@@ -355,3 +355,4 @@ MigrationBackup/
 *.7z
 *.bin
 PersistCache/
+Settings.settings
