@@ -1,0 +1,509 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+/*
+ * The BSD License
+ * 
+ * Copyright (c) 2006-2015, Ageyev A.V.
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*
+ * Строки табличек фильтров в отчетах (для отчета в-целом и для отдельных страниц
+ */
+namespace AgeyevAV.ExtForms
+{
+  /// <summary>
+  /// Описание одной строки фильтра отчета
+  /// </summary>
+  public class EFPReportFilterItem
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает строку фильтра
+    /// </summary>
+    /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
+    /// <param name="value">Значение фильтра. Может быть пустой строкой</param>
+    public EFPReportFilterItem(string displayName, string value)
+    {
+#if DEBUG
+      if (String.IsNullOrEmpty(displayName))
+        throw new ArgumentNullException("displayName");
+#endif
+      _DisplayName = displayName;
+      _Value = value;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Заголовок фильтра. Задается в конструкторе
+    /// </summary>
+    public string DisplayName { get { return _DisplayName; } }
+    private string _DisplayName;
+
+    /// <summary>
+    /// Значение фильтра. Задается в конструкторе
+    /// </summary>
+    public string Value { get { return _Value; } }
+    private string _Value;
+
+    /// <summary>
+    /// Имя значка для фильтра из списка EFPApp.ImageKey.
+    /// По умолчанию используется значок "Filter"
+    /// </summary>
+    public string ImageKey
+    {
+      get 
+      {
+        if (_ImageKey == null)
+          return EFPGridFilterTools.DefaultFilterImageKey;
+        else
+          return _ImageKey; 
+      }
+      set { _ImageKey = value; }
+    }
+    private string _ImageKey;
+
+    /// <summary>
+    /// Для отладки
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return DisplayName + "=" + Value;
+    }
+
+    #endregion
+  }
+
+#if XXX
+  public class GridReportRefFilterItem : EFPReportFilterItem
+  {
+    #region Конструкторы
+
+    public GridReportRefFilterItem(string DocTypeName, Int32 DocId, string DisplayName)
+      : base(GetDisplayName(DocTypeName, DisplayName), GetValue(DocTypeName, DocId))
+    {
+      FDocType = AccDepClientExec.DocTypes[DocTypeName];
+      FDocId = DocId;
+    }
+
+    public GridReportRefFilterItem(string DocTypeName, Int32 DocId)
+      : this(DocTypeName, DocId, null)
+    {
+    }
+
+    private static string GetDisplayName(string DocTypeName, string DisplayName)
+    {
+      if (String.IsNullOrEmpty(DisplayName))
+        return AccDepClientExec.DocTypes[DocTypeName].SingularTitle;
+      else
+        return DisplayName;
+    }
+
+    private static string GetValue(string DocTypeName, Int32 DocId)
+    {
+      return AccDepClientExec.DocTypes[DocTypeName].GetTextValue(DocId);
+    }
+
+    /// <summary>
+    /// Эта версия конструктора удобна для отображения переменных ссылок
+    /// </summary>
+    /// <param name="TableId">Идентификатор таблицы документа</param>
+    /// <param name="DocId">Идентификатор документа</param>
+    public GridReportRefFilterItem(Int32 TableId, Int32 DocId)
+      : base(GetDisplayName(TableId), AccDepClientExec.DocTypes.GetTextValue(TableId, DocId))
+    {
+      FDocType = AccDepClientExec.DocTypes.FindByTableId(TableId);
+      FDocId = DocId;
+    }
+
+    private static string GetDisplayName(Int32 TableId)
+    {
+      if (TableId == 0)
+        return "Нет ссылки";
+      ClientDocType DocType = AccDepClientExec.DocTypes.FindByTableId(TableId);
+      if (DocType == null)
+        return "Неизв. таблица " + TableId.ToString();
+      else
+        return DocType.SingularTitle;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    public ClientDocType DocType { get { return FDocType; } }
+    private ClientDocType FDocType;
+
+    public Int32 DocId { get { return FDocId; } }
+    private Int32 FDocId;
+
+    #endregion
+  }
+#endif
+
+  /// <summary>
+  /// Коллекция строк фильтра для отчета
+  /// </summary>
+  public class EFPReportFilterItems : IEnumerable<EFPReportFilterItem>, ICollection<EFPReportFilterItem>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает пустой список
+    /// </summary>
+    public EFPReportFilterItems()
+    {
+      _Items = new List<EFPReportFilterItem>();
+    }
+
+    #endregion
+
+    #region Свойства
+
+    private List<EFPReportFilterItem> _Items;
+
+    /// <summary>
+    /// Количество добавленных строк фильтра
+    /// </summary>
+    public int Count { get { return _Items.Count; } }
+
+    /// <summary>
+    /// Доступ к строке фильтра по индексу
+    /// </summary>
+    /// <param name="index">Индекс в диапазоне от 0 до Count-1</param>
+    /// <returns>Объект EFPReportFilterItem</returns>
+    public EFPReportFilterItem this[int index]
+    {
+      get { return _Items[index]; }
+      set
+      {
+        if (value == null)
+          throw new ArgumentNullException();
+        _Items[index] = value;
+        OnChanged();
+      }
+    }
+
+    #endregion
+
+    #region Методы
+
+    /// <summary>
+    /// Добавление строки фильтра
+    /// </summary>
+    /// <param name="item">Объект строки</param>
+    public void Add(EFPReportFilterItem item)
+    {
+#if DEBUG
+      if (item == null)
+        throw new ArgumentNullException("item");
+#endif
+      _Items.Add(item);
+
+      OnChanged();
+    }
+
+    /// <summary>
+    /// Добавление строки фильтра
+    /// </summary>
+    /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
+    /// <param name="value">Значение фильтра. Может быть пустой строкой</param>
+    public EFPReportFilterItem Add(string displayName, string value)
+    {
+      EFPReportFilterItem item = new EFPReportFilterItem(displayName, value);
+      Add(item);
+      return item;
+    }
+
+    /// <summary>
+    /// Добавление строки фильтра
+    /// </summary>
+    /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
+    /// <param name="value">Значение фильтра. Может быть пустой строкой</param>
+    /// <param name="imageKey">Имя изображения в EFPApp.MainImages.
+    /// Если задана пустая строка, будет использован стандартный значок фильтра</param>
+    public EFPReportFilterItem Add(string displayName, string value, string imageKey)
+    {
+      EFPReportFilterItem item = new EFPReportFilterItem(displayName, value);
+      item.ImageKey = imageKey;
+      Add(item);
+      return item;
+    }
+
+    /// <summary>
+    /// Добавление строк фильтра из другого списка
+    /// </summary>
+    /// <param name="items">Перечислимый список фильтров. Не может быть null</param>
+    public void AddRange(IEnumerable<EFPReportFilterItem> items)
+    {
+#if DEBUG
+      if (items == null)
+        throw new ArgumentNullException("items");
+
+      foreach (EFPReportFilterItem Item in items)
+      {
+        if (Item == null)
+          throw new ArgumentException("Один из элементов равен null", "items");
+      }
+#endif
+      _Items.AddRange(items);
+      OnChanged();
+    }
+
+    /// <summary>
+    /// Возвращает последний добавленный объект EFPReportFilterItem или null, если нет ни одной строки фильтра
+    /// </summary>
+    public EFPReportFilterItem LastAdded
+    {
+      get
+      {
+        if (_Items.Count == 0)
+          return null;
+        else
+          return _Items[_Items.Count - 1];
+      }
+    }
+
+    /// <summary>
+    /// Замена списка фильтров.
+    /// Комбинация вызовов Clear() и AddRange(). Если <paramref name="items"/> равно 0, просто
+    /// очищается список строк
+    /// </summary>
+    /// <param name="items">Перечислимый список фильтров</param>
+    public void Assign(IEnumerable<EFPReportFilterItem> items)
+    {
+      if (items == null)
+        Clear();
+      else
+      {
+        _Items.Clear();
+        AddRange(items);
+      }
+    }
+
+    /// <summary>
+    /// Удаление строки фильтра
+    /// </summary>
+    /// <param name="item">Удаляемый объет</param>
+    /// <returns>true, если строка была найдена</returns>
+    public bool Remove(EFPReportFilterItem item)
+    {
+      bool Res = _Items.Remove(item);
+      if (Res)
+        OnChanged();
+      return Res;
+    }
+
+    /// <summary>
+    /// Очистка фильтра
+    /// </summary>
+    public void Clear()
+    {
+      if (_Items.Count == 0)
+        return;
+
+      _Items.Clear();
+      OnChanged();
+    }
+
+    /// <summary>
+    /// Возвращает true при наличии строки фильтра
+    /// </summary>
+    /// <param name="item">Объект строки</param>
+    /// <returns>Наличие</returns>
+    public bool Contains(EFPReportFilterItem item)
+    {
+      return _Items.Contains(item);
+    }
+
+
+    /// <summary>
+    /// Копирование в массив
+    /// </summary>
+    /// <param name="array"></param>
+    /// <param name="arrayIndex"></param>
+    public void CopyTo(EFPReportFilterItem[] array, int arrayIndex)
+    {
+      _Items.CopyTo(array, arrayIndex);
+    }
+
+    /// <summary>
+    /// Копирование в массив
+    /// </summary>
+    /// <param name="array"></param>
+    public void CopyTo(EFPReportFilterItem[] array)
+    {
+      _Items.CopyTo(array);
+    }
+
+    /// <summary>
+    /// Копирование в массив
+    /// </summary>
+    /// <returns></returns>
+    public EFPReportFilterItem[] ToArray()
+    {
+      return _Items.ToArray();
+    }
+
+    #endregion
+
+    #region Виртуальные методы
+
+    /// <summary>
+    /// Вызывыается при всех изменениях в списке фильтров
+    /// </summary>
+    protected virtual void OnChanged()
+    {
+    }
+
+    #endregion
+
+    #region IEnumerable<GridReportFilterItem> Members
+
+    /// <summary>
+    /// Возвращает перечислитель по объектам EFPReportFilterItem
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public IEnumerator<EFPReportFilterItem> GetEnumerator()
+    {
+      return _Items.GetEnumerator();
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+      return _Items.GetEnumerator();
+    }
+
+    #endregion
+
+    #region ICollection<GridReportFilterItem> Members
+
+    bool ICollection<EFPReportFilterItem>.IsReadOnly
+    {
+      get { return false; }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Реализация списка фильтров для одной страницы отчета
+  /// </summary>
+  public class EFPReportPageFilterItems:EFPReportFilterItems
+  {
+    #region Конструктор
+
+    internal EFPReportPageFilterItems(EFPReportPage page)
+    {
+      _Page = page;
+      _UpdateCount = 0;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Страница, к которой относится отчет
+    /// </summary>
+    public EFPReportPage Page { get { return _Page; } }
+    private EFPReportPage _Page;
+
+    /// <summary>
+    /// Возвращает всплывающую подсказку, собранную из строк фильтра в виде длинной строки,
+    /// содержащей пары "DisplayName=Value".
+    /// Используется методом EFPReportPage.ToolTipTextFromFilters()
+    /// </summary>
+    public string ToolTipText
+    {
+      get
+      {
+        if (Count == 0)
+          return "Без фильтра";
+        else
+        {
+          StringBuilder sb = new StringBuilder();
+          for (int i = 0; i < Count; i++)
+          {
+            if (i > 0)
+              sb.Append(", ");
+            sb.Append(this[i].DisplayName);
+            sb.Append("=");
+            sb.Append(this[i].Value);
+          }
+          return sb.ToString();
+        }
+      }
+    }
+
+
+    #endregion
+
+    #region Методы
+
+    private int _UpdateCount;
+
+    /// <summary>
+    /// Начать обновление списка фильтров.
+    /// Подавляет последующие вызовы метода OnChanged().
+    /// Допускаются вложенные пары вызовов BeginUpdate() / EndUpdate()
+    /// </summary>
+    public void BeginUpdate()
+    {
+      _UpdateCount++;
+    }
+
+    /// <summary>
+    /// Закончить обновление списка фильтров.
+    /// Допускаются вложенные пары вызовов BeginUpdate() / EndUpdate()
+    /// Вызывает OnChanged()
+    /// </summary>
+    public void EndUpdate()
+    {
+      _UpdateCount--;
+      if (_UpdateCount == 0)
+        OnChanged();
+    }
+
+    /// <summary>
+    /// Инициализирует фильтры страницы, если нет незакрытых вызовов BeginUpdate()
+    /// </summary>
+    protected override void OnChanged()
+    {
+      if (_UpdateCount > 0)
+        return;
+      _Page.DoSetFilterItems();
+    }
+
+    #endregion
+  }
+}

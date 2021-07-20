@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{29AFED76-67DD-4EEF-860C-84413DB7BE28}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AgeyevAV.ExtForms.Docs</RootNamespace>
+    <AssemblyName>ExtDBDocForms</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ExtDBDocForms.XML</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ExtDBDocForms.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DocProviderUI.cs" />
+    <Compile Include="EFPDBxViewOrder.cs" />
+    <Compile Include="GridFilterRange.cs" />
+    <Compile Include="GroupGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GroupGridFilterForm.Designer.cs">
+      <DependentUpon>GroupGridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocSelectDialog.cs" />
+    <Compile Include="SubDocTableViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubDocTableViewForm.Designer.cs">
+      <DependentUpon>SubDocTableViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBxDocImageHandlers.cs" />
+    <Compile Include="DocEditItem.cs" />
+    <Compile Include="DocSelectionEditor.cs" />
+    <Compile Include="DocumentViewHandler.cs" />
+    <Compile Include="DocValueCheckBox.cs" />
+    <Compile Include="DocTypeUserPermissionUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocTypeUserPermissionUI.Designer.cs">
+      <DependentUpon>DocTypeUserPermissionUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditGroupDoc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditGroupDoc.Designer.cs">
+      <DependentUpon>EditGroupDoc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPAnyDocComboBoxBase.cs" />
+    <Compile Include="EFPDBxTextSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPDBxTextSearchForm.designer.cs">
+      <DependentUpon>EFPDBxTextSearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPDBxErrorGridView.cs" />
+    <Compile Include="EFPDBxGridViewHieHandler.cs" />
+    <Compile Include="EFPDBxViewSync.cs" />
+    <Compile Include="EFPDocSelTextGridView.cs" />
+    <Compile Include="EFPDocTreeView.cs" />
+    <Compile Include="EFPDBxTreeView.cs" />
+    <Compile Include="EFPGroupDocComboBox.cs" />
+    <Compile Include="EFPGroupDocTreeView.cs" />
+    <Compile Include="EFPMultiDocComboBox.cs" />
+    <Compile Include="EFPReportDocGridPage.cs" />
+    <Compile Include="EFPSubDocTreeView.cs" />
+    <Compile Include="CodeGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CodeGridFilterForm.designer.cs">
+      <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBxPasteFormats.cs" />
+    <Compile Include="ColumnUI.cs" />
+    <Compile Include="DocEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocEditForm.Designer.cs">
+      <DependentUpon>DocEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocEditPage.cs" />
+    <Compile Include="RefDocGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RefDocGridFilterForm.designer.cs">
+      <DependentUpon>RefDocGridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocInfoForm.Designer.cs">
+      <DependentUpon>DocInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DocValueControl.cs" />
+    <Compile Include="DocValueControl2.cs" />
+    <Compile Include="DocValueNumEdit.cs" />
+    <Compile Include="DummyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummyForm.Designer.cs">
+      <DependentUpon>DummyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPDBxGridView.cs" />
+    <Compile Include="EFPDocComboBox.cs" />
+    <Compile Include="EFPDocGridView.cs" />
+    <Compile Include="GridFilter.cs" />
+    <Compile Include="DateRangeInclusionGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DateRangeInclusionGridFilterForm.designer.cs">
+      <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GridFilterOthers.cs" />
+    <Compile Include="YearGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="YearGridFilterForm.designer.cs">
+      <DependentUpon>YearGridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPDBxGridProducer.cs" />
+    <Compile Include="InitDocEditForm.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DocTableViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocTableViewForm.Designer.cs">
+      <DependentUpon>DocTableViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPSubDocGridView.cs" />
+    <Compile Include="DBUI.cs">
+    </Compile>
+    <Compile Include="UserActionsReportParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserActionsReportParamsForm.designer.cs">
+      <DependentUpon>UserActionsReportParamsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubDocumentEditor.cs" />
+    <Compile Include="UserPermissionUI.cs" />
+    <Compile Include="DBUserPermissionUI.cs" />
+    <Compile Include="XmlCfgDocEditItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtForms\ExtForms.csproj">
+      <Project>{DBD17DB7-A65F-4659-9604-B2ACB1BA35A2}</Project>
+      <Name>ExtForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtTools\ExtTools.csproj">
+      <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
+      <Name>ExtTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtDBDocs\ExtDBDocs.csproj">
+      <Project>{5AA9F43F-C1D1-47BD-B83D-E11CD90CFA08}</Project>
+      <Name>ExtDBDocs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtDB\ExtDB.csproj">
+      <Project>{D78C5082-6E86-47A5-8216-36AEB83751FE}</Project>
+      <Name>ExtDB</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GroupGridFilterForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>GroupGridFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubDocTableViewForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SubDocTableViewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocTypeUserPermissionUI.resx">
+      <DependentUpon>DocTypeUserPermissionUI.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditGroupDoc.resx">
+      <DependentUpon>EditGroupDoc.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPDBxTextSearchForm.resx">
+      <DependentUpon>EFPDBxTextSearchForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CodeGridFilterForm.resx">
+      <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RefDocGridFilterForm.resx">
+      <DependentUpon>RefDocGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocInfoForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DocInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummyForm.resx">
+      <DependentUpon>DummyForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DateRangeInclusionGridFilterForm.resx">
+      <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="YearGridFilterForm.resx">
+      <DependentUpon>YearGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocTableViewForm.resx">
+      <DependentUpon>DocTableViewForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserActionsReportParamsForm.resx">
+      <DependentUpon>UserActionsReportParamsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

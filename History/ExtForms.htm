@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
+	<meta name="generator" content="LibreOffice 6.2.2.2 (Windows)"/>
+	<meta name="created" content="2017-12-15T19:00:27.344000000"/>
+	<meta name="changed" content="2019-04-15T15:18:24.038000000"/>
+	<style type="text/css">
+		@page { margin: 2cm }
+		td p { margin-bottom: 0cm; line-height: 120% }
+		h1 { margin-bottom: 0.21cm }
+		h1.western { font-family: "Liberation Serif", serif }
+		h1.cjk { font-family: "SimSun"; font-size: 24pt }
+		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; line-height: 120% }
+		h2.cjk { font-family: "SimSun" }
+		h2.ctl { font-family: "Mangal" }
+		a:link { so-language: zxx }
+	</style>
+</head>
+<body lang="ru-RU" dir="ltr"><p>См. также <a href="http://BU05_11.htm/">версию
+1.1</a> и описание <a href="http://Changes10_11.htm/">перехода на
+новую версию</a></p>
+<h1 class="western">История изменений <br/>
+Модуль <span lang="en-US">ExtForms</span>.<span lang="en-US">dll</span>
+(Дополнительные управляющие элементы)</h1>
+<p>Модуль входит в комплект библиотек <span lang="en-US">FreeLibSet</span>,
+и является свободным программным обеспечением (Free Software)</p>
+<h2 class="western">Версия 1.0</h2>
+<p>Полный номер версии файла, который можно узнать, посмотрев
+свойства файла или в меню &laquo;О программе&raquo; состоит из
+четырех чисел и имеет вид &laquo;1.0.0.<span lang="en-US">X</span>&raquo;.
+В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
+<table width="100%" cellpadding="2" cellspacing="0">
+	<col width="15*"/>
+
+	<col width="25*"/>
+
+	<col width="216*"/>
+
+	<tr valign="top">
+		<td width="6%" style="border: 1.00pt solid #000000; padding: 0.05cm"><p align="center">
+			Версия</p>
+		</td>
+		<td width="10%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			Дата</p>
+		</td>
+		<td width="84%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			16</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			14.11.2011</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p style="margin-bottom: 0.5cm">
+			<span lang="en-US">1. </span>Объект для отслеживания щелчков мыши
+			<span lang="en-US">ControlMouseClickHandler</span></p>
+			<p><a name="v016p2"></a>2. Свойство <span lang="en-US">DateBox</span>.<span lang="en-US">DefaultYear</span>,
+			чтобы можно было вводить дату без года</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			15</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			16.10.2011</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. В поле ввода интервала дат (<a href="#v001p2"><span lang="en-US">v</span><span lang="ru-RU">.1
+			п.2</span></a>) не блокировались кнопки меню и сдвига, если
+			управляющий элемент добавлен в дизайнере формы</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
+			14</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			09.11.2009</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p style="margin-bottom: 0.5cm">
+			1. Возможен сдвиг интервала дат (<a href="#v013p3"><span lang="en-US">v</span><span lang="ru-RU">.13
+			п.3</span></a>) с одним заполненным полем (переключение &laquo;до&raquo;
+			- &laquo;после&raquo;)</p>
+			<p>2. В поле ввода даты переставало работать сочетание клавиш
+			&lt;<span lang="en-US">Alt</span>&gt;-&lt;Стрелка вниз&gt; (<a href="#v013p1"><span lang="en-US">v</span><span lang="ru-RU">.13
+			п.1</span></a>)</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
+			13</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			06.11.2009</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p style="margin-bottom: 0.5cm"><a name="v013p1"></a>
+			1. Новый управляющий элемент <span lang="en-US">ControlRightButton</span>
+			(маленькая кнопка с картинкой 12<span lang="en-US">x</span>12,
+			которая может как получать фокус ввода, так и не получать)</p>
+			<p style="margin-bottom: 0.5cm">2. В <span lang="en-US">UserComboBox</span>,
+			<span lang="en-US">MaskedComboBoxBase</span>, <span lang="en-US">DateRangeBox
+			</span>используются кнопки <span lang="en-US">ControlRightButton
+			</span>вместо <span lang="en-US">ToolStrip</span> +
+			<span lang="en-US">ToolStripButton</span>. Переопределяется метод
+			<span lang="en-US">SetBoundsCore</span>() для установки
+			фиксированной высоты элемента и установки размеров кнопок</p>
+			<p style="margin-bottom: 0.5cm"><a name="v013p3"></a>3. В поле
+			ввода интервала дат (<a href="#v001p2"><span lang="en-US">v</span><span lang="ru-RU">.1
+			п.2</span></a>) сдвиг выполняется не на один месяц, а на число
+			месяцев в интервале (если период соответствует целым месяцам)
+			(метод <span lang="en-US">DateRangeBox</span>.<span lang="en-US">ShiftDateRange</span>).
+			Команды задания интервалов &laquo;Месяц&raquo;, &laquo;Квартал&raquo;
+			и &laquo;Год&raquo; используют только одну дату интервала, а не
+			расширяют интервал. Кнопки меню и прокрутки блокируются, если хотя
+			бы одно из полей ввода заблокировано</p>
+			<p style="margin-bottom: 0.5cm">4. В поле ввода даты текст
+			выводится повторно при смене видимости, что позволяет преодолеть
+			дефект убегания текста влево при нестандартном масштабе экрана
+			(больше 96 <span lang="en-US">DPI</span>)</p>
+			<p>5. Свойства <span lang="en-US">UserComboBox</span>.<span lang="en-US">EditButtonToolTipText
+			</span>и <span lang="en-US">ClearButtonToolTipText</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
+			12</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			02.09.2009</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p><a name="v012p1"></a>
+			1. Управляющий элемент <span lang="en-US">MonthDayBox</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
+			11</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			19.08.2009<span lang="en-US">-31.08.2009</span></p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p style="margin-bottom: 0.5cm">
+			<span lang="en-US">1. </span>Свойство <span lang="en-US">NumEditBox.ZeroAsEmptyText</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="en-US">2.
+			NumEditBox.Value </span>преобразует строку в целое число<span lang="en-US">,
+			</span>а не <span lang="en-US">decimal, </span>если
+			<span lang="en-US">DecimalPlaces=0. </span>Вспомогательное
+			свойство <span lang="en-US">IsValidText.</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="en-US">3. </span>Для
+			<span lang="en-US">NumEditBox.TextAlign </span>установлен атрибут
+			<span lang="en-US">DefaultValue(Right)</span></p>
+			<p style="margin-bottom: 0.5cm"><a name="v011p4"></a>4.
+			Управляющий элемент <span lang="en-US">YearMonthBox</span>
+			(перенесен из <a href="http://AccDep.htm/#v139p25"><span lang="en-US">AccDep</span></a>)</p>
+			<p><a name="v011p5"></a><span lang="en-US">5. </span>Управляющий
+			элемент <span lang="en-US">YearMonthRangeBox</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			10</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			02.01.2009</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			<span lang="en-US">1. </span>Свойство <span lang="en-US">UserComboBox.DrawMode
+			</span>и событие <span lang="en-US">DrawItem</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			9</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			30.06.2008</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. Значения свойства <span lang="en-US">DecimalPlaces </span>в
+			<span lang="en-US">NumEditBox </span>(<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
+			п.3</span></a>) по умолчанию изменено на (-1), что означает
+			отсутствие ограничения на число разрядов (можно вводить
+			произвольные числа)</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			8</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			28.01.2008</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. В комбоблоке <span lang="en-US">UserComboBox</span>&nbsp; в
+			обработчике сигнала от таймера, после закрытия &laquo;выпавшего&raquo;
+			списка, восстановление текущего выделения выполняется только для
+			редактируемого комбоблока. При вызове <span lang="en-US">ComboBox.Select(StartPos,
+			Length) </span>перехватываются исключения.</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			7</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			30.05.2007</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. После инициализации команд локального меню оно активировалось
+			не сразу</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			6</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			26.05.2007</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. Кнопка редактирования (клавиша &lt;<span lang="en-US">F</span>2&gt;)
+			в комбоблоке <span lang="en-US">UserComboBox</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
+			5</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			08.05.2007</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. Комбоблок <span lang="en-US">UserComboBox </span>не
+			обрабатывает клавишу &laquo;пробел&raquo;, если находится в режиме
+			редактирования (иначе очищается ввод при нажатии).</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			4</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			16.04.2007</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. Комбоблок выбора цвета (<span lang="en-US">ColorComboBox</span>)
+			(не доработано)</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
+			3</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			18.10.2006</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. <span lang="en-US">DateBox </span>работал неправильно, если
+			установленный в системе формат даты имел неправильный порядок
+			&laquo;День-Месяц-Год&raquo;</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			2</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
+			17.10.2006</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
+			1. Комбоблок с маской не обрабатывал кнопку &laquo;Очистить&raquo;</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="6%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
+			1</p>
+		</td>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
+			1<span lang="en-US">5</span>.10.2006</p>
+		</td>
+		<td width="84%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p style="margin-bottom: 0.5cm">
+			Базовая версия</p>
+			<p style="margin-bottom: 0.5cm"><a name="v001p1"></a>1. Поле ввода
+			даты <span lang="en-US">DateBox </span>(с маской)</p>
+			<p style="margin-bottom: 0.5cm"><a name="v001p2"></a>2. Поле ввода
+			интервала дат <span lang="en-US">DateRangeBox </span>(с
+			дополнительными командами и кнопками прокрутки интервала)</p>
+			<p style="margin-bottom: 0.5cm"><a name="v001p3"></a>3. Поле ввода
+			чисел с фиксированным количеством знаков после запятой <span lang="en-US">NumEditBox
+			</span>(например, денежных сумм)</p>
+			<p style="margin-bottom: 0.5cm"><a name="v001p4"></a>4.
+			Комбоблоки, нажатие на стрелочку которых, вызывает действия,
+			отличные от появления списка (например, выбор из справочника с
+			возможностью встроенного редактирования) <span lang="en-US">UserComboBox</span></p>
+			<p style="margin-bottom: 0.5cm">5. Комбоблоки с маской в строке
+			редактирования <span lang="en-US">UserMaskedComboBox</span>. 
+			</p>
+			<p><a name="v001p6"></a>6. Промежуточные абстрактные классы
+			MaskedComboBoxBase и UserMaskedComboBoxBase</p>
+		</td>
+	</tr>
+</table>
+<p>&nbsp;</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+</body>
+</html>

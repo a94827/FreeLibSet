@@ -1,0 +1,779 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DBD17DB7-A65F-4659-9604-B2ACB1BA35A2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AgeyevAV.ExtForms</RootNamespace>
+    <AssemblyName>ExtForms</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ExtForms.XML</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ExtForms.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationExceptionHandler.cs" />
+    <Compile Include="BackgroundPrinting.cs" />
+    <Compile Include="BandPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EFPAppClipboard.cs" />
+    <Compile Include="EFPAppCommandItemHelpers.cs" />
+    <Compile Include="EFPAppCompositionHistoryHandler.cs" />
+    <Compile Include="EFPAppFileExtAssociations.cs" />
+    <Compile Include="EFPAppInterface.cs" />
+    <Compile Include="EFPAppInterfaceMDI.cs">
+    </Compile>
+    <Compile Include="EFPAppInterfaceSDI.cs" />
+    <Compile Include="EFPAppMainWindowLayout.cs" />
+    <Compile Include="EFPAppRemoteExitHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPAppRemoteExitHandler.designer.cs">
+      <DependentUpon>EFPAppRemoteExitHandler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPAppTrayIcon.cs" />
+    <Compile Include="EFPButton.cs" />
+    <Compile Include="EFPConfigHandler.cs" />
+    <Compile Include="EFPConfigParamSetComboBox.cs" />
+    <Compile Include="EFPConfigurableDataTreeView.cs" />
+    <Compile Include="EFPControlWithToolBar.cs" />
+    <Compile Include="EFPDataGridViewColumnHeaderArray.cs" />
+    <Compile Include="EFPDataGridViewHieHandler.cs" />
+    <Compile Include="EFPDataGridViewOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPDataGridViewOrderForm.Designer.cs">
+      <DependentUpon>EFPDataGridViewOrderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPDataGridViewRowsResizer.cs" />
+    <Compile Include="EFPDataTreeViewColumn.cs" />
+    <Compile Include="EFPDataTreeViewCommandItems.cs" />
+    <Compile Include="DateRangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DateRangeForm.Designer.cs">
+      <DependentUpon>DateRangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPConfigManager.cs" />
+    <Compile Include="EFPDataGridViewCommandItems.cs" />
+    <Compile Include="EFPDataGridViewExpExcel.cs" />
+    <Compile Include="EFPConfigurableDataGridView.cs" />
+    <Compile Include="EFPDataTreeView.cs" />
+    <Compile Include="EFPDialogPosition.cs" />
+    <Compile Include="EFPExternalDialogOwnerWindowHandler.cs" />
+    <Compile Include="EFPErrorDataGridView.cs" />
+    <Compile Include="EFPDataGridViewColumn.cs" />
+    <Compile Include="EFPDataGridViewRectArea.cs" />
+    <Compile Include="EFPAppColors.cs" />
+    <Compile Include="EFPAppCommandItems.cs" />
+    <Compile Include="EFPAppFonts.cs" />
+    <Compile Include="EFPAppPrinters.cs" />
+    <Compile Include="EFPAppTimers.cs" />
+    <Compile Include="EFPCommandItem.cs">
+    </Compile>
+    <Compile Include="EFPDataGridView.cs" />
+    <Compile Include="EFPFileAssociationsCommandItemsHandler.cs" />
+    <Compile Include="EFPFileTools.cs" />
+    <Compile Include="EFPFormBounds.cs" />
+    <Compile Include="EFPFormCreator.cs" />
+    <Compile Include="EFPGridFilterGridView.cs" />
+    <Compile Include="EFPGridProducer.cs" />
+    <Compile Include="EFPGridProducerColumn.cs" />
+    <Compile Include="EFPGridProducerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPGridProducerEditor.designer.cs">
+      <DependentUpon>EFPGridProducerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPGridProducerItemBase.cs" />
+    <Compile Include="EFPGridProducerToolTip.cs" />
+    <Compile Include="EFPHieView.cs" />
+    <Compile Include="EFPHieViewConfig.cs" />
+    <Compile Include="EFPHieViewLevel.cs" />
+    <Compile Include="EFPInputDataGridView.cs" />
+    <Compile Include="EFPMenu.cs" />
+    <Compile Include="EFPPasteHandler.cs" />
+    <Compile Include="EFPPictureBox.cs" />
+    <Compile Include="EFPReportExtParamsTwoPageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPReportExtParamsTwoPageForm.Designer.cs">
+      <DependentUpon>EFPReportExtParamsTwoPageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPSelRCDataGridView.cs" />
+    <Compile Include="EFPSnapshotManager.cs" />
+    <Compile Include="EFPStatusBar.cs" />
+    <Compile Include="EFPStdConfigurableDataGridView.cs" />
+    <Compile Include="EFPTabControl.cs" />
+    <Compile Include="EFPToolBar.cs" />
+    <Compile Include="EFPToolWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EFPControlCommandItems.cs" />
+    <Compile Include="ControlMouseClickHandler.cs" />
+    <Compile Include="ControlRightButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DateBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DateRangeBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DateRangeBox.Designer.cs">
+      <DependentUpon>DateRangeBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DebugFormDispose.cs" />
+    <Compile Include="DebugTools.cs" />
+    <Compile Include="DummyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummyForm.Designer.cs">
+      <DependentUpon>DummyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPApp.cs">
+    </Compile>
+    <Compile Include="EFPBaseProvider.cs" />
+    <Compile Include="EFPCheckBox.cs" />
+    <Compile Include="EFPComboBox.cs" />
+    <Compile Include="EFPControl.cs" />
+    <Compile Include="EFPDateBox.cs" />
+    <Compile Include="EFPFileControls.cs" />
+    <Compile Include="EFPFormProvider.cs" />
+    <Compile Include="EFPListControl.cs" />
+    <Compile Include="EFPMonthDayBox.cs" />
+    <Compile Include="EFPNumEditBox.cs" />
+    <Compile Include="EFPRadioButtons.cs" />
+    <Compile Include="EFPTextBox.cs" />
+    <Compile Include="EFPTextViewControl.cs" />
+    <Compile Include="EFPTreeView.cs" />
+    <Compile Include="EFPTreeViewAdv.cs">
+    </Compile>
+    <Compile Include="EFPTreeViewAdvCommandItems.cs" />
+    <Compile Include="EFPTreeViewCommandItems.cs" />
+    <Compile Include="EFPTwainHandler.cs" />
+    <Compile Include="EFPUserComboBox.cs" />
+    <Compile Include="EFPXmlViewBox.cs" />
+    <Compile Include="EFPYearMonthBox.cs" />
+    <Compile Include="ExtDataGridViewCheckBoxColumn.cs" />
+    <Compile Include="ExtNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ExtPrintPreviewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ExtTextRenderer.cs" />
+    <Compile Include="FileAssociations.cs" />
+    <Compile Include="FileBrowseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileBrowseForm.Designer.cs">
+      <DependentUpon>FileBrowseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileCopier.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileCopier.Designer.cs">
+      <DependentUpon>FileCopier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileEditorFormHandler.cs" />
+    <Compile Include="EFPDataGridViewExpHtml.cs" />
+    <Compile Include="EFPDataGridViewMeasures.cs" />
+    <Compile Include="EFPDataViewOrder.cs" />
+    <Compile Include="EFPDataGridViewExpExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPDataGridViewExpExcelForm.Designer.cs">
+      <DependentUpon>EFPDataGridViewExpExcelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPDataGridViewConfig.cs" />
+    <Compile Include="GridConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GridConfigForm.Designer.cs">
+      <DependentUpon>GridConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GridFilterForm.designer.cs">
+      <DependentUpon>GridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPReport.cs" />
+    <Compile Include="EFPReportFilterItem.cs" />
+    <Compile Include="EFPReportExtParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPReportExtParamsForm.Designer.cs">
+      <DependentUpon>EFPReportExtParamsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPReportGridPage.cs" />
+    <Compile Include="EFPReportControlPage.cs" />
+    <Compile Include="HieViewLevelEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HieViewLevelEditForm.designer.cs">
+      <DependentUpon>HieViewLevelEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IEFPGridFilter.cs" />
+    <Compile Include="IconOnlyButton.cs" />
+    <Compile Include="ImagingTools.cs" />
+    <Compile Include="InfoLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ListControlImagePainter.cs" />
+    <Compile Include="ListSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ListSelectForm.Designer.cs">
+      <DependentUpon>ListSelectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MessageBoxIconBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NumRangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NumRangeForm.designer.cs">
+      <DependentUpon>NumRangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MonthDayBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MonthDayBox.Designer.cs">
+      <DependentUpon>MonthDayBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NumEditBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ObjectDebugControl.cs" />
+    <Compile Include="OKCancelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OKCancelForm.Designer.cs">
+      <DependentUpon>OKCancelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OLEExcel.cs" />
+    <Compile Include="OLEWord.cs" />
+    <Compile Include="ParamSetComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ParamSetComboBox.designer.cs">
+      <DependentUpon>ParamSetComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PopupDialog.cs" />
+    <Compile Include="PowerSuspendLocker.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RadioGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RadioSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RadioSelectForm.Designer.cs">
+      <DependentUpon>RadioSelectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectCompositionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectCompositionForm.Designer.cs">
+      <DependentUpon>SelectCompositionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ShowExceptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShowExceptionForm.Designer.cs">
+      <DependentUpon>ShowExceptionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DebugParsingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DebugParsingForm.designer.cs">
+      <DependentUpon>DebugParsingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ShowExceptionMsgBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShowExceptionMsgBoxForm.Designer.cs">
+      <DependentUpon>ShowExceptionMsgBoxForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SimpleAboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SimpleAboutDialog.Designer.cs">
+      <DependentUpon>SimpleAboutDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SimpleGridForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Splash.cs" />
+    <Compile Include="SplashForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StackPanelHandler.cs" />
+    <Compile Include="TempBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TempMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TempMessageForm.Designer.cs">
+      <DependentUpon>TempMessageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPTextSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPTextSearchForm.Designer.cs">
+      <DependentUpon>EFPTextSearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TempWaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TempWaitForm.Designer.cs">
+      <DependentUpon>TempWaitForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreePagesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TreePagesForm.Designer.cs">
+      <DependentUpon>TreePagesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeViewAdvDrawContext.cs" />
+    <Compile Include="TreeViewAdv\TreeViewAdvDropPosition.cs" />
+    <Compile Include="TreeViewAdv\TreeViewAdvEditorContext.cs" />
+    <Compile Include="TreeViewAdv\Enums.cs" />
+    <Compile Include="TreeViewAdv\Helpers\ResourceHelper.cs" />
+    <Compile Include="TreeViewAdv\Helpers\StringCollectionEditor.cs" />
+    <Compile Include="TreeViewAdv\TreeViewAdvIncrementalSearch.cs" />
+    <Compile Include="TreeViewAdv\Input\ClickColumnState.cs" />
+    <Compile Include="TreeViewAdv\Input\ColumnState.cs" />
+    <Compile Include="TreeViewAdv\Input\InputState.cs" />
+    <Compile Include="TreeViewAdv\Input\InputWithControl.cs" />
+    <Compile Include="TreeViewAdv\Input\InputWithShift.cs" />
+    <Compile Include="TreeViewAdv\Input\NormalInputState.cs" />
+    <Compile Include="TreeViewAdv\Input\ReorderColumnState.cs" />
+    <Compile Include="TreeViewAdv\Input\ResizeColumnState.cs" />
+    <Compile Include="TreeViewAdv\TreeViewAdvRowLayout.cs" />
+    <Compile Include="TreeViewAdv\NativeMethods.cs" />
+    <Compile Include="TreeViewAdv\Helpers\TextHelper.cs" />
+    <Compile Include="TreeViewAdv\NumericTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\Helpers\AbortableThreadPool.cs" />
+    <Compile Include="TreeViewAdv\Helpers\GifDecoder.cs" />
+    <Compile Include="TreeViewAdv\TreeModel.cs" />
+    <Compile Include="TreeViewAdv\NodeControlInfo.cs" />
+    <Compile Include="TreeViewAdv\NodeControls\BaseTextControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\BindableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\DrawEventArgs.cs" />
+    <Compile Include="TreeViewAdv\NodeControls\EditableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\EditEventArgs.cs" />
+    <Compile Include="TreeViewAdv\NodeControls\ExpandingIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\InteractiveControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeControlsCollection.cs" />
+    <Compile Include="TreeViewAdv\NodeControls\NodeControlValueEventArgs.cs" />
+    <Compile Include="TreeViewAdv\NodeControls\NodeDecimalTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeEventArgs.cs" />
+    <Compile Include="TreeViewAdv\NodeControls\NodeIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeIntegerTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodePlusMinus.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeStateIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\NodeControls\NodeTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeColumnCollection.cs" />
+    <Compile Include="TreeViewAdv\TreeListAdapter.cs" />
+    <Compile Include="TreeViewAdv\TreeNodeAdv.cs" />
+    <Compile Include="TreeViewAdv\TreeViewAdv.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeViewAdv.Designer.cs">
+      <DependentUpon>TreeViewAdv.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeViewAdv.Draw.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeViewAdv.Editor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeViewAdv.Input.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeViewAdv.Properties.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TreeViewAdv\TreeViewAdvEventArgs.cs" />
+    <Compile Include="TreeViewAdvRes\TreeViewAdvResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TreeViewAdvResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TwainDefs.cs" />
+    <Compile Include="TwainLib.cs" />
+    <Compile Include="TwoListSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TwoListSelector.Designer.cs">
+      <DependentUpon>TwoListSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EFPAppRI.cs">
+    </Compile>
+    <Compile Include="WinFormsTools.cs" />
+    <Compile Include="WizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WizardForm.Designer.cs">
+      <DependentUpon>WizardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardSteps2.cs" />
+    <Compile Include="XmlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XmlViewBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="YearMonthBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="YearMonthBox.Designer.cs">
+      <DependentUpon>YearMonthBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="YearMonthRangeBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="YearMonthRangeBox.Designer.cs">
+      <DependentUpon>YearMonthRangeBox.cs</DependentUpon>
+    </Compile>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DateRangeForm.resx">
+      <DependentUpon>DateRangeForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPToolWindow.resx">
+      <DependentUpon>EFPToolWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DateRangeBox.resx">
+      <DependentUpon>DateRangeBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummyForm.resx">
+      <DependentUpon>DummyForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileBrowseForm.resx">
+      <DependentUpon>FileBrowseForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPDataGridViewExpExcelForm.resx">
+      <DependentUpon>EFPDataGridViewExpExcelForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileCopier.resx">
+      <DependentUpon>FileCopier.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ListSelectForm.resx">
+      <DependentUpon>ListSelectForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MessageBoxIconBox.resx">
+      <DependentUpon>MessageBoxIconBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MonthDayBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MonthDayBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OKCancelForm.resx">
+      <DependentUpon>OKCancelForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RadioSelectForm.resx">
+      <DependentUpon>RadioSelectForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShowExceptionForm.resx">
+      <DependentUpon>ShowExceptionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SimpleAboutDialog.resx">
+      <DependentUpon>SimpleAboutDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashForm.resx">
+      <DependentUpon>SplashForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TempMessageForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TempMessageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPTextSearchForm.resx">
+      <DependentUpon>EFPTextSearchForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TreePagesForm.resx">
+      <DependentUpon>TreePagesForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardForm.resx">
+      <DependentUpon>WizardForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="YearMonthBox.resx">
+      <DependentUpon>YearMonthBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="YearMonthRangeBox.resx">
+      <DependentUpon>YearMonthRangeBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtTools\ExtTools.csproj">
+      <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
+      <Name>ExtTools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DateBox.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ColorComboBox.bmp" />
+    <EmbeddedResource Include="DateRangeBox.bmp" />
+    <EmbeddedResource Include="ExtNumericUpDown.bmp" />
+    <EmbeddedResource Include="ExtPrintPreviewControl.bmp" />
+    <EmbeddedResource Include="MonthDayBox.bmp" />
+    <EmbeddedResource Include="NumEditBox.bmp" />
+    <EmbeddedResource Include="UserMaskedComboBox.bmp" />
+    <EmbeddedResource Include="UserSelComboBox.bmp" />
+    <EmbeddedResource Include="UserTextComboBox.bmp" />
+    <EmbeddedResource Include="XmlViewBox.bmp" />
+    <EmbeddedResource Include="YearMonthBox.bmp" />
+    <EmbeddedResource Include="YearMonthRangeBox.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GridFilterForm.resx">
+      <DependentUpon>GridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InfoLabel.bmp" />
+    <EmbeddedResource Include="MessageBoxIconBox.bmp" />
+    <EmbeddedResource Include="ParamSetComboBox.resx">
+      <DependentUpon>ParamSetComboBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TreeViewAdv\TreeViewAdv.resx">
+      <DependentUpon>TreeViewAdv.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TreeViewAdvRes\TreeViewAdvResources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TreeViewAdvResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\unknown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\check.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\Item.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\minus.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\plus.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\TreeViewClosedFolder.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\TreeViewOpenFolder.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\uncheck.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\DVSplit.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EFPReportExtParamsForm.resx">
+      <DependentUpon>EFPReportExtParamsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ParamSetComboBox.bmp" />
+    <EmbeddedResource Include="TreeViewAdv.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TreeViewAdvRes\Resources\loading_icon._gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EFPAppRemoteExitHandler.resx">
+      <DependentUpon>EFPAppRemoteExitHandler.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPReportExtParamsTwoPageForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EFPReportExtParamsTwoPageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GridConfigForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>GridConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HieViewLevelEditForm.resx">
+      <DependentUpon>HieViewLevelEditForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NumRangeForm.resx">
+      <DependentUpon>NumRangeForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RadioGroupBox.bmp" />
+    <EmbeddedResource Include="DebugParsingForm.resx">
+      <DependentUpon>DebugParsingForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectCompositionForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SelectCompositionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShowExceptionMsgBoxForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ShowExceptionMsgBoxForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TempWaitForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TempWaitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TwoListSelector.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TwoListSelector.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EFPDataGridViewOrderForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EFPDataGridViewOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPGridProducerEditor.resx">
+      <DependentUpon>EFPGridProducerEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserSingleGridCellComboBox.bmp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

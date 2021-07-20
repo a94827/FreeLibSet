@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5AA9F43F-C1D1-47BD-B83D-E11CD90CFA08}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AgeyevAV.ExtDB.Docs</RootNamespace>
+    <AssemblyName>ExtDBDocs</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ExtDBDocs.XML</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ExtDBDocs.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBxBinDataHandler.cs" />
+    <Compile Include="DBxCachedDocProvider.cs" />
+    <Compile Include="DBxChainDocProvider.cs" />
+    <Compile Include="DBxCommonFilter.cs" />
+    <Compile Include="DBxDataVersionHandler.cs" />
+    <Compile Include="DBxDocDBConnectionHelper.cs" />
+    <Compile Include="DBxDocsLock.cs" />
+    <Compile Include="DBxDocTypeRefInfo.cs" />
+    <Compile Include="DBxMultiDocsSubDocs.cs" />
+    <Compile Include="DBxMultiSubDocs.cs" />
+    <Compile Include="DBxRealDocProviderGlobal.cs" />
+    <Compile Include="DBxRealDocProviderSource.cs" />
+    <Compile Include="DBxSingleDocSubDocs.cs" />
+    <Compile Include="DBxSingleSubDocs.cs" />
+    <Compile Include="DBxSubDoc.cs" />
+    <Compile Include="DataRowDocValues.cs" />
+    <Compile Include="DBxDocSelection.cs" />
+    <Compile Include="DBxDocProvider.cs" />
+    <Compile Include="DBxDocSet.cs" />
+    <Compile Include="DBxDocTextHandlers.cs" />
+    <Compile Include="DBxDocType.cs" />
+    <Compile Include="DBxDocTypeFileRefs.cs" />
+    <Compile Include="DBxDocValue.cs" />
+    <Compile Include="DBxMultiDocs.cs" />
+    <Compile Include="DBxRealDocProvider.cs" />
+    <Compile Include="DBxSingleDoc.cs" />
+    <Compile Include="DBxVTReference.cs" />
+    <Compile Include="DBxDocTreeModel.cs" />
+    <Compile Include="DocTypePermission.cs" />
+    <Compile Include="DocUndoHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DBxDocProviderIdReplacer.cs" />
+    <Compile Include="DBxExtRefs.cs" />
+    <Compile Include="DBxDocPermissions.cs" />
+    <Compile Include="XmlCfgDocValues.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtTools\ExtTools.csproj">
+      <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
+      <Name>ExtTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtDB\ExtDB.csproj">
+      <Project>{D78C5082-6E86-47A5-8216-36AEB83751FE}</Project>
+      <Name>ExtDB</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

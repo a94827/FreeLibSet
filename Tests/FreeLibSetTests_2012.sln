@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtTools", "..\ExtTools\ExtTools.csproj", "{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtTools.tests", "ExtTools.tests\ExtTools.tests.csproj", "{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
