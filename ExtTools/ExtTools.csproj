@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AgeyevAV</RootNamespace>
+    <AssemblyName>ExtTools</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ExtTools.XML</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ExtTools.XML</DocumentationFile>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\Others\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SevenZipSharp">
+      <HintPath>..\Others\SevenZipSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbsPath.cs" />
+    <Compile Include="Cache.cs" />
+    <Compile Include="Cfg.cs" />
+    <Compile Include="DataTableRepeater.cs" />
+    <Compile Include="DataViewSortBuilder.cs" />
+    <Compile Include="DataRowValueExtractor.cs" />
+    <Compile Include="DataTools.cs" />
+    <Compile Include="DateRange.cs" />
+    <Compile Include="DateRangeFormatter.cs" />
+    <Compile Include="DbfFile.cs" />
+    <Compile Include="DepBoolean.cs" />
+    <Compile Include="DepChangeInfo.cs" />
+    <Compile Include="DepExpr.cs" />
+    <Compile Include="DepString.cs" />
+    <Compile Include="DepSync.cs" />
+    <Compile Include="DepValue.cs" />
+    <Compile Include="DisposableObject.cs" />
+    <Compile Include="Enumertors.cs" />
+    <Compile Include="EnvironmentTools.cs" />
+    <Compile Include="ErrorMessageList.cs" />
+    <Compile Include="ExcelFunctions.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="ExecProc.cs" />
+    <Compile Include="ExecProcCallList.cs" />
+    <Compile Include="ExecProcLock.cs" />
+    <Compile Include="FileContainer.cs" />
+    <Compile Include="FileEnumerators.cs" />
+    <Compile Include="FileTools.cs" />
+    <Compile Include="FormatParsing.cs" />
+    <Compile Include="FormatStringTools.cs" />
+    <Compile Include="HistoryList.cs" />
+    <Compile Include="IdList.cs" />
+    <Compile Include="INamedValuesAccess.cs" />
+    <Compile Include="IniFileWindows.cs" />
+    <Compile Include="IniFile.cs" />
+    <Compile Include="ISplash.cs" />
+    <Compile Include="LogoutTools.cs" />
+    <Compile Include="MarshalByRefSponsoredObject.cs" />
+    <Compile Include="MaskProvider.cs" />
+    <Compile Include="MemoryTools.cs" />
+    <Compile Include="MinMax.cs" />
+    <Compile Include="MonthDay.cs" />
+    <Compile Include="MRU.cs" />
+    <Compile Include="NamedObjectCollections.cs" />
+    <Compile Include="NamedValues.cs" />
+    <Compile Include="MicrosoftOfficeTools.cs" />
+    <Compile Include="OLEHelper.cs" />
+    <Compile Include="OpenOfficeTools.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="ParserMath.cs" />
+    <Compile Include="ParserOthers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistryTree.cs" />
+    <Compile Include="RegistryTree2.cs" />
+    <Compile Include="RelPath.cs" />
+    <Compile Include="RI.cs" />
+    <Compile Include="RIControl.cs" />
+    <Compile Include="RIStandardDialog.cs" />
+    <Compile Include="RIValueReaderWriter.cs" />
+    <Compile Include="SelectionFlagList.cs" />
+    <Compile Include="RegistryKey2.cs" />
+    <Compile Include="SerializationTools.cs" />
+    <Compile Include="SplashWatcher.cs" />
+    <Compile Include="StringCollections.cs" />
+    <Compile Include="StdConvert.cs" />
+    <Compile Include="TextWithRows.cs" />
+    <Compile Include="Timers.cs" />
+    <Compile Include="TimeSpanTracker.cs" />
+    <Compile Include="ITreeModel.cs" />
+    <Compile Include="TypedCollections.cs" />
+    <Compile Include="WTS.cs" />
+    <Compile Include="YearMonth.cs" />
+    <Compile Include="ZipFileCreator.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
