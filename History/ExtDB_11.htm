@@ -5,7 +5,10 @@
 	<title>Изменения в модуле ExtDB.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-07-12T20:09:29.312000000"/>
+	<meta name="changed" content="2021-07-20T17:29:32.323000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -124,6 +127,40 @@
 		</td>
 	</tr>
 	<tr valign="top">
+		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="77" sdnum="1049;">
+			<p lang="en-US" align="center">77</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">19.07.2021-20.07.2021</p>
+		</td>
+		<td width="78%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. SqlDB.DataBaseExists </span><span lang="ru-RU">для
+			</span><span lang="en-US">MS SQL Server Express</span><span lang="ru-RU">,</span>
+			<span lang="ru-RU">после проверки, что </span><span lang="en-US">mdf-</span><span lang="ru-RU">файл
+			не существует (</span><a href="#v017p4"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">),
+			выполняет и поиск базы данных в списке подключенных баз данных,
+			как для не </span><span lang="en-US">Express-</span><span lang="ru-RU">версии.
+			Метод CreateIfRequired</span><span lang="en-US">() </span><span lang="ru-RU">использует
+			свойство </span><span lang="en-US">DataBaseExists</span><span lang="ru-RU">,
+			а не выполняет собственную проверку наличия файла</span><span lang="en-US">.</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Изменения в
+			</span><span lang="en-US">DBxColumnList (<a href="#v001p2">v.1
+			</a></span><a href="#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span><span lang="ru-RU">:</span></p>
+			<p><span lang="ru-RU">- Перегрузки</span><span lang="en-US">.Contains()
+			</span><span lang="ru-RU">и </span><span lang="en-US">ContainsAny()</span><span lang="ru-RU">,
+			принимающие аргумент </span><span lang="en-US">DBxColumnList.</span></p>
+			<p>- Исправлен <span lang="en-US">Remove() </span>с
+			аргументом-строкой</p>
+			<p lang="en-US">3. <span lang="ru-RU">Черновой вариант поддержки
+			базы данных </span>SQLite <span lang="ru-RU">в памяти. Перегрузка
+			конструктора </span>SQLiteDBx <span lang="ru-RU">без аргументов.
+			Удерживается единственное открытое соединение </span>SQLiteConnection.
+			<span lang="ru-RU">Нельзя использовать </span>DbDataReader <span lang="ru-RU">с
+			одновременным выполнением других запросов.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
 		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="76" sdnum="1049;">
 			<p lang="en-US" align="center">76</p>
 		</td>
@@ -135,12 +172,11 @@
 			IDBxCon.SetValue</span><span lang="en-US">() </span><span lang="ru-RU">и
 			</span><span lang="en-US">SetValues() </span><span lang="ru-RU">(</span><a href="#v041p2"><span lang="en-US">v.41
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">) с
-			аргументом</span><span lang="en-US"> DBxFilter </span><span lang="ru-RU">определено,
+			аргументом</span> <span lang="en-US">DBxFilter </span><span lang="ru-RU">определено,
 			что допускается отсутствие фильтра (</span><span lang="en-US">where=null</span><span lang="ru-RU">)</span><span lang="en-US">.
 			</span><span lang="ru-RU">При этом модифицируются все строки
 			таблицы.</span></p>
-			<p><span lang="ru-RU">2. Вспомогательны</span><span lang="ru-RU">й</span><span lang="ru-RU">
-			</span><span lang="ru-RU">м</span><span lang="ru-RU">етод
+			<p><span lang="ru-RU">2. Вспомогательный</span> <span lang="ru-RU">метод
 			</span><span lang="en-US">DBxTableStructList.GetRequired() (<a href="#v001p9">v.1
 			</a></span><a href="#v001p9"><span lang="ru-RU">п.9</span></a><span lang="en-US">)</span></p>
 		</td>
@@ -1266,7 +1302,7 @@
 			<p align="center">21.06.2019-<span lang="en-US">30.06.2019</span></p>
 		</td>
 		<td width="78%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p>1. <span lang="ru-RU">В </span><span lang="en-US">DBxColumns
+			<p><a name="v038p1"></a>1. <span lang="ru-RU">В </span><span lang="en-US">DBxColumns
 			(<a href="#v001p2">v.1 </a></span><a href="#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">для ускорения доступа добавлен
 			внутренний несериализуемый индексатор</span> <span lang="en-US">StringArrayIndexer.
@@ -1788,7 +1824,8 @@
 			<p>3. Свойство DBx.MainEntry сделано общедоступным (для чтения).
 			Новый виртуальный метод CreateEntry() для получения дополнительных
 			подключений с заданными разрешениями</p>
-			<p>4. Свойство SqlDBx.DatabaseExists использует метод
+			<p><a name="v017p4"></a>4. Свойство SqlDBx.DatabaseExists (<a href="#v001p11"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.11</span></a>) использует метод
 			File.Exists(), если имя базы данных является путем к файлу</p>
 			<p><a name="v017p5"></a>5. Методы DBxCon.AddRecord(), возвращаюшие
 			идентификатор, переименованы в AddRecordWithIdResult().

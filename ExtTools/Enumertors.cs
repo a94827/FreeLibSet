@@ -74,7 +74,7 @@ namespace AgeyevAV
   /// </summary>
   /// <typeparam name="T">Тип перечислимого объекта</typeparam>
   [Serializable]
-  public sealed class SingleObjectEnumerator<T> : IEnumerator<T>
+  public struct SingleObjectEnumerator<T> : IEnumerator<T>
   {
     #region Конструктор
 
@@ -85,7 +85,7 @@ namespace AgeyevAV
     public SingleObjectEnumerator(T singleObject)
     {
       _Object = singleObject;
-      Flag = false;
+      _Flag = false;
     }
 
     #endregion
@@ -93,7 +93,7 @@ namespace AgeyevAV
     #region IEnumerator<T> Members
 
     private T _Object;
-    private bool Flag;
+    private bool _Flag;
 
     /// <summary>
     /// Возвращает текущее значение
@@ -118,18 +118,18 @@ namespace AgeyevAV
     /// <returns>Наличие значения</returns>
     public bool MoveNext()
     {
-      if (Flag)
+      if (_Flag)
         return false;
       else
       {
-        Flag = true;
+        _Flag = true;
         return true;
       }
     }
 
     void IEnumerator.Reset()
     {
-      Flag = false;
+      _Flag = false;
     }
 
     #endregion
@@ -386,6 +386,61 @@ namespace AgeyevAV
     void IEnumerator.Reset()
     {
       _Index = -1;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Получение типизированного перечислителя для массива
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  public struct ArrayEnumerable<T> : IEnumerable<T>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект для массива
+    /// </summary>
+    /// <param name="a">Массив</param>
+    public ArrayEnumerable(T[] a)
+    {
+      if (a == null)
+        throw new ArgumentNullException("a");
+      _Array = a;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Массив, по которому будет выполняться перечисление
+    /// </summary>
+    public T[] Array { get { return _Array; } }
+    private T[] _Array;
+
+    #endregion
+
+    #region IEnumerable<T> Members
+
+    /// <summary>
+    /// Создает новый перечислитель для массива
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public ArrayEnumerator<T> GetEnumerator()
+    {
+      return new ArrayEnumerator<T>(_Array);
+    }
+
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+      return new ArrayEnumerator<T>(_Array);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return new ArrayEnumerator<T>(_Array);
     }
 
     #endregion

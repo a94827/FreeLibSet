@@ -96,7 +96,7 @@ namespace AgeyevAV.ExtDB.Docs
 
     /// <summary>
     /// Добавляет описания структур таблиц "BinData" и "FileNames".
-    /// Структура и наличие таблиц зависит от управляющих строк
+    /// Структура и наличие таблиц зависит от управляющих свойств UseXXX.
     /// </summary>
     /// <param name="dbStruct">Описание базы данных, в которой будут созданы таблицы</param>
     public void AddMainTableStructs(DBxStruct dbStruct)
@@ -111,8 +111,13 @@ namespace AgeyevAV.ExtDB.Docs
         ts.Columns.AddId();
         ts.Columns.AddString("MD5", 32, false); // Сумма MD5
         ts.Columns.AddInt("Length", 0, Int32.MaxValue); // Размер блока в байтах
+        ts.Columns.LastAdded.Nullable = false; // 20.07.2021
+
         if (UseFragmentation)
+        {
           ts.Columns.AddInt("Section", 0, Int16.MaxValue);
+          ts.Columns.LastAdded.Nullable = false; // 20.07.2021
+        }
         else
           ts.Columns.AddBinary("Contents"); // Содержимое блока
 
@@ -468,7 +473,7 @@ namespace AgeyevAV.ExtDB.Docs
     }
 
 
-    private static readonly string EmptyMD5 = new string(' ', 32);
+    internal static readonly string EmptyMD5 = new string(' ', 32);
 
     private Int32 DoAppendBinData2(Int32 binDataId, byte[] contents, string md5, DBxCon con)
     {
@@ -823,197 +828,6 @@ namespace AgeyevAV.ExtDB.Docs
 
     #endregion
 
-    #region Проверка данных
-
-    /// <summary>
-    /// Выполняет проверку целостности двоичных данных
-    /// </summary>
-    /// <param name="errors">Сюда добавляются сообщения об ошибках</param>
-    /// <param name="splash">Для отображения процентного индикатора.
-    /// Если null, то индикатор не используется</param>
-    public void CheckData(ErrorMessageList errors, ISplash splash)
-    {
-      if (splash == null)
-        splash = new DummySplash();
-
-      CheckBinDataSums(errors, splash);
-      CheckBinDataRepeats(errors, splash);
-      if (UseFragmentation)
-        CheckBinDataStorages(errors, splash);
-    }
-
-    private void CheckBinDataSums(ErrorMessageList Errors, ISplash Splash)
-    {
-      Splash.PhaseText = "Проверка двоичных данных";
-
-      using (DBxCon Con = new DBxCon(MainEntry))
-      {
-        Splash.PercentMax = Con.GetRecordCount("BinData");
-        Splash.AllowCancel = true;
-
-        int cnt = 0;
-        int cntError = 0;
-        using (DbDataReader rdr = Con.ReaderSelect("BinData", new DBxColumns("Id,Length,MD5")))
-        {
-          while (rdr.Read())
-          {
-            cnt++;
-            Int32 Id = rdr.GetInt32(0);
-            int Length = rdr.GetInt32(1);
-            string MD5 = rdr.GetString(2);
-            if (MD5 == EmptyMD5)
-              // 19.11.2020
-              Errors.AddWarning("Таблица BinData, Id=" + Id.ToString() + ". Нулевое значение MD5. Не проверяется");
-            else
-            {
-              byte[] Data;
-              try
-              {
-                Data = GetBinData(Id);
-#if DEBUG
-                if (Data == null)
-                  throw new NullReferenceException("Data==null");
-#endif
-
-                if (Data.Length != Length)
-                {
-                  Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Неправильная длина блока данных. Ожидалось: " + Length.ToString() + ", прочитано: " + Data.Length.ToString());
-                  cntError++;
-                }
-                else
-                {
-                  string RealMD5 = DataTools.MD5Sum(Data);
-                  if (MD5 != RealMD5)
-                  {
-                    Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Неправильный блок данных. Неправильная контрольная сумма");
-                    cntError++;
-                  }
-                }
-              }
-              catch (Exception e)
-              {
-                Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Ошибка чтения блока данных. " + e.Message);
-                cntError++;
-              }
-            }
-
-            Splash.IncPercent();
-          }
-        }
-        Splash.PercentMax = 0;
-
-        Errors.AddInfo("Записей в таблице BinData (" + MainEntry.DB.DisplayName + "): " + cnt.ToString() + ", с ошибками: " + cntError.ToString());
-      }
-    }
-
-    private void CheckBinDataRepeats(ErrorMessageList errors, ISplash splash)
-    {
-      splash.PhaseText = "Поиск повторов в BinData";
-      bool HasRepeats = false;
-      using (DBxCon Con = new DBxCon(MainEntry))
-      {
-        splash.PercentMax = Con.GetRecordCount("BinData");
-        splash.AllowCancel = true;
-        Int32 PrevId = 0;
-        string PrevMD5 = null;
-        using (DbDataReader rdr = Con.ReaderSelect("BinData", new DBxColumns("Id,MD5"), null, new DBxOrder("MD5")))
-        {
-          while (rdr.Read())
-          {
-            Int32 Id = rdr.GetInt32(0);
-            string MD5 = rdr.GetString(1);
-            if (PrevMD5 != null)
-            {
-              if (MD5 == PrevMD5)
-              {
-                errors.AddWarning("Повтор в таблице BinData. Для Id=" + PrevId.ToString() + " и Id=" + Id.ToString() + " задана одинаковая сумма MD5=\"" + MD5 + "\"");
-                HasRepeats = true;
-              }
-            }
-            PrevId = Id;
-            PrevMD5 = MD5;
-
-            splash.IncPercent();
-          }
-        }
-        splash.PercentMax = 0;
-
-        if (!HasRepeats)
-          errors.AddInfo("Повторов в таблице BinData (" + MainEntry.DB.DisplayName + ") не обнаружено");
-      }
-    }
-
-    private void CheckBinDataStorages(ErrorMessageList errors, ISplash splash)
-    {
-      for (int Section = 1; Section <= SectionEntryCount; Section++)
-      {
-        try
-        {
-          CheckBinDataStorage(Section, errors, splash);
-        }
-        catch (Exception e)
-        {
-          e.Data["CheckBinDataStorages.Section"] = Section;
-          throw;
-        }
-      }
-    }
-
-    private void CheckBinDataStorage(int section, ErrorMessageList errors, ISplash splash)
-    {
-      DBxEntry Entry2 = GetSectionEntry(section);
-      splash.PhaseText = "Проверка BinDataStorage в базе данных " + Entry2.DB.DisplayName;
-      bool HasErrors = false;
-      using (DBxCon Con1 = new DBxCon(MainEntry))
-      {
-        using (DBxCon Con2 = new DBxCon(Entry2))
-        {
-          splash.PercentMax = Con2.GetRecordCount("BinDataStorage");
-          splash.AllowCancel = true;
-
-          using (DbDataReader rdr = Con2.ReaderSelect("BinDataStorage", new DBxColumns("Id")))
-          {
-            while (rdr.Read())
-            {
-              try
-              {
-                Int32 Id = rdr.GetInt32(0);
-                //int WantedSection = DataTools.GetInt(Con1.GetValue("BinData", Id, "Section"));
-                object oWantedSection;
-                if (!Con1.GetValue("BinData", Id, "Section", out oWantedSection)) // 04.06.2020
-                {
-                  errors.AddWarning("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + Id.ToString() + ". Такого идентификатора нет в основной таблице BinData");
-                  HasErrors = true;
-                }
-                else
-                {
-                  int WantedSection = DataTools.GetInt(oWantedSection);
-                  if (WantedSection != section)
-                  {
-                    errors.AddWarning("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + Id.ToString() + ". В основной таблице BinData для этого идентификатора задана секция №" + WantedSection.ToString() + ", а не №" + section.ToString());
-                    HasErrors = true;
-                  }
-                }
-              }
-              catch (Exception e)
-              {
-                errors.AddError("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage. Неперехваченная ошибка: " + e.Message);
-              }
-              splash.IncPercent();
-            }
-          }
-          splash.PercentMax = 0;
-          if (HasErrors)
-            errors.AddInfo("Обнаружены предупреждения по базе данных " + Entry2.DB.DisplayName);
-          else
-            errors.AddInfo("В BinDataStorage секции №" + section.ToString() + " (" + Entry2.DB.DisplayName + ") нет ошибок");
-
-        } // using Con2
-      } // using Con1
-    }
-
-    #endregion
-
     #region Копирование баз данных
 
     /// <summary>
@@ -1147,6 +961,245 @@ namespace AgeyevAV.ExtDB.Docs
           resMainCon.AddRecords("FileNames", rdr);
         }
       }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Выполняет проверку целостности двоичных данных
+  /// </summary>
+  public sealed class DBxBinDataValidator
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализирует объект проверки
+    /// </summary>
+    /// <param name="globalData">Глобальные данных для документов</param>
+    public DBxBinDataValidator(DBxRealDocProviderGlobal globalData)
+    {
+#if DEBUG
+      if (globalData == null)
+        throw new ArgumentNullException("globalData");
+#endif
+
+      if (globalData.BinDataHandler == null)
+        throw new ArgumentException("Переданный объект не содержит ссылки на DBxBinDataHandler");
+
+
+      _GlobalData = globalData;
+      _Splash = new DummySplash();
+      _Errors = new ErrorMessageList();
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Ссылки на объекты баз данных и DBxBinDataHandler
+    /// </summary>
+    public DBxRealDocProviderGlobal GlobalData { get { return _GlobalData; } }
+    private DBxRealDocProviderGlobal _GlobalData;
+
+    /// <summary>
+    /// Процентный индикатор, используемыф в ходе проверки.
+    /// Если не установлен, используется заглушка
+    /// </summary>
+    public ISplash Splash { get { return _Splash; } set { _Splash = value; } }
+    private ISplash _Splash;
+
+    /// <summary>
+    /// Сюда добавляются сообщения об ошибках
+    /// </summary>
+    public ErrorMessageList Errors { get { return _Errors; } }
+    private ErrorMessageList _Errors;
+
+    #endregion
+
+    #region Проверка данных
+
+    /// <summary>
+    /// Основной метод
+    /// Выполняет проверку целостности двоичных данных
+    /// </summary>
+    public void CheckData()
+    {
+      CheckBinDataSums();
+      CheckBinDataRepeats();
+      if (_GlobalData.BinDataHandler.UseFragmentation)
+        CheckBinDataStorages();
+    }
+
+    private void CheckBinDataSums()
+    {
+      Splash.PhaseText = "Проверка двоичных данных";
+
+      using (DBxCon Con = new DBxCon(_GlobalData.BinDataHandler.MainEntry))
+      {
+        Splash.PercentMax = Con.GetRecordCount("BinData");
+        Splash.AllowCancel = true;
+
+        int cnt = 0;
+        int cntError = 0;
+        using (DbDataReader rdr = Con.ReaderSelect("BinData", new DBxColumns("Id,Length,MD5")))
+        {
+          while (rdr.Read())
+          {
+            cnt++;
+            Int32 Id = rdr.GetInt32(0);
+            int Length = rdr.GetInt32(1);
+            string MD5 = rdr.GetString(2);
+            if (MD5 == DBxBinDataHandler.EmptyMD5)
+              // 19.11.2020
+              Errors.AddWarning("Таблица BinData, Id=" + Id.ToString() + ". Нулевое значение MD5. Не проверяется");
+            else
+            {
+              byte[] Data;
+              try
+              {
+                Data = _GlobalData.BinDataHandler.GetBinData(Id);
+#if DEBUG
+                if (Data == null)
+                  throw new NullReferenceException("Data==null");
+#endif
+
+                if (Data.Length != Length)
+                {
+                  Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Неправильная длина блока данных. Ожидалось: " + Length.ToString() + ", прочитано: " + Data.Length.ToString());
+                  cntError++;
+                }
+                else
+                {
+                  string RealMD5 = DataTools.MD5Sum(Data);
+                  if (MD5 != RealMD5)
+                  {
+                    Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Неправильный блок данных. Неправильная контрольная сумма");
+                    cntError++;
+                  }
+                }
+              }
+              catch (Exception e)
+              {
+                Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Ошибка чтения блока данных. " + e.Message);
+                cntError++;
+              }
+            }
+
+            Splash.IncPercent();
+          }
+        }
+        Splash.PercentMax = 0;
+
+        Errors.AddInfo("Записей в таблице BinData (" + _GlobalData.BinDataHandler.MainEntry.DB.DisplayName + "): " + cnt.ToString() + ", с ошибками: " + cntError.ToString());
+      }
+    }
+
+    private void CheckBinDataRepeats()
+    {
+      Splash.PhaseText = "Поиск повторов в BinData";
+      bool HasRepeats = false;
+      using (DBxCon Con = new DBxCon(_GlobalData.BinDataHandler.MainEntry))
+      {
+        Splash.PercentMax = Con.GetRecordCount("BinData");
+        Splash.AllowCancel = true;
+        Int32 PrevId = 0;
+        string PrevMD5 = null;
+        using (DbDataReader rdr = Con.ReaderSelect("BinData", new DBxColumns("Id,MD5"), null, new DBxOrder("MD5")))
+        {
+          while (rdr.Read())
+          {
+            Int32 Id = rdr.GetInt32(0);
+            string MD5 = rdr.GetString(1);
+            if (PrevMD5 != null)
+            {
+              if (MD5 == PrevMD5)
+              {
+                Errors.AddWarning("Повтор в таблице BinData. Для Id=" + PrevId.ToString() + " и Id=" + Id.ToString() + " задана одинаковая сумма MD5=\"" + MD5 + "\"");
+                HasRepeats = true;
+              }
+            }
+            PrevId = Id;
+            PrevMD5 = MD5;
+
+            Splash.IncPercent();
+          }
+        }
+        Splash.PercentMax = 0;
+
+        if (!HasRepeats)
+          Errors.AddInfo("Повторов в таблице BinData (" + _GlobalData.BinDataHandler.MainEntry.DB.DisplayName + ") не обнаружено");
+      }
+    }
+
+    private void CheckBinDataStorages()
+    {
+      for (int Section = 1; Section <= _GlobalData.BinDataHandler.SectionEntryCount; Section++)
+      {
+        try
+        {
+          CheckBinDataStorage(Section);
+        }
+        catch (Exception e)
+        {
+          e.Data["CheckBinDataStorages.Section"] = Section;
+          throw;
+        }
+      }
+    }
+
+    private void CheckBinDataStorage(int section)
+    {
+      DBxEntry Entry2 = _GlobalData.BinDataHandler.GetSectionEntry(section);
+      Splash.PhaseText = "Проверка BinDataStorage в базе данных " + Entry2.DB.DisplayName;
+      bool HasErrors = false;
+      using (DBxCon Con1 = new DBxCon(_GlobalData.BinDataHandler.MainEntry))
+      {
+        using (DBxCon Con2 = new DBxCon(Entry2))
+        {
+          Splash.PercentMax = Con2.GetRecordCount("BinDataStorage");
+          Splash.AllowCancel = true;
+
+          using (DbDataReader rdr = Con2.ReaderSelect("BinDataStorage", new DBxColumns("Id")))
+          {
+            while (rdr.Read())
+            {
+              try
+              {
+                Int32 Id = rdr.GetInt32(0);
+                //int WantedSection = DataTools.GetInt(Con1.GetValue("BinData", Id, "Section"));
+                object oWantedSection;
+                if (!Con1.GetValue("BinData", Id, "Section", out oWantedSection)) // 04.06.2020
+                {
+                  Errors.AddWarning("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + Id.ToString() + ". Такого идентификатора нет в основной таблице BinData");
+                  HasErrors = true;
+                }
+                else
+                {
+                  int WantedSection = DataTools.GetInt(oWantedSection);
+                  if (WantedSection != section)
+                  {
+                    Errors.AddWarning("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + Id.ToString() + ". В основной таблице BinData для этого идентификатора задана секция №" + WantedSection.ToString() + ", а не №" + section.ToString());
+                    HasErrors = true;
+                  }
+                }
+              }
+              catch (Exception e)
+              {
+                Errors.AddError("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage. Неперехваченная ошибка: " + e.Message);
+              }
+              Splash.IncPercent();
+            }
+          }
+          Splash.PercentMax = 0;
+          if (HasErrors)
+            Errors.AddInfo("Обнаружены предупреждения по базе данных " + Entry2.DB.DisplayName);
+          else
+            Errors.AddInfo("В BinDataStorage секции №" + section.ToString() + " (" + Entry2.DB.DisplayName + ") нет ошибок");
+
+        } // using Con2
+      } // using Con1
     }
 
     #endregion

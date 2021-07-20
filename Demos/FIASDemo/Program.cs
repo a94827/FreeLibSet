@@ -14,6 +14,7 @@ using AgeyevAV.ExtDB;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using AgeyevAV.ExtDB.SQLite;
 
 namespace FIASDemo
 {
@@ -27,6 +28,29 @@ namespace FIASDemo
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
+
+#if !XXX
+      using (SQLiteDBx dbx = new SQLiteDBx())
+      {
+        DBxStruct dbs = new DBxStruct();
+        DBxTableStruct ts = dbs.Tables.Add("AA");
+        ts.Columns.AddId();
+        ts.Columns.AddInt("BB");
+        dbx.Struct = dbs;
+        dbx.UpdateStruct();
+
+        using (DBxCon con = new DBxCon(dbx.MainEntry))
+        {
+          con.AddRecord("AA", "BB", 666);
+        }
+
+        using (DBxCon con = new DBxCon(dbx.MainEntry))
+        {
+          con.GetValue("AA", 1, "BB");
+        }
+      }
+
+#endif
 
 #if XXX
       DataTable table = new DataTable();

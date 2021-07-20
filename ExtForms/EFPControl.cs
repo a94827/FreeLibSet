@@ -780,14 +780,18 @@ namespace AgeyevAV.ExtForms
         catch (Exception e)
         {
           AddExceptionInfo(e);
-          e.Data["NewState"] = value;
-          e.Data["OldState"] = oldState;
-          LogoutTools.LogoutException(e, "Ошибка установки состояния EFPControlProviderState");
+          e.Data["InternalSetProviderState.NewState"] = value;
+          e.Data["InternalSetProviderState.OldState"] = oldState;
           _ProviderState = oldState; // 07.07.2021
 #if DEBUG
           if (TraceProviderState)
             Trace.WriteLine("EFPControl.ProviderState changing from " + oldState.ToString() + " to " + value.ToString() + " failed. Type=" + this.GetType().ToString() + ". DisplayName=" + DisplayName.ToString());
 #endif
+
+          if (value==EFPControlProviderState.Disposed)
+            LogoutTools.LogoutException(e, "Ошибка установки состояния EFPControlProviderState.Disposed");
+          else
+            throw; // 17.07.2021
         }
       }
       finally

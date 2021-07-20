@@ -68,7 +68,7 @@ namespace AgeyevAV.ExtDB.Docs
         throw new ArgumentNullException("docTypes");
 
       docTypes.SetReadOnly();
-      docTypes.CheckStruct(); // 07.12.2017
+      docTypes.CheckStruct(binDataHandler); // 07.12.2017
       _DocTypes = docTypes;
 
       if (mainDBEntry == null)
@@ -139,7 +139,6 @@ namespace AgeyevAV.ExtDB.Docs
       _SubDocTableServiceColumns = new DBxColumns(Cols);
 
       #endregion
-
 
       #region AllDocServiceColumns è AllSubDocServiceColumns
 

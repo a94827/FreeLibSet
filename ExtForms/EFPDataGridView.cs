@@ -1968,7 +1968,12 @@ namespace AgeyevAV.ExtForms
     /// </summary>
     protected virtual void OnCurrentCellChanged()
     {
-      if (Control.Visible && (!_Inside_Control_DataBindingComplete) && Control.CurrentCellAddress.X >= 0 && _VisibleHasChanged && _MouseOrKeyboardFlag)
+      if (Control.Visible && 
+        (!_Inside_Control_DataBindingComplete) && 
+        Control.CurrentCellAddress.X >= 0 && 
+        //_VisibleHasChanged && 
+        _MouseOrKeyboardFlag)
+
         _CurrentColumnIndex = Control.CurrentCellAddress.X;
 
       // При смене текущего столбца отключаем поиск по первым буквам
@@ -1986,11 +1991,11 @@ namespace AgeyevAV.ExtForms
 
     #region VisibleChanged
 
-    /// <summary>
-    /// Только после установки этого флага разрешается реагировать на смену ячейки
-    /// </summary>
-    public bool VisibleHasChanged { get { return _VisibleHasChanged; } }
-    private bool _VisibleHasChanged;
+    ///// <summary>
+    ///// Только после установки этого флага разрешается реагировать на смену ячейки
+    ///// </summary>
+    //public bool VisibleHasChanged { get { return _VisibleHasChanged; } }
+    //private bool _VisibleHasChanged;
 
     /// <summary>
     /// Этот флажок устанавливается в true, когда нажата мышь иди клавиша, что
@@ -2024,7 +2029,7 @@ namespace AgeyevAV.ExtForms
 
           //CommandItems.RefreshStatItems();
         }
-        _VisibleHasChanged = Control.Visible;
+        //_VisibleHasChanged = Control.Visible;
         _MouseOrKeyboardFlag = false;
       }
       catch (Exception e)
@@ -5315,12 +5320,18 @@ namespace AgeyevAV.ExtForms
         }
         else
         {
-          if (value == null)
-            throw new ArgumentNullException("value");
-          int p = Orders.IndexOf(value);
-          if (p < 0)
-            throw new ArgumentException("Значение отсутствует в коллекции Orders", "value");
-          CurrentOrderIndex = p;
+          if (value == null) // 20.07.2021
+          {
+            _CurrentOrder = value;
+            InternalSetCurrentOrder();
+          }
+          else
+          {
+            int p = Orders.IndexOf(value);
+            if (p < 0)
+              throw new ArgumentException("Значение отсутствует в коллекции Orders", "value");
+            CurrentOrderIndex = p;
+          }
         }
       }
     }
@@ -7915,7 +7926,7 @@ namespace AgeyevAV.ExtForms
         if (value)
           Control.ShowRowErrors = false;
 
-        if (VisibleHasChanged)
+        if (Control.Visible && ProviderState==EFPControlProviderState.Attached)
           Control.InvalidateColumn(-1);
       }
     }
@@ -7938,7 +7949,7 @@ namespace AgeyevAV.ExtForms
         if (value == _UseRowImagesDataError)
           return;
         _UseRowImagesDataError = value;
-        if (VisibleHasChanged)
+        if (Control.Visible && ProviderState == EFPControlProviderState.Attached)
           Control.InvalidateColumn(-1);
       }
     }
@@ -7959,7 +7970,7 @@ namespace AgeyevAV.ExtForms
           return;
         _TopLeftCellImageKind = value;
 
-        if (VisibleHasChanged)
+        if (Control.Visible && ProviderState == EFPControlProviderState.Attached)
           Control.InvalidateCell(-1, -1);
       }
     }
@@ -7980,7 +7991,7 @@ namespace AgeyevAV.ExtForms
           return;
         _TopLeftCellUserImage = value;
 
-        if (VisibleHasChanged)
+        if (Control.Visible && ProviderState == EFPControlProviderState.Attached)
           Control.InvalidateCell(-1, -1);
       }
     }

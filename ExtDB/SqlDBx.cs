@@ -345,7 +345,7 @@ namespace AgeyevAV.ExtDB.SqlClient
     #region Структура базы данных
 
     /// <summary>
-    /// Возвращает true, если баща данных существует.
+    /// Возвращает true, если база данных существует.
     /// Для базы данных SQL Server Express проверяется наличие файла на диске
     /// (при этом она может быть еще не подключена к серверу)
     /// Для "обычной" базы данных проверяется наличие базы, зарегистрированной на сервере.
@@ -358,7 +358,9 @@ namespace AgeyevAV.ExtDB.SqlClient
         {
           // база данных SQL Server Express
           AbsPath FilePath = new AbsPath(DatabaseName);
-          return System.IO.File.Exists(FilePath.Path);
+          if (System.IO.File.Exists(FilePath.Path))
+            return true;
+          // 19.07.2021. А если файла не существует, то проверяем и обычным способом
         }
 
         using (SqlDBxCon Con = new SqlDBxCon(MainEntry, true))
@@ -378,18 +380,25 @@ namespace AgeyevAV.ExtDB.SqlClient
     /// </summary>
     public override void CreateIfRequired()
     {
-      // TODO: А как насчет не-SQL Express?
-
-      AbsPath FilePath = new AbsPath(DatabaseName);
-      if (!System.IO.File.Exists(FilePath.Path))
+      if (DatabaseExists) // 19.07.2021
+        return;
+      if (DatabaseName.EndsWith(".mdf", StringComparison.OrdinalIgnoreCase))
+      {
+        AbsPath FilePath = new AbsPath(DatabaseName);
+        using (SqlDBxCon Con = new SqlDBxCon(MainEntry, true))
+        {
+          Con.CommandTimeout = 0; // Бесконечное время выполнения
+          Con.CreateDatabaseByFile(FilePath);
+        }
+      }
+      else
       {
         using (SqlDBxCon Con = new SqlDBxCon(MainEntry, true))
         {
           Con.CommandTimeout = 0; // Бесконечное время выполнения
-          Con.CreateDatabase(FilePath);
+          Con.CreateDatabaseByName(DatabaseName);
         }
       }
-
     }
 
     /// <summary>                               
@@ -1300,7 +1309,7 @@ namespace AgeyevAV.ExtDB.SqlClient
 
     #region Выполнение служебных команд
 
-    internal void CreateDatabase(AbsPath filePath)
+    internal void CreateDatabaseByFile(AbsPath filePath)
     {
       Buffer.Clear();
       Buffer.SB.Append("CREATE DATABASE [");
@@ -1309,6 +1318,21 @@ namespace AgeyevAV.ExtDB.SqlClient
       Buffer.FormatValue(filePath.Path, DBxColumnType.String);
       Buffer.SB.Append(")");
       SQLExecuteNonQuery(Buffer.SB.ToString());
+    }
+
+    internal void CreateDatabaseByName(string databaseName)
+    {
+      throw new NotImplementedException("Для не Express версии не реализовано");
+
+      // пока не на чем протестировать
+      // по идее, вот так
+      /*
+      Buffer.Clear();
+      Buffer.SB.Append("CREATE DATABASE [");
+      Buffer.SB.Append(databaseName);
+      Buffer.SB.Append("]");
+      SQLExecuteNonQuery(Buffer.SB.ToString());
+       * */
     }
 
     internal void DropDatabase()

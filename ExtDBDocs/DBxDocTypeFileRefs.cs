@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define USE_REFS // Ссылки или числовые поля
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -119,14 +121,19 @@ namespace AgeyevAV.ExtDB.Docs
 
     /// <summary>
     /// Добавляет файловую ссылку. 
-    /// При этом в описание структуры таблицы документа или поддокумента добавляется числовой
+    /// При этом в описание структуры таблицы документа или поддокумента добавляется ссылочный
     /// столбец для хранения идентификаторов
     /// </summary>
     /// <param name="columnName">Имя добавляемого столбца</param>
     /// <returns>Описание новой ссылки</returns>
     public DBxDocTypeFileRef Add(string columnName)
     {
+#if USE_REFS
+      // 19.07.2021. Добавляем ссылку, а не числовое поле
+      DBxColumnStruct Column = _TableStruct.Columns.AddReference(columnName, "FileNames", true);
+#else
       DBxColumnStruct Column = _TableStruct.Columns.AddInt(columnName);
+#endif
       DBxDocTypeFileRef Ref = new DBxDocTypeFileRef(Column);
       base.Add(Ref);
       return Ref;
@@ -237,7 +244,12 @@ namespace AgeyevAV.ExtDB.Docs
     /// <returns>Объект новой ссылки</returns>
     public DBxDocTypeBinDataRef Add(string columnName)
     {
+#if USE_REFS
+      // 19.07.2021. Добавляем ссылку, а не числовое поле
+      DBxColumnStruct Column = _TableStruct.Columns.AddReference(columnName, "BinData", true);
+#else
       DBxColumnStruct Column = _TableStruct.Columns.AddInt(columnName);
+#endif
       DBxDocTypeBinDataRef Ref = new DBxDocTypeBinDataRef(Column);
       base.Add(Ref);
       return Ref;

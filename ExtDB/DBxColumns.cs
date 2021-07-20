@@ -1233,7 +1233,8 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
-    /// Создает список, в которой будут добавлены имена столбцов из источника
+    /// Создает список, в которой будут добавлены имена столбцов из источника.
+    /// Имена в списке не должны содержать запятых.
     /// </summary>
     /// <param name="src">Список столбцов для добавления</param>
     public DBxColumnList(ICollection<string> src)
@@ -1243,11 +1244,24 @@ namespace AgeyevAV.ExtDB
 
     /// <summary>
     /// Создает список, в которой будут добавлены имена столбцов из источника
+    /// Имена в списке не должны содержать запятых.
     /// </summary>
     /// <param name="src">Список столбцов для добавления</param>
     public DBxColumnList(IEnumerable<string> src)
       : base(src)
     {
+    }
+
+    /// <summary>
+    /// Создает список и добавляет в него поля из строки.
+    /// Имена полей могут разделяться запятыми
+    /// </summary>
+    /// <param name="columnNames"></param>
+    public DBxColumnList(string columnNames)
+      : this()
+    {
+      if (!String.IsNullOrEmpty(columnNames))
+        Add(columnNames);
     }
 
     #endregion
@@ -1312,7 +1326,7 @@ namespace AgeyevAV.ExtDB
           base.Remove(a[i]);
       }
       else
-        base.Add(сolumnNames);
+        base.Remove(сolumnNames); // исправлено 20.07.2021
     }
 
     /// <summary>
@@ -1350,6 +1364,26 @@ namespace AgeyevAV.ExtDB
     /// <param name="columnNames">Имена искомых полей. Список имен разделен запятыми</param>
     /// <returns>true, если все поля имеются в списке</returns>
     public bool Contains(DBxColumns columnNames)
+    {
+      if (columnNames == null)
+        //return false;
+        return true; // 17.10.2019
+
+      for (int i = 0; i < columnNames.Count; i++)
+      {
+        if (IndexOf(columnNames[i]) < 0)
+          return false;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Содержит ли список все запрошенные поля из списка <paramref name="columnNames"/>.
+    /// Если <paramref name="columnNames"/>==null или пустой список, то метод возвращает true.
+    /// </summary>
+    /// <param name="columnNames">Имена искомых полей. Список имен разделен запятыми</param>
+    /// <returns>true, если все поля имеются в списке</returns>
+    public bool Contains(DBxColumnList columnNames)
     {
       if (columnNames == null)
         //return false;
@@ -1412,6 +1446,25 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
+    /// Содержит ли список хотя бы одно из запрошенных полей <paramref name="columnNames"/>.
+    /// Если <paramref name="columnNames"/>=null или пустой список, то возвращается false.
+    /// </summary>
+    /// <param name="columnNames">Имена искомых полей. Список имен разделен запятыми</param>
+    /// <returns>true, если хотя бы одно поле имеется в списке</returns>
+    public bool ContainsAny(DBxColumnList columnNames)
+    {
+      if (columnNames == null)
+        return false;
+
+      for (int i = 0; i < columnNames.Count; i++)
+      {
+        if (IndexOf(columnNames[i]) >= 0)
+          return true;
+      }
+      return false;
+    }
+
+    /// <summary>
     /// Возвращает true, если в текущем массиве есть любое из полей, заданных в строке <paramref name="columnNames"/>.
     /// Имена полей разделяются запятыми.
     /// Если <paramref name="columnNames"/> - пустая строка или null, возвращается false.
@@ -1442,6 +1495,7 @@ namespace AgeyevAV.ExtDB
     /// <summary>
     /// Возвращает true, если имеется хотя бы одно поле, имя которого начинается с <paramref name="columnNamePrefix"/>.
     /// Если <paramref name="columnNamePrefix"/> - пустая строка, то возвращается true, если текущий массив непустой.
+    /// Если выполняется поиск для ссылочных полей, точка вероятно, должна быть добавлена в аргумент <paramref name="columnNamePrefix"/>.
     /// </summary>
     /// <param name="columnNamePrefix">Префикс имени поля для поиска</param>
     /// <returns>true, если есть поле с подходящим именем</returns>
@@ -1602,6 +1656,794 @@ namespace AgeyevAV.ExtDB
         a[i] = this[i] + suffix;
 
       return new DBxColumnList(a);
+    }
+
+    #endregion
+
+    #region Статический список
+
+    /// <summary>
+    /// Пустой список полей
+    /// </summary>
+    public static readonly DBxColumnList Empty = CreateEmpty();
+
+    private static DBxColumnList CreateEmpty()
+    {
+      DBxColumnList list = new DBxColumnList();
+      list.SetReadOnly();
+      return list;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Простая структура, хранящая имя таблицы и имя поля
+  /// </summary>
+  [Serializable]
+  public struct DBxTableColumnName : IEquatable<DBxTableColumnName>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает структуру
+    /// </summary>
+    /// <param name="tableName">Имя таблицы. Должно быть задано</param>
+    /// <param name="columnName">Имя поля. Должно быть задано</param>
+    public DBxTableColumnName(string tableName, string columnName)
+    {
+      if (String.IsNullOrEmpty(tableName))
+        throw new ArgumentNullException("tableName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
+
+      _TableName = tableName;
+      _ColumnName = columnName;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя таблицы
+    /// </summary>
+    public string TableName { get { return _TableName; } }
+    private string _TableName;
+
+    /// <summary>
+    /// Имя столбца
+    /// </summary>
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
+
+    /// <summary>
+    /// Возвращает текстовое представление
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return _TableName + "." + _ColumnName;
+    }
+
+    #endregion
+
+    #region Empty
+
+    /// <summary>
+    /// Пустой объект
+    /// </summary>
+    public static readonly DBxTableColumnName Empty = new DBxTableColumnName();
+
+    /// <summary>
+    /// Возвращает true, если структура не была инициализирована
+    /// </summary>
+    public bool IsEmpty { get { return _TableName == null; } }
+
+    #endregion
+
+    #region Сравнение
+
+    /// <summary>
+    /// Сравнение с другим экземпляром
+    /// </summary>
+    /// <param name="other">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public bool Equals(DBxTableColumnName other)
+    {
+      return this == other;
+    }
+
+    /// <summary>
+    /// Сравнение с другим экземпляром
+    /// </summary>
+    /// <param name="obj">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public override bool Equals(object obj)
+    {
+      if (obj is DBxTableColumnName)
+        return this == (DBxTableColumnName)obj;
+      else
+        return false;
+    }
+
+    /// <summary>
+    /// Сравнение с другим экземпляром
+    /// </summary>
+    /// <param name="a">Первый сравниваемый объект</param>
+    /// <param name="b">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator ==(DBxTableColumnName a, DBxTableColumnName b)
+    {
+      if (Object.ReferenceEquals(a.TableName, null) || Object.ReferenceEquals(b.TableName, null))
+        return Object.ReferenceEquals(a.TableName, null) && Object.ReferenceEquals(b.TableName, null);
+
+      return a.TableName == b.TableName && a.ColumnName == b.ColumnName;
+    }
+
+    /// <summary>
+    /// Сравнение с другим экземпляром
+    /// </summary>
+    /// <param name="a">Первый сравниваемый объект</param>
+    /// <param name="b">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator !=(DBxTableColumnName a, DBxTableColumnName b)
+    {
+      return !(a == b);
+    }
+
+    /// <summary>
+    /// Хэш-код для коллекций
+    /// </summary>
+    /// <returns>Хэш-код</returns>
+    public override int GetHashCode()
+    {
+      if (_TableName == null)
+        return 0;
+      else
+        return _TableName.GetHashCode() ^ _ColumnName.GetHashCode();
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Список имен таблиц и полей.
+  /// Пары входят в список однократно. Порядок объектов учитывается
+  /// Предоставляет доступ как в виде структур DBxTableColumnName, так и виде коллекции таблиц,
+  /// для каждой из которых имеется список DBxColumnList.
+  /// Класс становится потокобезопасным после вызова SetReadOnly().
+  /// </summary>
+  [Serializable]
+  public class DBxTableColumnList : ICollection<DBxTableColumnName>, IReadOnlyObject, ICloneable
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает пустой список
+    /// </summary>
+    public DBxTableColumnList()
+    {
+      _List = new NamedList<TableItem>();
+      _Tables = new TableCollection(this);
+    }
+
+    #endregion
+
+    #region Основные данные
+
+    private class TableItem : IObjectWithCode // не может быть структурой, т.к. NamedList требует тип класса.
+    {
+      #region Конструктор
+
+      internal TableItem(string tableName)
+      {
+        _TableName = tableName;
+        _Columns = new DBxColumnList();
+      }
+
+      #endregion
+
+      #region Свойства
+
+      internal string TableName { get { return _TableName; } }
+      private string _TableName;
+
+      internal DBxColumnList Columns { get { return _Columns; } }
+      private DBxColumnList _Columns;
+
+      string IObjectWithCode.Code { get { return _TableName; } }
+
+      #endregion
+    }
+
+    private NamedList<TableItem> _List;
+
+    #endregion
+
+    #region Список таблиц
+
+    /// <summary>
+    /// Реализация свойства Tables
+    /// </summary>
+    public sealed class TableCollection : IDictionary<string, DBxColumnList>
+    {
+      // Не может быть структурой, т.к. возникает ошибка Compiler Error CS1612 "Cannot modify the return value of 'expression' because it is not a variable".
+
+      #region Конструктор
+
+      internal TableCollection(DBxTableColumnList owner)
+      {
+        _Owner = owner;
+      }
+
+      private DBxTableColumnList _Owner;
+
+      #endregion
+
+      #region IDictionary<string,DBxColumnList> Members
+
+      /// <summary>
+      /// Добавляет столбцы для указанной таблицы
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <param name="columnNames">Добавляемые столбцы</param>
+      public void Add(string tableName, DBxColumnList columnNames)
+      {
+        _Owner.CheckNotReadOnly();
+
+        if (columnNames == null)
+          return;
+        if (columnNames.Count == 0)
+          return;
+
+        TableItem ti;
+        if (!_Owner._List.TryGetValue(tableName, out ti))
+        {
+          ti = new TableItem(tableName);
+          _Owner._List.Add(ti);
+        }
+        ti.Columns.Add(columnNames);
+      }
+
+      /// <summary>
+      /// Возвращает true, если в коллекции есть такая таблица и для нее есть хотя бы одно поле.
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <returns>Наличие таблицы</returns>
+      public bool ContainsKey(string tableName)
+      {
+        TableItem ti;
+        if (_Owner._List.TryGetValue(tableName, out ti))
+          return ti.Columns.Count > 0;
+        else
+          return false;
+      }
+
+      /// <summary>
+      /// Возвращает коллекцию имен таблиц
+      /// </summary>
+      public ICollection<string> Keys { get { return _Owner._List.GetCodes(); } }
+
+      /// <summary>
+      /// Удаляет все поля для указанной таблицы
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <returns></returns>
+      public bool Remove(string tableName)
+      {
+        _Owner.CheckNotReadOnly();
+        return _Owner._List.Remove(tableName);
+      }
+
+      /// <summary>
+      /// Возвращает список полей для указанной таблицы.
+      /// Если в списке нет такой таблицы, то результат зависит от свойство DBxTableColumnList.IsReadOnly.
+      /// Если список находится в режиме "Только чтение", то возвращается DBxColumnList.Empty.
+      /// Иначе создается запись для таблицы с пустым списком.
+      /// Метод никогда не возвращает false и всегда предоставляет список.
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <param name="columnNames">Сюда записывается ссылка на список полей</param>
+      /// <returns>Всегда true</returns>
+      public bool TryGetValue(string tableName, out DBxColumnList columnNames)
+      {
+        TableItem ti;
+        if (_Owner._List.TryGetValue(tableName, out ti))
+          columnNames = ti.Columns;
+        else if (_Owner.IsReadOnly)
+          columnNames = DBxColumnList.Empty;
+        else
+        {
+          ti = new TableItem(tableName);
+          _Owner._List.Add(ti);
+          columnNames = ti.Columns;
+        }
+        return true;
+      }
+
+      ICollection<DBxColumnList> IDictionary<string, DBxColumnList>.Values
+      {
+        get { throw new NotImplementedException(); }
+      }
+
+      /// <summary>
+      /// Возвращает список полей для указанной таблицы.
+      /// Если в списке нет такой таблицы, то результат зависит от свойство DBxTableColumnList.IsReadOnly.
+      /// Если список находится в режиме "Только чтение", то возвращается DBxColumnList.Empty.
+      /// Иначе создается запись для таблицы с пустым списком.
+      /// Метод никогда не возвращает null.
+      /// 
+      /// Установка значения разрешается только при DBxTableColumnList.IsReadOnly=false.
+      /// Текущие поля таблицы, если есть, очищаются и заменяются на переданные
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <returns>Список полей</returns>
+      public DBxColumnList this[string tableName]
+      {
+        get
+        {
+          TableItem ti;
+          if (_Owner._List.TryGetValue(tableName, out ti))
+            return ti.Columns;
+          else if (_Owner.IsReadOnly)
+            return DBxColumnList.Empty;
+          else
+          {
+            ti = new TableItem(tableName);
+            _Owner._List.Add(ti);
+            return ti.Columns;
+          }
+        }
+        set
+        {
+          _Owner.CheckNotReadOnly();
+
+          if (value == null)
+            value = DBxColumnList.Empty;
+
+          TableItem ti;
+          if (!_Owner._List.TryGetValue(tableName, out ti))
+          {
+            ti = new TableItem(tableName);
+            _Owner._List.Add(ti);
+          }
+          ti.Columns.Clear();
+          ti.Columns.Add(value);
+        }
+      }
+
+      #endregion
+
+      #region ICollection<KeyValuePair<string,DBxColumnList>> Members
+
+      void ICollection<KeyValuePair<string, DBxColumnList>>.Add(KeyValuePair<string, DBxColumnList> item)
+      {
+        Add(item.Key, item.Value);
+      }
+
+      /// <summary>
+      /// Очищает весь список
+      /// </summary>
+      public void Clear()
+      {
+        _Owner.CheckNotReadOnly();
+        _Owner._List.Clear();
+      }
+
+      bool ICollection<KeyValuePair<string, DBxColumnList>>.Contains(KeyValuePair<string, DBxColumnList> item)
+      {
+        throw new NotImplementedException();
+
+      }
+
+      /// <summary>
+      /// Копирует список
+      /// </summary>
+      /// <param name="array">Записываемый массив</param>
+      /// <param name="arrayIndex">Смещение в массиве <paramref name="array"/>, по которому выполняется копирование</param>
+      public void CopyTo(KeyValuePair<string, DBxColumnList>[] array, int arrayIndex)
+      {
+        //ICollection<KeyValuePair<string, DBxColumnList>> lst = (ICollection<KeyValuePair<string, DBxColumnList>>)(_Owner._List);
+        //lst.CopyTo(array, arrayIndex);
+        // так не получится, надо делать руками
+        for (int i = 0; i < _Owner._List.Count; i++)
+        {
+          TableItem ti = _Owner._List[i];
+          array[arrayIndex] = new KeyValuePair<string, DBxColumnList>(ti.TableName, ti.Columns);
+          arrayIndex++;
+        }
+      }
+
+      /// <summary>
+      /// Возврашает количество таблиц (не полей!) в списке.
+      /// Пока DBxTableColumnList.IsReadOnly=false, список может содержать таблицы без полей.
+      /// Вызов SetReadOnly() убирает из списка пустые таблицы, при этом значение свойства Count может уменьшиться.
+      /// </summary>
+      public int Count
+      {
+        get { return _Owner._List.Count; }
+      }
+
+      bool ICollection<KeyValuePair<string, DBxColumnList>>.IsReadOnly
+      {
+        get { return _Owner.IsReadOnly; }
+      }
+
+      bool ICollection<KeyValuePair<string, DBxColumnList>>.Remove(KeyValuePair<string, DBxColumnList> item)
+      {
+        _Owner.CheckNotReadOnly();
+        TableItem ti = _Owner._List[item.Key];
+        if (ti == null)
+          return false;
+        int oldN = ti.Columns.Count;
+        ti.Columns.Remove(item.Value);
+        return oldN > ti.Columns.Count;
+      }
+
+      #endregion
+
+      #region IEnumerable<KeyValuePair<string,DBxColumnList>> Members
+
+      /// <summary>
+      /// Реализация перечислителя по парам "Таблица-Поля"
+      /// </summary>
+      public struct Enumerator : IEnumerator<KeyValuePair<string, DBxColumnList>>
+      {
+        #region Конструктор
+
+        internal Enumerator(DBxTableColumnList owner)
+        {
+          _Owner = owner;
+          _TableIndex = -1;
+        }
+
+        #endregion
+
+        #region Поля
+
+        DBxTableColumnList _Owner;
+
+        private int _TableIndex;
+
+        #endregion
+
+        #region IEnumerator<KeyValuePair<string,DBxColumnList>> Members
+
+        /// <summary>
+        /// Возвращает текущий элементь перечислителя
+        /// </summary>
+        public KeyValuePair<string, DBxColumnList> Current
+        {
+          get
+          {
+            TableItem ti = _Owner._List[_TableIndex];
+            return new KeyValuePair<string, DBxColumnList>(ti.TableName, ti.Columns);
+          }
+        }
+
+        #endregion
+
+        #region IDisposable Members
+
+        /// <summary>
+        /// Ничего не делает
+        /// </summary>
+        public void Dispose()
+        {
+        }
+
+        #endregion
+
+        #region IEnumerator Members
+
+        object System.Collections.IEnumerator.Current { get { return Current; } }
+
+        /// <summary>
+        /// Переход к следующей таблице
+        /// </summary>
+        /// <returns></returns>
+        public bool MoveNext()
+        {
+          _TableIndex++;
+          return _TableIndex < _Owner._List.Count;
+        }
+
+        void System.Collections.IEnumerator.Reset()
+        {
+          _TableIndex = -1;
+        }
+
+        #endregion
+      }
+
+      /// <summary>
+      /// Возращает перечислитель по парам "Имя таблицы"-"Список столбцов"
+      /// </summary>
+      /// <returns></returns>
+      public Enumerator GetEnumerator()
+      {
+        return new Enumerator(_Owner);
+      }
+
+      IEnumerator<KeyValuePair<string, DBxColumnList>> IEnumerable<KeyValuePair<string, DBxColumnList>>.GetEnumerator()
+      {
+        return new Enumerator(_Owner);
+      }
+
+      #endregion
+
+      #region IEnumerable Members
+
+      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+      {
+        return new Enumerator(_Owner);
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Доступ к отдельным таблицам, для каждой из которых доступен список DBxColumnList
+    /// </summary>
+    public TableCollection Tables { get { return _Tables; } }
+    private TableCollection _Tables;
+
+    #endregion
+
+    #region IReadOnlyObject Members
+
+    /// <summary>
+    /// Возвращает true, если список переведен в режим "Только чтение"
+    /// </summary>
+    public bool IsReadOnly { get { return _IsReadOnly; } }
+    private bool _IsReadOnly; // можно было бы использовать _Tables.ReadOnly, но тогда нужно выводить класс из NamedList
+
+    /// <summary>
+    /// Генерирует исключение, если список переведен в режим "Только чтение"
+    /// </summary>
+    public void CheckNotReadOnly()
+    {
+      if (_IsReadOnly)
+        throw new ObjectReadOnlyException();
+    }
+
+    /// <summary>
+    /// Переводит список в режим "Только чтение".
+    /// Если в списке таблиц имеются пустые записи (то есть, для таблицы нет ни одного поля,
+    /// то таблица удаляется.
+    /// Повторные вызовы отбрасываются.
+    /// </summary>
+    public void SetReadOnly()
+    {
+      if (IsReadOnly)
+        return; // Повторный вызов
+      for (int i = _List.Count - 1; i >= 0; i--)
+      {
+        if (_List[i].Columns.Count == 0)
+          _List.RemoveAt(i);
+        else
+          _List[i].Columns.SetReadOnly();
+      }
+      _IsReadOnly = true;
+    }
+
+    #endregion
+
+    #region ICollection<DBxTableColumnName> Members
+
+    /// <summary>
+    /// Добавляет поле для таблицы в список
+    /// </summary>
+    /// <param name="item">Имя таблицы и поля</param>
+    public void Add(DBxTableColumnName item)
+    {
+      CheckNotReadOnly();
+      if (item.IsEmpty)
+        throw new ArgumentNullException("item");
+
+      Tables[item.TableName].Add(item.ColumnName);
+    }
+
+    /// <summary>
+    /// Очищает весь список
+    /// </summary>
+    public void Clear()
+    {
+      CheckNotReadOnly();
+      _List.Clear();
+    }
+
+    /// <summary>
+    /// Возращает true, если список содержит такое поле для таблицы
+    /// </summary>
+    /// <param name="item">Имя таблицы и поля</param>
+    /// <returns>Наличие поля</returns>
+    public bool Contains(DBxTableColumnName item)
+    {
+      if (item.IsEmpty)
+        return false;
+
+      return Tables[item.TableName].Contains(item.ColumnName);
+    }
+
+    /// <summary>
+    /// Возвращает количество полей во всех таблицах
+    /// </summary>
+    public int Count
+    {
+      get
+      {
+        int cnt = 0;
+        for (int i = 0; i < _List.Count; i++)
+          cnt += _List[i].Columns.Count;
+        return cnt;
+      }
+    }
+
+    /// <summary>
+    /// Копирует пары "Имя таблицы"-"Имя поля" в указанный массив
+    /// </summary>
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="arrayIndex">Смещение в массиве, по которому записывается первый элемент</param>
+    public void CopyTo(DBxTableColumnName[] array, int arrayIndex)
+    {
+      for (int i = 0; i < _List.Count; i++)
+      {
+        TableItem ti = _List[i];
+        for (int j = 0; j < ti.Columns.Count; j++)
+        {
+          array[arrayIndex] = new DBxTableColumnName(ti.TableName, ti.Columns[j]);
+          arrayIndex++;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Копирует все пары "Имя таблицы"-"Имя поля" в массив
+    /// </summary>
+    /// <returns>Новый массив из Count элементов</returns>
+    public DBxTableColumnName[] ToArray()
+    {
+      DBxTableColumnName[] a = new DBxTableColumnName[Count];
+      CopyTo(a, 0);
+      return a;
+    }
+
+    /// <summary>
+    /// Удаляет поле для заданной таблицы из списка
+    /// </summary>
+    /// <param name="item">Имя таблицы и поля</param>
+    /// <returns>true, если поле было добавлено для таблицы</returns>
+    public bool Remove(DBxTableColumnName item)
+    {
+      CheckNotReadOnly();
+      if (item.IsEmpty)
+        return false;
+      TableItem ti = _List[item.TableName];
+      if (ti == null)
+        return false;
+
+      int oldN = ti.Columns.Count;
+      ti.Columns.Remove(item.ColumnName);
+      return ti.Columns.Count < oldN;
+    }
+
+    #endregion
+
+    #region IEnumerable<DBxTableColumnName> Members
+
+    /// <summary>
+    /// Возвращает перечислитель по всем парам "Имя таблицы"-"Имя поля"
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public IEnumerator<DBxTableColumnName> GetEnumerator()
+    {
+      // Неохота делать свой перечислитель
+      return new ArrayEnumerator<DBxTableColumnName>(ToArray());
+    }
+
+    #endregion
+
+    #region IEnumerable Members
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+      return GetEnumerator();
+    }
+
+    #endregion
+
+    #region Доступ как к логическому значению
+
+    /// <summary>
+    /// Возвращает true, если в списке есть указанное поле. Эквивалентно вызову Contains().
+    /// Установка свойства в true эквивалентна вызову Add(), а в false - Remove()
+    /// </summary>
+    /// <param name="item">Имя таблицы и поля</param>
+    /// <returns>Наличие в списке</returns>
+    public bool this[DBxTableColumnName item]
+    {
+      get
+      {
+        return Contains(item);
+      }
+      set
+      {
+        if (value)
+          Add(item);
+        else
+          Remove(item);
+      }
+    }
+
+    #endregion
+
+    #region Доступ без структуры DBxTableColumnName
+
+    /// <summary>
+    /// Возвращает true, если в списке есть указанное поле. Эквивалентно вызову Contains().
+    /// Установка свойства в true эквивалентна вызову Add(), а в false - Remove()
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Наличие в списке</returns>
+    public bool this[string tableName, string columnName]
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(tableName) || String.IsNullOrEmpty(columnName))
+          return false;
+        return Contains(new DBxTableColumnName(tableName, columnName));
+      }
+      set
+      {
+        if (value)
+          Add(new DBxTableColumnName(tableName, columnName));
+        else
+          Remove(new DBxTableColumnName(tableName, columnName));
+      }
+    }
+
+    #endregion
+
+    #region ICloneable Members
+
+    /// <summary>
+    /// Создает копию списка.
+    /// У созданной копии свойство IsReadOnly не установлено
+    /// </summary>
+    /// <returns></returns>
+    public DBxTableColumnList Clone()
+    {
+      DBxTableColumnList res = new DBxTableColumnList();
+      for (int i = 0; i < _List.Count; i++)
+      {
+        if (_List[i].Columns.Count > 0)
+          res.Tables.Add(_List[i].TableName, _List[i].Columns);
+      }
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
+    }
+
+    #endregion
+
+    #region Статический список
+
+    /// <summary>
+    /// Пустой список полей
+    /// </summary>
+    public static readonly DBxTableColumnList Empty = CreateEmpty();
+
+    private static DBxTableColumnList CreateEmpty()
+    {
+      DBxTableColumnList list = new DBxTableColumnList();
+      list.SetReadOnly();
+      return list;
     }
 
     #endregion

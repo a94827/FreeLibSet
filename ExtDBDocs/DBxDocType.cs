@@ -2537,10 +2537,13 @@ foreach (ServerSubDocType sdt in dt.SubDocs)
     /// Пользовательскому коду нет необходимости вызывать этот метод напрямую,
     /// так как проверка выполняется в конструкторе DBxRealDocProviderGlobal.
     /// </summary>
-    public void CheckStruct()
+    /// <param name="binDataHandler">Обработчик двоичных данных или null, если не используется</param>
+    public void CheckStruct(DBxBinDataHandler binDataHandler)
     {
       // Собираем пседвоструктуру базы данных для проверки
       DBxStruct dbs = this.GetMainDBStruct();
+      if (binDataHandler != null)
+        binDataHandler.AddMainTableStructs(dbs); // 19.07.2021
       dbs.CheckStruct();
 
       foreach (DBxDocType dt in this)

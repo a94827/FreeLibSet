@@ -47,7 +47,9 @@ namespace AgeyevAV.ExtDB.SQLite
   /// </summary>
   public class SQLiteDBx : DBx
   {
-    #region Конструктор
+    #region Конструкторы и Dispose
+
+    private const string MemoryFileName = ":memory:";
 
     /// <summary>
     /// Создание подключение к базе данных.
@@ -66,9 +68,14 @@ namespace AgeyevAV.ExtDB.SQLite
 
       SyncRoot = new object();
 
-      _FileName = new AbsPath(connectionStringBuilder.DataSource);
-      if (_FileName.IsEmpty)
-        throw new ArgumentException("В строке подключения не задан параметр DataSource", "connectionStringBuilder");
+
+      _InMemory = connectionStringBuilder.DataSource.EndsWith(MemoryFileName);
+      if (!InMemory)
+      {
+        _FileName = new AbsPath(connectionStringBuilder.DataSource);
+        if (_FileName.IsEmpty)
+          throw new ArgumentException("В строке подключения не задан параметр DataSource", "connectionStringBuilder");
+      }
 
       _DateFormat = @"yyyy\-MM\-dd";
       _TimeFormat = @"HH\:mm\:ss";
@@ -76,6 +83,13 @@ namespace AgeyevAV.ExtDB.SQLite
         SQLiteDBxSqlFormatter(this));
 
       connectionStringBuilder.FailIfMissing = false; // всегда автоматически создаем базу данных
+
+      if (InMemory)
+      {
+        MainConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
+        MainConnection.Open();
+      }
+
       new SQLiteDBxEntry(this, connectionStringBuilder);
     }
 
@@ -87,6 +101,26 @@ namespace AgeyevAV.ExtDB.SQLite
     public SQLiteDBx(string connectionString)
       : this(new SQLiteConnectionStringBuilder(connectionString))
     {
+    }
+
+    /// <summary>
+    /// Эта версия конструктора предназначена для создания базы данных в памяти
+    /// </summary>
+    public SQLiteDBx()
+      : this("Data Source="+MemoryFileName)
+    {
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        if (MainConnection != null)
+          MainConnection.Dispose();
+        MainConnection = null;
+      }
+
+      base.Dispose(disposing);
     }
 
     #endregion
@@ -162,6 +196,18 @@ namespace AgeyevAV.ExtDB.SQLite
     /// </summary>
     public override DBxManager Manager { get { return SQLiteDBxManager.TheManager; } }
 
+    /// <summary>
+    /// Возвращает true, если база данных располагается в памяти
+    /// </summary>
+    public bool InMemory { get { return _InMemory; } }
+    private bool _InMemory;
+
+    /// <summary>
+    /// Если база данных располагается в памяти, требуется постоянно открытое соединение для нее.
+    /// Когда это соединение закрывается, база данных уничтожается.
+    /// </summary>
+    internal SQLiteConnection MainConnection;
+
     #endregion
 
     #region Форматирование значений
@@ -205,6 +251,9 @@ namespace AgeyevAV.ExtDB.SQLite
     {
       get
       {
+        if (InMemory)
+          return true;
+
         return System.IO.File.Exists(FileName.Path);
       }
     }
@@ -503,7 +552,7 @@ namespace AgeyevAV.ExtDB.SQLite
       {
         if (_Connection != null)
         {
-          if (_Connection.State == ConnectionState.Open)
+          if (_Connection.State == ConnectionState.Open && (!Entry.DB.InMemory))
             _Connection.Close();
           _Connection = null;
         }
@@ -548,8 +597,22 @@ namespace AgeyevAV.ExtDB.SQLite
 #endif
           try
           {
-            _Connection = new SQLiteConnection(Entry.ConnectionString);
-            DoOpenConnection();
+            if (Entry.DB.MainConnection == null)
+            {
+              _Connection = new SQLiteConnection(Entry.ConnectionString);
+              DoOpenConnection();
+            }
+            else
+            {
+              // Это эквивалентно вызову new SQLiteConnection(Entry.DB.MainConnection)
+              // Создает соединение для новой временной базы данных
+              // Х.з., как подключиться к существующей
+              //_Connection = (SQLiteConnection)(Entry.DB.MainConnection.Clone());
+
+              // TODO: Плохо. Если используется DBDataReader, то соединение будет занято
+              _Connection = Entry.DB.MainConnection;
+            }
+
           }
           catch
           {

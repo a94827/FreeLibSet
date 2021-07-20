@@ -2289,7 +2289,7 @@ namespace AgeyevAV.ExtDB.Docs
       if (DeletedDocIds.Length > 0)
       {
         if (_ExtRefs == null)
-          _ExtRefs = new DBxExtRefs(DocTypes);
+          _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
 
 
         // Проверка удаления документа
@@ -2329,7 +2329,7 @@ namespace AgeyevAV.ExtDB.Docs
       if (EditDocIds.Length > 0)
       {
         if (_ExtRefs == null)
-          _ExtRefs = new DBxExtRefs(DocTypes);
+          _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
         // Проверяем удаляемые поддокументы в редактируемом документе
         // Проверяем наличие непустых ExtRefs
         bool HasSubDocsExtRefs = false;
@@ -2376,7 +2376,7 @@ namespace AgeyevAV.ExtDB.Docs
     private void ApplyDocsDelete1Table(DBxCon mainCon, DBxDocSet docSet, DBxDocTypeBase delType, IdsFilterGenerator delFltGen)
     {
       if (_ExtRefs == null)
-        _ExtRefs = new DBxExtRefs(DocTypes);
+        _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
 
       DBxExtRefs.TableRefList ExtRefList = _ExtRefs[delType.Name];
 

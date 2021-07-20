@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2021-07-12T20:12:05.599000000"/>
+	<meta name="changed" content="2021-07-20T20:08:13.811000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -80,19 +80,54 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center" style="text-decoration: none">112</p>
+		</td>
+		<td width="15%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center" style="text-decoration: none">19.07.2021-20.07.2021</p>
+		</td>
+		<td width="75%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Выделен класс
+			</span><span lang="en-US">DBxBinDataValidator (<a href="#v037p3">v.37
+			</a></span><a href="#v037p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">2. DBxDocTypeBinDataRefs </span><span lang="ru-RU">и
+			</span><span lang="en-US">DBxDocTypeFileRefs (<a href="#v037p1">v.37
+			</a></span><a href="#v037p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">добавляют ссылочные столбцы на таблицы
+			&quot;</span><span lang="en-US">BinData</span><span lang="ru-RU">&quot;</span>
+			<span lang="ru-RU">и </span><span lang="en-US">&quot;FileNames&quot;</span><span lang="ru-RU">,
+			а не обычные числовые.</span></p>
+			<p lang="en-US">3. <span lang="ru-RU">Метод
+			</span>DBxDocTypes.CheckStruct() <span lang="ru-RU">принимает
+			аргумент </span>DBxBinDataHandler, <span lang="ru-RU">чтобы
+			ссылочные столбцы на таблицы &quot;</span>BinData<span lang="ru-RU">&quot;</span>
+			<span lang="ru-RU">и </span>&quot;FileNames&quot; <span lang="ru-RU">не
+			вызывали ошибку.</span></p>
+			<p lang="en-US">4. <span lang="ru-RU">Изменения во внутреннем
+			классе DBxExtRefs.</span></p>
+			<p lang="en-US">5. DBxBinDataHandler <span lang="ru-RU">объявляет
+			поля &quot;</span>Length<span lang="ru-RU">&quot;</span> <span lang="ru-RU">и
+			&quot;</span>Section<span lang="ru-RU">&quot;</span> <span lang="ru-RU">таблицы
+			</span>&quot;BinData&quot;, <span lang="ru-RU">как </span>NOT
+			NULL.</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">111</p>
 		</td>
 		<td width="15%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">12.07.2021</p>
 		</td>
 		<td width="75%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">InitDBxEventArgs
-			переименован в DBxDocDBConnectionHelperInitDBxEventArgs</span>.<span lang="ru-RU">
-			Свойства DBxDocDBConnectionHelperInitDBxEventArgs.</span>Struct <span lang="ru-RU">и
-			</span>DBName. <span lang="ru-RU">Обработчик события
-			</span>DBxDocDBConnectionHelper.BeforeInitDB (<a href="#v066p1">v.66
-			<span lang="ru-RU">п.1</span></a>) <span lang="ru-RU">может менять
-			описание таблицы</span></p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">InitDBxEventArgs
+			переименован в DBxDocDBConnectionHelperInitDBxEventArgs</span><span lang="en-US">.
+			</span><span lang="ru-RU">Свойства
+			DBxDocDBConnectionHelperInitDBxEventArgs.</span><span lang="en-US">Struct
+			</span><span lang="ru-RU">и </span><span lang="en-US">DBName.
+			</span><span lang="ru-RU">Обработчик события
+			</span><span lang="en-US">DBxDocDBConnectionHelper.BeforeInitDB
+			(<a href="#v066p1">v.66 </a></span><a href="#v066p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">может менять описание таблицы</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -1336,10 +1371,10 @@
 			AllDocServiceColumns </span>и <span lang="en-US">UseDocHist. </span><strike>Метод
 			</strike><strike><span lang="en-US">GetServiceValues()</span></strike>
 			<font color="#c9211e"><span lang="ru-RU">Убран 07.10.2019</span></font></p>
-			<p style="margin-bottom: 0.5cm"><span lang="en-US">5. </span>Конструктор
-			<span lang="en-US">DBxRealDocProviderGlobal </span>выполняет
-			проверку корректности описаний<span lang="en-US">. </span>Метод
-			<span lang="en-US">DBxDocTypes.CheckStruct() (<a href="#v001p1">v.1
+			<p style="margin-bottom: 0.5cm"><a name="v054p5"></a><span lang="en-US">5.
+			</span>Конструктор <span lang="en-US">DBxRealDocProviderGlobal
+			</span>выполняет проверку корректности описаний<span lang="en-US">.
+			</span>Метод <span lang="en-US">DBxDocTypes.CheckStruct() (<a href="#v001p1">v.1
 			</a></span><a href="#v001p1"><span lang="ru-RU">п</span><span lang="en-US">.1</span></a><span lang="en-US">).
 			</span>Вызывает <span lang="en-US">DBxStruct.CheckStruct() (<a href="ExtDB_11.htm#v029p6">ExtDB,
 			v.29 </a></span><a href="ExtDB_11.htm#v029p6"><span lang="ru-RU">п</span><span lang="en-US">.6</span></a><span lang="en-US">)</span></p>
@@ -1687,17 +1722,17 @@
 			<p align="center">06.04.2017-17.04.2017</p>
 		</td>
 		<td width="75%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">1. Описатели полей со ссылкой на
-			двоичные данные DBxDocTypeBinDataRef. Свойство
+			<p style="margin-bottom: 0.5cm"><a name="v037p1"></a>1. Описатели
+			полей со ссылкой на двоичные данные DBxDocTypeBinDataRef. Свойство
 			DBxDocTypeBase.BinDataRefs (<a href="#v001p1">v.1 п.1</a>).</p>
 			<p style="margin-bottom: 0.5cm">2. Свойства
 			DBxDocTypes.HasBinDataRefs и HasFileRefs (<a href="#v001p1">v.1
 			п.1</a>)</p>
-			<p style="margin-bottom: 0.5cm"><a name="v037p3"></a>3. Класс
-			DBxBinDataHandler. Поддержка &laquo;фрагментированных&raquo; и
-			&laquo;безлимитных&raquo; баз данных для хранения двоичных данных.
-			Событие DBSizeLimitExceeded для добавления дополнительной базы
-			данных, если возникает исключение (<a href="ExtDB_11.htm#v017p7">ExtDB,
+			<p style="margin-bottom: 0.5cm"><a name="v037p2"></a><a name="v037p3"></a>
+			3. Класс DBxBinDataHandler. Поддержка &laquo;фрагментированных&raquo;
+			и &laquo;безлимитных&raquo; баз данных для хранения двоичных
+			данных. Событие DBSizeLimitExceeded для добавления дополнительной
+			базы данных, если возникает исключение (<a href="ExtDB_11.htm#v017p7">ExtDB,
 			<span lang="en-US">v</span>.17 п.7</a>) при добавлении очередного
 			блока данных. Метод CheckData() для проверки целостности таблицы
 			BinData. Метод DBxDocTypes.GetFilesDBStruct() убран</p>

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ExtDBDocs")]
-[assembly: AssemblyDescription("Хранение документов в базе данных. Расширяет модуль ExtDB")]
+[assembly: AssemblyTitle("ExtDB.tests")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Агеев Александр Владимирович")]
-[assembly: AssemblyProduct("Freeware Library Set")]
-[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2015-2021 г. Модуль ExtDBDocs.dll является свободным программным обеспечением (Free Software)")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("ExtDB.tests")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a4ae45d5-42cf-41ec-af62-e44155698f48")]
+[assembly: Guid("b42bacfd-04a3-419b-8c21-29ee9c53a6d6")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -31,4 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.1.0.112")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -84,7 +84,7 @@ namespace AgeyevAV.ExtDB.Docs
       public DBxSubDocType DetailsSubDocType { get { return _DetailsSubDocType; } }
       private DBxSubDocType _DetailsSubDocType;
 
-      public DBxDocTypeBase DetailsType 
+      public DBxDocTypeBase DetailsType
       {
         get
         {
@@ -168,15 +168,15 @@ namespace AgeyevAV.ExtDB.Docs
       public DBxSubDocType DetailsSubDocType { get { return _DetailsSubDocType; } }
       private DBxSubDocType _DetailsSubDocType;
 
-      public DBxDocTypeBase DetailsType 
-      { 
-        get 
+      public DBxDocTypeBase DetailsType
+      {
+        get
         {
           if (DetailsSubDocType == null)
             return DetailsDocType;
           else
             return DetailsSubDocType;
-        } 
+        }
       }
 
       public bool IsSubDocType { get { return DetailsSubDocType != null; } }
@@ -263,7 +263,7 @@ namespace AgeyevAV.ExtDB.Docs
       /// <returns>Текстовое представление</returns>
       public override string ToString()
       {
-        return "Ref column count="+_RefColumns.Count.ToString()+", VTReference count="+_VTRefs.Count.ToString();
+        return "Ref column count=" + _RefColumns.Count.ToString() + ", VTReference count=" + _VTRefs.Count.ToString();
       }
 
       #endregion
@@ -277,19 +277,20 @@ namespace AgeyevAV.ExtDB.Docs
     /// Создает заполненый список
     /// </summary>
     /// <param name="dts">Описание видов документов и поддокументов</param>
-    public DBxExtRefs(DBxDocTypes dts)
+    /// <param name="binDataHandler">Обработчик двоичных данных. Может быть null</param>
+    public DBxExtRefs(DBxDocTypes dts, DBxBinDataHandler binDataHandler)
     {
       _Items = new Dictionary<string, TableRefList>();
       // Перебираем описания
       for (int i = 0; i < dts.Count; i++)
       {
-        AddRefs(dts, dts[i], null);
+        AddRefs(dts, binDataHandler, dts[i], null);
         for (int j = 0; j < dts[i].SubDocs.Count; j++)
-          AddRefs(dts, dts[i], dts[i].SubDocs[j]);
+          AddRefs(dts, binDataHandler, dts[i], dts[i].SubDocs[j]);
       }
     }
 
-    private void AddRefs(DBxDocTypes dts, DBxDocType detailDocType, DBxSubDocType detailSubDocType)
+    private void AddRefs(DBxDocTypes dts, DBxBinDataHandler binDataHandler, DBxDocType detailDocType, DBxSubDocType detailSubDocType)
     {
       DBxDocTypeBase DetailBase;
       if (detailSubDocType == null)
@@ -303,14 +304,26 @@ namespace AgeyevAV.ExtDB.Docs
         DBxColumnStruct ColumnDef = DetailBase.Struct.Columns[i];
         if (!String.IsNullOrEmpty(ColumnDef.MasterTableName))
         {
-          if (ColumnDef.MasterTableName == "DocTables")
-            continue;
+          switch (ColumnDef.MasterTableName)
+          {
+            case "DocTables":
+              continue;
+
+            case "BinData":
+            case "FileNames":
+              if (binDataHandler != null)
+                continue; // 20.07.2021
+              break;
+          }
           DBxDocType dt1;
           DBxSubDocType sdt1;
-          if (!dts.FindByTableName(ColumnDef.MasterTableName, out dt1, out sdt1))
-            throw new BugException("Объявление таблицы \"" + DetailBase.Name +
-              "\" содержит описание ссылочного поля \"" + ColumnDef.ColumnName +
-              "\", которое ссылается на неизвестную таблицу \"" + ColumnDef.MasterTableName + "\"");
+          if (!(ColumnDef.MasterTableName == "BinData" || ColumnDef.MasterTableName == "FileNames"))
+          {
+            if (!dts.FindByTableName(ColumnDef.MasterTableName, out dt1, out sdt1))
+              throw new BugException("Объявление таблицы \"" + DetailBase.Name +
+                "\" содержит описание ссылочного поля \"" + ColumnDef.ColumnName +
+                "\", которое ссылается на неизвестную таблицу \"" + ColumnDef.MasterTableName + "\"");
+          }
 
           TableRefList List = InternalGetList(ColumnDef.MasterTableName);
 
@@ -352,7 +365,7 @@ namespace AgeyevAV.ExtDB.Docs
     public TableRefList this[string tableName]
     {
       get
-      { 
+      {
         TableRefList Res;
         if (_Items.TryGetValue(tableName, out Res))
           return Res;

@@ -1,0 +1,1189 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using AgeyevAV.IO;
+using System.Xml;
+using System.Globalization;
+using System.IO;
+using System.Diagnostics;
+
+namespace AgeyevAV
+{
+
+  #region Перечисление OpenOfficeKind
+
+  public enum OpenOfficeKind
+  {
+    /// <summary>
+    /// Нет установленного офиса
+    /// </summary>
+    Unknown,
+
+    /// <summary>
+    /// Установлен OpenOffice
+    /// </summary>
+    OpenOffice,
+
+    /// <summary>
+    /// Установлен Libre Office
+    /// </summary>
+    LibreOffice
+  }
+
+  #endregion
+
+  #region Перечисление OpenOfficeArchitecture
+
+  /// <summary>
+  /// Разрядность приложений LibreOffice
+  /// </summary>
+  public enum OpenOfficePlatform
+  {
+    /// <summary>
+    /// Разрядность неизвестна
+    /// </summary>
+    Unknown,
+
+    /// <summary>
+    /// 32-битное приложение
+    /// </summary>
+    x86,
+
+    /// <summary>
+    /// 64-битное приложение
+    /// </summary>
+    x64
+  }
+
+  #endregion
+
+  /// <summary>
+  /// Поддержка для OpenOffice / Libre Office.
+  /// </summary>
+  public static class OpenOfficeTools
+  {
+    #region Список установленных копий
+
+    #region Перечисление InfoSource
+
+    /// <summary>
+    /// Откуда получена информация об установленной копии
+    /// </summary>
+    public enum InfoSource
+    {
+      /// <summary>
+      /// Неизвестно
+      /// </summary>
+      Unknown,
+
+      /// <summary>
+      /// Из записи в реестре Windows.
+      /// В этом случае свойство OfficeInfo.InfoSourceString содержит раздел реестра
+      /// </summary>
+      Registry,
+
+      /// <summary>
+      /// Из переменной окружения.
+      /// В этом случае свойство OfficeInfo.InfoSourceString содержит имя переменной ("PATH")
+      /// </summary>
+      EnvironmentVariable,
+
+      /// <summary>
+      /// Поиск был выполнен по предопределенному пути
+      /// </summary>
+      PredefinedPath
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Информация об одной установленной копии офиса
+    /// </summary>
+    public sealed class OfficeInfo
+    {
+      #region Конструкторы
+
+      /// <summary>
+      /// Версия конструктора без указания источника информации
+      /// </summary>
+      /// <param name="ProgramDir"></param>
+      /// <param name="Kind"></param>
+      public OfficeInfo(AbsPath ProgramDir, OpenOfficeKind Kind)
+        : this(ProgramDir, Kind, InfoSource.Unknown, String.Empty, OpenOfficePlatform.Unknown)
+      {
+      }
+
+      /// <summary>
+      /// Версия конструктора с указанием источника информации
+      /// </summary>
+      /// <param name="ProgramDir"></param>
+      /// <param name="Kind"></param>
+      /// <param name="InfoSource"></param>
+      /// <param name="InfoSourceString"></param>
+      public OfficeInfo(AbsPath ProgramDir, OpenOfficeKind Kind, InfoSource InfoSource, string InfoSourceString)
+        : this(ProgramDir, Kind, InfoSource, InfoSourceString, OpenOfficePlatform.Unknown)
+      {
+      }
+
+      /// <summary>
+      /// Версия конструктора с указанием платформы
+      /// </summary>
+      /// <param name="ProgramDir"></param>
+      /// <param name="Kind"></param>
+      /// <param name="InfoSource"></param>
+      /// <param name="InfoSourceString"></param>
+      /// <param name="Platform"></param>
+      public OfficeInfo(AbsPath ProgramDir, OpenOfficeKind Kind, InfoSource InfoSource, string InfoSourceString, OpenOfficePlatform Platform)
+      {
+        #region Копирование аргументов
+
+        if (ProgramDir.IsEmpty)
+          throw new ArgumentException("Не задан ProgramDir", "ProgramDir");
+
+        FProgramDir = ProgramDir;
+        FKind = Kind;
+        FInfoSource = InfoSource;
+        FInfoSourceString = InfoSourceString;
+        FPlatform = Platform;
+
+        #endregion
+
+        #region Определение версии
+
+        try
+        {
+          switch (Environment.OSVersion.Platform)
+          {
+            case PlatformID.Unix:
+              InitVersionUnix(); // 17.05.2016
+              break;
+            default:
+              FVersion = FileTools.GetFileVersion(OfficePath.Path);
+              break;
+          }
+        }
+        catch
+        {
+          FVersion = new Version(); // пустая версия
+        }
+        if (FVersion == null)
+          FVersion = new Version();
+
+        #endregion
+
+        #region Определение наличия компонентов
+
+        FHasWriter = IsCompExists("swriter");
+        FHasCalc = IsCompExists("scalc");
+        FHasImpress = IsCompExists("simpress");
+        FHasDraw = IsCompExists("sdraw");
+        FHasBase = IsCompExists("sbase");
+        FHasMath = IsCompExists("smath");
+
+        #endregion
+      }
+
+      /// <summary>
+      /// Определение версии OpenOffice/LibreOffice в Linux.
+      /// Понятия не имею, как это сделать правильно.
+      /// Ни один файл не имеет версии, заданной в ресурсах, как в Windows.
+      /// Анализируем текстовый файл.
+      /// </summary>
+      /// <returns></returns>
+      private void InitVersionUnix()
+      {
+        AbsPath TextFile = new AbsPath(ProgramDir, "versionrc");
+        if (!File.Exists(TextFile.Path))
+          return;
+
+        string[] aLines = System.IO.File.ReadAllLines(TextFile.Path); // ?? кодировка
+        for (int i = 0; i < aLines.Length; i++)
+        {
+          // Искомая строка выглядит так:
+          // BuildVersion=1:5.0.3-rc2-0ubuntu1-trusty2
+
+          if (aLines[i].StartsWith("BuildVersion="))
+          {
+            string s = aLines[i].Substring(13); // после знака равенства
+            int p = s.IndexOf(':');
+            if (p < 0)
+              return;
+            s = s.Substring(p + 1);
+            p = s.IndexOf('-');
+            if (p >= 0)
+              s = s.Substring(0, p);
+            FVersion = FileTools.GetVersionFromStr(s);
+          }
+        }
+        // не нашли строки
+      }
+
+      private bool IsCompExists(string AppName)
+      {
+        AbsPath FilePath = new AbsPath(ProgramDir, AppName + GetExeExtension());
+        return File.Exists(FilePath.Path);
+      }
+
+      #endregion
+
+      #region Свойства офиса в-целом
+
+      /// <summary>
+      /// Возврашает тип установленного офиса или Unknown, если не установлен
+      /// </summary>
+      public OpenOfficeKind Kind { get { return FKind; } }
+      private OpenOfficeKind FKind;
+
+      /// <summary>
+      /// Получить каталог с программными файлами (в котором находится soffice.exe или soffice). 
+      /// Возвращает AbsPath.Empty, если офис не установлен.
+      /// </summary>
+      public AbsPath ProgramDir { get { return FProgramDir; } }
+      private AbsPath FProgramDir;
+
+      /// <summary>
+      /// Возвращает версию офиса
+      /// </summary>
+      public Version Version { get { return FVersion; } }
+      private Version FVersion;
+
+      /// <summary>
+      /// Разрядность приложения
+      /// </summary>
+      public OpenOfficePlatform Platform { get { return FPlatform; } }
+      private OpenOfficePlatform FPlatform;
+
+
+      /// <summary>
+      /// Возвращает абсолютный путь к файлу soffice.exe (или soffice под Linux).
+      /// </summary>
+      public AbsPath OfficePath
+      {
+        get
+        {
+          return new AbsPath(ProgramDir, "soffice" + GetExeExtension());
+        }
+      }
+
+      /// <summary>
+      /// Возвращает "LibreOffice" или "OpenOffice"
+      /// </summary>
+      public string KindName
+      {
+        get
+        {
+          switch (Kind)
+          {
+            case OpenOfficeKind.LibreOffice: return "LibreOffice";
+            case OpenOfficeKind.OpenOffice: return "OpenOffice";
+            default: return "Unknown Office";
+          }
+        }
+      }
+
+
+      #endregion
+
+      #region Наличие отдельных компонентов
+
+      #region Writer
+
+      /// <summary>
+      /// Возвращает true, если компонент "Writer" установлен
+      /// </summary>
+      public bool HasWriter { get { return FHasWriter; } }
+      private bool FHasWriter;
+
+      /// <summary>
+      /// Возвращает полный путь к файлу swriter.exe
+      /// </summary>
+      public AbsPath WriterPath
+      {
+        get
+        {
+          if (HasWriter)
+            return new AbsPath(ProgramDir, "swriter" + GetExeExtension());
+          else
+            return AbsPath.Empty;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает "OpenOffice Writer" или "LibreOffice Writer"
+      /// </summary>
+      public string WriterDisplayName
+      {
+        get { return KindName + " Writer"; }
+      }
+
+      #endregion
+
+      #region Calc
+
+      /// <summary>
+      /// Возвращает true, если компонент "Calc" установлен
+      /// </summary>
+      public bool HasCalc { get { return FHasCalc; } }
+      private bool FHasCalc;
+
+      /// <summary>
+      /// Возвращает полный путь к файлу scalc.exe
+      /// </summary>
+      public AbsPath CalcPath
+      {
+        get
+        {
+          if (HasCalc)
+            return new AbsPath(ProgramDir, "scalc" + GetExeExtension());
+          else
+            return AbsPath.Empty;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает "OpenOffice Calc" или "LibreOffice Calc"
+      /// </summary>
+      public string CalcDisplayName
+      {
+        get { return KindName + " Calc"; }
+      }
+
+      #endregion
+
+      #region Impress
+
+      /// <summary>
+      /// Возвращает true, если компонент "Impress" установлен
+      /// </summary>
+      public bool HasImpress { get { return FHasImpress; } }
+      private bool FHasImpress;
+
+      /// <summary>
+      /// Возвращает полный путь к файлу simpress.exe
+      /// </summary>
+      public AbsPath ImpressPath
+      {
+        get
+        {
+          if (HasImpress)
+            return new AbsPath(ProgramDir, "simpress" + GetExeExtension());
+          else
+            return AbsPath.Empty;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает "OpenOffice Impress" или "LibreOffice Impress"
+      /// </summary>
+      public string ImpressDisplayName
+      {
+        get { return KindName + " Impress"; }
+      }
+
+      #endregion
+
+      #region Draw
+
+      /// <summary>
+      /// Возвращает true, если компонент "Draw" установлен
+      /// </summary>
+      public bool HasDraw { get { return FHasDraw; } }
+      private bool FHasDraw;
+
+      /// <summary>
+      /// Возвращает полный путь к файлу sdraw.exe
+      /// </summary>
+      public AbsPath DrawPath
+      {
+        get
+        {
+          if (HasDraw)
+            return new AbsPath(ProgramDir, "sdraw" + GetExeExtension());
+          else
+            return AbsPath.Empty;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает "OpenOffice Draw" или "LibreOffice Draw"
+      /// </summary>
+      public string DrawDisplayName
+      {
+        get { return KindName + " Draw"; }
+      }
+
+      #endregion
+
+      #region Base
+
+      /// <summary>
+      /// Возвращает true, если компонент "Base" установлен
+      /// </summary>
+      public bool HasBase { get { return FHasBase; } }
+      private bool FHasBase;
+
+      /// <summary>
+      /// Возвращает полный путь к файлу sbase.exe
+      /// </summary>
+      public AbsPath BasePath
+      {
+        get
+        {
+          if (HasBase)
+            return new AbsPath(ProgramDir, "sbase" + GetExeExtension());
+          else
+            return AbsPath.Empty;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает "OpenOffice Base" или "LibreOffice Base"
+      /// </summary>
+      public string BaseDisplayName
+      {
+        get { return KindName + " Base"; }
+      }
+
+      #endregion
+
+      #region Math
+
+      /// <summary>
+      /// Возвращает true, если компонент "Math" установлен
+      /// </summary>
+      public bool HasMath { get { return FHasMath; } }
+      private bool FHasMath;
+
+      /// <summary>
+      /// Возвращает полный путь к файлу smath.exe
+      /// </summary>
+      public AbsPath MathPath
+      {
+        get
+        {
+          if (HasCalc)
+            return new AbsPath(ProgramDir, "smath" + GetExeExtension());
+          else
+            return AbsPath.Empty;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает "OpenOffice Math" или "LibreOffice Math"
+      /// </summary>
+      public string MathDisplayName
+      {
+        get { return KindName + " Math"; }
+      }
+
+      #endregion
+
+      /// <summary>
+      /// Возвращает строку с установленными компонентами, например, "Writer,Calc,Impress". Разделитель-запятые.
+      /// Предназначена для отладочных целей
+      /// </summary>
+      public string ComponentsCSVString
+      {
+        get
+        {
+          StringBuilder sb = new StringBuilder();
+          AddToCSV(sb, HasWriter, "Writer");
+          AddToCSV(sb, HasWriter, "Calc");
+          AddToCSV(sb, HasWriter, "Impress");
+          AddToCSV(sb, HasWriter, "Draw");
+          AddToCSV(sb, HasWriter, "Base");
+          AddToCSV(sb, HasWriter, "Math");
+          return sb.ToString();
+        }
+      }
+
+      private static void AddToCSV(StringBuilder sb, bool Flag, string Name)
+      {
+        if (!Flag)
+          return;
+        if (sb.Length > 0)
+          sb.Append(',');
+        sb.Append(Name);
+      }
+
+      #endregion
+
+      #region Прочие свойства
+
+      /// <summary>
+      /// Как была найдена эта копия офиса (через реестр Windows, переменную окружения ...)
+      /// </summary>
+      public InfoSource InfoSource { get { return FInfoSource; } }
+      private InfoSource FInfoSource;
+
+      /// <summary>
+      /// Дополнительная информация, как была найдена эта копия (ключ реестра или имя переменной окружения)
+      /// </summary>
+      public string InfoSourceString { get { return FInfoSourceString; } }
+      private string FInfoSourceString;
+
+      /// <summary>
+      /// Возвращает название и версию офиса
+      /// </summary>
+      /// <returns></returns>
+      public override string ToString()
+      {
+        return KindName + " " + Version.ToString() + PlatformSuffix;
+      }
+
+      private string PlatformSuffix
+      {
+        get
+        {
+          switch (Platform)
+          {
+            case OpenOfficePlatform.x86:
+              return " (32-bit)";
+            case OpenOfficePlatform.x64:
+              return " (64-bit)";
+            default:
+              return String.Empty;
+          }
+        }
+      }
+
+      #endregion
+
+      #region Открытие файла в Open Office
+
+      /// <summary>
+      /// Открыть файл текстового документа в редакторе OpenOffice / LibreOffice Writer
+      /// </summary>
+      /// <param name="FileName">Полный путь к ODT-файлу</param>
+      /// <param name="AsTemplate">Если true, то файл используется как шаблон.
+      /// В заголовке не будет показано имя файла, а команда "Сохранить" предложит выбрать имя файла.
+      /// Используется для реализации команд "Отправить"</param>
+      public void OpenWithWriter(AbsPath FileName, bool AsTemplate)
+      {
+        ProcessStartInfo psi = new ProcessStartInfo();
+        psi.FileName = WriterPath.Path;
+        if (String.IsNullOrEmpty(psi.FileName))
+          throw new BugException("Программа Writer не установлена");
+        psi.Arguments = "\"" + FileName.Path + "\"";
+        if (AsTemplate)
+          psi.Arguments = "-n " + psi.Arguments;
+        using (new FileRedirectionSupressor())
+        {
+          Process.Start(psi);
+        }
+      }
+
+      /// <summary>
+      /// Открыть файл табличного документа в программе OpenOffice / LibreOffice Calc
+      /// </summary>
+      /// <param name="FileName">Полный путь к ODS-файлу</param>
+      /// <param name="AsTemplate">Если true, то файл используется как шаблон.
+      /// В заголовке не будет показано имя файла, а команда "Сохранить" предложит выбрать имя файла.
+      /// Используется для реализации команд "Отправить"</param>
+      public void OpenWithCalc(AbsPath FileName, bool AsTemplate)
+      {
+        ProcessStartInfo psi = new ProcessStartInfo();
+        psi.FileName = CalcPath.Path;
+        if (String.IsNullOrEmpty(psi.FileName))
+          throw new BugException("Программа Calc не установлена");
+        psi.Arguments = "\"" + FileName.Path + "\"";
+        if (AsTemplate)
+          psi.Arguments = "-n " + psi.Arguments;
+
+        using (new FileRedirectionSupressor())
+        {
+          Process.Start(psi);
+        }
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Список обнаруженных копий OpenOffice и LibreOffice.
+    /// Если офис установлен, то обычно массив содержит один элемент.
+    /// Однако, могут быть установлено несколько различных копий офиса.
+    /// В этом случае обычно следует пользоваться "предпочтительной" копией, на которую указывает элемент с индексом 0.
+    /// Если нет установленного офиса, возвращается пустой массив.
+    /// Если приложение использует ExtForms.dll, для определения "действуюшей" копии следует использовать свойство EFPApp.UsedOpenOffice
+    /// </summary>
+    public static OfficeInfo[] Installations { get { return FInstallations; } }
+    private static OfficeInfo[] FInstallations = InitInstallations();
+
+    #region Поиск установленных копий
+
+    private static OfficeInfo[] InitInstallations()
+    {
+      // Этот метод не имеет права выбрасывать исключения.
+      // Нельзя даже вывести исключение в log-файл
+      try
+      {
+        List<OfficeInfo> lst = new List<OfficeInfo>();
+
+        switch (Environment.OSVersion.Platform)
+        {
+          case PlatformID.Win32NT:
+          case PlatformID.Win32Windows:
+          case PlatformID.Win32S: // ???
+            FindFromRegistry(lst);
+            break;
+          case PlatformID.Unix:
+            FindFromPredefined(lst); // 11.05.2016
+            FindFromPath(lst); // 22.05.2016
+            break;
+        }
+
+        FindFromUnoPath(lst); // для Windows и Unix
+
+        return lst.ToArray();
+      }
+      catch(Exception e)
+      {
+        Trace.WriteLine("Exception caught when detecting installed OpenOffices/LibreOffices: " + e.Message);
+        return new OfficeInfo[0];
+      }
+    }
+
+    private static void FindFromUnoPath(List<OfficeInfo> lst)
+    {
+      string s = Environment.GetEnvironmentVariable("UNO_PATH");
+      FindOrAddItem(lst, new AbsPath(s), OpenOfficeKind.Unknown, InfoSource.EnvironmentVariable, "UNO_PATH", OpenOfficePlatform.Unknown);
+    }
+
+    #region Поиск для Windows
+
+    private static void FindFromRegistry(List<OfficeInfo> lst)
+    {
+      // Поиск через реестр
+      // 11.01.2012
+      // В 64-разрядной версии Windows ключи реестра расположены в подузле Wow6432Node
+
+      // 22.05.2016
+      // Ключи могут быть также HKEY_CURRENT_USER
+
+      /*
+       * На поиск вляет разрядность:
+       * 1-приложения (Net Framework'а), т.к. в реестре выполняется подстановка ключей
+       * 2-Windows
+       * 3-LibreOffice
+       * 
+       * В таблице указаны ключи реестра, которые нужно искать
+       * 
+       * Приложение  Windows  LibreOffice  Ключ реестра                 Примечание
+       *   32-bit     32-bit     32-bit    HKxx\SOFTWARE\
+       *              64-bit     32-bit    HKxx\SOFTWARE\               Подстановка узла реестра Wow6432Node
+       *                         64-bit    Не знаю, как найти
+       *   64-bit     64-bit     32-bit    HKxx\SOFTWARE\Wow6432Node\
+       *                         64-bit    HKxx\SOFTWARE
+       */
+
+      // 32-разрядная версия приложения
+      if (EnvironmentTools.Is64BitOperatingSystem)
+      {
+        FindFromRegistry2(@"HKEY_CURRENT_USER\SOFTWARE\", SimpleRegistryView.Registry64, lst, OpenOfficePlatform.x64);
+        FindFromRegistry2(@"HKEY_CURRENT_USER\SOFTWARE\Wow6432Node\", SimpleRegistryView.Registry64, lst, OpenOfficePlatform.x86);
+        FindFromRegistry2(@"HKEY_LOCAL_MACHINE\SOFTWARE\", SimpleRegistryView.Registry64, lst, OpenOfficePlatform.x64);
+        FindFromRegistry2(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\", SimpleRegistryView.Registry64, lst, OpenOfficePlatform.x86);
+      }
+      else
+      {
+        FindFromRegistry2(@"HKEY_CURRENT_USER\SOFTWARE\", SimpleRegistryView.Default, lst, OpenOfficePlatform.x86);
+        FindFromRegistry2(@"HKEY_LOCAL_MACHINE\SOFTWARE\", SimpleRegistryView.Default, lst, OpenOfficePlatform.x86);
+      }
+    }
+
+
+    private static void FindFromRegistry2(string KeyNameBase, SimpleRegistryView View, List<OfficeInfo> lst, OpenOfficePlatform Platform)
+    {
+      FindFromRegistry3(KeyNameBase + @"OpenOffice\UNO\InstallPath", View, lst, OpenOfficeKind.OpenOffice, Platform); // 18.05.2016 - для OpenOffice 4.1.2
+      FindFromRegistry3(KeyNameBase + @"OpenOffice.org\UNO\InstallPath", View, lst, OpenOfficeKind.OpenOffice, Platform);
+      FindFromRegistry3(KeyNameBase + @"LibreOffice\UNO\InstallPath", View, lst, OpenOfficeKind.LibreOffice, Platform);
+    }
+
+    private static void FindFromRegistry3(string KeyName, SimpleRegistryView View, List<OfficeInfo> lst, OpenOfficeKind Kind, OpenOfficePlatform Platform)
+    {
+      // 30.09.2013
+      // Может не быть доступа к ключу реестра
+      try
+      {
+        AbsPath ProgramDir = new AbsPath((string)(SimpleRegistry.GetValue(KeyName, String.Empty, String.Empty, View)));
+        if (ProgramDir.IsEmpty)
+          return;
+
+        FindOrAddItem(lst, ProgramDir, Kind, InfoSource.Registry, KeyName, Platform);
+      }
+      catch
+      {
+      }
+    }
+
+    #endregion
+
+    #region Поиск для Linux
+
+    private static void FindFromPath(List<OfficeInfo> lst)
+    {
+      string PathVar=Environment.GetEnvironmentVariable("PATH");
+      if (String.IsNullOrEmpty(PathVar))
+        return;
+
+      string[] a = PathVar.Split(System.IO.Path.PathSeparator);
+      for (int i = 0; i < a.Length; i++)
+        FindOrAddItem(lst, new AbsPath(a[i]), OpenOfficeKind.Unknown, InfoSource.EnvironmentVariable, "Path", OpenOfficePlatform.Unknown);
+    }
+
+    private static void FindFromPredefined(List<OfficeInfo> lst)
+    {
+      AbsPath Dir = new AbsPath("/usr/lib/libreoffice/program");
+      if (File.Exists(new AbsPath(Dir, "soffice").Path))
+        FindOrAddItem(lst, Dir, OpenOfficeKind.LibreOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
+      Dir = new AbsPath("/usr/lib/openoffice/program"); // !! проверить имя папки
+      if (File.Exists(new AbsPath(Dir, "soffice").Path))
+        FindOrAddItem(lst, Dir, OpenOfficeKind.OpenOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
+    }
+
+    #endregion
+
+    #region Вспомогательные методы поиска
+
+    private static void FindOrAddItem(List<OfficeInfo> lst, AbsPath ProgramDir, OpenOfficeKind Kind, InfoSource InfoSource, string InfoSourceString, OpenOfficePlatform Platform)
+    {
+      if (ProgramDir.IsEmpty)
+        return;
+
+      if (!Directory.Exists(ProgramDir.Path))
+        return; // пустышка
+
+      AbsPath SOfficePath = new AbsPath(ProgramDir, "soffice" + GetExeExtension());
+      if (!File.Exists(SOfficePath.Path))
+        return;
+
+      if (Environment.OSVersion.Platform == PlatformID.Unix)
+      {
+        AbsPath SOfficeBinPath = new AbsPath(ProgramDir, "soffice.bin");
+        if (!File.Exists(SOfficeBinPath.Path))
+          return; // soffice может быть символьной ссылкой. Проверка не реализована
+      }
+
+      // Во избежание повторов, проверяем наличие в списке такого же пути
+      for (int i = 0; i < lst.Count; i++)
+      {
+        if (lst[i].ProgramDir == ProgramDir)
+          return;
+      }
+
+      lst.Add(new OfficeInfo(ProgramDir, Kind, InfoSource, InfoSourceString, Platform));
+    }
+
+    private static string GetExeExtension()
+    {
+      switch (Environment.OSVersion.Platform)
+      {
+        case PlatformID.Win32NT:
+        case PlatformID.Win32Windows:
+        case PlatformID.Win32S:
+        case PlatformID.WinCE: // ???
+          return ".exe";
+        default:
+          return String.Empty;
+      }
+    }
+
+    #endregion
+
+    #endregion
+
+    /// <summary>
+    /// Обновляет массив Installations.
+    /// </summary>
+    public static void RefreshInstalls()
+    {
+      FInstallations = InitInstallations();
+    }
+
+
+    #endregion
+
+    #region Файлы Open Document Format
+
+    #region Константы
+
+    const string nmspcStyle = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
+    const string nmspcNumber = "urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0";
+
+    #endregion
+
+    #region Форматы чисел и даты в файлах Open Document Format
+
+    public static bool ODFAddFormat(XmlElement elStyles, string FormatText, string StyleName)
+    {
+      return ODFAddFormat(elStyles, FormatText, StyleName, CultureInfo.CurrentCulture);
+    }
+
+    public static bool ODFAddFormat(XmlElement elStyles, string FormatText, string StyleName,
+      CultureInfo ci)
+    {
+      string Language = ci.Name.Substring(0, 2);
+      string Country = String.Empty;
+      if (ci.Name.Length == 5)
+        Country = ci.Name.Substring(3, 2);
+      return ODFAddFormat(elStyles, FormatText, StyleName,
+        ci.NumberFormat, ci.DateTimeFormat, Language, Country);
+    }
+
+    /// <summary>
+    /// В Open Document Format, в отличие от файлов Microsoft Office, форматы чисел
+    /// и дат задаются не в виде одной строки, например, "0.00", а в виде множества
+    /// отдельных стилей
+    /// Реализация не полная!
+    /// </summary>
+    /// <param name="elStyles">Узел "office:automatic-styles" для добавления форматов</param>
+    /// <param name="FormatText">Исходный формат числа</param>
+    /// <param name="StyleName">Имя создаваемого стиля</param>
+    /// <param name="NumberFormat"></param>
+    /// <param name="DateTimeFormat"></param>
+    /// <param name="Language"></param>
+    /// <param name="Country"></param>
+    /// <returns>true - стиль добавлен. false - в текущей реализации данный формат
+    /// не преобразуется</returns>
+    public static bool ODFAddFormat(XmlElement elStyles, string FormatText, string StyleName,
+      NumberFormatInfo NumberFormat, DateTimeFormatInfo DateTimeFormat, string Language, string Country)
+    {
+      if (String.IsNullOrEmpty(FormatText))
+        return false;
+
+      if (DataTools.IndexOfAny(FormatText, "yMdhmsDtTfFgGRruUY") >= 0)
+        return ODFAddDateTimeFormat(elStyles, FormatText, StyleName,
+          CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat, "ru", "RU");
+
+      if (FormatText.IndexOf('0') >= 0)
+        return ODFAddNumberFormat(elStyles, FormatText, StyleName, NumberFormat);
+
+      return false;
+    }
+
+    private static bool ODFAddNumberFormat(XmlElement elStyles, string FormatText, string StyleName,
+      NumberFormatInfo NumberFormat)
+    {
+      /*
+       * В Open Document Format не предусмотрено хранение необязательных цифр после запятой.
+       * Если задать формат "0.0#", сохранить документ ODS,  закрыть и открыть заново, то формат заменяется на "0.00"
+       */
+
+
+      int MinIntDigs;
+      int Decimals;
+      int p = FormatText.IndexOf('.');
+      if (p < 0)
+      {
+        Decimals = 0;
+        MinIntDigs = FormatText.Length;
+      }
+      else
+      {
+        Decimals = FormatText.Length - p - 1;
+        MinIntDigs = FormatText.Length - Decimals - 1;
+      }
+
+      XmlElement elStyle = elStyles.OwnerDocument.CreateElement("number:number-style", nmspcNumber);
+      elStyles.AppendChild(elStyle);
+      SetAttr(elStyle, "style:name", StyleName, nmspcStyle);
+
+      XmlElement elNumber = elStyle.OwnerDocument.CreateElement("number:number", nmspcNumber);
+      elStyle.AppendChild(elNumber);
+      SetAttr(elNumber, "number:decimal-places", Decimals.ToString(), nmspcNumber);
+      SetAttr(elNumber, "number:min-integer-digits", MinIntDigs.ToString(), nmspcNumber);
+
+      if (FormatText.IndexOf(',') >= 0) // по идее, надо проверять, что запятая идет слева от "." и находится между "0#"
+        SetAttr(elNumber, "number:grouping", "true", nmspcNumber);
+
+      return true;
+    }
+
+    private static bool ODFAddDateTimeFormat(XmlElement elStyles, string FormatText, string StyleName,
+      DateTimeFormatInfo FormatInfo, string Language, string Country)
+    {
+      // Заменяем стандартные стили
+      switch (FormatText)
+      {
+        case "d": FormatText = FormatInfo.ShortDatePattern; break;
+        case "D": FormatText = FormatInfo.LongDatePattern; break;
+        case "t": FormatText = FormatInfo.ShortTimePattern; break;
+        case "T": FormatText = FormatInfo.LongTimePattern; break;
+        case "f": FormatText = FormatInfo.LongDatePattern + " " + FormatInfo.ShortTimePattern; break;
+        case "F": FormatText = FormatInfo.FullDateTimePattern; break;
+        case "g": FormatText = FormatInfo.ShortDatePattern + " " + FormatInfo.ShortTimePattern; break;
+        case "G": FormatText = FormatInfo.ShortDatePattern + " " + FormatInfo.LongTimePattern; break;
+        case "M":
+        case "m": FormatText = FormatInfo.MonthDayPattern; break;
+        case "R":
+        case "r": FormatText = FormatInfo.RFC1123Pattern; break;
+        case "s": FormatText = FormatInfo.SortableDateTimePattern; break;
+        case "u": FormatText = FormatInfo.UniversalSortableDateTimePattern; break;
+        case "U": FormatText = FormatInfo.FullDateTimePattern; break;
+        case "Y":
+        case "y": FormatText = FormatInfo.YearMonthPattern; break;
+      }
+
+
+      XmlElement elStyle = elStyles.OwnerDocument.CreateElement(IsTimeOnlyFormat(FormatText) ? "number:time-style" : "number:date-style", nmspcNumber);
+      elStyles.AppendChild(elStyle);
+      SetAttr(elStyle, "style:name", StyleName, nmspcStyle);
+      SetAttr(elStyle, "number:language", Language, nmspcNumber);
+      SetAttr(elStyle, "number:country", Country, nmspcNumber);
+
+
+
+      XmlElement elPart;
+      string AllMaskChars = "yMdhms";
+
+      // Перебираем символы в FormatText
+      // использовать for неудобно, т.к. буду прыгать через символы
+      int pos = 0;
+      while (pos < FormatText.Length)
+      {
+        if (AllMaskChars.IndexOf(FormatText[pos]) >= 0)
+        {
+          // один из символов маски
+          // находим все такие же символы
+          int cnt = 1;
+          for (int j = pos + 1; j < FormatText.Length; j++)
+          {
+            if (FormatText[j] == FormatText[pos])
+              cnt++;
+            else
+              break;
+          }
+
+          switch (FormatText[pos])
+          {
+            case 'y':
+              elPart = elStyle.OwnerDocument.CreateElement("number:year", nmspcNumber);
+              elStyle.AppendChild(elPart);
+              if (cnt > 2)
+                SetAttr(elPart, "number:style", "long", nmspcNumber);
+              break;
+            case 'M':
+              switch (cnt)
+              {
+                case 1: // "1"
+                  elPart = elStyle.OwnerDocument.CreateElement("number:month", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  break;
+                case 2: // "01"
+                  elPart = elStyle.OwnerDocument.CreateElement("number:month", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  SetAttr(elPart, "number:style", "long", nmspcNumber);
+                  break;
+                case 3: // "янв"
+                  elPart = elStyle.OwnerDocument.CreateElement("number:month", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  SetAttr(elPart, "number:textual", "true", nmspcNumber);
+                  break;
+                case 4: // "январь"
+                  elPart = elStyle.OwnerDocument.CreateElement("number:month", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  SetAttr(elPart, "number:textual", "true", nmspcNumber);
+                  SetAttr(elPart, "number:style", "long", nmspcNumber);  // в чем разница ?????
+                  break;
+              }
+              break;
+            case 'd':
+              switch (cnt)
+              {
+                case 1: // "1"
+                  elPart = elStyle.OwnerDocument.CreateElement("number:day", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  break;
+                case 2: // "01"
+                  elPart = elStyle.OwnerDocument.CreateElement("number:day", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  SetAttr(elPart, "number:style", "long", nmspcNumber);
+                  break;
+                case 3: // "Чт"
+                  elPart = elStyle.OwnerDocument.CreateElement("day-of-week", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  break;
+                //case 4: // "Четверг"
+                default:
+                  elPart = elStyle.OwnerDocument.CreateElement("day-of-week", nmspcNumber);
+                  elStyle.AppendChild(elPart);
+                  SetAttr(elPart, "number:style", "long", nmspcNumber);
+                  break;
+              }
+              break;
+            case 'h':
+              elPart = elStyle.OwnerDocument.CreateElement("number:hours", nmspcNumber);
+              elStyle.AppendChild(elPart);
+              if (cnt > 1)
+                SetAttr(elPart, "number:style", "long", nmspcNumber);
+
+              break;
+            case 'm':
+              elPart = elStyle.OwnerDocument.CreateElement("number:minutes", nmspcNumber);
+              elStyle.AppendChild(elPart);
+              if (cnt > 1)
+                SetAttr(elPart, "number:style", "long", nmspcNumber);
+
+              break;
+            case 's':
+              elPart = elStyle.OwnerDocument.CreateElement("number:seconds", nmspcNumber);
+              elStyle.AppendChild(elPart);
+              if (cnt > 1)
+                SetAttr(elPart, "number:style", "long", nmspcNumber);
+              break;
+          }
+          pos += cnt;
+          continue;
+        }
+
+        string s;
+
+        if (FormatText[pos] == '\'')
+        {
+          // Ищем второй апостров
+          int p = FormatText.IndexOf('\'', pos + 1);
+          if (p < 0) // ошибка - нет второго апострофа
+            p = FormatText.Length; // считаем, что строка идет до конца формата
+
+          s = FormatText.Substring(pos + 1, p - pos - 1);
+
+          elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
+          elStyle.AppendChild(elPart);
+          elPart.InnerText = s; // !!! преобразование спецсимволов
+          pos = p;
+          continue;
+        }
+
+        // Простые символы и специальные символы
+        // Вряд ли будет идти больше одного символа подряд
+        switch (FormatText[pos])
+        {
+          case '/':
+            s = FormatInfo.DateSeparator;
+            break;
+          case ':':
+            s = FormatInfo.TimeSeparator;
+            break;
+          default:
+            s = new string(FormatText[pos], 1);
+            break;
+        }
+
+        elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
+        elStyle.AppendChild(elPart);
+        elPart.InnerText = s; // !!! преобразование спецсимволов
+
+        pos++;
+      }
+
+      return true;
+
+#if XXX
+      // лень думать
+      XmlElement elStyle = elStyles.OwnerDocument.CreateElement("number:date-style", nmspcNumber);
+      elStyles.AppendChild(elStyle);
+      SetAttr(elStyle, "style:name", StyleName, nmspcStyle);
+
+      XmlElement elPart;
+      elPart = elStyle.OwnerDocument.CreateElement("number:day", nmspcNumber);
+      elStyle.AppendChild(elPart);
+      SetAttr(elPart, "number:style", "long", nmspcNumber);
+
+      elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
+      elStyle.AppendChild(elPart);
+      elPart.InnerText = ".";
+
+      elPart = elStyle.OwnerDocument.CreateElement("number:month", nmspcNumber);
+      elStyle.AppendChild(elPart);
+      SetAttr(elPart, "number:style", "long", nmspcNumber);
+
+      elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
+      elStyle.AppendChild(elPart);
+      elPart.InnerText = ".";
+
+      elPart = elStyle.OwnerDocument.CreateElement("number:year", nmspcNumber);
+      elStyle.AppendChild(elPart);
+      SetAttr(elPart, "number:style", "long", nmspcNumber);
+
+      if (FormatText.IndexOf(':') >= 0)
+      {
+        elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
+        elStyle.AppendChild(elPart);
+        elPart.InnerText = " ";
+
+        elPart = elStyle.OwnerDocument.CreateElement("number:hours", nmspcNumber);
+        elStyle.AppendChild(elPart);
+        SetAttr(elPart, "number:style", "long", nmspcNumber);
+
+        elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
+        elStyle.AppendChild(elPart);
+        elPart.InnerText = ":";
+
+        elPart = elStyle.OwnerDocument.CreateElement("number:minutes", nmspcNumber);
+        elStyle.AppendChild(elPart);
+        SetAttr(elPart, "number:style", "long", nmspcNumber);
+
+        elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
+        elStyle.AppendChild(elPart);
+        elPart.InnerText = ":";
+
+        elPart = elStyle.OwnerDocument.CreateElement("number:seconds", nmspcNumber);
+        elStyle.AppendChild(elPart);
+        SetAttr(elPart, "number:style", "long", nmspcNumber);
+      }
+
+      return true;
+#endif
+    }
+
+    public static bool IsTimeOnlyFormat(string FormatText)
+    {
+      if (String.IsNullOrEmpty(FormatText))
+        return false;
+      switch (FormatText)
+      {
+        case "d":
+        case "D":
+        case "f":
+        case "F":
+        case "g":
+        case "G":
+        case "M":
+        case "m":
+        case "R":
+        case "r":
+        case "s":
+        case "u":
+        case "U":
+        case "Y":
+        case "y":
+          return false;
+        case "t":
+        case "T":
+          return true;
+      }
+
+      return DataTools.IndexOfAny(FormatText, "dMy") < 0;
+    }
+
+    #endregion
+
+    #region Вспомогательные методы
+
+    private static void SetAttr(XmlElement el, string Name, string Value, string nmspc)
+    {
+      XmlAttribute Attr;
+      if (String.IsNullOrEmpty(nmspc))
+        Attr = el.OwnerDocument.CreateAttribute(Name);
+      else
+        Attr = el.OwnerDocument.CreateAttribute(Name, nmspc);
+      Attr.Value = Value;
+      el.Attributes.Append(Attr);
+    }
+
+    #endregion
+
+    #endregion
+  }
+}

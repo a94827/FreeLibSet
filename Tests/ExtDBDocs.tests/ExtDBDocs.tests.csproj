@@ -1,15 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}</ProjectGuid>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{147B60C0-CAE8-499C-83E5-11D6BBAA4E73}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExtTools.tests</RootNamespace>
-    <AssemblyName>ExtTools.tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RootNamespace>ExtDBDocs.tests</RootNamespace>
+    <AssemblyName>ExtDBDocs.tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,7 +28,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
+    <Reference Include="nunit.framework, Version=2.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Others\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -37,17 +37,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataToolsTests_DataView.cs" />
-    <Compile Include="DataToolsTests_CSV.cs" />
-    <Compile Include="DataToolsTests_String.cs" />
-    <Compile Include="DataToolsTests_Date.cs" />
-    <Compile Include="DataToolsTests_Math.cs" />
-    <Compile Include="ListWithMRUTests.cs" />
+    <Compile Include="DBxBinDataValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ExtDBDocs\ExtDBDocs.csproj">
+      <Project>{5AA9F43F-C1D1-47BD-B83D-E11CD90CFA08}</Project>
+      <Name>ExtDBDocs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExtDB\ExtDB.csproj">
+      <Project>{D78C5082-6E86-47A5-8216-36AEB83751FE}</Project>
+      <Name>ExtDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">
-      <Project>{e61b6cf2-a434-46f2-af4a-db5e4851d170}</Project>
+      <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
       <Name>ExtTools</Name>
     </ProjectReference>
   </ItemGroup>
