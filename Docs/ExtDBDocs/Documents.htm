@@ -1,0 +1,1190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 5.3.7.2 (Windows)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2017-12-19T09:43:52.204000000"/>
+	<style type="text/css">
+		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; line-height: 120% }
+		td p { margin-bottom: 0cm; line-height: 120% }
+		h1 { margin-bottom: 0.21cm }
+		h1.western { font-family: "Liberation Sans", sans-serif; font-size: 18pt }
+		h1.cjk { font-family: "Microsoft YaHei"; font-size: 18pt }
+		h1.ctl { font-family: "Mangal"; font-size: 18pt }
+		h2.western { font-family: "Liberation Sans", sans-serif; font-size: 16pt }
+		h2.cjk { font-family: "Microsoft YaHei"; font-size: 16pt }
+		h2.ctl { font-family: "Mangal"; font-size: 16pt }
+		h3.western { font-family: "Albany", sans-serif; font-size: 14pt }
+		h3.cjk { font-family: "SimSun"; font-size: 14pt }
+		h3.ctl { font-family: "Mangal"; font-size: 14pt }
+		a:link { so-language: zxx }
+	</style>
+</head>
+<body lang="ru-RU" dir="ltr">
+<h1 class="western" align="center" style="margin-top: 0.42cm; line-height: 100%; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Хранение
+документов в ExtDbDocs.dll</b></font></font></h1>
+<h1 class="western"><meta name="created" content="2017-12-15T11:51:41"><meta name="changed" content="2017-12-15T14:13:46.620000000">Служебные
+поля документов и поддокументов</h1>
+<p>Все документы и поддокументы имеют одинаковый набор служебных
+полей. Служебные поля в документах и поддокументах различаются. Поля
+также отличаются в основной базе данных и базе данных истории.</p>
+<h2 class="western">Основная база данных</h2>
+<p>Некоторые служебные поля могут отсутствовать, если сброшены
+определенные свойства в <span lang="en-US">DBxDocTypes</span></p>
+<h3 class="western">Таблица <span lang="en-US">DocTables</span></h3>
+<p>Служебная таблица. В ней регистрируются все объявленные в
+<span lang="en-US">DBxDocTypes </span>виды документов. Содержит
+идентификаторы для каждого вида документов. Используется в базе
+данных истории в таблице <span lang="en-US">DocActions</span> для
+экономии места, чтобы ссылаться на вид документов не по имени
+таблицы, а по числовому значению. 
+</p>
+<p>Поддокументы пока не заносятся в таблицу, но это может быть
+изменено в будущих версиях библиотеки</p>
+<p>При запуске программы в таблицу добавляются строки для новых
+добавленных видов документов. Если какой-либо вид документа больше не
+объявлен в программе, строка в таблице сохраняется.</p>
+<table width="643" cellpadding="4" cellspacing="0">
+	<col width="93">
+	<col width="79">
+	<col width="306">
+	<col width="131">
+	<tr valign="top">
+		<td width="93" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Имя поля</p>
+		</td>
+		<td width="79" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Тип</p>
+		</td>
+		<td width="306" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Описание</p>
+		</td>
+		<td width="131" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Условие наличия <span lang="ru-RU">в зависимости
+			от свойств в </span><span lang="en-US">DBxDocTypes</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Id</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор <span lang="ru-RU">таблицы
+			документов</span>.</p>
+			<p><br/>
+
+			</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DocTableName</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Char NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Имя таблицы документов</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+</table>
+<h3 class="western">Документы</h3>
+<table width="643" cellpadding="4" cellspacing="0">
+	<col width="93">
+	<col width="79">
+	<col width="306">
+	<col width="131">
+	<tr valign="top">
+		<td width="93" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Имя поля</p>
+		</td>
+		<td width="79" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Тип</p>
+		</td>
+		<td width="306" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Описание</p>
+		</td>
+		<td width="131" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Условие наличия <span lang="ru-RU">в зависимости
+			от свойств в </span><span lang="en-US">DBxDocTypes</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Id</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор документа.</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span><span lang="ru-RU">и больше никогда не меняется</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Version</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Актуальная версия документа. Равно 1 при создании документа.
+			При каждом изменении документа увеличивается на 1. Если для одного
+			<span lang="en-US">DbxDocSet </span>несколько раз вызывается
+			<span lang="en-US">ApplyChanges(), </span>то версия меняется
+			только один раз (в том числе и при создании документа)</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseVersions=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Version2</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Дублирует поле <span lang="en-US">Version,
+			</span>если в документ были внесены изменения. Если действие над
+			документом не вносит изменения в прикладные поля документа, то
+			поле <span lang="en-US">Vesion2 </span>не меняется и начинает
+			&quot;отставать&quot; от поля <span lang="en-US">Version,</span>
+			которое увеличивается всегда.</p>
+			<p style="margin-bottom: 0.5cm">Изменения в поддокументах не
+			учитываются.</p>
+			<p style="margin-bottom: 0.5cm">При удалении документа значение
+			поля не меняется, как и при восстановлении (если нет других
+			изменений)</p>
+			<p>При создании документа поле получает значение 1.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseVersions=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Deleted</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Bool</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Если <span lang="en-US">true, </span>то
+			документ помечен на удаление. В табличных просмотрах обычно не
+			отображаются такие документы, пока не включен режим &laquo;Показывать
+			удаленные записи&raquo;.</p>
+			<p>Помеченный на удаление документ может быть восстановлен.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseDeleted=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">CreateTime</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DateTime NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Время создания документа. <span lang="en-US">Записывается при
+			добавлении строки командой INSERT INTO </span><span lang="ru-RU">и
+			больше никогда не меняется</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseTime=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">CreateUserId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">INT32 NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор пользователя,
+			создавшего документ.</p>
+			<p style="margin-bottom: 0.5cm">Ссылка на таблицу документов,
+			заданных свойством <span lang="en-US">DBxDocType.UserTableName</span></p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span>и больше никогда не меняется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseUsers=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ChangeTime</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DateTime NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Время последнего изменения документа. При создании документа
+			поле не заполняется.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseTime=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ChangeUserId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">INT32 NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор пользователя,
+			выполнившего последнее изменение документа.</p>
+			<p style="margin-bottom: 0.5cm">Ссылка на таблицу документов,
+			заданных свойством <span lang="en-US">DBxDocType.UserTableName.</span></p>
+			<p>При создании документа поле не заполняется.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseUsers=true</p>
+		</td>
+	</tr>
+</table>
+<p>Поля <span lang="en-US">CreateTime </span>и <span lang="en-US">CreateUserId
+</span>помечены как допускающие значение <span lang="en-US">NULL </span>в
+целях совместимости. Фактически, они никогда не принимают значение
+<span lang="en-US">NULL.</span></p>
+<h3 class="western"><span lang="ru-RU">Подд</span>окументы</h3>
+<p><br/>
+<br/>
+
+</p>
+<table width="643" cellpadding="4" cellspacing="0">
+	<col width="93">
+	<col width="79">
+	<col width="306">
+	<col width="131">
+	<tr valign="top">
+		<td width="93" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Имя поля</p>
+		</td>
+		<td width="79" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Тип</p>
+		</td>
+		<td width="306" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Описание</p>
+		</td>
+		<td width="131" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Условие наличия <span lang="ru-RU">в зависимости
+			от свойств в </span><span lang="en-US">DBxDocTypes</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Id</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор поддокумента.</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span><span lang="ru-RU">и больше никогда не меняется</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DocId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор документа, к
+			которому относится поддокумент.</p>
+			<p style="margin-bottom: 0.5cm">Ссылка на таблицу документа.</p>
+			<p style="margin-bottom: 0.5cm"><span lang="en-US">Записывается
+			при добавлении строки командой INSERT INTO </span>и больше никогда
+			не меняется.</p>
+			<p>Возможность &quot;перепрыгивания&quot; поддокумента от одного
+			документа к другому отсутствует</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Deleted</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Bool</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US" style="margin-bottom: 0.5cm">TRUE, <span lang="ru-RU">если
+			поддокумент помечен на удаление.</span></p>
+			<p style="margin-bottom: 0.5cm">При просмотре документа (кроме
+			режима просмотра истории), удаленные поддокументы не загружаются в
+			набор данных.</p>
+			<p>Таким образом, у пользователя нет возможности восстановить
+			отдельный удаленный поддокумент. Единственная возможность
+			восстановления поддокумента - восстановить до определенной версии
+			весь документ.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseDeleted=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">StartVersion</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">В это поле заносится номер версии
+			документа, в которой появляется этот поддокумент.</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span>и больше никогда не меняется.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseVersions=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Version2</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">В это поле заносится номер версии
+			документа, для которой были внесены изменения в поддокумент. Если
+			при редактировании документа, поддокумент не меняется, никакие
+			поля поддокумента не записываются.</p>
+			<p>В отличие от основного документа, состояние поле &laquo;Deleted&raquo;
+			учитывается при определении наличия изменений</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseVersions=true</p>
+		</td>
+	</tr>
+</table>
+<p><br/>
+<br/>
+
+</p>
+<h2 class="western">База данных истории <span lang="en-US">Undo</span></h2>
+<p>История ведется при условии, что конструктору
+<span lang="en-US">DBxRealDocProviderGlobal </span>передан аргумент
+<span lang="en-US">UndoDBEntry</span>, не равный <span lang="en-US">null.
+</span>Свойства <span lang="en-US">DBxDocTypes.UseDeleted,
+UseVersions </span>и <span lang="en-US">UseTime </span>должны быть
+установлены, иначе возникнет исключение. Свойство
+<span lang="en-US">DBxDocTypes</span>.<span lang="en-US">UseUsers
+</span>может быть сброшено, то есть история может вестись и без
+таблицы пользователей</p>
+<h3 class="western">Таблица <span lang="en-US">UserActions</span></h3>
+<p>Содержит список действий пользователей. Таблица существует даже
+при <span lang="en-US">UseUsers=false</span></p>
+<p>Таблицы БД undo используют однократную запись. То есть, после
+добавления строки в таблицу, эта строка больше изменяться не будет, в
+отличие от строки в основной базе данных</p>
+<table width="643" cellpadding="4" cellspacing="0">
+	<col width="93">
+	<col width="79">
+	<col width="306">
+	<col width="131">
+	<tr valign="top">
+		<td width="93" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Имя поля</p>
+		</td>
+		<td width="79" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Тип</p>
+		</td>
+		<td width="306" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Описание</p>
+		</td>
+		<td width="131" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Условие наличия <span lang="ru-RU">в зависимости
+			от свойств в </span><span lang="en-US">DBxDocTypes</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Id</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор <span lang="ru-RU">действия
+			пользователя</span>.</p>
+			<p style="margin-bottom: 0.5cm">Отображается при просмотре истории
+			действий пользователя</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span><span lang="ru-RU">и больше никогда не меняется</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">UserId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Псевдоссылочное поле на таблицу пользователей в основной базе
+			данных<span lang="en-US">. </span>Ограничение <span lang="en-US">FOREIGN
+			KEY </span>не может быть установлено на другую базу данных, хотя
+			по смыслу это поле является ссылочным</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">UseUsers=true</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ActionTime</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DateTime NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Время выполнения действия. Если
+			<span lang="en-US">ApllyChanges</span>() вызывается несколько раз,
+			то время первого сохранения</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span>и больше никогда не меняется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ActionInfo</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Char NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Текстовое описание действия,
+			используемое в просмотре действий пользователя</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span>и больше никогда не меняется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ApplyChangesCount</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Количество вызовов <span lang="en-US">ApplyChanges() </span>для
+			данного действия.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p style="margin-bottom: 0.5cm">Есть всегда.</p>
+			<p>Этого поля не было до 22.12.2016, поэтому для более ранних
+			действий нельзя узнать количество сохранений</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ApplyChangesTime</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DateTime NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Время последнего вызова <span lang="en-US">ApplyChanges</span>()
+			для данного действия. Если сохранение выполнялось однократно, то
+			поле совпадает с <span lang="en-US">ActionTime (</span>обратите
+			внимание, что это поведение отличается от полей документа
+			<span lang="en-US">CreateTime/ChangeTime, </span>так как по смыслу
+			назначение полей отличается<span lang="en-US">: </span>поля
+			документа относятся к разным действиям, а поля <span lang="en-US">DocActions
+			- </span>к одному действию<span lang="en-US">)</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p style="margin-bottom: 0.5cm">Есть всегда.</p>
+			<p>Этого поля не было до 22.12.2016</p>
+		</td>
+	</tr>
+</table>
+<p style="margin-bottom: 0cm; line-height: 100%">Используется индекс
+по полю ActionTime для ускорения доступа к просмотру действий
+пользователя</p>
+<h3 class="western">Таблица <span lang="en-US">DocActions</span></h3>
+<p>Содержит список действий над документами.</p>
+<table width="643" cellpadding="4" cellspacing="0">
+	<col width="93">
+	<col width="79">
+	<col width="306">
+	<col width="131">
+	<tr valign="top">
+		<td width="93" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Имя поля</p>
+		</td>
+		<td width="79" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Тип</p>
+		</td>
+		<td width="306" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Описание</p>
+		</td>
+		<td width="131" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Условие наличия <span lang="ru-RU">в зависимости
+			от свойств в </span><span lang="en-US">DBxDocTypes</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Id</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Первичный ключ таблицы. Нигде не
+			используется.</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span><span lang="ru-RU">и больше никогда не меняется</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">UserActionId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32  NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Ссылка на таблицу <span lang="en-US">UserActions.</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="en-US">Записывается
+			при добавлении строки командой INSERT INTO </span>и больше никогда
+			не меняется</p>
+			<p>Ссылка отсутствует при Action=&laquo;Base&raquo;. Для остальных
+			значений Action ссылка является обязательной</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DocTableId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Псевдоссылочное поле на таблицу
+			<span lang="en-US">DocTables </span>в основной базе данных. Задает
+			вид документа. Можно было бы использовать имя таблицы, но тогда
+			размер базы данных <span lang="en-US">Undo </span>был бы
+			значительно больше.</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span>и больше никогда не меняется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DocId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Идентификатор документа, с которым
+			выполняется действие.</p>
+			<p style="margin-bottom: 0.5cm"><span lang="en-US">Записывается
+			при добавлении строки командой INSERT INTO </span>и больше никогда
+			не меняется</p>
+			<p>Поля <span lang="en-US">DocTableId </span>и <span lang="en-US">DocId</span>
+			вместе однозначно идентифицируют документ</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Version</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Версия документа, которая была
+			получена в результате выполнения действия</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span>и больше никогда не меняется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Action</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int8</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Перечислимое поле, определяющее
+			выполненное действие.</p>
+			<p><span lang="en-US">Записывается при добавлении строки командой
+			INSERT INTO </span>и больше никогда не меняется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+</table>
+<p>Возможные значения поля Action:</p>
+<table width="100%" cellpadding="2" cellspacing="0">
+	<col width="46*">
+	<col width="53*">
+	<col width="157*">
+	<tr valign="top">
+		<td width="18%" style="border: 1.00pt solid #000000; padding: 0.05cm">
+			<p align="center">Числовое значение</p>
+		</td>
+		<td width="21%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Текстовое представление</p>
+		</td>
+		<td width="61%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Назначение</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="18%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">0</p>
+		</td>
+		<td width="21%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Base</p>
+		</td>
+		<td width="61%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>Используется после удаления базы данных undo. Означает, что на
+			момент актуализации undo документ уже существовал, но предыдущая
+			его история не сохранена.</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="18%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">1</p>
+		</td>
+		<td width="21%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Insert</p>
+		</td>
+		<td width="61%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>Создание документа</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="18%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">2</p>
+		</td>
+		<td width="21%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Edit</p>
+		</td>
+		<td width="61%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>Изменение документа</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="18%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">3</p>
+		</td>
+		<td width="21%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Delete</p>
+		</td>
+		<td width="61%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>Удаление документа</p>
+		</td>
+	</tr>
+</table>
+<p>Для ускорения записи документов применяется индекс по полям
+DocTableId+DocId+UserActionId (именно в таком порядке, чтобы этот же
+индекс можно было использовать для поиска по
+DocTableId+DocId+<span lang="en-US">Version</span>). Индекс запрещает
+повторы значений (ограничение UNIQUE)</p>
+<p>Вариант: Можно объявить второй индекс по DocTableId+DocId+<span lang="en-US">Version</span>,
+также с ограничением UNIQUE</p>
+<h3 class="western">Документы</h3>
+<table width="643" cellpadding="4" cellspacing="0">
+	<col width="93">
+	<col width="79">
+	<col width="306">
+	<col width="131">
+	<tr valign="top">
+		<td width="93" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Имя поля</p>
+		</td>
+		<td width="79" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Тип</p>
+		</td>
+		<td width="306" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Описание</p>
+		</td>
+		<td width="131" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Условие наличия <span lang="ru-RU">в зависимости
+			от свойств в </span><span lang="en-US">DBxDocTypes</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Id</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Первичный ключ. Не используется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DocId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Идентификатор документа. Псевдоссылочное поле на таблицу
+			документа в основной базе данных</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Version2</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p style="margin-bottom: 0.5cm">Версия документа, к которой
+			относится данная строка.</p>
+			<p style="margin-bottom: 0.5cm">В режиме просмотра истории, для
+			документа отыскивается последняя строка с <span lang="en-US">Version2,
+			</span><span lang="ru-RU">меньшей или равной запрошенной.</span></p>
+			<p><span lang="ru-RU">При добавлении записи в </span><span lang="en-US">Undo
+			</span><span lang="ru-RU">сюда помещается значение поля </span><span lang="en-US">Version2
+			</span><span lang="ru-RU">из основной таблицы документа.</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+</table>
+<p>Для таблицы устанавливается индекс по полям DocId+Version2 с
+ограничением UNIQUE</p>
+<p>Таблица документа не содержит поля Deleted, т.к. состояние Deleted
+однозначно определяется полем Action в таблице DocActions (см. доступ
+к версиям докумен-та). Если документ удаляется / восстанавливается, в
+основной таблице данных поле Version2 не меняется и строка в таблице
+в undo не добавляется</p>
+<p>Имеется неявное отношение &laquo;один к одному&raquo; между
+DocActions и таблицей доку-мента в БД undo, хотя не для всех строк в
+DocActions есть строка документа.</p>
+<h3 class="western"><span lang="ru-RU">Подд</span>окументы</h3>
+<table width="643" cellpadding="4" cellspacing="0">
+	<col width="93">
+	<col width="79">
+	<col width="306">
+	<col width="131">
+	<tr valign="top">
+		<td width="93" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Имя поля</p>
+		</td>
+		<td width="79" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Тип</p>
+		</td>
+		<td width="306" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Описание</p>
+		</td>
+		<td width="131" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Условие наличия <span lang="ru-RU">в зависимости
+			от свойств в </span><span lang="en-US">DBxDocTypes</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Id</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Первичный ключ. Не используется</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">SubDocId</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int32 NOT NULL</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Идентификатор поддокумента. Псевдоссылочное поле на таблицу
+			поддокумента в основной базе данных</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Version2</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Int16</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>Версия документа, в котором поддокумент был добавлен или
+			изменен, после чего он стал иметь такой вид.</p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="93" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Deleted</p>
+		</td>
+		<td width="79" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">Bool</p>
+		</td>
+		<td width="306" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">TRUE, <span lang="ru-RU">если эта версия
+			поддокумента относится к удаленному поддокументу</span></p>
+		</td>
+		<td width="131" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">Есть всегда</p>
+		</td>
+	</tr>
+</table>
+<p>Для таблицы устанавливается индекс по полям SubDocId+Version2 с
+ограничени-ем UNIQUE</p>
+<p>Пусть поддокумент удаляется в процессе редактирования документа.
+При сохра-нении изменений выполняется актуализация предыдущего
+состояния. При этом обнаруживается, что состояние поддокумента
+меняется, т.к. значение поле Deleted переходит из false в true.
+Соответственно, запись о поддокументе будет помещена в таблицу. В
+этом отличие от полного удаления документа, когда за-пись в таблицу
+не добавляется</p>
+<p>Имеется неявное отношение &laquo;один ко многим&raquo; между
+DocActions и таблицей под-документа в БД undo</p>
+<h1 class="western">Сохранение документов</h1>
+<p>Сохранение изменений для набора <span lang="en-US">DBxDocSet</span>
+выполняется в рамках одной транзакции (точнее: двух, так как
+используется две базы данных; но они должны обрабатываться как целое)
+При сохранении изменений выполняются следующие действия.</p>
+<p>&nbsp;</p>
+<p>1. Если в режиме редактирования нет изменений ни в документе, ни в
+поддокументах, а свойство <span lang="en-US">DBxDocSet</span>.<span lang="en-US">SaveIfNotChanged</span>
+не установлено, никаких действий не выполняется.</p>
+<p>2. Добавляется запись в таблицу UserActions и извлекается новый
+<span lang="en-US">UserActionId</span>. Это действие не выполняется,
+если пользователь повторно выполняет сохранение документа в процессе
+редактирования (свойство <span lang="en-US">DBxDocSet</span>.<span lang="en-US">UserActionId</span>
+передается между клиентом и сервером в обе стороны)</p>
+<p>3. Для каждого документа, который создается, изменяется или
+удаляется, добавляется запись в таблицу DocActions. Документу
+присваивается новое значение поля Version. Опять же, при повторном
+сохранении результатов редактирования, это действие не выполняется.
+Однако, тут требуется проверка для каждого документа отдельно
+(проверка выполняется поиском в таблице DocActions по полям
+UserActionId+DocTableId+DocId) (см. также проверку <span lang="en-US">DocActions</span>)</p>
+<p>4. Если документ редактируется, а не создается или удаляется, то
+для строки документа проверяется наличие изменений. Если есть
+изменения, выполняется актуализация строки в копии таблицы документа
+в undo. При повторном сохранении документов актуализация выполняется,
+только если она не сделана при предыдущем сохранении. Проверка
+выполняется просто. Если текущее значение поля <span lang="en-US">Version</span>2=<span lang="en-US">Version</span>,
+значит это не первое изменение документа, соответственно, выполнять
+актуализацию не надо</p>
+<p>5. Аналогично выполняется актуализация строк для поддокументов.
+Для них еще более вероятна ситуация, когда при первом сохранении
+документа изменений в поддокументе не было (и не было актуализации),
+а при втором &ndash; появились изменения. Актуализация выполняется в
+режиме редактирования документа, когда существующий поддокумент
+изменяется или удаляется. (Необходимость актуализации аналогично
+определяется сравнением Version2 поддокумента с текущей версией
+документа)</p>
+<p>6. Сохраняются документы и поддокументы в основной базе данных.
+При этом поле Version2 приравнивается к текущей версии документа,
+если данные были изменены. Если изменений не было, то строка
+документа записывается только при первом сохранении (чтобы обновить
+поля Version, <span lang="en-US">ChangeUserId</span> и <span lang="en-US">ChangeTime</span>).
+При изменении изменений в каждом поддокументе, он пропускается</p>
+<h2 class="western">Актуализация</h2>
+<p>Актуализация копий таблиц в БД undo &ndash; это добавление копий
+строк документов или поддокументов из основной базы данных.
+Назначение: возможность последующего восстановления состояния
+документа в любой его версии. Основным моментом является минимизация
+копируемой информации, чтобы уменьшить время сохранения изменений и
+предотвратить &laquo;раздувание&raquo; базы данных undo дублирующими
+данными. При просмотре версии документа используются обе базы данных
+(основная и undo). Наличия одной базы undo недостаточно.</p>
+<p>Добавление строк в таблицы UserActions и DocActions формально не
+является частью актуализации</p>
+<p>&nbsp;</p>
+<p align="center">Таблица необходимости актуализации состояния
+документов и поддокументов перед сохранением изменений</p>
+<center>
+	<table cellpadding="0" cellspacing="0">
+		<tr valign="top">
+			<td rowspan="3" width="127" style="border: 1.00pt solid #000000; padding: 0.05cm">
+				<p lang="en-US" align="center">Действие с документом</p>
+			</td>
+			<td rowspan="3" width="127" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">Актуализация документа</p>
+			</td>
+			<td colspan="3" width="384" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">Действие с поддокументом</p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="131" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">Создание</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">Изменение</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">Удаление</p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td colspan="3" width="384" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">Актуализация поддокумента</p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+				<p align="center">Создание</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+			<td width="131" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+				<p align="center">Изменение</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">+</p>
+			</td>
+			<td width="131" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">+</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">+</p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+				<p align="center">Удаление</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+			<td width="131" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+			<td width="127" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+				<p align="center">-</p>
+			</td>
+		</tr>
+	</table>
+</center>
+<p>&nbsp;</p>
+<p>Пусть пользователь создал документ с поддокументом и нажал кнопку
+&laquo;Запись&raquo;. Соответственно, в основной базе данных
+появились строка документа и поддокумента. В базе данных undo
+появились строки в таблицах UserActions и DocActions. В копиях таблиц
+строки не появились.</p>
+<p>Затем пользователь, продолжая редактирование, удалил поддокумент и
+нажимает кнопку &laquo;ОК&raquo;. В основной базе данных для
+поддокумента устанавливается поле Deleted=<span lang="en-US">true</span>.
+В базе данных undo в таблицах UserActions и UndoActions записи не
+добавляются и не изменяются (т.к. это считается продолжением
+действия). Должна ли добавляться запись в копию таблицы поддокумента?
+Ответ: Нет. При актуализации копируются данные, существующие до
+внесения изменений операцией редактирования в-целом, а не до одного
+данного такта записи. До начала редактирования поддокумента не было,
+поэтому актуализировать нечего. Актуализации также не будет, даже
+если документ создан, а затем &ndash; удален в процессе
+редактирования существующего документа.</p>
+<p>Таким образом, в основной базе данных могут появляться строки
+поддокументов, помеченные на удаление, для которых нет записей в базе
+данных undo. Для документа такая ситуация не встречается, т.к. нельзя
+в процессе редактирования удалить документ. Иначе в таблице
+DocActions будет строка с Action=Insert или <span lang="en-US">Edit</span>,
+но документ будет иметь признак Deleted=true.</p>
+<p>Если требуется именно такое поведение (создание -&gt; запись -&gt;
+удаление в одном сеансе работы), то можно добавить поле Deleted в
+DocActionId</p>
+<h2 class="western">Проверка DocActions</h2>
+<p>Перед выполнением добавления записи в DocActions (п.2),
+выполняется проверка соответствия версии документа в поле Version в
+основной таблице и в таблице <span lang="en-US">DocActions</span>.
+Проверка не выполняется при создании документа. В таблице DocActions
+отыскивается последняя строка для заданного документа</p>
+<p>&nbsp;</p>
+<p>Возможны следующие результаты сравнения:</p>
+<p>1. Версии совпадают. Это нормальная ситуация, никаких
+корректировок не требуется</p>
+<p>2. В таблице DocActions нет строк для этого документа. Эта
+ситуация не является ошибкой, если база данных undo была полностью
+удалена. В таблицу DocActions добавляется строка с Action=&laquo;Base&raquo;.
+Изменений в части дальнейшей актуализации не требуется</p>
+<p>3. Версия в DocActions меньше, чем версия документа в основной
+базе данных. Это считается ошибкой. Она может возникнуть, если база
+данных была повреждена и восстановлена из резервной копии, а основная
+база данных оказалась более новой. Можно попробовать выполнить
+следующие действия:</p>
+<p style="margin-left: 1.25cm">1. Добавить в UserActions строку,
+используя поля ChangeUser<span lang="en-US">Id</span> и ChangeTime
+(или CreateUserId и <span lang="en-US">CreateTime</span>, если
+<span lang="en-US">change</span>-полей нет). В качестве <span lang="en-US">ActionInfo
+указать </span>&laquo;Восстановление состояния документа&raquo;</p>
+<p style="margin-left: 1.25cm">2. Добавить в DocActions строку с
+текущей версией документа и Action=base</p>
+<p style="margin-left: 1.25cm">3. Выполнить актуализацию документов и
+поддокументов. Для каждой строки сравнивать значение поля Version2 с
+последним значением, существующим в копии таблицы
+документа/поддокумента. Если в основной базе данных значение поля
+больше, то добавить строку</p>
+<p>4. Версия в DocActions больше, чем в основной строке документа.
+Это уже серьезная ошибка. Возможны варианты исправления: 
+</p>
+<p style="margin-left: 1.25cm">Вариант 1. Полная очистка таблицы
+DocActions и таблиц документов / поддокументов, относящихся к этому
+документу. После этого выполняются действия, описанные в варианте
+сравнения №2</p>
+<p style="margin-left: 1.25cm">Вариант 2. Пропустить номера версий,
+которые есть в DocActions. Таким образом, документ получит приращение
+в номере версии, большее, чем на единицу. Никаких дополнительных
+действий не требуется, дальнейшая актуализация выполняется, как будто
+ничего не случилось&nbsp;</p>
+<h1 class="western">Доступ к состоянию документа с определенной
+версией</h1>
+<p>1. Находится запись в таблице DocAc<span lang="en-US">tions</span>.
+соответствующая запрошенной версии, чтобы определить будущее значения
+поля De<span lang="en-US">leted</span> (оно равно true, когда
+Action=Delete). Заодно проверяется корректность запрошенного номера
+версии документа. Если строка в DocActions не найдено, возникает
+ошибка</p>
+<p>2. Загружаются документы и поддокументы из основной базы данных,
+включая удаленные поддокументы (в отличие от обычной загрузки, когда
+удаленные поддокументы пропускаются). Пропускаются поддокументы, у
+которых StartVersion больше, чем запрошенная версия. Эти поддокументы
+были созданы позже</p>
+<p>3. Для каждой строки проверяется поле Version2. Если оно меньше
+или равно запрошенной версии документа, дополнительных действий не
+требуется. Иначе выполняется поиск в копии таблицы undo последней
+строки, значение Version2 которой меньше или равно запрошенной. Если
+строка найдена, выполняется замена значений на найденную строку. Если
+строка в un<span lang="en-US">d</span>o не найдена, это означает
+ошибку и корректное состояние поддокумента не может быть получено</p>
+<p>4. Удаляются строки поддокументов, у которых поле Deleted
+установлено в <span lang="en-US">true</span></p>
+<p>5. Поле Deleted для документа устанавливается в найденное значение
+в п.1</p>
+<h1 class="western">Права доступа пользователя</h1>
+<p>Имеется противорчение при записи данных. Пользователь может иметь
+запрет на чтение и/или запись отдельных полей документов или
+поддокументов. При сохранении изменений эти ограничения обязательно
+должны учитываться, т.к. злонамеренный пользователь, взломав
+клиентскую часть приложения, может попытаться выполнить запись в
+недоступные для него поля.</p>
+<p>В то же время, когда выполняется актуализация таблиц в базе данных
+<span lang="en-US">undo</span>, наложение таких ограничений
+недопустимо. В самом деле, при копировании строки документа или
+поддокумента, должны быть скопированы все поля. Последующий просмотр
+версии документа может быть выполнен другим пользователем, обладающим
+большими правами. Если актуализация была не для всех полей, то будут
+отображены пустые значения.</p>
+<p>Так как у клиентского приложения нет прямого доступа к базе undo,
+можно разрешить полный доступ к ней, не накладывая ограничений
+пользователя.</p>
+<p>Для основной базы данных применяются две отдельные &laquo;точки
+подключения&raquo;. Одна &ndash; с назначенными правами пользователя,
+используется при записи изменений в основные таблицы. Также она
+используется для считывания значений (пользователь имеет доступ к
+оператору SELECT этой точки, но не может выполнять другие действия)</p>
+<p>Вторая &ndash; недоступная для клиентского приложения, не содержит
+ограничений, и используется для актуализации таблиц <span lang="en-US">undo</span></p>
+<p>&nbsp;</p>
+<p><br/>
+<br/>
+
+</p>
+</body>
+</html>
