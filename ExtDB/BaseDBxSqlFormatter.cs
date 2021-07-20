@@ -1,0 +1,1429 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace AgeyevAV.ExtDB
+{
+  /// <summary>
+  /// Этот класс используется в качестве базового класса для специфических форматизаторов баз данных и для DataViewDBxSqlFormatter
+  /// </summary>                                         
+  public abstract class BaseDBxSqlFormatter : DBxSqlFormatter
+  {
+    #region Имена таблиц и полей
+
+    /// <summary>
+    /// Способ оборочивания имен таблиц, альясов и полей.
+    /// Обычно используются кавычки, но для DataView, MS SQL Server и Access должны использоваться квадратные скобки
+    /// </summary>
+    protected enum EnvelopMode
+    {
+      /// <summary>
+      /// Основной вариант - имена заключаются в двойные кавычки
+      /// </summary>
+      Quotation,
+
+      /// <summary>
+      /// Для баз данных Microsoft - квадратные скобки
+      /// </summary>
+      Brackets,
+
+      /// <summary>
+      /// Имена не должны экранироваться
+      /// </summary>
+      None,
+
+      /// <summary>
+      /// Все методы реализуются производным классом самостоятельно.
+      /// BaseDBxSqlFormatter вызывает исключение
+      /// </summary>
+      Unsupported
+    }
+
+    /// <summary>
+    /// Правила обрамления имен таблиц, полей и индексов.
+    /// По умолчанию, имена заключаются в кавычки
+    /// </summary>
+    protected virtual EnvelopMode NameEnvelopMode { get { return EnvelopMode.Quotation; } }
+
+    /// <summary>
+    /// Форматирование имени таблицы.
+    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства NameEnvelopMode
+    /// </summary>
+    /// <param name="buffer">Буфер для формирования SQL-запроса</param>
+    /// <param name="tableName">Имя таблицы</param>
+    protected override void OnFormatTableName(DBxSqlBuffer buffer, string tableName)
+    {
+      DoFormatName(buffer, tableName);
+    }
+
+    /// <summary>
+    /// Форматирование имени поля.
+    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства NameEnvelopMode
+    /// </summary>
+    /// <param name="buffer">Буфер для формирования SQL-запроса</param>
+    /// <param name="columnName">Имя столбца</param>
+    protected override void OnFormatColumnName(DBxSqlBuffer buffer, string columnName)
+    {
+      DoFormatName(buffer, columnName);
+    }
+
+    private void DoFormatName(DBxSqlBuffer buffer, string name)
+    {
+      switch (NameEnvelopMode)
+      {
+        case EnvelopMode.Quotation:
+          buffer.SB.Append("\"");
+          buffer.SB.Append(name);
+          buffer.SB.Append("\"");
+          break;
+        case EnvelopMode.Brackets:
+          buffer.SB.Append("[");
+          buffer.SB.Append(name);
+          buffer.SB.Append("]");
+          break;
+        case EnvelopMode.None:
+          buffer.SB.Append(name);
+          break;
+        case EnvelopMode.Unsupported:
+          throw new NotSupportedException("Метод должен быть реализован в производном классе");
+        default:
+          throw new BugException("Недопустимое значение свойства NameEnvelopMode=" + NameEnvelopMode.ToString());
+      }
+    }
+
+
+    /// <summary>
+    /// Форматирование имени поля и альяса таблицы для запросов SELECT c конструкцией JOIN.
+    /// Непереопределенный метод вызывает OnFormatTableName() для форматирования альяса, добавляет точку и 
+    /// форматирует имя поля вызовом OnFormatColumnName()
+    /// </summary>
+    /// <param name="buffer">Буфер для формирования SQL-запроса</param>
+    /// <param name="tableAlias">Альяс таблицы (до точки)</param>
+    /// <param name="columnName">Имя столбца (после точки)</param>
+    protected override void OnFormatColumnName(DBxSqlBuffer buffer, string tableAlias, string columnName)
+    {
+      OnFormatTableName(buffer, tableAlias);
+      buffer.SB.Append('.');
+      OnFormatColumnName(buffer, columnName);
+    }
+
+    #endregion
+
+    #region Типы данных
+
+    /// <summary>
+    /// Форматирование типа поля для операторов CREATE/ALTER TABLE ADD/ALTER COLUMN. 
+    /// Добавляется только тип данных, например, "CHAR(20)".
+    /// Имя столбца и выражение NULL/NOT NULL не добавляется.
+    /// </summary>
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="column">Описание столбца</param>
+    protected override void OnFormatValueType(DBxSqlBuffer buffer, DBxColumnStruct column)
+    {
+      switch (column.ColumnType)
+      {
+        #region Строка
+
+        case DBxColumnType.String:
+          buffer.SB.Append("CHAR(");
+          buffer.SB.Append(column.MaxLength);
+          buffer.SB.Append(")");
+          break;
+
+        #endregion
+
+        #region Логический
+
+        case DBxColumnType.Boolean:
+          buffer.SB.Append("BOOLEAN");
+          break;
+
+        #endregion
+
+        #region Числа
+
+        case DBxColumnType.Int:
+          if (column.MinValue == 0 && column.MaxValue == 0)
+            buffer.SB.Append("INTEGER"); // основной тип
+          else if (column.MinValue >= Int16.MinValue && column.MaxValue <= Int16.MaxValue)
+            buffer.SB.Append("SMALLINT");
+          else if (column.MinValue >= Int32.MinValue && column.MaxValue <= Int32.MaxValue)
+            buffer.SB.Append("INTEGER");
+          else
+            buffer.SB.Append("BIGINT");
+          break;
+
+        case DBxColumnType.Float:
+          if (column.MinValue == 0 && column.MaxValue == 0)
+            buffer.SB.Append("DOUBLE PRECISION");
+          else if (column.MinValue >= Single.MinValue && column.MaxValue <= Single.MaxValue)
+            buffer.SB.Append("REAL");
+          else
+            buffer.SB.Append("DOUBLE PRECISION");
+          break;
+
+        case DBxColumnType.Money: // Отдельного денежного типа нет
+          buffer.SB.Append("NUMERIC(18,2)");
+          break;
+
+        #endregion
+
+        #region Дата / время
+
+        case DBxColumnType.Date: // Только дата
+          buffer.SB.Append("DATE");
+          break;
+
+        case DBxColumnType.DateTime: // Дата и время
+          buffer.SB.Append("TIMESTAMP");
+          break;
+
+        case DBxColumnType.Time:
+          buffer.SB.Append("TIME");
+          break;
+
+        #endregion
+
+        #region GUID
+
+        case DBxColumnType.Guid:
+          buffer.SB.Append("CHAR(36)"); // 32 символа + 4 разделителя "-"
+          break;
+
+        #endregion
+
+        #region MEMO
+
+        case DBxColumnType.Memo:
+          buffer.SB.Append("CLOB"); // Интересно, его кто-нибудь поддерживает?
+          break;
+
+        case DBxColumnType.Xml:
+          buffer.SB.Append("XML");
+          break;
+
+        case DBxColumnType.Binary:
+          buffer.SB.Append("BLOB");
+          break;
+
+        #endregion
+
+        default:
+          throw new BugException("Неизвестный тип поля " + column.ColumnType.ToString());
+      }
+    }
+
+    #endregion
+
+    #region Выражения
+
+    /// <summary>
+    /// Форматирование части выражения, возвращающего значение столбца.
+    /// Если столбец поддерживает значения NULL и установлено свойство DBxFormatExpressionInfo.NullAsDefaultValue,
+    /// то выполяется форматирование функции COALESCE().
+    /// Иначе в запрос добавляется имя поля с помощью OnFormatColumnName(). Перед этим выполняется поиск альяса таблицы в списке DBxSqlBuffer.ColumnTableAliases.
+    /// При необходимости, перед именем столбца выводится альяс таблицы.
+    /// </summary>
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="column">Выражение - имя поля</param>
+    /// <param name="formatInfo">Параметры форматирования</param>
+    protected override void OnFormatColumn(DBxSqlBuffer buffer, DBxColumn column, DBxFormatExpressionInfo formatInfo)
+    {
+      string TableAlias;
+      buffer.ColumnTableAliases.TryGetValue(column.ColumnName, out TableAlias);
+
+      string ActualName = column.ColumnName;
+      int LastDotPos = column.ColumnName.LastIndexOf('.');
+      if (LastDotPos >= 0)
+      {
+        ActualName = ActualName.Substring(LastDotPos + 1);
+        if (String.IsNullOrEmpty(TableAlias))
+          throw new InvalidOperationException("Для ссылочного столбца \"" + column.ColumnName + "\" не найден альяс таблицы");
+      }
+
+      bool UseCoalesce = false;
+      DBxColumnType WantedType = formatInfo.WantedColumnType;
+      if (formatInfo.NullAsDefaultValue)
+      {
+        DBxColumnStruct Str;
+        buffer.ColumnStructs.TryGetValue(column.ColumnName, out Str);
+        if (Str != null)
+        {
+          UseCoalesce = Str.Nullable;
+          WantedType = Str.ColumnType;
+        }
+        else
+          UseCoalesce = true;
+      }
+
+      if (UseCoalesce)
+      {
+        if (WantedType == DBxColumnType.Unknown)
+          throw new InvalidOperationException("Для столбца \"" + column.ColumnName + "\" требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных");
+
+        DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(DBxTools.GetDefaultValue(WantedType), WantedType));
+        OnFormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // рекурсивный вызов форматировщика, но уже без флага 
+      }
+      else
+      {
+        if (String.IsNullOrEmpty(TableAlias))
+          OnFormatColumnName(buffer, ActualName);
+        else
+          OnFormatColumnName(buffer, TableAlias, ActualName);
+      }
+    }
+
+    /// <summary>
+    /// Форматирование выражения-функции или математической операции.
+    /// Для форматирования аргументов используется рекурсивный вызов FormatExpression()
+    /// </summary>
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="function">Выражение - функция</param>
+    /// <param name="formatInfo">Параметры форматирования</param>
+    protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      switch (function.Function)
+      {
+        #region Арифметические операции
+
+        case DBxFunctionKind.Add:
+          if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+            formatInfo.WantedColumnType = DBxColumnType.Int;
+
+          formatInfo.NoParentheses = true;
+          FormatExpression(buffer, function.Arguments[0], formatInfo);
+          buffer.SB.Append("+");
+          FormatExpression(buffer, function.Arguments[1], formatInfo);
+          break;
+
+        case DBxFunctionKind.Substract:
+          if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+            formatInfo.WantedColumnType = DBxColumnType.Int;
+
+          formatInfo.NoParentheses = true;
+          FormatExpression(buffer, function.Arguments[0], formatInfo);
+          buffer.SB.Append("-");
+          formatInfo.NoParentheses = false;
+          FormatExpression(buffer, function.Arguments[1], formatInfo);
+          break;
+
+        case DBxFunctionKind.Multiply:
+          formatInfo.NoParentheses = false;
+          if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+            formatInfo.WantedColumnType = DBxColumnType.Int;
+          FormatExpression(buffer, function.Arguments[0], formatInfo);
+          buffer.SB.Append("*");
+          FormatExpression(buffer, function.Arguments[1], formatInfo);
+          break;
+
+        case DBxFunctionKind.Divide:
+          if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+            formatInfo.WantedColumnType = DBxColumnType.Int;
+          formatInfo.NoParentheses = false;
+          FormatExpression(buffer, function.Arguments[0], formatInfo);
+          buffer.SB.Append("/");
+          FormatExpression(buffer, function.Arguments[1], formatInfo);
+          break;
+
+        case DBxFunctionKind.Neg:
+          if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+            formatInfo.WantedColumnType = DBxColumnType.Int;
+          formatInfo.NoParentheses = false;
+          buffer.SB.Append("-");
+          FormatExpression(buffer, function.Arguments[0], formatInfo);
+          break;
+
+        #endregion
+
+        #region Функции
+
+        case DBxFunctionKind.Abs:
+          if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+            formatInfo.WantedColumnType = DBxColumnType.Int;
+          DoFormatFunction(buffer, function, formatInfo);
+          break;
+
+        case DBxFunctionKind.Coalesce:
+          // Определяем тип данных из константы
+          for (int i = function.Arguments.Length - 1; i >= 1; i--)
+          {
+            DBxConst ConstExpr = function.Arguments[i].GetConst();
+            if (ConstExpr != null)
+            {
+              formatInfo.WantedColumnType = ConstExpr.ColumnType; // переопределяем переданный тип
+              break;
+            }
+          }
+          DoFormatFunction(buffer, function, formatInfo);
+          break;
+
+        case DBxFunctionKind.Length:
+        case DBxFunctionKind.Lower:
+        case DBxFunctionKind.Upper:
+          formatInfo.WantedColumnType = DBxColumnType.String;
+          DoFormatFunction(buffer, function, formatInfo);
+          break;
+
+        case DBxFunctionKind.Substring:
+          // Первый аргумент - строка, второй и третий - числа
+          buffer.SB.Append(GetFunctionName(function.Function));
+          buffer.SB.Append('(');
+          formatInfo.NoParentheses = true;
+          formatInfo.WantedColumnType = DBxColumnType.String;
+          buffer.FormatExpression(function.Arguments[0], formatInfo);
+          buffer.SB.Append(',');
+          formatInfo.WantedColumnType = DBxColumnType.Int;
+          buffer.FormatExpression(function.Arguments[1], formatInfo);
+          buffer.SB.Append(',');
+          formatInfo.WantedColumnType = DBxColumnType.Int;
+          buffer.FormatExpression(function.Arguments[2], formatInfo);
+          buffer.SB.Append(')');
+          break;
+
+        #endregion
+
+        default:
+          throw new BugException("Неизвестная функция " + function.Function.ToString());
+      }
+    }
+
+    private void DoFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      formatInfo.NoParentheses = true;
+
+      buffer.SB.Append(GetFunctionName(function.Function));
+      buffer.SB.Append('(');
+      for (int i = 0; i < function.Arguments.Length; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(',');
+        FormatExpression(buffer, function.Arguments[i], formatInfo);
+      }
+      buffer.SB.Append(')');
+    }
+
+    /// <summary>
+    /// Возвращает true, если выражение <paramref name="expression"/> требуется заключать в круглые скобки для правильного порядка вычислений.
+    /// Возвращает true для выражений-математических операций.
+    /// </summary>
+    /// <param name="expression">Выражение, которое, может быть, нужно заключать в скобки</param>
+    /// <returns>true, если скобки требуются</returns>
+    protected override bool OnAreParenthesesRequired(DBxExpression expression)
+    {
+      DBxFunction f = expression as DBxFunction;
+      if (f != null)
+      {
+        switch (f.Function)
+        {
+          case DBxFunctionKind.Add:
+          case DBxFunctionKind.Substract:
+          case DBxFunctionKind.Multiply:
+          case DBxFunctionKind.Divide:
+          case DBxFunctionKind.Neg:
+            return true;
+          default:
+            return false;
+        }
+      }
+      else
+        return false;
+    }
+
+    /// <summary>
+    /// Возвращает имя функции.
+    /// Для некоторых провайдеров функции называются нестандартным образом.
+    /// Например, для MS SQL Server и DataView, функция COALSECE() называется ISNULL(), хотя делает то же самое.
+    /// Если СУБД реализует функцию с другими аргументами, то требуется переопределение метода OnFormatFunction()
+    /// </summary>
+    /// <param name="function">Функция</param>
+    protected virtual string GetFunctionName(DBxFunctionKind function)
+    {
+      switch (function)
+      {
+        case DBxFunctionKind.Abs: return "ABS";
+        case DBxFunctionKind.Coalesce: return "COALESCE";
+        case DBxFunctionKind.Length: return "LEN";
+        case DBxFunctionKind.Lower: return "LOWER";
+        case DBxFunctionKind.Upper: return "UPPER";
+        case DBxFunctionKind.Substring: return "SUBSTRING";
+        default:
+          throw new ArgumentException("Неизвестная функция " + function.ToString(), "function");
+      }
+    }
+
+    /// <summary>
+    /// Форматирование выражения-функции или математической операции.
+    /// Для форматирования аргументов используется рекурсивный вызов FormatExpression()
+    /// </summary>
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="function">Выражение - функция</param>
+    /// <param name="formatInfo">Параметры форматирования</param>
+    protected override void OnFormatAgregateFunction(DBxSqlBuffer buffer, DBxAgregateFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      buffer.SB.Append(GetFunctionName(function.Function));
+      buffer.SB.Append('(');
+      if (function.Argument == null)
+        buffer.SB.Append('*');
+      else
+        buffer.FormatExpression(function.Argument, new DBxFormatExpressionInfo());
+      buffer.SB.Append(')');
+    }
+
+    private string GetFunctionName(DBxAgregateFunctionKind kind)
+    {
+      // Можно было бы вернуть Kind.ToString().ToUpperInvariant(), но это небезопасно с точки зрения иньекции кода
+      switch (kind)
+      { 
+        case DBxAgregateFunctionKind.Sum:
+        case DBxAgregateFunctionKind.Count:
+        case DBxAgregateFunctionKind.Min:
+        case DBxAgregateFunctionKind.Max:
+        case DBxAgregateFunctionKind.Avg:
+          return kind.ToString().ToUpperInvariant();
+        default:
+          throw new ArgumentException("Неизвестная агрегатная функция " + kind.ToString());
+      }
+    }
+
+
+    #endregion
+
+    #region Значения
+
+    /// <summary>
+    /// Форматирование значения поля
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>,
+    /// возможно, заключенное в апострофы.
+    /// Также отвечает за экранирование символов строкового значения, например, удвоение апострофов.
+    /// Метод не выполняет форматирование самостоятельно, а вызывает один из методов OnFormatXxxValue() для значения соответствующего типа.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    /// <param name="columnType">Тип значения</param>
+    protected sealed /*временно*/ override void OnFormatValue(DBxSqlBuffer buffer, object value, DBxColumnType columnType)
+    {
+      if (value == null)
+      {
+        OnFormatNullValue(buffer);
+        return;
+      }
+      if (value is DBNull)
+      {
+        OnFormatNullValue(buffer);
+        return;
+      }
+
+      if (value is String)
+      {
+        //// Для DataView строка берется в апострофы. Также выполняются замены
+        //// См. раздел справки "DataColumn.Expression Property"
+
+        // 15.02.2016
+        // Для строковой константы удваиваем апострофы
+        // Остальные символы не заменяются
+
+        string s = (string)value;
+
+        if (columnType == DBxColumnType.Guid)
+        {
+          // 07.10.2019
+          Guid g = new Guid(s);
+          OnFormatGuidValue(buffer, g);
+        }
+        else
+          OnFormatStringValue(buffer, s);
+        return;
+      }
+
+      if (value is Int64)
+      {
+        OnFormatInt64Value(buffer, (long)value);
+        return;
+      }
+
+      if (DataTools.IsIntegerType(value.GetType()))
+      {
+        OnFormatIntValue(buffer, DataTools.GetInt(value)); // нельзя использовать преобразование "(int)value", так как byte -> int вызывает исключение
+        return;
+      }
+
+      // Числа с плавающей точкой преобразуем с использованием точки,
+      // а не разделителя по умолчанию
+      if (value is Single)
+      {
+        OnFormatSingleValue(buffer, (float)value);
+        return;
+      }
+      if (value is Double)
+      {
+        OnFormatDoubleValue(buffer, (double)value);
+        return;
+      }
+      if (value is Decimal)
+      {
+        OnFormatDecimalValue(buffer, (decimal)value);
+        return;
+      }
+
+      if (value is Boolean)
+      {
+        OnFormatBooleanValue(buffer, (bool)value);
+        return;
+      }
+
+      if (value is DateTime)
+      {
+        DateTime TimeValue = (DateTime)value;
+        TimeValue = DateTime.SpecifyKind(TimeValue, DateTimeKind.Unspecified);
+
+        bool UseDate, UseTime;
+        switch (columnType)
+        {
+          case DBxColumnType.Date:
+            UseDate = true;
+            UseTime = false;
+            break;
+          case DBxColumnType.DateTime:
+            UseDate = true;
+            UseTime = true;
+            break;
+          case DBxColumnType.Time:
+            UseDate = false;
+            UseTime = true;
+            break;
+          default:
+            UseDate = true;
+            UseTime = (int)(TimeValue.TimeOfDay.TotalSeconds) != 0;
+            break;
+        }
+
+        OnFormatDateTimeValue(buffer, TimeValue, UseDate, UseTime);
+        return;
+      }
+
+      if (value is TimeSpan)
+      {
+        DateTime TimeValue = new DateTime(((TimeSpan)value).Ticks, DateTimeKind.Unspecified);
+        OnFormatDateTimeValue(buffer, TimeValue, false, true);
+        return;
+      }
+
+      if (value is Guid)
+      {
+        OnFormatGuidValue(buffer, (Guid)value);
+        return;
+      }
+
+      throw new NotImplementedException("Значение " + value.ToString() + " имеет неизвестный тип " + value.GetType().ToString());
+    }
+
+    /// <summary>
+    /// Форматирование строкового значения
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>, заключенное в апострофы.
+    /// Если строка содержит апострофы, то они удваиваются.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatStringValue(DBxSqlBuffer buffer, string value)
+    {
+      buffer.SB.Append(@"'");
+      for (int i = 0; i < value.Length; i++)
+      {
+        if (value[i] == '\'')
+          buffer.SB.Append(@"''");
+        else
+          buffer.SB.Append(value[i]);
+      }
+      buffer.SB.Append(@"'");
+    }
+
+    /// <summary>
+    /// Форматирование числового значения
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatIntValue(DBxSqlBuffer buffer, int value)
+    {
+      buffer.SB.Append(StdConvert.ToString(value));
+    }
+
+    /// <summary>
+    /// Форматирование числового значения
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatInt64Value(DBxSqlBuffer buffer, long value)
+    {
+      buffer.SB.Append(StdConvert.ToString(value));
+    }
+
+    /// <summary>
+    /// Форматирование числового значения
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatSingleValue(DBxSqlBuffer buffer, float value)
+    {
+      buffer.SB.Append(StdConvert.ToString(value));
+    }
+
+    /// <summary>
+    /// Форматирование числового значения
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatDoubleValue(DBxSqlBuffer buffer, double value)
+    {
+      buffer.SB.Append(StdConvert.ToString(value));
+    }
+
+    /// <summary>
+    /// Форматирование числового значения
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatDecimalValue(DBxSqlBuffer buffer, decimal value)
+    {
+      buffer.SB.Append(StdConvert.ToString(value));
+    }
+
+    /// <summary>
+    /// Форматирование логического значения.
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// Непереопределенный метод записывает "TRUE" или "FALSE".
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatBooleanValue(DBxSqlBuffer buffer, bool value)
+    {
+      buffer.SB.Append(value ? "TRUE" : "FALSE");
+    }
+
+    /// <summary>
+    /// Преобразование значения даты и/или времени.
+    /// Этот метод вызывается из OnFormatValue().
+    /// Даты задаются в формате "#M/D/YYYY#"
+    /// Дата и время задается в формате "#M/D/YYYY H:M:S#"
+    /// </summary>
+    /// <param name="buffer">Буфер для записи значения</param>
+    /// <param name="value">Записываемое значение</param>
+    /// <param name="useDate">если true, то должен быть записан компонент даты</param>
+    /// <param name="useTime">если true, то должен быть записан компонент времени</param>
+    protected virtual void OnFormatDateTimeValue(DBxSqlBuffer buffer, DateTime value, bool useDate, bool useTime)
+    {
+      buffer.SB.Append('#');
+
+      if (useDate)
+      {
+        buffer.SB.Append(value.Month);
+        buffer.SB.Append('/');
+        buffer.SB.Append(value.Day);
+        buffer.SB.Append('/');
+        buffer.SB.Append(value.Year);
+      }
+      if (useTime)
+      {
+        if (useDate)
+          buffer.SB.Append(' ');
+        buffer.SB.Append(value.Hour);
+        buffer.SB.Append(':');
+        buffer.SB.Append(value.Minute);
+        buffer.SB.Append(':');
+        buffer.SB.Append(value.Second);
+      }
+      buffer.SB.Append('#');
+    }
+
+    /// <summary>
+    /// Форматирование значения типа GUID.
+    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// Вызывает метод Guid.ToString("D") для получения строки длиной 36 символов (без скобок, но с разделителями "-").
+    /// Затем вызывает OnFormatStringValue() для записи строки.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="value">Записываемое значение</param>
+    protected virtual void OnFormatGuidValue(DBxSqlBuffer buffer, Guid value)
+    {
+      OnFormatStringValue(buffer, value.ToString("D"));
+    }
+
+    /// <summary>
+    /// Форматирование логического значения.
+    /// Записывает в <paramref name="buffer"/>.SB текст "NULL".
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    protected virtual void OnFormatNullValue(DBxSqlBuffer buffer)
+    {
+      buffer.SB.Append("NULL");
+    }
+
+    #endregion
+
+    #region Фильтры
+
+
+    /// <summary>
+    /// Получить знак для условия ValueFilterKind 
+    /// </summary>
+    /// <param name="Kind">Тип сравнения</param>
+    /// <returns>Знак операции сравнения</returns>
+    protected virtual string GetSignStr(CompareKind Kind)
+    {
+      switch (Kind)
+      {
+        case CompareKind.Equal: return "=";
+        case CompareKind.LessThan: return "<";
+        case CompareKind.LessOrEqualThan: return "<=";
+        case CompareKind.GreaterThan: return ">";
+        case CompareKind.GreaterOrEqualThan: return ">=";
+        case CompareKind.NotEqual: return "<>";
+        default: throw new ArgumentException("Неизвестный Kind: " + Kind.ToString());
+      }
+    }
+
+    #region Фильтры "Выражение IN (Список значений)"
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatIdsFilter(DBxSqlBuffer buffer, IdsFilter filter)
+    {
+      if (filter.Ids.Count == 1)
+      {
+        Int32 SingleId = filter.Ids.SingleId;
+        CompareFilter Filter2 = new CompareFilter(filter.Expression, new DBxConst(SingleId), CompareKind.Equal, SingleId == 0, DBxColumnType.Int);
+        FormatFilter(buffer, Filter2);
+        return;
+      }
+
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = true;
+      formatInfo.WantedColumnType = DBxColumnType.Int;
+      buffer.FormatExpression(filter.Expression, formatInfo);
+      buffer.SB.Append(" IN (");
+      bool First = true;
+      foreach (Int32 Id in filter.Ids)
+      {
+        if (First)
+          First = false;
+        else
+          buffer.SB.Append(", ");
+
+        buffer.SB.Append(Id.ToString());
+      }
+      buffer.SB.Append(')');
+    }
+
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    {
+      // Есть ли в списке значений значение по умолчанию
+      bool HasDefaultValue = false;
+      foreach (object v in filter.Values)
+      {
+        if (DataTools.IsEmptyValue(v))
+        {
+          HasDefaultValue = true;
+          break;
+        }
+      }
+
+      if (filter.Values.Length == 1)
+      {
+        // Как обычный ValueFilter
+        CompareFilter Filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.Values.GetValue(0)), CompareKind.Equal, HasDefaultValue, filter.ColumnType);
+        FormatFilter(buffer, Filter2);
+        return;
+      }
+
+      // Сложный фильтр использует IN
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = HasDefaultValue;
+      if (filter.ColumnType == DBxColumnType.Unknown)
+      {
+        foreach (object v in filter.Values)
+        {
+          if (v == null)
+            continue;
+
+          formatInfo.WantedColumnType = DBxTools.ValueToColumnType(v);
+          if (formatInfo.WantedColumnType != DBxColumnType.Unknown)
+            break;
+        }
+      }
+      else
+        formatInfo.WantedColumnType = filter.ColumnType;
+      OnFormatExpression(buffer, filter.Expression, formatInfo);
+
+      buffer.SB.Append(" IN (");
+      for (int i = 0; i < filter.Values.Length; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(", ");
+        buffer.FormatValue(filter.Values.GetValue(i), formatInfo.WantedColumnType);
+      }
+      buffer.SB.Append(')');
+    }
+
+   
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatInSelectFilter(DBxSqlBuffer buffer, InSelectFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      if (filter.ColumnType != DBxColumnType.Unknown)
+        formatInfo.WantedColumnType = filter.ColumnType;
+
+      OnFormatExpression(buffer, filter.Expression, formatInfo);
+
+      buffer.SB.Append(" IN (");
+
+      //DBxSelectFormatter formatter2=new DBxSelectFormatter(filter.selectInfo, DBxNameValidator.
+
+      buffer.SB.Append(')');
+      throw new NotImplementedException(); // TODO: 04.12.2020
+    }
+
+    #endregion
+
+    #region Строковые фильтры
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Непереопределенная реализация заменяет StringValueFilter на CompareFilter с вызовом функции UPPER()
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatStringValueFilter(DBxSqlBuffer buffer, StringValueFilter filter)
+    {
+      DBxExpression Expr1, Expr2;
+      if (filter.IgnoreCase)
+      {
+        Expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
+        Expr2 = new DBxConst(filter.Value.ToUpperInvariant(), DBxColumnType.String);
+      }
+      else
+      {
+        Expr1 = filter.Expression;
+        Expr2 = new DBxConst(filter.Value, DBxColumnType.String);
+      }
+      CompareFilter Filter2 = new CompareFilter(Expr1, Expr2, CompareKind.Equal, true);
+      buffer.FormatFilter(Filter2);
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
+    {
+      DBxExpression Expr1;
+      if (filter.IgnoreCase)
+        Expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
+      else
+        Expr1 = filter.Expression;
+
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = true;
+      formatInfo.WantedColumnType = DBxColumnType.String;
+      formatInfo.NoParentheses = false;
+      buffer.FormatExpression(Expr1, formatInfo);
+      buffer.SB.Append(" LIKE '");
+
+      string v = filter.Value;
+      if (filter.IgnoreCase)
+        v = v.ToUpperInvariant();
+      MakeEscapedChars(buffer, v, new char[] { '%', '_', '[', '\'' }, "[", "]");
+      buffer.SB.Append("%\'");
+    }
+
+    /// <summary>
+    /// Окружение специальных символов в строке для фильтров, основанных на предложении LIKE
+    /// </summary>
+    /// <param name="buffer">Буфер для записи строки</param>
+    /// <param name="value">Строка, возможно содержащая символы</param>
+    /// <param name="chars">Символы, которые требуется окружить</param>
+    /// <param name="prefix">Окружение слева</param>
+    /// <param name="suffix">Окружение справа</param>
+    protected static void MakeEscapedChars(DBxSqlBuffer buffer, string value, char[] chars, string prefix, string suffix)
+    {
+      if (String.IsNullOrEmpty(value))
+        return;
+      if (value.IndexOfAny(chars) < 0)
+      {
+        buffer.SB.Append(value);
+        return;
+      }
+
+      for (int i = 0; i < value.Length; i++)
+      {
+        char c = value[i];
+        if (Array.IndexOf<char>(chars, c) >= 0)
+        {
+          // Спецсимвол
+          buffer.SB.Append(prefix);
+          buffer.SB.Append(c);
+          buffer.SB.Append(suffix);
+        }
+        else
+          // Обычный символ
+          buffer.SB.Append(c);
+      }
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Непереопределенная реализация заменяет StringValueFilter на CompareFilter с вызовом функций UPPER() и SUBSTRING()
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatSubstringFilter(DBxSqlBuffer buffer, SubstringFilter filter)
+    {
+      // 24.06.2019.
+      // То же, что и классе DataViewDBxSqlFormatter, но с переводом к верхнему регистру
+      DBxExpression Expr1, Expr2;
+      if (filter.IgnoreCase)
+      {
+        Expr1 = new DBxFunction(DBxFunctionKind.Upper, new DBxFunction(DBxFunctionKind.Substring,
+          filter.Expression,
+          new DBxConst(filter.StartIndex + 1),
+          new DBxConst(filter.Value.Length)));
+        Expr2 = new DBxConst(filter.Value.ToUpperInvariant(), DBxColumnType.String);
+      }
+      else
+      {
+        Expr1 = new DBxFunction(DBxFunctionKind.Substring,
+          filter.Expression,
+          new DBxConst(filter.StartIndex + 1),
+          new DBxConst(filter.Value.Length));
+        Expr2 = new DBxConst(filter.Value, DBxColumnType.String);
+      }
+
+      CompareFilter Filter2 = new CompareFilter(Expr1, Expr2, CompareKind.Equal, true);
+      buffer.FormatFilter(Filter2);
+    }
+
+    #endregion
+
+    #region Фильтры по диапазонам
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatNumRangeFilter(DBxSqlBuffer buffer, NumRangeFilter filter)
+    {
+      if (filter.MinValue.HasValue)
+      {
+        if (filter.MaxValue.HasValue)
+        {
+          if (filter.MaxValue.Value == filter.MinValue.Value)
+          {
+            CompareFilter filter3 = new CompareFilter(filter.Expression, new DBxConst(filter.MinValue.Value));
+            buffer.FormatFilter(filter3);
+          }
+          else
+          {
+            if (BetweenInstructionSupported)
+            {
+              DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+              formatInfo.NoParentheses = false;
+              formatInfo.NullAsDefaultValue = true;
+              formatInfo.WantedColumnType = DBxColumnType.Money;
+              buffer.FormatExpression(filter.Expression, formatInfo);
+              buffer.SB.Append(" BETWEEN ");
+              buffer.FormatValue(filter.MinValue.Value, DBxColumnType.Unknown);
+              buffer.SB.Append(" AND ");
+              buffer.FormatValue(filter.MaxValue.Value, DBxColumnType.Unknown);
+            }
+            else
+            {
+              CompareFilter filter1 = new CompareFilter(filter.Expression, new DBxConst(filter.MinValue.Value), CompareKind.GreaterOrEqualThan, true);
+              CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.MaxValue.Value), CompareKind.LessOrEqualThan, true);
+              AndFilter filter3 = new AndFilter(filter1, filter2); // 25.12.2020
+              buffer.FormatFilter(filter3);
+            }
+          }
+        }
+        else
+        {
+          CompareFilter filter1 = new CompareFilter(filter.Expression, new DBxConst(filter.MinValue.Value), CompareKind.GreaterOrEqualThan, true);
+          buffer.FormatFilter(filter1);
+        }
+      }
+      else
+      {
+        if (filter.MaxValue.HasValue)
+        {
+          CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.MaxValue.Value), CompareKind.LessOrEqualThan, true);
+          buffer.FormatFilter(filter2);
+        }
+        else
+        {
+          // Вырожденный фильтр
+          buffer.FormatFilter(DummyFilter.AlwaysTrue);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Возвращает true, если реализация SQL поддерживает инструкцию BETWEEN.
+    /// Непереопределенная реализация возвращает true
+    /// </summary>
+    protected virtual bool BetweenInstructionSupported { get { return true; } }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatDateRangeFilter(DBxSqlBuffer buffer, DateRangeFilter filter)
+    {
+      // Так как поле может содержать компонент времени, нельзя использовать конструкцию
+      // "Значение <= #КонечнаяДата#". Вместо этого надо использовать конструкцию
+      // "Значение < #КонечнаяДата+1#"
+      // Поэтому же нельзя использовать упрощенный фильтр на равенство при MinValue=MaxValue
+
+      if (filter.MinValue.HasValue)
+      {
+        if (filter.MaxValue.HasValue)
+        {
+          CompareFilter filter1 = new CompareFilter(filter.Expression, new DBxConst(filter.MinValue.Value), CompareKind.GreaterOrEqualThan, false);
+          CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.MaxValue.Value.AddDays(1)), CompareKind.LessThan, false);
+          AndFilter filter3 = new AndFilter(filter1, filter2);
+          buffer.FormatFilter(filter3);
+        }
+        else
+        {
+          CompareFilter filter1 = new CompareFilter(filter.Expression, new DBxConst(filter.MinValue.Value), CompareKind.GreaterOrEqualThan, false);
+          buffer.FormatFilter(filter1);
+        }
+      }
+      else
+      {
+        if (filter.MaxValue.HasValue)
+        {
+          CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.MaxValue.Value.AddDays(1)), CompareKind.LessThan, false);
+          buffer.FormatFilter(filter2);
+        }
+        else
+        {
+          // Вырожденный фильтр
+          buffer.FormatFilter(DummyFilter.AlwaysTrue);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Непереопределенная реализация заменяет фильтр на два CompareFilter, объединенных AndFilter и функкии COALESCE для учета значения NULL
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatDateRangeInclusionFilter(DBxSqlBuffer buffer, DateRangeInclusionFilter filter)
+    {
+      DBxFunction Expr1 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.Value));
+      CompareFilter Filt1 = new CompareFilter(Expr1, new DBxConst(filter.Value), CompareKind.LessOrEqualThan, false);
+
+      DBxFunction Expr2 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.Value));
+      CompareFilter Filt2 = new CompareFilter(Expr2, new DBxConst(filter.Value), CompareKind.GreaterOrEqualThan, false);
+
+      DBxFilter Filt3 = new AndFilter(Filt1, Filt2);
+      buffer.FormatFilter(Filt3);
+    }
+
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Непереопределенная реализация использует один или два CompareFilter
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatDateRangeCrossFilter(DBxSqlBuffer buffer, DateRangeCrossFilter filter)
+    {
+      // 30.06.2019
+      // Исправлено, чтобы больше не использовать DateTime.MinValue и MaxValue.
+      // Вместо этого используем сам диапазон.
+      // Нужно, на случай, если провайдер базы данных (SQLite) не поддерживает весь диапазон дат DateTime
+
+      List<DBxFilter> Filters = new List<DBxFilter>();
+
+      if (filter.FirstDate.HasValue)
+      {
+        // Не путать. Первое поле (начальная дата) сравнивается с конечной датой фильтра и наоборот.
+        DBxFunction Expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.FirstDate.Value));
+        CompareFilter Filt = new CompareFilter(Expr, new DBxConst(filter.FirstDate.Value), CompareKind.GreaterOrEqualThan, false);
+        Filters.Add(Filt);
+      }
+      if (filter.LastDate.HasValue)
+      {
+        DBxFunction Expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.LastDate.Value));
+        CompareFilter Filt = new CompareFilter(Expr, new DBxConst(filter.LastDate.Value), CompareKind.LessOrEqualThan, false);
+        Filters.Add(Filt);
+      }
+      DBxFilter ResFilter = AndFilter.FromList(Filters);
+      if (ResFilter == null)
+        ResFilter = DummyFilter.AlwaysTrue;
+
+      buffer.FormatFilter(ResFilter);
+    }
+
+    #endregion
+
+    #region Логические фильтры AND/OR/NOT
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatAndFilter(DBxSqlBuffer buffer, AndFilter filter)
+    {
+      for (int i = 0; i < filter.Filters.Length; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(" AND ");
+
+        bool Parentheses = FilterNeedsParentheses(filter.Filters[i]);
+
+        if (Parentheses)
+          buffer.SB.Append('(');
+        buffer.FormatFilter(filter.Filters[i]);
+        if (Parentheses)
+          buffer.SB.Append(')');
+      }
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatOrFilter(DBxSqlBuffer buffer, OrFilter filter)
+    {
+      for (int i = 0; i < filter.Filters.Length; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(" OR ");
+        bool Parentheses = FilterNeedsParentheses(filter.Filters[i]);
+
+        if (Parentheses)
+          buffer.SB.Append('(');
+
+        buffer.FormatFilter(filter.Filters[i]);
+
+        if (Parentheses)
+          buffer.SB.Append(')');
+      }
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatNotFilter(DBxSqlBuffer buffer, NotFilter filter)
+    {
+      buffer.SB.Append("NOT ");
+      bool Parentheses = FilterNeedsParentheses(filter.BaseFilter);
+      if (Parentheses)
+        buffer.SB.Append("(");
+
+      buffer.FormatFilter(filter.BaseFilter);
+
+      if (Parentheses)
+        buffer.SB.Append(')');
+    }
+
+    /// <summary>
+    /// Метод возвращает true, если вокруг дочернего фильтра <paramref name="filter"/> должны быть скобки
+    /// Для большинства фильтров возвращается true
+    /// </summary>
+    /// <param name="filter">Фильтр, для которого определяется необходимость окружить его скобками</param>
+    /// <returns>Необходимость в скобках</returns>
+    protected virtual bool FilterNeedsParentheses(DBxFilter filter)
+    {
+      // TODO:
+      //if (filter is ValueFilter)
+      //{
+      //  if (((ValueFilter)filter).Value == null)
+      //    return true;
+      //  else
+      //    return false;
+      //}
+
+      return true;
+    }
+
+    #endregion
+
+    #region Прочие фильтры
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatCompareFilter(DBxSqlBuffer buffer, CompareFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
+      DBxConst cnst2 = filter.Expression2.GetConst();
+      if (cnst2 != null)
+      {
+        if (cnst2.Value == null)
+        {
+          switch (filter.Kind)
+          {
+            case CompareKind.Equal:
+            case CompareKind.NotEqual:
+              OnFormatNullNotNullCompareFilter(buffer, filter.Expression1, cnst2.ColumnType, filter.Kind);
+              return;
+            default:
+              throw new ArgumentException("В фильтре задано сравнение значения с NULL в режиме " + filter.Kind.ToString() + ". Допускаются только сравнения на равенство и неравенство");
+          }
+        }
+
+        formatInfo.WantedColumnType = cnst2.ColumnType;
+      }
+      else
+      {
+        DBxConst cnst1 = filter.Expression1.GetConst();
+        if (cnst1 != null)
+        {
+          if (cnst1.Value == null)
+          {
+            switch (filter.Kind)
+            {
+              case CompareKind.Equal:
+              case CompareKind.NotEqual:
+                OnFormatNullNotNullCompareFilter(buffer, filter.Expression2, cnst1.ColumnType, filter.Kind);
+                return;
+              default:
+                throw new ArgumentException("В фильтре задано сравнение значения с NULL в режиме " + filter.Kind.ToString() + ". Допускаются только сравнения на равенство и неравенство");
+            }
+          }
+
+          formatInfo.WantedColumnType = cnst1.ColumnType;
+        }
+      }
+
+
+      buffer.FormatExpression(filter.Expression1, formatInfo);
+      buffer.SB.Append(GetSignStr(filter.Kind));
+      buffer.FormatExpression(filter.Expression2, formatInfo);
+    }
+
+    /// <summary>
+    /// Запись фильтра CompareFilter в режиме сравнения значения с NULL.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="expression">Выражение, которое надо сравнить с NULL (левая часть условия)</param>
+    /// <param name="columnType">Тип данных</param>
+    /// <param name="kind">Режим сравнения: Equal или NotEqual</param>
+    protected virtual void OnFormatNullNotNullCompareFilter(DBxSqlBuffer buffer, DBxExpression expression, DBxColumnType columnType, CompareKind kind)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.WantedColumnType = columnType;
+      formatInfo.NoParentheses = false;
+      formatInfo.NullAsDefaultValue = false;
+      buffer.FormatExpression(expression, formatInfo);
+      switch (kind)
+      {
+        case CompareKind.Equal:
+          buffer.SB.Append(" IS NULL");
+          break;
+        case CompareKind.NotEqual:
+          buffer.SB.Append(" IS NOT NULL");
+          break;
+        default:
+          throw new ArgumentException("Недопустимый kind=" + kind.ToString(), "kind");
+      }
+    }
+
+#if XXX
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="Buffer">Буфер для записи</param>
+    /// <param name="Filter">Фильтр</param>
+    protected override void OnFormatValueFilter(DBxSqlBuffer Buffer, ValueFilter Filter)
+    {
+      // Для просто значения null используем функцию IsNull()
+      if (Filter.Value == null || Filter.Value is DBNull)
+      {
+        if (Filter.Kind != ValueFilterKind.Equal)
+          throw new InvalidOperationException("Значение NULL в фильтре сравнения допускается только для сравнения на равенство (поле \"" + Filter.ColumnName + "\")");
+
+        if (Filter.DataType == null)
+          throw new InvalidOperationException("Для сравнения с NULL требуется, чтобы был задан тип значения в свойстве ValueFilter.DataType (поле \"" + Filter.ColumnName + "\")");
+
+        Buffer.SB.Append(IsNullFunctionName);
+        Buffer.SB.Append("(");
+        Buffer.FormatColumnName(Filter.ColumnName);
+        Buffer.SB.Append(", ");
+        Buffer.FormatValue(DataTools.GetEmptyValue(Filter.DataType), DBxColumnType.Unknown);
+        Buffer.SB.Append(")=");
+        Buffer.FormatValue(DataTools.GetEmptyValue(Filter.DataType), DBxColumnType.Unknown);
+        return;
+      }
+
+      if (Filter.Kind == ValueFilterKind.Equal)
+      {
+        // Для значений 0 и false используем ISNULL() в комбинации со сравнением
+        if (DataTools.IsEmptyValue(Filter.Value))
+        {
+          Buffer.SB.Append(IsNullFunctionName);
+          Buffer.SB.Append("(");
+          Buffer.FormatColumnName(Filter.ColumnName);
+          Buffer.SB.Append(',');
+          Buffer.FormatValue(Filter.Value, DBxColumnType.Unknown);
+          Buffer.SB.Append(")=");
+          Buffer.FormatValue(Filter.Value, DBxColumnType.Unknown);
+          return;
+        }
+      }
+
+      Buffer.FormatColumnName(Filter.ColumnName);
+      Buffer.SB.Append(GetSignStr(Filter.Kind));
+      Buffer.FormatValue(Filter.Value, DBxColumnType.Unknown);
+    }
+
+#endif
+
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatDummyFilter(DBxSqlBuffer buffer, DummyFilter filter)
+    {
+      if (filter.IsTrue)
+        buffer.SB.Append("1=1");
+      else
+        buffer.SB.Append("1=0");
+    }
+
+    #endregion
+
+    #endregion
+  }
+}

@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D78C5082-6E86-47A5-8216-36AEB83751FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AgeyevAV.ExtDB</RootNamespace>
+    <AssemblyName>ExtDB</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ExtDB.XML</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ExtDB.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Others\Mono.Security.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.2.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Others\Npgsql.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Data.SQLite, Version=1.0.106.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Others\System.Data.SQLite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseDBxSqlFormatter.cs" />
+    <Compile Include="DBxConBase.cs" />
+    <Compile Include="DBxDataWriter.cs" />
+    <Compile Include="DBxExceptions.cs" />
+    <Compile Include="DBxExpression.cs" />
+    <Compile Include="DBxSelectInfo.cs" />
+    <Compile Include="DBxNameValidator.cs" />
+    <Compile Include="DBxTools.cs" />
+    <Compile Include="SQLiteDBxSqlFormatter.cs" />
+    <Compile Include="DBUserPermission.cs" />
+    <Compile Include="DBxManager.cs" />
+    <Compile Include="OleDbDBx.cs" />
+    <Compile Include="DBxClearCacheData.cs" />
+    <Compile Include="OracleDBxSqlFormatter.cs" />
+    <Compile Include="OraclelDBx.cs" />
+    <Compile Include="NpgqlDBxSqlFormatter.cs" />
+    <Compile Include="DataViewDBxSqlFormatter.cs" />
+    <Compile Include="DBxCache.cs" />
+    <Compile Include="DBxColumns.cs" />
+    <Compile Include="DBxEntry.cs" />
+    <Compile Include="DBxFilter.cs" />
+    <Compile Include="DBxOrder.cs" />
+    <Compile Include="DBxPermissions.cs" />
+    <Compile Include="DBxTableStruct.cs" />
+    <Compile Include="DBxSqlFormatter.cs" />
+    <Compile Include="DBx.cs" />
+    <Compile Include="DBxCon.cs" />
+    <Compile Include="DBxStruct.cs" />
+    <Compile Include="NpgsqlDBx.cs" />
+    <Compile Include="SQLiteDBx.cs" />
+    <Compile Include="UserPermissions.cs" />
+    <Compile Include="DBxSelectFormatter.cs" />
+    <Compile Include="OleDbDBxSqlFormatter.cs" />
+    <Compile Include="SqlDBx.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlDBxSqlFormatter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtTools\ExtTools.csproj">
+      <Project>{e61b6cf2-a434-46f2-af4a-db5e4851d170}</Project>
+      <Name>ExtTools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
