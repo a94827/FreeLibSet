@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ExtTools.tests")]
-[assembly: AssemblyDescription("Тесты NUnit для ExtTools.dll")]
+[assembly: AssemblyTitle("ExtDB.tests")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Агеев Александр Владимирович")]
-[assembly: AssemblyProduct("Freeware Library Set")]
-[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2021 г. Модуль ExtTools.tests.dll является свободным программным обеспечением (Free Software)")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("ExtDB.tests")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cd5b24b7-ebe5-421a-a7f4-365d116cbb28")]
+[assembly: Guid("b42bacfd-04a3-419b-8c21-29ee9c53a6d6")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
+// You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

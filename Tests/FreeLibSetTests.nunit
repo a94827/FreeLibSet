@@ -2,6 +2,8 @@
   <Settings activeconfig="Debug" />
   <Config name="Debug" binpathtype="Auto">
     <assembly path="ExtTools.tests\bin\Debug\ExtTools.tests.dll" />
+    <assembly path="ExtDB.tests\bin\Debug\ExtDB.tests.dll" />
+    <assembly path="ExtDBDocs.tests\bin\Debug\ExtDBDocs.tests.dll" />
   </Config>
   <Config name="Release" binpathtype="Auto" />
 </NUnitProject>
