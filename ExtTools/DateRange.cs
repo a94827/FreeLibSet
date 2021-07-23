@@ -1218,6 +1218,8 @@ namespace AgeyevAV
     /// <param name="rangeList">Добавляемый список</param>
     public void Add(DateRangeList rangeList)
     {
+      CheckNotReadOnly();
+
       for (int i = 0; i < rangeList.Count; i++)
         Add(rangeList[i]);
     }
@@ -1228,6 +1230,8 @@ namespace AgeyevAV
     /// <param name="rangeList">Вычитаемый список</param>
     public void Remove(DateRangeList rangeList)
     {
+      CheckNotReadOnly();
+
       for (int i = 0; i < rangeList.Count; i++)
         Remove(rangeList[i]);
     }
@@ -1239,18 +1243,24 @@ namespace AgeyevAV
     /// <summary>
     /// Разбиение интервалов в списке на части по границам указанных дат.
     /// Вызывает перегрузку метода Split() для каждой даты в списке <paramref name="aDates"/>.
+    /// О границах интервалов см. в перегрузке для аргумента DateTime.
     /// </summary>
     /// <param name="aDates">Список дат для разбиения</param>
     public void Split(DateTime[] aDates)
     {
+      CheckNotReadOnly();
+
       for (int i = 0; i < aDates.Length; i++)
         Split(aDates[i]);
     }
 
     /// <summary>
     /// Разбиение интервала на 2, если указанная дата попадает в какой-нибудь
-    /// интервал. При разбиении интервала поле Tag копируется из исходного в два
-    /// новых
+    /// интервал. При разбиении интервала поле Tag копируется из исходного DateRange в два
+    /// новых.
+    /// Определено, что при разбиении <paramref name="date"/> задает конец первого интервала. Начало второго интервала - на один день больше.
+    /// Например, если есть интервал {01.01.2021-31.01.2021} и дата равна 15.01.2021, то после разбиения будет {01.01.2021-15.01.2021},{16.01.2021-31.01.2021}.
+    /// При необходимости, используйте DateTime.AddDays(-1).
     /// </summary>
     /// <param name="date">Дата разбиения</param>
     public void Split(DateTime date)
@@ -1277,13 +1287,15 @@ namespace AgeyevAV
     /// </summary>
     public void SplitIntoYears()
     {
+      CheckNotReadOnly();
+
       if (Count == 0)
         return;
 
       int FirstYear = FirstDate.Value.Year;
       int LastYear = LastDate.Value.Year;
-      for (int y = FirstYear + 1; y <= LastYear; y++)
-        Split(new DateTime(y, 1, 1));
+      for (int y = FirstYear; y < LastYear; y++)
+        Split(DataTools.EndOfYear(y)); // 23.07.2021
     }
 
     /// <summary>
@@ -1291,6 +1303,8 @@ namespace AgeyevAV
     /// </summary>
     public void SplitIntoMonths()
     {
+      CheckNotReadOnly();
+
       if (Count == 0)
         return;
 
@@ -1298,7 +1312,7 @@ namespace AgeyevAV
       DateTime dt2 = DataTools.BottomOfMonth(LastDate.Value);
 
       for (DateTime dt = dt1.AddMonths(1); dt <= dt2; dt = dt.AddMonths(1))
-        Split(dt);
+        Split(dt.AddDays(-1)); // 23.07.2021
     }
 
     #endregion
