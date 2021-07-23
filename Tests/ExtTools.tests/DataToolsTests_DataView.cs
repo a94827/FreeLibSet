@@ -16,9 +16,7 @@ namespace ExtTools.tests
       DataTable table = CreateGroupTestTable();
       table.DefaultView.Sort = "Text"; // A B M N Y Z
 
-      DataRow[][] res = DataTools.GroupRows(table.DefaultView, "Group", false);
-
-      Assert.AreEqual("{6},{5},{1,3},{4,2}", GetIdString(res));
+      DoTest(table.DefaultView, "Group", false, "{6},{5},{1,3},{4,2}");
     }
 
     [Test]
@@ -27,8 +25,7 @@ namespace ExtTools.tests
       DataTable table = CreateGroupTestTable();
       table.DefaultView.Sort = "Text"; // A B M N Y Z
 
-      DataRow[][] res = DataTools.GroupRows(table.DefaultView, "Group", true);
-      Assert.AreEqual("{5,6},{1,3},{4,2}", GetIdString(res));
+      DoTest(table.DefaultView, "Group", true, "{5,6},{1,3},{4,2}");
     }
 
     [Test]
@@ -37,8 +34,7 @@ namespace ExtTools.tests
       DataTable table = CreateGroupTestTable();
       table.DefaultView.Sort = "Id"; // A Z B Y M N
 
-      DataRow[][] res = DataTools.GroupRows(table.DefaultView, "Group", true);
-      Assert.AreEqual("{5,6},{1,3},{2,4}", GetIdString(res));
+      DoTest(table.DefaultView, "Group", true, "{5,6},{1,3},{2,4}");
     }
 
     [Test]
@@ -47,8 +43,7 @@ namespace ExtTools.tests
       DataTable table = CreateGroupTestTable();
       table.DefaultView.Sort = "Id DESC"; // N M Y B Z A
 
-      DataRow[][] res = DataTools.GroupRows(table.DefaultView, "Group", true);
-      Assert.AreEqual("{6,5},{3,1},{4,2}", GetIdString(res));
+      DoTest(table.DefaultView, "Group", true, "{6,5},{3,1},{4,2}");
     }
 
     private DataTable CreateGroupTestTable()
@@ -65,6 +60,18 @@ namespace ExtTools.tests
       table.Rows.Add(6, DBNull.Value, "N");
       //DataTools.SetPrimaryKey(table, "Id");
       return table;
+    }
+
+    private void DoTest(DataView dv, string keyColumnNames, bool dbNullAsZero, string result)
+    {
+      DataRow[][] res1 = DataTools.GroupRows(dv, keyColumnNames, dbNullAsZero);
+      Assert.AreEqual(result, GetIdString(res1), "for DataView");
+
+      DataRow[][] res2 = DataTools.GroupRows(dv.ToTable(), keyColumnNames, dbNullAsZero);
+      Assert.AreEqual(result, GetIdString(res2), "for DataTable");
+
+      DataRow[][] res3 = DataTools.GroupRows(DataTools.GetDataViewRows(dv), keyColumnNames, dbNullAsZero);
+      Assert.AreEqual(result, GetIdString(res3), "for DataRow[]");
     }
 
     private static string GetIdString(DataRow[][] rows)
