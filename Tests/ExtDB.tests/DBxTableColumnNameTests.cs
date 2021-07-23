@@ -22,8 +22,10 @@ namespace ExtDB.tests
     [Test]
     public void Constructor_exception()
     {
-      Assert.Throws(typeof(ArgumentNullException), delegate() { new DBxTableColumnName("A", String.Empty); });
-      Assert.Throws(typeof(ArgumentNullException), delegate() { new DBxTableColumnName(String.Empty, "B"); });
+      Assert.Catch<ArgumentException>(delegate() { new DBxTableColumnName("A", String.Empty); });
+      Assert.Catch<ArgumentException>(delegate() { new DBxTableColumnName("A", null); });
+      Assert.Catch<ArgumentException>(delegate() { new DBxTableColumnName(String.Empty, "B"); });
+      Assert.Catch<ArgumentException>(delegate() { new DBxTableColumnName(null, "B"); });
     }
 
     [Test]

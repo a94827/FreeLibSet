@@ -40,6 +40,7 @@ namespace ExtDB.tests
       Assert.AreEqual(wanted, sut.ToArray());
     }
 
+
     [Test]
     public void Tables_ContainsKey()
     {
@@ -259,6 +260,33 @@ namespace ExtDB.tests
 
       Assert.AreEqual(2, sut.Count, "Count");
       Assert.AreEqual(2, sut.Tables["Tab1"].Count, "Tables.Count");
+    }
+
+
+    [Test]
+    public void Pairs_AddRange()
+    {
+      DBxTableColumnList sut = new DBxTableColumnList();
+
+      DBxTableColumnName[] a = new DBxTableColumnName[]{
+        new DBxTableColumnName("Tab1", "F1"),
+        new DBxTableColumnName("Tab2", "F2"),
+        new DBxTableColumnName("Tab1", "F3")};
+      ArrayEnumerable<DBxTableColumnName> ae = new ArrayEnumerable<DBxTableColumnName>(a);
+
+      sut.AddRange(ae);
+
+      Assert.AreEqual(3, sut.Count);
+      Assert.AreEqual(2, sut.Tables.Count);
+    }
+
+
+    [Test]
+    public void Pairs_AddRange_exception()
+    {
+      DBxTableColumnList sut = new DBxTableColumnList();
+
+      Assert.Throws<ArgumentException>(delegate() { sut.AddRange(sut); });
     }
 
     [Test]

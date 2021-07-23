@@ -2246,6 +2246,30 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
+    /// Добавляет все элементы из другого списка
+    /// </summary>
+    /// <param name="collection">Список добавляемых элементов</param>
+    public void AddRange(IEnumerable<DBxTableColumnName> collection)
+    {
+      CheckNotReadOnly();
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
+      foreach (DBxTableColumnName item in collection)
+      {
+        if (item.IsEmpty)
+          throw new ArgumentException("Один из элементов пустой", "collection");
+
+        Tables[item.TableName].Add(item.ColumnName);
+      }
+    }
+
+
+    /// <summary>
     /// Очищает весь список
     /// </summary>
     public void Clear()

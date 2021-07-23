@@ -4,6 +4,8 @@ using System.Text;
 using AgeyevAV.IO;
 using System.Data.Common;
 using AgeyevAV.Logging;
+using System.Data;
+using System.Diagnostics;
 
 namespace AgeyevAV.ExtDB.Docs
 {
@@ -265,10 +267,18 @@ namespace AgeyevAV.ExtDB.Docs
     /// <returns>Точка входа</returns>
     public DBxEntry GetSectionEntry(int sectionNum)
     {
+      DBxEntry en;
       lock (_SectionEntries)
       {
-        return _SectionEntries[sectionNum - 1];
+        en = _SectionEntries[sectionNum - 1];
       }
+
+#if DEBUG
+      if (Object.ReferenceEquals(en.DB, MainEntry.DB))
+        throw new BugException("База данных секции совпадает с основной базой данных");
+#endif
+
+      return en;
     }
 
     /// <summary>
@@ -435,7 +445,7 @@ namespace AgeyevAV.ExtDB.Docs
               // Между ними можно попробовать добавить базу данных
               try
               {
-                Id = DoAppendBinData2(0, contents, MD5, Con);
+                Id = DoAppendBinDataWhenFragmentation(0, contents, MD5, Con);
               }
               catch (Exception e)
               {
@@ -451,7 +461,7 @@ namespace AgeyevAV.ExtDB.Docs
                 DBSizeLimitExceeded(this, EventArgs.Empty);
 
                 // Пробуем еще раз
-                Id = DoAppendBinData2(0, contents, MD5, Con);
+                Id = DoAppendBinDataWhenFragmentation(0, contents, MD5, Con);
 
                 // Получилось - включаем флажок обратно
                 DBSizeLimitExceededHandlerEnabled = true;
@@ -475,7 +485,7 @@ namespace AgeyevAV.ExtDB.Docs
 
     internal static readonly string EmptyMD5 = new string(' ', 32);
 
-    private Int32 DoAppendBinData2(Int32 binDataId, byte[] contents, string md5, DBxCon con)
+    private Int32 DoAppendBinDataWhenFragmentation(Int32 binDataId, byte[] contents, string md5, DBxCon con)
     {
       // 18.11.2020
       // Не используем DBxTransactionArray.
@@ -511,8 +521,14 @@ namespace AgeyevAV.ExtDB.Docs
       try
       {
         // Записываем двоичные данные в таблицу секции
-        using (DBxCon con2 = new DBxCon(GetSectionEntry(Section)))
+        DBxEntry en2 = GetSectionEntry(Section);
+        using (DBxCon con2 = new DBxCon(en2))
         {
+          //#if DEBUG
+          //          if (!en2.DB.Struct.Tables.Contains("BinDataStorage"))
+          //            throw new BugException("Нет таблицы BinDataStorage");
+          //#endif
+
           con2.TransactionBegin();
           con2.AddRecord("BinDataStorage", "Id", binDataId);
           con2.WriteBlob("BinDataStorage", binDataId, "Contents", contents);
@@ -906,7 +922,7 @@ namespace AgeyevAV.ExtDB.Docs
         // Между ними можно попробовать добавить базу данных
         try
         {
-          DoAppendBinData2(binDataId, contents, md5, con);
+          DoAppendBinDataWhenFragmentation(binDataId, contents, md5, con);
         }
         catch (Exception e)
         {
@@ -936,7 +952,7 @@ namespace AgeyevAV.ExtDB.Docs
 
 
           // Пробуем еще раз
-          DoAppendBinData2(binDataId, contents, md5, con);
+          DoAppendBinDataWhenFragmentation(binDataId, contents, md5, con);
 
           // Получилось - включаем флажок обратно
           DBSizeLimitExceededHandlerEnabled = true;
@@ -989,8 +1005,10 @@ namespace AgeyevAV.ExtDB.Docs
 
 
       _GlobalData = globalData;
-      _Splash = new DummySplash();
       _Errors = new ErrorMessageList();
+      _UseDocRefValidation = true;
+      _UseBinDataValidation = true;
+      _UseTrace = true;
     }
 
     #endregion
@@ -1004,42 +1022,243 @@ namespace AgeyevAV.ExtDB.Docs
     private DBxRealDocProviderGlobal _GlobalData;
 
     /// <summary>
-    /// Процентный индикатор, используемыф в ходе проверки.
-    /// Если не установлен, используется заглушка
-    /// </summary>
-    public ISplash Splash { get { return _Splash; } set { _Splash = value; } }
-    private ISplash _Splash;
-
-    /// <summary>
     /// Сюда добавляются сообщения об ошибках
     /// </summary>
     public ErrorMessageList Errors { get { return _Errors; } }
     private ErrorMessageList _Errors;
 
+    /// <summary>
+    /// Если установлено в true (по умолчанию), то будет проверяться ссылочная целостность для документов и поддокументов.
+    /// Актуально для базы данных истории. Для основной базы данных проверка не выполняется, так как ссылочная целость обеспечивается СУБД.
+    /// </summary>
+    public bool UseDocRefValidation { get { return _UseDocRefValidation; } set { _UseDocRefValidation = value; } }
+    private bool _UseDocRefValidation;
+
+    /// <summary>
+    /// Если установлено в true (по умолчанию), то будет выполняться проверка двоичных данных на реальный доступ к блокам, соответствие контрольным суммам и длине.
+    /// </summary>
+    public bool UseBinDataValidation { get { return _UseBinDataValidation; } set { _UseBinDataValidation = value; } }
+    private bool _UseBinDataValidation;
+
+    /// <summary>
+    /// Если установлено в true (по умолчанию), то будет использована трассировка
+    /// </summary>
+    public bool UseTrace { get { return _UseTrace; } set { _UseTrace = value; } }
+    private bool _UseTrace;
+
     #endregion
 
-    #region Проверка данных
+    #region Основной метод
 
     /// <summary>
     /// Основной метод
     /// Выполняет проверку целостности двоичных данных
     /// </summary>
-    public void CheckData()
+    public void Validate()
     {
-      CheckBinDataSums();
-      CheckBinDataRepeats();
-      if (_GlobalData.BinDataHandler.UseFragmentation)
-        CheckBinDataStorages();
+      #region Строки для процентного индикатора
+
+      List<string> splashItems = new List<string>();
+      if (UseDocRefValidation)
+        splashItems.Add("Проверка ссылок в документах");
+
+      int SectionEntryCount = 0;
+      if (UseBinDataValidation)
+      {
+        splashItems.Add("Проверка двоичных данных");
+        splashItems.Add("Поиск повторов в двоичных данных");
+        if (_GlobalData.BinDataHandler.UseFragmentation)
+        {
+          // Запоминаем количество секций заранее.
+          // Вдруг в процессе проверке добавится новая секция
+          SectionEntryCount = _GlobalData.BinDataHandler.SectionEntryCount;
+          for (int sect = 1; sect <= SectionEntryCount; sect++)
+          {
+            DBxEntry en = _GlobalData.BinDataHandler.GetSectionEntry(sect);
+            splashItems.Add("Проверка БД " + en.DB.DatabaseName);
+          }
+        }
+      }
+      if (splashItems.Count == 0)
+        return; // все флажки сброшены
+
+      #endregion
+
+      if (UseTrace)
+      {
+        Trace.WriteLine(DateTime.Now.ToString("G") + ". DBxBinDataValidator started");
+        Trace.IndentLevel++;
+      }
+      ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(splashItems.ToArray());
+      try
+      {
+        if (UseDocRefValidation)
+        {
+          if (ValidateRefs(spl))
+            spl.Complete();
+          else
+            spl.Skip();
+        }
+
+        if (UseBinDataValidation)
+        {
+          ValidateBinDataSums(spl);
+          spl.Complete();
+
+          ValidateBinDataRepeats(spl);
+          spl.Complete();
+
+          for (int sect = 1; sect <= SectionEntryCount; sect++)
+          {
+            try
+            {
+              ValidateBinDataStorage(sect, spl);
+              spl.Complete();
+            }
+            catch (Exception e)
+            {
+              e.Data["CheckBinDataStorages.Section"] = sect;
+              throw;
+            }
+          }
+        }
+      }
+      finally
+      {
+        SplashTools.ThreadSplashStack.EndSplash();
+        if (UseTrace)
+        {
+          Trace.IndentLevel--;
+          Trace.WriteLine(DateTime.Now.ToString("G") + ". DBxBinDataValidator finished");
+        }
+      }
     }
 
-    private void CheckBinDataSums()
-    {
-      Splash.PhaseText = "Проверка двоичных данных";
+    #endregion
 
+    #region Проверка ссылок из документов
+
+    private bool ValidateRefs(ISplash spl)
+    {
+      if (UseTrace)
+      Trace.WriteLine("Search for references in document tables...");
+      DBxBinDataRefFinder finder = new DBxBinDataRefFinder();
+      finder.FindRefs(GlobalData, true);
+
+      if (finder.IsEmpty)
+      {
+        if (UseTrace)
+          Trace.WriteLine("There are no references to validate. All possible references are maintained by database");
+        return false; // такое может быть, если история не ведется
+      }
+
+      using (DBxConBase con1 = GlobalData.MainDBEntry.CreateCon())
+      {
+        // При проверке могут встретиться таблицы, которые не объявлены в программе, но которые надо проверять
+        con1.NameCheckingEnabled = false; // для основной БД не очень актуально
+
+        DoValidateRefs(con1, finder.MainBinDataRefs, con1, "BinData", spl);
+        DoValidateRefs(con1, finder.MainFileNameRefs, con1, "FileNames", spl);
+        if (GlobalData.UndoDBEntry != null)
+        {
+          using (DBxConBase con2 = GlobalData.UndoDBEntry.CreateCon())
+          {
+            con2.NameCheckingEnabled = false; // а вот для Undo - очень даже актуально
+
+            DoValidateRefs(con2, finder.UndoBinDataRefs, con1, "BinData", spl);
+            DoValidateRefs(con2, finder.UndoFileNameRefs, con1, "FileNames", spl);
+          }
+        }
+#if DEBUG
+        else if (finder.UndoBinDataRefs.Count > 0 || finder.UndoFileNameRefs.Count > 0)
+          throw new BugException("Лишние Undo");
+#endif
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Поиск для одного списка
+    /// </summary>
+    /// <param name="detCon">Подключение к БД, в которой находятся таблицы из списка</param>
+    /// <param name="refList">Список таблиц и ссылочных полей</param>
+    /// <param name="masterCon">Подключение к (основной) базе данных, где находится <paramref name="masterTableName"/></param>
+    /// <param name="masterTableName">Имя таблицы "BinData" или "FileNames"</param>
+    private void DoValidateRefs(DBxConBase detCon, DBxTableColumnList refList, DBxConBase masterCon, string masterTableName, ISplash spl)
+    {
+      foreach (DBxTableColumnName tc in refList)
+      {
+        string oldPT = spl.PhaseText;
+
+        string RefText = "DB=" + detCon.DB.DatabaseName + ", TableName=" + tc.TableName + ", ColumnName=" + tc.ColumnName;
+        spl.PhaseText = "Поиск ссылок. " + RefText;
+        if (UseTrace)
+          Trace.WriteLine(RefText + "...");
+
+        Int32 lastId = DataTools.GetInt(detCon.GetMaxValue(tc.TableName, "Id", null));
+        spl.PercentMax = lastId;
+        spl.AllowCancel = true;
+        for (Int32 firstId = 1; firstId <= lastId; firstId += 1000)
+        {
+          spl.Percent = firstId - 1;
+
+          Int32 thisLastId = Math.Min(firstId + 1000 - 1, lastId);
+
+          DBxFilter[] filters = new DBxFilter[3];
+          filters[0] = new ValueFilter("Id", firstId, CompareKind.GreaterOrEqualThan);
+          filters[1] = new ValueFilter("Id", thisLastId, CompareKind.LessOrEqualThan);
+          filters[2] = new NotNullFilter(tc.ColumnName, DBxColumnType.Int);
+          Int32[] refIds = detCon.GetUniqueIntValues(tc.TableName,
+            tc.ColumnName,
+            new AndFilter(filters));
+          if (refIds.Length > 0)
+          {
+            Int32[] realIds = masterCon.GetUniqueIntValues(masterTableName, "Id", new IdsFilter(refIds));
+            if (realIds.Length != refIds.Length)
+            {
+              ArrayIndexer<Int32> realIdIndexer = new ArrayIndexer<Int32>(realIds);
+
+              // Есть ошибки. Нужен детальный поиск
+              DataTable table = detCon.FillSelect(tc.TableName,
+                new DBxColumns(new string[] { "Id", tc.ColumnName }),
+                new AndFilter(filters));
+              foreach (DataRow row in table.Rows)
+              {
+                Int32 id = DataTools.GetInt(row, "Id");
+                Int32 refId = DataTools.GetInt(row, tc.ColumnName);
+                if (refId == 0)
+                  throw new BugException("RefId=0");
+                if (!realIdIndexer.Contains(refId))
+                {
+                  Errors.AddError(RefText + ". Неправильная ссылка " + refId.ToString() + ". В таблице \"" + masterTableName + "\" нет записи с таким идентификатором");
+                  if (UseTrace)
+                    Trace.TraceError("Error reference. " + RefText + ". RefId=" + refId.ToString());
+                }
+              }
+
+              if (Errors.Severity != ErrorMessageKind.Error)
+                throw new BugException("Ошибка углубленного поиска ссылки в блоке");
+            }
+          }
+        }
+        spl.PercentMax = 0;
+        spl.AllowCancel = false;
+        spl.PhaseText = oldPT;
+      }
+    }
+
+    #endregion
+
+    #region Проверка целостности двоичных данных
+
+    private void ValidateBinDataSums(ISplash spl)
+    {
+      if (UseTrace)
+        Trace.WriteLine("Validating table BinData...");
       using (DBxCon Con = new DBxCon(_GlobalData.BinDataHandler.MainEntry))
       {
-        Splash.PercentMax = Con.GetRecordCount("BinData");
-        Splash.AllowCancel = true;
+        spl.PercentMax = Con.GetRecordCount("BinData");
+        spl.AllowCancel = true;
 
         int cnt = 0;
         int cntError = 0;
@@ -1052,8 +1271,12 @@ namespace AgeyevAV.ExtDB.Docs
             int Length = rdr.GetInt32(1);
             string MD5 = rdr.GetString(2);
             if (MD5 == DBxBinDataHandler.EmptyMD5)
+            {
               // 19.11.2020
               Errors.AddWarning("Таблица BinData, Id=" + Id.ToString() + ". Нулевое значение MD5. Не проверяется");
+              if (UseTrace)
+                Trace.TraceWarning("BinData, Id=" + Id.ToString() + ". MD5 is empty");
+            }
             else
             {
               byte[] Data;
@@ -1068,6 +1291,8 @@ namespace AgeyevAV.ExtDB.Docs
                 if (Data.Length != Length)
                 {
                   Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Неправильная длина блока данных. Ожидалось: " + Length.ToString() + ", прочитано: " + Data.Length.ToString());
+                  if (UseTrace)
+                    Trace.TraceError("BinData, Id=" + Id.ToString() + ". Invalid Length");
                   cntError++;
                 }
                 else
@@ -1076,6 +1301,8 @@ namespace AgeyevAV.ExtDB.Docs
                   if (MD5 != RealMD5)
                   {
                     Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Неправильный блок данных. Неправильная контрольная сумма");
+                    if (UseTrace)
+                      Trace.TraceError("BinData, Id=" + Id.ToString() + ". Invalid MD5");
                     cntError++;
                   }
                 }
@@ -1083,27 +1310,34 @@ namespace AgeyevAV.ExtDB.Docs
               catch (Exception e)
               {
                 Errors.AddError("Таблица BinData, Id=" + Id.ToString() + ". Ошибка чтения блока данных. " + e.Message);
+                if (UseTrace)
+                  Trace.TraceError("BinData, Id=" + Id.ToString() + ". Cannot read the data. " + e.Message);
                 cntError++;
               }
             }
 
-            Splash.IncPercent();
+            spl.IncPercent();
           }
         }
-        Splash.PercentMax = 0;
+        spl.PercentMax = 0;
 
         Errors.AddInfo("Записей в таблице BinData (" + _GlobalData.BinDataHandler.MainEntry.DB.DisplayName + "): " + cnt.ToString() + ", с ошибками: " + cntError.ToString());
       }
     }
 
-    private void CheckBinDataRepeats()
+    #endregion
+
+    #region Проверка повторов в BinData
+
+    private void ValidateBinDataRepeats(ISplash spl)
     {
-      Splash.PhaseText = "Поиск повторов в BinData";
+      if (UseTrace)
+        Trace.WriteLine("Search for MD5 repeats...");
       bool HasRepeats = false;
       using (DBxCon Con = new DBxCon(_GlobalData.BinDataHandler.MainEntry))
       {
-        Splash.PercentMax = Con.GetRecordCount("BinData");
-        Splash.AllowCancel = true;
+        spl.PercentMax = Con.GetRecordCount("BinData");
+        spl.AllowCancel = true;
         Int32 PrevId = 0;
         string PrevMD5 = null;
         using (DbDataReader rdr = Con.ReaderSelect("BinData", new DBxColumns("Id,MD5"), null, new DBxOrder("MD5")))
@@ -1117,49 +1351,41 @@ namespace AgeyevAV.ExtDB.Docs
               if (MD5 == PrevMD5)
               {
                 Errors.AddWarning("Повтор в таблице BinData. Для Id=" + PrevId.ToString() + " и Id=" + Id.ToString() + " задана одинаковая сумма MD5=\"" + MD5 + "\"");
+                if (UseTrace)
+                  Trace.TraceWarning("BinData has an MD5 twice. Id=" + PrevId.ToString() + " and Id=" + Id.ToString() + ". MD5=\"" + MD5 + "\"");
                 HasRepeats = true;
               }
             }
             PrevId = Id;
             PrevMD5 = MD5;
 
-            Splash.IncPercent();
+            spl.IncPercent();
           }
         }
-        Splash.PercentMax = 0;
+        spl.PercentMax = 0;
 
         if (!HasRepeats)
           Errors.AddInfo("Повторов в таблице BinData (" + _GlobalData.BinDataHandler.MainEntry.DB.DisplayName + ") не обнаружено");
       }
     }
 
-    private void CheckBinDataStorages()
-    {
-      for (int Section = 1; Section <= _GlobalData.BinDataHandler.SectionEntryCount; Section++)
-      {
-        try
-        {
-          CheckBinDataStorage(Section);
-        }
-        catch (Exception e)
-        {
-          e.Data["CheckBinDataStorages.Section"] = Section;
-          throw;
-        }
-      }
-    }
+    #endregion
 
-    private void CheckBinDataStorage(int section)
+    #region Проверка фрагментированных баз
+
+    private void ValidateBinDataStorage(int section, ISplash spl)
     {
       DBxEntry Entry2 = _GlobalData.BinDataHandler.GetSectionEntry(section);
-      Splash.PhaseText = "Проверка BinDataStorage в базе данных " + Entry2.DB.DisplayName;
-      bool HasErrors = false;
+      spl.PhaseText = "Проверка BinDataStorage в базе данных " + Entry2.DB.DisplayName;
+      if (UseTrace)
+        Trace.WriteLine("Validating " + Entry2.DB.DisplayName + "...");
+      bool HasWarnings = false;
       using (DBxCon Con1 = new DBxCon(_GlobalData.BinDataHandler.MainEntry))
       {
         using (DBxCon Con2 = new DBxCon(Entry2))
         {
-          Splash.PercentMax = Con2.GetRecordCount("BinDataStorage");
-          Splash.AllowCancel = true;
+          spl.PercentMax = Con2.GetRecordCount("BinDataStorage");
+          spl.AllowCancel = true;
 
           using (DbDataReader rdr = Con2.ReaderSelect("BinDataStorage", new DBxColumns("Id")))
           {
@@ -1173,33 +1399,257 @@ namespace AgeyevAV.ExtDB.Docs
                 if (!Con1.GetValue("BinData", Id, "Section", out oWantedSection)) // 04.06.2020
                 {
                   Errors.AddWarning("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + Id.ToString() + ". Такого идентификатора нет в основной таблице BinData");
-                  HasErrors = true;
+                  if (UseTrace)
+                    Trace.TraceWarning(Entry2.DB.DisplayName + ", BinDataStorage, Id=" + Id.ToString() + ". There is no such Id in BinData");
+                  HasWarnings = true;
                 }
                 else
                 {
                   int WantedSection = DataTools.GetInt(oWantedSection);
                   if (WantedSection != section)
                   {
+                    // Это считается предупреждением а не ошибкой.
+                    // Либо блок данных присутствует сразу в двух секциях, и тогда лишний блок никому не мешает.
+                    // Либо блока нет в нужной секции, тогда ошибка уже была выловлена при основной проверке
                     Errors.AddWarning("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + Id.ToString() + ". В основной таблице BinData для этого идентификатора задана секция №" + WantedSection.ToString() + ", а не №" + section.ToString());
-                    HasErrors = true;
+                    if (UseTrace)
+                      Trace.TraceWarning(Entry2.DB.DisplayName + ", BinDataStorage, Id=" + Id.ToString() + ". BinData section number is different for this Id.");
+
+                    HasWarnings = true;
                   }
                 }
               }
               catch (Exception e)
               {
                 Errors.AddError("База данных " + Entry2.DB.DisplayName + ", таблица BinDataStorage. Неперехваченная ошибка: " + e.Message);
+                if (UseTrace)
+                  Trace.TraceError(Entry2.DB.DisplayName + ", BinDataStorage. Exception occured. " + e.Message);
               }
-              Splash.IncPercent();
+              spl.IncPercent();
             }
           }
-          Splash.PercentMax = 0;
-          if (HasErrors)
+          spl.PercentMax = 0;
+          spl.AllowCancel = false;
+          if (HasWarnings)
             Errors.AddInfo("Обнаружены предупреждения по базе данных " + Entry2.DB.DisplayName);
           else
             Errors.AddInfo("В BinDataStorage секции №" + section.ToString() + " (" + Entry2.DB.DisplayName + ") нет ошибок");
 
         } // using Con2
       } // using Con1
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Результат поиска ссылок
+  /// </summary>
+  internal class DBxBinDataRefFinder
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект с пустыми списками
+    /// </summary>
+    public DBxBinDataRefFinder()
+    {
+      _MainBinDataRefs = new DBxTableColumnList();
+      _UndoBinDataRefs = new DBxTableColumnList();
+      _MainFileNameRefs = new DBxTableColumnList();
+      _UndoFileNameRefs = new DBxTableColumnList();
+    }
+
+    #endregion
+
+    #region Поиск
+
+    /// <summary>
+    /// Основной метод поиска.
+    /// Заполняет списки
+    /// </summary>
+    /// <param name="globalData">Инициализированный объект DBxRealDocProviderGlobal </param>
+    /// <param name="skipRealRefs">Если true, то для основной базы данных будут исключены реальные ссылочные поля.
+    /// Это позволяет сэкономить время на проверке целостности данных, так как ссылочная целостность</param>
+    public void FindRefs(DBxRealDocProviderGlobal globalData, bool skipRealRefs)
+    {
+#if DEBUG
+      if (globalData == null)
+        throw new ArgumentNullException("globalData");
+#endif
+      if (MainBinDataRefs.IsReadOnly)
+        throw new InvalidOperationException("Повторный вызов");
+
+      // Поиск в DBxDocTypes
+      DBxTableColumnList binDataRefs = new DBxTableColumnList();
+      DBxTableColumnList fileNameRefs = new DBxTableColumnList();
+      FindFromDocTypes(globalData.DocTypes, binDataRefs, fileNameRefs);
+
+      // Недостающая ссылка из FileNames
+      if (globalData.BinDataHandler.UseFiles)
+        binDataRefs.Add(new DBxTableColumnName("FileNames", "Data"));
+
+      // Поиск в реальной структуре основной базы данных недостающих ссылок
+      DBxStruct mainRealStr = globalData.MainDBEntry.DB.GetRealStruct();
+      foreach (DBxTableStruct ts in mainRealStr.Tables)
+      {
+        foreach (DBxColumnStruct cs in ts.Columns)
+        {
+          // Не проверяем флаги UseXXX в DBxBinDataHandler.
+          // 
+
+          if (String.Compare(cs.MasterTableName, "BinData", StringComparison.OrdinalIgnoreCase) == 0)
+            binDataRefs.Add(new DBxTableColumnName(ts.TableName, cs.ColumnName));
+          else if (String.Compare(cs.MasterTableName, "FileNames", StringComparison.OrdinalIgnoreCase) == 0)
+            fileNameRefs.Add(new DBxTableColumnName(ts.TableName, cs.ColumnName));
+        }
+      }
+
+      if (skipRealRefs)
+      {
+        // Проверяем, объявлены ли в основной базе данных поля, как ссылочные. Вероятно, ответ всегда "Да"
+        foreach (DBxTableColumnName tc in binDataRefs)
+        {
+          DBxColumnStruct cs = mainRealStr.Tables.GetRequired(tc.TableName).Columns.GetRequired(tc.ColumnName);
+          if (String.IsNullOrEmpty(cs.MasterTableName))
+            MainBinDataRefs.Add(tc);
+          else if (String.Compare(cs.MasterTableName, "BinData", StringComparison.OrdinalIgnoreCase) != 0)
+            throw new BugException("В реальной структуре БД " + globalData.MainDBEntry.DB.DatabaseName +
+              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + ", объявлена ссылка на таблицу \"" +
+              cs.MasterTableName + "\", а не на \"BinData\"");
+        }
+
+        foreach (DBxTableColumnName tc in fileNameRefs)
+        {
+          DBxColumnStruct cs = mainRealStr.Tables.GetRequired(tc.TableName).Columns.GetRequired(tc.ColumnName);
+          if (String.IsNullOrEmpty(cs.MasterTableName))
+            MainFileNameRefs.Add(tc);
+          else if (String.Compare(cs.MasterTableName, "FileNames", StringComparison.OrdinalIgnoreCase) != 0)
+            throw new BugException("В реальной структуре БД " + globalData.MainDBEntry.DB.DatabaseName +
+              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + ", объявлена ссылка на таблицу \"" +
+              cs.MasterTableName + "\", а не на \"FileNames\"");
+        }
+      }
+      else
+      {
+        MainBinDataRefs.AddRange(binDataRefs);
+        MainFileNameRefs.AddRange(fileNameRefs);
+      }
+
+      // Поиск в базе данных undo
+      if (globalData.UndoDBEntry != null)
+      {
+        DBxStruct undoRealStr = globalData.UndoDBEntry.DB.GetRealStruct();
+
+        foreach (DBxTableColumnName tc in binDataRefs)
+        {
+          DBxTableStruct ts = undoRealStr.Tables[tc.TableName];
+          if (ts == null)
+            continue;
+          DBxColumnStruct cs = ts.Columns[tc.ColumnName];
+          if (cs == null)
+            continue;
+
+          if (!String.IsNullOrEmpty(cs.MasterTableName))
+            throw new BugException("В реальной структуре БД " + globalData.UndoDBEntry.DB.DatabaseName +
+              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + " объявлено ссылочным");
+
+          UndoBinDataRefs.Add(tc);
+        }
+
+        foreach (DBxTableColumnName tc in fileNameRefs)
+        {
+          DBxTableStruct ts = undoRealStr.Tables[tc.TableName];
+          if (ts == null)
+            continue;
+          DBxColumnStruct cs = ts.Columns[tc.ColumnName];
+          if (cs == null)
+            continue;
+
+          if (!String.IsNullOrEmpty(cs.MasterTableName))
+            throw new BugException("В реальной структуре БД " + globalData.UndoDBEntry.DB.DatabaseName +
+              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + " объявлено ссылочным");
+
+          UndoFileNameRefs.Add(tc);
+        }
+      }
+
+      // Предотвращаем повторный вызов
+      SetReadOnly();
+    }
+
+    /// <summary>
+    /// Поиск ссылок, объявленных в DBxDocTypes
+    /// </summary>
+    /// <param name="docTypes"></param>
+    /// <param name="binDataRefs"></param>
+    /// <param name="fileNameRefs"></param>
+    private void FindFromDocTypes(DBxDocTypes docTypes, DBxTableColumnList binDataRefs, DBxTableColumnList fileNameRefs)
+    {
+      foreach (DBxDocType dt in docTypes)
+      {
+        FindFromDocTypeBase(dt, binDataRefs, fileNameRefs);
+        foreach (DBxSubDocType sdt in dt.SubDocs)
+          FindFromDocTypeBase(sdt, binDataRefs, fileNameRefs);
+      }
+    }
+
+    private void FindFromDocTypeBase(DBxDocTypeBase dt, DBxTableColumnList binDataRefs, DBxTableColumnList fileNameRefs)
+    {
+      foreach (DBxDocTypeBinDataRef r in dt.BinDataRefs)
+        binDataRefs.Add(new DBxTableColumnName(dt.Name, r.Column.ColumnName));
+      foreach (DBxDocTypeFileRef r in dt.FileRefs)
+        fileNameRefs.Add(new DBxTableColumnName(dt.Name, r.Column.ColumnName));
+    }
+
+    private void SetReadOnly()
+    {
+      MainBinDataRefs.SetReadOnly();
+      UndoBinDataRefs.SetReadOnly();
+      MainFileNameRefs.SetReadOnly();
+      UndoBinDataRefs.SetReadOnly();
+    }
+
+    #endregion
+
+    #region Результаты поиска
+
+    /// <summary>
+    /// Ссылки на таблицу BinData в основной базе данных
+    /// </summary>
+    public DBxTableColumnList MainBinDataRefs { get { return _MainBinDataRefs; } }
+    private DBxTableColumnList _MainBinDataRefs;
+
+    /// <summary>
+    /// Псевдоссылки в БД истории на двоичные данные
+    /// </summary>
+    public DBxTableColumnList UndoBinDataRefs { get { return _UndoBinDataRefs; } }
+    private DBxTableColumnList _UndoBinDataRefs;
+
+    /// <summary>
+    /// Ссылки на таблицу BinData в основной базе данных
+    /// </summary>
+    public DBxTableColumnList MainFileNameRefs { get { return _MainFileNameRefs; } }
+    private DBxTableColumnList _MainFileNameRefs;
+
+    /// <summary>
+    /// Ссылки на таблицу BinData в основной базе данных
+    /// </summary>
+    public DBxTableColumnList UndoFileNameRefs { get { return _UndoFileNameRefs; } }
+    private DBxTableColumnList _UndoFileNameRefs;
+
+    /// <summary>
+    /// Возвращает true, если все списки пустые
+    /// </summary>
+    public bool IsEmpty
+    {
+      get
+      {
+        return MainBinDataRefs.Count == 0 &&
+          UndoBinDataRefs.Count == 0 &&
+          MainFileNameRefs.Count == 0 &&
+          UndoFileNameRefs.Count == 0;
+      }
     }
 
     #endregion

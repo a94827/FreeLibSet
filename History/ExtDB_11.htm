@@ -5,7 +5,13 @@
 	<title>Изменения в модуле ExtDB.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-07-20T17:29:32.323000000"/>
+	<meta name="changed" content="2021-07-22T15:53:46.433000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -127,6 +133,25 @@
 		</td>
 	</tr>
 	<tr valign="top">
+		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="78" sdnum="1049;">
+			<p lang="en-US" align="center">78</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">22.07.2021</p>
+		</td>
+		<td width="78%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. DBxNameValidator.CheckTableColumnName()
+			</span><span lang="ru-RU">(</span><a href="#v045p9"><span lang="en-US">v.45
+			</span><span lang="ru-RU">п.9</span></a><span lang="ru-RU">)
+			выбрасывал исключение для ненайденной таблицы, при
+			</span><span lang="en-US">NameCheckingEnabled=false</span></p>
+			<p>2. При загрузке реальной структуры таблиц <span lang="en-US">SQLite
+			</span>(<span lang="en-US">SQLiteDBxCon.GetRealTableStructFromSchema(),
+			<a href="#v059p2">v.59 </a></span><a href="#v059p2">п.2</a>)
+			анализируются внешние ключи для определения ссылочных полей</p>
+		</td>
+	</tr>
+	<tr valign="top">
 		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="77" sdnum="1049;">
 			<p lang="en-US" align="center">77</p>
 		</td>
@@ -158,6 +183,21 @@
 			Удерживается единственное открытое соединение </span>SQLiteConnection.
 			<span lang="ru-RU">Нельзя использовать </span>DbDataReader <span lang="ru-RU">с
 			одновременным выполнением других запросов.</span></p>
+			<p><span lang="ru-RU">4. Метод </span><span lang="en-US">SQLiteDBx.CreateIfRequired()
+			(<a href="#v029p1">v.29 </a></span><a href="#v029p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">не создавал базы данных. Файл создавался
+			только после вызова </span><span lang="en-US">UpdateStruct().</span></p>
+			<p><span lang="ru-RU">5</span><span lang="en-US">. </span><span lang="ru-RU">Свойства
+			</span><span lang="en-US">DBx.StructHasBeenSet </span><span lang="ru-RU">и
+			</span><span lang="en-US">StructHasBeenUpdated (<a href="#v001p1">v.1
+			</a></span><a href="#v001p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Метод </span><span lang="en-US">GetRealDBStruct().</span></p>
+			<p><span lang="en-US">6. DBxTableStruct.Clone() (<a href="#v001p1">v.1
+			</a></span><a href="#v001p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span>
+			<span lang="ru-RU">не копировал свойство </span><span lang="en-US">AutoCreate.
+			</span><span lang="ru-RU">При этом у новой таблицы оно получало
+			значение </span><span lang="en-US">false, </span><span lang="ru-RU">а
+			не </span><span lang="en-US">true.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -527,7 +567,7 @@
 			внутренняя реорганизация для вывода отладочной информации в
 			</span><span lang="en-US">DBxTools.InitLogout() (<a href="#v046p1">v.46
 			</a></span><a href="#v046p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
-			<p><span lang="en-US">2. </span><span lang="ru-RU">Исправлена
+			<p><a name="v059p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Исправлена
 			реализация </span><span lang="en-US">SQLiteDBxCon.GetAllTableNamesFromSchema()
 			</span><span lang="ru-RU">и GetRealTableStructFromSchema() (</span><a href="#v029p1"><span lang="en-US">v.29
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
@@ -1047,9 +1087,10 @@
 			описанием столбцов при форматировании выражений</span></p>
 			<p><a name="v045p8"></a><span lang="ru-RU">8. Выделен класс
 			</span>DBxTools <span lang="ru-RU">со статическими методами</span></p>
-			<p><span lang="ru-RU">9</span><span lang="en-US">. </span><span lang="ru-RU">Методы
-			проверки корректности имени таблицы столбца перенесены из
-			</span><span lang="en-US">DBxConBase </span><span lang="ru-RU">(</span><a href="#v001p1"><span lang="en-US">v.1
+			<p><a name="v045p9"></a><span lang="ru-RU">9</span><span lang="en-US">.
+			</span><span lang="ru-RU">Методы проверки корректности имени
+			таблицы и столбца перенесены из </span><span lang="en-US">DBxConBase
+			</span><span lang="ru-RU">(</span><a href="#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) в
 			отдельный класс </span><span lang="en-US">DBxNameValidator.
 			</span><span lang="ru-RU">Свойство </span><span lang="en-US">DBxConBase.Validator.</span></p>

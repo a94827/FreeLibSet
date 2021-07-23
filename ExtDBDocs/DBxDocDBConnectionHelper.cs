@@ -371,6 +371,18 @@ namespace AgeyevAV.ExtDB.Docs
     private bool? _UseUndo;
 
     /// <summary>
+    /// Управление фрагментацией в DBxBinDataHandler.
+    /// Если null (по умолчанию, то определяется автоматически)
+    /// </summary>
+    public bool? UseBinDataFragmentation
+    {
+      get { return _UseBinDataFragmentation; }
+      set { _UseBinDataFragmentation = value; }
+    }
+    private bool? _UseBinDataFragmentation;
+
+
+    /// <summary>
     /// Структура основной базы данных.
     /// Свойство инициализируется после установки DocTypes.
     /// Прикладной код может добавить собственные таблицы, не связанные с документами
@@ -471,9 +483,14 @@ namespace AgeyevAV.ExtDB.Docs
       binDataHandler.UseBinData = useBinData;
       binDataHandler.UseFiles = useFiles;
 
-      using (DBx DummyDB = InitDB("db", null))
+      if (_UseBinDataFragmentation.HasValue)
+        binDataHandler.UseFragmentation = _UseBinDataFragmentation.Value;
+      else
       {
-        binDataHandler.UseFragmentation = DummyDB.DBSizeLimit < FileTools.TByte;
+        using (DBx DummyDB = InitDB("db", null))
+        {
+          binDataHandler.UseFragmentation = DummyDB.DBSizeLimit < FileTools.TByte;
+        }
       }
 
       binDataHandler.AddMainTableStructs(MainDBStruct);

@@ -2239,6 +2239,8 @@ namespace AgeyevAV.IO
     /// </summary>
     public TempDirectory()
     {
+      _DeleteOnDispose = true;
+
       AbsPath TempRoot = RootDir;
       lock (DataTools.InternalSyncRoot)
       {
@@ -2264,7 +2266,7 @@ namespace AgeyevAV.IO
     [DebuggerStepThrough]
     protected override void Dispose(bool disposing)
     {
-      if (!_Dir.IsEmpty)
+      if ((!_Dir.IsEmpty) && DeleteOnDispose)
       {
         try
         {
@@ -2286,6 +2288,13 @@ namespace AgeyevAV.IO
     /// </summary>
     public AbsPath Dir { get { return _Dir; } }
     private AbsPath _Dir;
+
+    /// <summary>
+    /// Если true (по умолчанию), то файлы и сам каталог будут удалены при вызове Dispose() или деструктора объекта.
+    /// Если сбросить в false, то каталог и файлы будут сохранены. Это можно использовать, например, в отладочных целях.
+    /// </summary>
+    public bool DeleteOnDispose { get { return _DeleteOnDispose; } set { _DeleteOnDispose = value; } }
+    private bool _DeleteOnDispose;
 
     /// <summary>
     /// Возвращает путь к каталогу, если не было вызова Dispose()

@@ -1467,6 +1467,13 @@ namespace AgeyevAV
     public void AddRange(IEnumerable<T> collection)
     {
       CheckNotReadOnly();
+#if DEBUG
+      if (collection==null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
       foreach (T Item in collection)
         Add(Item);
     }
@@ -2119,6 +2126,13 @@ namespace AgeyevAV
     public void AddRange(IEnumerable<T> Collection)
     {
       CheckNotReadOnly();
+#if DEBUG
+      if (collection==null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
       BeginUpdate();
       try
       {
@@ -2165,7 +2179,7 @@ namespace AgeyevAV
 
     #endregion
 
-    #region Извещения при изменениях в списке
+  #region Извещения при изменениях в списке
 
     /// <summary>
     /// Событие вызывается перед добавлением элемента.
@@ -2304,7 +2318,7 @@ namespace AgeyevAV
 
     #endregion
 
-    #region Приостановка отправки извещений
+  #region Приостановка отправки извещений
 
     /// <summary>
     /// После вызова метода перестают посылаться извещения BeforeAdd, AfterAdd, BeforeRemove и AfterRemove.
@@ -2348,7 +2362,7 @@ namespace AgeyevAV
 
     #endregion
 
-    #region Десериализация
+  #region Десериализация
 
     [OnDeserialized]
     private void OnDeserializedMethod(StreamingContext context)
@@ -2366,7 +2380,7 @@ namespace AgeyevAV
 
     #endregion
 
-    #region INamedValuesAccess Members
+  #region INamedValuesAccess Members
 
     object INamedValuesAccess.GetValue(string Name)
     {
@@ -3039,6 +3053,13 @@ namespace AgeyevAV
     public void AddRange(IEnumerable<T> collection)
     {
       CheckNotReadOnly();
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
       BeginUpdate();
       try
       {
@@ -3738,6 +3759,13 @@ namespace AgeyevAV
     public void AddRange(IEnumerable<T> collection)
     {
       CheckNotReadOnly();
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
       foreach (T Item in collection)
         Add(Item);
     }
@@ -4033,6 +4061,15 @@ namespace AgeyevAV
     /// <param name="collection">Исходные элементы</param>
     public new void AddRange(IEnumerable<T> collection)
     {
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+      if (Object.ReferenceEquals(collection, Source))
+        throw new ArgumentException("Нельзя добавить элементы из базового списка", "collection");
+
       lock (SyncRoot)
       {
         ResetCopyArray();
@@ -4339,6 +4376,15 @@ namespace AgeyevAV
     /// <param name="collection">Список элементов для добавления</param>
     public new void AddRange(IEnumerable<T> collection)
     {
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+      if (Object.ReferenceEquals(collection, Source))
+        throw new ArgumentException("Нельзя добавить элементы из базового списка", "collection");
+
       lock (SyncRoot)
       {
         ResetCopyArray();

@@ -145,7 +145,15 @@ namespace AgeyevAV.ExtDB
       }
       else
       {
-        if (!Entry.DB.Struct.Tables[tableName].Columns.Contains(columnName))
+        DBxTableStruct ts = Entry.DB.Struct.Tables[tableName];
+        if (ts == null)
+        {
+          if (NameCheckingEnabled)
+            throw new ArgumentException("Нет определения для таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "tableName");
+          else
+            return null; // 22.07.2021
+        }
+        if (!ts.Columns.Contains(columnName))
         {
           if (NameCheckingEnabled)
             throw new ArgumentException("Определения для столбца \"" + columnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "columnName");

@@ -427,12 +427,18 @@ namespace AgeyevAV
     /// Групповое добавление элементов списка
     /// В исходной коллекции могут быть одинаковые элементы, которые пропускаются
     /// </summary>
-    /// <param name="сollection"></param>
-    public void AddRange(IEnumerable<string> сollection)
+    /// <param name="collection"></param>
+    public void AddRange(IEnumerable<string> collection)
     {
       CheckNotReadOnly();
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
 
-      foreach (string Item in сollection)
+      foreach (string Item in collection)
         Add(Item);
     }
 

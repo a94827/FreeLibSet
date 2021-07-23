@@ -70,6 +70,7 @@ namespace AgeyevAV.ExtDB
       _PrimaryKey = source._PrimaryKey; // копируется, если задано в явном виде
       _AutoPrimaryKey = source._AutoPrimaryKey;
       _Comment = source._Comment;
+      _AutoCreate = source._AutoCreate; // 21.07.2021
     }
 
     #endregion

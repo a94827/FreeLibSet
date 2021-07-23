@@ -16582,6 +16582,28 @@ namespace AgeyevAV
       return Rows;
     }
 
+    /// <summary>
+    /// Распределение строк таблицы по группам с одинаковыми значениями ключевых
+    /// полей. На входе задается произвольный массив строк. Строки должны относится
+    /// к одной таблице или однотипным таблицам
+    /// Возвращаются массивы ссылок на строки исходного массива, каждый массив содержит
+    /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
+    /// </summary>
+    /// <param name="srcRows">Исходные строки.
+    /// Таблица, к которой относятся строки, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
+    /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
+    /// <param name="dbNullAsZero">Если true, то значения DBNull полей <paramref name="keyColumnNames"/>
+    /// в исходной таблице трактоваться как 0 (или пустая строка)</param>
+    /// <returns>Возвращается двумерный массив ссылок на строки масива
+    /// SrcRows. Первая размерность соответствует уникальным комбинациям значений полей</returns>
+    public static DataRow[][] GroupRows(DataRow[] srcRows, string keyColumnNames, bool dbNullAsZero)
+    {
+      DataTable KeyTable;
+      DataRow[][] Rows;
+      GroupRows(srcRows, keyColumnNames, out KeyTable, out Rows, dbNullAsZero);
+      return Rows;
+    }
+
     #endregion
 
     #endregion
@@ -16926,7 +16948,6 @@ namespace AgeyevAV
       // Лучше замену массива выполнить в самом конце, тут меньше вероятность исключения
       rows2.CopyTo(rows, 0);
     }
-
 
     #endregion
 

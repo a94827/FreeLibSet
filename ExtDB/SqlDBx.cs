@@ -411,7 +411,7 @@ namespace AgeyevAV.ExtDB.SqlClient
     /// не вносится не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
-    public override bool UpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
       using (SqlDBxCon Con = new SqlDBxCon(MainEntry, false))

@@ -49,7 +49,7 @@ namespace AgeyevAV.ExtDB.SQLite
   {
     #region Конструкторы и Dispose
 
-    private const string MemoryFileName = ":memory:";
+    internal const string MemoryFileName = ":memory:";
 
     /// <summary>
     /// Создание подключение к базе данных.
@@ -104,20 +104,46 @@ namespace AgeyevAV.ExtDB.SQLite
     }
 
     /// <summary>
-    /// Эта версия конструктора предназначена для создания базы данных в памяти
+    /// Открывает базу данных по указанному пути
     /// </summary>
-    public SQLiteDBx()
-      : this("Data Source="+MemoryFileName)
+    /// <param name="path">Путь к базе данных. Должен быть задан</param>
+    /// <param name="readOnly">True - открыть базу только для просмотра, false - для записи</param>
+    public SQLiteDBx(AbsPath path, bool readOnly)
+      : this(GetConnectionStringBuilder(path, readOnly))
     {
     }
 
+    private static SQLiteConnectionStringBuilder GetConnectionStringBuilder(AbsPath path, bool readOnly)
+    {
+      if (path.IsEmpty)
+        throw new ArgumentNullException("path");
+      SQLiteConnectionStringBuilder b = new SQLiteConnectionStringBuilder();
+      b.DataSource = path.Path;
+      b.ReadOnly = readOnly;
+      return b;
+    }
+
+    /// <summary>
+    /// Эта версия конструктора предназначена для создания базы данных в памяти
+    /// </summary>
+    public SQLiteDBx()
+      : this("Data Source=" + MemoryFileName)
+    {
+    }
+
+    /// <summary>
+    /// Если InMemory=true, то закрывает соединение с базой данных, что приводит к ее удалению.
+    /// </summary>
+    /// <param name="disposing">true, если вызван метод Dispose()</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
       {
         if (MainConnection != null)
+        {
           MainConnection.Dispose();
-        MainConnection = null;
+          MainConnection = null;
+        }
       }
 
       base.Dispose(disposing);
@@ -265,9 +291,12 @@ namespace AgeyevAV.ExtDB.SQLite
     {
       if (DatabaseExists)
         return;
-      using (/*SQLiteDBxCon Con = */new SQLiteDBxCon(MainEntry))
+      using (SQLiteDBxCon Con = new SQLiteDBxCon(MainEntry))
       {
         // Ничего не делаем. Само создается
+        // 21.07.2021. Неверно. Надо обязательно обратиться к свойству Connection
+
+        Con.Connection.GetSchema();
       }
     }
 
@@ -281,7 +310,7 @@ namespace AgeyevAV.ExtDB.SQLite
     /// не вносится не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
-    public override bool UpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
       using (SQLiteDBxCon Con = new SQLiteDBxCon(MainEntry))
@@ -1049,62 +1078,37 @@ namespace AgeyevAV.ExtDB.SQLite
       #endregion
 
       #region Определение ссылочных полей
-      // TODO: НЕ РЕАЛИЗОВАНО !!!!!!
-#if XXX
-      int TableObjId = GetTableObjId(TableName);
-      if (TableObjId == 0)
-        throw new BugException("Не удалось получить идентификатор object_id таблицы \"" + TableName + "\"");
 
-      Buffer.Clear();
-      Buffer.SB.Append("SELECT [name],[object_id],[referenced_object_id],[delete_referential_action] FROM sys.foreign_keys WHERE parent_object_id=");
-      Buffer.FormatValue(TableObjId);
-      DataTable tbl = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_keys");
-      foreach (DataRow Row in tbl.Rows)
+      DataTable schema = Connection.GetSchema("FOREIGNKEYS", new string[] { null, null, tableName, null });
+      foreach (DataRow row in schema.Rows)
       {
-        int FKObjId = DataTools.GetInt(Row, "object_id");
-        int RefTableObjId = DataTools.GetInt(Row, "referenced_object_id");
+        string refColName = DataTools.GetString(row, "FKEY_FROM_COLUMN");
+        DBxColumnStruct colStr = TableStr.Columns[refColName];
+        if (colStr == null)
+          continue; // по идее, это ошибка
 
-      Buffer.Clear();
-        Buffer.SB.Append("SELECT [parent_column_id] FROM sys.foreign_key_columns WHERE constraint_object_id=");
-        Buffer.FormatValue(FKObjId);
-        // TODO: Нужно сделать метод SQLExecuteScalarSingle(), который будет работать как ExecuteScalar(), но с проверкой количества данных в DataReader'е
-        DataTable tbl2 = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_key_columns");
-        if (tbl2.Rows.Count == 0)
-          throw new BugException("Не найдено ни одно столбца для ограничения с constraint_object_id=" + FKObjId.ToString());
-        if (tbl2.Rows.Count > 1)
-          throw new BugException("Ограничение с constraint_object_id=" + FKObjId.ToString() + " содержит несколько столбцов (" + tbl2.Rows.Count.ToString() + ")");
-        int ParentColumnId = DataTools.GetInt(tbl2.Rows[0], "parent_column_id");
+        colStr.MasterTableName = DataTools.GetString(row, "FKEY_TO_TABLE");
 
-      Buffer.Clear();
-        Buffer.SB.Append("SELECT [name] FROM sys.columns WHERE object_id=");
-        Buffer.FormatValue(TableObjId);
-        Buffer.SB.Append(" AND column_id=");
-        Buffer.FormatValue(ParentColumnId);
-        string ParentColumnName = DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
-        if (String.IsNullOrEmpty(ParentColumnName))
-          throw new BugException("Не удалось определить имя ссылочного поля");
+        string mode = DataTools.GetString(row, "FKEY_ON_DELETE");
 
-      Buffer.Clear();
-        Buffer.SB.Append("SELECT [name] FROM sys.tables WHERE object_id=");
-        Buffer.FormatValue(RefTableObjId);
-        string RefTableName = DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
-        if (String.IsNullOrEmpty(RefTableName))
-          throw new BugException("Не удалось определить имя ссылочной таблицы для RefTableId=" + RefTableObjId.ToString());
+        // См.режимы: https://www.sqlite.org/foreignkeys.html
+        // раздел 4.3
 
-        DBxColumnStruct ColStr = TableStr.Columns[ParentColumnName];
-        ColStr.MasterTableName = RefTableName;
-
-        int RefTypeCode = DataTools.GetInt(Row, "delete_referential_action");
-        switch (RefTypeCode)
+        switch (mode)
         {
-          case 0: ColStr.RefType = DBxRefType.Disallow; break;
-          case 1: ColStr.RefType = DBxRefType.Delete; break;
-          case 2: ColStr.RefType = DBxRefType.Clear; break;
-          case 3: ColStr.RefType = DBxRefType.Clear; break; // устанавливается значение по умолчанию
+          case "SET NULL":
+          case "SET DEFAULT":
+            colStr.RefType = DBxRefType.Clear;
+            break;
+          case "CASCADE":
+            colStr.RefType = DBxRefType.Delete;
+            break;
+          default:
+            colStr.RefType = DBxRefType.Disallow;
+            break;
         }
       }
 
-#endif
       #endregion
 
       TableStr.SetReadOnly();
@@ -1975,6 +1979,10 @@ namespace AgeyevAV.ExtDB.SQLite
     public override string ReplaceDBName(string connectionString, string oldDBName, string newDBName)
     {
       SQLiteConnectionStringBuilder csb = new SQLiteConnectionStringBuilder(connectionString);
+
+      if (csb.DataSource.EndsWith(SQLiteDBx.MemoryFileName))
+        return csb.ConnectionString; // 21.07.2021 У баз данных в памяти одно и тоже имя
+
       //csb.DataSource = ReplaceDBItem(csb.DataSource, OldDBName, NewDBName);
       // 31.07.2018. Вместо простой замены текста, заменяем имя файла
       AbsPath Path = new AbsPath(csb.DataSource);
@@ -1984,6 +1992,7 @@ namespace AgeyevAV.ExtDB.SQLite
         Path = new AbsPath(Path.ParentDir, FileName);
         csb.DataSource = Path.Path;
       }
+
       return csb.ConnectionString;
     }
 

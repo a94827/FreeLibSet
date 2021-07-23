@@ -618,6 +618,9 @@ namespace AgeyevAV.ExtForms
       {
         CheckNotAssigned();
         _ManualOrderColumn = value;
+
+        if (!String.IsNullOrEmpty(value))
+          Owner.AutoSort = false; // 21.07.2021
       }
     }
     private string _ManualOrderColumn;
@@ -757,7 +760,7 @@ namespace AgeyevAV.ExtForms
         }
       }
 
-      if (Owner.OrderCount > 0 || 
+      if (Owner.OrderCount > 0 ||
         Owner.CustomOrderAllowed ||
         (Owner.GridProducer != null && Owner.GridProducer.OrderCount > 0 && Owner.UseGridProducerOrders))
       {

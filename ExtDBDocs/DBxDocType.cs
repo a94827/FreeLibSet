@@ -1847,7 +1847,7 @@ namespace AgeyevAV.ExtDB.Docs
 
     /// <summary>
     /// Получение структуры основной базы данных.
-    /// Устанавливает IsReadOnly=true.
+    /// Устанавливает свойство DBxDocTypes.IsReadOnly=true.
     /// </summary>
     /// <returns>Структура базы данных, включая служебные таблицы и поля</returns>
     public DBxStruct GetMainDBStruct()
@@ -1935,7 +1935,7 @@ namespace AgeyevAV.ExtDB.Docs
 
     /// <summary>
     /// Получение структуры базы данных Undo.
-    /// Устанавливает IsReadOnly=true.
+    /// Устанавливает свойство DBxDocTypes.IsReadOnly=true.
     /// Если какое-либо из свойств UseDeleted, UserVersions или UseTime,
     /// метод возвращает null, т.к. ведение истории невозможно
     /// </summary>

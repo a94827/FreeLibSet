@@ -1020,6 +1020,15 @@ namespace AgeyevAV
     /// <param name="collection">Список, откуда добавляются элементы</param>
     public void AddRange(IEnumerable<T> collection)
     {
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+      if (Object.ReferenceEquals(collection, Source))
+        throw new ArgumentException("Нельзя добавить элементы из базового списка", "collection");
+
       lock (SyncRoot)
       {
         ResetCopyArray(); // 11.11.2016
@@ -2637,11 +2646,11 @@ namespace AgeyevAV
     /// Связь между внутренним списком и переданной коллекцией отсутствует
     /// </summary>
     /// <param name="collection">Коллекция, откуда берутся начальные значения для списка</param>
-    /// <param name="IsReadOnly">Если true, то обертка сразу переводится в режим "только чтение"</param>
-    public ListWithReadOnly(ICollection<T> collection, bool IsReadOnly)
+    /// <param name="isReadOnly">Если true, то обертка сразу переводится в режим "только чтение"</param>
+    public ListWithReadOnly(ICollection<T> collection, bool isReadOnly)
     {
       _Source = new List<T>(collection);
-      _IsReadOnly = IsReadOnly;
+      _IsReadOnly = isReadOnly;
     }
 
     /// <summary>
@@ -2870,20 +2879,28 @@ namespace AgeyevAV
     /// <summary>
     /// Добавляет множество элементов в конец списка
     /// </summary>
-    /// <param name="Collection"></param>
-    public void AddRange(IEnumerable<T> Collection)
+    /// <param name="collection">Добавляемые элементы</param>
+    public void AddRange(IEnumerable<T> collection)
     {
       CheckNotReadOnly();
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+      if (Object.ReferenceEquals(collection, Source))
+        throw new ArgumentException("Нельзя добавить элементы из базового списка", "collection");
 
       // Оптимизированная загрузка для списков
       if (Source is List<T>)
       {
-        ((List<T>)Source).AddRange(Collection);
+        ((List<T>)Source).AddRange(collection);
         return;
       }
 
       // Поэлементная загрузка
-      foreach (T Item in Collection)
+      foreach (T Item in collection)
         _Source.Add(Item);
     }
 
@@ -3570,6 +3587,14 @@ namespace AgeyevAV
     /// <param name="collection"></param>
     public void AddRange(IEnumerable<T> collection)
     {
+      CheckNotReadOnly();
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
       foreach (T Item in collection)
         Add(Item);
     }
@@ -3874,10 +3899,18 @@ namespace AgeyevAV
     /// Групповое добавление элементов списка
     /// В исходной коллекции могут быть одинаковые элементы, которые пропускаются
     /// </summary>
-    /// <param name="сollection"></param>
-    public void AddRange(IEnumerable<T> сollection)
+    /// <param name="collection"></param>
+    public void AddRange(IEnumerable<T> collection)
     {
-      foreach (T Item in сollection)
+      CheckNotReadOnly();
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
+      foreach (T Item in collection)
         Add(Item);
     }
 
@@ -4832,6 +4865,13 @@ namespace AgeyevAV
     /// <param name="collection">Коллекция для добавления</param>
     public new void AddRange(IEnumerable<T> collection)
     {
+#if DEBUG
+      if (collection == null)
+        throw new ArgumentException("collection");
+#endif
+      if (Object.ReferenceEquals(collection, this))
+        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
       // Подсчет числа добавляемых элементов
       int AddedCount = 0;
       foreach (T item in collection)

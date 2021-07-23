@@ -546,10 +546,18 @@ namespace AgeyevAV.ExtDB
             throw new InvalidOperationException("Нельзя задать структуру, если есть установленные соединения");
 
           _Struct = value;
+          _StructHasBeenSet = true;
         }
       }
     }
     private DBxStruct _Struct;
+
+    /// <summary>
+    /// Возвращает true, если свойство Struct было установлено.
+    /// Если false, то Struct возвращает реальную структуру базы данных
+    /// </summary>
+    public bool StructHasBeenSet { get { return _StructHasBeenSet; } }
+    private bool _StructHasBeenSet;
 
     /// <summary>
     /// Восстанавливает свойство Struct в значение по умолчанию, то есть отображающее реальную структуру таблиц в базе данных.
@@ -559,11 +567,22 @@ namespace AgeyevAV.ExtDB
     {
       lock (_Cons.SyncRoot)
       {
-        if (_MainEntry == null)
-          _Struct = null;
-        else
-          _Struct = new DBxStruct(new DBxRealStructSource(_MainEntry));
+        _Struct = GetRealStruct();
+        _StructHasBeenSet = false;
+        _StructHasBeenUpdated = false;
       }
+    }
+
+    /// <summary>
+    /// Возвращает новый объект DBxStruct, соответствующий реальной структуре базы данных
+    /// </summary>
+    /// <returns></returns>
+    public DBxStruct GetRealStruct()
+    {
+      if (_MainEntry == null)
+        return null;
+      else
+        return new DBxStruct(new DBxRealStructSource(_MainEntry));
     }
 
     #endregion
@@ -581,18 +600,30 @@ namespace AgeyevAV.ExtDB
     public abstract void CreateIfRequired();
 
     /// <summary>
+    /// Возвращает true, если был успешный вызов метода UpdateStruct().
+    /// Вызов ResetDBStruct() сбрасывает флаг в false.
+    /// </summary>
+    public bool StructHasBeenUpdated { get { return _StructHasBeenUpdated; } }
+    private bool _StructHasBeenUpdated;
+
+    /// <summary>                               
     /// Метод должен выполнить обновление структуры существующей базы
     /// данных на основании созданного описание в свойстве DBx.Struct.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
-    /// Эта перегрузка использует параметры обновления по умолчанию, которые применимы в большинстве случаев
+    /// Эта версия позволяет настроить параметры обновления.
     /// </summary>
     /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится не вносится, сообщения не добавляются</param>
+    /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
-    public bool UpdateStruct(ISplash splash, ErrorMessageList errors)
+    public bool UpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
-      return UpdateStruct(splash, errors, new DBxUpdateStructOptions());
+      if (!StructHasBeenSet)
+        throw new InvalidOperationException("StructHasBeenSet=false");
+      bool res = OnUpdateStruct(splash, errors, options);
+      _StructHasBeenUpdated = true;
+      return res;
     }
 
     /// <summary>                               
@@ -606,7 +637,23 @@ namespace AgeyevAV.ExtDB
     /// не вносится не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
-    public abstract bool UpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options);
+    protected abstract bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options);
+
+
+    /// <summary>
+    /// Метод должен выполнить обновление структуры существующей базы
+    /// данных на основании созданного описание в свойстве DBx.Struct.
+    /// На момент вызова база данных (возможно, пустая) должна существовать.
+    /// Эта перегрузка использует параметры обновления по умолчанию, которые применимы в большинстве случаев
+    /// </summary>
+    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
+    /// не вносится не вносится, сообщения не добавляются</param>
+    /// <returns>true, если в базу данных были внесены изменения</returns>
+    public bool UpdateStruct(ISplash splash, ErrorMessageList errors)
+    {
+      return UpdateStruct(splash, errors, new DBxUpdateStructOptions());
+    }
 
     /// <summary>
     /// Обновление структуры существующей базы данных на основании созданного описание в свойстве DBx.Struct.

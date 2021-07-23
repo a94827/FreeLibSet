@@ -10,7 +10,7 @@ using AgeyevAV;
 namespace ExtDB.tests
 {
   [TestFixture]
-  class SQLiteDBx_InMemory
+  public class SQLiteDBxTests_InMemory
   {
     [Test]
     public void SimpleUsage()

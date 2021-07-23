@@ -389,6 +389,13 @@ namespace AgeyevAV.ExtDB.Docs
       /// <param name="collection">Блокировки</param>
       public new void AddRange(IEnumerable<DBxLongDocsLock> collection)
       {
+#if DEBUG
+        if (collection == null)
+          throw new ArgumentException("collection");
+#endif
+        if (Object.ReferenceEquals(collection, this))
+          throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+
         foreach (DBxLongDocsLock Item in collection)
           Add(Item);
       }
