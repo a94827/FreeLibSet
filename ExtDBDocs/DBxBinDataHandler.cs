@@ -1184,6 +1184,7 @@ namespace AgeyevAV.ExtDB.Docs
     /// <param name="refList">Список таблиц и ссылочных полей</param>
     /// <param name="masterCon">Подключение к (основной) базе данных, где находится <paramref name="masterTableName"/></param>
     /// <param name="masterTableName">Имя таблицы "BinData" или "FileNames"</param>
+    /// <param name="spl">Текущая экранная заставка</param>
     private void DoValidateRefs(DBxConBase detCon, DBxTableColumnList refList, DBxConBase masterCon, string masterTableName, ISplash spl)
     {
       foreach (DBxTableColumnName tc in refList)

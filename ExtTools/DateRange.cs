@@ -44,7 +44,7 @@ namespace AgeyevAV
   /// </summary>
   [Serializable]
   [StructLayout(LayoutKind.Auto)]
-  public struct DateRange : IEnumerable<DateTime>
+  public struct DateRange : IEnumerable<DateTime>, IEquatable<DateRange>
   {
     #region Конструкторы
 
@@ -1452,8 +1452,8 @@ namespace AgeyevAV
     }
 
     /// <summary>
-    /// Возвращает true, если проверяемый все периоды в проверяемом списке <paramref name="rangeList"/> 
-    /// полностью входzт в текущий список периодов.
+    /// Возвращает true, если все периоды в проверяемом списке <paramref name="rangeList"/> 
+    /// полностью входят в текущий список периодов.
     /// В списке может быть несколько периодов, идущих без разрыва, в которые
     /// попадают начальная и конечная дата проверяемого диапазона
     /// </summary>
