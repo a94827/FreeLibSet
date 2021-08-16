@@ -2042,7 +2042,22 @@ namespace AgeyevAV.ExtDB.Docs
       #region Список обрабатываемых полей
 
       if (usedColumnNames == null)
-        usedColumnNames = DBxColumns.FromColumns(row.Table.Columns) - AddUserFieldPairsSysColNames;
+      {
+        DBxColumnList lst=new DBxColumnList();
+        for (int i = 0; i < row.Table.Columns.Count; i++)
+        {
+          string colName=row.Table.Columns[i].ColumnName;
+          if (AddUserFieldPairsSysColNames.Contains(colName))
+            continue;
+
+          if (dbPermissions.ColumnModes[row.Table.TableName, colName] != DBxAccessMode.Full)
+            continue; // 17.12.2015, 25.09.2020
+                      // 16.08.2021. Поля, недоступные для записи пропускаем всегда, а не только для пустых значений
+
+          lst.Add(colName);
+        }
+        usedColumnNames = new DBxColumns(lst);
+      }
 
       #endregion
 
@@ -2061,18 +2076,28 @@ namespace AgeyevAV.ExtDB.Docs
           // 09.12.2015: Добавление всех полей при повторном вызове для добавляемой записи
           //             У нас нет оригинальной версии строки для DataRowState.Added
           // 17.12.2015: Код переработан
-          if (DataTools.IsEmptyValue(NewValue) &&
-            ColDef.Nullable) // 07.08.2018
-          // Если когда-нибудь будет свойство DBxColumnStruct.DefaultValue, нужно будет добавить проверку
-          {
-            if (realAdd)
-              continue;
-            else if (dbPermissions.ColumnModes[row.Table.TableName, usedColumnNames[i]] != DBxAccessMode.Full)
-              continue; // 17.12.2015, 25.09.2020
-          }
+          // 16.08.2021: Учитывается DBxColumnStruct.DefaultValue
 
+          if (realAdd)
+          {
+            if (ColDef.Nullable)
+            {
+              if (DataTools.IsEmptyValue(NewValue))
+                continue; // 07.08.2018
+            }
+            else
+            {
+              if (NewValue is DBNull)
+                continue; // 16.08.2021
+            }
+          }
           if (NewValue is DBNull && (!ColDef.Nullable))
-            NewValue = DataTools.GetEmptyValue(ColDef.DataType); // 07.08.2018
+          {
+            if (ColDef.DefaultValue == null)
+              NewValue = DataTools.GetEmptyValue(ColDef.DataType); // 07.08.2018
+            else
+              NewValue = ColDef.DefaultValue; // 16.08.2021
+          }
 
           fieldPairs.Add(usedColumnNames[i], NewValue);
           Res = true;

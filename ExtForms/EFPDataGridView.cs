@@ -1764,7 +1764,7 @@ namespace AgeyevAV.ExtForms
     private void Init()
     {
       Control.MultiSelect = false;
-      //FGrid.RowTemplate.Height = DefaultRowHeight;
+      //Control.RowTemplate.Height = DefaultRowHeight;
       Control.AllowUserToResizeRows = false;
       Control.AllowUserToAddRows = false;
       Control.AllowUserToDeleteRows = false;
@@ -3178,9 +3178,6 @@ namespace AgeyevAV.ExtForms
 
         int ColIdx = CurrentColumnIndex;
 
-        //if (MainGrid.CurrentCell!=null)
-        //  ColIdx=MainGrid.CurrentCell.ColumnIndex;
-
         if (ColIdx < 0 || ColIdx >= Control.Columns.Count /* 21.11.2018 */)
           ColIdx = 0;
         Control.CurrentCell = value.Cells[ColIdx];
@@ -3685,7 +3682,7 @@ namespace AgeyevAV.ExtForms
     }
 
     /// <summary>
-    /// Получение MainGrid.DataSource в виде DataTable 
+    /// Получение DataGridView.DataSource в виде DataTable 
     /// Для источника DataTable возвращает DefaultView
     /// Возвращает null, если другой источник.
     /// 
@@ -3792,12 +3789,6 @@ namespace AgeyevAV.ExtForms
     /// <returns>Объект DataRow или null при любой ошибке</returns>
     public static DataRow GetDataRow(DataGridView control, int rowIndex)
     {
-      //DataGridViewRow GridRow = MainGrid.Rows.SharedRow(RowIndex);
-      //if (GridRow.DataBoundItem is DataRowView)
-      //  return ((DataRowView)(GridRow.DataBoundItem)).Row;
-      //if (GridRow.DataBoundItem is DataRow)
-      //  return (DataRow)(GridRow.DataBoundItem);
-
       /*
       if (control.DataSource is DataView)
       {
@@ -3997,7 +3988,7 @@ namespace AgeyevAV.ExtForms
           }
 
           int p = DataTools.FindDataRowViewIndex(dv, value[0]);
-          if (p > 0)
+          if (p >= 0) // исправлено 16.08.2021
             SelectedRowIndices = new int[1] { p };
           return;
         }
@@ -4044,7 +4035,7 @@ namespace AgeyevAV.ExtForms
           return;
         DataView dv = SourceAsDataView;
         if (dv == null)
-          throw new InvalidDataSourceException("Свойство Grid.DataSource не является DataView или DataTable");
+          throw new InvalidDataSourceException("Свойство DataGridView.DataSource не является DataView или DataTable");
 
         // 04.07.2021
         // Оптимизация
@@ -4097,7 +4088,7 @@ namespace AgeyevAV.ExtForms
           return;
         DataTable Table = SourceAsDataTable;
         if (Table == null)
-          throw new InvalidOperationException("Grid.DataSource не является DataTable");
+          throw new InvalidOperationException("DataGridView.DataSource не является DataTable");
         DataRow[] Rows = DataTools.GetPrimaryKeyRows(Table, value);
         SelectedDataRows = Rows;
       }
@@ -4120,7 +4111,7 @@ namespace AgeyevAV.ExtForms
       {
         DataTable Table = SourceAsDataTable;
         if (Table == null)
-          throw new InvalidOperationException("Grid.DataSource не является DataTable");
+          throw new InvalidOperationException("DataGridView.DataSource не является DataTable");
         if (value == null)
           return;
         DataRow Row = Table.Rows.Find(value);
@@ -7219,14 +7210,14 @@ namespace AgeyevAV.ExtForms
     /// <param name="args"></param>
     public void DefaultShowDataError(object sender, DataGridViewDataErrorEventArgs args)
     {
-      DataGridView Grid = (DataGridView)sender;
+      DataGridView control = (DataGridView)sender;
       if ((args.Context & (DataGridViewDataErrorContexts.Commit | DataGridViewDataErrorContexts.Parsing)) ==
         (DataGridViewDataErrorContexts.Commit | DataGridViewDataErrorContexts.Parsing))
       {
         // Введено неправильное значение в поле. Вместо большого сообщения об ошибке
         // выдаем всплывающее сообщение внизу экрана
-        DataGridViewCell Cell = Grid.Rows[args.RowIndex].Cells[args.ColumnIndex];
-        EFPApp.ShowTempMessage("Ошибка преобразования введенного значения \"" + Cell.EditedFormattedValue.ToString() + "\"");
+        DataGridViewCell cell = control.Rows[args.RowIndex].Cells[args.ColumnIndex];
+        EFPApp.ShowTempMessage("Ошибка преобразования введенного значения \"" + cell.EditedFormattedValue.ToString() + "\"");
         return;
       }
 
@@ -7238,12 +7229,12 @@ namespace AgeyevAV.ExtForms
         if (_FormatDisplayErrorWasShown)
           return; // сообщение выдается только один раз
         _FormatDisplayErrorWasShown = true;
-        Exception e1 = new DataGridViewDataErrorException(Grid, args);
+        Exception e1 = new DataGridViewDataErrorException(control, args);
         EFPApp.ShowException(e1, "Ошибка форматирования для ячейки RowIndex=" + args.RowIndex.ToString() + " и ColIndex=" + args.ColumnIndex.ToString());
         return;
       }
 
-      Exception e2 = new DataGridViewDataErrorException(Grid, args);
+      Exception e2 = new DataGridViewDataErrorException(control, args);
       EFPApp.ShowException(e2, e2.Message);
     }
 
@@ -7415,7 +7406,7 @@ namespace AgeyevAV.ExtForms
     public EFPDataGridViewCellAttributesEventArgs DoGetCellAttributes(int _ColumnIndex)
     {
       // // Избегаем делать строки Unshared
-      // DataGridViewRow Row = MainGrid.RowList.SharedRow(GetRowAttributesArgs.RowIndex);
+      // DataGridViewRow Row = Control.RowList.SharedRow(GetRowAttributesArgs.RowIndex);
       // DataGridViewCell Cell = Row.Cells[ColumnIndex];
       // !!! Так не работает. Если строка Unshared, то ее RowIndex=-1 и свойство
       // Cell вызывает ошибку при получении значения.
@@ -7510,8 +7501,7 @@ namespace AgeyevAV.ExtForms
       {
         args.Graphics.FillRectangle(Brushes.Black, args.RowBounds);
         args.Handled = true;
-        System.Threading.Thread.Sleep(100);
-        //MainGrid.InvalidateRow(Args.RowIndex);
+        //System.Threading.Thread.Sleep(100);
       }
     }
 
@@ -9040,9 +9030,9 @@ namespace AgeyevAV.ExtForms
     /// MarkRows в методе EFPDataGridViewColumns.AddBool()
     /// Свойство следует устанавливать после добавления всех столбцов в просмотр,
     /// но перед вызовом SetCommandItems(). Также допускается повторная установка свойства в процессе работы, если столбцы создаются заново
-    /// При установке свойства, если MainGrid.DataReadOnly=true, устанавливается свойство
-    /// DataReadOnly для всех столбцов, кроме заданного, а MainGrid.DataReadOnly устанавливается в false
-    /// Также устанавливается в true свойство MainGrid.MultiSelect
+    /// При установке свойства, если DataGridView.ReadOnly=true, устанавливается свойство
+    /// DataGridViewColumn.ReadOnly для всех столбцов, кроме заданного, а DataGridView.ReadOnly устанавливается в false.
+    /// Также устанавливается в true свойство DataGridView.MultiSelect=true.
     /// </summary>
     public DataGridViewCheckBoxColumn MarkRowsGridColumn
     {

@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2021-07-22T17:03:51.252000000"/>
+	<meta name="changed" content="2021-08-16T11:31:29.923000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -83,7 +83,7 @@
 			<p align="center" style="text-decoration: none">113</p>
 		</td>
 		<td width="15%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p align="center" style="text-decoration: none">22.07.2021</p>
+			<p align="center" style="text-decoration: none">22.07.2021<span lang="en-US">-16.08.2021</span></p>
 		</td>
 		<td width="75%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v113p1"></a><span lang="ru-RU">1. </span><span lang="en-US">DBxBinDataValidator</span>
@@ -110,6 +110,17 @@
 			<p lang="en-US">- <span lang="ru-RU">Свойство </span>Splash
 			<span lang="ru-RU">упразднено. Выполняется вывод отдельной
 			заставки с помощью SplashTools.ThreadSplashStack.</span></p>
+			<p lang="en-US">2. <span lang="ru-RU">Изменения во внутреннем
+			методе </span>DBxRealaDocProvider.AddUserFieldPairs():</p>
+			<p lang="en-US">- Поля <span lang="ru-RU">таблицы</span>,
+			недоступные для записи, пропуска<span lang="ru-RU">ются</span>
+			всегда, а не <span lang="ru-RU">только для</span> пустых значений<span lang="ru-RU">
+			(</span><a href="#v008p1">v.8 <span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p>- Учитывается свойство <span lang="en-US">DBxColumnStruct.DefaultValue
+			</span><span lang="en-US">(<a href="ExtDB_11.htm#v052p1">ExtDB.
+			v.52 </a></span><a href="ExtDB_11.htm#v052p1">п.1</a><span lang="en-US">)
+			</span>при  обрабатке пустых значений (<a href="#v061p5"><span lang="en-US">v.61
+			</span>п.5</a>)</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -1254,7 +1265,7 @@
 			</a></span><a href="#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">вызывают </span><span lang="en-US">DataTable.AcceptChanges(),
 			</span><span lang="ru-RU">чтобы не зависеть от </span><span lang="en-US">DBxCon.FillSelect()</span></p>
-			<p><span lang="en-US">5. </span><span lang="ru-RU">Внутренний
+			<p><a name="v061p5"></a><span lang="en-US">5. </span><span lang="ru-RU">Внутренний
 			метод </span><span lang="en-US">DBxRealDocProvider.AddUserFieldPairs</span><span lang="ru-RU">()
 			правильно обрабатывает пустые значения для столбцов, для которых
 			</span><span lang="en-US">DBxColumnStruct.Nullable=false</span></p>
@@ -2302,8 +2313,9 @@
 			<p lang="en-US" align="center">09.12.2015</p>
 		</td>
 		<td width="75%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">1. Исправлена реализация
-			внутреннего метода <span lang="en-US">DBxRealDocProvider</span>.<span lang="en-US">AddUserFieldPairs</span>()
+			<p style="margin-bottom: 0.5cm"><a name="v008p1"></a>1. Исправлена
+			реализация внутреннего метода
+			<span lang="en-US">DBxRealDocProvider</span>.<span lang="en-US">AddUserFieldPairs</span>()
 			(<a href="#v001p2"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.2</span></a>). Если создается новый документ (или поддокумент) с
 			заполненным значением поля, а затем он повторно записывается, но
