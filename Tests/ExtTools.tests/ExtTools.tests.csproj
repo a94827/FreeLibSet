@@ -45,6 +45,7 @@
     <Compile Include="DataToolsTests_Date.cs" />
     <Compile Include="DataToolsTests_Math.cs" />
     <Compile Include="DateRangeListTests.cs" />
+    <Compile Include="DateRangeTests.cs" />
     <Compile Include="ListWithMRUTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyAssert.cs" />

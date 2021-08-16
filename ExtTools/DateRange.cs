@@ -290,7 +290,10 @@ namespace AgeyevAV
     {
       get
       {
-        return new YearMonthRange(_FirstDate, _LastDate);
+        if (IsEmpty)
+          return new YearMonthRange(); // 16.08.2021
+        else
+          return new YearMonthRange(_FirstDate, _LastDate);
       }
     }
 
@@ -301,7 +304,10 @@ namespace AgeyevAV
     {
       get
       {
-        return new MinMaxDateTime(FirstDate, LastDate);
+        if (IsEmpty)
+          return new MinMaxDateTime(); // 16.08.2021
+        else
+          return new MinMaxDateTime(FirstDate, LastDate);
       }
     }
 
@@ -312,7 +318,10 @@ namespace AgeyevAV
     {
       get
       {
-        return new MinMaxInt(FirstDate.Year, LastDate.Year);
+        if (IsEmpty)
+          return new MinMaxInt(); // 16.08.2021
+        else
+          return new MinMaxInt(FirstDate.Year, LastDate.Year);
       }
     }
 
@@ -325,6 +334,12 @@ namespace AgeyevAV
       {
         return _FirstDate.Ticks == 0L && _LastDate.Ticks == 0L;
       }
+    }
+
+    private void CheckIsNotEmpty()
+    {
+      if (IsEmpty)
+        throw new InvalidOperationException("DateRange is empty");
     }
 
     /// <summary>
@@ -381,7 +396,8 @@ namespace AgeyevAV
     }
 
     /// <summary>
-    /// Корректирует дату <paramref name="date"/>, если она не попадает в диапазон
+    /// Корректирует дату <paramref name="date"/>, если она не попадает в диапазон.
+    /// Если IsEmpty=true, текущая дата не меняется
     /// </summary>
     /// <param name="date">Проверяемая/корректируемая дата</param>
     public void DateToRange(ref DateTime date)
@@ -401,13 +417,26 @@ namespace AgeyevAV
     #region Сложение
 
     /// <summary>
-    /// Возвращает объединенный интервал дат, в который полностью входят оба исходных интервала
+    /// Возвращает объединенный интервал дат, в который полностью входят оба исходных интервала.
+    /// Если первый или второй интервал пустой, возвращается другой интервал.
+    /// Свойство Tag копируется из первого интервала.
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
     /// <returns>Объединенный интервал</returns>
     public static DateRange operator +(DateRange r1, DateRange r2)
     {
+      // 16.08.2021
+      if (r1.IsEmpty)
+      {
+        if (r2.IsEmpty)
+          return r1;
+        else
+          return new DateRange(r2.FirstDate, r2.LastDate);
+      }
+      if (r2.IsEmpty)
+        return r1;
+
       DateTime dt1 = r1.FirstDate < r2.FirstDate ? r1.FirstDate : r2.FirstDate;
       DateTime dt2 = r1.LastDate > r2.LastDate ? r1.LastDate : r2.LastDate;
       return new DateRange(dt1, dt2, r1.Tag);
@@ -415,12 +444,14 @@ namespace AgeyevAV
 
     /// <summary>
     /// Сдвигает интервал на заданное число дней.
+    /// Если <paramref name="r1"/>IsEmpty=true, выбрасывается исключение.
     /// </summary>
     /// <param name="r1">Исходный интервал</param>
     /// <param name="days">Сдвиг в днях (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
     /// <returns>Новый интервал</returns>
     public static DateRange operator +(DateRange r1, int days)
     {
+      r1.CheckIsNotEmpty();
       return new DateRange(r1.FirstDate.AddDays(days), r1.LastDate.AddDays(days), r1.Tag);
     }
 
@@ -437,12 +468,14 @@ namespace AgeyevAV
 
     /// <summary>
     /// Сдвигает интервал на заданное число дней в обратную сторону.
+    /// Если <paramref name="r1"/>IsEmpty=true, выбрасывается исключение.
     /// </summary>
     /// <param name="r1">Исходный интервал</param>
     /// <param name="days">Сдвиг в днях (положительное значение - сдвиг назад, отрицательное - вперед, 0 - нет сдвига)</param>
     /// <returns>Новый интервал</returns>
     public static DateRange operator -(DateRange r1, int days)
     {
+      r1.CheckIsNotEmpty();
       return new DateRange(r1.FirstDate.AddDays(-days), r1.LastDate.AddDays(-days), r1.Tag);
     }
 
@@ -483,11 +516,15 @@ namespace AgeyevAV
     /// А два сдвига по одному месяцу: {01.02.2019-28.02.2019}, {01.03.2019-31.03.2019}.
     /// Неаддитивность происходит при переходе от неполномесячного интервала к интервалу с полными месяцами.
     /// Операции над интервалами с целыми месяцами всегда аддитивны.
+    /// 
+    /// Если IsEmpty=true, выбрасывается исключение.
     /// </summary>                                               
     /// <param name="months">Сдвиг в месяцах (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
     /// <returns>Сдвинутый интервал</returns>
     public DateRange AddMonths(int months)
     {
+      CheckIsNotEmpty();
+
       if (months == 0)
         return this;
 
@@ -516,6 +553,8 @@ namespace AgeyevAV
     /// не равен двум сдвигам на два года: {01.02.2018-28.02.2018}, {01.02.2020-29.02.2020}.
     /// Неаддитивность происходит при переходе от неполномесячного интервала к интервалу с полными месяцами.
     /// Операции над интервалами с целыми месяцами всегда аддитивны.
+    /// 
+    /// Если IsEmpty=true, выбрасывается исключение.
     /// </summary>                                               
     /// <param name="years">Сдвиг в годах (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
     /// <returns>Сдвинутый интервал</returns>
@@ -536,6 +575,8 @@ namespace AgeyevAV
     /// А два отдельных сдвига на один интервал: {01.02.2019-28.02.2019}, {01.03.2019-31.03.2019}.
     /// Неаддитивность происходит при переходе от неполномесячного интервала к интервалу с полными месяцами.
     /// Операции над интервалами с целыми месяцами всегда аддитивны.
+    /// 
+    /// Если <paramref name="r1"/>.IsEmpty=true, выбрасывается исключение.
     /// </summary>
     /// <param name="r1">исходный диапазон</param>
     /// <param name="rangeCount">Количество интервалов, на которое нужно сдвинуть исходный период</param>
@@ -574,9 +615,10 @@ namespace AgeyevAV
     #region Объединение и пересечение периодов
 
     /// <summary>
-    /// Возвращает интервал, включающие в себя и r1 и r2 (расширение интервалов)
-    /// Операция применима к любым двум интервалам
+    /// Возвращает интервал, включающие в себя и r1 и r2 (расширение интервалов).
+    /// Операция применима к любым двум интервалам.
     /// Интервалы r1 и r2 равноправны. Поле Tag берется из первого интервала
+    /// Если первый или второй интервал пустые, то возвращается пустой интервал.
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -593,7 +635,8 @@ namespace AgeyevAV
     /// <summary>
     /// Возвращает интервал, в который входит пересечение интервалов  r1 и r2
     /// Если интервалы не пересекаются, вызывается исключение InvalidOperationException
-    /// Интервалы r1 и r2 равноправны. Поле Tag берется из первого интервала
+    /// Интервалы r1 и r2 равноправны. Поле Tag берется из первого интервала.
+    /// Если первый или второй интервал пустые, то возвращается пустой интервал.
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -656,7 +699,7 @@ namespace AgeyevAV
     public DateRangeList SplitIntoYears()
     {
       DateRangeList lst = new DateRangeList();
-      for (int y = FirstDate.Year + 1; y <= LastDate.Year; y++)
+      for (int y = FirstDate.Year; y <= LastDate.Year; y++) // исправлено 16.08.2021
       {
         DateTime dt1 = DataTools.BottomOfYear(y);
         DateTime dt2 = DataTools.EndOfYear(y);
