@@ -162,6 +162,7 @@ namespace ExtTools.tests
     [TestCase(1, -1, 365)]
     [TestCase(1, 3 * 365, 1)]
     [TestCase(1, -2 * 365, 1)]
+    [TestCase(1, 0, 1)]
     public void AddDays(int curr, int days, int wanted)
     {
       MonthDay sut = new MonthDay(curr);
