@@ -305,7 +305,7 @@ namespace AgeyevAV
 
     /// <summary>
     /// Возвращает количество дней между <paramref name="a"/> и <paramref name="b"/>.
-    /// Возващаемое значение может быть в диапазоне от (-364) до (+364).
+    /// Возвращаемое значение может быть в диапазоне от 0 до (+364).
     /// </summary>
     /// <param name="a">Первое значение. Не может быть пустой структурой</param>
     /// <param name="b">Второе значение. Не может быть пустой структурой</param>
@@ -316,7 +316,11 @@ namespace AgeyevAV
         throw new ArgumentException("Пустая первая дата", "a");
       if (b.IsEmpty)
         throw new ArgumentException("Пустая вторая дата", "b");
-      return a.DayOfYear - b.DayOfYear;
+
+      int days= a.DayOfYear - b.DayOfYear;
+      if (days < 0)
+        days += 365;
+      return days;
     }
 
     /// <summary>

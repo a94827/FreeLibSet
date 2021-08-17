@@ -5503,7 +5503,7 @@ namespace AgeyevAV
     #region IEnumerable<T> Members
 
     /// <summary>
-    /// Возващает фиктивный перечислитель DummyEnumerator
+    /// Возвращает фиктивный перечислитель DummyEnumerator
     /// </summary>
     /// <returns>DummyEnumerator</returns>
     public DummyEnumerator<T> GetEnumerator()

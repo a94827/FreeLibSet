@@ -2559,7 +2559,7 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
-    /// Возващает текстовое представление для Columns
+    /// Возвращает текстовое представление для Columns
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
