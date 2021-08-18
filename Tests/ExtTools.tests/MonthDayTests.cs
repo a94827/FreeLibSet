@@ -37,6 +37,10 @@ namespace ExtTools.tests
 
     private void DoTestConstructor(MonthDay sut)
     {
+      // «десь провер€ем установленные свойства поштучно.
+      // Ќе пытаемс€ использовать Assert.AreEquals(CreateMonthDay("0308"), sut),
+      // вдруг операци€ сравнени€ неправильно работает
+
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
       Assert.AreEqual(March8Day, sut.DayOfYear, "DayOfYear");
       Assert.AreEqual(3, sut.Month, "Month");
