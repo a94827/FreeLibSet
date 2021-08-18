@@ -908,6 +908,44 @@ namespace AgeyevAV.ExtForms
     public static EFPAppIdleHandlers IdleHandlers { get { return _IdleHandlers; } }
     private static readonly EFPAppIdleHandlers _IdleHandlers = new EFPAppIdleHandlers();
 
+    #region Приостановка вызова обработчиков по таймеру и события Idle
+
+    /// <summary>
+    /// Временная приостановка вызова обработчиков IdleHandlers.
+    /// Также прекращается обработка сигналов таймера в Timers.
+    /// Для продолжения работы должен быть вызван парный метод ResumeIdle() в блоке finally.
+    /// Разрешаются вызовы из любого потока и вложенные вызовы.
+    /// 
+    /// Работа оконного интерфейса полагается на вызовы сигналов Idle, поэтому длительная приостановка
+    /// вызова обработчиков может привести к неправильной работе окон.
+    /// Этот метод не предназначен для использования в прикладном коде.
+    /// </summary>
+    internal static void SuspendIdle()
+    {
+      Interlocked.Increment(ref _IdleSuspendCount);
+    }
+
+    /// <summary>
+    /// Возобновление работы обработчиков IdleHandlers, прерванного SuspendIdle().
+    /// Если было несколько вызовов SuspendIdle(), то должно быть такое же количество вызовов ResumeIdle().
+    /// Этот метод не предназначен для использования в прикладном коде.
+    /// </summary>
+    internal static void ResumeIdle()
+    {
+      Interlocked.Decrement(ref _IdleSuspendCount);
+      if (IsMainThread && (!_IdleHandlers.IsDisposed))
+        _IdleHandlers.Application_Idle(null, null);
+    }
+
+    /// <summary>
+    /// Возвращает true, если был непарный вызов SuspendIdle()
+    /// </summary>
+    internal static bool IdleSuspended { get { return _IdleSuspendCount > 0; } }
+    private static int _IdleSuspendCount = 0;
+
+    #endregion
+
+
     /// <summary>
     /// Возвращает true, если выполнение осуществляется под MONO, а не .NET Framework
     /// </summary>
@@ -1975,7 +2013,7 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Если true (по умолчанию), то главное окно будет развернуто на весь экран.
     /// Если свойство сбросить в false, то окно будет иметь размеры по умолчанию.
-    /// Свойство может устанавливаться только до вызова ShowMainWindow
+    /// Свойство может устанавливаться только до вызова ShowMainWindow().
     /// </summary>
     public static bool MainWindowDefaultMaximized
     {
@@ -1993,29 +2031,34 @@ namespace AgeyevAV.ExtForms
     private static bool _MainWindowDefaultMaximized = true;
 
     /// <summary>
-    /// Вывод окна приложения на первый план
-    /// При этом выключается экранная заставка
-    /// На некоторых версиях Windows возможно включение дисплея, если он выключен
-    /// для энергосбережения
+    /// Вывод окна приложения на первый план.
+    /// При этом выключается экранная заставка.
+    /// На некоторых версиях Windows возможно включение дисплея, если он выключен для энергосбережения.
     /// </summary>
     public static void Activate()
     {
-      PowerSuspendLocker.TurnDisplayOn(); // отключение экранной заставки
+      try
+      {
+        PowerSuspendLocker.TurnDisplayOn(); // отключение экранной заставки
 
-      //#if DEBUG
-      //      CheckTread();
-      //#endif
-      // 12.05.2016
-      // Вызов не из основного потока не является ошибкой. Просто, нельзя ничего сделать
-      if (!IsMainThread)
-        return;
-      if (MainWindow == null)
-        return;
+        //#if DEBUG
+        //      CheckTread();
+        //#endif
+        // 12.05.2016
+        // Вызов не из основного потока не является ошибкой. Просто нельзя ничего сделать
+        if (!IsMainThread)
+          return;
 
-      if (MainWindow.WindowState == FormWindowState.Minimized)
-        MainWindow.WindowState = FormWindowState.Maximized;
-      MainWindow.BringToFront();
-      MainWindow.Activate();
+        Form frm = MainWindow; // 18.08.2021. Используем локальную переменную, т.к.MainWindow может внезапно обнулиться.
+        if (frm == null)
+          return;
+
+        if (frm.WindowState == FormWindowState.Minimized)
+          frm.WindowState = FormWindowState.Maximized;
+        frm.BringToFront();
+        frm.Activate();
+      }
+      catch { } // 18.08.2021
     }
 
     #endregion
@@ -3761,8 +3804,12 @@ namespace AgeyevAV.ExtForms
       if (ExternalDialogOwnerWindow == null) // 22.12.2016
         Activate(); // 03.06.2015
 
+      bool suspenIdleRequired = EFPApp.InsideShowException;
+
       DialogResult res;
       CurrentHelpContext = helpContext;
+      if (suspenIdleRequired)
+        EFPApp.SuspendIdle(); // 18.08.2021
       try
       {
         try
@@ -3780,6 +3827,8 @@ namespace AgeyevAV.ExtForms
       finally
       {
         CurrentHelpContext = null;
+        if (suspenIdleRequired)
+          EFPApp.ResumeIdle();
       }
 
       return res;
@@ -4145,6 +4194,19 @@ namespace AgeyevAV.ExtForms
     /// <param name="title">Заголовок для выдачи сообщения</param>
     public static void ShowException(Exception exception, string title)
     {
+      Interlocked.Increment(ref _InsideShowExceptionCount);
+      try
+      {
+        DoShowException(exception, title);
+      }
+      finally
+      {
+        Interlocked.Decrement(ref _InsideShowExceptionCount);
+      }
+    }
+
+    private static void DoShowException(Exception exception, string title)
+    {
       try
       {
         if (ExceptionShowing != null)
@@ -4168,6 +4230,13 @@ namespace AgeyevAV.ExtForms
       }
     }
 
+
+    /// <summary>
+    /// Свойство возвращает true, если в данный момент работает метод EFPApp.ShowException()
+    /// </summary>
+    public static bool InsideShowException { get { return _InsideShowExceptionCount>0; } }
+    private static int _InsideShowExceptionCount = 0; // могут быть вложенные вызовы ShowException()
+
     /// <summary>
     /// Альтернативный способ вывода сообщения об исключении.
     /// Показывает сообщение a'la MessageBox() с дополнительной кнопкой "Подробности".
@@ -4180,19 +4249,27 @@ namespace AgeyevAV.ExtForms
     /// <param name="alwaysLogout">Если true, то log-файл будет создан, даже если пользователь не нажмет кнопку "Подробности"</param>
     public static void ExceptionMessageBox(string message, Exception exception, string title, bool alwaysLogout)
     {
+      EFPApp.SuspendIdle(); // 18.08.2021
       try
       {
-        ShowExceptionMsgBoxForm frm = new ShowExceptionMsgBoxForm();
-        frm.MsgLabel.Text = message;
-        frm.Text = title;
-        frm.Exception = exception;
-        if (alwaysLogout) // иначе потом запишем
-          frm.LogFilePath = DebugTools.LogoutException(exception, title);
-        EFPApp.ShowDialog(frm, true);
+        try
+        {
+          ShowExceptionMsgBoxForm frm = new ShowExceptionMsgBoxForm();
+          frm.MsgLabel.Text = message;
+          frm.Text = title;
+          frm.Exception = exception;
+          if (alwaysLogout) // иначе потом запишем
+            frm.LogFilePath = DebugTools.LogoutException(exception, title);
+          EFPApp.ShowDialog(frm, true);
+        }
+        catch (Exception e2)
+        {
+          DebugTools.ShowException(e2, "Ошибка при выводе сообщения об исключении");
+        }
       }
-      catch (Exception e2)
+      finally
       {
-        DebugTools.ShowException(e2, "Ошибка при выводе сообщения об исключении");
+        EFPApp.ResumeIdle();
       }
     }
 

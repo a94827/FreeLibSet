@@ -993,6 +993,26 @@ namespace AgeyevAV.Logging
         }
       }
 
+      if (args.Object is FileInfo) // 18.08.2021
+      {
+        switch (args.PropertyName)
+        { 
+          case "Directory":
+            args.Mode = LogoutPropMode.None;
+            break;
+        }
+      }
+      if (args.Object is DirectoryInfo) // 18.08.2021
+      {
+        switch (args.PropertyName)
+        {
+          case "Parent":
+          case "Root":
+            args.Mode = LogoutPropMode.None;
+            break;
+        }
+      }
+
       if (args.Object is FileVersionInfo) // 09.02.2021
       {
         switch (args.PropertyName)
@@ -1979,7 +1999,37 @@ namespace AgeyevAV.Logging
       }
       catch { }
       args.WritePair("Current time", DateTime.Now.ToString());
+
       args.WritePair("App. path", FileTools.ApplicationPath.Path);
+      if (!FileTools.ApplicationPath.IsEmpty)
+      {
+        args.IndentLevel++;
+        try
+        {
+          if (System.IO.File.Exists(FileTools.ApplicationPath.Path))
+          {
+            FileInfo fi = new FileInfo(FileTools.ApplicationPath.Path);
+            args.WriteLine("FileInfo");
+            args.IndentLevel++;
+            LogoutObject(args, fi);
+            args.IndentLevel--;
+
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(FileTools.ApplicationPath.Path);
+            args.WriteLine("FileVersionInfo");
+            args.IndentLevel++;
+            LogoutObject(args, fvi);
+            args.IndentLevel--;
+          }
+          else
+            args.WriteLine("*** Исполняемый файл не найден ***");
+        }
+        catch (Exception e)
+        {
+          args.WriteLine("*** Ошибка получения информации о выполняемом файле ***. " + e.Message);
+        }
+        args.IndentLevel=CurrIndentLevel;
+      }
+
       args.WritePair("App. base dir", FileTools.ApplicationBaseDir.Path);
       args.WritePair("App. name", EnvironmentTools.ApplicationName);
       args.WritePair("Environment.NewLine", DataTools.StrToCSharpString(Environment.NewLine));

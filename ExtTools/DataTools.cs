@@ -17663,7 +17663,7 @@ namespace AgeyevAV
     }
 
     /// <summary>
-    /// Получение массива строк DataRow соответствующий объекту DataView
+    /// Получение массива строк DataRow соответствующих объекту DataView
     /// </summary>
     /// <param name="dv">Объект DataView. Если null, то будет возвращен пустой массив строк</param>
     /// <returns>Массив строк</returns>

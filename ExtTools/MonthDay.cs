@@ -867,7 +867,7 @@ namespace AgeyevAV
     /// <param name="r1">Первый диапазон</param>
     /// <param name="r2">Второй диапазон</param>
     /// <returns>Наличие пересечения</returns>
-    public static bool IsCroosed(MonthDayRange r1, MonthDayRange r2)
+    public static bool IsCrossed(MonthDayRange r1, MonthDayRange r2)
     {
       return !GetCross(r1, r2).IsEmpty;
     }

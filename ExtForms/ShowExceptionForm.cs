@@ -328,127 +328,135 @@ namespace AgeyevAV.ExtForms
 
     private static void DoShowException(Exception e, string title, ShowExceptionForm prevForm, AbsPath logFilePath, bool useDialogOwnerWindow)
     {
-      using (ShowExceptionForm Form1 = new ShowExceptionForm())
+      EFPApp.SuspendIdle(); // 18.08.2021
+      try
       {
-        if (prevForm != null)
+        using (ShowExceptionForm Form1 = new ShowExceptionForm())
         {
-          Form1.StartPosition = FormStartPosition.Manual;
-          Point pos = prevForm.Location;
-          pos.Offset(16, 16);
-          Form1.Location = pos;
-        }
-        if (!String.IsNullOrEmpty(title))
-          Form1.Text = title;
-        Form1.panStopShow.Visible = (prevForm == null);
+          if (prevForm != null)
+          {
+            Form1.StartPosition = FormStartPosition.Manual;
+            Point pos = prevForm.Location;
+            pos.Offset(16, 16);
+            Form1.Location = pos;
+          }
+          if (!String.IsNullOrEmpty(title))
+            Form1.Text = title;
+          Form1.panStopShow.Visible = (prevForm == null);
 
-        Form1._LogFilePath = logFilePath.Path;
-        if (logFilePath.IsEmpty)
-          Form1.panLog.Visible = false;
-        else
-        {
-          Form1.edLogPath.Text = logFilePath.Path;
-          Form1.InitEditButtons();
-        }
-
-        Form1._ThisObj = e;
-
-        Form1.edType.Text = e.GetType().ToString();
-        Form1.edMessage.Text = e.Message;
-
-        try
-        {
-          Form1.pg1.SelectedObject = e;
-        }
-        catch { }
-
-        #region Стек вызовов
-
-        try
-        {
-          if (String.IsNullOrEmpty(e.StackTrace))
-            Form1.grStack.Rows.Add("Стек вызовов недоступен");
+          Form1._LogFilePath = logFilePath.Path;
+          if (logFilePath.IsEmpty)
+            Form1.panLog.Visible = false;
           else
           {
-            string[] a = e.StackTrace.Split(DataTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < a.Length; i++)
-              Form1.grStack.Rows.Add(a[i]);
+            Form1.edLogPath.Text = logFilePath.Path;
+            Form1.InitEditButtons();
           }
-        }
-        catch
-        {
-          Form1.grStack.Rows.Add("Не удалось получить стек вызовов");
-        }
 
-        #endregion
+          Form1._ThisObj = e;
 
-        #region Exception.Data
+          Form1.edType.Text = e.GetType().ToString();
+          Form1.edMessage.Text = e.Message;
 
-        try
-        {
-          if (e.Data != null)
+          try
           {
-            foreach (DictionaryEntry Entry in e.Data)
-            {
-              string Name = Entry.Key.ToString();
-              object Value = Entry.Value;
-              Form1.grData.RowCount++;
-              DataGridViewRow Row = Form1.grData.Rows[Form1.grData.RowCount - 1];
-              Row.Cells[0].Value = Name;
+            Form1.pg1.SelectedObject = e;
+          }
+          catch { }
 
-              if (Value != null)
-              {
-                try
-                {
-                  Row.Cells[1].Value = Value.ToString();
-                  Row.Cells[2].ToolTipText = "Тип: " + Value.GetType().ToString();
-                }
-                catch (Exception e2)
-                {
-                  Row.Cells[1].Value = e2.Message;
-                }
-              }
-              else
-              {
-                Row.Cells[1].Value = "null";
-                Row.Cells[2].ToolTipText = "null";
-              }
-              Row.Tag = Value;
+          #region Стек вызовов
+
+          try
+          {
+            if (String.IsNullOrEmpty(e.StackTrace))
+              Form1.grStack.Rows.Add("Стек вызовов недоступен");
+            else
+            {
+              string[] a = e.StackTrace.Split(DataTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
+              for (int i = 0; i < a.Length; i++)
+                Form1.grStack.Rows.Add(a[i]);
             }
           }
+          catch
+          {
+            Form1.grStack.Rows.Add("Не удалось получить стек вызовов");
+          }
+
+          #endregion
+
+          #region Exception.Data
+
+          try
+          {
+            if (e.Data != null)
+            {
+              foreach (DictionaryEntry Entry in e.Data)
+              {
+                string Name = Entry.Key.ToString();
+                object Value = Entry.Value;
+                Form1.grData.RowCount++;
+                DataGridViewRow Row = Form1.grData.Rows[Form1.grData.RowCount - 1];
+                Row.Cells[0].Value = Name;
+
+                if (Value != null)
+                {
+                  try
+                  {
+                    Row.Cells[1].Value = Value.ToString();
+                    Row.Cells[2].ToolTipText = "Тип: " + Value.GetType().ToString();
+                  }
+                  catch (Exception e2)
+                  {
+                    Row.Cells[1].Value = e2.Message;
+                  }
+                }
+                else
+                {
+                  Row.Cells[1].Value = "null";
+                  Row.Cells[2].ToolTipText = "null";
+                }
+                Row.Tag = Value;
+              }
+            }
+          }
+          catch
+          {
+          }
+
+          if (Form1.grData.RowCount == 0)
+            Form1.TheTabControl.TabPages.Remove(Form1.tpData);
+
+          #endregion
+
+          #region Exception.InnerException
+
+          try
+          {
+            Form1.cbInner.Enabled = e.InnerException != null;
+          }
+          catch
+          {
+            Form1.cbInner.Text = "Нет доступа к InnerException";
+            Form1.cbInner.Enabled = false;
+          }
+
+          #endregion
+
+          if (useDialogOwnerWindow && EFPApp.DialogOwnerWindow != null)
+            Form1.ShowDialog(EFPApp.DialogOwnerWindow);
+          else
+            Form1.ShowDialog();
+
+          if (Form1.cbStopShow.Checked)
+          {
+            DebugTools.ShowExceptionEnabled = false; // 31.01.2020
+            MessageBox.Show("Вывод сообщений об ошибках отключен. Завершите работу программы как можно быстрее", "Отключение вывода сообщений", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+          }
         }
-        catch
-        {
-        }
-
-        if (Form1.grData.RowCount == 0)
-          Form1.TheTabControl.TabPages.Remove(Form1.tpData);
-
-        #endregion
-
-        #region Exception.InnerException
-
-        try
-        {
-          Form1.cbInner.Enabled = e.InnerException != null;
-        }
-        catch
-        {
-          Form1.cbInner.Text = "Нет доступа к InnerException";
-          Form1.cbInner.Enabled = false;
-        }
-
-        #endregion
-
-        if (useDialogOwnerWindow && EFPApp.DialogOwnerWindow != null)
-          Form1.ShowDialog(EFPApp.DialogOwnerWindow);
-        else
-          Form1.ShowDialog();
-
-        if (Form1.cbStopShow.Checked)
-        {
-          DebugTools.ShowExceptionEnabled = false; // 31.01.2020
-          MessageBox.Show("Вывод сообщений об ошибках отключен. Завершите работу программы как можно быстрее", "Отключение вывода сообщений", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-        }
+      }
+      finally
+      {
+        EFPApp.ResumeIdle();
       }
     }
 

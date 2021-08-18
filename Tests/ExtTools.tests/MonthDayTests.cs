@@ -96,52 +96,56 @@ namespace ExtTools.tests
       Assert.AreEqual(365, MonthDay.EndOfYear.DayOfYear);
     }
 
-    [TestCase(March8Day, March8Day + 1)]
-    [TestCase(1, 2)]
-    [TestCase(365, 1)]
-    [TestCase(February28Day, March1Day)]
-    public void NextDay(int curr, int wanted)
+    [TestCase("0308", "0309")]
+    [TestCase("0101", "0102")]
+    [TestCase("1231", "0101")]
+    [TestCase("0228", "0301")]
+    public void NextDay(string sCurr, string sWanted)
     {
-      MonthDay sut = new MonthDay(curr);
+      MonthDay sut = CreateMonthDay(sCurr);
       MonthDay res = sut.NextDay;
-      Assert.IsFalse(res.IsEmpty, "IsEmpty");
-      Assert.AreEqual(wanted, res.DayOfYear, "DayOfYear");
+      MonthDay wanted = CreateMonthDay(sWanted);
+      Assert.AreEqual(wanted, res);
     }
 
-    [TestCase(March8Day, March8Day - 1)]
-    [TestCase(2, 1)]
-    [TestCase(1, 365)]
-    [TestCase(March1Day, February28Day)]
-    public void PrevDay(int curr, int wanted)
+    [TestCase("0309", "0308")]
+    [TestCase("0102", "0101")]
+    [TestCase("0101", "1231")]
+    [TestCase("0301", "0228")]
+    public void PrevDay(string sCurr, string sWanted)
     {
-      MonthDay sut = new MonthDay(curr);
+      MonthDay sut = CreateMonthDay(sCurr);
       MonthDay res = sut.PrevDay;
-      Assert.IsFalse(res.IsEmpty, "IsEmpty");
-      Assert.AreEqual(wanted, res.DayOfYear, "DayOfYear");
+      MonthDay wanted = CreateMonthDay(sWanted);
+      Assert.AreEqual(wanted, res);
     }
 
-    [TestCase(February28Day, 1, March1Day)]
-    [TestCase(February28Day, 3 * 365 + 1, March1Day)]
-    [TestCase(February28Day, -2 * 365 + 1, March1Day)]
-    [TestCase(365, 1, 1)]
-    public void Operator_Add_Days(int curr, int days, int wanted)
+    [TestCase("0228", 1, "0301")]
+    [TestCase("0228", 3 * 365 + 1, "0301")]
+    [TestCase("0228", -2 * 365 + 1, "0301")]
+    [TestCase("1230", 2, "0101")]
+    [TestCase("0228", 0, "0228")]
+    [TestCase("0228", 365, "0228")]
+    public void Operator_Add_Days(string sCurr, int days, string sWanted)
     {
-      MonthDay arg = new MonthDay(curr);
+      MonthDay arg = CreateMonthDay(sCurr);
       MonthDay res = arg + days;
-      Assert.IsFalse(res.IsEmpty, "IsEmpty");
-      Assert.AreEqual(wanted, res.DayOfYear, "DayOfYear");
+      MonthDay wanted = CreateMonthDay(sWanted);
+      Assert.AreEqual(wanted, res);
     }
 
-    [TestCase(March1Day, 1, February28Day)]
-    [TestCase(March1Day, 3 * 365 + 1, February28Day)]
-    [TestCase(March1Day, -2 * 365 + 1, February28Day)]
-    [TestCase(1, 1, 365)]
-    public void Operator_Substract_Days(int curr, int days, int wanted)
+    [TestCase("0301", 1, "0228")]
+    [TestCase("0301", 3 * 365 + 1, "0228")]
+    [TestCase("0301", -2 * 365 + 1, "0228")]
+    [TestCase("0101", 2, "1230")]
+    [TestCase("0228", 0, "0228")]
+    [TestCase("0228", 365, "0228")]
+    public void Operator_Substract_Days(string sCurr, int days, string sWanted)
     {
-      MonthDay arg = new MonthDay(curr);
+      MonthDay arg = CreateMonthDay(sCurr);
       MonthDay res = arg - days;
-      Assert.IsFalse(res.IsEmpty, "IsEmpty");
-      Assert.AreEqual(wanted, res.DayOfYear, "DayOfYear");
+      MonthDay wanted = CreateMonthDay(sWanted);
+      Assert.AreEqual(wanted, res);
     }
 
     [TestCase(1, 2, 364)]
@@ -184,6 +188,22 @@ namespace ExtTools.tests
     }
 
     #region Вспомогательные методы
+
+    /// <summary>
+    /// Создает объект MonthDay из четырехсимвольной строки "ММДД".
+    /// Для пустой строки возращает пустой объект
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static MonthDay CreateMonthDay(string s)
+    {
+      if (s.Length == 0)
+        return MonthDay.Empty;
+
+      int m = int.Parse(s.Substring(0, 2));
+      int d = int.Parse(s.Substring(2, 2));
+      return new MonthDay(m, d);
+    }
 
     public static DateTime CreateDate(string s)
     {

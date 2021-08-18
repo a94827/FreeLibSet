@@ -689,25 +689,28 @@ namespace AgeyevAV.ExtForms.Docs
     /// <param name="rowIndices">Массив номеров строк в просмотре или null, если требуется обновить все строки</param>
     public override void UpdateRows(int[] rowIndices)
     {
-      DataRow[] Rows;
-      if (rowIndices == null)
+      if (Control.DataSource != null) // 18.08.2021
       {
-        DataView dv = SourceAsDataView;
-        if (dv == null)
-          throw new InvalidOperationException("Табличный просмотр не присоединен к DataView");
-        Rows = DataTools.GetDataViewRows(dv);
-      }
-      else
-        Rows = base.GetDataRows(rowIndices);
+        DataRow[] Rows;
+        if (rowIndices == null)
+        {
+          DataView dv = SourceAsDataView;
+          if (dv == null)
+            throw new InvalidOperationException("Табличный просмотр не присоединен к DataView");
+          Rows = DataTools.GetDataViewRows(dv);
+        }
+        else
+          Rows = base.GetDataRows(rowIndices);
 
-      Int32[] Ids = DataTools.GetIdsFromField(Rows, "Id");
-      if (Ids.Length > 0)
-        ClearCacheForUpdate(Ids); // 24.10.2017
+        Int32[] Ids = DataTools.GetIdsFromField(Rows, "Id");
+        if (Ids.Length > 0)
+          ClearCacheForUpdate(Ids); // 24.10.2017
 
-      for (int i = 0; i < Rows.Length; i++)
-      {
-        if (Rows[i] != null)
-          LoadDataRowForUpdate(Rows[i]);
+        for (int i = 0; i < Rows.Length; i++)
+        {
+          if (Rows[i] != null)
+            LoadDataRowForUpdate(Rows[i]);
+        }
       }
 
       base.UpdateRows(rowIndices);

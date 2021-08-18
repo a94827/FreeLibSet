@@ -175,6 +175,10 @@ namespace AgeyevAV.ExtForms
 #if DEBUG
         EFPApp.CheckMainThread();
 #endif
+
+        if (EFPApp.IdleSuspended)
+          return; // 18.08.2021
+
         EFPApp.ProcessDelayedTempMessage();
 
         // В процессе перебора могут добавляться или удаляться обработчики
@@ -593,6 +597,9 @@ namespace AgeyevAV.ExtForms
       if (!EFPApp.AppWasInit)
         return; // 18.06.2018
 
+      if (EFPApp.IdleSuspended)
+        return; // 18.08.2021
+
       try
       {
 #if DEBUG
@@ -625,7 +632,6 @@ namespace AgeyevAV.ExtForms
         }
 
         #endregion
-
 
         EFPApp.CommandItems.HandleIdle(); // 28.01.2021
 
