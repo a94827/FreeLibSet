@@ -163,22 +163,34 @@ namespace AgeyevAV.ExtForms
       {
         Control.RowCount = value;
         if (HasBeenCreated) // условие добавлено 09.07.2019
-          Control.Visible = value > 0;
+          if (ProviderState==EFPControlProviderState.Attached) // 19.08.2021
+            Control.Visible = value > 0;
         if (value > 0)
           Control.Height = 4 + value * Control.RowTemplate.Height;
       }
     }
 
-    /// <summary>
-    /// Метод вызывается при первом появлении элемента на экране.
-    /// Устанавливает свойство Control.Visible, в зависимости от количества строк фильтров.
-    /// Если табличка не содержит ни одного фильтра, она не выводится.
-    /// </summary>
-    protected override void OnCreated()
-    {
-      base.OnCreated();
+    ///// <summary>
+    ///// Метод вызывается при первом появлении элемента на экране.
+    ///// Устанавливает свойство Control.Visible, в зависимости от количества строк фильтров.
+    ///// Если табличка не содержит ни одного фильтра, она не выводится.
+    ///// </summary>
+    //protected override void OnCreated()
+    //{
+    //  base.OnCreated();
 
-      Control.Visible = Control.RowCount > 0; // 09.07.2019
+    //  // Control.Visible = Control.RowCount > 0; // 09.07.2019
+    //}
+
+    /// <summary>
+    /// Вызывает событие Attached. См. описание события.
+    /// Устанавливает свойство Control.Visible, в зависимости от количества строк фильтров.
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      Control.Visible = Control.RowCount > 0; // 09.07.2019, 19.08.2021
     }
 
     /// <summary>
