@@ -1141,7 +1141,7 @@ namespace AgeyevAV.ExtDB.Docs
     private bool ValidateRefs(ISplash spl)
     {
       if (UseTrace)
-      Trace.WriteLine("Search for references in document tables...");
+        Trace.WriteLine("Search for references in document tables...");
       DBxBinDataRefFinder finder = new DBxBinDataRefFinder();
       finder.FindRefs(GlobalData, true);
 
@@ -1191,7 +1191,7 @@ namespace AgeyevAV.ExtDB.Docs
       {
         string oldPT = spl.PhaseText;
 
-        string RefText = "DB=" + detCon.DB.DatabaseName + ", TableName=" + tc.TableName + ", ColumnName=" + tc.ColumnName;
+        string RefText = "DB=" + detCon.DB.DatabaseName + ", TableName=\"" + tc.TableName + "\", ColumnName=\"" + tc.ColumnName + "\"";
         spl.PhaseText = "Поиск ссылок. " + RefText;
         if (UseTrace)
           Trace.WriteLine(RefText + "...");
@@ -1231,9 +1231,9 @@ namespace AgeyevAV.ExtDB.Docs
                   throw new BugException("RefId=0");
                 if (!realIdIndexer.Contains(refId))
                 {
-                  Errors.AddError(RefText + ". Неправильная ссылка " + refId.ToString() + ". В таблице \"" + masterTableName + "\" нет записи с таким идентификатором");
+                  Errors.AddError(RefText + "Id=" + id.ToString() + ". Неправильная ссылка " + refId.ToString() + ". В таблице \"" + masterTableName + "\" нет записи с таким идентификатором");
                   if (UseTrace)
-                    Trace.TraceError("Error reference. " + RefText + ". RefId=" + refId.ToString());
+                    Trace.TraceError("Error reference. " + RefText + ". RefId=" + refId.ToString() + " (Id=" + id.ToString() + ")");
                 }
               }
 
