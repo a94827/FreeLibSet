@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Creators.cs" />
     <Compile Include="DataToolsTests_DataRow.cs" />
     <Compile Include="DataToolsTests_DataView.cs" />
     <Compile Include="DataToolsTests_CSV.cs" />
