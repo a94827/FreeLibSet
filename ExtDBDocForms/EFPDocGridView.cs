@@ -296,7 +296,7 @@ namespace AgeyevAV.ExtForms.Docs
     /// <summary>
     /// Имена столбцов, необходимых для просмотра.
     /// Список заполняется после инициализации просмотра с помощью EFPGridProducer.
-    /// Чтобы гарантировать заполнение свойства, можно использовать метод PerdormInitGrid().
+    /// Чтобы гарантировать заполнение свойства, можно использовать метод PerformInitGrid().
     /// </summary>
     public DBxColumns UsedColumnNames { get { return _UsedColumnNames; } }
     private DBxColumns _UsedColumnNames;

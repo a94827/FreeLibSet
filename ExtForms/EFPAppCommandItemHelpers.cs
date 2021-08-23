@@ -48,6 +48,37 @@ namespace AgeyevAV.ExtForms
 
     #endregion
 
+    #region Меню "Файл"
+
+    /// <summary>
+    /// Команда "Файл"-"Выход".
+    /// Свойство задано, если был вызван метод AddExit()
+    /// </summary>
+    public EFPCommandItem Exit { get { return _Exit; } }
+    private EFPCommandItem _Exit;
+
+    /// <summary>
+    /// Добавление команды "Файл"-"Выход"
+    /// </summary>
+    /// <param name="menuFile">Меню "Файл"</param>
+    public void AddExit(EFPCommandItem menuFile)
+    {
+      _Exit = CommandItems.Add(EFPAppStdCommandItems.Exit, menuFile);
+      _Exit.Click += new EventHandler(Exit_Click);
+    }
+
+    /// <summary>
+    /// Завершение работы приложения вызовом EFPApp.Exit()
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void Exit_Click(object sender, EventArgs args)
+    {
+      Application.Exit();
+    }
+
+    #endregion
+
     #region Меню "Вид"
 
     /// <summary>
@@ -214,6 +245,11 @@ namespace AgeyevAV.ExtForms
       _CommandItems.Add(_StatusBarVisible);
     }
 
+    /// <summary>
+    /// Переключение видимости статусной строки
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     private static void StatusBarVisible_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
@@ -331,7 +367,12 @@ namespace AgeyevAV.ExtForms
       _TileHorizontal.Click += new EventHandler(TileHorizontal_Click);
     }
 
-    private static void TileHorizontal_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Размещение окон сверху вниз
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void TileHorizontal_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
         EFPApp.Interface.CurrentMainWindowLayout.LayoutChildForms(MdiLayout.TileHorizontal);
@@ -358,7 +399,12 @@ namespace AgeyevAV.ExtForms
       _TileVertical.Click += new EventHandler(TileVertical_Click);
     }
 
-    private static void TileVertical_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Размещение окон слева направо
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void TileVertical_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
         EFPApp.Interface.CurrentMainWindowLayout.LayoutChildForms(MdiLayout.TileVertical);
@@ -385,7 +431,12 @@ namespace AgeyevAV.ExtForms
       _Cascade.Click += new EventHandler(Cascade_Click);
     }
 
-    private static void Cascade_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Размещение окон каскадом
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void Cascade_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
         EFPApp.Interface.CurrentMainWindowLayout.LayoutChildForms(MdiLayout.Cascade);
@@ -412,7 +463,12 @@ namespace AgeyevAV.ExtForms
       _ArrangeIcons.Click += new EventHandler(ArrangeIcons_Click);
     }
 
-    private static void ArrangeIcons_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Упорядочение значков свернутых окон
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void ArrangeIcons_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
         EFPApp.Interface.CurrentMainWindowLayout.LayoutChildForms(MdiLayout.ArrangeIcons);
@@ -439,7 +495,12 @@ namespace AgeyevAV.ExtForms
       _CloseAll.Click += new EventHandler(CloseAll_Click);
     }
 
-    private static void CloseAll_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Закрытие дочерних окон MDI
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void CloseAll_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
         EFPApp.Interface.CurrentMainWindowLayout.CloseAllChildren();
@@ -466,7 +527,12 @@ namespace AgeyevAV.ExtForms
       _CloseAllButThis.Click += new EventHandler(CloseAllButThis_Click);
     }
 
-    private static void CloseAllButThis_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Закрытие всех окон, кроме текущего
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void CloseAllButThis_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
       {
@@ -529,7 +595,7 @@ namespace AgeyevAV.ExtForms
     /// </summary>
     /// <param name="sender">Не используется</param>
     /// <param name="args">Не используется</param>
-    private static void NewMainWindow_Click(object sender, EventArgs args)
+    public static void NewMainWindow_Click(object sender, EventArgs args)
     {
       if (EFPApp.Interface != null)
         EFPApp.Interface.ShowMainWindow();
@@ -562,6 +628,12 @@ namespace AgeyevAV.ExtForms
     public string SelectCompositionDialogHelpContext { get { return _SelectCompositionDialogHelpContext; } set { _SelectCompositionDialogHelpContext = value; } }
     private string _SelectCompositionDialogHelpContext;
 
+    /// <summary>
+    /// Вывод диалога "Композиции рабочего стола" с помощью SelectCompositionDialog.
+    /// Устанавливается свойство HelpContext = SelectCompositionDialogHelpContext
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
     private void SavedCompositions_Click(object sender, EventArgs args)
     {
       SelectCompositionDialog dlg = new SelectCompositionDialog();
@@ -886,6 +958,37 @@ namespace AgeyevAV.ExtForms
     }
 
     #endregion
+
+    #endregion
+
+    #region Меню "Справка"
+
+    /// <summary>
+    /// Команда "Справка"-"О программе".
+    /// Свойство задано, если был вызван метод AddAbout()
+    /// </summary>
+    public EFPCommandItem About { get { return _About; } }
+    private EFPCommandItem _About;
+
+    /// <summary>
+    /// Добавление команды "Справка"-"О программе"
+    /// </summary>
+    /// <param name="menuHelp">Меню "Справка"</param>
+    public void AboutExit(EFPCommandItem menuHelp)
+    {
+      _About = CommandItems.Add(EFPAppStdCommandItems.About, menuHelp);
+      _About.Click += new EventHandler(About_Click);
+    }
+
+    /// <summary>
+    /// Показ диалога "О программе" с помошью EFPApp.ShowAboutDialog()
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public static void About_Click(object sender, EventArgs args)
+    {
+      EFPApp.ShowAboutDialog();
+    }
 
     #endregion
   }

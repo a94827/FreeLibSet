@@ -365,8 +365,12 @@ namespace AgeyevAV.ExtForms
 
     private void DoHide()
     {
-      foreach (NotifyIcon ni in _NotifyIcons.Values)
-        ni.Visible = false;
+      try
+      {
+        foreach (NotifyIcon ni in _NotifyIcons.Values)
+          ni.Visible = false;
+      }
+      catch (ObjectDisposedException) { } // 23.08.2021
     }
 
     #endregion

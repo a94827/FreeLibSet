@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2021-08-19T17:35:57.090000000"/>
+	<meta name="changed" content="2021-08-23T16:32:52.114000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -258,20 +258,41 @@
 	</tr>
 	<tr valign="top">
 		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">296</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">23.08.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. EFPAppCommandItemHelpers (<a href="#v199p12">v.199
+			<span lang="ru-RU">п.12</span></a>) <span lang="ru-RU">поддерживает
+			команды &quot;Выход&quot; </span>(AddExit())<span lang="ru-RU"> и
+			&quot;О программе&quot;</span> (AddAbout())<span lang="ru-RU">.
+			Статические методы выполнения команд </span>XXX_Click() <span lang="ru-RU">(кроме
+			некоторых) сделаны общедоступными.</span></p>
+			<p lang="en-US"><span lang="ru-RU">2. При установке
+			</span>EFPAppTrayIcon.Visible=false <span lang="ru-RU">(</span><a href="#v206p9">v.206
+			<span lang="ru-RU">п.9</span></a><span lang="ru-RU">)
+			перехватывается исключение </span>ObjectDisposedException</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">295</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">19.08.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. EFPBaseFilterGridView <span lang="ru-RU">устанавливает
-			свойство </span>DataGridView.Visible <span lang="ru-RU">в
-			обработчике </span>OnAttached(), <span lang="ru-RU">а не
-			</span>OnCreated() (<span lang="ru-RU">раньше было событие
-			</span>OnShown(),<span lang="ru-RU"> </span><a href="#v233p8">v.233
-			<span lang="ru-RU">п.8</span></a>). <span lang="ru-RU">Табличка
-			без фильтров пряталась, но пустое место на форме для нее могло
-			оставаться (в диалоге установки фильтра </span>RefDocGridFilter).</p>
+			<p><span lang="en-US">1. EFPBaseFilterGridView </span><span lang="ru-RU">устанавливает
+			свойство </span><span lang="en-US">DataGridView.Visible </span><span lang="ru-RU">в
+			обработчике </span><span lang="en-US">OnAttached(), </span><span lang="ru-RU">а
+			не </span><span lang="en-US">OnCreated() (</span><span lang="ru-RU">раньше
+			было событие </span><span lang="en-US">OnShown(), <a href="#v233p8">v.233
+			</a></span><a href="#v233p8"><span lang="ru-RU">п.8</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Табличка без фильтров пряталась, но
+			пустое место на форме для нее могло оставаться (в диалоге
+			установки фильтра </span><span lang="en-US">RefDocGridFilter).</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -3584,9 +3605,9 @@
 			выделения команды жирным шрифтом. Используется </span>EFPDataGridView
 			<span lang="ru-RU">и </span>EFPTreeViewAdv <span lang="ru-RU">для
 			выделения команды редактирования и просмотра</span>.</p>
-			<p lang="en-US" style="margin-bottom: 0.5cm">9. <span lang="ru-RU">Поддержка
-			</span>tray icon. <span lang="ru-RU">Свойство </span>EFPApp.TrayIcon
-			<span lang="ru-RU">и класс </span>EFPAppTrayIcon.</p>
+			<p lang="en-US" style="margin-bottom: 0.5cm"><a name="v206p9"></a>9.
+			<span lang="ru-RU">Поддержка </span>tray icon. <span lang="ru-RU">Свойство
+			</span>EFPApp.TrayIcon <span lang="ru-RU">и класс </span>EFPAppTrayIcon.</p>
 			<p><span lang="en-US">10. EFPWebBrowser (<a href="#v022p1">v.22
 			</a></span><a href="#v022p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">не обрабатывал сочетания клавиш,
