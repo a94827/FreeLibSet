@@ -144,7 +144,7 @@ namespace ExtTools.tests
       sut.Append(new DateRange(2019));
       sut.Append(new DateRange(2021));
 
-      return sut.IndexOf(CreateDate(sDate));
+      return sut.IndexOf(Creators.CreateDate(sDate));
     }
 
     [Test]
@@ -188,14 +188,14 @@ namespace ExtTools.tests
       return sut.Count;
     }
 
-    [TestCase("20200201", "20200229", "20190101-20191231,20200201-20200229,20210101-20211231")]
-    [TestCase("20210201", "20210228", "20190101-20191231,20210101-20211231")]
-    [TestCase("20180201", "20180228", "20180201-20180228,20190101-20191231,20210101-20211231")]
-    [TestCase("20191101", "20200228", "20190101-20200228,20210101-20211231")]
-    [TestCase("20200101", "20201231", "20190101-20211231")]
-    public void Add(string sDate1, string sDate2, string result)
+    [TestCase("20200201-20200229", "20190101-20191231,20200201-20200229,20210101-20211231")]
+    [TestCase("20210201-20210228", "20190101-20191231,20210101-20211231")]
+    [TestCase("20180201-20180228", "20180201-20180228,20190101-20191231,20210101-20211231")]
+    [TestCase("20191101-20200228", "20190101-20200228,20210101-20211231")]
+    [TestCase("20200101-20201231", "20190101-20211231")]
+    public void Add(string sDTR, string result)
     {
-      DateRange r = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange r = Creators.CreateDateRange(sDTR);
       DateRangeList list2 = new DateRangeList();
       list2.Append(r);
 
@@ -213,14 +213,14 @@ namespace ExtTools.tests
       Assert.AreEqual(result, ToString(sut2));
     }
 
-    [TestCase("20200201", "20200229", "20190101-20191231,20210101-20211231")]
-    [TestCase("20210201", "20210228", "20190101-20191231,20210101-20210131,20210301-20211231")]
-    [TestCase("20201230", "20210228", "20190101-20191231,20210301-20211231")]
-    [TestCase("20201230", "20211231", "20190101-20191231")]
-    [TestCase("20190101", "20211231", "")]
-    public void Remove(string sDate1, string sDate2, string result)
+    [TestCase("20200201-20200229", "20190101-20191231,20210101-20211231")]
+    [TestCase("20210201-20210228", "20190101-20191231,20210101-20210131,20210301-20211231")]
+    [TestCase("20201230-20210228", "20190101-20191231,20210301-20211231")]
+    [TestCase("20201230-20211231", "20190101-20191231")]
+    [TestCase("20190101-20211231", "")]
+    public void Remove(string sDTR, string result)
     {
-      DateRange r = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange r = Creators.CreateDateRange(sDTR);
       DateRangeList list2 = new DateRangeList();
       list2.Append(r);
 
@@ -248,7 +248,7 @@ namespace ExtTools.tests
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2021));
 
-      sut.Split(CreateDate(sDate));
+      sut.Split(Creators.CreateDate(sDate));
       Assert.AreEqual(result, ToString(sut));
     }
 
@@ -293,14 +293,14 @@ namespace ExtTools.tests
       }
     }
 
-    [TestCase("20180101", "20181231", Result = false)]
-    [TestCase("20190101", "20190101", Result = true)]
-    [TestCase("20201201", "20210131", Result = true)]
-    [TestCase("20200101", "20201231", Result = false)]
-    [TestCase("20220101", "20221231", Result = false)]
-    public bool IsCrossed_DateRange(string sDate1, string sDate2)
+    [TestCase("20180101-20181231", Result = false)]
+    [TestCase("20190101-20190101", Result = true)]
+    [TestCase("20201201-20210131", Result = true)]
+    [TestCase("20200101-20201231", Result = false)]
+    [TestCase("20220101-20221231", Result = false)]
+    public bool IsCrossed_DateRange(string sDTR)
     {
-      DateRange r = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange r = Creators.CreateDateRange(sDTR);
 
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2019));
@@ -351,16 +351,16 @@ namespace ExtTools.tests
       Assert.IsFalse(sut.IsCrossed(arg));
     }
 
-    [TestCase("20180101", "20181231", Result = "")]
-    [TestCase("20190101", "20190101", Result = "20190101-20190101")]
-    [TestCase("20201201", "20210131", Result = "20210101-20210131")]
-    [TestCase("20200101", "20201231", Result = "")]
-    [TestCase("20220101", "20221231", Result = "")]
-    [TestCase("20181201", "20210131", Result = "20190101-20191231,20210101-20210131")]
-    [TestCase("20181201", "20221231", Result = "20190101-20191231,20210101-20211231")]
-    public string GetCross_DateRange(string sDate1, string sDate2)
+    [TestCase("20180101-20181231", Result = "")]
+    [TestCase("20190101-20190101", Result = "20190101-20190101")]
+    [TestCase("20201201-20210131", Result = "20210101-20210131")]
+    [TestCase("20200101-20201231", Result = "")]
+    [TestCase("20220101-20221231", Result = "")]
+    [TestCase("20181201-20210131", Result = "20190101-20191231,20210101-20210131")]
+    [TestCase("20181201-20221231", Result = "20190101-20191231,20210101-20211231")]
+    public string GetCross_DateRange(string sDTR)
     {
-      DateRange r = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange r = Creators.CreateDateRange(sDTR);
 
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2019));
@@ -370,14 +370,14 @@ namespace ExtTools.tests
       return ToString(res);
     }
 
-    [TestCase("20210301", "20210331", Result = true)]
-    [TestCase("20210101", "20211231", Result = true)]
-    [TestCase("20201231", "20211231", Result = false)]
-    [TestCase("20210101", "20220101", Result = false)]
-    [TestCase("20190101", "20211231", Result = false)]
-    public bool ContainsWhole_DateRange(string sDate1, string sDate2)
+    [TestCase("20210301-20210331", Result = true)]
+    [TestCase("20210101-20211231", Result = true)]
+    [TestCase("20201231-20211231", Result = false)]
+    [TestCase("20210101-20220101", Result = false)]
+    [TestCase("20190101-20211231", Result = false)]
+    public bool ContainsWhole_DateRange(string sDTR)
     {
-      DateRange r = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange r = Creators.CreateDateRange(sDTR);
 
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2019));
@@ -491,11 +491,6 @@ namespace ExtTools.tests
     }
 
     #region Вспомогательные методы
-
-    public static DateTime CreateDate(string s)
-    {
-      return DateTime.ParseExact(s, "yyyyMMdd", CultureInfo.InvariantCulture);
-    }
 
     public static string ToString(DateRangeList obj)
     {

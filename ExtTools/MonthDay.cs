@@ -813,7 +813,7 @@ namespace AgeyevAV
         if (_Last >= _First)
           return _Last.DayOfYear - _First.DayOfYear + 1;
         else
-          return 364 - _First.DayOfYear + _Last.DayOfYear;
+          return 366 - _First.DayOfYear + _Last.DayOfYear;
       }
     }
 
