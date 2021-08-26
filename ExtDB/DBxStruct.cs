@@ -837,14 +837,29 @@ namespace AgeyevAV.ExtDB
 
     /// <summary>
     /// Реализация интерфейса ICollection
+    /// Удаление описания таблицы.
+    /// Таблица из базы данных не удаляется.
     /// </summary>
-    /// <param name="item"></param>
-    /// <returns></returns>
+    /// <param name="item">Описание таблицы</param>
+    /// <returns>true, если описание было удалено</returns>
     public bool Remove(DBxTableStruct item)
     {
       _Owner.CheckNotReadOnly();
       _AllTableNames = null;
       return _List.Remove(item);
+    }
+
+    /// <summary>
+    /// Удаление описания таблицы.
+    /// Таблица из базы данных не удаляется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>true, если описание было удалено</returns>
+    public bool Remove(string tableName)
+    {
+      _Owner.CheckNotReadOnly();
+      _AllTableNames = null;
+      return _List.Remove(tableName);
     }
 
     #endregion

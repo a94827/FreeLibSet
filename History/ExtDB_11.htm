@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtDB.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-08-16T11:04:30.832000000"/>
+	<meta name="changed" content="2021-08-25T11:00:38.985000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -131,6 +132,19 @@
 		</td>
 		<td width="78%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="79" sdnum="1049;">
+			<p lang="en-US" align="center">79</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">25.08.2021</p>
+		</td>
+		<td width="78%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Для </span>PostgreSQL<span lang="ru-RU">,
+			тип данных DBxColumnType.Guid сохраняется как &quot;</span>uuid<span lang="ru-RU">&quot;</span>,
+			<span lang="ru-RU">а не </span>CHAR (<a href="#v044p2">v.44 <span lang="ru-RU">п.2</span></a>)</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -1166,8 +1180,8 @@
 			преобразование </span><span lang="en-US">new
 			Guid(string).ToString(&ldquo;D&rdquo;), </span><span lang="ru-RU">чтобы
 			убрать возможные символы форматирования, например &laquo;</span><span lang="en-US">{}</span><span lang="ru-RU">&raquo;.</span></p>
-			<p><span lang="en-US">2. </span><span lang="ru-RU">При групповом
-			добавлении записей в </span><span lang="en-US">NpgsqlDBxCon.</span><span lang="ru-RU">DoAddRecords()
+			<p><a name="v044p2"></a><span lang="en-US">2. </span><span lang="ru-RU">При
+			групповом добавлении записей в </span><span lang="en-US">NpgsqlDBxCon.</span><span lang="ru-RU">DoAddRecords()
 			(<a href="#v009p1" target="_blank">v.9 п.1</a>) поля типа </span><span lang="en-US">Guid
 			</span><span lang="ru-RU">форматируются с помощью
 			NpgsqlCopySerializer, а не NpgsqlDBxSqlFormatter.FormatValue(),

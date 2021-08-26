@@ -73,6 +73,9 @@ namespace AgeyevAV.ExtDB.Npgsql
         case DBxColumnType.Binary:
           buffer.SB.Append("BYTEA"); // ???
           break;
+        case DBxColumnType.Guid:
+          buffer.SB.Append("UUID"); // 25.08.2021
+          break;
         default:
           base.OnFormatValueType(buffer, column);
           break;

@@ -395,7 +395,7 @@ namespace AgeyevAV.FIAS
       if (!UseHistory)
       {
         sb.Append(", даты действия записей: ");
-        sb.Append(UseIFNS ? "есть" : "нет");
+        sb.Append(UseDates ? "есть" : "нет");
       }
 
       return sb.ToString();
