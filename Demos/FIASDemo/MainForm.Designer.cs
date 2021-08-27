@@ -65,15 +65,16 @@ namespace FIASDemo
       this.groupBox9 = new System.Windows.Forms.GroupBox();
       this.btnConvertGuid = new System.Windows.Forms.Button();
       this.groupBox8 = new System.Windows.Forms.GroupBox();
+      this.btnToDisk = new System.Windows.Forms.Button();
       this.btnLoadWeb = new System.Windows.Forms.Button();
       this.btnUpdateHistory = new System.Windows.Forms.Button();
       this.groupBox7 = new System.Windows.Forms.GroupBox();
       this.lblRoomCount = new System.Windows.Forms.Label();
-      this.label10 = new System.Windows.Forms.Label();
+      this.lblRoomCount2 = new System.Windows.Forms.Label();
       this.lblHouseCount = new System.Windows.Forms.Label();
-      this.label8 = new System.Windows.Forms.Label();
+      this.lblHouseCount2 = new System.Windows.Forms.Label();
       this.lblAddrObCount = new System.Windows.Forms.Label();
-      this.label6 = new System.Windows.Forms.Label();
+      this.lblAddrObjCount2 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
       this.edActualDate = new AgeyevAV.ExtForms.DateBox();
       this.btnTest = new System.Windows.Forms.Button();
@@ -89,7 +90,6 @@ namespace FIASDemo
       this.infoLabel1 = new AgeyevAV.ExtForms.InfoLabel();
       this.panel4 = new System.Windows.Forms.Panel();
       this.btnSearch = new System.Windows.Forms.Button();
-      this.btnToDisk = new System.Windows.Forms.Button();
       this.TheTabControl.SuspendLayout();
       this.tpAddress.SuspendLayout();
       this.groupBox2.SuspendLayout();
@@ -532,6 +532,16 @@ namespace FIASDemo
       this.groupBox8.TabStop = false;
       this.groupBox8.Text = "Обновление";
       // 
+      // btnToDisk
+      // 
+      this.btnToDisk.Location = new System.Drawing.Point(9, 46);
+      this.btnToDisk.Margin = new System.Windows.Forms.Padding(2);
+      this.btnToDisk.Name = "btnToDisk";
+      this.btnToDisk.Size = new System.Drawing.Size(176, 24);
+      this.btnToDisk.TabIndex = 3;
+      this.btnToDisk.Text = "Скачать с сайта на диск";
+      this.btnToDisk.UseVisualStyleBackColor = true;
+      // 
       // btnLoadWeb
       // 
       this.btnLoadWeb.Location = new System.Drawing.Point(9, 18);
@@ -555,11 +565,11 @@ namespace FIASDemo
       // groupBox7
       // 
       this.groupBox7.Controls.Add(this.lblRoomCount);
-      this.groupBox7.Controls.Add(this.label10);
+      this.groupBox7.Controls.Add(this.lblRoomCount2);
       this.groupBox7.Controls.Add(this.lblHouseCount);
-      this.groupBox7.Controls.Add(this.label8);
+      this.groupBox7.Controls.Add(this.lblHouseCount2);
       this.groupBox7.Controls.Add(this.lblAddrObCount);
-      this.groupBox7.Controls.Add(this.label6);
+      this.groupBox7.Controls.Add(this.lblAddrObjCount2);
       this.groupBox7.Controls.Add(this.label5);
       this.groupBox7.Controls.Add(this.edActualDate);
       this.groupBox7.Dock = System.Windows.Forms.DockStyle.Top;
@@ -580,14 +590,14 @@ namespace FIASDemo
       this.lblRoomCount.Text = "???";
       this.lblRoomCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
-      // label10
+      // lblRoomCount2
       // 
-      this.label10.Location = new System.Drawing.Point(508, 14);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(100, 34);
-      this.label10.TabIndex = 6;
-      this.label10.Text = "Помещения";
-      this.label10.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.lblRoomCount2.Location = new System.Drawing.Point(508, 14);
+      this.lblRoomCount2.Name = "lblRoomCount2";
+      this.lblRoomCount2.Size = new System.Drawing.Size(100, 34);
+      this.lblRoomCount2.TabIndex = 6;
+      this.lblRoomCount2.Text = "Помещения";
+      this.lblRoomCount2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       // 
       // lblHouseCount
       // 
@@ -599,14 +609,14 @@ namespace FIASDemo
       this.lblHouseCount.Text = "???";
       this.lblHouseCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
-      // label8
+      // lblHouseCount2
       // 
-      this.label8.Location = new System.Drawing.Point(399, 14);
-      this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(100, 34);
-      this.label8.TabIndex = 4;
-      this.label8.Text = "Здания";
-      this.label8.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.lblHouseCount2.Location = new System.Drawing.Point(399, 14);
+      this.lblHouseCount2.Name = "lblHouseCount2";
+      this.lblHouseCount2.Size = new System.Drawing.Size(100, 34);
+      this.lblHouseCount2.TabIndex = 4;
+      this.lblHouseCount2.Text = "Здания";
+      this.lblHouseCount2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       // 
       // lblAddrObCount
       // 
@@ -618,14 +628,14 @@ namespace FIASDemo
       this.lblAddrObCount.Text = "???";
       this.lblAddrObCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
-      // label6
+      // lblAddrObjCount2
       // 
-      this.label6.Location = new System.Drawing.Point(296, 14);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(100, 34);
-      this.label6.TabIndex = 2;
-      this.label6.Text = "Адресные объекты";
-      this.label6.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.lblAddrObjCount2.Location = new System.Drawing.Point(296, 14);
+      this.lblAddrObjCount2.Name = "lblAddrObjCount2";
+      this.lblAddrObjCount2.Size = new System.Drawing.Size(100, 34);
+      this.lblAddrObjCount2.TabIndex = 2;
+      this.lblAddrObjCount2.Text = "Адресные объекты";
+      this.lblAddrObjCount2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       // 
       // label5
       // 
@@ -779,16 +789,6 @@ namespace FIASDemo
       this.btnSearch.Text = "Найти";
       this.btnSearch.UseVisualStyleBackColor = true;
       // 
-      // btnToDisk
-      // 
-      this.btnToDisk.Location = new System.Drawing.Point(9, 46);
-      this.btnToDisk.Margin = new System.Windows.Forms.Padding(2);
-      this.btnToDisk.Name = "btnToDisk";
-      this.btnToDisk.Size = new System.Drawing.Size(176, 24);
-      this.btnToDisk.TabIndex = 3;
-      this.btnToDisk.Text = "Скачать с сайта на диск";
-      this.btnToDisk.UseVisualStyleBackColor = true;
-      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -876,11 +876,11 @@ namespace FIASDemo
     private System.Windows.Forms.GroupBox groupBox7;
     private System.Windows.Forms.GroupBox groupBox8;
     private System.Windows.Forms.Label lblRoomCount;
-    private System.Windows.Forms.Label label10;
+    private System.Windows.Forms.Label lblRoomCount2;
     private System.Windows.Forms.Label lblHouseCount;
-    private System.Windows.Forms.Label label8;
+    private System.Windows.Forms.Label lblHouseCount2;
     private System.Windows.Forms.Label lblAddrObCount;
-    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.Label lblAddrObjCount2;
     private System.Windows.Forms.GroupBox groupBox9;
     private System.Windows.Forms.CheckBox cbManualPostalCode;
     private System.Windows.Forms.ComboBox cbPartialMode;

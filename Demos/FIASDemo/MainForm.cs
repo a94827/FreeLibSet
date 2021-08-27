@@ -379,12 +379,12 @@ namespace FIASDemo
       lblAddrObCount.Text = fiasDB.DBStat.AddrObCount.ToString("#,##0");
 
       lblHouseCount.Visible = fiasDB.DBSettings.UseHouse;
-      GetNextControl(lblHouseCount, false).Visible = lblHouseCount.Visible;
       lblHouseCount.Text = fiasDB.DBStat.HouseCount.ToString("#,##0");
+      lblHouseCount2.Visible = fiasDB.DBSettings.UseHouse;
 
       lblRoomCount.Visible = fiasDB.DBSettings.UseRoom;
-      GetNextControl(lblRoomCount, false).Visible = lblRoomCount.Visible;
       lblRoomCount.Text = fiasDB.DBStat.RoomCount.ToString("#,##0");
+      lblRoomCount2.Visible = fiasDB.DBSettings.UseRoom;
     }
 
     #endregion
