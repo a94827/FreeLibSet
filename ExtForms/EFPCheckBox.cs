@@ -133,7 +133,7 @@ namespace AgeyevAV.ExtForms
     #region Свойство CheckState
 
     /// <summary>
-    /// Возвращает актуальное состояние элемента CheckBox.CheckState
+    /// Возвращает актуальное состояние элемента CheckBox.CheckState.
     /// При установке свойства Control.CheckState не устанавливается, если Enabled=false
     /// и AllowDisabledState=true. В этом случае значение запоминается и будет 
     /// использовано при переходе в разрешенное состояние.
@@ -448,7 +448,7 @@ namespace AgeyevAV.ExtForms
     private bool _AllowDisabledCheckState;
 
     /// <summary>
-    /// Возвращает true, если в настоящий момент в действует DisabledCheckStateEx
+    /// Возвращает true, если в настоящий момент действует значение DisabledCheckState
     /// </summary>
     public bool IsDisabledCheckState
     {
