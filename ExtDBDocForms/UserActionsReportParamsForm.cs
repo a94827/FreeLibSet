@@ -545,6 +545,7 @@ namespace AgeyevAV.ExtForms.Docs
 
       ActionPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ActionGridHandler_GetRowAttributes);
       ActionPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ActionGridHandler_GetCellAttributes);
+      ActionPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
 
 
       ActionPage.ControlProvider.CanMultiEdit = false;
