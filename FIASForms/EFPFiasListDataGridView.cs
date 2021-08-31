@@ -95,6 +95,8 @@ namespace AgeyevAV.ExtForms.FIAS
             Columns.AddBool("Actual", true, "Actual");
             Columns.AddBool("Live", true, "Live");
           }
+          Columns.AddText("POSTALCODE", true, "Почтовый индекс", 6, 6); 
+          Columns.LastAdded.TextAlign = HorizontalAlignment.Center;
           FrozenColumns = 3;
           break;
 
@@ -116,6 +118,8 @@ namespace AgeyevAV.ExtForms.FIAS
             Columns.LastAdded.CanIncSearch = true;
             Columns.LastAdded.Grayed = true;
           }
+          Columns.AddText("POSTALCODE", true, "Почтовый индекс", 6, 6);
+          Columns.LastAdded.TextAlign = HorizontalAlignment.Center;
           FrozenColumns = 2;
           break;
 
@@ -348,8 +352,8 @@ namespace AgeyevAV.ExtForms.FIAS
 
           #region Вызовы IsValidName
 
-            // 03.03.2021
-            // Вызываем IsValidName() в основном, чтобы протестировать эту функцию
+          // 03.03.2021
+          // Вызываем IsValidName() в основном, чтобы протестировать эту функцию
 
           case "OFFNAME":
             FiasLevel level = (FiasLevel)(DataTools.GetInt(args.DataRow, "AOLEVEL"));
@@ -461,6 +465,10 @@ namespace AgeyevAV.ExtForms.FIAS
                 }
               }
             }
+            break;
+          case "POSTALCODE":
+            if (DataTools.GetInt(args.DataRow, "POSTALCODE") == 0)
+              args.Value = null; // поле является числовым
             break;
         }
       }
