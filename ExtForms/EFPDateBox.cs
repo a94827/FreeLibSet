@@ -60,6 +60,8 @@ namespace AgeyevAV.ExtForms
         control.PopupButtonToolTipText = "Выбрать из календаря";
       if (String.IsNullOrEmpty(control.ClearButtonToolTipText))
         control.ClearButtonToolTipText = "Очистить дату";
+
+      _SavedValue = control.Value;
     }
 
     #endregion
@@ -67,11 +69,11 @@ namespace AgeyevAV.ExtForms
     #region Переопределяемые методы
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Visible и Enabled равны true, а ReadOnly=false
+    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
     /// </summary>
-    public override bool Editable
+    public override bool EnabledState
     {
-      get { return Enabled && Visible && (!ReadOnly); }
+      get { return Enabled && (!ReadOnly); }
     }
 
     /// <summary>
@@ -135,11 +137,12 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Инициализация "серого" значения.
     /// </summary>
-    protected override void VisibleOrEnabledChanged()
+    protected override void OnEnabledStateChanged()
     {
-      base.VisibleOrEnabledChanged();
-      if (AllowDisabledValue)
-        InitValue();
+      base.OnEnabledStateChanged();
+      if (AllowDisabledValue && EnabledState)
+        _HasSavedValue = true;
+      InitControlValue();
     }
 
     /// <summary>
@@ -172,7 +175,8 @@ namespace AgeyevAV.ExtForms
           _SavedValue = value.Value.Date;
         else
           _SavedValue = null;
-        InitValue();
+        _HasSavedValue = true;
+        InitControlValue();
       }
     }
 
@@ -181,19 +185,23 @@ namespace AgeyevAV.ExtForms
     /// Используется, если в данный момент используется DisabledValue.
     /// </summary>
     private DateTime? _SavedValue;
+    private bool _HasSavedValue;
 
     /// <summary>
     /// Инициализация DateBox.Value.
     /// </summary>
-    protected void InitValue()
+    protected void InitControlValue()
     {
       // Не нужно, иначе может не обновляться
       //if (InsideValueChanged)
       //  return;
-      if (IsDisabledValue)
+      if (AllowDisabledValue && (!EnabledState))
         Control.Value = DisabledValue;
-      else
+      else if (_HasSavedValue)
+      {
+        _HasSavedValue = false;
         Control.Value = _SavedValue;
+      }
     }
 
     /// <summary>
@@ -221,6 +229,7 @@ namespace AgeyevAV.ExtForms
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(ValueEx_CheckValue);
+        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
@@ -260,6 +269,9 @@ namespace AgeyevAV.ExtForms
       if (_ValueEx != null)
         _ValueEx.OwnerSetValue(Control.Value);
 
+      if (AllowDisabledValue && EnabledState)
+        _SavedValue = Value;
+
       Validate();
       DoSyncValueChanged();
     }
@@ -270,12 +282,14 @@ namespace AgeyevAV.ExtForms
     void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime?> args)
     {
       if (args.NewValue.HasValue)
-        _SavedValue = args.NewValue.Value.Date;
-      else
-        _SavedValue = null;
-      args.Cancel = true;
-      InitValue();
+        args.NewValue = args.NewValue.Value.Date;
     }
+    void ValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      Value = _ValueEx.Value;
+    }
+
+
 
     /// <summary>
     /// Управляемое свойство, которое содержит true, если есть введенная дата (Value.HasValue=true).
@@ -313,8 +327,7 @@ namespace AgeyevAV.ExtForms
         _DisabledValue = value;
         if (_DisabledValueEx != null)
           _DisabledValueEx.Value = value;
-        if (IsDisabledValue) // 28.07.2015
-          InitValue();
+        InitControlValue();
       }
     }
     private DateTime? _DisabledValue;
@@ -368,18 +381,10 @@ namespace AgeyevAV.ExtForms
         if (value == _AllowDisabledValue)
           return;
         _AllowDisabledValue = value;
-        InitValue();
+        InitControlValue();
       }
     }
     private bool _AllowDisabledValue;
-
-    /// <summary>
-    /// Возвращает true, если в настоящий момент в действует DisabledValue.
-    /// </summary>
-    public bool IsDisabledValue
-    {
-      get { return AllowDisabledValue && (!Enabled); }
-    }
 
     #endregion
 
@@ -573,10 +578,7 @@ namespace AgeyevAV.ExtForms
         Control.ReadOnly = value;
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-        if (AllowDisabledValue)
-          InitValue();
-        VisibleOrEnabledChanged();
-        Validate();
+        UpdateEnabledState();
       }
     }
 
@@ -1618,6 +1620,7 @@ namespace AgeyevAV.ExtForms
     {
       if (!DesignMode)
         control.ValueChanged += new EventHandler(Control_ValueChanged);
+      _SavedValue = control.Value;
     }
 
     #endregion
@@ -1642,11 +1645,12 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Этот метод вызывается при изменении свойств Control.Visible или Control.Enabled
     /// </summary>
-    protected override void VisibleOrEnabledChanged()
+    protected override void OnEnabledStateChanged()
     {
-      base.VisibleOrEnabledChanged();
-      if (AllowDisabledValue)
-        InitControlValue();
+      base.OnEnabledStateChanged();
+      if (AllowDisabledValue && EnabledState)
+        _HasSavedValue = true;
+      InitControlValue();
     }
 
     /*
@@ -1701,11 +1705,13 @@ namespace AgeyevAV.ExtForms
       set
       {
         _SavedValue = value;
+        _HasSavedValue = true;
         InitControlValue();
       }
     }
 
     private DateTime? _SavedValue;
+    private bool _HasSavedValue;
 
     private void InitControlValue()
     {
@@ -1713,7 +1719,16 @@ namespace AgeyevAV.ExtForms
       //if (InsideValueChanged)
       //  return;
 
-      DateTime? Value2 = IsDisabledValue ? DisabledValue : _SavedValue;
+      DateTime? Value2;
+      if (AllowDisabledValue && (!EnabledState))
+        Value2 = DisabledValue;
+      else if (_HasSavedValue)
+      {
+        _HasSavedValue = false;
+        Value2 = _SavedValue;
+      }
+      else
+        return;
 
       if (Value2.HasValue)
       {
@@ -1753,6 +1768,7 @@ namespace AgeyevAV.ExtForms
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(ValueEx_CheckValue);
+        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
@@ -1794,6 +1810,9 @@ namespace AgeyevAV.ExtForms
       if (_TimeEx != null)
         _TimeEx.OwnerSetValue(Control.Value.TimeOfDay);
 
+      if (AllowDisabledValue && EnabledState)
+        _SavedValue = Value;
+
       Validate();
       DoSyncValueChanged();
     }
@@ -1804,12 +1823,13 @@ namespace AgeyevAV.ExtForms
     void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime?> args)
     {
       if (args.NewValue.HasValue)
-        _SavedValue = args.NewValue.Value.Date;
-      else
-        _SavedValue = null;
-      args.Cancel = true;
-      InitControlValue();
+        args.NewValue = args.NewValue.Value.Date;
     }
+    void ValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      Value = ValueEx.Value;
+    }
+
 
 
     #endregion
@@ -1829,15 +1849,13 @@ namespace AgeyevAV.ExtForms
         _DisabledValue = value;
         if (_DisabledValueEx != null)
           _DisabledValueEx.Value = value;
-        if (IsDisabledValue) // 28.07.2015
-          InitControlValue();
+        InitControlValue();
       }
     }
     private DateTime? _DisabledValue;
 
     /// <summary>
-    /// Этот текст замещает свойство Text, когда Enabled=false 
-    /// Свойство действует при установленном свойстве AllowDisabledText
+    /// Значение, которое показывается при Enabled=false и AllowDisabledValue=true
     /// </summary>
     public DepValue<DateTime?> DisabledValueEx
     {
@@ -1888,15 +1906,6 @@ namespace AgeyevAV.ExtForms
       }
     }
     private bool _AllowDisabledValue;
-
-    /// <summary>
-    /// Возвращает true, если в настоящий момент в действует DisabledCheckStateEx
-    /// Переопределяется для элементов, имеющих свойство ReadOnly
-    /// </summary>
-    public bool IsDisabledValue
-    {
-      get { return AllowDisabledValue && (!Enabled); }
-    }
 
     #endregion
 
@@ -2081,11 +2090,11 @@ namespace AgeyevAV.ExtForms
     #region Переопределяемые методы
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Visible и Enabled, а ReadOnly=false
+    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
     /// </summary>
-    public override bool Editable
+    public override bool EnabledState
     {
-      get { return Enabled && Visible && (!ReadOnly); }
+      get { return Enabled && (!ReadOnly); }
     }
 
     /// <summary>
@@ -2861,8 +2870,7 @@ namespace AgeyevAV.ExtForms
         InitText(); // переключает Control.ReadOnly
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-        VisibleOrEnabledChanged();
-        Validate();
+        UpdateEnabledState();
       }
     }
     private bool _ReadOnly;

@@ -291,11 +291,12 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Инициализация "серого" значения
     /// </summary>
-    protected override void VisibleOrEnabledChanged()
+    protected override void OnEnabledStateChanged()
     {
-      base.VisibleOrEnabledChanged();
-      if (AllowDisabledSelectedIndex)
-        InitSelectedIndex();
+      base.OnEnabledStateChanged();
+      if (AllowDisabledSelectedIndex && EnabledState)
+        _HasSavedSelectedIndex = true;
+      InitControlSelectedIndex();
     }
 
     #endregion
@@ -354,7 +355,8 @@ namespace AgeyevAV.ExtForms
       set
       {
         _SavedSelectedIndex = value;
-        InitSelectedIndex();
+        _HasSavedSelectedIndex = true;
+        InitControlSelectedIndex();
       }
     }
 
@@ -367,23 +369,26 @@ namespace AgeyevAV.ExtForms
     /// Сохраненная позиция (на время Disabled)
     /// </summary>
     private int _SavedSelectedIndex;
+    private bool _HasSavedSelectedIndex;
 
-    private void InitSelectedIndex()
+    private void InitControlSelectedIndex()
     {
       // Не нужно, иначе может не обновляться
       //if (InsideSelectedIndexChanged)
       //  return;
-
-      if (IsDisabledSelectedIndex)
+      int Value2;
+      if (AllowDisabledSelectedIndex && (!EnabledState))
+        Value2 = DisabledSelectedIndex;
+      else if (_HasSavedSelectedIndex)
       {
-        for (int i = 0; i < _Controls.Length; i++)
-          _Controls[i].Checked = (i == DisabledSelectedIndex);
+        _HasSavedSelectedIndex = false;
+        Value2 = _SavedSelectedIndex;
       }
       else
-      {
-        for (int i = 0; i < _Controls.Length; i++)
-          _Controls[i].Checked = (i == _SavedSelectedIndex);
-      }
+        return;
+
+      for (int i = 0; i < _Controls.Length; i++)
+        _Controls[i].Checked = (i == Value2);
     }
 
     private bool _InsideSelectedIndexChanged;
@@ -414,10 +419,14 @@ namespace AgeyevAV.ExtForms
     protected virtual void OnSelectedIndexChanged(int value)
     {
       _CurrentSelectedIndex = value;
+
       if (_SelectedIndexEx != null)
-        _SelectedIndexEx.OwnerSetValue(value);
+        _SelectedIndexEx.Value = SelectedIndex;
       if (_SelectedCodeEx != null)
-        _SelectedCodeEx.OwnerSetValue(SelectedCode);
+        _SelectedCodeEx.Value = SelectedCode;
+
+      if (AllowDisabledSelectedIndex && EnabledState)
+        _DisabledSelectedIndex = SelectedIndex;
 
       Validate();
       DoSyncValueChanged();
@@ -440,29 +449,22 @@ namespace AgeyevAV.ExtForms
         _SelectedIndexEx.Source = value;
       }
     }
+    private DepInput<int> _SelectedIndexEx;
 
     private void InitSelectedIndexEx()
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInputWithCheck<int>();
+        _SelectedIndexEx = new DepInput<int>();
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
-        _SelectedIndexEx.OwnerSetValue(SelectedIndex);
-        _SelectedIndexEx.CheckValue += new DepInputCheckEventHandler<int>(SelectedIndexEx_CheckValue);
+        _SelectedIndexEx.Value = SelectedIndex;
+        _SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndexEx_ValueChanged);
       }
     }
 
-    private DepInputWithCheck<int> _SelectedIndexEx;
-
-    /// <summary>
-    /// Вызывается, когда свойство изменяется "снаружи" элемента
-    /// </summary>
-    void SelectedIndexEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void SelectedIndexEx_ValueChanged(object sender, EventArgs args)
     {
-      _SavedSelectedIndex = args.NewValue;
-      args.Cancel = true;
-      if (!IsDisabledSelectedIndex)
-        InitSelectedIndex();
+      SelectedIndex = _SelectedIndexEx.Value;
     }
 
     /// <summary>
@@ -502,8 +504,7 @@ namespace AgeyevAV.ExtForms
         _DisabledSelectedIndex = value;
         if (_DisabledSelectedIndexEx != null)
           _DisabledSelectedIndexEx.Value = value;
-        if (IsDisabledSelectedIndex)
-          InitSelectedIndex();
+        InitControlSelectedIndex();
       }
     }
     private int _DisabledSelectedIndex;
@@ -558,18 +559,10 @@ namespace AgeyevAV.ExtForms
         if (value == _AllowDisabledSelectedIndex)
           return;
         _AllowDisabledSelectedIndex = value;
-        InitSelectedIndex();
+        InitControlSelectedIndex();
       }
     }
     private bool _AllowDisabledSelectedIndex;
-
-    /// <summary>
-    /// Возвращает true, если в настоящий момент в редакторе показан DisabledSelectedIndex
-    /// </summary>
-    public bool IsDisabledSelectedIndex
-    {
-      get { return AllowDisabledSelectedIndex && (!Enabled); }
-    }
 
     #endregion
 
@@ -766,12 +759,7 @@ namespace AgeyevAV.ExtForms
           return;
         if (value == null)
           value = String.Empty;
-        int NewSelectedIndex = Array.IndexOf<string>(Codes, value);
-        if (NewSelectedIndex != _SavedSelectedIndex)
-        {
-          _SavedSelectedIndex = NewSelectedIndex;
-          InitSelectedIndex();
-        }
+        SelectedIndex = Array.IndexOf<string>(Codes, value);
       }
     }
 

@@ -137,6 +137,13 @@ namespace FIASDemo
       efpActualDate = new EFPDateBox(efpForm, edActualDate);
       efpActualDate.ReadOnly = true;
 
+      efpAddrObCount = new EFPLabel(efpForm, lblAddrObCount);
+      efpAddrObCount.Label = lblAddrObjCount2;
+      efpHouseCount = new EFPLabel(efpForm, lblHouseCount);
+      efpHouseCount.Label = lblHouseCount2;
+      efpRoomCount = new EFPLabel(efpForm, lblRoomCount);
+      efpRoomCount.Label = lblRoomCount2;
+
       efpLoadWeb = new EFPButton(efpForm, btnLoadWeb);
       efpLoadWeb.Click += new EventHandler(efpLoadWeb_Click);
 
@@ -157,6 +164,7 @@ namespace FIASDemo
       efpConvertGuid.Click += new EventHandler(efpConvertGuid_Click);
 
       InitDBStat();
+
 
       #endregion
 
@@ -370,21 +378,21 @@ namespace FIASDemo
 
     EFPDateBox efpActualDate;
 
+    EFPLabel efpAddrObCount, efpHouseCount, efpRoomCount;
+
     private void InitDBStat()
     {
       efpLoadWeb.Enabled = !fiasDB.IsEmpty; // 26.02.2021 ѕока нельз€ загрузить полную версию с сайта
 
       efpActualDate.Value = fiasDB.ActualDate;
 
-      lblAddrObCount.Text = fiasDB.DBStat.AddrObCount.ToString("#,##0");
+      efpAddrObCount.Text = fiasDB.DBStat.AddrObCount.ToString("#,##0");
 
-      lblHouseCount.Visible = fiasDB.DBSettings.UseHouse;
-      lblHouseCount.Text = fiasDB.DBStat.HouseCount.ToString("#,##0");
-      lblHouseCount2.Visible = fiasDB.DBSettings.UseHouse;
+      efpHouseCount.Visible = fiasDB.DBSettings.UseHouse;
+      efpHouseCount.Text = fiasDB.DBStat.HouseCount.ToString("#,##0");
 
-      lblRoomCount.Visible = fiasDB.DBSettings.UseRoom;
-      lblRoomCount.Text = fiasDB.DBStat.RoomCount.ToString("#,##0");
-      lblRoomCount2.Visible = fiasDB.DBSettings.UseRoom;
+      efpRoomCount.Visible = fiasDB.DBSettings.UseRoom;
+      efpRoomCount.Text = fiasDB.DBStat.RoomCount.ToString("#,##0");
     }
 
     #endregion

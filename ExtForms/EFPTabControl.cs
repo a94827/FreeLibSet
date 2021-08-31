@@ -806,15 +806,12 @@ namespace AgeyevAV.ExtForms
     private bool _PageVisible;
 
     /// <summary>
-    /// Возвращает true, если Viisble=true.
+    /// Возвращает true.
     /// Свойство Enabled не актуально для закладки.
     /// </summary>
-    public override bool Editable
+    public override bool EnabledState
     {
-      get
-      {
-        return Visible;
-      }
+      get { return Enabled; }
     }
 
     #endregion

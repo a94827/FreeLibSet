@@ -115,9 +115,7 @@ namespace AgeyevAV.ExtForms
         if (_SelectableEx != null)
           _SelectableEx.Value = value;
         ClearButtonEnabled = _ClearButtonEnabled;
-        VisibleOrEnabledChanged(); // 27.02.2018
-        Validate(); // 08.06.2018
-        InitControlColors();
+        UpdateEnabledState();
       }
     }
     private bool _Selectable;
@@ -146,7 +144,7 @@ namespace AgeyevAV.ExtForms
         _SelectableEx = new DepInput<bool>();
         _SelectableEx.OwnerInfo = new DepOwnerInfo(this, "SelectableEx");
         _SelectableEx.Value = Selectable;
-        _SelectableEx.ValueChanged += new EventHandler(FSelectableEx_ValueChanged);
+        _SelectableEx.ValueChanged += new EventHandler(SelectableEx_ValueChanged);
 
         _SelectableMain = new DepInput<bool>();
         _SelectableMain.OwnerInfo = new DepOwnerInfo(this, "SelectableMain");
@@ -177,21 +175,17 @@ namespace AgeyevAV.ExtForms
     private DepInput<Boolean> _SelectableSync;
 
 
-    void FSelectableEx_ValueChanged(object sender, EventArgs args)
+    void SelectableEx_ValueChanged(object sender, EventArgs args)
     {
       Selectable = _SelectableEx.Value;
     }
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Visible, Enabled и Selectable,
-    /// то есть когда пользователь может менять выбранное значение
+    /// Возвращает true, если установлены свойства Enabled=true и Selectable=true.
     /// </summary>
-    public override bool Editable
+    public override bool EnabledState
     {
-      get
-      {
-        return Visible && Enabled && Selectable;
-      }
+      get { return Enabled && Selectable; }
     }
 
     /// <summary>

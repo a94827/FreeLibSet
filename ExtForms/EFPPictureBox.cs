@@ -138,9 +138,12 @@ namespace AgeyevAV.ExtForms
     }
 
     /// <summary>
-    /// Возвращает true, если кнопка видима и доступна, а свойство ReadOnly=false.
+    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
     /// </summary>
-    public override bool Editable { get { return Visible && Enabled && (!ReadOnly); } }
+    public override bool EnabledState
+    {
+      get { return Enabled && (!ReadOnly); }
+    }
 
     #endregion
 
@@ -365,8 +368,7 @@ namespace AgeyevAV.ExtForms
         _ReadOnly = value;
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-        VisibleOrEnabledChanged();
-        Validate();
+        UpdateEnabledState();
         CommandItems.PerformRefreshItems();
       }
     }

@@ -318,7 +318,9 @@ namespace AgeyevAV.ExtForms
       _ValidateState = EFPValidateState.Ok;
       _LabelNeeded = labelNeeded;
       _Visible = true;
+      _PrevVisibleState = false;
       _Enabled = true;
+      _PrevEnabledState = true;
       _OrgControlForeColor = control.ForeColor;
       _ProviderState = EFPControlProviderState.Initialization;
       _ConfigSectionName = String.Empty;
@@ -435,221 +437,6 @@ namespace AgeyevAV.ExtForms
 
     #endregion
 
-    #region Свойство Visible
-
-    /// <summary>
-    /// Видимость управляющего элемента
-    /// Возвращает и устанавливает свойство Visible управляющего элемента
-    /// Установка значения true может оказаться отложенной, если в момент вызова
-    /// один из родительских элементов не является видимым
-    /// </summary>
-    public bool Visible
-    {
-      get { return _Visible; }
-      set
-      {
-        _Visible = value;
-        if (_VisibleEx != null)
-          _VisibleEx.Value = value;
-        ControlVisible = value;
-        InitLabelVisible();
-        VisibleOrEnabledChanged();
-        Validate();
-      }
-    }
-    private bool _Visible;
-
-    /// <summary>
-    /// Расширенное свойство Visible.
-    /// В .Net Framework свойство Control.Visible изменяется, когда изменяется
-    /// видимость одного из родительских элементов (например, саиой формы).
-    /// При этом, когда свойство переключается в false, событие VisibleChanged
-    /// не посылается, поэтому в VisibleEx может оказаться неактуальное значение
-    /// </summary>
-    public DepValue<Boolean> VisibleEx
-    {
-      get
-      {
-        InitVisibleEx();
-        return _VisibleEx;
-      }
-      set
-      {
-        InitVisibleEx();
-        _VisibleEx.Source = value;
-      }
-    }
-
-    private void InitVisibleEx()
-    {
-      if (_VisibleEx == null)
-      {
-        _VisibleEx = new DepInput<Boolean>();
-        _VisibleEx.OwnerInfo = new DepOwnerInfo(this, "VisibleEx");
-        _VisibleEx.Value = Visible;
-        _VisibleEx.ValueChanged += new EventHandler(VisibleEx_ValueChanged);
-      }
-    }
-
-    void VisibleEx_ValueChanged(object sender, EventArgs args)
-    {
-      Visible = _VisibleEx.Value;
-    }
-
-    private DepInput<Boolean> _VisibleEx;
-
-    /// <summary>
-    /// Чтение и запись свойства Control.Visible
-    /// </summary>
-    protected abstract bool ControlVisible { get; set; }
-
-    /// <summary>
-    /// Сюда должен быть присоединен обработчик события Control.VisibleChanged
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
-    protected virtual void ControlVisibleChanged(object sender, EventArgs args)
-    {
-      try
-      {
-        EFPFormProvider FormProvider = BaseProvider.FormProvider;
-        if (FormProvider == null)
-          return; // 09.06.2021. До присоединения к форме - игнорируем
-
-        if (ControlVisible && FormProvider.Form.Visible /* 09.06.2021 */)
-        {
-          FormProvider.FirstReadConfig(); // 04.10.2018. Выполняем предзагрузку секций конфигурации.
-          // 15.10.2018  Но делаем это не из метода OnShown(), так как
-          //             чтение конфигурации может сделать элемент невидимым и получится,
-          //             что Control.Visible=false в процессе OnShown(), что может привести к сбою
-          // 18.10.2018  И только если элемент переходит в видимое состояние, а не скрывается
-
-
-          if (Control.IsHandleCreated && (!Control.IsDisposed))
-            _Visible = ControlVisible; // 15.10.2018. Здесь ControlVisible могло поменяться
-
-          if (_Visible)
-          {
-            UpdateFormProviderState();
-          }
-          if (_VisibleEx != null)
-            _VisibleEx.Value = Visible;
-        }
-      }
-      catch (Exception e)
-      {
-        AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка обработчика Control.VisibleChanged");
-      }
-    }
-
-    /// <summary>
-    /// Добавляет в объект Exception информацию об управляющем элементе.
-    /// Вызывается в блоке catch при перехвате исключения
-    /// </summary>
-    /// <param name="e">Заполняемое исключение</param>
-    protected virtual void AddExceptionInfo(Exception e)
-    {
-      try
-      {
-        e.Data["EFPControlBase.DisplayName"] = this.DisplayName;
-        e.Data["EFPControlBase.GetType()"] = this.GetType().ToString();
-        e.Data["EFPControlBase.ProviderState"] = ProviderState;
-        e.Data["Control.GetType()"] = Control.GetType().ToString();
-        try
-        {
-          e.Data["Control"] = Control.ToString();
-          e.Data["Control.IsDisposed"] = Control.IsDisposed;
-          e.Data["EFPControlBase.ControlVisible"] = ControlVisible;
-          e.Data["EFPControlBase.ControlEnabled"] = ControlEnabled;
-        }
-        catch { }
-
-        try
-        {
-          if (BaseProvider.FormProvider == null)
-            e.Data["FormProvider"] = "null";
-          else
-          {
-            e.Data["Form.GetType()"] = BaseProvider.FormProvider.Form.GetType().ToString();
-            try { e.Data["FormProvider"] = BaseProvider.FormProvider.ToString(); }
-            catch { }
-            e.Data["FormProvider.Modal"] = BaseProvider.FormProvider.Modal;
-            e.Data["FormProvider.Visible"] = BaseProvider.FormProvider.Visible;
-          }
-        }
-        catch { }
-      }
-      catch { }
-    }
-
-    private void InitLabelVisible()
-    {
-      if (Label == null)
-        return;
-      if (Label is Label)
-        Label.Visible = Visible;
-    }
-
-    /// <summary>
-    /// Этот метод вызывается при изменении свойств Control.Visible или Control.Enabled
-    /// Метод переопределяется для производных классов, имеющих Disabled-значения.
-    /// Они должны заменить текущее значение в объекте на заблокированное или обычное.
-    /// Для элементов, имеющих свойство ReadOnly, этот метод должен вызываться при изменении
-    /// свойства
-    /// </summary>
-    protected virtual void VisibleOrEnabledChanged()
-    {
-      if (_EditableEx != null)
-        _EditableEx.OwnerSetValue(Editable);
-
-
-      // 06.04.2018
-      // Mono, в отличие от NetFramework, для TextBox использует ForeColor и BackColor в режиме ReadOnly
-      if (EnvironmentTools.IsMono && NeedsResetControlColorsInMono())
-      {
-        //MessageBox.Show("Editable=" + Editable.ToString(), Control.GetType().ToString());
-        if (Editable)
-        {
-          Control.BackColor = SystemColors.Window;
-          // Метод Validate() установит правильный цвет ForeColor
-        }
-        else
-        {
-          Control.BackColor = SystemColors.Control;
-          Control.ForeColor = SystemColors.ControlText;
-        }
-      }
-
-    }
-
-    private bool NeedsResetControlColorsInMono()
-    {
-      // 06.04.2018
-      // В Mono, почему-то поля ввода по умолчанию имеют не такой цвет как в Windows
-      //if (!EnvironmentTools.IsMono)
-      //  return false;
-
-      if ((Control is ComboBox) || (Control is DateTimePicker) || (Control is ListBox) || (Control is UpDownBase))
-        return true;
-      if (Control is TextBoxBase)
-        //return !((TextBoxBase)Control).ReadOnly;
-        return true;
-      if (Control is UserTextComboBoxBase)
-        //return !((UserTextComboBoxBase)Control).ReadOnly;
-        return true;
-      // Так не работает
-      //if (Control is YearMonthBox)
-      //  return true;
-      //if (Control is YearMonthRangeBox)
-      //  return true;
-
-      return false;
-    }
-
-
-    #endregion
-
     #region IEFPCheckItem Members
 
     internal void ParentProviderChanged()
@@ -691,6 +478,8 @@ namespace AgeyevAV.ExtForms
         case EFPControlProviderState.Detached:
           if (BaseProvider.IsFormVisible && ControlVisible)
             InternalSetProviderState(EFPControlProviderState.Attached);
+          else
+            InitLabelVisible(); // Иначе будут висячие метки
           break;
         case EFPControlProviderState.Disposed:
           return;
@@ -788,7 +577,7 @@ namespace AgeyevAV.ExtForms
             Trace.WriteLine("EFPControl.ProviderState changing from " + oldState.ToString() + " to " + value.ToString() + " failed. Type=" + this.GetType().ToString() + ". DisplayName=" + DisplayName.ToString());
 #endif
 
-          if (value==EFPControlProviderState.Disposed)
+          if (value == EFPControlProviderState.Disposed)
             LogoutTools.LogoutException(e, "Ошибка установки состояния EFPControlProviderState.Disposed");
           else
             throw; // 17.07.2021
@@ -868,7 +657,7 @@ namespace AgeyevAV.ExtForms
       LoadConfig();
 
       PrepareCommandItems(); // 18.09.2018. Должно быть после LoadConfig()
-
+      UpdateEnabledState();
     }
 
     /// <summary>
@@ -938,8 +727,6 @@ namespace AgeyevAV.ExtForms
       if (Attached != null)
         Attached(this, EventArgs.Empty);
 
-      VisibleOrEnabledChanged(); // 06.04.2018
-
       Validate(); // 09.07.2019
 
       if (ToolBarPanel != null)
@@ -947,6 +734,8 @@ namespace AgeyevAV.ExtForms
 
       if (Control.ContainsFocus)
         CommandItems.Active = true; // 05.07.2021
+
+      UpdateVisibleState();
     }
 
     #endregion
@@ -985,7 +774,7 @@ namespace AgeyevAV.ExtForms
         Detached(this, EventArgs.Empty);
 
       SaveConfig();
-      VisibleOrEnabledChanged(); // 23.06.2021
+      UpdateVisibleState();
     }
 
     #endregion
@@ -1017,6 +806,188 @@ namespace AgeyevAV.ExtForms
 
     #endregion
 
+
+    #region Свойство Visible
+
+    /// <summary>
+    /// Видимость управляющего элемента
+    /// Возвращает и устанавливает свойство Visible управляющего элемента
+    /// Установка значения true может оказаться отложенной, если в момент вызова
+    /// один из родительских элементов не является видимым
+    /// </summary>
+    public bool Visible
+    {
+      get { return _Visible; }
+      set
+      {
+        _Visible = value;
+        if (_VisibleEx != null)
+          _VisibleEx.Value = value;
+        ControlVisible = value;
+      }
+    }
+    private bool _Visible;
+
+    /// <summary>
+    /// Расширенное свойство Visible.
+    /// В .Net Framework свойство Control.Visible изменяется, когда изменяется
+    /// видимость одного из родительских элементов (например, саиой формы).
+    /// При этом, когда свойство переключается в false, событие VisibleChanged
+    /// не посылается, поэтому в VisibleEx может оказаться неактуальное значение
+    /// </summary>
+    public DepValue<Boolean> VisibleEx
+    {
+      get
+      {
+        InitVisibleEx();
+        return _VisibleEx;
+      }
+      set
+      {
+        InitVisibleEx();
+        _VisibleEx.Source = value;
+      }
+    }
+
+    private void InitVisibleEx()
+    {
+      if (_VisibleEx == null)
+      {
+        _VisibleEx = new DepInput<Boolean>();
+        _VisibleEx.OwnerInfo = new DepOwnerInfo(this, "VisibleEx");
+        _VisibleEx.Value = Visible;
+        _VisibleEx.ValueChanged += new EventHandler(VisibleEx_ValueChanged);
+      }
+    }
+
+    void VisibleEx_ValueChanged(object sender, EventArgs args)
+    {
+      Visible = _VisibleEx.Value;
+    }
+
+    private DepInput<Boolean> _VisibleEx;
+
+    /// <summary>
+    /// Чтение и запись свойства Control.Visible
+    /// </summary>
+    protected abstract bool ControlVisible { get; set; }
+
+    /// <summary>
+    /// Сюда должен быть присоединен обработчик события Control.VisibleChanged
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
+    protected virtual void ControlVisibleChanged(object sender, EventArgs args)
+    {
+      try
+      {
+        EFPFormProvider FormProvider = BaseProvider.FormProvider;
+        if (FormProvider == null)
+          return; // 09.06.2021. До присоединения к форме - игнорируем
+
+        if (ControlVisible && FormProvider.Form.Visible /* 09.06.2021 */)
+        {
+          FormProvider.FirstReadConfig(); // 04.10.2018. Выполняем предзагрузку секций конфигурации.
+          // 15.10.2018  Но делаем это не из метода OnShown(), так как
+          //             чтение конфигурации может сделать элемент невидимым и получится,
+          //             что Control.Visible=false в процессе OnShown(), что может привести к сбою
+          // 18.10.2018  И только если элемент переходит в видимое состояние, а не скрывается
+
+
+          if (Control.IsHandleCreated && (!Control.IsDisposed))
+            _Visible = ControlVisible; // 15.10.2018. Здесь ControlVisible могло поменяться
+
+          if (_Visible)
+          {
+            UpdateFormProviderState();
+          }
+          if (_VisibleEx != null)
+            _VisibleEx.Value = Visible;
+        }
+
+        UpdateVisibleState();
+      }
+      catch (Exception e)
+      {
+        AddExceptionInfo(e);
+        EFPApp.ShowException(e, "Ошибка обработчика Control.VisibleChanged");
+      }
+    }
+
+    private void InitLabelVisible()
+    {
+      if (Label == null)
+        return;
+      if (Label is Label)
+        Label.Visible = Visible;
+    }
+
+    private bool NeedsResetControlColorsInMono()
+    {
+      // 06.04.2018
+      // В Mono, почему-то поля ввода по умолчанию имеют не такой цвет как в Windows
+      //if (!EnvironmentTools.IsMono)
+      //  return false;
+
+      if ((Control is ComboBox) || (Control is DateTimePicker) || (Control is ListBox) || (Control is UpDownBase))
+        return true;
+      if (Control is TextBoxBase)
+        //return !((TextBoxBase)Control).ReadOnly;
+        return true;
+      if (Control is UserTextComboBoxBase)
+        //return !((UserTextComboBoxBase)Control).ReadOnly;
+        return true;
+      // Так не работает
+      //if (Control is YearMonthBox)
+      //  return true;
+      //if (Control is YearMonthRangeBox)
+      //  return true;
+
+      return false;
+    }
+
+
+    #endregion
+
+    #region Свойство VisibleState
+
+    /// <summary>
+    /// Свойство возвращает true, когда ProviderState=Attached и Visible=true.
+    /// В отличие от основного свойства Visible, это свойство имеет одинаковый "жизненный цикл",
+    /// независимо от способа показа формы и прикрепления к ней управляющего элемента.
+    /// Сначала свойство имеет значение false. Затем, при показе формы, оно приобретает значение true,
+    /// если элемент является видимым. Если свойство Visiblу меняется в процессе показа формы, то VisibleState
+    /// также меняется. Затем, при скрытии элемента или его отключении, свойство переходит в false.
+    /// </summary>
+    public bool VisibleState { get { return ProviderState == EFPControlProviderState.Attached && Visible; } }
+
+    /// <summary>
+    /// Этот метод вызывается при изменении значения свойства VisibleState
+    /// </summary>
+    protected virtual void OnVisibleStateChanged()
+    {
+      InitControlColors();
+      InitLabelVisible();
+      Validate();
+    }
+
+    /// <summary>
+    /// Вызывает метод OnVisibleStateChanged(), если значение свойства VisibleChanged изменилось
+    /// </summary>
+    private void UpdateVisibleState()
+    {
+      if (VisibleState == _PrevVisibleState)
+        return;
+      _PrevVisibleState = VisibleState;
+      OnVisibleStateChanged();
+      if (_EditableEx != null)
+        _EditableEx.OwnerSetValue(Editable);
+    }
+
+    private bool _PrevVisibleState;
+
+    #endregion
+
     #region Свойство Enabled
 
     /// <summary>
@@ -1034,7 +1005,6 @@ namespace AgeyevAV.ExtForms
         if (_EnabledEx != null)
           _EnabledEx.Value = value;
         ControlEnabled = value;
-        VisibleOrEnabledChanged();
         Validate();
       }
     }
@@ -1116,6 +1086,7 @@ namespace AgeyevAV.ExtForms
     {
       try
       {
+        UpdateEnabledState();
         if (_EnabledEx != null)
           _EnabledEx.Value = Enabled;
       }
@@ -1128,16 +1099,49 @@ namespace AgeyevAV.ExtForms
 
     #endregion
 
+    #region Свойство EnabledState
+
+    /// <summary>
+    /// "Доступное" состояние.
+    /// Для большинства управляющих элементов свойство дублирует Enabled.
+    /// Для EFPTextBox и некоторых других возвращает комбинацию Enabled and not ReadOnly.
+    /// </summary>
+    public virtual bool EnabledState { get { return Enabled; } }
+
+    /// <summary>
+    /// Этот метод вызывается при изменении значении свойства EnabledState.
+    /// Переопределенный метод должен обязательно вызывать метод базового класса.
+    /// </summary>
+    protected virtual void OnEnabledStateChanged()
+    {
+      Validate();
+    }
+
+    /// <summary>
+    /// Проверяет, не изменилось ли значение свойства EnabledState, и вызывает метод OnEnabledStateChanged() при необходимости.
+    /// Этот метод должен вызываться из установщика свойства ReadOnly, если свойство есть в производном классе
+    /// </summary>
+    protected void UpdateEnabledState()
+    {
+      if (EnabledState == _PrevEnabledState)
+        return;
+      _PrevEnabledState = EnabledState;
+      OnEnabledStateChanged();
+
+      if (_EditableEx != null)
+        _EditableEx.OwnerSetValue(Editable);
+    }
+
+    private bool _PrevEnabledState;
+
+    #endregion
+
     #region Свойство Editable
 
     /// <summary>
-    /// Свойство возвращает true, если свойства Visible и Enabled установлены
-    /// Для элементов, имеющих свойство ReadOnly, оно должно быть установлено в false
+    /// Свойство возвращает true, если свойства Visible и EnabledState установлены в true.
     /// </summary>
-    public virtual bool Editable
-    {
-      get { return Visible && Enabled; }
-    }
+    public bool Editable { get { return Visible && EnabledState; } }
 
     /// <summary>
     /// Управляемое свойство, возвращающее установку свойств Visible и Enabled
@@ -2009,6 +2013,23 @@ namespace AgeyevAV.ExtForms
     /// </summary>
     protected virtual void InitControlColors()
     {
+      // 06.04.2018
+      // Mono, в отличие от NetFramework, для TextBox использует ForeColor и BackColor в режиме ReadOnly
+      if (EnvironmentTools.IsMono && NeedsResetControlColorsInMono())
+      {
+        //MessageBox.Show("Editable=" + Editable.ToString(), Control.GetType().ToString());
+        if (Editable)
+        {
+          Control.BackColor = SystemColors.Window;
+          // Метод Validate() установит правильный цвет ForeColor
+        }
+        else
+        {
+          Control.BackColor = SystemColors.Control;
+          Control.ForeColor = SystemColors.ControlText;
+        }
+      }
+
       switch (ValidateState)
       {
         case EFPValidateState.Ok:
@@ -2562,6 +2583,50 @@ namespace AgeyevAV.ExtForms
     /// <param name="actionInfo">Информация о выполняемом действии</param>
     public virtual void ReadConfigPart(string Category, CfgPart cfg, EFPConfigActionInfo actionInfo)
     {
+    }
+
+    #endregion
+
+    #region Отладка
+
+    /// <summary>
+    /// Добавляет в объект Exception информацию об управляющем элементе.
+    /// Вызывается в блоке catch при перехвате исключения
+    /// </summary>
+    /// <param name="e">Заполняемое исключение</param>
+    protected virtual void AddExceptionInfo(Exception e)
+    {
+      try
+      {
+        e.Data["EFPControlBase.DisplayName"] = this.DisplayName;
+        e.Data["EFPControlBase.GetType()"] = this.GetType().ToString();
+        e.Data["EFPControlBase.ProviderState"] = ProviderState;
+        e.Data["Control.GetType()"] = Control.GetType().ToString();
+        try
+        {
+          e.Data["Control"] = Control.ToString();
+          e.Data["Control.IsDisposed"] = Control.IsDisposed;
+          e.Data["EFPControlBase.ControlVisible"] = ControlVisible;
+          e.Data["EFPControlBase.ControlEnabled"] = ControlEnabled;
+        }
+        catch { }
+
+        try
+        {
+          if (BaseProvider.FormProvider == null)
+            e.Data["FormProvider"] = "null";
+          else
+          {
+            e.Data["Form.GetType()"] = BaseProvider.FormProvider.Form.GetType().ToString();
+            try { e.Data["FormProvider"] = BaseProvider.FormProvider.ToString(); }
+            catch { }
+            e.Data["FormProvider.Modal"] = BaseProvider.FormProvider.Modal;
+            e.Data["FormProvider.Visible"] = BaseProvider.FormProvider.Visible;
+          }
+        }
+        catch { }
+      }
+      catch { }
     }
 
     #endregion

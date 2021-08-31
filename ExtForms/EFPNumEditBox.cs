@@ -131,19 +131,20 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Инициализация DecimalValue при смене свойств Enabled или ReadOnly
     /// </summary>
-    protected override void VisibleOrEnabledChanged()
+    protected override void OnEnabledStateChanged()
     {
-      base.VisibleOrEnabledChanged();
-      if (AllowDisabledValue)
-        InitValue();
+      base.OnEnabledStateChanged();
+      if (AllowDisabledValue && EnabledState)
+        _HasSavedDecimalValue = true;
+      InitControlValue();
     }
 
     /// <summary>
-    /// Комбинация Visible, Enabled и ReadOnly
+    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
     /// </summary>
-    public override bool Editable
+    public override bool EnabledState
     {
-      get { return Visible && Enabled && (!ReadOnly); }
+      get { return Enabled && (!ReadOnly); }
     }
 
     /// <summary>
@@ -213,24 +214,29 @@ namespace AgeyevAV.ExtForms
       set
       {
         _SavedDecimalValue = value;
-        InitValue();
+        _HasSavedDecimalValue = true;
+        InitControlValue();
       }
     }
 
     private decimal _SavedDecimalValue;
+    private bool _HasSavedDecimalValue;
 
     /// <summary>
     /// Инициализация ControlDecimalValue.
     /// </summary>
-    protected void InitValue()
+    protected void InitControlValue()
     {
       // Не нужно, иначе может не обновляться
       // if (InsideValueChanged)
       //   return;
-      if (IsDisabledValue)
+      if (AllowDisabledValue && (!EnabledState))
         ControlDecimalValue = DisabledDecimalValue;
-      else
+      else if (_HasSavedDecimalValue)
+      {
+        _HasSavedDecimalValue = false;
         ControlDecimalValue = _SavedDecimalValue;
+      }
     }
 
     /// <summary>
@@ -249,19 +255,18 @@ namespace AgeyevAV.ExtForms
         _DecimalValueEx.Source = value;
       }
     }
+    private DepInput<decimal> _DecimalValueEx;
 
     private void InitDecimalValueEx()
     {
       if (_DecimalValueEx == null)
       {
-        _DecimalValueEx = new DepInputWithCheck<decimal>();
+        _DecimalValueEx = new DepInput<decimal>();
         _DecimalValueEx.OwnerInfo = new DepOwnerInfo(this, "DecimalValueEx");
-        _DecimalValueEx.OwnerSetValue(DecimalValue);
-        _DecimalValueEx.CheckValue += new DepInputCheckEventHandler<decimal>(DecimalValueEx_CheckValue);
+        _DecimalValueEx.Value = DecimalValue;
+        _DecimalValueEx.ValueChanged += new EventHandler(DecimalValueEx_ValueChanged);
       }
     }
-
-    private DepInputWithCheck<decimal> _DecimalValueEx;
 
     /// <summary>
     /// Обработчик события значения в управляющем элементе
@@ -300,26 +305,24 @@ namespace AgeyevAV.ExtForms
     protected virtual void OnValueChanged()
     {
       if (_DecimalValueEx != null)
-        _DecimalValueEx.OwnerSetValue(DecimalValue);
+        _DecimalValueEx.Value = DecimalValue;
       if (_IntValueEx != null)
-        _IntValueEx.OwnerSetValue(IntValue);
+        _IntValueEx.Value = IntValue;
       if (_SingleValueEx != null)
-        _SingleValueEx.OwnerSetValue(SingleValue);
+        _SingleValueEx.Value = SingleValue;
       if (_DoubleValueEx != null)
-        _DoubleValueEx.OwnerSetValue(DoubleValue);
+        _DoubleValueEx.Value = DoubleValue;
+
+      if (AllowDisabledValue && EnabledState)
+        _SavedDecimalValue = DecimalValue;
 
       Validate();
       DoSyncValueChanged();
     }
 
-    /// <summary>
-    /// Вызывается, когда изменяется значение "снаружи" элемента
-    /// </summary>
-    void DecimalValueEx_CheckValue(object sender, DepInputCheckEventArgs<decimal> args)
+    void DecimalValueEx_ValueChanged(object sender, EventArgs args)
     {
-      _SavedDecimalValue = args.NewValue;
-      args.Cancel = true;
-      InitValue();
+      DecimalValue = _DecimalValueEx.Value;
     }
 
     /// <summary>
@@ -358,25 +361,22 @@ namespace AgeyevAV.ExtForms
         _IntValueEx.Source = value;
       }
     }
+    private DepInput<int> _IntValueEx;
 
     private void InitIntValueEx()
     {
       if (_IntValueEx == null)
       {
-        _IntValueEx = new DepInputWithCheck<int>();
+        _IntValueEx = new DepInput<int>();
         _IntValueEx.OwnerInfo = new DepOwnerInfo(this, "IntValueEx");
         _IntValueEx.Value = IntValue;
-        _IntValueEx.CheckValue += new DepInputCheckEventHandler<int>(IntValueEx_CheckValue);
+        _IntValueEx.ValueChanged += new EventHandler(IntValueEx_ValueChanged);
       }
     }
 
-    private DepInputWithCheck<int> _IntValueEx;
-
-    void IntValueEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void IntValueEx_ValueChanged(object sender, EventArgs args)
     {
-      _SavedDecimalValue = (decimal)(args.NewValue);
-      args.Cancel = true;
-      InitValue();
+      IntValue = _IntValueEx.Value;
     }
 
     #endregion
@@ -408,25 +408,22 @@ namespace AgeyevAV.ExtForms
         _SingleValueEx.Source = value;
       }
     }
+    private DepInput<float> _SingleValueEx;
 
     private void InitSingleValueEx()
     {
       if (_SingleValueEx == null)
       {
-        _SingleValueEx = new DepInputWithCheck<float>();
+        _SingleValueEx = new DepInput<float>();
         _SingleValueEx.OwnerInfo = new DepOwnerInfo(this, "SingleValueEx");
         _SingleValueEx.Value = SingleValue;
-        _SingleValueEx.CheckValue += new DepInputCheckEventHandler<float>(SingleValueEx_CheckValue);
+        _SingleValueEx.ValueChanged += new EventHandler(SingleValueEx_ValueChanged);
       }
     }
 
-    private DepInputWithCheck<float> _SingleValueEx;
-
-    void SingleValueEx_CheckValue(object sender, DepInputCheckEventArgs<float> args)
+    void SingleValueEx_ValueChanged(object sender, EventArgs args)
     {
-      _SavedDecimalValue = (decimal)(args.NewValue);
-      args.Cancel = true;
-      InitValue();
+      SingleValue = _SingleValueEx.Value;
     }
 
     #endregion
@@ -458,25 +455,22 @@ namespace AgeyevAV.ExtForms
         _DoubleValueEx.Source = value;
       }
     }
+    private DepInput<double> _DoubleValueEx;
 
     private void InitDoubleValueEx()
     {
       if (_DoubleValueEx == null)
       {
-        _DoubleValueEx = new DepInputWithCheck<double>();
+        _DoubleValueEx = new DepInput<double>();
         _DoubleValueEx.OwnerInfo = new DepOwnerInfo(this, "DoubleValueEx");
-        _DoubleValueEx.Value = IntValue;
-        _DoubleValueEx.CheckValue += new DepInputCheckEventHandler<double>(DoubleValueEx_CheckValue);
+        _DoubleValueEx.Value = DoubleValue;
+        _DoubleValueEx.ValueChanged += new EventHandler(DoubleValueEx_ValueChanged);
       }
     }
 
-    private DepInputWithCheck<double> _DoubleValueEx;
-
-    void DoubleValueEx_CheckValue(object sender, DepInputCheckEventArgs<double> args)
+    void DoubleValueEx_ValueChanged(object sender, EventArgs args)
     {
-      _SavedDecimalValue = (decimal)(args.NewValue);
-      args.Cancel = true;
-      InitValue();
+      DoubleValue = _DoubleValueEx.Value;
     }
 
     #endregion
@@ -502,8 +496,7 @@ namespace AgeyevAV.ExtForms
           _DisabledSingleValueEx.Value = DisabledSingleValue;
         if (_DisabledDoubleValueEx != null)
           _DisabledDoubleValueEx.Value = DisabledDoubleValue;
-        if (IsDisabledValue) // 28.07.2015
-          InitValue();
+        InitControlValue();
       }
     }
     private decimal _DisabledDecimalValue;
@@ -525,6 +518,7 @@ namespace AgeyevAV.ExtForms
         _DisabledDecimalValueEx.Source = value;
       }
     }
+    private DepInput<decimal> _DisabledDecimalValueEx;
 
     private void InitDisabledDecimalValueEx()
     {
@@ -536,7 +530,6 @@ namespace AgeyevAV.ExtForms
         _DisabledDecimalValueEx.ValueChanged += new EventHandler(DisabledDecimalValueEx_ValueChanged);
       }
     }
-    private DepInput<decimal> _DisabledDecimalValueEx;
 
     /// <summary>
     /// Вызывается, когда снаружи было изменено свойство DisabledCheckStateEx
@@ -557,18 +550,10 @@ namespace AgeyevAV.ExtForms
         if (value == _AllowDisabledValue)
           return;
         _AllowDisabledValue = value;
-        InitValue();
+        InitControlValue();
       }
     }
     private bool _AllowDisabledValue;
-
-    /// <summary>
-    /// Возвращает true, если в настоящий момент действует "серое" значение DisabledDecimalValue.
-    /// </summary>
-    public bool IsDisabledValue
-    {
-      get { return AllowDisabledValue && ((!Enabled) || ReadOnly); }
-    }
 
     #endregion
 
@@ -599,6 +584,7 @@ namespace AgeyevAV.ExtForms
         _DisabledIntValueEx.Source = value;
       }
     }
+    private DepInput<int> _DisabledIntValueEx;
 
     private void InitDisabledIntValueEx()
     {
@@ -610,8 +596,6 @@ namespace AgeyevAV.ExtForms
         _DisabledIntValueEx.ValueChanged += new EventHandler(DisabledIntValueEx_ValueChanged);
       }
     }
-
-    private DepInput<int> _DisabledIntValueEx;
 
     void DisabledIntValueEx_ValueChanged(object sender, EventArgs args)
     {
@@ -647,6 +631,7 @@ namespace AgeyevAV.ExtForms
         _DisabledSingleValueEx.Source = value;
       }
     }
+    private DepInput<float> _DisabledSingleValueEx;
 
     private void InitDisabledSingleValueEx()
     {
@@ -658,8 +643,6 @@ namespace AgeyevAV.ExtForms
         _DisabledSingleValueEx.ValueChanged += new EventHandler(FDisabledSingleValueEx_ValueChanged);
       }
     }
-
-    private DepInput<float> _DisabledSingleValueEx;
 
     void FDisabledSingleValueEx_ValueChanged(object sender, EventArgs args)
     {
@@ -695,6 +678,7 @@ namespace AgeyevAV.ExtForms
         _DisabledDoubleValueEx.Source = value;
       }
     }
+    private DepInput<double> _DisabledDoubleValueEx;
 
     private void InitDisabledDoubleValueEx()
     {
@@ -706,8 +690,6 @@ namespace AgeyevAV.ExtForms
         _DisabledDoubleValueEx.ValueChanged += new EventHandler(DisabledDoubleValueEx_ValueChanged);
       }
     }
-
-    private DepInput<double> _DisabledDoubleValueEx;
 
     void DisabledDoubleValueEx_ValueChanged(object sender, EventArgs args)
     {
@@ -731,8 +713,7 @@ namespace AgeyevAV.ExtForms
         ControlReadOnly = value;
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-        VisibleOrEnabledChanged();
-        Validate();
+        UpdateEnabledState();
       }
     }
 
@@ -1064,7 +1045,7 @@ namespace AgeyevAV.ExtForms
       set
       {
         InitNullableDecimalValueEx();
-        _NullableDecimalValueEx.Source=value;
+        _NullableDecimalValueEx.Source = value;
       }
     }
     private DepInput<decimal?> _NullableDecimalValueEx;
@@ -1352,8 +1333,8 @@ namespace AgeyevAV.ExtForms
         return;
 
       // Взято из UpDownBase.OnMouseWheel()
-      if ((System.Windows.Forms.Control.ModifierKeys & (Keys.Shift | Keys.Alt)) != 0 || 
-        System.Windows.Forms.Control.MouseButtons != MouseButtons.None) 
+      if ((System.Windows.Forms.Control.ModifierKeys & (Keys.Shift | Keys.Alt)) != 0 ||
+        System.Windows.Forms.Control.MouseButtons != MouseButtons.None)
         return; // Do not scroll when Shift or Alt key is down, or when a mouse button is down.
 
       if (Args2.Delta == 0)
@@ -1361,7 +1342,7 @@ namespace AgeyevAV.ExtForms
 
       if (Args2.Delta > 0)
         Control.UpButton();
-      else 
+      else
         Control.DownButton();
 
       Args2.Handled = true;
@@ -1377,8 +1358,8 @@ namespace AgeyevAV.ExtForms
     protected override decimal ControlDecimalValue
     {
       get { return Control.Value; }
-      set 
-      { 
+      set
+      {
 #if DEBUG
         try
         {

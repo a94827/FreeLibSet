@@ -114,7 +114,18 @@ namespace AgeyevAV.DependedValues
       _InsideSetValue = true;
       try
       {
-        BaseSetValue2(value);
+        if (!IsEqualValues(value, _Value))
+        {
+          _Value = value;
+
+          OnValueChanged();
+          DepInput<T> CurrOutput = FirstOutput;
+          while (CurrOutput != null)
+          {
+            CurrOutput.SetValueChanged();
+            CurrOutput = CurrOutput.NextOutput;
+          }
+        }
       }
       finally
       {
@@ -128,30 +139,13 @@ namespace AgeyevAV.DependedValues
     public bool InsideSetValue { get { return _InsideSetValue; } }
     private bool _InsideSetValue;
 
-    private void BaseSetValue2(T value)
-    {
-      //if (value == null && FValueEx == null)
-      //  return;
-      if (IsEqualValues(value, _Value))
-        return;
-      _Value = value;
-
-      OnValueChanged();
-      DepInput<T> CurrOutput = FirstOutput;
-      while (CurrOutput != null)
-      {
-        CurrOutput.SetValueChanged();
-        CurrOutput = CurrOutput.NextOutput;
-      }
-    }
-
     /// <summary>
     /// Признак того, что значение будет получено позже, если понадобится
     /// </summary>
     private bool _Delayed;
 
     /// <summary>
-    /// Уставливет признак отложенной установки в true.
+    /// Уставливает признак отложенной установки в true.
     /// Посылает событие ValueChanged текущему объекту и зависимым объектам
     /// </summary>
     protected void SetDelayed()
@@ -714,7 +708,7 @@ namespace AgeyevAV.DependedValues
     /// <param name="owner">Владелец</param>
     public DepInputCheckEventArgs(DepValue<T> owner)
     {
-      FOwner = owner;
+      _Owner = owner;
     }
 
     #endregion
@@ -731,9 +725,9 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Получить текущее значение, действующее до установки
     /// </summary>
-    public T CurrValue { get { return FOwner.Value; } }
+    public T CurrValue { get { return _Owner.Value; } }
 
-    private readonly DepValue<T> FOwner;
+    private readonly DepValue<T> _Owner;
 
     #endregion
   }
@@ -764,7 +758,7 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     public DepInputWithCheck()
     {
-      CheckValueArgs = new DepInputCheckEventArgs<T>(this);
+      _CheckValueArgs = new DepInputCheckEventArgs<T>(this);
     }
 
     #endregion
@@ -777,7 +771,7 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     public event DepInputCheckEventHandler<T> CheckValue;
 
-    private DepInputCheckEventArgs<T> CheckValueArgs; // чтобы каждый раз не создавать
+    private DepInputCheckEventArgs<T> _CheckValueArgs; // чтобы каждый раз не создавать
 
     #endregion
 
@@ -794,12 +788,12 @@ namespace AgeyevAV.DependedValues
 
       if (CheckValue != null)
       {
-        CheckValueArgs.NewValue = value;
-        CheckValueArgs.Cancel = false;
-        CheckValue(this, CheckValueArgs);
-        if (CheckValueArgs.Cancel)
+        _CheckValueArgs.NewValue = value;
+        _CheckValueArgs.Cancel = false;
+        CheckValue(this, _CheckValueArgs);
+        if (_CheckValueArgs.Cancel)
           return;
-        value = CheckValueArgs.NewValue;
+        value = _CheckValueArgs.NewValue;
       }
 
       base.DoSetValue(value);

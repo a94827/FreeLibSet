@@ -1790,9 +1790,9 @@ namespace AgeyevAV.ExtForms.FIAS
     /// <summary>
     /// ¬озвращает true, если установлены свойства Visible и Enabled равны true, а ReadOnly=false
     /// </summary>
-    public override bool Editable
+    public override bool EnabledState
     {
-      get { return Enabled && Visible && (!ReadOnly); }
+      get { return Enabled && (!ReadOnly); }
     }
 
     /// <summary>
@@ -1809,7 +1809,7 @@ namespace AgeyevAV.ExtForms.FIAS
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
 
-        VisibleOrEnabledChanged();
+        UpdateEnabledState();
 
         efpPaste.Enabled = !value; // 11.03.2021
         _CmdClear.Enabled = !value;

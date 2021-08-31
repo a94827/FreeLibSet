@@ -50,6 +50,7 @@ namespace AgeyevAV.ExtForms
     public EFPCheckBox(EFPBaseProvider baseProvider, CheckBox control)
       : base(baseProvider, control, false)
     {
+      _SavedCheckState = control.CheckState;
       _AllowDisabledCheckState = false;
       _DisabledCheckState = CheckState.Unchecked;
 
@@ -64,182 +65,14 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Инициализация "серого" значения
     /// </summary>
-    protected override void VisibleOrEnabledChanged()
+    protected override void OnEnabledStateChanged()
     {
-      base.VisibleOrEnabledChanged();
-      if (AllowDisabledCheckState)
-        InitCheckState();
+      base.OnEnabledStateChanged();
+      if (AllowDisabledCheckState && EnabledState)
+        _HasSavedCheckState = true;
+      InitControlCheckState();
     }
 
-
-    #endregion
-
-    #region Свойство Checked
-
-    /// <summary>
-    /// Доступ к CheckedEx.ValueEx без принудительного создания объекта
-    /// </summary>
-    public bool Checked
-    {
-      get { return Control.Checked; }
-      set
-      {
-        CheckState = value ? CheckState.Checked : CheckState.Unchecked;
-      }
-    }
-
-    /// <summary>
-    /// Свойство CheckedEx
-    /// </summary>
-    public DepValue<Boolean> CheckedEx
-    {
-      get
-      {
-        InitCheckedEx();
-        return _CheckedEx;
-      }
-      set
-      {
-        InitCheckedEx();
-        _CheckedEx.Source = value;
-      }
-    }
-
-    private void InitCheckedEx()
-    {
-      if (_CheckedEx == null)
-      {
-        _CheckedEx = new DepInputWithCheck<bool>();
-        _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
-        _CheckedEx.OwnerSetValue(Checked);
-        _CheckedEx.CheckValue += new DepInputCheckEventHandler<bool>(CheckedEx_CheckValue);
-      }
-    }
-
-    private DepInputWithCheck<Boolean> _CheckedEx;
-
-    /// <summary>
-    /// Вызывается, когда изменяется значение "снаружи" элемента
-    /// </summary>
-    void CheckedEx_CheckValue(object sender, DepInputCheckEventArgs<bool> args)
-    {
-      _SavedCheckState = args.NewValue ? CheckState.Checked : CheckState.Unchecked;
-      args.Cancel = true;
-      InitCheckState();
-    }
-
-    #endregion
-
-    #region Свойство CheckState
-
-    /// <summary>
-    /// Возвращает актуальное состояние элемента CheckBox.CheckState.
-    /// При установке свойства Control.CheckState не устанавливается, если Enabled=false
-    /// и AllowDisabledState=true. В этом случае значение запоминается и будет 
-    /// использовано при переходе в разрешенное состояние.
-    /// </summary>
-    public CheckState CheckState
-    {
-      get { return Control.CheckState; }
-      set
-      {
-        _SavedCheckState = value;
-        InitCheckState();
-      }
-    }
-
-    private CheckState _SavedCheckState;
-
-    private void InitCheckState()
-    {
-      // Не нужно, иначе может не обновляться
-      // if (InsideCheckStateChanged)
-      //   return;
-      if (IsDisabledCheckState)
-        Control.CheckState = DisabledCheckState;
-      else
-        Control.CheckState = _SavedCheckState;
-    }
-
-    /// <summary>
-    /// Управляемое свойство CheckState
-    /// </summary>
-    public DepValue<CheckState> CheckStateEx
-    {
-      get
-      {
-        InitCheckStateEx();
-        return _CheckStateEx;
-      }
-      set
-      {
-        InitCheckStateEx();
-        _CheckStateEx.Source = value;
-      }
-    }
-
-    private void InitCheckStateEx()
-    {
-      if (_CheckStateEx == null)
-      {
-        _CheckStateEx = new DepInputWithCheck<CheckState>();
-        _CheckStateEx.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx");
-        _CheckStateEx.OwnerSetValue(CheckState);
-        _CheckStateEx.CheckValue += new DepInputCheckEventHandler<CheckState>(CheckStateEx_CheckValue);
-      }
-    }
-
-    private DepInputWithCheck<CheckState> _CheckStateEx;
-
-    private void Control_CheckStateChanged(object sender, EventArgs args)
-    {
-      try
-      {
-        if (!_InsideCheckStateChanged)
-        {
-          _InsideCheckStateChanged = true;
-          try
-          {
-            OnCheckStateChanged();
-          }
-          finally
-          {
-            _InsideCheckStateChanged = false;
-          }
-        }
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, "Ошибка обработчика CheckBox.CheckStateChanged");
-      }
-    }
-
-    private bool _InsideCheckStateChanged;
-
-    /// <summary>
-    /// Метод вызывается при изменении состояния флажка в управляющем элементе.
-    /// При переопределении обязательно должен вызываться базовый метод
-    /// </summary>
-    protected virtual void OnCheckStateChanged()
-    {
-      if (_CheckStateEx != null)
-        _CheckStateEx.OwnerSetValue(Control.CheckState);
-      if (_CheckedEx != null)
-        _CheckedEx.OwnerSetValue(Control.Checked);
-
-      Validate();
-      //DoSyncValueChanged();
-    }
-
-    /// <summary>
-    /// Вызывается, когда изменяется значение "снаружи" элемента
-    /// </summary>
-    void CheckStateEx_CheckValue(object sender, DepInputCheckEventArgs<CheckState> args)
-    {
-      _SavedCheckState = args.NewValue;
-      args.Cancel = true;
-      InitCheckState();
-    }
 
     #endregion
 
@@ -279,7 +112,7 @@ namespace AgeyevAV.ExtForms
         _ThreeStateEx = new DepInput<Boolean>();
         _ThreeStateEx.OwnerInfo = new DepOwnerInfo(this, "ThreeStateEx");
         _ThreeStateEx.Value = ThreeState;
-        _ThreeStateEx.ValueChanged += new EventHandler(_ThreeStateEx_ValueChanged);
+        _ThreeStateEx.ValueChanged += new EventHandler(ThreeStateEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _ThreeStateEx;
@@ -287,85 +120,176 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Вызывается, когда изменяется значение "снаружи" элемента
     /// </summary>
-    private void _ThreeStateEx_ValueChanged(object sender, EventArgs args)
+    private void ThreeStateEx_ValueChanged(object sender, EventArgs args)
     {
       ThreeState = _ThreeStateEx.Value;
     }
 
     #endregion
 
-    #region Свойство DisabledChecked
+    #region Свойство CheckState
 
     /// <summary>
-    /// Обращение к DisabledCheckedEx.ValueEx без принудительного создания объекта
-    /// По умолчанию - false
+    /// Возвращает актуальное состояние элемента CheckBox.CheckState.
+    /// При установке свойства Control.CheckState не устанавливается, если Enabled=false
+    /// и AllowDisabledState=true. В этом случае значение запоминается и будет 
+    /// использовано при переходе в разрешенное состояние.
     /// </summary>
-    public bool DisabledChecked
+    public CheckState CheckState
+    {
+      get { return Control.CheckState; }
+      set
+      {
+        _HasSavedCheckState = true;
+        _SavedCheckState = value;
+        InitControlCheckState();
+      }
+    }
+
+    private CheckState _SavedCheckState;
+    private bool _HasSavedCheckState;
+
+    private void InitControlCheckState()
+    {
+      // Не нужно, иначе может не обновляться
+      // if (InsideCheckStateChanged)
+      //   return;
+      if (AllowDisabledCheckState && (!EnabledState))
+        Control.CheckState = DisabledCheckState;
+      else if (_HasSavedCheckState)
+      {
+        _HasSavedCheckState = false;
+        Control.CheckState = _SavedCheckState;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство CheckState
+    /// </summary>
+    public DepValue<CheckState> CheckStateEx
     {
       get
       {
-        return DisabledCheckState != CheckState.Unchecked;
+        InitCheckStateEx();
+        return _CheckStateEx;
       }
       set
       {
-        DisabledCheckState = value ? CheckState.Checked : CheckState.Unchecked;
+        InitCheckStateEx();
+        _CheckStateEx.Source = value;
+      }
+    }
+
+    private void InitCheckStateEx()
+    {
+      if (_CheckStateEx == null)
+      {
+        _CheckStateEx = new DepInput<CheckState>();
+        _CheckStateEx.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx");
+        _CheckStateEx.Value = CheckState;
+        _CheckStateEx.ValueChanged += new EventHandler(CheckStateEx_ValueChanged);
+      }
+    }
+
+    private DepInput<CheckState> _CheckStateEx;
+
+    private void Control_CheckStateChanged(object sender, EventArgs args)
+    {
+      try
+      {
+        if (!_InsideCheckStateChanged)
+        {
+          _InsideCheckStateChanged = true;
+          try
+          {
+            OnCheckStateChanged();
+          }
+          finally
+          {
+            _InsideCheckStateChanged = false;
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        EFPApp.ShowException(e, "Ошибка обработчика CheckBox.CheckStateChanged");
+      }
+    }
+
+    private bool _InsideCheckStateChanged;
+
+    /// <summary>
+    /// Метод вызывается при изменении состояния флажка в управляющем элементе.
+    /// При переопределении обязательно должен вызываться базовый метод
+    /// </summary>
+    protected virtual void OnCheckStateChanged()
+    {
+      if (_CheckStateEx != null)
+        _CheckStateEx.Value = CheckState;
+      if (_CheckedEx != null)
+        _CheckedEx.Value = Checked;
+
+      if (AllowDisabledCheckState && EnabledState)
+        _SavedCheckState = Control.CheckState;
+
+      Validate();
+      //DoSyncValueChanged();
+    }
+
+    void CheckStateEx_ValueChanged(object sender, EventArgs args)
+    {
+      CheckState = _CheckStateEx.Value;
+    }
+
+    #endregion
+
+    #region Свойство Checked
+
+    /// <summary>
+    /// Доступ к CheckedEx.ValueEx без принудительного создания объекта
+    /// </summary>
+    public bool Checked
+    {
+      get { return Control.Checked; }
+      set
+      {
+        CheckState = value ? CheckState.Checked : CheckState.Unchecked;
       }
     }
 
     /// <summary>
-    /// Этот текст замещает свойство CheckedEx, когда EnabledEx=false 
-    /// Свойство действует при установленном свойстве AllowDisabledChecked
+    /// Свойство CheckedEx
     /// </summary>
-    public DepValue<Boolean> DisabledCheckedEx
+    public DepValue<Boolean> CheckedEx
     {
       get
       {
-        InitDisabledCheckedEx();
-        return _DisabledCheckedEx;
+        InitCheckedEx();
+        return _CheckedEx;
       }
       set
       {
-        InitDisabledCheckedEx();
-        _DisabledCheckedEx.Source = value;
+        InitCheckedEx();
+        _CheckedEx.Source = value;
       }
     }
 
-    private void InitDisabledCheckedEx()
+    private void InitCheckedEx()
     {
-      if (_DisabledCheckedEx == null)
+      if (_CheckedEx == null)
       {
-        _DisabledCheckedEx = new DepInput<Boolean>();
-        _DisabledCheckedEx.OwnerInfo = new DepOwnerInfo(this, "DisabledCheckedEx");
-        _DisabledCheckedEx.Value = DisabledChecked;
-        _DisabledCheckedEx.ValueChanged += new EventHandler(DisabledCheckedEx_ValueChanged);
+        _CheckedEx = new DepInput<bool>();
+        _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
+        _CheckedEx.Value = Checked;
+        _CheckedEx.ValueChanged += new EventHandler(CheckedEx_ValueChanged);
       }
     }
-    private DepInput<Boolean> _DisabledCheckedEx;
 
-    /// <summary>
-    /// Вызывается, когда снаружи было изменено свойство DisabledCheckedEx
-    /// </summary>
-    private void DisabledCheckedEx_ValueChanged(object sender, EventArgs args)
-    {
-      DisabledChecked = _DisabledCheckedEx.Value;
-    }
+    private DepInput<bool> _CheckedEx;
 
-    /// <summary>
-    /// Разрешает использование свойства DisabledChecked.
-    /// Это свойство совпадает с AllowDisabledCheckState.
-    /// </summary>
-    public bool AllowDisabledChecked
+    void CheckedEx_ValueChanged(object sender, EventArgs args)
     {
-      get { return AllowDisabledCheckState; }
-      set { AllowDisabledCheckState = value; }
-    }
-
-    /// <summary>
-    /// Возвращает true, если в настоящий момент в действует DisabledCheckedEx
-    /// </summary>
-    public bool IsDisabledChecked
-    {
-      get { return AllowDisabledChecked && (!Enabled); }
+      Checked = _CheckedEx.Value;
     }
 
     #endregion
@@ -387,8 +311,7 @@ namespace AgeyevAV.ExtForms
           _DisabledCheckStateEx.Value = value;
         if (_DisabledCheckedEx != null)
           _DisabledCheckedEx.Value = DisabledChecked;
-        if (IsDisabledCheckState) // 28.07.2015
-          InitCheckState();
+        InitControlCheckState();
       }
     }
     private CheckState _DisabledCheckState;
@@ -442,17 +365,71 @@ namespace AgeyevAV.ExtForms
         if (value == _AllowDisabledCheckState)
           return;
         _AllowDisabledCheckState = value;
-        InitCheckState();
+        InitControlCheckState();
       }
     }
     private bool _AllowDisabledCheckState;
 
+    #endregion
+
+    #region Свойство DisabledChecked
+
     /// <summary>
-    /// Возвращает true, если в настоящий момент действует значение DisabledCheckState
+    /// Обращение к DisabledCheckedEx.ValueEx без принудительного создания объекта
+    /// По умолчанию - false
     /// </summary>
-    public bool IsDisabledCheckState
+    public bool DisabledChecked
     {
-      get { return AllowDisabledCheckState && (!Enabled); }
+      get { return DisabledCheckState != CheckState.Unchecked; }
+      set { DisabledCheckState = value ? CheckState.Checked : CheckState.Unchecked; }
+    }
+
+    /// <summary>
+    /// Этот текст замещает свойство CheckedEx, когда EnabledEx=false 
+    /// Свойство действует при установленном свойстве AllowDisabledChecked
+    /// </summary>
+    public DepValue<Boolean> DisabledCheckedEx
+    {
+      get
+      {
+        InitDisabledCheckedEx();
+        return _DisabledCheckedEx;
+      }
+      set
+      {
+        InitDisabledCheckedEx();
+        _DisabledCheckedEx.Source = value;
+      }
+    }
+
+    private void InitDisabledCheckedEx()
+    {
+      if (_DisabledCheckedEx == null)
+      {
+        _DisabledCheckedEx = new DepInput<Boolean>();
+        _DisabledCheckedEx.OwnerInfo = new DepOwnerInfo(this, "DisabledCheckedEx");
+        _DisabledCheckedEx.Value = DisabledChecked;
+        _DisabledCheckedEx.ValueChanged += new EventHandler(DisabledCheckedEx_ValueChanged);
+      }
+    }
+    private DepInput<Boolean> _DisabledCheckedEx;
+
+    /// <summary>
+    /// Вызывается, когда снаружи было изменено свойство DisabledCheckedEx
+    /// </summary>
+    private void DisabledCheckedEx_ValueChanged(object sender, EventArgs args)
+    {
+      DisabledChecked = _DisabledCheckedEx.Value;
+    }
+
+    /// <summary>
+    /// Разрешает использование свойства DisabledChecked.
+    /// Это свойство совпадает с AllowDisabledCheckState.
+    /// </summary>
+    public bool AllowDisabledChecked
+    {
+      get { return AllowDisabledCheckState; }
+      set { AllowDisabledCheckState = value; }
     }
 
     #endregion

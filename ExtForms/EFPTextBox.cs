@@ -280,7 +280,7 @@ namespace AgeyevAV.ExtForms
     {
       _AllowDisabledText = false;
       _DisabledText = String.Empty;
-      _SavedText = String.Empty;
+      _SavedText = Control.Text;
       _CanBeEmpty = true;
       if (!DesignMode)
         Control.TextChanged += new EventHandler(Control_TextChanged);
@@ -354,11 +354,12 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Ицициализация текста при смене состояния блокировки элемента
     /// </summary>
-    protected override void VisibleOrEnabledChanged()
+    protected override void OnEnabledStateChanged()
     {
-      base.VisibleOrEnabledChanged();
-      if (AllowDisabledText)
-        InitText();
+      base.OnEnabledStateChanged();
+      if (AllowDisabledText && EnabledState)
+        _HasSavedText = true;
+      InitControlText();
     }
 
     /// <summary>
@@ -456,24 +457,29 @@ namespace AgeyevAV.ExtForms
       set
       {
         _SavedText = value;
-        InitText();
+        _HasSavedText = true;
+        InitControlText();
       }
     }
 
     private string _SavedText;
+    private bool _HasSavedText;
 
     /// <summary>
     /// Установка свойства ControlText
     /// </summary>
-    protected void InitText()
+    protected void InitControlText()
     {
       // Не нужно, иначе может не обновляться
       //if (InsideTextChanged)
       //  return;
-      if (IsDisabledText)
-        ControlText = DisabledText;
-      else
-        ControlText = _SavedText;
+      if (AllowDisabledText && (!EnabledState))
+        Control.Text = DisabledText;
+      else if (_HasSavedText)
+      {
+        _HasSavedText = false;
+        Control.Text = _SavedText;
+      }
     }
 
     /// <summary>
@@ -492,19 +498,23 @@ namespace AgeyevAV.ExtForms
         _TextEx.Source = value;
       }
     }
+    private DepInput<string> _TextEx;
 
     private void InitTextEx()
     {
       if (_TextEx == null)
       {
-        _TextEx = new DepInputWithCheck<string>();
+        _TextEx = new DepInput<string>();
         _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
-        _TextEx.OwnerSetValue(Text);
-        _TextEx.CheckValue += new DepInputCheckEventHandler<string>(TextEx_CheckValue);
+        _TextEx.Value = Text;
+        _TextEx.ValueChanged += new EventHandler(TextEx_ValueChanged);
       }
     }
 
-    private DepInputWithCheck<string> _TextEx;
+    void TextEx_ValueChanged(object sender, EventArgs args)
+    {
+      Text = _TextEx.Value;
+    }
 
     private void Control_TextChanged(object sender, EventArgs args)
     {
@@ -539,20 +549,13 @@ namespace AgeyevAV.ExtForms
     protected virtual void OnTextChanged()
     {
       if (_TextEx != null)
-        _TextEx.OwnerSetValue(ControlText);
+        _TextEx.Value = Text;
+
+      if (AllowDisabledText && EnabledState)
+        _SavedText = Text;
 
       Validate();
       DoSyncValueChanged();
-    }
-
-    /// <summary>
-    /// Вызывается, когда изменяется значение "снаружи" элемента
-    /// </summary>
-    void TextEx_CheckValue(object sender, DepInputCheckEventArgs<string> args)
-    {
-      _SavedText = args.NewValue;
-      args.Cancel = true;
-      InitText();
     }
 
     /// <summary>
@@ -604,8 +607,7 @@ namespace AgeyevAV.ExtForms
         _DisabledText = value;
         if (_DisabledTextEx != null)
           _DisabledTextEx.Value = value;
-        if (IsDisabledText) // 28.07.2015
-          InitText();
+        InitControlText();
       }
     }
     private string _DisabledText;
@@ -661,20 +663,10 @@ namespace AgeyevAV.ExtForms
         if (value == _AllowDisabledText)
           return;
         _AllowDisabledText = value;
-        InitText();
+        InitControlText();
       }
     }
     private bool _AllowDisabledText;
-
-    /// <summary>
-    /// Возвращает true, если в настоящий момент в действует свойство DisabledText,
-    /// то есть AllowDisabledText=true и Enabled=false.
-    /// Переопределяется для элементов, имеющих свойство ReadOnly.
-    /// </summary>
-    public virtual bool IsDisabledText
-    {
-      get { return AllowDisabledText && (!Enabled); }
-    }
 
     #endregion
 
@@ -1109,11 +1101,11 @@ namespace AgeyevAV.ExtForms
     #region Переопределяемые методы
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Visible и Enabled, а ReadOnly=false
+    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
     /// </summary>
-    public override bool Editable
+    public override bool EnabledState
     {
-      get { return Enabled && Visible && (!ReadOnly); }
+      get { return Enabled && (!ReadOnly); }
     }
 
     /// <summary>
@@ -1148,10 +1140,7 @@ namespace AgeyevAV.ExtForms
 
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-        if (AllowDisabledText)
-          InitText();
-        VisibleOrEnabledChanged();
-        Validate();
+        UpdateEnabledState();
       }
     }
 
@@ -1220,13 +1209,6 @@ namespace AgeyevAV.ExtForms
 
     #region Свойство DisabledText
 
-    /// <summary>
-    /// Возвращает true, если в настоящий момент в редакторе показан DisabledText
-    /// </summary>
-    public override bool IsDisabledText
-    {
-      get { return AllowDisabledText && ((!Enabled) || ReadOnly); }
-    }
 
     #endregion
   }
@@ -1409,11 +1391,11 @@ namespace AgeyevAV.ExtForms
     }
 
     /// <summary>
-        /// 02.09.2015
-        /// Проверяем все сепараторы новой строки, а не только Environment.NewLine.
-        /// Сначала длинные, затем, короткие
-        /// </summary>
-    private static readonly string[] NewLineSeps = new string[] { "\r\n", "\r\n", "\n", "\r" };
+    /// 02.09.2015
+    /// Проверяем все сепараторы новой строки, а не только Environment.NewLine.
+    /// Сначала длинные, затем, короткие
+    /// </summary>
+    private static readonly string[] NewLineSeps = new string[] { "\r\n", "\r\n", "\n" , "\r" };
 
     internal static void GetCurrentRC(string text, int pos, out int row, out int column)
     {
