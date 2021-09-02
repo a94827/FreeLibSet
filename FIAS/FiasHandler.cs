@@ -2031,8 +2031,12 @@ namespace AgeyevAV.FIAS
       if (address == null)
         throw new ArgumentNullException("address");
 #endif
-
-      sb.Append(address.PostalCode);
+      if (!String.IsNullOrEmpty(address.PostalCode))
+      {
+        sb.Append(address.PostalCode);
+        if (address.NameBottomLevel != FiasLevel.Unknown)
+          sb.Append(", ");
+      }
       GetTextWithoutPostalCode(sb, address);
     }
 
@@ -2063,17 +2067,13 @@ namespace AgeyevAV.FIAS
         throw new ArgumentNullException("address");
 #endif
 
-      address.AddPartToString(sb, FiasLevel.Region, FiasAbbreviationPlace.AfterName);
-      address.AddPartToString(sb, FiasLevel.District, FiasAbbreviationPlace.AfterName);
-      address.AddPartToString(sb, FiasLevel.City, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.Village, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.PlanningStructure, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.Street, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.House, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.Building, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.Structure, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.Flat, FiasAbbreviationPlace.BeforeName);
-      address.AddPartToString(sb, FiasLevel.Room, FiasAbbreviationPlace.BeforeName);
+      // Нельзя сразу использовать sb, т.к. он может быть непустой.
+      // При записи компонентов добавляется запятая
+      if (_InternalSB == null)
+        _InternalSB = new StringBuilder();
+      _InternalSB.Length = 0;
+      GetComponentTextAt(address, FiasLevel.Region);
+      sb.Append(_InternalSB);
     }
 
     #endregion
@@ -2196,16 +2196,16 @@ namespace AgeyevAV.FIAS
           switch (level)
           {
             case FiasLevel.House:
-              GetComponentNameAndAbbr(address, FiasLevel.House);
-              GetComponentNameAndAbbr(address, FiasLevel.Building);
-              GetComponentNameAndAbbr(address, FiasLevel.Structure);
+              GetComponentNameAndAbbreviation(address, FiasLevel.House);
+              GetComponentNameAndAbbreviation(address, FiasLevel.Building);
+              GetComponentNameAndAbbreviation(address, FiasLevel.Structure);
               break;
             case FiasLevel.Room:
-              GetComponentNameAndAbbr(address, FiasLevel.Flat);
-              GetComponentNameAndAbbr(address, FiasLevel.Room);
+              GetComponentNameAndAbbreviation(address, FiasLevel.Flat);
+              GetComponentNameAndAbbreviation(address, FiasLevel.Room);
               break;
             default:
-              GetComponentNameAndAbbr(address, level);
+              GetComponentNameAndAbbreviation(address, level);
               break;
           }
           break;
@@ -2214,13 +2214,13 @@ namespace AgeyevAV.FIAS
           switch (level)
           {
             case FiasLevel.House:
-              GetComponentNameAndAbbr(address.GetName(FiasLevel.House), String.Empty, FiasLevel.House);
-              GetComponentNameAndAbbr(address, FiasLevel.Building);
-              GetComponentNameAndAbbr(address, FiasLevel.Structure);
+              GetComponentNameAndAbbreviation(address.GetName(FiasLevel.House), String.Empty, FiasLevel.House);
+              GetComponentNameAndAbbreviation(address, FiasLevel.Building);
+              GetComponentNameAndAbbreviation(address, FiasLevel.Structure);
               break;
             case FiasLevel.Room:
-              GetComponentNameAndAbbr(address.GetName(FiasLevel.Flat), String.Empty, FiasLevel.Flat);
-              GetComponentNameAndAbbr(address, FiasLevel.Room);
+              GetComponentNameAndAbbreviation(address.GetName(FiasLevel.Flat), String.Empty, FiasLevel.Flat);
+              GetComponentNameAndAbbreviation(address, FiasLevel.Room);
               break;
             default:
               _InternalSB.Append(address.GetName(level));
@@ -2306,10 +2306,10 @@ namespace AgeyevAV.FIAS
     private void GetComponentTextAt(FiasAddress address, FiasLevel topLevel)
     {
       for (int i = FiasTools.AllLevelIndexer.IndexOf(topLevel); i < FiasTools.AllLevels.Length; i++)
-        GetComponentNameAndAbbr(address, FiasTools.AllLevels[i]);
+        GetComponentNameAndAbbreviation(address, FiasTools.AllLevels[i]);
     }
 
-    private void GetComponentNameAndAbbr(FiasAddress address, FiasLevel level)
+    private void GetComponentNameAndAbbreviation(FiasAddress address, FiasLevel level)
     {
       string nm = address.GetName(level);
       string aoType = address.GetAOType(level);
@@ -2321,37 +2321,81 @@ namespace AgeyevAV.FIAS
           abbr = String.Empty; // 05.10.2020
       }
 
-      GetComponentNameAndAbbr(nm, abbr, level);
+      GetComponentNameAndAbbreviation(nm, abbr, level);
     }
-    private void GetComponentNameAndAbbr(string nm, string abbr, FiasLevel level)
+    private void GetComponentNameAndAbbreviation(string name, string abbr, FiasLevel level)
     {
-      if (String.IsNullOrEmpty(nm))
+      if (String.IsNullOrEmpty(name))
         return;
       if (_InternalSB.Length > 0)
         _InternalSB.Append(", ");
-      FiasAbbreviationPlace place = GetAbbreviationPlace(level, abbr);
+
+      if (GetComponentNameAndAbbreviationSpecialCases(name, abbr, level))
+        return;
+
+      FiasAOTypePlace place = GetAOTypePlace(level, name, abbr, FiasAOTypeMode.Abbreviation);
 
       if (String.IsNullOrEmpty(abbr))
-        place = FiasAbbreviationPlace.None;
+        place = FiasAOTypePlace.None;
 
       switch (place)
       {
-        case FiasAbbreviationPlace.AfterName:
-          _InternalSB.Append(nm);
+        case FiasAOTypePlace.AfterName:
+          _InternalSB.Append(name);
           _InternalSB.Append(" ");
           _InternalSB.Append(abbr);
           break;
-        case FiasAbbreviationPlace.BeforeName:
+        case FiasAOTypePlace.BeforeName:
           _InternalSB.Append(abbr);
+          if (abbr[abbr.Length - 1] != '.' && AOTypes.IsAbbreviationDotRequired(abbr, level))
+            _InternalSB.Append('.'); // 02.09.2021
           _InternalSB.Append(" ");
-          _InternalSB.Append(nm);
+          _InternalSB.Append(name);
           break;
-        case FiasAbbreviationPlace.None:
-          _InternalSB.Append(nm);
+        case FiasAOTypePlace.None:
+          _InternalSB.Append(name);
           break;
         default:
           throw new BugException("place=" + place.ToString());
       }
+    }
+
+    private bool GetComponentNameAndAbbreviationSpecialCases(string name, string abbr, FiasLevel level)
+    {
+      int p;
+
+      switch (abbr)
+      { 
+        case "линия":
+          p = name.IndexOf("-я ");
+          if (p >= 0)
+          {
+            // Город Санкт-Петербург, линия "14-я В.О." -> 14-я линия В.О.
+
+            _InternalSB.Append(name.Substring(0, p + 2)); // включая "-я", но без пробела
+            _InternalSB.Append(" линия");
+            _InternalSB.Append(name.Substring(p + 2)); // начиная с пробела
+            return true;
+          }
+          if (name.EndsWith("-я"))
+          {
+            // Город Санкт-Петербург, линия "сдт Ленмашзавод 1-я" -> сдт Ленмашзавод 1-я линия
+            _InternalSB.Append(name);
+            _InternalSB.Append(" линия");
+            return true;
+          }
+          // Город Санкт-Петербург, линия "Фруктовая (Апраксин двор)" -> Фруктовая линия (Апраксин двор)
+          p = name.IndexOf("я (");
+          if (p >= 0)
+          {
+            _InternalSB.Append(name.Substring(0, p + 1)); // без пробела
+            _InternalSB.Append(" линия");
+            _InternalSB.Append(name.Substring(p + 1));
+            return true;
+          }
+          break;
+      }
+      return false;
     }
 
     /// <summary>
@@ -2359,19 +2403,26 @@ namespace AgeyevAV.FIAS
     /// Например, сокращение "р-н" должно идти после наименования, а "г."- до наименования
     /// </summary>
     /// <param name="level">Уровень адресообразующего элемента</param>
-    /// <param name="abbr">Сокращение типа</param>
+    /// <param name="name">Именная часть адресного объекта</param>
+    /// <param name="aoType">Сокращение или типа адресного объекта</param>
+    /// <param name="aoTypeMode">Тип или сокращение в <paramref name="aoType"/>?</param>
     /// <returns>Положение сокращения относительно наименования</returns>
-    public FiasAbbreviationPlace GetAbbreviationPlace(FiasLevel level, string abbr)
+    public FiasAOTypePlace GetAOTypePlace(FiasLevel level, string name, string aoType, FiasAOTypeMode aoTypeMode)
     {
-      if (String.IsNullOrEmpty(abbr))
-        return FiasAbbreviationPlace.None;
+      if (String.IsNullOrEmpty(aoType))
+        return FiasAOTypePlace.None;
       switch (level)
       {
         case FiasLevel.Region:
         case FiasLevel.District:
-          return FiasAbbreviationPlace.AfterName;
+          return FiasAOTypePlace.AfterName;
         default:
-          return FiasAbbreviationPlace.BeforeName;
+          switch (aoType.ToUpperInvariant())
+          { 
+            case "КМ":
+              return FiasAOTypePlace.AfterName;
+          }
+          return FiasAOTypePlace.BeforeName;
       }
     }
 

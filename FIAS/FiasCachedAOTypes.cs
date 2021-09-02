@@ -422,6 +422,12 @@ namespace AgeyevAV.FIAS
     {
       switch (level)
       {
+        case FiasLevel.House: // 01.09.2021
+          FiasEstateStatus estStatus = FiasEnumNames.ParseEstateStatus(AOType);
+          if (estStatus != FiasEstateStatus.Unknown)
+            return FiasEnumNames.EstateStatusAbbrs[(int)estStatus];
+          else
+            break; // вдруг есть в справочнике
         case FiasLevel.Building:
           if (AOType == "Корпус")
             return "корп.";
@@ -445,13 +451,14 @@ namespace AgeyevAV.FIAS
             return AOType;
           else
             return FiasEnumNames.RoomTypeAbbrs[(int)roomType];
-        default:
-          Int32 id = FindAOTypeId(level, AOType);
-          if (id >= 0)
-            return GetAOType(id, FiasAOTypeMode.Abbreviation);
-          else
-            return AOType; // если не нашли, обойдемся без сокращения
       }
+
+      // Общий случай. Используем справочник
+      Int32 id = FindAOTypeId(level, AOType);
+      if (id >= 0)
+        return GetAOType(id, FiasAOTypeMode.Abbreviation);
+      else
+        return AOType; // если не нашли, обойдемся без сокращения
     }
 
     #endregion
@@ -733,6 +740,104 @@ namespace AgeyevAV.FIAS
         throw new ArgumentOutOfRangeException("level", level, "Уровень должен быть из списка FiasTools.AllLevels");
 
       return _MaxSpaceCounts[pLevel];
+    }
+
+    #endregion
+
+    #region Точка после сокращения
+
+    // Взяты значения поля SCNAME из таблицы AOType. 
+    // Добавлены сокращения для домов и помещений из FiasEnumNames
+
+    private static readonly StringArrayIndexer _AbbrWithDotIndexer = new StringArrayIndexer(new string[] { 
+      "ал", // Аллея
+      "взд", // Въезд
+      "влд", // Владение 
+      "г",
+      "д", // Деревня или дом
+      "двлд", // Домовладение
+      "дор", // Дорога
+      "ж/д казарм",
+      "ж/д платф",
+      "ж/д рзд",
+      "ж/д ст",
+      "зд",
+      "ззд", // Заезд
+      "зим", // Зимовье
+      "кв",
+      "киш", // Кишлак
+      "ком", // Комната
+      "корп",
+      "кот", // Котельная
+      "лн", // Линия
+      "м", // Местечко
+      "мгстр", // Магистраль
+      "межсел.тер", // межселенная территория
+      "месторожд",
+      "мкр",
+      "мр", // Месторождение
+      "наб", // Набережная
+      "л", // Литера
+      "лит",
+      "оф", // Офис
+      "п", // Поселение, Поселок
+      "п. ж/д ст", // Поселок при железнодорожной станции
+      "п. ст", // Поселок при станции (поселок станции)
+      "пав", // Павильон
+      "пб", // Погреб
+      "пер",
+      "пл", // Площадь
+      "платф",
+      "подв", // Подвал
+      "пом", // Помещение
+      "пос",
+      "проул", // Проулок
+      "раб.уч",
+      "рзд", // Разъезд
+      "с",
+      "сзд", // Съезд
+      "скл", // Склад
+      "сл", // Слобода
+      "cоор", // Сооружение
+      "сооруж",
+      "ст", // Станция
+      "стр", // Строение
+      "тер", 
+      "туп", // Тупик
+      "у", // Улус
+      "ул",
+      "ус", // Усадьба
+      "х", // Хутор
+      "ш", // Шоссе
+      "ю" // Юрты
+     }, true);
+
+    /// <summary>
+    /// Возвращает true, если после сокращения должна идти точка.
+    /// Например, для "ул" возвращается true, а для "аул" - false.
+    /// Если сокращение уже заканчивается на точку, возвращается false.
+    /// </summary>
+    /// <param name="abbr">Проверяемое сокращение</param>
+    /// <param name="level">Уровень адресного объекта (в текущей реализации не учитывается)</param>
+    /// <returns>Необходимость добавления точки</returns>
+    internal bool IsAbbreviationDotRequired(string abbr, FiasLevel level)
+    {
+      if (String.IsNullOrEmpty(abbr))
+        return false;
+      if (abbr[abbr.Length - 1] == '.')
+        return false;
+
+      // После сокращения должна идти точка с пробелом
+      // http://new.gramota.ru/spravka/buro/search-answer?s=238880 (вопрос № 238880)
+      // После составных сокращений "пгт", "рп", ... точка не нужна
+      // http://new.gramota.ru/spravka/buro/search-answer?s=261380 (вопрос 261380)
+
+
+      abbr = abbr.Replace('_', ' '); // бывают с подчеркиваниями
+
+      // Не знаю разумного правила, только тупо перебирать.
+      // Так как точка чаще не нужна, чем нужна, перебираем то, где нужна точка.
+      return _AbbrWithDotIndexer.Contains(abbr);
     }
 
     #endregion

@@ -36,10 +36,10 @@ namespace AgeyevAV.FIAS
   #region FiasAbbreviationPlace
 
   /// <summary>
-  /// Положение сокращения относительно наименования
+  /// Положение типа адресного объекта относительно наименования
   /// </summary>
   [Serializable]
-  public enum FiasAbbreviationPlace
+  public enum FiasAOTypePlace
   {
     /// <summary>
     /// Сокращение не нужно
@@ -468,6 +468,31 @@ namespace AgeyevAV.FIAS
             _IntValue |= (1 << i);
         }
         return new FiasLevelSet(_IntValue);
+      }
+    }
+
+    /// <summary>
+    /// Выполнить копирование наименований и типов адресообразующих элементов из текущего адреса в другой.
+    /// GUIDы, идентификаторы записей, почтовый индекс, сообщения об ошибках не копируются.
+    /// </summary>
+    /// <param name="dest">Заполняемый адресный объект</param>
+    /// <param name="levels">Копируемые уровни. 
+    /// Если в текущем адресе для уровня из набора нет значения, то уровень очищается.
+    /// В заполнямом адресе уровни, не перечисленные в наборе, не заменяются</param>
+    public void CopyNamesTo(FiasAddress dest, FiasLevelSet levels)
+    { 
+#if DEBUG
+      if (dest == null)
+        throw new ArgumentNullException("dest");
+#endif
+
+      for (int i = 0; i < FiasTools.AllLevels.Length; i++)
+      {
+        if (levels[FiasTools.AllLevels[i]])
+        {
+          dest.SetName(FiasTools.AllLevels[i], this.GetName(FiasTools.AllLevels[i]));
+          dest.SetAOType(FiasTools.AllLevels[i], this.GetAOType(FiasTools.AllLevels[i]));
+        }
       }
     }
 
@@ -1355,7 +1380,7 @@ namespace AgeyevAV.FIAS
     /// </summary>
     /// <param name="level">Уровень адреса ФИАС из перечня FiasTools.AllLevels.
     /// Если задано значение FiasLevel.Unknown, возвращаются сообщения, не привязанные ни к какому уровню</param>
-    /// <returns></returns>
+    /// <returns>Выбранные сообщения из списка Messages</returns>
     public ErrorMessageList GetMessages(FiasLevel level)
     {
       if (_Messages == null)
@@ -1383,6 +1408,55 @@ namespace AgeyevAV.FIAS
       }
     }
 
+
+    /// <summary>
+    /// Возвращает список сообщений, связанных с заданными уровнями классификатора.
+    /// Нельзя получить сообщения, не привязанные к уровню
+    /// </summary>
+    /// <param name="levels">Уровни адреса ФИАС из перечня FiasTools.AllLevels.</param>
+    /// <returns>Выбранные сообщения из списка Messages</returns>
+    public ErrorMessageList GetMessages(FiasLevelSet levels)
+    {
+      if (_Messages == null)
+        return ErrorMessageList.Empty;
+
+      ErrorMessageList list2 = null;
+      for (int i = 0; i < _Messages.Count; i++)
+      {
+        if (_Messages[i].Tag is FiasLevel)
+        {
+          FiasLevel thisLevel = (FiasLevel)(_Messages[i].Tag);
+          if (levels[thisLevel])
+          {
+            if (list2 == null)
+              list2 = new ErrorMessageList();
+            list2.Add(_Messages[i]);
+          }
+        }
+      }
+      if (list2 == null)
+        return ErrorMessageList.Empty;
+      else
+      {
+        list2.SetReadOnly();
+        return list2;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает уровень адресного объекта к которому относится сообщение из списка Messages.
+    /// Некоторые сообщения могут быть не привязаны к конкруетному уровню. Для них возвращается FiasLevel.Unknown
+    /// </summary>
+    /// <param name="item">Сообщение</param>
+    /// <returns>Уровень адресного объекта</returns>
+    public FiasLevel GetMessageFiasLevel(ErrorMessageItem item)
+    {
+      if (item.Tag is FiasLevel)
+        return (FiasLevel)(item.Tag);
+      else
+        return FiasLevel.Unknown;
+    }                       
+
     #endregion
 
     #region ToString()
@@ -1397,17 +1471,17 @@ namespace AgeyevAV.FIAS
     {
       StringBuilder sb = new StringBuilder();
       sb.Append(PostalCode);
-      AddPartToString(sb, FiasLevel.Region, FiasAbbreviationPlace.AfterName);
-      AddPartToString(sb, FiasLevel.District, FiasAbbreviationPlace.AfterName);
-      AddPartToString(sb, FiasLevel.City, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.Village, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.PlanningStructure, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.Street, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.House, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.Building, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.Structure, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.Flat, FiasAbbreviationPlace.BeforeName);
-      AddPartToString(sb, FiasLevel.Room, FiasAbbreviationPlace.BeforeName);
+      AddPartToString(sb, FiasLevel.Region, FiasAOTypePlace.AfterName);
+      AddPartToString(sb, FiasLevel.District, FiasAOTypePlace.AfterName);
+      AddPartToString(sb, FiasLevel.City, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.Village, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.PlanningStructure, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.Street, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.House, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.Building, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.Structure, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.Flat, FiasAOTypePlace.BeforeName);
+      AddPartToString(sb, FiasLevel.Room, FiasAOTypePlace.BeforeName);
 
       if (_Messages != null)
       {
@@ -1419,7 +1493,7 @@ namespace AgeyevAV.FIAS
       return sb.ToString();
     }
 
-    internal void AddPartToString(StringBuilder sb, FiasLevel level, FiasAbbreviationPlace place)
+    internal void AddPartToString(StringBuilder sb, FiasLevel level, FiasAOTypePlace place)
     {
       string s1 = GetName(level);
       string s2 = GetAOType(level);
@@ -1435,13 +1509,13 @@ namespace AgeyevAV.FIAS
       if (sb.Length > 0)
         sb.Append(", ");
 
-      if (place == FiasAbbreviationPlace.BeforeName && s2.Length > 0)
+      if (place == FiasAOTypePlace.BeforeName && s2.Length > 0)
       {
         sb.Append(s2);
         sb.Append(" ");
       }
       sb.Append(s1);
-      if (place == FiasAbbreviationPlace.AfterName && s2.Length > 0)
+      if (place == FiasAOTypePlace.AfterName && s2.Length > 0)
       {
         sb.Append(" ");
         sb.Append(s2);

@@ -724,7 +724,7 @@ namespace AgeyevAV.FIAS
      "подв.", 
      "кот.", 
      "пб.", 
-     "онс."
+     "онс"
     };
 
     /// <summary>

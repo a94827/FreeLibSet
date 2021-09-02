@@ -200,7 +200,17 @@ namespace AgeyevAV.ExtForms.FIAS
     /// Позиция блока диалога на экране.
     /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
     /// </summary>
-    public EFPDialogPosition DialogPosition { get { return _DialogPosition; } }
+    public EFPDialogPosition DialogPosition 
+    {
+      get { return _DialogPosition; }
+      set
+      {
+        if (value == null)
+          _DialogPosition = new EFPDialogPosition();
+        else
+          _DialogPosition = value;
+      }
+    }
     private EFPDialogPosition _DialogPosition;
 
     #endregion

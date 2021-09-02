@@ -48,9 +48,9 @@ namespace AgeyevAV.ExtDB.Docs
     internal DBxMultiDocs(DBxDocSet docSet, DBxDocType docType)
     {
       if (docSet == null)
-        throw new ArgumentNullException("docSet"); 
-      if (docType==null)
-        throw new ArgumentNullException("docType"); 
+        throw new ArgumentNullException("docSet");
+      if (docType == null)
+        throw new ArgumentNullException("docType");
 
       _DocType = docType;
       _DocSet = docSet;
@@ -1312,7 +1312,7 @@ namespace AgeyevAV.ExtDB.Docs
       }
     }
 
-    
+
     /// <summary>
     /// Добавляет в таблицу открытых документов документы с заданными идентификаторами и переводит их состояние
     /// на редактирование. В списке ранее открытых документов не должно быть документов с этими идентификаторами
@@ -1451,7 +1451,7 @@ namespace AgeyevAV.ExtDB.Docs
 #endif
     }
 
-     /// <summary>
+    /// <summary>
     /// Открывает для просмотра документы с заданными идентификаторами, заменяет идентификаторы на временные и
     /// добавляет документы в список открытых. Документы получают состояние Insert
     /// В списке могут быть другие документы в состоянии View, Edit и Insert
@@ -1716,6 +1716,27 @@ namespace AgeyevAV.ExtDB.Docs
     }
 
     #endregion
+
+    #endregion
+
+    #region Проверка наличия изменений в документе
+
+    /// <summary>
+    /// Свойство возвращает true, если в списке документов есть добавленные/удаленные, или для документа в состоянии Edit есть измененные значения
+    /// Также возвращается true, если есть какие-либо изменения в поддокументах.
+    /// </summary>
+    public bool IsDataModified
+    {
+      get
+      {
+        for (int i = 0; i < Table.Rows.Count; i++)
+        {
+          if (this[i].IsDataModified)
+            return true;
+        }
+        return false;
+      }
+    }
 
     #endregion
 

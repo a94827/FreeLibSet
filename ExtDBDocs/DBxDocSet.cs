@@ -530,6 +530,23 @@ namespace AgeyevAV.ExtDB.Docs
     }
     private bool? _UseAsyncWriting;
 
+    /// <summary>
+    /// Свойство возвращает true, если в списке документов есть добавленные/удаленные, или для документа в состоянии Edit есть измененные значения
+    /// Также возвращается true, если есть какие-либо изменения в поддокументах.
+    /// </summary>
+    public bool IsDataModified
+    {
+      get
+      {
+        foreach (DBxMultiDocs mDocs in _MultiDocs)
+        {
+          if (mDocs.IsDataModified)
+            return true;
+        }
+        return false;
+      }
+    }
+
     #endregion
 
     #region InsertCopy

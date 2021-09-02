@@ -1049,6 +1049,7 @@ namespace AgeyevAV.ExtForms.FIAS
           {
             form.Text = "Выбор из справочника уровня [" + FiasEnumNames.ToString(this.Level, true) + "] (PARENTGUID=" + ParentGuid.ToString() + ")";
             form.NoButtonProvider.Visible = true;
+            form.FormProvider.ConfigSectionName = "Fias_Sel_" + Level.ToString();
             EFPFiasListDataGridView efpGrid = new EFPFiasListDataGridView(form.ControlWithToolBar, Owner.UI, FiasTableType.AddrOb, false);
             efpGrid.CommandItems.EnterAsOk = true;
 
