@@ -3601,6 +3601,83 @@ namespace AgeyevAV.FIAS
 
     #endregion
 
+    #region Список регионов
+
+    private Dictionary<string, Guid> _RegionCodeGuids;
+
+    private void PrepareRegionCodeGuids()
+    {
+      if (_RegionCodeGuids != null)
+        return;
+
+      FiasCachedPageAddrOb page=Source.GetAddrObPages(FiasLevel.Region, new Guid[1] { Guid.Empty })[Guid.Empty];
+
+      using (DataView dv = page.CreateDataView())
+      {
+        Dictionary<string, Guid> dict = new Dictionary<string, Guid>(dv.Count);
+        foreach (DataRowView drv in dv)
+        {
+          Guid g = DataTools.GetGuid(drv.Row, "AOGUID");
+          int nRegCode = DataTools.GetInt(drv.Row, "REGIONCODE");
+          dict[nRegCode.ToString("00")] = g;
+        }
+        _RegionCodeGuids = dict;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает GUID адресного элемента верхнего уровня по коду региона.
+    /// Если задан код региона
+    /// </summary>
+    /// <param name="regionCode">Код региона "01"-"99"</param>
+    /// <returns></returns>
+    public Guid GetRegionAOGuid(string regionCode)
+    {
+      if (String.IsNullOrEmpty(regionCode))
+        return Guid.Empty;
+
+      PrepareRegionCodeGuids();
+      Guid g;
+      _RegionCodeGuids.TryGetValue(regionCode, out g);
+      return g;
+    }
+
+    /// <summary>
+    /// Возвращает true, если в загруженном справочнике есть регион с заданным кодом
+    /// </summary>
+    /// <param name="regionCode">Проверяемый код региона</param>
+    /// <returns>Наличие региона в ФИАС</returns>
+    public bool RegionCodeExists(string regionCode)
+    {
+      if (String.IsNullOrEmpty(regionCode))
+        return false;
+      PrepareRegionCodeGuids();
+      return _RegionCodeGuids.ContainsKey(regionCode);
+    }
+
+
+    /// <summary>
+    /// Список кодов регионов "01"-"99" которые есть в загруженном справочнике.
+    /// Массив является осортированным.
+    /// </summary>
+    public string[] RegionCodes
+    {
+      get
+      {
+        if (_RegionCodes == null)
+        {
+          PrepareRegionCodeGuids();
+          string[] a = new string[_RegionCodeGuids.Count];
+          _RegionCodeGuids.Keys.CopyTo(a, 0);
+          Array.Sort<string>(a);
+          _RegionCodes = a;
+        }
+        return _RegionCodes;
+      }
+    }
+    private string[] _RegionCodes;
+
+    #endregion
 
     #region Вспомогательные информационные методы
 

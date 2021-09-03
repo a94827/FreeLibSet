@@ -302,6 +302,9 @@ namespace AgeyevAV.FIAS
     /// Справочник регионов. Таблица содержит поля "Code" и "Name".
     /// Коды регионов хранятся как двусимвольные строки ("01", ...)
     /// Первичный ключ - поле "Code"
+    /// 
+    /// Эта таблица является фиксированной.
+    /// В прикладном коде следует использовать метод FiasHandler.GetRegionAOGuid() или свойство RegionCodes
     /// </summary>
     public static readonly DataTable RegionCodes = CreateRegionCodes();
 

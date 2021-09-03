@@ -34,6 +34,8 @@ using AgeyevAV.Parsing;
 
 namespace AgeyevAV.FIAS
 {
+  #region Перечисление FiasAddressConvertGuidMode
+
   /// <summary>
   /// Возможные значения для свойства
   /// </summary>
@@ -89,6 +91,8 @@ namespace AgeyevAV.FIAS
     GuidPreferred = 0x47,
   }
 
+  #endregion
+
   /// <summary>
   /// Преобразование адреса в строку для хранения в базе данных или файлах.
   /// Строка состоит из пар код-значение и имеет формат: N1="v1",N2="v2"
@@ -97,8 +101,7 @@ namespace AgeyevAV.FIAS
   /// 2. Установить свойства.
   /// 3. Вызвать ToString() для записи или Parse()/TryParse() для чтения.
   /// 
-  /// Этот класс не является потокобезопасным в части установки свойств. Вызов основных методов Parse(), TryParse() и ToString() 
-  /// являются потокобезопасными
+  /// Этот класс не является потокобезопасным в части установки свойств. Вызовы методов являются потокобезопасными.
   /// </summary>
   public sealed class FiasAddressConvert : ICloneable
   {
@@ -550,7 +553,7 @@ namespace AgeyevAV.FIAS
       if (FillAddress)
       {
         // Адреса, для которых нужно будет вызвать FiasHandler=FillAddresses().
-        // Оптимистически создаем список с начльной емкостью для всех элементов.
+        // Оптимистически создаем список с начальной емкостью для всех элементов.
         List<FiasAddress> lstToFill = new List<FiasAddress>(strs.Length);
 
         FiasAddressConvert conv2 = this.Clone();
@@ -709,6 +712,115 @@ namespace AgeyevAV.FIAS
           s = ToString(addr);
       }
 
+      return res;
+    }
+
+    /// <summary>
+    /// Комбинация вызовов ParseArray() и ToStringArray() для кодированных строк адреса.
+    /// При этом возвращаются строки в формате GuidMode.
+    /// Если какая-либо из исходных строк имеет неправильный формат, выбрасывается исключение.
+    /// 
+    /// Предполагается, что свойство FillAddress установлено.
+    /// Иначе корректный результат можно получить только для немногих преобразований GuidMode, например из AOGuidWithText в Text.
+    /// </summary>
+    /// <param name="strs">Исходные кодированные строки. Этот массив не меняется в процессе работы, в том числе и при возникновении ошибки</param>
+    /// <returns>Кодировананные строки в требуемом формате</returns>
+    public string[] ConvertStringArray(string[] strs)
+    {
+#if DEBUG
+      if (strs == null)
+        throw new ArgumentNullException("strs");
+#endif
+
+      if (strs.Length == 0)
+        return DataTools.EmptyStrings;
+
+      if (FillAddress)
+      {
+        // Не выйдет обойтись без промежуточного массива адресов.
+        // Если конвертировать адреса по одному, не будет группового вызова FiasHandler.FillAddresses().
+        // Выигрыш в размере памяти не компенсирует падения быстродействия
+
+        FiasAddressConvert conv2 = this.Clone();
+        conv2.FillAddress = false;
+        FiasAddress[] addrs = conv2.ParseArray(strs);
+        string[] a2 = this.ToStringArray(addrs); // вызван FillAddresses()
+        return a2;
+      }
+      else
+      {
+        string[] a2 = new string[strs.Length];
+        for (int i = 0; i < strs.Length; i++)
+          a2[i] = ToString(Parse(strs[i]));
+        return a2;
+      }
+    }
+
+    /// <summary>
+    /// Комбинация вызовов TryParseArray() и ToStringArray() для кодированных строк адреса.
+    /// При этом возвращаются строки в формате GuidMode.
+    /// Если какая-либо из исходных строк имеет неправильный формат, метод возвращает false.
+    /// 
+    /// Предполагается, что свойство FillAddress установлено.
+    /// Иначе корректный результат можно получить только для немногих преобразований GuidMode, например из AOGuidWithText в Text.
+    /// </summary>
+    /// <param name="strs">Кодированные строки. В процессе работы элементы массива заменяются. Если какую-либо строку не удалось
+    /// преобразовать, она остается без изменений, а оставшиеся строки продолжают заменяться</param>
+    /// <returns>Кодировананные строки в требуемом формате</returns>
+    public bool TryConvertStringArray(string[] strs)
+    {
+#if DEBUG
+      if (strs == null)
+        throw new ArgumentNullException("strs");
+#endif
+
+      if (strs.Length == 0)
+        return true;
+
+      FiasAddress addr;
+      bool res = true;
+      if (FillAddress)
+      {
+        // Придется частично повторить реализацию метода TryParseArray(), т.к. этот метод не возвращает признаков,
+        // какие именно адреса оказались неправильными.
+
+        List<FiasAddress> lstToFill = new List<FiasAddress>(strs.Length);
+
+        FiasAddressConvert conv2 = this.Clone();
+        conv2.FillAddress = false;
+
+        FiasAddress[] addrs = new FiasAddress[strs.Length];
+        for (int i = 0; i < strs.Length; i++)
+        {
+          if (conv2.TryParse(strs[i], out addr))
+          {
+            if (addr.Messages.Count == 0)
+              lstToFill.Add(addr);
+          }
+          else
+            res = false;
+          addrs[i] = addr;
+        }
+
+        // Заполняем адреса
+        if (lstToFill.Count > 0)
+        {
+          new FiasHandler(_Source).FillAddresses(lstToFill.ToArray());
+        }
+
+
+        strs = conv2.ToStringArray(addrs); // опять без вызова FillAddress()
+      }
+      else
+      {
+        for (int i = 0; i < strs.Length; i++)
+        {
+          if (TryParse(strs[i], out addr))
+            strs[i] = ToString(addr);
+          else
+            res = false;
+        }
+      }
       return res;
     }
 

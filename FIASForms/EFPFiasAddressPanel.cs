@@ -1102,6 +1102,7 @@ namespace AgeyevAV.ExtForms.FIAS
             if (nRegion >= 1 && nRegion <= 99)
             {
               string sRegion = nRegion.ToString("00");
+#if XXX
               DataRow row = FiasTools.RegionCodes.Rows.Find(sRegion);
               if (row != null)
               {
@@ -1112,6 +1113,17 @@ namespace AgeyevAV.ExtForms.FIAS
                 Owner.UpdateAddress(FiasLevel.Region, a2.GetRecId(FiasLevel.Region));
                 return;
               }
+#else
+              Guid AOGuid = Owner._Handler.GetRegionAOGuid(sRegion); // 03.09.2021
+              if (AOGuid!=Guid.Empty)
+              {
+                FiasAddress a2 = new FiasAddress();
+                a2.SetGuid(FiasLevel.Region, AOGuid);
+                Owner._Handler.FillAddress(a2);
+                Owner.UpdateAddress(FiasLevel.Region, a2.GetRecId(FiasLevel.Region));
+                return;
+              }
+#endif
             }
           }
         }
