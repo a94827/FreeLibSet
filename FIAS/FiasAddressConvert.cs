@@ -809,7 +809,8 @@ namespace AgeyevAV.FIAS
         }
 
 
-        strs = conv2.ToStringArray(addrs); // опять без вызова FillAddress()
+        string[] strs2 = conv2.ToStringArray(addrs); // опять без вызова FillAddress()
+        strs2.CopyTo(strs, 0);
       }
       else
       {
