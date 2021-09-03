@@ -1145,7 +1145,10 @@ namespace AgeyevAV.FIAS
     internal FiasAddressTextCache(FiasCachedSource source)
     {
       _Source = source;
-      _Convert = new FiasAddressConvert(source);
+
+      _ConvertWithoutFill = new FiasAddressConvert(source);
+      _ConvertWithoutFill.FillAddress = false;
+
       _Handler = new FiasHandler(source);
       _SB = new StringBuilder();
 
@@ -1177,9 +1180,10 @@ namespace AgeyevAV.FIAS
     }
 
     /// <summary>
-    /// Используется для преобразования кодированной строки в FiasAddress
+    /// Используется для преобразования кодированной строки в FiasAddress.
+    /// Свойство FiasAddressConvert.FillAddress=false.
     /// </summary>
-    private FiasAddressConvert _Convert;
+    private FiasAddressConvert _ConvertWithoutFill;
 
     /// <summary>
     /// Используется для вызова метода Format
@@ -1215,11 +1219,13 @@ namespace AgeyevAV.FIAS
           return text;
       }
 
-      lock (_Convert)
+      lock (_Handler)
       {
         FiasAddress address;
-        if (_Convert.TryParse(addressCode, out address, true)) // Здесь заодно вызывается метод FillAddress()
+        if (_ConvertWithoutFill.TryParse(addressCode, out address)) 
         {
+          _Handler.FillAddress(address);
+
           _SB.Length = 0;
           _Handler.Format(_SB, address, format);
           text = _SB.ToString();
@@ -1277,12 +1283,12 @@ namespace AgeyevAV.FIAS
       {
         Dictionary<string, FiasAddress> addrDict = new Dictionary<string, FiasAddress>(notFound.Count);
 
-        lock (_Convert)
+        lock (_Handler)
         {
           foreach (string s in notFound)
           {
             FiasAddress address;
-            if (_Convert.TryParse(s, out address, false)) // Не вызываем метод FillAddress()
+            if (_ConvertWithoutFill.TryParse(s, out address)) // Не вызываем метод FillAddress()
               addrDict.Add(s, address);
           }
         }

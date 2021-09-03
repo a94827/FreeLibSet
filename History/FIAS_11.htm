@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtRussan</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:08:00.088000000"/>
-	<meta name="changed" content="2021-09-02T18:07:58.086000000"/>
+	<meta name="changed" content="2021-09-03T16:24:32.550000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -58,7 +58,7 @@
 			<p lang="en-US" align="center">24</p>
 		</td>
 		<td width="15%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">01.09.2021-02.09.2021</p>
+			<p lang="en-US" align="center">01.09.2021-03.09.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
@@ -90,9 +90,32 @@
 			<p><span lang="en-US">4. </span><span lang="ru-RU">Перегрузка
 			метода </span><span lang="en-US">FiasAddress.GetMessages() (<a href="#v001p1">v.1
 			</a></span><a href="#v001p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
-			</span><span lang="ru-RU">с аргументом </span><span lang="en-US">FiasLevelSet</span><span lang="ru-RU">
-			(</span><a href="#v021p7"><span lang="en-US">v.21 </span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">с аргументом </span><span lang="en-US">FiasLevelSet</span>
+			<span lang="ru-RU">(</span><a href="#v021p7"><span lang="en-US">v.21
+			</span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">)</span><span lang="en-US">.
 			</span><span lang="ru-RU">Метод </span><span lang="en-US">GetMessageFiasLevel()</span></p>
+			<p><span lang="en-US">5. </span><span lang="ru-RU">Изменения в
+			</span><span lang="en-US">FiasAddressConvert</span> <span lang="ru-RU">(</span><a href="#v001p8"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.8</span></a><span lang="ru-RU">)</span><span lang="en-US">:</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Методы класса
+			объявлены потокобезопасными. Внутренний объект </span><span lang="en-US">FiasHandler</span>
+			<span lang="ru-RU">больше не хранится как поле, а создается при
+			каждом вызове.</span></p>
+			<p><span lang="ru-RU">- Убраны перегрузки методов </span><span lang="en-US">ToString()
+			</span><span lang="ru-RU">(</span><a href="#v015p2"><span lang="en-US">v.15
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">) и
+			</span><span lang="en-US">TryParse()</span> <span lang="ru-RU">(</span><a href="#v010p7"><span lang="en-US">v.10
+			</span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">)</span><span lang="en-US">,
+			</span><span lang="ru-RU">принимающие аргумент </span><span lang="en-US">fillAddress.
+			</span><span lang="ru-RU">Добавлено свойство </span><span lang="en-US">FillAddress.</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Методы
+			группового преобразования </span><span lang="en-US">ToStringArray(),
+			ParseArray() </span><span lang="ru-RU">и </span><span lang="en-US">TryParseArray().</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Изменена
+			внутренняя реализация класса </span><span lang="en-US">FiasAddressTextCache
+			(<a href="#v023p1">v.23 </a></span><a href="#v023p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">).</span>
+			<span lang="ru-RU">Он фактически не был потокобезопасным, вопреки
+			заявленному.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -351,7 +374,7 @@
 			</span><span lang="ru-RU">и
 			</span><span lang="en-US">FiasDistributedSource</span><span lang="ru-RU">.</span><span lang="en-US">UpdateActualDate</span><span lang="ru-RU">()
 			(</span><a href="#v014p6"><span lang="en-US">v.14 </span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">)</span></p>
-			<p><span lang="en-US">2. </span><span lang="ru-RU">Перегрузка
+			<p><a name="v015p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Перегрузка
 			метода </span><span lang="en-US">FiasAddressConvert.ToString() </span><span lang="ru-RU">с
 			аргументом </span><span lang="en-US">fillAddress </span><span lang="ru-RU">(</span><a href="#v010p7"><span lang="en-US">v.10
 			</span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
