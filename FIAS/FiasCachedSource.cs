@@ -623,7 +623,10 @@ namespace AgeyevAV.FIAS
             if (Cache.SetItemIfNew<FiasCachedPageAddrOb>(GetAddrObPageKeys(level, pair2.Key),
               CachePersistance.MemoryAndPersist, pair2.Value))
               cnt++;
-            pair2.Value.AddToGuidDict(_GuidDict);
+            lock (_GuidDict) // 06.09.2021
+            {
+              pair2.Value.AddToGuidDict(_GuidDict);
+            }
             dict[pair2.Key] = pair2.Value;
             spl.IncPercent();
           }
@@ -771,7 +774,10 @@ namespace AgeyevAV.FIAS
             if (Cache.SetItemIfNew<FiasCachedPageHouse>(GetHousePageKeys(pair2.Key),
               CachePersistance.MemoryAndPersist, pair2.Value))
               cnt++;
-            pair2.Value.AddToGuidDict(_GuidDict);
+            lock (_GuidDict) // 06.09.2021
+            {
+              pair2.Value.AddToGuidDict(_GuidDict);
+            }
             dict[pair2.Key] = pair2.Value;
             spl.IncPercent();
           }
@@ -873,7 +879,10 @@ namespace AgeyevAV.FIAS
             if (Cache.SetItemIfNew<FiasCachedPageRoom>(GetRoomPageKeys(pair2.Key),
               CachePersistance.MemoryAndPersist, pair2.Value))
               cnt++;
-            pair2.Value.AddToGuidDict(_GuidDict);
+            lock (_GuidDict) // 06.09.2021
+            {
+              pair2.Value.AddToGuidDict(_GuidDict);
+            }
             dict[pair2.Key] = pair2.Value;
 
             spl.IncPercent();
@@ -976,7 +985,10 @@ namespace AgeyevAV.FIAS
       Cache.Clear<FiasCachedPageSpecialAddrOb>(_CacheFirstKeySimpleArray);
       Cache.Clear<FiasCachedPageHouse>(_CacheFirstKeySimpleArray);
       Cache.Clear<FiasCachedPageRoom>(_CacheFirstKeySimpleArray);
-      _GuidDict.Clear();
+      lock (_GuidDict) // 06.09.2021
+      {
+        _GuidDict.Clear();
+      }
 
       _TextCache.Clear();
 

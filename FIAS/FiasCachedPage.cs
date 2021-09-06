@@ -138,6 +138,7 @@ namespace AgeyevAV.FIAS
   /// <summary>
   /// Страница классификатора для адресных объектов.
   /// Этот класс не используется в пользовательском коде.
+  /// Класс является потокобезопасным.
   /// </summary>
   [Serializable]
   public class FiasCachedPageAddrOb
@@ -433,6 +434,7 @@ namespace AgeyevAV.FIAS
   /// <summary>
   /// Специальная страница классификатора адресных объектов
   /// Отдельный класс нужен, чтобы специальные страницы не путались при извлечении из кэша обычных страниц.
+  /// Класс является потокобезопасным.
   /// </summary>
   [Serializable]
   public sealed class FiasCachedPageSpecialAddrOb : FiasCachedPageAddrOb
@@ -470,6 +472,7 @@ namespace AgeyevAV.FIAS
   /// <summary>
   /// Страница классификатора для домов.
   /// Этот класс не используется в пользовательском коде.
+  /// Класс является потокобезопасным.
   /// </summary>
   [Serializable]
   public sealed class FiasCachedPageHouse
@@ -816,6 +819,7 @@ namespace AgeyevAV.FIAS
   /// <summary>
   /// Страница классификатора для помещений.
   /// Этот класс не используется в пользовательском коде.
+  /// Класс является потокобезопасным.
   /// </summary>
   [Serializable]
   public sealed class FiasCachedPageRoom

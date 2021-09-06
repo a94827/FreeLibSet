@@ -1301,6 +1301,10 @@ namespace AgeyevAV
     {
       foreach (KeyValuePair<TKey, TValue> Pair in source)
         Add(Pair.Key, Pair.Value);
+
+#if DEBUG
+      DebugCheckCount();
+#endif
     }
 
     #endregion
@@ -1380,6 +1384,10 @@ namespace AgeyevAV
         if (!Remove(MRULastKey))
           throw new BugException("Ошибка удаления последнего элемента списка");
       }
+
+#if DEBUG
+      DebugCheckCount();
+#endif
     }
 
     #endregion
@@ -1398,18 +1406,22 @@ namespace AgeyevAV
       try
       {
         _Dict.Add(key, new NodeAndValue(node, value));
+
+#if DEBUG
+        DebugCheckCount();
+#endif
       }
       catch
       {
         _LinkedList.Remove(node);
+
+#if DEBUG
+        DebugCheckCount();
+#endif
         throw;
       }
 
       LimitCount();
-
-#if DEBUG
-      CheckCount();
-#endif
     }
 
     /// <summary>
@@ -1436,7 +1448,7 @@ namespace AgeyevAV
         _Dict.Remove(key);
         _LinkedList.Remove(nv.Node);
 #if DEBUG
-        CheckCount();
+        DebugCheckCount();
 #endif
         return true;
       }
@@ -1479,7 +1491,7 @@ namespace AgeyevAV
       set
       {
 #if DEBUG
-        CheckCount();
+        DebugCheckCount();
 #endif
 
         NodeAndValue nv;
@@ -1510,7 +1522,7 @@ namespace AgeyevAV
 
         LimitCount();
 #if DEBUG
-        CheckCount();
+        DebugCheckCount();
 #endif
       }
     }
@@ -1905,6 +1917,10 @@ namespace AgeyevAV
     {
       _Dict.Clear();
       _LinkedList.Clear();
+
+#if DEBUG
+      DebugCheckCount();
+#endif
     }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
@@ -1925,7 +1941,17 @@ namespace AgeyevAV
     /// <summary>
     /// Возвращает количество записей в словаре
     /// </summary>
-    public int Count { get { return _Dict.Count; } }
+    public int Count 
+    { 
+      get 
+      {
+#if DEBUG
+        DebugCheckCount();
+#endif
+
+        return _Dict.Count; 
+      } 
+    }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly { get { return false; } }
 
@@ -1950,7 +1976,7 @@ namespace AgeyevAV
       internal Enumerator(DictionaryWithMRU<TKey, TValue> owner)
       {
 #if DEBUG
-        owner.CheckCount();
+        owner.DebugCheckCount();
 #endif
         _Owner = owner;
         _En = _Owner._LinkedList.GetEnumerator();
@@ -2057,17 +2083,23 @@ namespace AgeyevAV
       {
         _LinkedList.Remove(nv.Node);
         _LinkedList.AddFirst(nv.Node);
+
+#if DEBUG
+        DebugCheckCount();
+#endif
         return true;
       }
       else
         return false;
     }
 
-    private void CheckCount()
+#if DEBUG
+    private void DebugCheckCount()
     {
       if (_Dict.Count != _LinkedList.Count)
         throw new BugException("Длина внутренних списков различается");
     }
+#endif
 
     /// <summary>
     /// Возвращает первый объект в списке MRU.
@@ -2077,6 +2109,10 @@ namespace AgeyevAV
     {
       get
       {
+#if DEBUG
+        DebugCheckCount();
+#endif
+
         LinkedListNode<TKey> node = _LinkedList.First;
         if (node == null)
           return default(TKey);
@@ -2093,6 +2129,9 @@ namespace AgeyevAV
     {
       get
       {
+#if DEBUG
+        DebugCheckCount();
+#endif
         LinkedListNode<TKey> node = _LinkedList.Last;
         if (node == null)
           return default(TKey);
