@@ -208,9 +208,9 @@ namespace AgeyevAV.ExtForms.FIAS
     /// <summary>
     /// Выполняет первое обновление полей адреса
     /// </summary>
-    protected override void OnCreated()
+    protected override void OnAttached()
     {
-      base.OnCreated();
+      base.OnAttached();
       UpdateAddress(FiasLevel.Unknown, Guid.Empty);
     }
 
@@ -624,24 +624,8 @@ namespace AgeyevAV.ExtForms.FIAS
 
         _AllAOTypes = _Owner._Handler.AOTypes.GetAOTypes(level, FiasAOTypeMode.Full);
         _AOType.Control.Items.AddRange(_AllAOTypes);
-        switch (_AllAOTypes.Length)
-        {
-          case 0:
-            _AOType.Text = "[" + FiasEnumNames.ToString(level, false) + "]";
-            _AOType.Enabled = false;
-            break;
-          //case 1:
-          //  _AOType.Text = AllAOTypes[0];
-          //  _AOType.Enabled = false;
-          //  break;
-          default:
-            //_AOType.Text = AllAOTypes[0];
-            _AOType.AllowDisabledText = true;
-            _AOType.DisabledText = "[" + FiasEnumNames.ToString(level, false) + "]";
-            _AOType.EnabledEx = new DepAnd(_Name.IsNotEmptyEx, new DepNot(_Owner.ReadOnlyEx));
-            _AOType.Control.AutoCompleteCustomSource.AddRange(_AllAOTypes);
-            break;
-        }
+        _AOType.Control.AutoCompleteCustomSource.AddRange(_AllAOTypes);
+        _AOType.DisabledText = "[" + FiasEnumNames.ToString(level, false) + "]";
 
 #if XXX
         EFPCommandItem ci;
@@ -653,10 +637,33 @@ namespace AgeyevAV.ExtForms.FIAS
         ci.GroupBegin = true;
         _AOType.CommandItems.Add(ci);
 #endif
+
+        //InitAOTypeEnabled();
+      }
+
+      public void InitAOTypeEnabled()
+      {
+        if (_Owner.EnabledState)
+        {
+          _AOType.AllowDisabledText = true;
+          if (_AOType.Control.AutoCompleteCustomSource.Count == 0)
+            _AOType.Enabled = false;
+          else if (_Name.Text.Length == 0)
+            _AOType.Enabled = false;
+          else
+            _AOType.Enabled = true;
+        }
+        else
+        {
+          _AOType.Enabled = false;
+          _AOType.AllowDisabledText = false;
+        }
       }
 
       void Name_Validating(object sender, EFPValidatingEventArgs args)
       {
+        InitAOTypeEnabled();
+
         if (args.ValidateState == EFPValidateState.Error)
           return;
         if (String.IsNullOrEmpty(_Name.Text))
@@ -702,12 +709,15 @@ namespace AgeyevAV.ExtForms.FIAS
 
       public void AddressUpdated()
       {
+        if (_Owner.ProviderState != EFPControlProviderState.Attached)
+          return;
+
         _Name.SetText(_Owner._Address.GetName(_Level));
 
         string aoType = _Owner._Address.GetAOType(_Level);
         if (aoType.Length > 0)
           _AOType.SetText(aoType);
-        else if (AllAOTypes.Length > 0)
+        else if (AllAOTypes.Length > 0 && (!_Owner.ReadOnly))
         {
           //_AOType.Text = AllAOTypes[0];
           /*
@@ -871,6 +881,12 @@ namespace AgeyevAV.ExtForms.FIAS
         }
 
         Owner.UpdateAddress(Level, Guid.Empty);
+      }
+
+      internal void InitAOTypeEnabled()
+      {
+        for (int i = 0; i < _NAs.Length; i++)
+          _NAs[i].InitAOTypeEnabled();
       }
 
       #endregion
@@ -1115,7 +1131,7 @@ namespace AgeyevAV.ExtForms.FIAS
               }
 #else
               Guid AOGuid = Owner._Handler.GetRegionAOGuid(sRegion); // 03.09.2021
-              if (AOGuid!=Guid.Empty)
+              if (AOGuid != Guid.Empty)
               {
                 FiasAddress a2 = new FiasAddress();
                 a2.SetGuid(FiasLevel.Region, AOGuid);
@@ -1493,7 +1509,7 @@ namespace AgeyevAV.ExtForms.FIAS
 
     private void UpdateAddress(FiasLevel level, Guid recId)
     {
-      if (ProviderState ==EFPControlProviderState.Initialization)
+      if (ProviderState == EFPControlProviderState.Initialization)
         return; // 27.10.2020
 
       if (_InsideUpdateAddress)
@@ -1832,6 +1848,14 @@ namespace AgeyevAV.ExtForms.FIAS
         efpManualPostalCode.Enabled = !value;
 
         Address = Address; // повторная инициализация
+
+
+        foreach (AddrObItem item in _AddrObParts)
+          item.InitAOTypeEnabled();
+        if (_HousePart != null)
+          _HousePart.InitAOTypeEnabled();
+        if (_RoomPart != null)
+          _RoomPart.InitAOTypeEnabled();
       }
     }
     private bool _ReadOnly;

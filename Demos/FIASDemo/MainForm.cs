@@ -567,61 +567,6 @@ namespace FIASDemo
     #endregion
 
 
-    private void btnTest_Click(object sender, EventArgs args)
-    {
-#if XXX
-      SingleScopeList<char> lst = new SingleScopeList<char>();
-      using (DBxCon con = new DBxCon(fiasDB.DB.MainEntry))
-      {
-        int LastDate=(int)(DateTime.Today.ToOADate());
-
-        //using (DbDataReader rdr = con.ReaderSelect("AddrOb", new DBxColumns("OFFNAME")))
-        using (DbDataReader rdr = con.ReaderSelect("House", new DBxColumns("HOUSENUM,BUILDNUM,STRUCNUM"),
-          new ValueFilter("dEndDate", LastDate, CompareKind.GreaterThan)))
-        {
-          while (rdr.Read())
-          {
-            for (int j = 0; j < 3; j++)
-            {
-              string s = DataTools.GetString(rdr[j]);
-              for (int i = 0; i < s.Length; i++)
-              {
-                if (s[i] >= '0' && s[i] <= '9')
-                  continue;
-                if (s[i] >= 'А' && s[i] <= 'Я')
-                  continue;
-                if (s[i] >= 'а' && s[i] <= 'я')
-                  continue;
-                if (s[i] == 'Ё' || s[i] == 'ё')
-                  continue;
-                lst.Add(s[i]);
-                if (s[i] == '№')
-                {
-                }
-              }
-            }
-          }
-        }
-      }
-
-      string xxx = new string(lst.ToArray());
-#endif
-
-
-      FiasHandler handler = new FiasHandler(this.UI.Source);
-
-      FiasParseSettings ps = new FiasParseSettings(this.UI.Source);
-      ps.BaseAddress.UnknownGuid = new Guid("74b36adf-c954-49bc-806a-f1920f3f697b");
-      ps.CellLevels = new FiasLevelSet[1] { FiasLevelSet.HouseLevels };
-
-      FiasAddress a = handler.ParseAddress(new string[1] {"д. 9"}, ps);
-      FiasAddressDialog dlg = new FiasAddressDialog(this.UI);
-      dlg.Address = a;
-      //dlg.ReadOnly = true;
-      dlg.ShowDialog();
-    }
-
-
 #if XXX
     private void btnTest_Click(object sender, EventArgs args)
     {
@@ -930,5 +875,38 @@ namespace FIASDemo
     }
 
     #endregion
+
+
+    private void btnTest_Click(object sender, EventArgs args)
+    {
+      FiasHandler handler = new FiasHandler(UI.Source);
+      FiasParseSettings ps = new FiasParseSettings(UI.Source);
+      ps.BaseAddress.AOGuid = handler.GetRegionAOGuid("72");
+      handler.FillAddress(ps.BaseAddress);
+
+      ps.CellLevels = new FiasLevelSet[6];
+      ps.CellLevels[0] = FiasLevelSet.FromLevel(FiasLevel.City);
+      ps.CellLevels[1] = FiasLevelSet.FromLevel(FiasLevel.Village);
+      ps.CellLevels[2] = FiasLevelSet.FromLevel(FiasLevel.PlanningStructure) | FiasLevelSet.FromLevel(FiasLevel.Street);
+      ps.CellLevels[3] = FiasLevelSet.FromLevel(FiasLevel.House);
+      ps.CellLevels[4] = FiasLevelSet.FromLevel(FiasLevel.Building);
+      ps.CellLevels[5] = FiasLevelSet.FromLevel(FiasLevel.Structure);
+
+      // рп Голышманово, ул Карла Маркса, Дом 1
+
+      string[] cells = new string[6];
+      cells[0] = "";
+      cells[1] = "рп. Голышманово";
+      cells[2] = "ул. Карла Маркса";
+      cells[3] = "Дом 1";
+      cells[4] = "";
+      cells[5] = "";
+
+      FiasAddress a = handler.ParseAddress(cells, ps);
+      FiasAddressDialog dlg = new FiasAddressDialog(UI);
+      dlg.ReadOnly = true;
+      dlg.Address = a;
+      dlg.ShowDialog();
+  }
   }
 }

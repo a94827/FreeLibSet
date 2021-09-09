@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtRussan</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:08:00.088000000"/>
-	<meta name="changed" content="2021-09-06T11:59:40.015000000"/>
+	<meta name="changed" content="2021-09-09T16:26:19.571000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -41,7 +41,7 @@
 <table width="100%" cellpadding="2" cellspacing="0" style="page-break-before: always">
 	<col width="21*">
 	<col width="37*">
-	<col width="197*">
+	<col width="198*">
 	<tr valign="top">
 		<td width="8%" style="border: 1.00pt solid #000000; padding: 0.05cm">
 			<p align="center">Версия</p>
@@ -51,6 +51,30 @@
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="8%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">25</p>
+		</td>
+		<td width="15%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">09.09.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Вспомогательный метод
+			</span>FiasAddress.SetDefaultAOType() (<a href="#v001p1">v.1 </a><a href="#v001p1"><span lang="ru-RU">п.1</span></a>)</p>
+			<p lang="en-US">2. <span lang="ru-RU">Перегрузки методов
+			</span>FiasCachedPageAddrOb, FiasCachedPageHouse,
+			FiasCachedPageRoom.CreateDataView() (<a href="#v001p5">v.1 <span lang="ru-RU">п.5</span></a>)
+			<span lang="ru-RU">с аргументом </span>actualOnly,</p>
+			<p>3. Структуры (были классы) <span lang="en-US">FiasAddrObExtractor,
+			FiasHouseExtractor </span>и <span lang="en-US">FiasRoomExtractor
+			</span>сделаны общедоступными.</p>
+			<p>4. Свойства  <span lang="en-US">FiasCachedPageAddrOb</span><span lang="en-US">.AOGuids,</span><span lang="en-US">
+			FiasCachedPageHouse</span><span lang="en-US">.HouseGuids </span>и<span lang="en-US">
+			FiasCachedPageRoom</span><span lang="en-US">.RoomGuids</span> <span lang="en-US">(</span><a href="#v001p5">v.1
+			п.5</a><span lang="en-US">) </span>
+			</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -122,8 +146,8 @@
 			(<a href="#v023p1">v.23 </a></span><a href="#v023p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">).</span>
 			<span lang="ru-RU">Он фактически не был потокобезопасным, вопреки
 			заявленному.</span></p>
-			<p><a name="v024p6"></a><span lang="en-US">6. </span><span lang="ru-RU">Методы</span><span lang="en-US">
-			FiasHandler.GetRegionAOGuid()</span><span lang="ru-RU">,
+			<p><a name="v024p6"></a><span lang="en-US">6. </span><span lang="ru-RU">Методы</span>
+			<span lang="en-US">FiasHandler.GetRegionAOGuid()</span><span lang="ru-RU">,
 			RegionCodeExists(), свойство </span><span lang="en-US">RegionCodes
 			(<a href="#v001p2">v.1 </a></span><a href="#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">7. </span><span lang="ru-RU">Добавлены

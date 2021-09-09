@@ -281,6 +281,8 @@ namespace AgeyevAV.DependedValues
     /// <returns>Массив выходов</returns>
     public DepInput<T>[] GetOutputs()
     {
+      #region Подсчет
+
       int n = 0;
       DepInput<T> CurrInput = FirstOutput;
       while (CurrInput != null)
@@ -288,6 +290,11 @@ namespace AgeyevAV.DependedValues
         n++;
         CurrInput = CurrInput.NextOutput;
       }
+
+      #endregion
+
+      #region Создание списка
+
       DepInput<T>[] Outputs = new DepInput<T>[n];
       n = 0;
       CurrInput = FirstOutput;
@@ -298,6 +305,8 @@ namespace AgeyevAV.DependedValues
         CurrInput = CurrInput.NextOutput;
       }
       return Outputs;
+
+      #endregion
     }
 
     internal void AddOutput(DepInput<T> theInput)

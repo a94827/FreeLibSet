@@ -71,6 +71,22 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "TOSTRING", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "TOSTRING";
+      else
+        return base.ToString();
+    }
+
+    #endregion
+
   }
 
   /// <summary>
@@ -126,6 +142,22 @@ namespace AgeyevAV.DependedValues
         return Arg1.Substring(Arg2);
       else
         return Arg1.Substring(Arg2, Arg3);
+    }
+
+    #endregion
+
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "SUBSTRING", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "SUBSTRING";
+      else
+        return base.ToString();
     }
 
     #endregion

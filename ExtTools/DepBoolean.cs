@@ -172,6 +172,22 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "AND", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "AND";
+      else
+        return base.ToString();
+    }
+
+    #endregion
+
     #region Статические методы
 
     /// <summary>
@@ -271,6 +287,22 @@ namespace AgeyevAV.DependedValues
           x = x | Inputs[i].Value;
         OwnerSetValue(x);
       }
+    }
+
+    #endregion
+
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "OR", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "OR";
+      else
+        return base.ToString();
     }
 
     #endregion
@@ -375,6 +407,22 @@ namespace AgeyevAV.DependedValues
     private void SourceValueChanged(object sender, EventArgs args)
     {
       OwnerSetValue(!Source.Value);
+    }
+
+    #endregion
+
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "NOT", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "NOT";
+      else
+        return base.ToString();
     }
 
     #endregion
@@ -494,6 +542,22 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "EQUAL", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "EQUAL";
+      else
+        return base.ToString();
+    }
+
+    #endregion
+
     #region Внутренняя реализация
 
     private void ArgValueChanged(object sender, EventArgs args)
@@ -553,6 +617,22 @@ namespace AgeyevAV.DependedValues
       if (_Items == null)
         return false;
       return Array.IndexOf<T>(_Items, Source.Value) >= 0;
+    }
+
+    #endregion
+
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "INARRAY", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "INARRAY";
+      else
+        return base.ToString();
     }
 
     #endregion

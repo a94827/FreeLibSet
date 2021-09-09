@@ -388,7 +388,7 @@ namespace AgeyevAV.DependedValues
       _Source3 = new DepInput<T3>();
       _Source3.OwnerInfo = new DepOwnerInfo(this, "Source3");
       _Source3.ValueChanged += new EventHandler(SourceValueChanged);
-      FFunction = function;
+      _Function = function;
       _Source1.Source = source1;
       _Source2.Source = source2;
       _Source3.Source = source3;
@@ -484,7 +484,7 @@ namespace AgeyevAV.DependedValues
     /// Делегат для вычисления функции
     /// </summary>
     //public DepFunction3<TResult, T1, T2, T3> Function { get { return FFunction; } }
-    private DepFunction3<TResult, T1, T2, T3> FFunction;
+    private DepFunction3<TResult, T1, T2, T3> _Function;
 
 
     #endregion
@@ -503,9 +503,9 @@ namespace AgeyevAV.DependedValues
     /// <returns></returns>
     protected virtual TResult Calculate()
     {
-      if (FFunction == null)
+      if (_Function == null)
         throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
-      return FFunction(_Source1.Value, _Source2.Value, _Source3.Value);
+      return _Function(_Source1.Value, _Source2.Value, _Source3.Value);
     }
 
     #endregion

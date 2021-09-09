@@ -157,7 +157,7 @@ namespace AgeyevAV.ExtForms
 
     public override void ResetForeColor()
     {
-      BackColor = SystemColors.InfoText;
+      ForeColor = SystemColors.InfoText; // испр. 09.09.2021
     }
 
     #endregion

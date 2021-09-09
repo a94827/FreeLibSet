@@ -38,6 +38,8 @@ namespace AgeyevAV.FIAS
 {
   // Буферизуемые данные
 
+  #region Перечисление FiasSearchRowCount
+
   /// <summary>
   /// Результаты поиска строк
   /// </summary>
@@ -60,6 +62,8 @@ namespace AgeyevAV.FIAS
     /// </summary>
     Multi,
   }
+
+  #endregion
 
   /// <summary>
   /// Результаты поиска компонента адреса
@@ -278,7 +282,8 @@ namespace AgeyevAV.FIAS
     #region Методы и свойства для редактора
 
     /// <summary>
-    /// Имена без сокращений для инициализации списка AutoComplete в поле ввода
+    /// Имена без сокращений для инициализации списка AutoComplete в поле ввода.
+    /// В список входят только действующие элементы.
     /// </summary>
     public string[] Names
     {
@@ -309,13 +314,30 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Создать объект DataView для просмотра.
     /// Список отсортирован.
-    /// Созданный список должен быть удален после того, как просмотр закрывается.
+    /// Созданный объект должен быть удален после того, как просмотр закрывается.
+    /// В просмотр входят только актуальные записи.
+    /// Для извлечения информации из строк DataRow просмотра используйте FiasAddrObExtractor.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект DataView</returns>
     public DataView CreateDataView()
     {
+      return CreateDataView(true);
+    }
+
+    /// <summary>
+    /// Создать объект DataView для просмотра.
+    /// Список отсортирован.
+    /// Созданный объект должен быть удален после того, как просмотр закрывается.
+    /// Для извлечения информации из строк DataRow просмотра используйте FiasAddrObExtractor.
+    /// </summary>
+    /// <param name="actualOnly">Если true, то в просмотр входят только актуальные записи.
+    /// Если false, то фильтр не устанавливается. Однако наличие исторических записей зависит от FiasDBSettings.</param>
+    /// <returns>Новый объект DataView</returns>
+    public DataView CreateDataView(bool actualOnly)
+    {
       DataView dv = new DataView(_DS.Tables[0]);
-      FiasTools.InitTopFlagAndDatesRowFilter(dv);
+      if (actualOnly)
+        FiasTools.InitTopFlagAndDatesRowFilter(dv);
       dv.Sort = "OFFNAME";
       return dv;
     }
@@ -427,6 +449,36 @@ namespace AgeyevAV.FIAS
       else
         return FiasSearchRowResult.NotFound;
     }
+
+    /// <summary>
+    /// Устойчивые идентификаторы адресных объектов.
+    /// В список входят только действующие элементы.
+    /// </summary>
+    public Guid[] AOGuids
+    {
+      get
+      {
+        if (_AOGuids != null)
+          return _AOGuids;
+
+        lock (_DS)
+        {
+          if (_AOGuids == null)
+          {
+            SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
+            using (DataView dv = CreateDataView())
+            {
+              foreach (DataRowView drv in dv)
+                lst.Add(DataTools.GetGuid(drv.Row, "AOGUID"));
+            }
+            _AOGuids = lst.ToArray();
+          }
+        }
+        return _AOGuids;
+      }
+    }
+    [NonSerialized]
+    private volatile Guid[] _AOGuids;
 
     #endregion
   }
@@ -672,12 +724,29 @@ namespace AgeyevAV.FIAS
     /// Создать объект DataView для просмотра.
     /// Список отсортирован.
     /// Созданный список должен быть удален после того, как просмотр закрывается.
+    /// В просмотр входят только актуальные записи.
+    /// Для извлечения информации из строк DataRow просмотра используйте FiasHouseExtractor.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект DataView</returns>
     public DataView CreateDataView()
     {
+      return CreateDataView(true);
+    }
+
+    /// <summary>
+    /// Создать объект DataView для просмотра.
+    /// Список отсортирован.
+    /// Созданный объект должен быть удален после того, как просмотр закрывается.
+    /// Для извлечения информации из строк DataRow просмотра используйте FiasHouseExtractor.
+    /// </summary>
+    /// <param name="actualOnly">Если true, то в просмотр входят только актуальные записи.
+    /// Если false, то фильтр не устанавливается. Однако наличие исторических записей зависит от FiasDBSettings.</param>
+    /// <returns>Новый объект DataView</returns>
+    public DataView CreateDataView(bool actualOnly)
+    {
       DataView dv = new DataView(_DS.Tables[0]);
-      FiasTools.InitTopFlagAndDatesRowFilter(dv);
+      if (actualOnly)
+        FiasTools.InitTopFlagAndDatesRowFilter(dv);
       dv.Sort = "nHouseNum,HOUSENUM,nBuildNum,BUILDNUM,STRSTATUS,nStrucNum,STRUCNUM";
       return dv;
     }
@@ -812,6 +881,36 @@ namespace AgeyevAV.FIAS
       }
       return sb.ToString();
     }
+
+    /// <summary>
+    /// Устойчивые идентификаторы зданий.
+    /// В список входят только действующие элементы.
+    /// </summary>
+    public Guid[] HouseGuids
+    {
+      get
+      {
+        if (_HouseGuids != null)
+          return _HouseGuids;
+
+        lock (_DS)
+        {
+          if (_HouseGuids == null)
+          {
+            SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
+            using (DataView dv = CreateDataView())
+            {
+              foreach (DataRowView drv in dv)
+                lst.Add(DataTools.GetGuid(drv.Row, "HOUSEGUID"));
+            }
+            _HouseGuids = lst.ToArray();
+          }
+        }
+        return _HouseGuids;
+      }
+    }
+    [NonSerialized]
+    private volatile Guid[] _HouseGuids;
 
     #endregion
   }
@@ -987,13 +1086,30 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Создать объект DataView для просмотра.
     /// Список отсортирован.
-    /// Созданный список должен быть удален после того, как просмотр закрывается.
+    /// Созданный объект должен быть удален после того, как просмотр закрывается.
+    /// В просмотр входят только актуальные записи.
+    /// Для извлечения информации из строк DataRow просмотра используйте FiasRoomExtractor.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект DataView</returns>
     public DataView CreateDataView()
     {
+      return CreateDataView(true);
+    }
+
+    /// <summary>
+    /// Создать объект DataView для просмотра.
+    /// Список отсортирован.
+    /// Созданный объект должен быть удален после того, как просмотр закрывается.
+    /// Для извлечения информации из строк DataRow просмотра используйте FiasRoomExtractor.
+    /// </summary>
+    /// <param name="actualOnly">Если true, то в просмотр входят только актуальные записи.
+    /// Если false, то фильтр не устанавливается. Однако наличие исторических записей зависит от FiasDBSettings.</param>
+    /// <returns>Новый объект DataView</returns>
+    public DataView CreateDataView(bool actualOnly)
+    {
       DataView dv = new DataView(_DS.Tables[0]);
-      FiasTools.InitTopFlagAndDatesRowFilter(dv);
+      if (actualOnly)
+        FiasTools.InitTopFlagAndDatesRowFilter(dv);
       dv.Sort = "FLATTYPE,nFlatNumber,FLATNUMBER,ROOMTYPE,nRoomNumber,ROOMNUMBER"; // квартиры до помещений, затем по номерам квартир
       return dv;
     }
@@ -1117,22 +1233,60 @@ namespace AgeyevAV.FIAS
       return sb.ToString();
     }
 
+    /// <summary>
+    /// Устойчивые идентификаторы помещений.
+    /// В список входят только действующие элементы.
+    /// </summary>
+    public Guid[] RoomGuids
+    {
+      get
+      {
+        if (_RoomGuids != null)
+          return _RoomGuids;
+
+        lock (_DS)
+        {
+          if (_RoomGuids == null)
+          {
+            SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
+            using (DataView dv = CreateDataView())
+            {
+              foreach (DataRowView drv in dv)
+                lst.Add(DataTools.GetGuid(drv.Row, "ROOMGUID"));
+            }
+            _RoomGuids = lst.ToArray();
+          }
+        }
+        return _RoomGuids;
+      }
+    }
+    [NonSerialized]
+    private volatile Guid[] _RoomGuids;
+
     #endregion
   }
 
   /// <summary>
   /// Извлечение данных из строки классификатора для таблицы AddrOb.
-  /// После установки свойства Row становятся доступными данные в читаемом виде.
-  /// Создается в FiasHandler.
-  /// Этот класс не является потокобезопасным.
+  /// Строки должны быть получены из просмотра, создаваемым FiasCachedPageAddrOb.CreateDataView()
+  /// После установки свойства Row становятся доступными свойства для извлечения информации.
   /// </summary>
-  internal class FiasAddrObExtractor
+  public struct FiasAddrObExtractor
   {
     #region Конструктор
 
+    /// <summary>
+    /// Инициализирует объект.
+    /// </summary>
+    /// <param name="source">Источник данных. Не может быть null</param>
     public FiasAddrObExtractor(IFiasSource source)
     {
+#if DEBUG
+      if (source == null)
+        throw new ArgumentNullException("source");
+#endif
       _Source = source;
+      _Row = null;
     }
 
     #endregion
@@ -1141,6 +1295,10 @@ namespace AgeyevAV.FIAS
 
     private readonly IFiasSource _Source;
 
+    /// <summary>
+    /// Сюда должна быть помещена строка из просмотра страницы FiasCachedPageAddrOb.CreateDataView().
+    /// После этого можно обращаться к другим свойствам.
+    /// </summary>
     public DataRow Row { get { return _Row; } set { _Row = value; } }
     private DataRow _Row;
 
@@ -1151,7 +1309,7 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Идентификатор адресного объекта
     /// </summary>
-    public Guid AOGUID { get { return DataTools.GetGuid(_Row, "AOGUID"); } }
+    public Guid AOGuid { get { return DataTools.GetGuid(_Row, "AOGUID"); } }
 
     /// <summary>
     /// Текстовое наименование без сокращения
@@ -1159,7 +1317,8 @@ namespace AgeyevAV.FIAS
     public string Name { get { return DataTools.GetString(_Row, "OFFNAME"); } }
 
     /// <summary>
-    /// Идентификатор сокращения
+    /// Идентификатор типа адресообразующего элемента.
+    /// Для получения типа в читаемом виде используйте метод FiasCachedAOTypes.GetAOType()
     /// </summary>
     public Int32 AOTypeId { get { return DataTools.GetInt(_Row, "AOTypeId"); } }
 
@@ -1199,7 +1358,8 @@ namespace AgeyevAV.FIAS
 
 
     /// <summary>
-    /// Код ОКАТО
+    /// Код ОКАТО.
+    /// Если FiasDBSettings.UseOKATO=false, то возвращается пустая строка.
     /// </summary>
     public string OKATO
     {
@@ -1219,7 +1379,8 @@ namespace AgeyevAV.FIAS
     }
 
     /// <summary>
-    /// Код ОКТМО (8 или 11 знаков)
+    /// Код ОКТМО (8 или 11 знаков).
+    /// Если FiasDBSettings.UseOKTMO=false, то возвращается пустая строка.
     /// </summary>
     public string OKTMO
     {
@@ -1241,64 +1402,88 @@ namespace AgeyevAV.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ
+    /// Код ИФНС ФЛ.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
     public string IFNSFL
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSFL") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSFL") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSFL").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSFL").ToString("0000");
+          return String.Empty;
       }
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ территории
+    /// Код ИФНС ФЛ территории.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
-    public string IFNSFLTerr
+    internal string IFNSFLTerr
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSFLTerr") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSFLTerr") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSFLTerr").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSFLTerr").ToString("0000");
+          return String.Empty;
       }
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ
+    /// Код ИФНС ЮЛ.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
     public string IFNSUL
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSUL") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSUL") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSUL").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSUL").ToString("0000");
+          return String.Empty;
       }
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ территории
+    /// Код ИФНС ЮЛ территории.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
-    public string IFNSULTerr
+    internal string IFNSULTerr
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSULTERR") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSULTERR") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSULTERR").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSULTERR").ToString("0000");
+          return String.Empty;
       }
     }
 
     /// <summary>
     /// Признак актуальности записи.
-    /// Если FiasDBSettings.UseHistory=false, всегда возвращает true
+    /// Если FiasDBSettings.UseHistory=false, всегда возвращает true.
     /// </summary>
     public bool Actual
     {
@@ -1314,6 +1499,7 @@ namespace AgeyevAV.FIAS
 
     /// <summary>
     /// Признак действующей записи.
+    /// Если FiasDBSettings.UseHistory=false, всегда возвращает true.
     /// </summary>
     public bool Live
     {
@@ -1334,17 +1520,17 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Идентификатор записи
     /// </summary>
-    public Guid RecId { get { return DataTools.GetGuid(_Row, "AOID"); } }
+    internal Guid RecId { get { return DataTools.GetGuid(_Row, "AOID"); } }
 
     /// <summary>
     /// Начало действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null
+    /// Если FiasDBSetting.UseDates=false, возвращает null.
     /// </summary>
     public DateTime? StartDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, true); } }
 
     /// <summary>
     /// Окончание действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null
+    /// Если FiasDBSetting.UseDates=false, возвращает null.
     /// </summary>
     public DateTime? EndDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, false); } }
 
@@ -1353,17 +1539,25 @@ namespace AgeyevAV.FIAS
 
   /// <summary>
   /// Извлечение данных из строки классификатора для таблицы House.
-  /// После установки свойства Row становятся доступными данные в читаемом виде.
-  /// Создается в FiasHandler.
-  /// Этот класс не является потокобезопасным.
+  /// Строки должны быть получены из просмотра, создаваемым FiasCachedPageHouse.CreateDataView()
+  /// После установки свойства Row становятся доступными свойства для извлечения информации.
   /// </summary>
-  internal class FiasHouseExtractor
+  public struct FiasHouseExtractor
   {
     #region Конструктор
 
+    /// <summary>
+    /// Инициализирует объект.
+    /// </summary>
+    /// <param name="source">Источник данных. Не может быть null</param>
     public FiasHouseExtractor(IFiasSource source)
     {
+#if DEBUG
+      if (source == null)
+        throw new ArgumentNullException("source");
+#endif
       _Source = source;
+      _Row = null;
     }
 
     #endregion
@@ -1372,6 +1566,10 @@ namespace AgeyevAV.FIAS
 
     private readonly IFiasSource _Source;
 
+    /// <summary>
+    /// Сюда должна быть помещена строка из просмотра страницы FiasCachedPageHouse.CreateDataView().
+    /// После этого можно обращаться к другим свойствам.
+    /// </summary>
     public DataRow Row { get { return _Row; } set { _Row = value; } }
     private DataRow _Row;
 
@@ -1382,7 +1580,7 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Идентификатор здания
     /// </summary>
-    public Guid HOUSEGUID { get { return DataTools.GetGuid(_Row, "HOUSEGUID"); } }
+    public Guid HouseGuid { get { return DataTools.GetGuid(_Row, "HOUSEGUID"); } }
 
     /// <summary>
     /// Номер дома
@@ -1425,7 +1623,8 @@ namespace AgeyevAV.FIAS
     }
 
     /// <summary>
-    /// Код ОКАТО
+    /// Код ОКАТО.
+    /// Если FiasDBSettings.UseOKATO=false, то возвращается пустая строка.
     /// </summary>
     public string OKATO
     {
@@ -1445,7 +1644,8 @@ namespace AgeyevAV.FIAS
     }
 
     /// <summary>
-    /// Код ОКТМО (8 или 11 знаков)
+    /// Код ОКТМО (8 или 11 знаков).
+    /// Если FiasDBSettings.UseOKTMO=false, то возвращается пустая строка.
     /// </summary>
     public string OKTMO
     {
@@ -1467,58 +1667,82 @@ namespace AgeyevAV.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ
+    /// Код ИФНС ФЛ.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
     public string IFNSFL
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSFL") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSFL") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSFL").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSFL").ToString("0000");
+          return String.Empty;
       }
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ территории
+    /// Код ИФНС ФЛ территории.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
-    public string IFNSFLTerr
+    internal string IFNSFLTerr
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSFLTerr") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSFLTerr") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSFLTerr").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSFLTerr").ToString("0000");
+          return String.Empty;
       }
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ
+    /// Код ИФНС ЮЛ.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
     public string IFNSUL
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSUL") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSUL") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSUL").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSUL").ToString("0000");
+          return String.Empty;
       }
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ территории
+    /// Код ИФНС ЮЛ территории.
+    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
     /// </summary>
-    public string IFNSULTerr
+    internal string IFNSULTerr
     {
       get
       {
-        if (DataTools.GetInt(_Row, "IFNSULTERR") == 0)
-          return String.Empty;
+        if (_Source.DBSettings.UseIFNS)
+        {
+          if (DataTools.GetInt(_Row, "IFNSULTERR") == 0)
+            return String.Empty;
+          else
+            return DataTools.GetInt(_Row, "IFNSULTERR").ToString("0000");
+        }
         else
-          return DataTools.GetInt(_Row, "IFNSULTERR").ToString("0000");
+          return String.Empty;
       }
     }
 
@@ -1529,7 +1753,7 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Идентификатор записи
     /// </summary>
-    public Guid RecId { get { return DataTools.GetGuid(_Row, "HOUSEID"); } }
+    internal Guid RecId { get { return DataTools.GetGuid(_Row, "HOUSEID"); } }
 
     /// <summary>
     /// Начало действия записи.
@@ -1548,17 +1772,25 @@ namespace AgeyevAV.FIAS
 
   /// <summary>
   /// Извлечение данных из строки классификатора для таблицы Room.
-  /// После установки свойства Row становятся доступными данные в читаемом виде.
-  /// Создается в FiasHandler.
-  /// Этот класс не является потокобезопасным.
+  /// Строки должны быть получены из просмотра, создаваемым FiasCachedPageRoom.CreateDataView()
+  /// После установки свойства Row становятся доступными свойства для извлечения информации.
   /// </summary>
-  internal class FiasRoomExtractor
+  public struct FiasRoomExtractor
   {
     #region Конструктор
 
+    /// <summary>
+    /// Инициализирует объект.
+    /// </summary>
+    /// <param name="source">Источник данных. Не может быть null</param>
     public FiasRoomExtractor(IFiasSource source)
     {
+#if DEBUG
+      if (source == null)
+        throw new ArgumentNullException("source");
+#endif
       _Source = source;
+      _Row = null;
     }
 
     #endregion
@@ -1567,6 +1799,10 @@ namespace AgeyevAV.FIAS
 
     private readonly IFiasSource _Source;
 
+    /// <summary>
+    /// Сюда должна быть помещена строка из просмотра страницы FiasCachedPageRoom.CreateDataView().
+    /// После этого можно обращаться к другим свойствам.
+    /// </summary>
     public DataRow Row { get { return _Row; } set { _Row = value; } }
     private DataRow _Row;
 
@@ -1577,7 +1813,7 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Идентификатор помещения
     /// </summary>
-    public Guid ROOMGUID { get { return DataTools.GetGuid(_Row, "ROOMGUID"); } }
+    public Guid RoomGuid { get { return DataTools.GetGuid(_Row, "ROOMGUID"); } }
 
     /// <summary>
     /// Номер квартиры, офиса
@@ -1616,6 +1852,7 @@ namespace AgeyevAV.FIAS
 
     /// <summary>
     /// Признак действующей записи.
+    /// Если FiasDBSettings.UseHistory=false, всегда возвращает true.
     /// </summary>
     public bool Live
     {
@@ -1635,7 +1872,7 @@ namespace AgeyevAV.FIAS
     /// <summary>
     /// Идентификатор записи
     /// </summary>
-    public Guid RecId { get { return DataTools.GetGuid(_Row, "ROOMID"); } }
+    internal Guid RecId { get { return DataTools.GetGuid(_Row, "ROOMID"); } }
 
     /// <summary>
     /// Начало действия записи.

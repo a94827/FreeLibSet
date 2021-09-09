@@ -341,7 +341,7 @@ namespace AgeyevAV.FIAS
             if (FiasTools.GetTableType(FiasTools.AllLevels[i]) == FiasTableType.AddrOb)
               sPrefix = "Неправильное наименование. ";
             else
-              sPrefix = "Неправильное номер. ";
+              sPrefix = "Неправильный номер. ";
             address.AddMessage(ErrorMessageKind.Error, sPrefix + errorText, FiasTools.AllLevels[i]); // 03.03.2021
           }
         }
@@ -475,7 +475,7 @@ namespace AgeyevAV.FIAS
         address.SetName(FiasLevel.Room, String.Empty);
         address.SetAOType(FiasLevel.Room, String.Empty);
       }
-      address.SetGuid(FiasLevel.Flat, _RoomExtractor.ROOMGUID);
+      address.SetGuid(FiasLevel.Flat, _RoomExtractor.RoomGuid);
       address.SetRecId(FiasLevel.Flat, _RoomExtractor.RecId);
       address.UnknownGuid = Guid.Empty; // 02.11.2020
 
@@ -566,7 +566,7 @@ namespace AgeyevAV.FIAS
         address.SetAOType(FiasLevel.Structure, String.Empty);
       }
 
-      address.SetGuid(FiasLevel.House, _HouseExtractor.HOUSEGUID);
+      address.SetGuid(FiasLevel.House, _HouseExtractor.HouseGuid);
       address.SetRecId(FiasLevel.House, _HouseExtractor.RecId);
       address.UnknownGuid = Guid.Empty; // 02.11.2020
 
@@ -660,7 +660,7 @@ namespace AgeyevAV.FIAS
 
       address.SetName(_AddrObExtractor.Level, _AddrObExtractor.Name);
       address.SetAOType(_AddrObExtractor.Level, AOTypes.GetAOType(_AddrObExtractor.AOTypeId, FiasAOTypeMode.Full));
-      address.SetGuid(_AddrObExtractor.Level, _AddrObExtractor.AOGUID);
+      address.SetGuid(_AddrObExtractor.Level, _AddrObExtractor.AOGuid);
       address.SetRecId(_AddrObExtractor.Level, _AddrObExtractor.RecId);
       address.AOGuid = Guid.Empty; // 02.11.2020
       address.AORecId = Guid.Empty; // 02.11.2020
@@ -2787,7 +2787,7 @@ namespace AgeyevAV.FIAS
 
               _AddrObExtractor.Row = searchRes.Row;
               address.AOGuid = Guid.Empty; // очищаем неуточненный уровень
-              address.SetGuid(level, _AddrObExtractor.AOGUID);
+              address.SetGuid(level, _AddrObExtractor.AOGuid);
               address.SetName(level, _AddrObExtractor.Name);
               address.SetAOType(level, AOTypes.GetAOType(_AddrObExtractor.AOTypeId, FiasAOTypeMode.Full));
               return true;
@@ -2804,7 +2804,7 @@ namespace AgeyevAV.FIAS
 
               _HouseExtractor.Row = row;
               address.AOGuid = Guid.Empty; // очищаем неуточненный уровень
-              address.SetGuid(FiasLevel.House, _HouseExtractor.HOUSEGUID);
+              address.SetGuid(FiasLevel.House, _HouseExtractor.HouseGuid);
               address.SetName(FiasLevel.House, _HouseExtractor.HouseNum);
               address.SetAOType(FiasLevel.House, FiasEnumNames.ToString(_HouseExtractor.EstStatus));
               return true;
