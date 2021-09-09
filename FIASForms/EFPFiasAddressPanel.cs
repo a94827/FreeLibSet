@@ -883,10 +883,11 @@ namespace AgeyevAV.ExtForms.FIAS
         Owner.UpdateAddress(Level, Guid.Empty);
       }
 
-      internal void InitAOTypeEnabled()
+      internal void InitEnabled()
       {
         for (int i = 0; i < _NAs.Length; i++)
           _NAs[i].InitAOTypeEnabled();
+        InitButtonSelEnabled();
       }
 
       #endregion
@@ -920,14 +921,19 @@ namespace AgeyevAV.ExtForms.FIAS
 
         OnParentGuidChanged(isInheritable, out _PageIsEmpty);
 
-        if (_PageIsEmpty)
-          efpButtonSel.Enabled = false;
-        else
-          efpButtonSel.Enabled = !NAs[0].Name.ReadOnly;
+        InitButtonSelEnabled();
 
 
         for (int i = 0; i < _NAs.Length; i++)
           _NAs[i].Validate();
+      }
+
+      private void InitButtonSelEnabled()
+      {
+        if (_PageIsEmpty)
+          efpButtonSel.Enabled = false;
+        else
+          efpButtonSel.Enabled = !NAs[0].Name.ReadOnly;
       }
 
       /// <summary>
@@ -1851,11 +1857,11 @@ namespace AgeyevAV.ExtForms.FIAS
 
 
         foreach (AddrObItem item in _AddrObParts)
-          item.InitAOTypeEnabled();
+          item.InitEnabled();
         if (_HousePart != null)
-          _HousePart.InitAOTypeEnabled();
+          _HousePart.InitEnabled();
         if (_RoomPart != null)
-          _RoomPart.InitAOTypeEnabled();
+          _RoomPart.InitEnabled();
       }
     }
     private bool _ReadOnly;

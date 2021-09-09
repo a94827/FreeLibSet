@@ -881,7 +881,9 @@ namespace FIASDemo
     {
       FiasHandler handler = new FiasHandler(UI.Source);
       FiasParseSettings ps = new FiasParseSettings(UI.Source);
-      ps.BaseAddress.AOGuid = handler.GetRegionAOGuid("72");
+      //ps.BaseAddress.AOGuid = handler.GetRegionAOGuid("72");
+      ps.BaseAddress.AOGuid = new Guid("4af5a970-b80c-422e-bc42-406cbf579c85");
+
       handler.FillAddress(ps.BaseAddress);
 
       ps.CellLevels = new FiasLevelSet[6];
@@ -896,7 +898,7 @@ namespace FIASDemo
 
       string[] cells = new string[6];
       cells[0] = "";
-      cells[1] = "рп. Голышманово";
+      cells[1] = "рп Голышманово";
       cells[2] = "ул. Карла Маркса";
       cells[3] = "Дом 1";
       cells[4] = "";

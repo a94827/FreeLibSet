@@ -62,6 +62,7 @@
     <Compile Include="FiasExceptions.cs" />
     <Compile Include="FiasFormatStringParser.cs" />
     <Compile Include="FiasHandler.cs" />
+    <Compile Include="FiasParseHelper.cs" />
     <Compile Include="FiasParseSettings.cs" />
     <Compile Include="FiasRI.cs" />
     <Compile Include="FiasTools.cs" />

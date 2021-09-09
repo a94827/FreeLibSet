@@ -1496,9 +1496,11 @@ namespace AgeyevAV.FIAS
 
       if (_Messages != null)
       {
-        sb.Append(Environment.NewLine);
         for (int i = 0; i < _Messages.Count; i++)
+        {
+          sb.Append(Environment.NewLine);
           sb.Append(_Messages[i].ToString());
+        }
       }
 
       return sb.ToString();
