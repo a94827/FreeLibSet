@@ -132,6 +132,9 @@ namespace AgeyevAV.ExtForms.Docs
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
     private DocTypeUI _DocTypeUI;
 
+    /// <summary>
+    /// Наличие в списке режимо efpMode вариантов "Ссылка на любой документ" и "Ссылка не задана".
+    /// </summary>
     public bool Nullable { get { return _Nullable; } }
     private bool _Nullable;
 
@@ -161,6 +164,7 @@ namespace AgeyevAV.ExtForms.Docs
         dlg.SelectionMode = DocSelectionMode.MultiSelect;
         dlg.CanBeEmpty = false;
         dlg.DialogPosition = dialogPosition;
+        dlg.Filters = docFilters; // 10.09.2021
         if (dlg.ShowDialog() == DialogResult.OK)
         {
           mode = RefDocFilterMode.Include;
