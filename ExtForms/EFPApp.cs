@@ -1413,6 +1413,10 @@ namespace AgeyevAV.ExtForms
     public static void EndUpdateInterface()
     {
       _UpdateInterfaceCount--;
+#if DEBUG
+      if (_UpdateInterfaceCount < 0)
+        throw new InvalidOperationException("Лишний вызов EFPApp.EndUpdateInterface()");
+#endif
       TestInterfaceChanged();
     }
 

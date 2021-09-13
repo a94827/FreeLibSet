@@ -352,7 +352,7 @@ namespace AgeyevAV.ExtForms
     public bool CloseAllChildren()
     {
       bool Res;
-      EFPApp.EndUpdateInterface();
+      EFPApp.BeginUpdateInterface(); // »справлено 13.09.2021
       try
       {
         Res = DoCloseAllChildren();
@@ -969,6 +969,19 @@ namespace AgeyevAV.ExtForms
       {
         form.WindowState = OldState;
       }
+    }
+
+    #endregion
+
+    #region ѕрочие методы
+
+    /// <summary>
+    /// Ётот метод вызываетс€, когда закрываютс€ все дочерние окна.
+    /// ¬ следующий раз окно откроетс€ в левом верхнем углу без смещени€, как дл€ первого окна.
+    /// </summary>
+    public void ResetStartPosition()
+    {
+      _PrevLocation = new Point(int.MaxValue, int.MaxValue);
     }
 
     #endregion

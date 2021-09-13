@@ -3130,6 +3130,16 @@ namespace AgeyevAV.ExtDB.Docs
     }
 
     /// <summary>
+    /// Установить или очистить фильтр.
+    /// Эта перегрузка предназначена только для режимов <paramref name="mode"/>=NoFilter, Null и NotNull.
+    /// </summary>
+    /// <param name="mode">Режим фильтра</param>
+    public void SetFilter(RefDocFilterMode mode)
+    {
+      SetFilter(mode, (IdList)null);
+    }
+
+    /// <summary>
     /// Установить или очистить фильтр
     /// </summary>
     /// <param name="mode">Режим фильтра</param>

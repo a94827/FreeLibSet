@@ -1754,17 +1754,17 @@ namespace AgeyevAV.ExtForms
       FormWindowState oldWS = Form.WindowState;
       Form.WindowState = FormWindowState.Normal;
 
-      if (DialogPosition != null)
-      {
-        Form.StartPosition = FormStartPosition.Manual;
-        if (DialogPosition.PopupOwnerControl != null)
-          WinFormsTools.PlacePopupForm(Form, DialogPosition.PopupOwnerControl);
-        else if (!DialogPosition.PopupOwnerBounds.IsEmpty)
-          WinFormsTools.PlacePopupForm(Form, DialogPosition.PopupOwnerBounds);
-      }
-
       if (Modal)
       {
+        if (DialogPosition != null)
+        {
+          Form.StartPosition = FormStartPosition.Manual;
+          if (DialogPosition.PopupOwnerControl != null)
+            WinFormsTools.PlacePopupForm(Form, DialogPosition.PopupOwnerControl);
+          else if (!DialogPosition.PopupOwnerBounds.IsEmpty)
+            WinFormsTools.PlacePopupForm(Form, DialogPosition.PopupOwnerBounds);
+        }
+
         switch (Form.StartPosition)
         {
           case FormStartPosition.CenterScreen:
@@ -1952,35 +1952,38 @@ namespace AgeyevAV.ExtForms
           CfgPart cfg2 = cfg.GetChild(Modal ? "Dialog" : "Form", true);
           if ((WantedParts & EFPFormBoundsPart.WindowState) != 0)
             cfg2.SetEnum<FormWindowState>("State", Bounds.WindowState);
-          CfgPart cfg3 = cfg2.GetChild(ScreenSubSectionName, true);
-          if ((WantedParts & EFPFormBoundsPart.Size) != 0)
+          if (Bounds.WindowState != FormWindowState.Maximized) // 13.09.2021
           {
-            cfg3.SetInt("Width", Bounds.Bounds.Width);
-            cfg3.SetInt("Height", Bounds.Bounds.Height);
-          }
-          if ((WantedParts & EFPFormBoundsPart.Location) != 0)
-          {
-            // Середина окна
-            int cx = Bounds.Bounds.Left + Bounds.Bounds.Width / 2;
-            int cy = Bounds.Bounds.Top + Bounds.Bounds.Height / 2;
-
-            if (EFPApp.MainWindow == null)
+            CfgPart cfg3 = cfg2.GetChild(ScreenSubSectionName, true);
+            if ((WantedParts & EFPFormBoundsPart.Size) != 0)
             {
-              // Середина экрана
-              int cx0 = _DefaultScreen.WorkingArea.X + _DefaultScreen.WorkingArea.Width / 2;
-              int cy0 = _DefaultScreen.WorkingArea.Y + _DefaultScreen.WorkingArea.Height / 2;
-
-              cfg3.SetInt("ScreenCenterDX", cx - cx0);
-              cfg3.SetInt("ScreenCenterDY", cy - cy0);
+              cfg3.SetInt("Width", Bounds.Bounds.Width);
+              cfg3.SetInt("Height", Bounds.Bounds.Height);
             }
-            else
+            if ((WantedParts & EFPFormBoundsPart.Location) != 0)
             {
-              // Середина главного окна
-              int cx0 = EFPApp.MainWindow.Bounds.Left + EFPApp.MainWindow.Bounds.Width / 2;
-              int cy0 = EFPApp.MainWindow.Bounds.Top + EFPApp.MainWindow.Bounds.Height / 2;
+              // Середина окна
+              int cx = Bounds.Bounds.Left + Bounds.Bounds.Width / 2;
+              int cy = Bounds.Bounds.Top + Bounds.Bounds.Height / 2;
 
-              cfg3.SetInt("MainWindowCenterDX", cx - cx0);
-              cfg3.SetInt("MainWindowCenterDY", cy - cy0);
+              if (EFPApp.MainWindow == null)
+              {
+                // Середина экрана
+                int cx0 = _DefaultScreen.WorkingArea.X + _DefaultScreen.WorkingArea.Width / 2;
+                int cy0 = _DefaultScreen.WorkingArea.Y + _DefaultScreen.WorkingArea.Height / 2;
+
+                cfg3.SetInt("ScreenCenterDX", cx - cx0);
+                cfg3.SetInt("ScreenCenterDY", cy - cy0);
+              }
+              else
+              {
+                // Середина главного окна
+                int cx0 = EFPApp.MainWindow.Bounds.Left + EFPApp.MainWindow.Bounds.Width / 2;
+                int cy0 = EFPApp.MainWindow.Bounds.Top + EFPApp.MainWindow.Bounds.Height / 2;
+
+                cfg3.SetInt("MainWindowCenterDX", cx - cx0);
+                cfg3.SetInt("MainWindowCenterDY", cy - cy0);
+              }
             }
           }
         }
@@ -2015,7 +2018,7 @@ namespace AgeyevAV.ExtForms
           CfgPart cfg2 = cfg.GetChild(Modal ? "Dialog" : "Form", false);
           if (cfg2 != null)
           {
-            EFPFormBoundsPart WantedParts = GetWantedFormBoundsParts(EFPConfigMode.Write);
+            EFPFormBoundsPart WantedParts = GetWantedFormBoundsParts(EFPConfigMode.Read); // исправлено 13.09.2021
             EFPFormBoundsPart RealParts = EFPFormBoundsPart.None;
             EFPFormBounds Bounds = new EFPFormBounds();
             Bounds.FromControl(Form);

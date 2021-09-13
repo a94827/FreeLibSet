@@ -183,7 +183,6 @@ namespace AgeyevAV.ExtForms
       CorrectMdiChildFormIcon(form);
 
       base.PrepareChildForm(form);
-
     }
 
     /// <summary>
@@ -294,6 +293,9 @@ namespace AgeyevAV.ExtForms
       }
 
       #endregion
+
+      if (ChildFormCount == 1) // форма уже добавлена в список
+        _CascadeHelper.ResetStartPosition(); // 13.09.2021
 
       // 09.06.2021 Перенесено вниз, после вызова Form.Show()
       // 14.06.2021 Перенесено обратно, до показа формы, чтобы окно не прыгало

@@ -201,8 +201,16 @@ namespace AgeyevAV.ExtForms
 
       CorrectBounds(form);
 
-      // Можно использовать сохраненные значения
-      form.StartPosition = FormStartPosition.Manual;
+      // Исправлено 13.09.2021
+      if ((parts & EFPFormBoundsPart.Size) !=0)
+      {
+        if (form.StartPosition==FormStartPosition.WindowsDefaultBounds)
+          form.StartPosition =FormStartPosition.WindowsDefaultLocation;
+      }
+      if ((parts & EFPFormBoundsPart.Location) != 0)
+      {
+        form.StartPosition = FormStartPosition.Manual;
+      }
 
       FormWindowState OrgState = form.WindowState;
 

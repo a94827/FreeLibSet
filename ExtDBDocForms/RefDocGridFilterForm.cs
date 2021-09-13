@@ -416,25 +416,33 @@ namespace AgeyevAV.ExtForms.Docs
 
     private void InitFilterImageKey()
     {
-      _FilterImageKey = EFPGridFilterTools.DefaultFilterImageKey;
+      _FilterImageKey = GetFilterImageKey(Mode);
       switch (Mode)
       {
         case RefDocFilterMode.Include:
           if (DocIds.Count == 1)
             _FilterImageKey = DocTypeUI.GetImageKey(DocIds.SingleId);
           break;
-        case RefDocFilterMode.Exclude:
-          // ??
-          break;
-        case RefDocFilterMode.NotNull:
-          _FilterImageKey = "Item";
-          break;
-        case RefDocFilterMode.Null:
-          _FilterImageKey = "Delete";
-          break;
       }
     }
 
+    /// <summary>
+    /// Возвращает имя значка изображения для фильтра.
+    /// Может использоваться в прикладном коде, если диалог установки фильтра реализуется самостоятельно.
+    /// Для режима Include обычно используется значок вида документа
+    /// </summary>
+    /// <param name="mode">Режим фильтра</param>
+    /// <returns>Имя значка в EFPApp.MainImages</returns>
+    public static string GetFilterImageKey(RefDocFilterMode mode)
+    {
+      switch (mode)
+      {
+        case RefDocFilterMode.NoFilter: return EFPGridFilterTools.NoFilterImageKey;
+        case RefDocFilterMode.NotNull: return "Item";
+        case RefDocFilterMode.Null: return "Delete";
+        default: return EFPGridFilterTools.DefaultFilterImageKey;
+      }
+    }
 
     /// <summary>
     /// Выводит блок диалога установки фильтра
