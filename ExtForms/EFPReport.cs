@@ -764,7 +764,8 @@ namespace AgeyevAV.ExtForms
         {
 
           //TheForm.StartPosition = FormStartPosition.WindowsDefaultLocation;
-          _TheForm.WindowState = cfg.GetBool("Maximized") ? FormWindowState.Maximized : FormWindowState.Normal;
+
+          // Убрано 14.09.2021 _TheForm.WindowState = cfg.GetBool("Maximized") ? FormWindowState.Maximized : FormWindowState.Normal;
         }
 
         _TheOwnerControl = _TheForm;
@@ -1073,7 +1074,7 @@ namespace AgeyevAV.ExtForms
       CfgPart cfg;
       using (ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
       {
-        cfg.SetBool("Maximized", _TheForm.WindowState == FormWindowState.Maximized);
+        // Убрано 14.09.2021. cfg.SetBool("Maximized", _TheForm.WindowState == FormWindowState.Maximized);
         for (int i = 0; i < Pages.Count; i++)
         {
           if (!Pages[i].SaveViewConfig(cfg))
@@ -1386,16 +1387,16 @@ namespace AgeyevAV.ExtForms
         _FormProvider = new EFPFormProvider(this);
 
         // Будет записан другой тег Class
+        _FormProvider.ConfigSectionName = report.ConfigSectionName;
         if (report.StoreComposition)
         {
           _FormProvider.ConfigClassName = report.GetType().ToString();
-          _FormProvider.ConfigSectionName = report.ConfigSectionName;
           _FormProvider.ConfigHandler.Sources.Add(report);
         }
         else
         {
           _FormProvider.ConfigClassName = String.Empty;
-          _FormProvider.ConfigSectionName = String.Empty;
+          // убрано 14.09.2021 _FormProvider.ConfigSectionName = String.Empty;
         }
       }
 
