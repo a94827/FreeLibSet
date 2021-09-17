@@ -835,6 +835,8 @@ namespace AgeyevAV.ExtForms
         {
           foreach (Form dlg in _DialogStack)
           {
+            if (dlg.IsDisposed)
+              continue; // 17.09.2021
             if (value.Handle == dlg.Handle)
             {
 #if TRACE_DIALOGOWNERWINDOW
@@ -2833,7 +2835,21 @@ namespace AgeyevAV.ExtForms
         CheckMainThread();
 
         if (_DialogStack.Count > 0)
-          return _DialogStack.Peek();
+        {
+          Form frm = _DialogStack.Peek();
+          if ((!frm.IsDisposed) && (frm.Visible))
+            return _DialogStack.Peek();
+
+          // 16.09.2021
+          // Перебираем весь стек диалогов, если верхний уже не актуален
+          Form[] a = _DialogStack.ToArray();
+          for (int i = 0; i < a.Length; i++)
+          {
+            if ((!a[i].IsDisposed) && (a[i].Visible))
+              return a[i];
+          }
+          return null;
+        }
         else
           return null;
       }

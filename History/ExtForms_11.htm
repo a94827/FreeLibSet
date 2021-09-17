@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2021-09-14T10:00:21.451000000"/>
+	<meta name="changed" content="2021-09-16T18:02:39.510000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -258,6 +258,36 @@
 	</tr>
 	<tr valign="top">
 		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">298</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">16.09.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>1. <span lang="ru-RU">Свойство </span><span lang="en-US">EFPApp.ActiveDialog
+			</span><span lang="ru-RU">(</span><a href="#v254p1"><span lang="en-US">v.254
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не
+			возвращает форму, если она разрушена. Вместо этого просматривается
+			весь стек диалогов.</span></p>
+			<p><span lang="ru-RU">2. Обработчик события </span><span lang="en-US">Control.Disposed
+			</span><span lang="ru-RU">выполняет установку состояния
+			</span><span lang="en-US">ProviderState=Detached, </span><span lang="ru-RU">если
+			текущее состояние - </span><span lang="en-US">Attached.
+			</span><span lang="ru-RU">Неправильное состояние возникает, если
+			показ формы завершился неудачей из-за ошибки обработчика </span><span lang="en-US">Attached
+			</span><span lang="ru-RU">для одного из элементов. При этом часть
+			элементов оказываются в состоянии </span><span lang="en-US">Attached,
+			</span><span lang="ru-RU">а остальные - в </span><span lang="en-US">Created.
+			</span><span lang="ru-RU">При удалении элементов для каждого
+			&quot;хорошего&quot; элемента в состоянии </span><span lang="en-US">Attached
+			</span><span lang="ru-RU">выводился </span><span lang="en-US">log-</span><span lang="ru-RU">файл
+			ошибки (</span><a href="#v291p8"><span lang="en-US">v.291 </span><span lang="ru-RU">п.8</span></a><span lang="ru-RU">)
+			</span>
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="9%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">297</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -286,16 +316,18 @@
 			открываемое дочернее окно является первым. Метод
 			FormStartPositionCascadeHelper.ResetStartPosition() (</span><a href="#v199p7"><span lang="en-US">v.199
 			</span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">).</span></p>
-			<p lang="en-US">5. EFPReport (<a href="#v093p2">v.93 <span lang="ru-RU">п.2</span></a>)
-			<span lang="ru-RU">больше не записывает в секцию конфигурации
-			&quot;</span>ReportParams<span lang="ru-RU">&quot;</span> <span lang="ru-RU">признак
-			&quot;</span>Maximized<span lang="ru-RU">&quot;</span>. <span lang="ru-RU">Вместо
-			этого используется секция &quot;</span>FormBounds<span lang="ru-RU">&quot;</span>,
-			<span lang="ru-RU">как для других форм </span>(<a href="#v282p5">v.282
-			</a><a href="#v282p5"><span lang="ru-RU">п.5</span></a>)<span lang="ru-RU">.
-			Для этого свойство </span>EFPFormProvider.ConfigSectionName<span lang="ru-RU">
-			устанавливается не только при </span>EFPReport.StoreCompoistion=true
-			(<a href="#v199p26">v.199 <span lang="ru-RU">п.26</span></a>).</p>
+			<p><span lang="en-US">5. EFPReport (<a href="#v093p2">v.93 </a></span><a href="#v093p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">больше не записывает в секцию
+			конфигурации &quot;</span><span lang="en-US">ReportParams</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+			</span><span lang="ru-RU">признак &quot;</span><span lang="en-US">Maximized</span><span lang="ru-RU">&quot;</span><span lang="en-US">.
+			</span><span lang="ru-RU">Вместо этого используется секция
+			&quot;</span><span lang="en-US">FormBounds</span><span lang="ru-RU">&quot;</span><span lang="en-US">,
+			</span><span lang="ru-RU">как для других форм </span><span lang="en-US">(<a href="#v282p5">v.282
+			</a></span><a href="#v282p5"><span lang="ru-RU">п.5</span></a><span lang="en-US">)</span><span lang="ru-RU">.
+			Для этого свойство </span><span lang="en-US">EFPFormProvider.ConfigSectionName
+			</span><span lang="ru-RU">устанавливается не только при
+			</span><span lang="en-US">EFPReport.StoreCompoistion=true (<a href="#v199p26">v.199
+			</a></span><a href="#v199p26"><span lang="ru-RU">п.26</span></a><span lang="en-US">).</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -456,13 +488,14 @@
 			</p>
 			<p lang="en-US">7. <span lang="ru-RU">Убрано ненужное свойство
 			</span>EFPDataGridView.VisibleHasChanged</p>
-			<p><span lang="en-US">8. EFPControlBase.InternalSetProviderState()
-			</span><span lang="ru-RU">выбрасывает исключения наружу, а не
-			вызывает </span><span lang="en-US">LogoutException(). </span><span lang="ru-RU">Исключение
-			&mdash; переход в состояние </span><span lang="en-US">Disposed,
-			</span><span lang="ru-RU">для которого вызывается
-			</span><span lang="en-US">LogoutException(), </span><span lang="ru-RU">как
-			было (</span><a href="#v288p3"><span lang="en-US">v.288 </span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">).</span></p>
+			<p><a name="v291p8"></a><span lang="en-US">8.
+			EFPControlBase.InternalSetProviderState() </span><span lang="ru-RU">выбрасывает
+			исключения наружу, а не вызывает </span><span lang="en-US">LogoutException().
+			</span><span lang="ru-RU">Исключение &mdash; переход в состояние
+			</span><span lang="en-US">Disposed, </span><span lang="ru-RU">для
+			которого вызывается </span><span lang="en-US">LogoutException(),
+			</span><span lang="ru-RU">как было (</span><a href="#v288p3"><span lang="en-US">v.288
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">).</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -1969,7 +2002,7 @@
 			<p lang="en-US" align="center">20.08.2020-31.08.2020</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменена
+			<p><a name="v254p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Изменена
 			реализация свойства </span><span lang="en-US">EFPApp.ActiveDialog
 			(<a href="#v017p3">v.17 </a></span><a href="#v017p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">).
 			</span><span lang="ru-RU">Оно устанавливается не перед вызовом

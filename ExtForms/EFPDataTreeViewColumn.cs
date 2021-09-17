@@ -1057,7 +1057,7 @@ namespace AgeyevAV.ExtForms
 
 #endif
 
-#if XXX
+#if XXX // Объект EFPDataTreeViewColumn пока никуда не добавляется
     /// <summary>
     /// Возвращает последний столбец EFPDataGridViewColumn, добавленный с помощью методов AddXXX().
     /// Значение не определено, если выполнялось добавление столбцов непосредственно
@@ -1065,7 +1065,7 @@ namespace AgeyevAV.ExtForms
     /// Свойство удобно использовать для установки дополнительных атрибутов столбца,
     /// которые не были установлены в методе AddXXX()
     /// </summary>
-    public EFPDataGridViewColumn LastAdded
+    public EFPDataTreeViewColumn LastAdded
     {
       get
       {

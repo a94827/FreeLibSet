@@ -799,6 +799,16 @@ namespace AgeyevAV.ExtForms
 
     void Control_Disposed(object sender, EventArgs args)
     {
+      try
+      {
+        if (ProviderState == EFPControlProviderState.Attached)
+          InternalSetProviderState(EFPControlProviderState.Detached); // 16.09.2021
+      }
+      catch (Exception e)
+      {
+        LogoutTools.LogoutException(e, "Ошибка аварийной установки состояния Detached при вызове Control.Disposed");
+        // Будет и вторая ошибка при установке Disposed
+      }
       InternalSetProviderState(EFPControlProviderState.Disposed);
     }
 

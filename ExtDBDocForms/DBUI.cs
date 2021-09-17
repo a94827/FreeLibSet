@@ -91,6 +91,37 @@ namespace AgeyevAV.ExtForms.Docs
 
   #endregion
 
+
+#if XXX // пока не вижу смысла в таких настройках
+  /// <summary>
+  /// Аргумент вызова метода DBUI.EndInit().
+  /// Определяет, какие столбцы и подсказки нужно добавить к объявлениям документов и поддокументов
+  /// </summary>
+  [Flags]
+  public enum DBUIEndInitOptions
+  { 
+    /// <summary>
+    /// Ничего добавлять не надо
+    /// </summary>
+    None=0,
+
+    /// <summary>
+    /// В справочники документов нужно добавить столбец "Id", если он не добавлен в явном виде.
+    /// Если столбец "Id" был добавлен в явном виде, то игнорируется
+    /// </summary>
+    DocIdColumn=1,
+
+    /// <summary>
+    /// В справочники документов добавляются столбцы "CreateUserId", "CreateTime", "ChangeUserId", "ChangeTime" и "Version".
+    /// Если у пользователя отозвано разрешение на просмотр истории DocTypeViewHistoryPermission, то столбцы не добавляются.
+    /// Если в объекте DBxDocTypes не установлены свойства UseTime, UseUsers, UseVersions, то соответствующие столбцы не добавляются.
+    /// Столбец "Version" не добавляется, если флажок DocIdColumn не установлен.
+    /// </summary>
+    HistoryColumns=2,
+  }
+
+#endif
+
   /// <summary>
   /// Обработчики документов на стороне клиента
   /// Класс не является потокобезопасным.
@@ -600,6 +631,16 @@ namespace AgeyevAV.ExtForms.Docs
 
       foreach (DocTypeUI dt in DocTypes)
       {
+        if (!dt.GridProducer.Columns.Contains("Id"))
+        {
+          EFPGridProducerColumn IdCol=dt.GridProducer.Columns.AddInt("Id", "Id", 6);
+          IdCol.DisplayName = "Идентификатор документа";
+          IdCol.CanIncSearch = true;
+          // Делаем первым в списке
+          dt.GridProducer.Columns.RemoveAt(dt.GridProducer.Columns.Count - 1);
+          dt.GridProducer.Columns.Insert(0, IdCol);
+        }
+
         bool HistoryAllowed = DocTypeViewHistoryPermission.GetAllowed(this.DocProvider.UserPermissions, dt.DocType.Name);
 
         // Информация о документе
@@ -642,12 +683,6 @@ namespace AgeyevAV.ExtForms.Docs
           {
             dt.GridProducer.Columns.AddText("Version", "Версия документа", 4, 2);
             dt.GridProducer.Columns.LastAdded.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-          }
-
-          // 04.12.2015
-          if (dt.GridProducer.Orders.Count == 0)
-          {
-            dt.GridProducer.Orders.Add(dt.DocType.DefaultOrder, "Основной порядок сортировки");
           }
 
           // TODO:
@@ -694,7 +729,14 @@ namespace AgeyevAV.ExtForms.Docs
             ttDocumentInfo.DisplayName = "Документ создан / изменен";
             ttDocumentInfo.Tag = dt;
           }
-        }
+        } // HistoryAllowed
+
+        // 04.12.2015
+        // 16.09.2021 Больше не нужно. Если всегда есть столбец "Id", то и произвольная сортировка по нему возможна
+        //if (dt.GridProducer.Orders.Count == 0)
+        //{
+        //  dt.GridProducer.Orders.Add(dt.DocType.DefaultOrder, "Основной порядок сортировки");
+        //}
       }
     }
 
@@ -2980,7 +3022,8 @@ namespace AgeyevAV.ExtForms.Docs
 
 
       //AccDepClientExec.AddGridDebugIdColumn(DocGridHandler.MainGrid);
-      if (UI.DebugShowIds)
+      if (UI.DebugShowIds &&
+        (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
       {
         //Columns += "CreateTime,ChangeTime";
         controlProvider.Columns.AddInt("Id");
@@ -3472,10 +3515,13 @@ namespace AgeyevAV.ExtForms.Docs
       columns.Add(DocType.TreeParentColumnName);
 
       //Columns += "CreateTime,ChangeTime";
-      if (UI.DebugShowIds)
+      if (UI.DebugShowIds &&
+        (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
+      {
         controlProvider.Columns.AddInt("Id", true, "Id", 6);
-      //ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-      //ControlProvider.Columns.LastAdded.CanIncSearch = true;
+        // пока нельзя сделать
+        // controlProvider.Columns.LastAdded.CanIncSearch = true;
+      }
       //TODO: if (UseHieView)
       //TODO: {
       //TODO:   ControlProvider.Columns.AddInt("GroupId");
@@ -5152,7 +5198,8 @@ namespace AgeyevAV.ExtForms.Docs
       if (UI.DocProvider.DocTypes.UseDeleted) // 16.05.2018
         columns.Add("Deleted");
 
-      if (UI.DebugShowIds)
+      if (UI.DebugShowIds &&
+        (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
       {
         controlProvider.Columns.AddInt("Id");
         controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -5431,7 +5478,8 @@ namespace AgeyevAV.ExtForms.Docs
       columns.Add("DocId");
       columns.Add(SubDocType.TreeParentColumnName);
 
-      if (UI.DebugShowIds)
+      if (UI.DebugShowIds &&
+        (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
       {
         controlProvider.Columns.AddInt("Id", true, "Id", 6);
         //ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
