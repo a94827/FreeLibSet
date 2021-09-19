@@ -2085,7 +2085,7 @@ namespace AgeyevAV.ExtDB.Docs
               if (DataTools.IsEmptyValue(NewValue))
                 continue; // 07.08.2018
             }
-            else
+            else if (!Object.ReferenceEquals(ColDef.DefaultValue, null)) // дополнительное условие добавлено 19.09.2021
             {
               if (NewValue is DBNull)
                 continue; // 16.08.2021

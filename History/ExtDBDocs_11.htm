@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2021-09-01T10:31:41.602000000"/>
+	<meta name="changed" content="2021-09-19T17:05:19.093000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -66,7 +66,7 @@
 <table width="803" cellpadding="2" cellspacing="0">
 	<col width="72">
 	<col width="115">
-	<col width="599">
+	<col width="601">
 	<tr valign="top">
 		<td width="72" style="border: 1.00pt solid #000000; padding: 0.05cm">
 			<p align="center">Версия</p>
@@ -74,8 +74,24 @@
 		<td width="115" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Дата</p>
 		</td>
-		<td width="599" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="72" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center" style="text-decoration: none">115</p>
+		</td>
+		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center" style="text-decoration: none">19.09.2021</p>
+		</td>
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Добавлено недостающее
+			условие в </span>DBxRealaDocProvider.AddUserFieldPairs() <span lang="ru-RU">(</span><a href="#v113p2">v.113
+			<span lang="ru-RU">п.2</span></a><span lang="ru-RU">). Если
+			</span>DBxColumnStruct.Nullable=false <span lang="ru-RU">и
+			</span>DBxColumnStruct.DefaultValue=null, <span lang="ru-RU">то
+			нельзя пропускать значение для этого поля.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -83,12 +99,13 @@
 			<p lang="en-US" align="center" style="text-decoration: none">114</p>
 		</td>
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center" style="text-decoration: none">01.08.2021</p>
+			<p lang="en-US" align="center" style="text-decoration: none">01.09.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Недостающие свойства
-			</span>DBxMultiDocs <span lang="ru-RU">и </span>DBxDocSet.IsDataModified
-			(<a href="#v001p3">v.1 <span lang="ru-RU">п.3</span></a>)</p>
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Недостающие
+			свойства </span><span lang="en-US">DBxMultiDocs </span><span lang="ru-RU">и
+			</span><span lang="en-US">DBxDocSet.IsDataModified (<a href="#v001p3">v.1
+			</a></span><a href="#v001p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -98,7 +115,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">22.07.2021<span lang="en-US">-16.08.2021</span></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v113p1"></a><span lang="ru-RU">1. </span><span lang="en-US">DBxBinDataValidator</span>
 			<span lang="ru-RU">(</span><a href="#v112p1"><span lang="en-US">v.112
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">:</span></p>
@@ -123,12 +140,12 @@
 			<p lang="en-US">- <span lang="ru-RU">Свойство </span>Splash
 			<span lang="ru-RU">упразднено. Выполняется вывод отдельной
 			заставки с помощью SplashTools.ThreadSplashStack.</span></p>
-			<p lang="en-US">2. <span lang="ru-RU">Изменения во внутреннем
-			методе </span>DBxRealaDocProvider.AddUserFieldPairs():</p>
+			<p lang="en-US"><a name="v113p2"></a>2. <span lang="ru-RU">Изменения
+			во внутреннем методе </span>DBxRealaDocProvider.AddUserFieldPairs():</p>
 			<p><span lang="en-US">- Поля </span><span lang="ru-RU">таблицы</span><span lang="en-US">,
-			недоступные для записи, пропуска</span><span lang="ru-RU">ются</span><span lang="en-US">
-			всегда, а не </span><span lang="ru-RU">только для</span><span lang="en-US">
-			пустых значений </span><span lang="ru-RU">(</span><a href="#v008p1"><span lang="en-US">v.8
+			недоступные для записи, пропуска</span><span lang="ru-RU">ются</span>
+			<span lang="en-US">всегда, а не </span><span lang="ru-RU">только
+			для</span> <span lang="en-US">пустых значений </span><span lang="ru-RU">(</span><a href="#v008p1"><span lang="en-US">v.8
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
 			<p>- Учитывается свойство <span lang="en-US">DBxColumnStruct.DefaultValue
 			(<a href="ExtDB_11.htm#v052p1">ExtDB. v.52 </a></span><a href="ExtDB_11.htm#v052p1">п.1</a><span lang="en-US">)
@@ -143,7 +160,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">19.07.2021-20.07.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v112p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Выделен
 			класс </span><span lang="en-US">DBxBinDataValidator (<a href="#v037p3">v.37
 			</a></span><a href="#v037p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span></p>
@@ -176,7 +193,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">12.07.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">InitDBxEventArgs
 			переименован в DBxDocDBConnectionHelperInitDBxEventArgs</span><span lang="en-US">.
 			</span><span lang="ru-RU">Свойства
@@ -195,7 +212,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">25.06.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <span lang="ru-RU">Внутренний метод
 			</span><span lang="en-US">DBxDocProvider.CreateClearCacheData()
 			</span><span lang="ru-RU">вызывает </span><span lang="en-US">ClearCacheData.Add()
@@ -211,7 +228,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">20.06.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. DBxRealDocProvider.ApplyChangesInternal()
 			</span><span lang="ru-RU">перехватывает исключение при вызове
 			ExtendedPropertiesSaver.</span><span lang="en-US">Restore() </span><span lang="ru-RU">(</span><a href="#v083p2"><span lang="en-US">v.83
@@ -227,7 +244,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">16.06.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
 			</span><span lang="en-US">DBxDocTextHandlers.GetTextColumnNames()
 			(<a href="#v001p8">v.1 </a></span><a href="#v001p8"><span lang="ru-RU">п.8</span></a><span lang="en-US">)
@@ -252,7 +269,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">23.05.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US"><a name="v107p1"></a>1. <span lang="ru-RU">Статические
 			классы </span>DBSDocType <span lang="ru-RU">и </span>DBSSubDocType.
 			<span lang="ru-RU">Статические поля </span>DBxDocProvider.IdColumns,
@@ -267,7 +284,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">30.03.2021-<span lang="ru-RU">28</span>.04.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v106p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Класс
 			фильтра FixedSqlCommonFilter</span> <span lang="en-US">(<a href="#v077p1">v.77
 			</a></span><a href="#v077p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
@@ -300,7 +317,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">19.01.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="ru-RU">1</span><span lang="en-US">. </span><span lang="ru-RU">Методы
 			</span><span lang="en-US">DBxDocSelection.ContainsAny() </span><span lang="ru-RU">(</span><a href="#v062p1"><span lang="en-US">v.62
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
@@ -316,7 +333,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">15.01.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Событие
 			DBxBinDataHandler.SectionEntryAdded</span> <span lang="ru-RU">(</span><a href="#v037p3"><span lang="en-US">v.37
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span></p>
@@ -329,7 +346,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">05.01.2021</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Возвращена
 			обратно реализация внутренних объектов в </span><span lang="en-US">DBxDocTypes
 			</span><span lang="ru-RU">без использования </span><span lang="en-US">Interlocked
@@ -344,7 +361,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">25.12.2020<span lang="en-US">-28.12.2020</span></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <span lang="ru-RU">Исправлена ошибка в свойстве
 			</span><span lang="en-US">DBxDocTypes.UseSessionId (<a href="#v065p1">v.65
 			</a></span><a href="#v065p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
@@ -363,7 +380,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">18.11.2020-19.11.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменена запись
 			двоичных данных при использовании баз данных </span><span lang="en-US">&quot;files*&quot;
 			(</span><span lang="ru-RU">метод
@@ -395,7 +412,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">14.10.2020<span lang="ru-RU">-19.10.2020</span></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v100p1"></a><span lang="en-US">1.
 			DBxRealDocProvider.RealDocProviderExecProc (<a href="#v095p2">v.95
 			</a></span><a href="#v095p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
@@ -415,7 +432,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">21.09.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Для некоторых
 			структур, реализующих </span><span lang="en-US">IEnumerator&lt;T&gt;
 			(<a href="#v089p2">v.89 </a></span><a href="#v089p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">),
@@ -437,7 +454,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">15.09.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Исправлена
 			ошибка в DBxDocSetLockData.SetReadOnly() (</span><a href="#v001p2"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
@@ -450,7 +467,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">10.09.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. И</span><span lang="ru-RU">спользование
 			</span><span lang="en-US">IDBxCon.IsTableEmpty (<a href="ExtDB_11.htm#v061p3">ExtDB,
 			v.61 </a></span><a href="ExtDB_11.htm#v061p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span></p>
@@ -466,7 +483,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">01.09.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменения в
 			интерфейсе </span><span lang="en-US">IDBxCacheSource</span>
 			<span lang="en-US">(<a href="ExtDB_11.htm#v060p1">ExtDB, v.60 </a></span><a href="ExtDB_11.htm#v060p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
@@ -479,7 +496,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">19.08.2020-28.08.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="ru-RU">1</span><span lang="en-US">.
 			DBxDocTypes.GetMainDBStruct() </span><span lang="ru-RU">(</span><a href="#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не
@@ -522,7 +539,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">27.07.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Оптимизация
 			методов</span> <span lang="ru-RU">с использованием индексаторов:</span></p>
 			<p><span lang="ru-RU">-</span> <span lang="en-US">DBxMultiDocs.IndexOfDocId()
@@ -545,7 +562,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">04.06.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">В
 			</span><span lang="en-US">DBxBinDataHandler.CheckBinDataStorage</span><span lang="ru-RU">()
 			(</span><a href="#v037p3"><span lang="en-US">v.37 </span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
@@ -562,7 +579,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">03.06.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v092p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Изменена
 			реализация добавления двоичных данных в
 			</span><span lang="en-US">DBxBinDataHandler.AppendBinData() </span><span lang="ru-RU">и
@@ -582,7 +599,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">30.04.2020-<span lang="en-US">15.05.2020</span></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <font face="Liberation Serif"><font size="3" style="font-size: 12pt"><span lang="ru-RU">Для
 			всех перечислителей (</span></font></font><a href="#v089p2"><font face="Liberation Serif"><font size="3" style="font-size: 12pt"><span lang="en-US">v.</span></font></font><font face="Liberation Serif"><font size="3" style="font-size: 12pt"><span lang="ru-RU">89</span></font></font>
 			<font face="Liberation Serif"><font size="3" style="font-size: 12pt"><span lang="ru-RU">п.2</font></font></span></a><font face="Liberation Serif"><font size="3" style="font-size: 12pt"><span lang="ru-RU">)
@@ -607,7 +624,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">25.04.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Убрана лишняя
 			проверка идентификаторов во внутреннем методе
 			</span><span lang="en-US">DBxRealDocProvider.CheckDocColumnAccess
@@ -622,7 +639,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">09.04.2020-18.04.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1.
 			DBxDocDBConnectionHelper.CreateRealDocProviderGlobal() (<a href="#v037p9">v.37
 			</a></span><a href="#v037p9"><span lang="ru-RU">п.9</span></a><span lang="en-US">)
@@ -726,7 +743,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">06.04.2020</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Вспомогательный
 			метод DBxMultiDocsSubDocs.</span><span lang="en-US">LoadAll() (<a href="#v001p3">v.1
 			</a></span><a href="#v001p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span></p>
@@ -739,7 +756,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">31.12.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. DBxMemoryDocValues </span><span lang="ru-RU">(</span><a href="#v001p4"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)
 			использует </span><span lang="en-US">StringArrayIndexer (<a href="ExtTools_11.htm#v117p4">ExtTools,
@@ -753,7 +770,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">20.12.2019-<span lang="en-US">24.12.2019</span></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <span lang="en-US">DBxBinDataHandler (<a href="#v037p3">v.37
 			</a><a href="#v037p3">п.3</a>) </span><span lang="ru-RU">использует
 			перегрузки методов </span><span lang="en-US">ReadBlob() </span><span lang="ru-RU">и
@@ -774,7 +791,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">09.12.2019-13.12.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Команда
 			&laquo;Пересчитать вычисляемые поля&raquo;
 			(</span><span lang="en-US">DBxRealDocProvider.RecalcColumns, <a href="#v043p1">v.43
@@ -804,7 +821,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">27.11.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1<span lang="en-US">. </span>Убрана перегрузка метода
 			<span lang="en-US">DBxDocProvider.FillSelect() </span>с аргументом
 			<span lang="en-US">maxRecordCount. </span>Следует использовать
@@ -819,7 +836,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">24.11.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0cm; background: transparent"><font face="Liberation Serif, serif">1.
 			В методах DBxChainDocProvider,
 			DBxRealDocProvider.InternalGetBinData() </font><font face="Liberation Serif, serif"><span lang="en-US">(<a href="#v037p7">v.37
@@ -848,7 +865,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">14.11.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Перегрузка
 			</span><span lang="en-US">DBxDocProvider</span><span lang="ru-RU">.</span><span lang="en-US">FillSelect(),
 			</span><span lang="ru-RU">принимающая DBxFillSelectInfo (</span><a href="ExtDB_11.htm#v045p6"><span lang="en-US">ExtDB,
@@ -866,7 +883,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">07.10.2019-18.10.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
 			</span><span lang="en-US">DBxDocProvider.GetServiceValues</span><span lang="ru-RU">()
 			(</span><a href="#v054p4"><span lang="en-US">v.54 </span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)
@@ -887,7 +904,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">27.09.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
 			</span><span lang="en-US">DBxDocProvider.UpdateDBCache() </span><span lang="ru-RU">(</span><a href="#v001p2"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">,
@@ -902,7 +919,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">24.07.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <span lang="ru-RU">Фиктивный фильтр </span><span lang="en-US">DummyCommonFilter
 			(<a href="#v077p1">v.77 </a></span><span lang="ru-RU"><a href="#v077p1">п.1</a>,
 			</span><a href="ExtDB_11.htm#v040p1"><span lang="en-US">ExtDB,
@@ -923,7 +940,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">08.07.2019-11<span lang="ru-RU">.07.2019</span></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span><span lang="ru-RU">Новые
 			режимы фильтрации для ссылочного фильтра </span><span lang="en-US">RefDocCommonFilter
 			(<a href="#v077p1">v.77 </a></span><a href="#v077p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">.
@@ -952,7 +969,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">25.06.2019-01.07.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><a name="v077p1"></a>1. Общая
 			часть фильтров табличного просмотра и фильтров отчетов</p>
 			<p style="margin-bottom: 0.5cm">- Абстрактный класс
@@ -983,7 +1000,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">31.05.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span><span lang="ru-RU">Перегрузки
 			методов </span><span lang="en-US">DBxMultiDocs.View(), Edit(),
 			InsertCopy() </span><span lang="ru-RU">и </span><span lang="en-US">Delete()
@@ -1002,7 +1019,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">21.05.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">DBxRealDocProvider.GetUserActionsTable()
 			(</span><a href="#v001p2"><span lang="en-US">v.1 </span></a><span lang="ru-RU"><a href="#v001p2">п.2</a>)
 			вызывал исключение при DBxDocTypes.UseUsers=false</span></p>
@@ -1015,7 +1032,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">08.05.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">При записи
 			изменений в документе </span><span lang="en-US">(DBxRealDocProvider.ApplyDocChanges2(),
 			<a href="#v001p2">v.1 </a></span><a href="#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span><span lang="ru-RU">в
@@ -1034,7 +1051,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">15.04.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Для таблицы
 			&laquo;</span><span lang="en-US">UserActions</span><span lang="ru-RU">&raquo;
 			добавлен составной индекс по полям &laquo;</span><span lang="en-US">UserId,ActionTime</span><span lang="ru-RU">&raquo;
@@ -1054,7 +1071,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">15.03.2019-19.03.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1.
 			</span><span lang="ru-RU">Вспомогательные методы
 			</span><span lang="en-US">DBxMultiDocs.TryGetDocById(),
@@ -1075,7 +1092,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">14.02.2019-19.02.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span><span lang="ru-RU">Замена
 			класса DBxStructSource на интефрейс IDBxStructSource (</span><a href="ExtDB_11.htm#v036p4"><span lang="en-US">ExtDB,
 			v.36 </span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span></p>
@@ -1093,7 +1110,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center" style="text-decoration: none">22.01.2019</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Поддержка реентрабельности при обращении к спискам
 			документов и поддокументов в <span lang="en-US">DBxDocSet (<a href="#v001p3">v.1
 			</a></span><a href="#v001p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span></p>
@@ -1106,7 +1123,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">23.11.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. В DBxDocTreeModel (<a href="#v001p9">v.1
 			</a></span><a href="#v001p9"><span lang="ru-RU">п.9</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">задается свойство </span><span lang="en-US">Sort,
@@ -1121,7 +1138,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">21.11.2018-22.11.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span><span lang="ru-RU">Конструкторы
 			копирования </span><span lang="en-US">DBxDocSelection </span><span style="text-decoration: none"><span lang="ru-RU">(</span></span><a href="#v001p7"><span style="text-decoration: none"><span lang="en-US">v.</span></span><span style="text-decoration: none"><span lang="ru-RU">1</span></span><span style="text-decoration: none">
 			</span><span style="text-decoration: none"><span lang="ru-RU"><span style="text-decoration: none"><span style="text-decoration: none">п.7</span></span></span></span></a><span style="text-decoration: none"><span lang="ru-RU"><span style="text-decoration: none"><span style="text-decoration: none">)
@@ -1148,7 +1165,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center" style="text-decoration: none">30.10.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span style="text-decoration: none"><span lang="en-US">1.
 			</span></span><span style="text-decoration: none"><span lang="ru-RU">Перегрузка
 			</span></span><span style="text-decoration: none"><span lang="en-US">DBxDocSelection</span></span><span style="text-decoration: none"><span lang="ru-RU">.</span></span><span style="text-decoration: none"><span lang="en-US">ToString()
@@ -1166,7 +1183,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center"><strike>16.10.2018</strike></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><strike><span lang="en-US">1. </span></strike><strike><span lang="ru-RU">Свойства
 			</span></strike><strike><span lang="en-US">DBxSingleDoc.CreateUserId,
 			CreateTime, ChangeUserId, ChangeTime, LastWriteUserId </span></strike><strike><span lang="ru-RU">и
@@ -1181,7 +1198,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">08.10.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v066p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Событие
 			DBxDocDBConnectionHelper.</span><span lang="en-US">BeforeInitDB
 			(<a href="#v037p9">v.37 п.9</a>)</span></p>
@@ -1194,7 +1211,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">01.10.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v065p1"></a>1. Поддержка идентификатора сеанса клиента
 			в истории. Свойство <span lang="en-US">DocTypes</span>.<span lang="en-US">UseSessionId</span>
 			и <span lang="en-US">DBxDocProvider</span>.<span lang="en-US">SessionId</span>.
@@ -1209,7 +1226,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">25.09.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Метод внутреннего класса
 			<span lang="en-US">DBxDocProvider</span>.<span lang="en-US">InternalStructSource</span>.<span lang="en-US">GetTableStruct</span>()
 			(<a href="#v001p2"><span lang="en-US">v.1 </span><span lang="ru-RU">п</span><span lang="en-US">.2</span></a><span lang="en-US">)
@@ -1223,7 +1240,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">01.09.2018-02.09.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Изменение
 			<span lang="en-US">DBxRealDocProvider</span>.<span lang="en-US">AddUserFieldPairs</span>()
 			(<a href="#v061p5"><span lang="en-US">v</span>.61 п.5</a>)
@@ -1245,7 +1262,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">13.08.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v062p1"></a><span lang="en-US">1. </span>Методы
 			<span lang="en-US">DBxDocSelection.Contains(), ContainsAny() </span>и
 			<span lang="en-US">ContainsAll() (<a href="#v001p7">v.1 </a></span><a href="#v001p7">п<span lang="en-US">.7</span></a><span lang="en-US">)</span></p>
@@ -1258,7 +1275,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">31.07.2018-07.08.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span><span lang="ru-RU">Не
 			работало ведение истории при </span><span lang="en-US">DocTypes.UseUsers=false
 			(<a href="#v054p2">v.54 </a></span><a href="#v054p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
@@ -1291,7 +1308,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">10.07.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">1.
 			</span><span lang="en-US">D</span><span lang="ru-RU">B</span><span lang="en-US">xDocTextHandlers
 			</span><span lang="ru-RU">(</span><a href="#v001p11"><span lang="en-US">v.1
@@ -1316,7 +1333,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">03.05.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. В </span><span lang="ru-RU">текстовом
 			представлении установленной блокировки (статический метод
 			DbxDocSetLockData.ToString(), </span><a href="#v042p2"><span lang="en-US">v.42
@@ -1334,7 +1351,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">28.03.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. DbxDocProvider.GetTemplate() (<a href="#v001p2">v</a></span><a href="#v001p2"><span lang="ru-RU">.1
 			п.2</span></a><span lang="en-US">) </span><span lang="ru-RU">поддерживает
 			реентрантный вызов при работе с внутренней коллекцией </span>
@@ -1348,7 +1365,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">27.03.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменена
 			реализация в </span><span lang="en-US">D</span><span lang="ru-RU">B</span><span lang="en-US">xDocTextHandlers
 			</span><span lang="ru-RU">(</span><a href="#v001p8"><span lang="en-US">v.1
@@ -1364,7 +1381,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">05.02.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">В
 			</span><span lang="en-US">DBxRealDocProvider.ApplyDocChanges2()
 			</span><span lang="ru-RU">исправлена проверка, что текущей версией
@@ -1382,7 +1399,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">19.12.2017-15.01.2018</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span><span lang="ru-RU">Добавлены
 			недостающие проверки отсутствия служебных полей документов (<a href="#v054p2">v</a></span><a href="#v054p2"><span lang="en-US">.54
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
@@ -1404,7 +1421,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">05.12.2017-<span lang="en-US">15</span>.12.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Поддержка провайдера SQLiteDBx
 			(<a href="ExtDB_11.htm#v029p1">ExtDB, v.29 п.1</a>)</p>
 			<p style="margin-bottom: 0.5cm"><a name="v054p2"></a>2. Свойства
@@ -1469,7 +1486,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">24.11.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Событие DBxDocType.BeforeInsert
 			(<a href="#v001p1">v.1 п.1</a>) вызывается и при восстановлении
 			удаленного документа. Свойство
@@ -1487,7 +1504,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">17.11.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span>Конструктор
 			<span lang="en-US">DBxRealDocProviderSource() </span>вызывает
 			<span lang="en-US">DBxRealDocProviderGlobal.SetReadOnly() (<a href="#v001p2">v.1
@@ -1515,7 +1532,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">08.11.2017-14.11.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><a name="v051p1"></a>1. Группы
 			документов. Свойство DBxDocType.GroupRefColumnName (<a href="#v001p1">v.1
 			п.1</a>)</p>
@@ -1532,7 +1549,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">05.10.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span>Методы
 			<span lang="en-US">DBxBinDataHandler.GetBinDataCount() </span>и
 			<span lang="en-US">GetDBFileCount() (<a href="#v037p3">v.37 </a></span><a href="#v037p3">п<span lang="en-US">.3</span></a><span lang="en-US">)</span></p>
@@ -1545,7 +1562,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">27.09.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. При добавлении ссылок в выборку документов DBxDocSelection
 			(<a href="#v001p7">v.1 п.7</a>) из таблиц DataTable пропускаются
 			удаленные строки с RowState=Deleted</p>
@@ -1558,7 +1575,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">05.09.2017-08.09.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Перехват исключений
 			DBxChainDocProvider (<a href="#v046p1">v.46 п.1</a>) при получении
 			кэша двоичных данных</p>
@@ -1575,7 +1592,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">04.09.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Перехват исключений
 			DBxChainDocProvider (<a href="#v046p1">v.46 п.1</a>) в методах и
 			свойствах, связанных с правами пользователя.</p>
@@ -1591,7 +1608,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">01.09.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Возможность перехватывать исключения в DBxChainDocProvider
 			(<a href="#v001p2" target="_blank">v.1 п.2</a>). Реализовано
 			только для методов, извлекающих информацию с сервера, но не
@@ -1606,7 +1623,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">16.08.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. При получении списка ссылок на документ (<a href="#v043p2">v.43
 			п.2</a>) возникало исключение, если возможны ссылки на
 			поддокумент, а поддокументов нет.</p>
@@ -1619,7 +1636,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">09.08.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span>Методы
 			<span lang="en-US">DBxDocProvider.GetInheritorIds() (<a href="ExtDB_11.htm#v023p1">ExtDB,
 			v.23 </a></span><a href="ExtDB_11.htm#v023p1"><span lang="ru-RU">п</span><span lang="en-US">.1</span></a><span lang="en-US">)</span></p>
@@ -1632,7 +1649,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">11.07.2017-<span lang="en-US">02</span>.0<span lang="en-US">8</span>.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Поддержка пересчета вычисляемых
 			полей. Метод <span lang="en-US">DBxDocProvider</span>.<span lang="en-US">RecalcColumns</span>()
 			(<a href="#v001p2" target="_blank"><span lang="en-US">v</span>.1
@@ -1657,7 +1674,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">05.07.2017-06.07.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><a name="v042p1"></a><span lang="en-US">1.
 			</span>Методы <span lang="en-US">DocTypePermission </span>и
 			<span lang="en-US">DocTypeViewHistoryPermission.FindPermission()
@@ -1678,7 +1695,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">29.06.2017-30.06.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Исправлена ошибка в
 			конструкторе в DBxDocPermissions (<a href="#v001p5">v.1 п.5</a>),
 			которая возникала, когда IDBxDocPermission.TableNames возвращает
@@ -1696,7 +1713,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">09.06.2017-13.06.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Изменение в IDBxCacheSource
 			(<a href="ExtDB_11.htm#v021p1">Ex<span lang="en-US">t</span>DB,
 			v.21 п.1</a>)</p>
@@ -1722,7 +1739,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">10.05.2017-13.05.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Свойство
 			<span lang="en-US">DBxDocDBConnectionHelper</span>.<span lang="en-US">ConnectionStringSettings</span>
 			(<a href="#v037p9"><span lang="en-US">v</span>.37 п.9</a>)&nbsp;для
@@ -1743,7 +1760,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">26.04.2017-03.05.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Изменение во внутренних методах
 			<span lang="en-US">DBxDocProvider</span>.<span lang="en-US">InternalGetBinData</span>()
 			и <span lang="en-US">InternalGetDBFile</span>() (<a href="#v037p5"><span lang="en-US">v</span><span lang="ru-RU">.37
@@ -1779,7 +1796,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">06.04.2017-17.04.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><a name="v037p1"></a>1. Описатели
 			полей со ссылкой на двоичные данные DBxDocTypeBinDataRef. Свойство
 			DBxDocTypeBase.BinDataRefs (<a href="#v001p1">v.1 п.1</a>).</p>
@@ -1836,7 +1853,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">21.03.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Из отладочной информации (<a href="#v028p2"><span lang="en-US">v</span><span lang="ru-RU">.28
 			п.2</span></a>) исключается свойства некоторых объектов</p>
 		</td>
@@ -1848,7 +1865,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">09.02.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Метод DBxMultiSubDocs.Insert() мог (<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.3</span></a>) вызывать NullReferenceException, если до этого не
 			было других действий с поддокументами.</p>
@@ -1861,7 +1878,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">16.01.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <span lang="en-US">DBxDocSet </span>(<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.3</span></a>) больше не выводится из <span lang="en-US">DisposableObject</span></p>
 		</td>
@@ -1873,7 +1890,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">13.01.2017-15.01.2017</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. В отладочную информацию (<a href="#v028p2"><span lang="en-US">v</span><span lang="ru-RU">.28
 			п.2</span></a>) не выводится свойство
 			DBxRealDocProviderSource.<span lang="en-US">GlobalData</span></p>
@@ -1899,7 +1916,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">22.12.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span>В таблицу <span lang="en-US">&laquo;UserActions&raquo;
 			(<a href="#v001p2">v.1 </a></span><a href="#v001p2"><span lang="ru-RU">п</span><span lang="en-US">.2</span></a><span lang="en-US">)
 			</span>добавлены поля <span lang="en-US">&laquo;ApplyChangesCount&raquo;
@@ -1913,7 +1930,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">20.12.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Свойство <span lang="en-US">CalculatedColumns </span>перенесено
 			из <span lang="en-US">DBxDocType </span>в <span lang="en-US">DBxDocTypeBase</span>,
 			чтобы вычисляемые поля можно было объявлять и для поддокументов.
@@ -1927,7 +1944,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">19.12.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Добавлены недостающие свойства
 			<span lang="en-US">DocProvider </span>в объектах доступа к
 			документам (<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
@@ -1944,7 +1961,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">17.11.2016-24.11.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Не работало создание копии
 			документов, содержащих поддокументы. После замены фиктивных
 			идентификаторов добавленных документов и поддокументов
@@ -1963,7 +1980,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">13.11.2016-15.11.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span>Вызов
 			<span lang="en-US">ExecProc.Dispose() (<a href="ExtTools_11.htm#v099p2">ExtTools,
 			v.99 </a></span><a href="ExtTools_11.htm#v099p2"><span lang="ru-RU">п</span><span lang="en-US">.2</span></a><span lang="en-US">)
@@ -1984,7 +2001,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">13.10.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Метод <span lang="en-US">DBxDocProvider</span>.<span lang="en-US">GetDBFileInfo</span>()
 			использует буферизацию данных</p>
 		</td>
@@ -1996,7 +2013,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">05.10.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Перегрузки <span lang="en-US">DBxDocProvider</span>.<span lang="en-US">AddLongLock</span>()
 			(<a href="#v001p11"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.11</span></a>) для удобства</p>
@@ -2009,7 +2026,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center"><span lang="en-US">15.09.201</span>6-18.09.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Изменена реализация системы
 			получения текстовых представлений документов DBxDocTextHandlers
 			(<a href="#v001p8"><span lang="en-US">v</span><span lang="ru-RU">.1
@@ -2045,7 +2062,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">15.08.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Поддержка индивидуальной
 			буферизации полей таблиц (<a href="ExtDB_11.htm#v015p8"><span lang="en-US">ExtDB</span><span lang="ru-RU">,
 			</span><span lang="en-US">v</span><span lang="ru-RU">.15 п.8</span></a>):</p>
@@ -2062,7 +2079,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">14.07.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Изменена реализация записи значений строки документа /
 			поддокумента в <span lang="en-US">DBxRealDocProvider</span>.<span lang="en-US">ApplyChanges</span>()
 			(во внутреннем методе AddUserFieldPairs(), <a href="#v008p1"><span lang="en-US">v</span><span lang="ru-RU">.8
@@ -2079,7 +2096,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">11.07.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Исправлены ошибки, связанные с внутренним полем
 			<span lang="en-US">DBxMultiSubDocs</span>.<span lang="en-US">DocRowDict</span></p>
 		</td>
@@ -2091,7 +2108,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">08.07.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. В <span lang="en-US">DBxMultiDocs </span>(<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.3</span></a>) добавлены внутренние вызовы <span lang="en-US">ResetDocIds</span>(),
 			т.к. свойство <span lang="en-US">DocIds </span>могло содержать
@@ -2105,7 +2122,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">05.07.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Метод <span lang="en-US">DBxDocSet</span>.<span lang="en-US">ApplyChanges</span>()
 			не устанавливает свойство <span lang="en-US">IgnoredLocks</span>.<span lang="en-US">IsReadOnly
 			</span>в <span lang="en-US">true</span> (<a href="#v019p1"><span lang="en-US">v</span><span lang="ru-RU">.19
@@ -2128,7 +2145,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">04.07.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Изменена реализация
 			предотвращения самоблокировки при редактировании документов (<a href="#v001p11"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.11</span></a>). Ранее длительная блокировка игнорировалась, если
@@ -2156,7 +2173,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">27.06.2016-29.06.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Убрано свойство
 			<span lang="en-US">DBxCache</span>.<span lang="en-US">CacheUniqueKey</span>
 			(<a href="ExtDB_11.htm#v012p1"><span lang="en-US">ExtDB</span><span lang="ru-RU">,
@@ -2181,7 +2198,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">22.06.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v017p1"></a><span lang="en-US">1. </span>Метод
 			<span lang="en-US">DBxDocProvider.GetIds() (<a href="#v001p2">v.1
 			</a></span><a href="#v001p2"><span lang="ru-RU">п</span><span lang="en-US">.2</span></a><span lang="en-US">)</span></p>
@@ -2194,7 +2211,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">09.06.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v016p1"></a>1. Вспомогательные методы
 			<span lang="en-US">DBxDocSet</span>.<span lang="en-US">Add</span>/<span lang="en-US">RemoveLongLocks</span>(),
 			вызывающие одноименные методы в <span lang="en-US">DBxDocProvider
@@ -2210,7 +2227,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">11.04.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><a name="v015p1"></a>1.
 			Возможность выборочного запрета на просмотр истории документов 
 			</p>
@@ -2228,7 +2245,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">07.04.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <span lang="en-US">DBxRealDocProvider</span>.<span lang="en-US">GetDocHistTable</span>()
 			предотвращает доступ к истории изменения документа (<a href="#v001p2"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.2</span></a>), если нет прав доступа конкретно к этому документу</p>
@@ -2241,7 +2258,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">28.03.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Текст <span lang="en-US">ActionInfo </span>обрезался в
 			<span lang="en-US">UndoHelper </span>до 60 символов, невзирая на
 			свойство <span lang="en-US">DBxDocTypes</span>.<span lang="en-US">ActionInfoMaxLength</span>
@@ -2256,7 +2273,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">19.03.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Исправлена ошибка записи
 			поддокументов, которые сначала были созданы, а потом изменены до
 			вызова DBxDocSet.ApplyChanges() (<a href="#v001p2">v.1 п.2</a>):</p>
@@ -2277,7 +2294,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">05.02.2016-08.02.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span>Метод
 			<span lang="en-US">DBxMultiSubDocs.CreateSubDocsData() (<a href="#v001p3">v.1
 			</a></span><a href="#v001p3"><span lang="ru-RU">п</span><span lang="en-US">.3</span></a><span lang="en-US">)</span></p>
@@ -2293,7 +2310,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">20.01.2016</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. При вызове <span lang="en-US">DBxDocSetApplyChanges</span>()
 			выполняется сброс внутреннего массива идентификаторов документов
 			внутри метода <span lang="en-US">DBxMultiDocs</span>.<span lang="en-US">InitTables</span>()
@@ -2308,7 +2325,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">10.12.2015-17.12.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Настраиваемое свойство
 			<span lang="en-US">DBxDocTypes</span>.ActionInfoMaxLength (<a href="#v001p1"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.1</span></a>)</p>
@@ -2325,7 +2342,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">09.12.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><a name="v008p1"></a>1. Исправлена
 			реализация внутреннего метода
 			<span lang="en-US">DBxRealDocProvider</span>.<span lang="en-US">AddUserFieldPairs</span>()
@@ -2357,7 +2374,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">03.11.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm"><span lang="en-US">1. </span>Методы
 			<span lang="en-US">DBxMultiDocs.InsertCopy() </span>и
 			<span lang="en-US">DBxMultiSubDocs.InsertCopy() (<a href="#v001p3">v.1
@@ -2383,7 +2400,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">02.11.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Метод <span lang="en-US">DBxDocSet</span>.<span lang="en-US">Validate</span>()
 			для отладки (<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.3</span></a>)</p>
@@ -2396,7 +2413,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">13.10.2015-23.10.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">1. Методы <span lang="en-US">DBxSingleDoc</span>.<span lang="en-US">CopyTo</span>(),
 			<span lang="en-US">DBxSingleDoc</span>.<span lang="en-US">IsSameDoc</span>(),
 			<span lang="en-US">DBxSubDoc</span>.<span lang="en-US">IsSameSubDoc</span>(),
@@ -2440,7 +2457,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">06.10.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span>Метод <span lang="en-US">DBxDocProvider.Clone()
 			(<a href="#v001p2">v.1 </a></span><a href="#v001p2"><span lang="ru-RU">п</span><span lang="en-US">.2</span></a><span lang="en-US">)</span></p>
 		</td>
@@ -2452,7 +2469,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">14.09.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Свойство <span lang="en-US">DBxSingleDoc</span>.<span lang="en-US">Valu</span>es
 			(<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.3</span></a>) дает доступ к оригинальным значениям документа,
@@ -2466,7 +2483,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">31.08.<span lang="en-US">2015</span></p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Исправлена реализация свойства <span lang="en-US">DBxDocValue</span>.<span lang="en-US">ComplexValue
 			</span>(<a href="#v001p4"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.4</span></a>)</p>
@@ -2479,7 +2496,7 @@
 		<td width="115" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">18.03.2015- 26.08.2015</p>
 		</td>
-		<td width="599" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+		<td width="601" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0.5cm">Базовая версия</p>
 			<p style="margin-bottom: 0.5cm"><a name="v001p1"></a>1. Описание
 			видов документов и поддокументов <span lang="en-US">DBxDocType</span>,
