@@ -1814,7 +1814,7 @@ namespace AgeyevAV.ExtForms
 
       #region Переопределенные методы
 
-      protected override void OnChanged()
+      internal protected override void OnChanged()
       {
         base.OnChanged();
 

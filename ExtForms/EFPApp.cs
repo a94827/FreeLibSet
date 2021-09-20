@@ -3085,7 +3085,8 @@ namespace AgeyevAV.ExtForms
         _DialogStack.Pop();
 #else
         // Это - на всякий случай:
-        if (Object.ReferenceEquals(ActiveDialog, form))
+        //if (Object.ReferenceEquals(ActiveDialog, form))
+        if (Object.ReferenceEquals(_DialogStack.Peek(), form)) // 20.09.2021 - ActiveDialog не вернет текущий диалог, т.к. он уже закрыт
           _DialogStack.Pop();
 #endif
 
@@ -4254,7 +4255,7 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Свойство возвращает true, если в данный момент работает метод EFPApp.ShowException()
     /// </summary>
-    public static bool InsideShowException { get { return _InsideShowExceptionCount>0; } }
+    public static bool InsideShowException { get { return _InsideShowExceptionCount > 0; } }
     private static int _InsideShowExceptionCount = 0; // могут быть вложенные вызовы ShowException()
 
     /// <summary>

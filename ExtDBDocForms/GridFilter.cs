@@ -623,7 +623,8 @@ namespace AgeyevAV.ExtForms.Docs
       {
         if (!this[i].IsEmpty)
         {
-          EFPReportFilterItem fi = new EFPReportFilterItem(this[i].DisplayName, ((IEFPGridFilter)this[i]).FilterText);
+          EFPReportFilterItem fi = new EFPReportFilterItem(this[i].DisplayName);
+          fi.Value = ((IEFPGridFilter)this[i]).FilterText;
           if (EFPApp.ShowListImages)
           {
             string imageKey = null;

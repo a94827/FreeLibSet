@@ -633,7 +633,7 @@ namespace AgeyevAV.ExtForms.Docs
       {
         if (!dt.GridProducer.Columns.Contains("Id"))
         {
-          EFPGridProducerColumn IdCol=dt.GridProducer.Columns.AddInt("Id", "Id", 6);
+          EFPGridProducerColumn IdCol = dt.GridProducer.Columns.AddInt("Id", "Id", 6);
           IdCol.DisplayName = "Идентификатор документа";
           IdCol.CanIncSearch = true;
           // Делаем первым в списке
@@ -2257,7 +2257,8 @@ namespace AgeyevAV.ExtForms.Docs
     /// <returns>Описание строки таблички фильтра</returns>
     public EFPReportFilterItem CreateReportFilterItem(string displayName, Int32 id)
     {
-      EFPReportFilterItem item = new EFPReportFilterItem(displayName, GetTextValue(id));
+      EFPReportFilterItem item = new EFPReportFilterItem(displayName);
+      item.Value = GetTextValue(id);
       if (EFPApp.ShowListImages)
         item.ImageKey = GetImageKey(id);
       return item;

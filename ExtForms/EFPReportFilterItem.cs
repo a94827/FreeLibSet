@@ -37,30 +37,40 @@ using System.Text;
 namespace AgeyevAV.ExtForms
 {
   /// <summary>
-  /// Описание одной строки фильтра отчета
+  /// Описание одной строки фильтра отчета.
   /// </summary>
-  public class EFPReportFilterItem
+  public sealed class EFPReportFilterItem
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает строку фильтра
+    /// Создает строку фильтра.
+    /// Создаваемая строка должна быть добавлена в коллекцию EFPReportFilterItems
     /// </summary>
     /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
-    /// <param name="value">Значение фильтра. Может быть пустой строкой</param>
-    public EFPReportFilterItem(string displayName, string value)
+    public EFPReportFilterItem(string displayName)
     {
 #if DEBUG
       if (String.IsNullOrEmpty(displayName))
         throw new ArgumentNullException("displayName");
 #endif
       _DisplayName = displayName;
-      _Value = value;
+      _Value = String.Empty;
+      _ImageKey = null;
     }
 
     #endregion
 
     #region Свойства
+
+    internal EFPReportFilterItems Owner { get { return _Owner; } set { _Owner = value; } }
+    private EFPReportFilterItems _Owner;
+
+    internal void CheckNotAdded()
+    {
+      if (_Owner != null)
+        throw new InvalidOperationException("Строка фильтра уже была добавлена в коллекцию");
+    }
 
     /// <summary>
     /// Заголовок фильтра. Задается в конструкторе
@@ -69,9 +79,19 @@ namespace AgeyevAV.ExtForms
     private string _DisplayName;
 
     /// <summary>
-    /// Значение фильтра. Задается в конструкторе
+    /// Значение фильтра.
+    /// Устанавливается динамически
     /// </summary>
-    public string Value { get { return _Value; } }
+    public string Value 
+    { 
+      get { return _Value; }
+      set
+      {
+        _Value = value;
+        if (_Owner != null)
+          _Owner.OnChanged();
+      }
+    }
     private string _Value;
 
     /// <summary>
@@ -80,14 +100,19 @@ namespace AgeyevAV.ExtForms
     /// </summary>
     public string ImageKey
     {
-      get 
+      get
       {
         if (_ImageKey == null)
           return EFPGridFilterTools.DefaultFilterImageKey;
         else
-          return _ImageKey; 
+          return _ImageKey;
       }
-      set { _ImageKey = value; }
+      set 
+      { 
+        _ImageKey = value;
+        if (_Owner != null)
+          _Owner.OnChanged();
+      }
     }
     private string _ImageKey;
 
@@ -106,7 +131,7 @@ namespace AgeyevAV.ExtForms
 #if XXX
   public class GridReportRefFilterItem : EFPReportFilterItem
   {
-    #region Конструкторы
+  #region Конструкторы
 
     public GridReportRefFilterItem(string DocTypeName, Int32 DocId, string DisplayName)
       : base(GetDisplayName(DocTypeName, DisplayName), GetValue(DocTypeName, DocId))
@@ -158,7 +183,7 @@ namespace AgeyevAV.ExtForms
 
     #endregion
 
-    #region Свойства
+  #region Свойства
 
     public ClientDocType DocType { get { return FDocType; } }
     private ClientDocType FDocType;
@@ -173,7 +198,7 @@ namespace AgeyevAV.ExtForms
   /// <summary>
   /// Коллекция строк фильтра для отчета
   /// </summary>
-  public class EFPReportFilterItems : IEnumerable<EFPReportFilterItem>, ICollection<EFPReportFilterItem>
+  public class EFPReportFilterItems : IList<EFPReportFilterItem>
   {
     #region Конструктор
 
@@ -227,6 +252,8 @@ namespace AgeyevAV.ExtForms
       if (item == null)
         throw new ArgumentNullException("item");
 #endif
+      item.CheckNotAdded();
+      item.Owner = this;
       _Items.Add(item);
 
       OnChanged();
@@ -239,7 +266,8 @@ namespace AgeyevAV.ExtForms
     /// <param name="value">Значение фильтра. Может быть пустой строкой</param>
     public EFPReportFilterItem Add(string displayName, string value)
     {
-      EFPReportFilterItem item = new EFPReportFilterItem(displayName, value);
+      EFPReportFilterItem item = new EFPReportFilterItem(displayName);
+      item.Value = value;
       Add(item);
       return item;
     }
@@ -253,7 +281,8 @@ namespace AgeyevAV.ExtForms
     /// Если задана пустая строка, будет использован стандартный значок фильтра</param>
     public EFPReportFilterItem Add(string displayName, string value, string imageKey)
     {
-      EFPReportFilterItem item = new EFPReportFilterItem(displayName, value);
+      EFPReportFilterItem item = new EFPReportFilterItem(displayName);
+      item.Value = value;
       item.ImageKey = imageKey;
       Add(item);
       return item;
@@ -268,13 +297,16 @@ namespace AgeyevAV.ExtForms
 #if DEBUG
       if (items == null)
         throw new ArgumentNullException("items");
-
-      foreach (EFPReportFilterItem Item in items)
-      {
-        if (Item == null)
-          throw new ArgumentException("Один из элементов равен null", "items");
-      }
 #endif
+      foreach (EFPReportFilterItem item in items)
+      {
+#if DEBUG
+        if (item == null)
+          throw new ArgumentException("Один из элементов равен null", "items");
+#endif
+        item.CheckNotAdded();
+        item.Owner = this;
+      }
       _Items.AddRange(items);
       OnChanged();
     }
@@ -292,6 +324,25 @@ namespace AgeyevAV.ExtForms
           return _Items[_Items.Count - 1];
       }
     }
+
+    /// <summary>
+    /// Добавление строки фильтра
+    /// </summary>
+    /// <param name="index">Индекс для добавления строки</param>
+    /// <param name="item">Объект строки</param>
+    void IList<EFPReportFilterItem>.Insert(int index, EFPReportFilterItem item)
+    {
+#if DEBUG
+      if (item == null)
+        throw new ArgumentNullException("item");
+      item.CheckNotAdded();
+#endif
+      item.Owner = this;
+      _Items.Insert(index, item);
+
+      OnChanged();
+    }
+
 
     /// <summary>
     /// Замена списка фильтров.
@@ -323,6 +374,17 @@ namespace AgeyevAV.ExtForms
       return Res;
     }
 
+
+    /// <summary>
+    /// Удаление строки фильтра
+    /// </summary>
+    /// <param name="index">Индекс строки</param>
+    public void RemoveAt(int index)
+    {
+      _Items.RemoveAt(index);
+      OnChanged();
+    }
+
     /// <summary>
     /// Очистка фильтра
     /// </summary>
@@ -333,6 +395,34 @@ namespace AgeyevAV.ExtForms
 
       _Items.Clear();
       OnChanged();
+    }
+
+    /// <summary>
+    /// Возвращает индекс объекта строки фильтра.
+    /// Если такого объекта нет, возвращается (-1).
+    /// </summary>
+    /// <param name="item">Объект строки</param>
+    /// <returns>Индекс строки фильтра</returns>
+    public int IndexOf(EFPReportFilterItem item)
+    {
+      return _Items.IndexOf(item);
+    }
+
+
+    /// <summary>
+    /// Возвращает индекс строки фильтра с заданным наименованием.
+    /// Если такого объекта нет, возвращается (-1).
+    /// </summary>
+    /// <param name="displayName">Заголовок строки фильтра</param>
+    /// <returns>Индекс строки фильтра</returns>
+    public int IndexOf(string displayName)
+    {
+      for (int i = 0; i < _Items.Count; i++)
+      {
+        if (String.CompareOrdinal(_Items[i].DisplayName, displayName) == 0)
+          return i;
+      }
+      return -1;
     }
 
     /// <summary>
@@ -381,7 +471,7 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Вызывыается при всех изменениях в списке фильтров
     /// </summary>
-    protected virtual void OnChanged()
+    internal protected virtual void OnChanged()
     {
     }
 
@@ -418,7 +508,7 @@ namespace AgeyevAV.ExtForms
   /// <summary>
   /// Реализация списка фильтров для одной страницы отчета
   /// </summary>
-  public class EFPReportPageFilterItems:EFPReportFilterItems
+  public class EFPReportPageFilterItems : EFPReportFilterItems
   {
     #region Конструктор
 
@@ -497,7 +587,7 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Инициализирует фильтры страницы, если нет незакрытых вызовов BeginUpdate()
     /// </summary>
-    protected override void OnChanged()
+    internal protected override void OnChanged()
     {
       if (_UpdateCount > 0)
         return;

@@ -80,6 +80,9 @@ namespace AgeyevAV.ExtForms.Docs
       _Pages = new DocEditPages(this);
 
       _Editor = editor;
+
+      FormProvider.Shown += new EventHandler(FormProvider_Shown);
+      FormProvider.Hidden += new EventHandler(FormProvider_Hidden);
     }
 
     /// <summary>
@@ -226,6 +229,35 @@ namespace AgeyevAV.ExtForms.Docs
     {
       _MaxPageSize.Width = Math.Max(_MaxPageSize.Width, sz.Width);
       _MaxPageSize.Height = Math.Max(_MaxPageSize.Height, sz.Height);
+    }
+
+    #endregion
+
+    #region Сохранение выбранной вкладки
+
+    private static Dictionary<string, string> _SelectedTabs = new Dictionary<string, string>();
+
+    void FormProvider_Shown(object sender, EventArgs e)
+    {
+      string text;
+      if (!_SelectedTabs.TryGetValue(FormProvider.ConfigSectionName, out text))
+        return;
+
+      for (int i = 0; i < MainTabControl.TabCount; i++)
+      {
+        if (String.CompareOrdinal(MainTabControl.TabPages[i].Text, text) == 0)
+        {
+          MainTabControl.SelectedIndex = i;
+          break;
+        }
+      }
+    }
+
+
+    void FormProvider_Hidden(object sender, EventArgs e)
+    {
+      if (MainTabControl.SelectedTab!=null)
+        _SelectedTabs[FormProvider.ConfigSectionName] = MainTabControl.SelectedTab.Text;
     }
 
     #endregion
