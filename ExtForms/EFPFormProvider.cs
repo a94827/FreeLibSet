@@ -7,6 +7,7 @@ using AgeyevAV.DependedValues;
 using System.Drawing;
 using AgeyevAV.Config;
 using AgeyevAV.Logging;
+using System.Runtime.CompilerServices;
 
 /*
  * The BSD License
@@ -606,9 +607,52 @@ namespace AgeyevAV.ExtForms
         return;
 
       // Записываем положение и размеры формы, параметры для всех управляющих элементов
-      ConfigHandler.WriteConfigChanges(this.ConfigManager);
-      foreach (EFPControlBase controlProvider in GetAllControlProviders())
-        controlProvider.SaveConfig();
+      SaveFormConfig();
+    }
+
+    /// <summary>
+    /// Для предотвращения повторного вывода сообщений в log-файл
+    /// </summary>
+    private bool _SaveFormConfigExceptionFlag;
+
+    [MethodImpl(MethodImplOptions.NoInlining)] // для удобства поиска ошибок
+    private void SaveFormConfig()
+    {
+      try
+      {
+        try
+        {
+          ConfigHandler.WriteConfigChanges(this.ConfigManager);
+        }
+        catch (Exception e)
+        {
+          if (!_SaveFormConfigExceptionFlag)
+          {
+            _SaveFormConfigExceptionFlag = true;
+            LogoutTools.LogoutException(e, "Ошибка вызова EFPFormProvider.ConfigHandler.WriteConfigChanges()");
+          }
+        }
+        foreach (EFPControlBase controlProvider in GetAllControlProviders())
+        {
+          try
+          {
+            if (controlProvider.ProviderState == EFPControlProviderState.Attached) // 20.09.2021
+              controlProvider.SaveConfig();
+          }
+          catch (Exception e)
+          {
+            if (!_SaveFormConfigExceptionFlag)
+            {
+              _SaveFormConfigExceptionFlag = true;
+              LogoutTools.LogoutException(e, "Ошибка вызова EFPControlProvider.SaveConfig()");
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        LogoutTools.LogoutException(e, "Неперехваченная ошибка в EFPFormProvider.SaveFormConfig()");
+      }
     }
 
 
@@ -680,7 +724,8 @@ namespace AgeyevAV.ExtForms
         _StatusBarHandler = null;
       }
 
-      ConfigHandler.WriteConfigChanges(this.ConfigManager);
+      //ConfigHandler.WriteConfigChanges(this.ConfigManager);
+      SaveFormConfig();
     }
 
     #endregion
