@@ -317,7 +317,7 @@ namespace AgeyevAV
       if (b.IsEmpty)
         throw new ArgumentException("Пустая вторая дата", "b");
 
-      int days= a.DayOfYear - b.DayOfYear;
+      int days = a.DayOfYear - b.DayOfYear;
       if (days < 0)
         days += 365;
       return days;
@@ -861,38 +861,6 @@ namespace AgeyevAV
     }
 
     /// <summary>
-    /// Возвращает true, если два диапазона полностью или частично перекрываются.
-    /// Если один или оба диапазона пустые, возвращается false
-    /// </summary>
-    /// <param name="r1">Первый диапазон</param>
-    /// <param name="r2">Второй диапазон</param>
-    /// <returns>Наличие пересечения</returns>
-    public static bool IsCrossed(MonthDayRange r1, MonthDayRange r2)
-    {
-      return !GetCross(r1, r2).IsEmpty;
-    }
-
-
-    /// <summary>
-    /// Возвращает пересечение двух интервалов. Поле Tag берется из первого интервала
-    /// Если интервалы не пересекаются, или один из интервалов пустой, возвращается пустой интервал с Tag=null.
-    /// </summary>
-    /// <param name="r1">Первый диапазон</param>
-    /// <param name="r2">Второй диапазон</param>
-    /// <returns>Общий интервал</returns>
-    public static MonthDayRange GetCross(MonthDayRange r1, MonthDayRange r2)
-    {
-      if (r1.IsEmpty || r2.IsEmpty)
-        return Empty;
-
-      // Хорошо бы сделать без DateRange, но это очень сложно
-      DateRange dr1 = r1.GetDateRange(2001); // точно без високосного года
-      DateRange dr2 = r2.GetDateRange(2001);
-      DateRange dr = DateRange.GetCross(dr1, dr2);
-      return new MonthDayRange(dr); // поле Tag копируется правильно.
-    }
-
-    /// <summary>
     /// Попадает ли заданная дата в интервал
     /// </summary>
     /// <param name="date">Проверяемая дата</param>
@@ -902,6 +870,199 @@ namespace AgeyevAV
       MonthDay md = new MonthDay(date);
       return Contains(md);
     }
+
+    #endregion
+
+    #region Пересечение
+
+
+#if XXX // Плохой метод. Не нужен.
+    /// <summary>
+    /// Возвращает пересечение двух интервалов. Поле Tag берется из первого интервала
+    /// Если интервалы не пересекаются, или один из интервалов пустой, возвращается пустой интервал с Tag=null.
+    /// Если обменять местами аргументы, то результат должен быть тот же самый, за исключением свойства Tag.
+    /// </summary>
+    /// <param name="r1">Первый диапазон</param>
+    /// <param name="r2">Второй диапазон</param>
+    /// <returns>Общий интервал</returns>
+    [Obsolete("Этот метод бесполезен. Два интервала могут иметь 2 пересечения. Например, интервалы [01.02-30.09] и [01.08-31.03] дают пересечения [01.02-31.03] и [01.08-30.09]")]
+    public static MonthDayRange GetCross(MonthDayRange r1, MonthDayRange r2)
+    {
+      if (r1.IsEmpty || r2.IsEmpty)
+        return Empty;
+
+      // Хорошо бы сделать без DateRange, но это очень сложно
+      DateRange dr11 = r1.GetDateRange(2002, false); // 2002-2003 год. Точно без високосного года 
+      DateRange dr21 = r2.GetDateRange(2002, false); // 2002-2003
+      DateRange dr = DateRange.GetCross(dr11, dr21);
+      if (dr.IsEmpty)
+      {
+        // 22.09.2021
+        // Проверяем со сдвигом на год назад
+        DateRange dr22 = r2.GetDateRange(2002, true); // 2001-2002
+        dr = DateRange.GetCross(dr11, dr22);
+        if (dr.IsEmpty)
+        {
+          DateRange dr12 = r1.GetDateRange(2002, true); // 2001-2002
+          dr = DateRange.GetCross(dr12, dr21);
+        }
+      }
+      return new MonthDayRange(dr); // поле Tag копируется правильно.
+
+    }
+#endif
+
+    /// <summary>
+    /// Возвращает пересечение двух интервалов. Поле Tag берется из первого интервала.
+    /// Метод возвращает пустой массив, если интервалы не пересекаются, например [01.02-31.03]-[01.04-30.04]
+    /// Возвращается массив из одного элемента, когда есть одно пересечение. Например, для [01.02-31.05]-[01.03-30.06] возвращается [01.03-31.05]
+    /// Возвращается пересечение из двух интервалов для двух пересечений. Например, для [01.02-30.09]-[01.08-31.03] возвращается [01.02-31.03] и [01.08-30.09].
+    /// При наличии двух пересечений интервалы сортируются по возрастанию начальной даты
+    /// Если интервалы не пересекаются, или один из интервалов пустой, возвращается пустой интервал с Tag=null.
+    /// Если обменять местами аргументы, то результат должен быть тот же самый, за исключением свойства Tag.
+    /// </summary>
+    /// <param name="r1">Первый диапазон</param>
+    /// <param name="r2">Второй диапазон</param>
+    /// <returns>Общий интервал</returns>
+    public static MonthDayRange[] GetCrosses(MonthDayRange r1, MonthDayRange r2)
+    {
+      if (r1.IsEmpty || r2.IsEmpty)
+        return _EmptyArray;
+      if (r2.IsWholeYear)
+        return new MonthDayRange[1] { r1 };
+      if (r1.IsWholeYear)
+        return new MonthDayRange[1] { new MonthDayRange(r2, r1.Tag) };
+
+      CrossResults res = GetCrossResult(r1.First, r1.Last, r2.First, r2.Last);
+      switch (res)
+      {
+        case CrossResults.AB: return new MonthDayRange[1] { r1 };
+        case CrossResults.CD: return new MonthDayRange[1] { new MonthDayRange(r2, r1.Tag) };
+        case CrossResults.AD: return new MonthDayRange[1] { new MonthDayRange(r1.First, r2.Last, r1.Tag) };
+        case CrossResults.CB: return new MonthDayRange[1] { new MonthDayRange(r2.First, r1.Last, r1.Tag) };
+        case CrossResults.ADCB:
+          if (r1.First <= r2.First)
+            return new MonthDayRange[2] { new MonthDayRange(r1.First, r2.Last, r1.Tag), new MonthDayRange(r2.First, r1.Last, r1.Tag) };
+          else
+            return new MonthDayRange[2] { new MonthDayRange(r2.First, r1.Last, r1.Tag), new MonthDayRange(r1.First, r2.Last, r1.Tag) };
+        case CrossResults.None: return _EmptyArray;
+        default: throw new BugException();
+      }
+    }
+
+    private static readonly MonthDayRange[] _EmptyArray = new MonthDayRange[0];
+
+    /*
+     * Теория.
+     * Пусть первый интервал [AB] и второй [CD]. Имеются 4 даты, которые можно сравнивать на больше-равно. 
+     * Это дает 6 пар (AB, CD, AC, BD, AD, BC), для каждой из которых возможны два результата, итого, 64 комбинации.
+     * В результирующие периоды всегда входят начало одного периода и окончание другого.
+     * Возможные комбинации: Пусто, [AB], [CD], [AD], [BC], [AD]+[CB].
+     * 
+     * Можно сначала выполнить сравнения дат, получить номер комбинации от 0-12, а потом выбрать один из 6 результатов
+     */
+
+    [Flags]
+    private enum CrossResults
+    {
+      None = 0,
+      AB = 1,
+      CD = 2,
+      AD = 4,
+      CB = 8,
+      ADCB = AD | CB
+    };
+
+    private static CrossResults GetCrossResult(MonthDay A, MonthDay B, MonthDay C, MonthDay D)
+    {
+      // Так как интервалы [AB] и [CD] можно поменять местами, можно сократить количество комбинаций в два раза
+
+      if (A > C)
+      {
+        CrossResults res = GetCrossResult2(C, D, A, B);
+        switch (res)
+        {
+          case CrossResults.AB: return CrossResults.CD;
+          case CrossResults.CD: return CrossResults.AB;
+          case CrossResults.AD: return CrossResults.CB;
+          case CrossResults.CB: return CrossResults.AD;
+          default: return res;
+        }
+      }
+      else
+        return GetCrossResult2(A, B, C, D);
+    }
+
+    private static CrossResults GetCrossResult2(MonthDay A, MonthDay B, MonthDay C, MonthDay D)
+    {
+      if (A <= B) // первый интервал прямой
+      {
+        if (C <= D) // второй интервал прямой
+        {
+          if (C <= B)
+            return CrossResults.CB;
+          else
+            return CrossResults.None;
+        }
+        else // второй интервал вывернутый
+        {
+          if (D >= B)
+            return CrossResults.AB;
+          else
+          {
+            CrossResults res = CrossResults.None;
+            if (C <= B)
+              res |= CrossResults.CB;
+            if (A <= D)
+              res |= CrossResults.AD;
+            return res;
+          }
+        }
+      }
+      else  // первый интервал вывернутый
+      {
+        if (C <= D) // второй интервал прямой
+        {
+          return CrossResults.CD;
+        }
+        else // второй интервал вывернутый
+        {
+          CrossResults res = CrossResults.CB;
+          if (A <= D)
+            res |= CrossResults.AD;
+          return res;
+        }
+      }
+    }
+
+
+    /// <summary>
+    /// Возвращает true, если два диапазона полностью или частично перекрываются.
+    /// Если один или оба диапазона пустые, возвращается false.
+    /// Если обменять местами аргументы, то результат должен быть тот же самый, за исключением свойства Tag.
+    /// </summary>
+    /// <param name="r1">Первый диапазон</param>
+    /// <param name="r2">Второй диапазон</param>
+    /// <returns>Наличие пересечения</returns>
+    public static bool IsCrossed(MonthDayRange r1, MonthDayRange r2)
+    {
+#if XXX
+
+#pragma warning disable 0618 // Obsolete
+      return !GetCross(r1, r2).IsEmpty;
+#pragma warning restore 0618
+
+#else
+
+      if (r1.IsEmpty || r2.IsEmpty)
+        return false;
+      if (r1.IsWholeYear || r2.IsWholeYear)
+        return true;
+
+      return GetCrossResult(r1.First, r1.Last, r2.First, r2.Last) != CrossResults.None;
+#endif
+    }
+
 
     #endregion
 

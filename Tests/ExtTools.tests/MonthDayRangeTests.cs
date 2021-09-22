@@ -104,6 +104,7 @@ namespace ExtTools.tests
       Assert.IsFalse(sut3.Contains(dt), sut3.ToString());
     }
 
+#if XXX // Метод GetCross() является устаревшим
     [TestCase("0201-0331", "0325-0408", "0325-0331")]
     [TestCase("0331-0201", "0325-0408", "0331-0408")]
     [TestCase("0201-0331", "0408-0325", "0201-0325")]
@@ -112,11 +113,15 @@ namespace ExtTools.tests
       MonthDayRange r1 = Creators.CreateMonthDayRange(sR1);
       MonthDayRange r2 = Creators.CreateMonthDayRange(sR2);
 
-      MonthDayRange res = MonthDayRange.GetCross(r1, r2);
+      // Метод GetCross() должен возвращать одинаковый результат при перестановке аргументов.
 
-      Assert.AreEqual(sWanted, Creators.ToString(res), "GetCross()");
+      MonthDayRange res1 = MonthDayRange.GetCross(r1, r2);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "GetCross() - Direct");
+      Assert.IsTrue(MonthDayRange.IsCrossed(r1, r2), "IsCrossed() - Direct");
 
-      Assert.IsTrue(MonthDayRange.IsCrossed(r1, r2), "IsCrossed()");
+      MonthDayRange res2 = MonthDayRange.GetCross(r2, r1);
+      Assert.AreEqual(sWanted, Creators.ToString(res2), "GetCross() - Exchanged");
+      Assert.IsTrue(MonthDayRange.IsCrossed(r2, r1), "IsCrossed() - Exchanged");
     }
 
     [TestCase("0201-0331", "0401-0131")]
@@ -126,10 +131,56 @@ namespace ExtTools.tests
       MonthDayRange r1 = Creators.CreateMonthDayRange(sR1);
       MonthDayRange r2 = Creators.CreateMonthDayRange(sR2);
 
-      MonthDayRange res = MonthDayRange.GetCross(r1, r2);
-      Assert.IsTrue(res.IsEmpty, "GetCross()");
+      MonthDayRange res1 = MonthDayRange.GetCross(r1, r2);
+      Assert.IsTrue(res1.IsEmpty, "GetCross() - Direct");
+      Assert.IsFalse(MonthDayRange.IsCrossed(r1, r2), "IsCrossed() - Direct");
 
-      Assert.IsFalse(MonthDayRange.IsCrossed(r1, r2), "IsCrossed()");
+      MonthDayRange res2 = MonthDayRange.GetCross(r2, r1);
+      Assert.IsTrue(res2.IsEmpty, "GetCross() - Direct");
+      Assert.IsFalse(MonthDayRange.IsCrossed(r2, r1), "IsCrossed() - Direct");
+    }
+#endif
+
+    [TestCase("0201-0331", "0325-0408", "0325-0331")]
+    [TestCase("0331-0201", "0325-0408", "0331-0408")]
+    [TestCase("0201-0331", "0408-0325", "0201-0325")]
+    [TestCase("0201-0331", "0408-0401", "0201-0331")]
+    [TestCase("0201-0331", "0408-0401", "0201-0331")]
+    [TestCase("0301-0228", "0401-0430", "0401-0430")]
+    [TestCase("0201-0331", "0401-0131", "")]
+    [TestCase("0331-0201", "0202-0330", "")]
+    [TestCase("0201-0930", "0801-0331", "0201-0331,0801-0930")]
+    [TestCase("1201-0731", "0501-0131", "0501-0731,1201-0131")]
+    [TestCase("0201-0331", "", "")]
+    [TestCase("", "0201-0331", "")]
+    [TestCase("0201-0131", "0601-0630", "0601-0630")] // полный год
+    [TestCase("0601-0630", "0101-1231", "0601-0630")] // полный год
+    public void GetCrosses(string sR1, string sR2, string sWanted)
+    {
+      MonthDayRange r1 = Creators.CreateMonthDayRange(sR1);
+      MonthDayRange r2 = Creators.CreateMonthDayRange(sR2);
+
+      MonthDayRange[] res1 = MonthDayRange.GetCrosses(r1, r2);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "GetCross() - Direct");
+      Assert.AreEqual(sWanted.Length > 0, MonthDayRange.IsCrossed(r1, r2), "IsCrossed() - Direct");
+
+      MonthDayRange[] res2 = MonthDayRange.GetCrosses(r2, r1);
+      Assert.AreEqual(sWanted, Creators.ToString(res2), "GetCross() - Inverted");
+      Assert.AreEqual(sWanted.Length > 0, MonthDayRange.IsCrossed(r2, r1), "IsCrossed() - Inverted");
+    }
+
+    [TestCase("0228-0331", 2020, false, "20200228-20200331")]
+    [TestCase("0228-0331", 2020, true, "20200228-20200331")]
+    [TestCase("0331-0228", 2020, false, "20200331-20210228")]
+    [TestCase("0331-0228", 2020, true, "20190331-20200229")]
+    [TestCase("0408-0325", 2021, false, "20210408-20220325")]
+    [TestCase("0408-0325", 2021, true, "20200408-20210325")]
+    public void GetDateRange(string sMDR, int year, bool yearIsForLastDay, string sWanted)
+    {
+      MonthDayRange sut = Creators.CreateMonthDayRange(sMDR);
+      DateRange res = sut.GetDateRange(year, yearIsForLastDay);
+      string sRes = Creators.ToString(res);
+      Assert.AreEqual(sWanted, sRes);
     }
   }
 }

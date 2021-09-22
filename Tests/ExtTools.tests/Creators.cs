@@ -74,8 +74,9 @@ namespace ExtTools.tests
       if (value.IsEmpty)
         return String.Empty;
       else
-        return ToString(value.FirstDate) + "-" + value.LastDate;
+        return ToString(value.FirstDate) + "-" + ToString(value.LastDate);
     }
+
 
     /// <summary>
     /// Создает объект MonthDay из четырехсимвольной строки "ММДД".
@@ -128,6 +129,23 @@ namespace ExtTools.tests
         return String.Empty;
       else
         return ToString(value.First) + "-" + ToString(value.Last);
+    }
+
+
+    /// <summary>
+    /// Создает массив текстовых представлений MonthDayRange в виде "ММДД-ММДД,ММДД-ММДД".
+    /// Для пустого массива возвращает пустую строку
+    /// </summary>
+    /// <param name="a"></param>
+    /// <returns></returns>
+    public static string ToString(MonthDayRange[] a)
+    {
+      if (a.Length == 0)
+        return string.Empty;
+      string[] a2 = new string[a.Length];
+      for (int i = 0; i < a.Length; i++)
+        a2[i] = ToString(a[i]);
+      return String.Join(",", a2);
     }
 
     #endregion

@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-09-09T16:55:52.856000000"/>
+	<meta name="changed" content="2021-09-22T17:49:31.029000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -403,6 +404,21 @@
 		</td>
 	</tr>
 	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="243" sdnum="1049;">
+			<p lang="en-US" align="center">243</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">22.09.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Метод
+			</span>MonthDayRange.GetCross() (<a href="#v184p2">v.184 <span lang="ru-RU">п.2</span></a>)
+			<span lang="ru-RU">заменен на </span>GetCrosses(), <span lang="ru-RU">так
+			как может быть два пересечения диапазонов, а не одно. Упрощена
+			реализация метода </span>IsCrossed()</p>
+		</td>
+	</tr>
+	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="242" sdnum="1049;">
 			<p lang="en-US" align="center">242</p>
 		</td>
@@ -410,11 +426,13 @@
 			<p lang="en-US" align="center">09.09.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Для классов </span>DepAnd,
-			DepOr <span lang="ru-RU">и прочих, производных от </span>DepValue,
-			<span lang="ru-RU">переопределен метод </span>ToString(). <span lang="ru-RU">Для
-			таких объектов обычно не устанавливается свойство </span>OwnerInfo
-			(<a href="#v107p1">v.107 <span lang="ru-RU">п.1</span></a>).</p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Для классов
+			</span><span lang="en-US">DepAnd, DepOr </span><span lang="ru-RU">и
+			прочих, производных от </span><span lang="en-US">DepValue,
+			</span><span lang="ru-RU">переопределен метод </span><span lang="en-US">ToString().
+			</span><span lang="ru-RU">Для таких объектов обычно не
+			устанавливается свойство </span><span lang="en-US">OwnerInfo
+			(<a href="#v107p1">v.107 </a></span><a href="#v107p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">).</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -2256,7 +2274,7 @@
 			<p><span lang="ru-RU">- Перегрузки метода </span><span lang="en-US">ToString()
 			</span><span lang="ru-RU">с аргументами </span><span lang="en-US">Format
 			</span><span lang="ru-RU">и </span><span lang="en-US">FormatProvider.</span></p>
-			<p><span lang="en-US">2. </span><span lang="ru-RU">Структура
+			<p><a name="v184p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Структура
 			</span><span lang="en-US">MonthDayRange.</span></p>
 			<p><span lang="en-US">3</span><span lang="ru-RU">. Изменения в
 			</span><span lang="en-US">DateRange </span><span lang="ru-RU">(</span><a href="#v008p2"><span lang="en-US">v.8
