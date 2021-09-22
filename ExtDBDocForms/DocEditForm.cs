@@ -45,7 +45,7 @@ namespace AgeyevAV.ExtForms.Docs
   {
     #region Конструктор и Dispose
 
-    internal DocEditForm(DocumentEditor editor)
+    internal DocEditForm(DocumentEditor editor, EFPDataGridViewState state)
     {
       InitializeComponent();
 
@@ -80,6 +80,7 @@ namespace AgeyevAV.ExtForms.Docs
       _Pages = new DocEditPages(this);
 
       _Editor = editor;
+      _State = state;
 
       FormProvider.Shown += new EventHandler(FormProvider_Shown);
       FormProvider.Hidden += new EventHandler(FormProvider_Hidden);
@@ -182,8 +183,17 @@ namespace AgeyevAV.ExtForms.Docs
 
     #region Другие свойства
 
+    /// <summary>
+    /// Используется для поиска открытых редакторов документов.
+    /// Для редактора поддокумента равна null
+    /// </summary>
     public DocumentEditor Editor { get { return _Editor; } }
     private DocumentEditor _Editor;
+
+    /// <summary>
+    /// Режим редактирования документа/поддокумента
+    /// </summary>
+    private EFPDataGridViewState _State;
 
     public DocEditPages Pages { get { return _Pages; } }
     private DocEditPages _Pages;
@@ -209,7 +219,7 @@ namespace AgeyevAV.ExtForms.Docs
       //        sz.Height+MyMaxPageSize.Height-48);
 
       PerformLayout();
-      
+
       // Размеры заголовка и рамок формы и панели с кнопками
       Size sz2 = new Size();
       sz2.Width = Size.Width - ClientSize.Width;
@@ -243,20 +253,28 @@ namespace AgeyevAV.ExtForms.Docs
       if (!_SelectedTabs.TryGetValue(FormProvider.ConfigSectionName, out text))
         return;
 
-      for (int i = 0; i < MainTabControl.TabCount; i++)
+      switch (_State)
       {
-        if (String.CompareOrdinal(MainTabControl.TabPages[i].Text, text) == 0)
-        {
-          MainTabControl.SelectedIndex = i;
+        case EFPDataGridViewState.Insert:
+        case EFPDataGridViewState.InsertCopy:
+          break; // 22.09.2021
+        default:
+          for (int i = 0; i < MainTabControl.TabCount; i++)
+          {
+            if (String.CompareOrdinal(MainTabControl.TabPages[i].Text, text) == 0)
+            {
+              MainTabControl.SelectedIndex = i;
+              break;
+            }
+          }
           break;
-        }
       }
     }
 
 
     void FormProvider_Hidden(object sender, EventArgs e)
     {
-      if (MainTabControl.SelectedTab!=null)
+      if (MainTabControl.SelectedTab != null)
         _SelectedTabs[FormProvider.ConfigSectionName] = MainTabControl.SelectedTab.Text;
     }
 

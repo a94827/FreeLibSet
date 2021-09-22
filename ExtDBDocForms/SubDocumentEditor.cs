@@ -261,7 +261,7 @@ namespace AgeyevAV.ExtForms.Docs
 
       if (ShowEditor)
       {
-        _Form = new DocEditForm(null);
+        _Form = new DocEditForm(null, this.State);
         try
         {
           _Form.FormProvider.ConfigSectionName = "Ed_" + _SubDocTypeUI.SubDocType.Name; // 09.06.2021

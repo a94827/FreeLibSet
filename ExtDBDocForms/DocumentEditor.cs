@@ -745,7 +745,7 @@ namespace AgeyevAV.ExtForms.Docs
         EFPApp.BeginWait("Открытие редактора");
         try
         {
-          _Form = new DocEditForm(this);
+          _Form = new DocEditForm(this, this.State);
           try
           {
             _Form.FormProvider.ConfigSectionName = "Ed_" + Documents[0].DocType.Name; // 09.06.2021
