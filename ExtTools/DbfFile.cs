@@ -495,7 +495,7 @@ namespace AgeyevAV.DBF
       for (int i = 0; i < _Items.Count; i++)
       {
         //if (FItems[i].Name == Name)
-        if (String.Compare(_Items[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0) // 09.10.2018
+        if (String.Equals(_Items[i].Name, name, StringComparison.OrdinalIgnoreCase)) // 09.10.2018
           return i;
       }
       return -1;
@@ -3645,7 +3645,7 @@ namespace AgeyevAV.DBF
           bool ExceptFlag = false;
           for (int i = 0; i < exceptedFields.Length; i++)
           {
-            if (String.Compare(FieldName, exceptedFields[i], StringComparison.OrdinalIgnoreCase) == 0)
+            if (String.Equals(FieldName, exceptedFields[i], StringComparison.OrdinalIgnoreCase))
             {
               ExceptFlag = true;
               break;

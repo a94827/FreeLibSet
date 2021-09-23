@@ -390,7 +390,7 @@ namespace AgeyevAV.ExtDB.Docs
         {
           DataColumn OldCol = _Table.Columns[i];
           DataColumn NewCol = value.Columns[i];
-          if (String.Compare(OldCol.ColumnName, NewCol.ColumnName, StringComparison.OrdinalIgnoreCase) != 0)
+          if (!String.Equals(OldCol.ColumnName, NewCol.ColumnName, StringComparison.OrdinalIgnoreCase))
             throw new ArgumentException("Имя столбца с индексом " + i.ToString() + " в новой таблице \"" + value.TableName + "\" (" + NewCol.ColumnName + ") не совпадает с именем столбца в существующей таблице (" + OldCol.ColumnName + ")");
 
           // 13.06.2017 Убрано.

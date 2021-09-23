@@ -1310,13 +1310,13 @@ namespace AgeyevAV.Caching
           keys = DataTools.EmptyStrings;
 
         string oldVersion = DoSetVersion(objType, keys, version, true);
-        bool changed = String.Compare(version, oldVersion, StringComparison.Ordinal) != 0;
+        bool changed = !String.Equals(version, oldVersion, StringComparison.Ordinal);
         bool clearPersist;
         if (oldVersion.Length == 0)
         {
           // Первый вызов
           oldVersion = ReadVersionTxt(objType, keys);
-          clearPersist = String.Compare(version, oldVersion, StringComparison.Ordinal) != 0;
+          clearPersist = !String.Equals(version, oldVersion, StringComparison.Ordinal);
           if (clearPersist)
             WriteVersionTxt(objType, keys, version);
         }
@@ -1330,7 +1330,7 @@ namespace AgeyevAV.Caching
       internal void SyncVersion(Type objType, string[] keys, CacheSetVersionResult setResult)
       {
         string oldVersion = DoSetVersion(objType, keys, setResult.Version, false);
-        bool changed = String.Compare(setResult.Version, oldVersion, StringComparison.Ordinal) != 0;
+        bool changed = !String.Equals(setResult.Version, oldVersion, StringComparison.Ordinal);
         if (changed)
           Clear(objType, keys, setResult.PersistFilesCleared);
       }
@@ -4908,13 +4908,13 @@ namespace AgeyevAV.Caching
           keys = DataTools.EmptyStrings;
 
         string oldVersion = DoSetVersion(objType, keys, version, true);
-        bool changed = String.Compare(version, oldVersion, StringComparison.Ordinal) != 0;
+        bool changed = !String.Equals(version, oldVersion, StringComparison.Ordinal);
         bool clearPersist;
         if (oldVersion.Length == 0)
         {
           // Первый вызов
           oldVersion = ReadVersionTxt(objType, keys);
-          clearPersist = String.Compare(version, oldVersion, StringComparison.Ordinal) != 0;
+          clearPersist = !String.Equals(version, oldVersion, StringComparison.Ordinal);
           if (clearPersist)
             WriteVersionTxt(objType, keys, version);
         }
@@ -4928,7 +4928,7 @@ namespace AgeyevAV.Caching
       internal void SyncVersion(Type objType, string[] keys, CacheSetVersionResult setResult)
       {
         string oldVersion = DoSetVersion(objType, keys, setResult.Version, false);
-        bool changed = String.Compare(setResult.Version, oldVersion, StringComparison.Ordinal) != 0;
+        bool changed = !String.Equals(setResult.Version, oldVersion, StringComparison.Ordinal);
         if (changed)
           Clear(objType, keys, setResult.PersistFilesCleared);
       }

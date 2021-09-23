@@ -138,7 +138,7 @@ namespace AgeyevAV
           if (p >= 0)
             Name = Name.Substring(0, p);
           Name = Name.Trim();
-          if (String.Compare(Name, AppName, StringComparison.OrdinalIgnoreCase) == 0)
+          if (String.Equals(Name, AppName, StringComparison.OrdinalIgnoreCase))
             return asms[i];
         }
 

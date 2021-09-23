@@ -528,7 +528,7 @@ namespace AgeyevAV.ExtForms
               cfgOne.GetString("Name"),
               cfgOne.GetDateTime("Time"),
               cfgOne.GetString("MD5"));
-            if (String.Compare(Row["Name"].ToString(), name, StringComparison.OrdinalIgnoreCase) == 0)
+            if (String.Equals(Row["Name"].ToString(), name, StringComparison.OrdinalIgnoreCase))
             {
               CurrentIndex = i;
               cfgOne.SetDateTime("Time", Time); // просто заменяем

@@ -183,7 +183,7 @@ namespace AgeyevAV.IO
     public static bool CaseSensitive
     {
       // Реализация находится там, т.к. файл AbsPath.cs может использоваться отдельно, без FileTools
-      get { return AbsPath.ComparisionType == StringComparison.Ordinal; }
+      get { return AbsPath.ComparisonType == StringComparison.Ordinal; }
     }
 
     /// <summary>

@@ -1350,7 +1350,7 @@ namespace AgeyevAV.Trees
       {
         if (_Table.PrimaryKey.Length != 1)
           return false;
-        return String.Compare(_Table.PrimaryKey[0].ColumnName, IdColumnName, StringComparison.OrdinalIgnoreCase) == 0;
+        return String.Equals(_Table.PrimaryKey[0].ColumnName, IdColumnName, StringComparison.OrdinalIgnoreCase);
       }
     }
 

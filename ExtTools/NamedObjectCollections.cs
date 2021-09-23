@@ -126,16 +126,16 @@ namespace AgeyevAV
   {
     #region Защищенный конструктор
 
-    private ObjectWithCodeComparer(StringComparison comparisionType)
+    private ObjectWithCodeComparer(StringComparison comparisonType)
     {
-      _ComparisionType = comparisionType;
+      _ComparisonType = comparisonType;
     }
 
     #endregion
 
     #region Поля
 
-    private readonly StringComparison _ComparisionType;
+    private readonly StringComparison _ComparisonType;
 
     #endregion
 
@@ -143,14 +143,14 @@ namespace AgeyevAV
 
     /// <summary>
     /// Сравнение двух объектов.
-    /// Использует String.Compare(x.Code, y.Code, ComparisionType)
+    /// Использует String.Compare(x.Code, y.Code, ComparisonType)
     /// </summary>
     /// <param name="x">Первый сравниваемый объект</param>
     /// <param name="y">Второй сравниваемый объект</param>
     /// <returns>Результат сравнения кодов объектов</returns>
     public int Compare(T x, T y)
     {
-      return String.Compare(x.Code, y.Code, _ComparisionType);
+      return String.Compare(x.Code, y.Code, _ComparisonType);
     }
 
     #endregion
@@ -631,7 +631,7 @@ namespace AgeyevAV
       {
         for (int i = 0; i < FList.Count; i++)
         {
-          if (String.Compare(FList[i].Code, Code, StringComparison.OrdinalIgnoreCase) == 0)
+          if (String.Equals(FList[i].Code, Code, StringComparison.OrdinalIgnoreCase))
             return i;
         }
       }
@@ -1381,7 +1381,7 @@ namespace AgeyevAV
       {
         for (int i = 0; i < _List.Count; i++)
         {
-          if (String.Compare(_List[i].Code, code, StringComparison.OrdinalIgnoreCase) == 0)
+          if (String.Equals(_List[i].Code, code, StringComparison.OrdinalIgnoreCase))
             return i;
         }
       }
@@ -2053,7 +2053,7 @@ namespace AgeyevAV
       {
         for (int i = 0; i < FList.Count; i++)
         {
-          if (String.Compare(FList[i].Code, Code, StringComparison.OrdinalIgnoreCase) == 0)
+          if (String.Equals(FList[i].Code, Code, StringComparison.OrdinalIgnoreCase))
             return i;
         }
       }
@@ -2967,7 +2967,7 @@ namespace AgeyevAV
       {
         for (int i = 0; i < _List.Count; i++)
         {
-          if (String.Compare(_List[i].Code, code, StringComparison.OrdinalIgnoreCase) == 0)
+          if (String.Equals(_List[i].Code, code, StringComparison.OrdinalIgnoreCase))
             return i;
         }
       }

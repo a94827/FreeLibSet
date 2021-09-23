@@ -884,7 +884,7 @@ namespace AgeyevAV.ExtDB
 
       for (int i = 0; i < Count; i++)
       {
-        if (String.Compare(this[i], sourceTable.Columns[i].ColumnName, StringComparison.OrdinalIgnoreCase) != 0)
+        if (!String.Equals(this[i], sourceTable.Columns[i].ColumnName, StringComparison.OrdinalIgnoreCase))
           return CreateSubTable(sourceTable);
       }
 

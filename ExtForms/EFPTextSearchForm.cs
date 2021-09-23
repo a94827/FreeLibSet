@@ -555,7 +555,7 @@ namespace AgeyevAV.ExtForms
         {
           spl.CheckCancelled();
 
-          if (String.Compare(_TextCopy, startPos, _SearchCopy, 0, _SearchCopy.Length, StringComparison.Ordinal) == 0)
+          if (String.Compare(_TextCopy, startPos, _SearchCopy, 0, _SearchCopy.Length, StringComparison.Ordinal) == 0) // TODO: Equals()
           {
             Owner.Select(startPos, _SearchCopy.Length);
             Found = true;

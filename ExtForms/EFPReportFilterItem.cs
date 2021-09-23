@@ -419,7 +419,7 @@ namespace AgeyevAV.ExtForms
     {
       for (int i = 0; i < _Items.Count; i++)
       {
-        if (String.CompareOrdinal(_Items[i].DisplayName, displayName) == 0)
+        if (String.Equals(_Items[i].DisplayName, displayName))
           return i;
       }
       return -1;

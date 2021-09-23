@@ -3549,12 +3549,12 @@ namespace AgeyevAV
     /// <summary>
     /// Сортировка списка с использованием заданного метода сравнение
     /// </summary>
-    /// <param name="comparision">Делегат, выполняющий сравнение</param>
-    public void Sort(Comparison<T> comparision)
+    /// <param name="comparison">Делегат, выполняющий сравнение</param>
+    public void Sort(Comparison<T> comparison)
     {
       CheckNotReadOnly();
 
-      _List.Sort(comparision);
+      _List.Sort(comparison);
     }
 
     /// <summary>

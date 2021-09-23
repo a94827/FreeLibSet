@@ -491,9 +491,9 @@ namespace AgeyevAV.IO
     /// <summary>
     /// Содержит true, если при сравнении путей учитывается регистр (Unix), или нет (Windows)
     /// </summary>
-    internal static readonly StringComparison ComparisionType = GetComparisionType();
+    internal static readonly StringComparison ComparisonType = GetComparisonType();
 
-    private static StringComparison GetComparisionType()
+    private static StringComparison GetComparisonType()
     {
       switch (Environment.OSVersion.Platform)
       {
@@ -523,7 +523,7 @@ namespace AgeyevAV.IO
       if (path1.IsEmpty || path2.IsEmpty)
         return false;
 
-      return String.Compare(path1.Path, path2.Path, ComparisionType) == 0;
+      return String.Equals(path1.Path, path2.Path, ComparisonType);
     }
 
     /// <summary>
@@ -590,9 +590,9 @@ namespace AgeyevAV.IO
     {
       if (path.IsEmpty || this.IsEmpty)
         return false;
-      if (String.Compare(this.Path, path.Path, ComparisionType) == 0)
+      if (String.Equals(this.Path, path.Path, ComparisonType))
         return true; // текущий каталог
-      if (this.Path.StartsWith(path.SlashedPath, ComparisionType))
+      if (this.Path.StartsWith(path.SlashedPath, ComparisonType))
         return true; // вложенный путь
 
       return false;
@@ -625,7 +625,7 @@ namespace AgeyevAV.IO
       if (RelPath[RelPath.Length - 1] == System.IO.Path.DirectorySeparatorChar)
         RelPath = RelPath.Substring(0, RelPath.Length - 1);
 
-      return _Path.EndsWith(RelPath, ComparisionType);
+      return _Path.EndsWith(RelPath, ComparisonType);
     }
 
     /// <summary>

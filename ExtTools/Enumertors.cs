@@ -961,7 +961,7 @@ namespace AgeyevAV
         string s1 = x1 as String;
         string s2 = x2 as String;
         if (!(Object.ReferenceEquals(s1, null)) || Object.ReferenceEquals(s2, null))
-          return String.Compare(s1, s2, StringComparison.OrdinalIgnoreCase) == 0;
+          return String.Equals(s1, s2, StringComparison.OrdinalIgnoreCase);
       }
 
       return x1.Equals(x2);

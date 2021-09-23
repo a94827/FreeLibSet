@@ -437,7 +437,7 @@ namespace AgeyevAV.IO
       // Эта проверка лишняя.
       // В Windows никогда не будет одинаковых имен, отоичающихся регистром,
       // поэтому предыдущее условие всегда будет выполнено
-      // if (AbsPath.ComparisionType == StringComparison.Ordinal)
+      // if (AbsPath.ComparisonType == StringComparison.Ordinal)
       return String.Compare(x2, y2, StringComparison.Ordinal);
     }
 
@@ -453,7 +453,7 @@ namespace AgeyevAV.IO
       if (res != 0)
         return res;
 
-      if (AbsPath.ComparisionType == StringComparison.Ordinal)
+      if (AbsPath.ComparisonType == StringComparison.Ordinal)
       {
         res = String.Compare(x3, y3, StringComparison.Ordinal);
         if (res != 0)

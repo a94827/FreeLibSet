@@ -259,7 +259,7 @@ namespace AgeyevAV
 
       for (int i = 0; i < _List.Count; i++)
       {
-        if (String.Compare(item, _List[i], Flags) == 0)
+        if (String.Equals(item, _List[i], Flags))
           return i;
       }
       return -1;

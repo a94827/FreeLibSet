@@ -205,9 +205,9 @@ namespace AgeyevAV.ExtForms
       if (Object.ReferenceEquals(a, null) || Object.ReferenceEquals(b, null))
         return false;
 
-      return String.CompareOrdinal(a.ConfigSectionName, b.ConfigSectionName) == 0 &&
-        String.CompareOrdinal(a.Category, b.Category) == 0 &&
-        String.CompareOrdinal(a.UserSetName, b.UserSetName) == 0;
+      return String.Equals(a.ConfigSectionName, b.ConfigSectionName) &&
+        String.Equals(a.Category, b.Category) &&
+        String.Equals(a.UserSetName, b.UserSetName);
     }
 
     /// <summary>

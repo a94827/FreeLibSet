@@ -464,7 +464,7 @@ namespace AgeyevAV
       {
         string MasterPK = DataTools.GetPrimaryKey(_MasterTable);
         string SlavePK = DataTools.GetPrimaryKey(_SlaveTable);
-        if (String.Compare(MasterPK, SlavePK, StringComparison.Ordinal) != 0)
+        if (!String.Equals(MasterPK, SlavePK, StringComparison.Ordinal))
           throw new InvalidOperationException("Таблица SlaveTable имеет первичный ключ \"" + SlavePK + "\". Подключаемая таблица MasterTable должна иметь такой же ключ, а не \"" + MasterPK + "\"");
 
         if (SlavePK.IndexOf(',') >= 0)

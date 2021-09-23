@@ -590,12 +590,12 @@ namespace AgeyevAV.ExtForms
             throw new ArgumentException("Ёлементы в SourceColumnNames не могут содержать зап€тые", "sourceColumnNames");
 
           // 21.05.2021
-          if (String.Compare(name, sourceColumnNames[i], StringComparison.OrdinalIgnoreCase)==0)
+          if (String.Equals(name, sourceColumnNames[i], StringComparison.OrdinalIgnoreCase))
             throw new ArgumentException("Ёлемент в SourceColumnNames совпадает с именем вычисл€емого столбца/подсказки \""+name+"\"", "sourceColumnNames");
 
           for (int j = 0; j < i; j++)
           {
-            if (String.Compare(sourceColumnNames[i], sourceColumnNames[j], StringComparison.OrdinalIgnoreCase) == 0)
+            if (String.Equals(sourceColumnNames[i], sourceColumnNames[j], StringComparison.OrdinalIgnoreCase))
               throw new ArgumentException("ƒва одинаковых элемента \"" + sourceColumnNames[i] + "\" в SourceColumnNames", "sourceColumnNames");
           }
         }

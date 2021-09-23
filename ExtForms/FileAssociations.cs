@@ -331,7 +331,7 @@ namespace AgeyevAV.Shell
     {
       for (int i = 0; i < _OpenWithItems.Count; i++)
       {
-        if (String.Compare(_OpenWithItems[i].ProgId, item.ProgId, StringComparison.OrdinalIgnoreCase) == 0)
+        if (String.Equals(_OpenWithItems[i].ProgId, item.ProgId, StringComparison.OrdinalIgnoreCase))
           return i;
         if (_OpenWithItems[i].ProgramPath == item.ProgramPath)
           return i;

@@ -3332,8 +3332,8 @@ namespace AgeyevAV.Remoting
     {
       if (t == null)
         return false;
-      return String.Compare(this.TypeName, t.FullName, StringComparison.Ordinal) == 0 &&
-        String.Compare(this.AssemblyName, t.Assembly.FullName, StringComparison.Ordinal) == 0;
+      return String.Equals(this.TypeName, t.FullName, StringComparison.Ordinal) &&
+        String.Equals(this.AssemblyName, t.Assembly.FullName, StringComparison.Ordinal);
     }
 
     /// <summary>

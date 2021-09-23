@@ -1499,9 +1499,9 @@ namespace AgeyevAV.ExtDB.Docs
           // Не проверяем флаги UseXXX в DBxBinDataHandler.
           // 
 
-          if (String.Compare(cs.MasterTableName, "BinData", StringComparison.OrdinalIgnoreCase) == 0)
+          if (String.Equals(cs.MasterTableName, "BinData", StringComparison.OrdinalIgnoreCase))
             binDataRefs.Add(new DBxTableColumnName(ts.TableName, cs.ColumnName));
-          else if (String.Compare(cs.MasterTableName, "FileNames", StringComparison.OrdinalIgnoreCase) == 0)
+          else if (String.Equals(cs.MasterTableName, "FileNames", StringComparison.OrdinalIgnoreCase))
             fileNameRefs.Add(new DBxTableColumnName(ts.TableName, cs.ColumnName));
         }
       }
@@ -1514,7 +1514,7 @@ namespace AgeyevAV.ExtDB.Docs
           DBxColumnStruct cs = mainRealStr.Tables.GetRequired(tc.TableName).Columns.GetRequired(tc.ColumnName);
           if (String.IsNullOrEmpty(cs.MasterTableName))
             MainBinDataRefs.Add(tc);
-          else if (String.Compare(cs.MasterTableName, "BinData", StringComparison.OrdinalIgnoreCase) != 0)
+          else if (!String.Equals(cs.MasterTableName, "BinData", StringComparison.OrdinalIgnoreCase))
             throw new BugException("В реальной структуре БД " + globalData.MainDBEntry.DB.DatabaseName +
               ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + ", объявлена ссылка на таблицу \"" +
               cs.MasterTableName + "\", а не на \"BinData\"");
@@ -1525,7 +1525,7 @@ namespace AgeyevAV.ExtDB.Docs
           DBxColumnStruct cs = mainRealStr.Tables.GetRequired(tc.TableName).Columns.GetRequired(tc.ColumnName);
           if (String.IsNullOrEmpty(cs.MasterTableName))
             MainFileNameRefs.Add(tc);
-          else if (String.Compare(cs.MasterTableName, "FileNames", StringComparison.OrdinalIgnoreCase) != 0)
+          else if (!String.Equals(cs.MasterTableName, "FileNames", StringComparison.OrdinalIgnoreCase))
             throw new BugException("В реальной структуре БД " + globalData.MainDBEntry.DB.DatabaseName +
               ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + ", объявлена ссылка на таблицу \"" +
               cs.MasterTableName + "\", а не на \"FileNames\"");

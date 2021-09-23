@@ -135,7 +135,7 @@ namespace AgeyevAV.ExtForms
       {
         for (int iCol = ColumnCount - 1; iCol >= 1; iCol--)
         {
-          if (String.Compare(Text[iRow, iCol], Text[iRow, iCol - 1], StringComparison.Ordinal) != 0)
+          if (!String.Equals(Text[iRow, iCol], Text[iRow, iCol - 1], StringComparison.Ordinal))
             continue;
           if (RowSpan[iRow, iCol] == 0)
             continue; // уже объединенная ячейка внизу

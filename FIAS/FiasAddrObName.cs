@@ -116,7 +116,7 @@ namespace AgeyevAV.FIAS
         {
           if (flags_b[j]) continue;
 
-          if (String.Compare(a._Tokens[i], b._Tokens[j], StringComparison.Ordinal) == 0)
+          if (String.Equals(a._Tokens[i], b._Tokens[j], StringComparison.Ordinal))
           {
             flags_a[i] = true;
             flags_b[j] = true;

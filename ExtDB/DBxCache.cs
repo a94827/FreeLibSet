@@ -1992,7 +1992,7 @@ namespace AgeyevAV.ExtDB
 
       DBxCacheTablePage Page = DoGetPage(firstId);
       DBxColumns OrgColumnNames = DBxColumns.FromColumns(Page.Table.Columns);
-      if (String.Compare(columnNames.AsString, OrgColumnNames.AsString, StringComparison.Ordinal) == 0)
+      if (String.Equals(columnNames.AsString, OrgColumnNames.AsString, StringComparison.Ordinal))
         // Список полей совпадает
         return Page;
       else

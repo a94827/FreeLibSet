@@ -12248,6 +12248,7 @@ namespace AgeyevAV
     /// пары элементов Equals() возвращает true.
     /// Если обе ссылки на массивы равны null, возвращается true.
     /// Если только одна из ссылок равна null, возвращается false.
+    /// Для строковых массивов можно использовать метод AreStringArrayEqual()
     /// </summary>
     /// <typeparam name="T">Тип значений, хранящихся в массивах</typeparam>
     /// <param name="a">Первый сравниваемый массив</param>
@@ -12264,6 +12265,33 @@ namespace AgeyevAV
       for (int i = 0; i < a.Length; i++)
       {
         if (!Object.Equals(a[i], b[i]))
+          return false;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Сравнение двух одномерных массивов строк
+    /// Возвращает true, если массивы имеют одинаковую длину и для каждой
+    /// пары элементов значения совпадают.
+    /// Если обе ссылки на массивы равны null, возвращается true.
+    /// Если только одна из ссылок равна null, возвращается false.
+    /// </summary>
+    /// <param name="a">Первый сравниваемый массив</param>
+    /// <param name="b">Второй сравниваемый массив</param>
+    /// <param name="comparisonType">Режим сравнения строк</param>
+    /// <returns>true, если массивы совпадают.</returns>
+    public static bool AreArraysEqual(string[] a, string[] b, StringComparison comparisonType)
+    {
+      if (a == null && b == null)
+        return true;
+      if (a == null || b == null)
+        return false; // 13.12.2016
+      if (a.Length != b.Length)
+        return false;
+      for (int i = 0; i < a.Length; i++)
+      {
+        if (String.Equals(a[i], b[i], comparisonType))
           return false;
       }
       return true;
@@ -12939,6 +12967,48 @@ namespace AgeyevAV
 
         if (!object.Equals(en1.Current, en2.Current))
           return false;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс IEnumerable для строк
+    /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попанрно совпадают.
+    /// Порядок элементов в перечислители имеет значение.
+    /// </summary>
+    /// <param name="list1">Первый сравниваемый объек</param>
+    /// <param name="list2">Второй сравниваемый объек</param>
+    /// <param name="comparisonType">Режим сравнения для строк</param>
+    /// <returns>true, если перечислители содержат одинаковые объекты</returns>
+    public static bool AreEnumerablesEqual(IEnumerable<string> list1, IEnumerable<string> list2, StringComparison comparisonType)
+    {
+#if DEBUG
+      if (list1 == null)
+        throw new ArgumentNullException("list1");
+      if (list2 == null)
+        throw new ArgumentNullException("list2");
+#endif
+
+      // Нельзя использовать оператор foreach, придется работать с IEnumerator
+      using (IEnumerator<string> en1 = list1.GetEnumerator())
+      {
+        using (IEnumerator<string> en2 = list2.GetEnumerator())
+        {
+          en1.Reset();
+          en2.Reset();
+          while (true)
+          {
+            bool has1 = en1.MoveNext();
+            bool has2 = en2.MoveNext();
+            if (has1 != has2)
+              return false; // число элементов не совпадает
+            if (!has1)
+              break;
+
+            if (!String.Equals(en1.Current, en2.Current, comparisonType))
+              return false;
+          }
+        }
       }
       return true;
     }
@@ -14401,7 +14471,7 @@ namespace AgeyevAV
     private static bool IsPrimaryIdKey(DataTable table)
     {
       if (table.PrimaryKey.Length == 1)
-        return String.Compare(table.PrimaryKey[0].ColumnName, "Id", StringComparison.OrdinalIgnoreCase) == 0;
+        return String.Equals(table.PrimaryKey[0].ColumnName, "Id", StringComparison.OrdinalIgnoreCase);
       else
         return false;
     }
@@ -16068,7 +16138,7 @@ namespace AgeyevAV
       {
         string s1 = ((string)value1).TrimEnd();
         string s2 = ((string)value2).TrimEnd();
-        return String.Compare(s1, s2) == 0;
+        return String.Equals(s1, s2);
       }
 
       return value1.Equals(value2);
@@ -19771,7 +19841,7 @@ namespace AgeyevAV
     {
       for (int i = 0; i < a.Length; i++)
       {
-        if (String.Compare(a[i], searchStr, ignoreCase) == 0)
+        if (String.Compare(a[i], searchStr, ignoreCase) == 0) // TODO: Замена на Equals()
           return i;
       }
       return -1;
@@ -19790,7 +19860,7 @@ namespace AgeyevAV
     {
       for (int i = 0; i < a.Length; i++)
       {
-        if (String.Compare(a[i], searchStr, ignoreCase, culture) == 0)
+        if (String.Compare(a[i], searchStr, ignoreCase, culture) == 0) // TODO: Замена на Equals()
           return i;
       }
       return -1;
@@ -19853,9 +19923,9 @@ namespace AgeyevAV
     /// <param name="startPos">Позиция начала подстроки для проверки. Может быть отрицательной или выходить
     /// за пределы строки</param>
     /// <param name="substring">Проверяемая подстрока</param>
-    /// <param name="comparisionType">Способ сравнения строк</param>
+    /// <param name="comparisonType">Способ сравнения строк</param>
     /// <returns>Совпадение подстроки</returns>
-    public static bool IsSubstring(string s, int startPos, string substring, StringComparison comparisionType)
+    public static bool IsSubstring(string s, int startPos, string substring, StringComparison comparisonType)
     {
       if (s == null)
         s = String.Empty;
@@ -19865,7 +19935,7 @@ namespace AgeyevAV
       if (startPos < 0 || (startPos + substring.Length) > s.Length)
         return false;
 
-      return String.Compare(s, startPos, substring, 0, substring.Length, comparisionType) == 0;
+      return String.Compare(s, startPos, substring, 0, substring.Length, comparisonType) == 0; // TODO: Equals()
     }
 
     /// <summary>
@@ -19889,7 +19959,7 @@ namespace AgeyevAV
       if (startPos < 0 || (startPos + substring.Length) > s.Length)
         return false;
 
-      return String.Compare(s, startPos, substring, 0, substring.Length) == 0;
+      return String.Compare(s, startPos, substring, 0, substring.Length) == 0; // TODO: Equals()
     }
 
     /// <summary>
@@ -19914,7 +19984,7 @@ namespace AgeyevAV
       if (startPos < 0 || (startPos + substring.Length) > s.Length)
         return false;
 
-      return String.Compare(s, startPos, substring, 0, substring.Length, ignoreCase) == 0;
+      return String.Compare(s, startPos, substring, 0, substring.Length, ignoreCase) == 0; // TODO: Equals()
     }
 
     /// <summary>
@@ -19940,7 +20010,7 @@ namespace AgeyevAV
       if (startPos < 0 || (startPos + substring.Length) > s.Length)
         return false;
 
-      return String.Compare(s, startPos, substring, 0, substring.Length, ignoreCase, culture) == 0;
+      return String.Compare(s, startPos, substring, 0, substring.Length, ignoreCase, culture) == 0; // TODO: Equals()
     }
 
     #endregion
@@ -19965,7 +20035,7 @@ namespace AgeyevAV
     /// Двусимвольные комбинации идут перед односимвольными
     /// Для использования в методе String.Split().
     /// </summary>
-    public static readonly string[] AllPossibleLineSeparators = new string[] { "\r\n", "\n\r", "\r", "\n" };
+    public static readonly string[] AllPossibleLineSeparators = new string[] { "\r\n" , "\n\r" , "\r", "\n" };
 
     #endregion
 
@@ -20742,7 +20812,7 @@ namespace AgeyevAV
     /// <param name="sb">Заполняемый StringBuilder</param>
     /// <param name="a">Массив исходных значений</param>
     /// <param name="fieldDelimiter">Разделитель записей</param>
-    public static void CommaStringFromArray2(StringBuilder sb, string[,] a, char fieldDelimiter)
+    public static void CommaStringFromArray2(StringBuilder sb, string[, ] a, char fieldDelimiter)
     {
       CommaStringFromArray2(sb, a, fieldDelimiter, Environment.NewLine);
     }
@@ -20755,7 +20825,7 @@ namespace AgeyevAV
     /// <param name="a">Массив исходных значений</param>
     /// <param name="fieldDelimiter">Разделитель записей</param>
     /// <param name="newLine">Разделитель строк. Если не задан, используется Environment.NewLine</param>
-    public static void CommaStringFromArray2(StringBuilder sb, string[,] a, char fieldDelimiter, string newLine)
+    public static void CommaStringFromArray2(StringBuilder sb, string[, ] a, char fieldDelimiter, string newLine)
     {
       if (a == null)
         return;
@@ -20821,7 +20891,7 @@ namespace AgeyevAV
     /// <param name="sb">Сюда записывается форматированная строка</param>
     /// <param name="a">Исходный двумерный массив</param>
     /// <param name="simpleValues">Если true, то преобразование значений не выполняется. Если false, то строки, содержащие кавычки, заключаются в кавычки, сами кавычки удваиваются</param>
-    public static void TabbedStringFromArray2(StringBuilder sb, string[,] a, bool simpleValues)
+    public static void TabbedStringFromArray2(StringBuilder sb, string[, ] a, bool simpleValues)
     {
       TabbedStringFromArray2(sb, a, simpleValues, Environment.NewLine);
     }
@@ -20833,7 +20903,7 @@ namespace AgeyevAV
     /// <param name="a">Исходный двумерный массив</param>
     /// <param name="simpleValues">Если true, то преобразование значений не выполняется. Если false, то строки, содержащие кавычки, заключаются в кавычки, сами кавычки удваиваются</param>
     /// <param name="newLine">Символы перевода строки. Если не задано, используется Environment.NewLine</param>
-    public static void TabbedStringFromArray2(StringBuilder sb, string[,] a, bool simpleValues, string newLine)
+    public static void TabbedStringFromArray2(StringBuilder sb, string[, ] a, bool simpleValues, string newLine)
     {
       if (a == null)
         return;

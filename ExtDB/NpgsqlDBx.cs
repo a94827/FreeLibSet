@@ -1649,7 +1649,7 @@ namespace AgeyevAV.ExtDB.Npgsql
       foreach (DataRowView drvCol in dvIndexColumns)
       {
         string ColumnName = DataTools.GetString(drvCol.Row, "COLUMN_NAME");
-        if (String.Compare(ColumnName, table.PrimaryKey[0], StringComparison.OrdinalIgnoreCase) == 0)
+        if (String.Equals(ColumnName, table.PrimaryKey[0], StringComparison.OrdinalIgnoreCase))
           Found = true;
         else
         {

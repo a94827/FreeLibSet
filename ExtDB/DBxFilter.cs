@@ -2616,7 +2616,7 @@ namespace AgeyevAV.ExtDB
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
       string v = DataTools.GetString(Expression.GetValue(rowValues, false));
-      return String.Compare(v, Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture) == 0;
+      return String.Equals(v, Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
     #endregion

@@ -203,7 +203,7 @@ namespace AgeyevAV.ExtForms
 
         // В просмотре могут быть два столбца, сортировка которых выполняется одинаково
         // (например, текстовое представление перечисление и значок)
-        return String.Compare(a.Column.CustomOrderColumnName, b.Column.CustomOrderColumnName, StringComparison.Ordinal)==0;
+        return String.Equals(a.Column.CustomOrderColumnName, b.Column.CustomOrderColumnName, StringComparison.Ordinal);
       }
 
       public static bool operator !=(SortItem a, SortItem b)

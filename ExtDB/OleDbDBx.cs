@@ -378,7 +378,7 @@ namespace AgeyevAV.ExtDB.OleDb
         OleDbConnectionStringBuilder csb = new OleDbConnectionStringBuilder(cs);
         foreach (string Key in csb.Keys)
         {
-          if (String.Compare(Key, "Password", StringComparison.OrdinalIgnoreCase) == 0)
+          if (String.Equals(Key, "Password", StringComparison.OrdinalIgnoreCase))
           {
             object v;
             if (csb.TryGetValue(Key, out v))

@@ -1986,7 +1986,7 @@ namespace AgeyevAV.ExtDB.SQLite
       //csb.DataSource = ReplaceDBItem(csb.DataSource, OldDBName, NewDBName);
       // 31.07.2018. Вместо простой замены текста, заменяем имя файла
       AbsPath Path = new AbsPath(csb.DataSource);
-      if (String.Compare(Path.FileNameWithoutExtension, oldDBName, StringComparison.OrdinalIgnoreCase) == 0)
+      if (String.Equals(Path.FileNameWithoutExtension, oldDBName, StringComparison.OrdinalIgnoreCase))
       {
         string FileName = newDBName + Path.Extension;
         Path = new AbsPath(Path.ParentDir, FileName);

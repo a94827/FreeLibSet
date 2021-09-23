@@ -859,7 +859,7 @@ namespace AgeyevAV.Russian
       s2 = s2.Replace('Ё', 'Е').Replace(' ', '-');
 
       // Точное сравнение
-      if (String.Compare(s1, s2, StringComparison.OrdinalIgnoreCase) == 0)
+      if (String.Equals(s1, s2, StringComparison.OrdinalIgnoreCase))
         return true;
 
       // Имя и отчество может быть одно задано, а другое - нет
