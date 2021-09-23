@@ -106,6 +106,23 @@ namespace ExtTools.tests
     }
 
     /// <summary>
+    /// Создает массив текстовых представлений MonthDay в виде "ММДД,ММДД".
+    /// Для пустого массива возвращает пустую строку
+    /// </summary>
+    /// <param name="a"></param>
+    /// <returns></returns>
+    public static string ToString(MonthDay[] a)
+    {
+      if (a.Length == 0)
+        return string.Empty;
+      string[] a2 = new string[a.Length];
+      for (int i = 0; i < a.Length; i++)
+        a2[i] = ToString(a[i]);
+      return String.Join(",", a2);
+    }
+
+
+    /// <summary>
     /// Создает объект MonthDayRange из строки в формате "ММДД-ММДД".
     /// Для пустой строки возращает MonthDayRange.Empty
     /// </summary>

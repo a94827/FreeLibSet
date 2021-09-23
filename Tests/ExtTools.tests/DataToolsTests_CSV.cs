@@ -68,6 +68,7 @@ namespace ExtTools.tests
       return DataTools.CommaStringFromIds(a2, addSpace);
     }
 
+    [Test]
     public void CommaStringFromIds_empty()
     {
       string s1 = DataTools.CommaStringFromIds(new Int32[] { }, false);

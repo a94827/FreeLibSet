@@ -12297,6 +12297,31 @@ namespace AgeyevAV
       return true;
     }
 
+    /// <summary>
+    /// Сравнение двух наборов числовых идентификаторов
+    /// Возвращает true, если массивы полностью идентичны. Порядок элементов в массивах имеет значение.
+    /// </summary>
+    /// <param name="ids1">Первый массив идентификаторов</param>
+    /// <param name="ids2">Второй массив идентификаторов</param>
+    /// <returns>Идентичность массивов</returns>
+    public static bool AreIdsEqual(Int32[] ids1, Int32[] ids2)
+    {
+      // TODO: Не уверен, что эта функция нужна. AreArrayEqual<Int32>() делает тоже самое
+
+      if (ids1 == null)
+        throw new ArgumentNullException("Ids1");
+      if (ids2 == null)
+        throw new ArgumentNullException("Ids2");
+      if (ids1.Length != ids2.Length)
+        return false;
+      for (int i = 0; i < ids1.Length; i++)
+      {
+        if (ids2[i] != ids1[i])
+          return false;
+      }
+      return true;
+    }
+
     #endregion
 
     #region Объединение массивов
@@ -22514,29 +22539,6 @@ namespace AgeyevAV
         throw new BugException("Для типа " + type.ToString() + " не найден конструктор по умолчанию");
       return ci.Invoke(null);
        * */
-    }
-
-    /// <summary>
-    /// Сравнение двух наборов числовых идентификаторов
-    /// Возвращает true, если массивы полностью идентичны. Порядок элементов в массивах имеет значение.
-    /// </summary>
-    /// <param name="ids1">Первый массив идентификаторов</param>
-    /// <param name="ids2">Второй массив идентификаторов</param>
-    /// <returns>Идентичность массивов</returns>
-    public static bool AreIdsEqual(Int32[] ids1, Int32[] ids2)
-    {
-      if (ids1 == null)
-        throw new ArgumentNullException("Ids1");
-      if (ids2 == null)
-        throw new ArgumentNullException("Ids2");
-      if (ids1.Length != ids2.Length)
-        return false;
-      for (int i = 0; i < ids1.Length; i++)
-      {
-        if (ids2[i] != ids1[i])
-          return false;
-      }
-      return true;
     }
 
 

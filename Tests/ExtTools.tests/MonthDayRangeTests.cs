@@ -158,11 +158,15 @@ namespace ExtTools.tests
     public void GetCrosses(string sR1, string sR2, string sWanted)
     {
       MonthDayRange r1 = Creators.CreateMonthDayRange(sR1);
+      r1 = new MonthDayRange(r1, "123");
       MonthDayRange r2 = Creators.CreateMonthDayRange(sR2);
+      r2 = new MonthDayRange(r2, "456");
 
       MonthDayRange[] res1 = MonthDayRange.GetCrosses(r1, r2);
       Assert.AreEqual(sWanted, Creators.ToString(res1), "GetCross() - Direct");
       Assert.AreEqual(sWanted.Length > 0, MonthDayRange.IsCrossed(r1, r2), "IsCrossed() - Direct");
+      for (int i = 0; i < res1.Length; i++)
+        Assert.AreEqual("123", res1[i].Tag, "Tag");
 
       MonthDayRange[] res2 = MonthDayRange.GetCrosses(r2, r1);
       Assert.AreEqual(sWanted, Creators.ToString(res2), "GetCross() - Inverted");
@@ -180,6 +184,77 @@ namespace ExtTools.tests
       MonthDayRange sut = Creators.CreateMonthDayRange(sMDR);
       DateRange res = sut.GetDateRange(year, yearIsForLastDay);
       string sRes = Creators.ToString(res);
+      Assert.AreEqual(sWanted, sRes);
+    }
+
+    [TestCase("0401-0630", 10, "0411-0710")]
+    [TestCase("0401-0630", 0, "0401-0630")]
+    [TestCase("0401-0630", -10, "0322-0620")]
+    [TestCase("0401-0630", 2 * 365, "0401-0630")]
+    [TestCase("0401-0630", -2 * 365, "0401-0630")]
+    public void AddDays(string sMDR, int days, string sWanted)
+    {
+      MonthDayRange sut = Creators.CreateMonthDayRange(sMDR);
+      sut = new MonthDayRange(sut, "123");
+
+      MonthDayRange res = sut.AddDays(days);
+      string sRes = Creators.ToString(res);
+      Assert.AreEqual(sWanted, sRes, "Result");
+      Assert.AreEqual("123", res.Tag, "Tag");
+    }
+
+    [Test]
+    public void Empty()
+    {
+      Assert.IsTrue(MonthDayRange.Empty.IsEmpty, "IsEmpty");
+      Assert.IsTrue(MonthDayRange.Empty.First.IsEmpty, "First");
+      Assert.IsTrue(MonthDayRange.Empty.Last.IsEmpty, "Last");
+      Assert.AreEqual(0, MonthDayRange.Empty.Days, "Days");
+      Assert.IsFalse(MonthDayRange.Empty.IsWholeYear, "IsWholeYear");
+      Assert.IsNull(MonthDayRange.Empty.Tag, "Tag");
+      Assert.IsTrue(MonthDayRange.Empty.Complement.IsEmpty, "Complement");
+    }
+
+    [Test]
+    public void WholeYear()
+    {
+      Assert.IsTrue(MonthDayRange.WholeYear.IsWholeYear, "IsWholeYear");
+      Assert.IsFalse(MonthDayRange.WholeYear.IsEmpty, "IsEmpty");
+      Assert.AreEqual(365, MonthDayRange.WholeYear.Days, "Days");
+      Assert.IsNull(MonthDayRange.WholeYear.Tag, "Tag");
+      Assert.IsTrue(MonthDayRange.WholeYear.Complement.IsWholeYear, "Complement");
+    }
+
+    [TestCase("1231-0102", "1231-0102", true)]
+    [TestCase("1231-0102", "0102-1231", false)]
+    [TestCase("", "0102-1231", false)]
+    [TestCase("0102-1231", "", false)]
+    [TestCase("", "", true)]
+    [TestCase("0101-1231", "0201-0131", true)] // whole year
+    [TestCase("0810-0809", "0201-0131", true)] // whole year
+    public void Operator_Equal(string sArg1, string sArg2, bool wanted)
+    {
+      MonthDayRange arg1 = Creators.CreateMonthDayRange(sArg1);
+      MonthDayRange arg2 = Creators.CreateMonthDayRange(sArg2);
+
+      bool res1 = (arg1 == arg2);
+      Assert.AreEqual(wanted, res1, "==");
+
+      bool res2 = (arg1 != arg2);
+      Assert.AreEqual(!wanted, res2, "!=");
+    }
+
+    [TestCase("0101-0104", "0101,0102,0103,0104")]
+    [TestCase("1231-0102", "1231,0101,0102")]
+    [TestCase("", "")]
+    public void GetEnumerator(string sMDR, string sWanted)
+    {
+      MonthDayRange sut = Creators.CreateMonthDayRange(sMDR);
+      List<MonthDay> lst = new List<MonthDay>();
+      foreach (MonthDay item in sut)
+        lst.Add(item);
+
+      string sRes = Creators.ToString(lst.ToArray());
       Assert.AreEqual(sWanted, sRes);
     }
   }
