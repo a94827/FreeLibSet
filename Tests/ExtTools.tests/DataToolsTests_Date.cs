@@ -132,5 +132,162 @@ namespace ExtTools.tests
     {
       return DataTools.YearInRange(year, Creators.CreateNDate(firstDate), Creators.CreateNDate(lastDate));
     }
+
+    [TestCase("20210101", "20210101")]
+    [TestCase("20210924", "20210101")]
+    [TestCase("20211231", "20210101")]
+    public void BottomOfYear(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res1 = DataTools.BottomOfYear(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "BottomOfYear(DateTime)");
+
+      DateTime res2 = DataTools.BottomOfYear(dt.Year);
+      Assert.AreEqual(sWanted, Creators.ToString(res2), "BottomOfYear(int)");
+
+      bool res3 = DataTools.IsBottomOfYear(dt);
+      Assert.AreEqual(res1 == dt, res3, "IsBottomOfYear()");
+    }
+
+    [TestCase("20210101", "20211231")]
+    [TestCase("20210924", "20211231")]
+    [TestCase("20211231", "20211231")]
+    public void EndOfYear(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res1 = DataTools.EndOfYear(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "EndOfYear(DateTime)");
+
+      DateTime res2 = DataTools.EndOfYear(dt.Year);
+      Assert.AreEqual(sWanted, Creators.ToString(res2), "EndOfYear(int)");
+
+      bool res3 = DataTools.IsEndOfYear(dt);
+      Assert.AreEqual(res1 == dt, res3, "IsEndOfYear()");
+    }
+
+    [TestCase("20210101", "20210101")]
+    [TestCase("20200301", "20200301")]
+    [TestCase("20200229", "20200201")]
+    [TestCase("20211231", "20211201")]
+    public void BottomOfMonth(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res1 = DataTools.BottomOfMonth(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "BottomOfMonth(DateTime)");
+
+      DateTime res2 = DataTools.BottomOfMonth(dt.Year, dt.Month);
+      Assert.AreEqual(sWanted, Creators.ToString(res2), "BottomOfMonth(int, int)");
+
+      bool res3 = DataTools.IsBottomOfMonth(dt);
+      Assert.AreEqual(res1 == dt, res3, "IsBottomOfMonth()");
+    }
+
+    [TestCase("20210101", "20210131")]
+    [TestCase("20200301", "20200331")]
+    [TestCase("20200201", "20200229")]
+    [TestCase("20200229", "20200229")]
+    [TestCase("20210201", "20210228")]
+    [TestCase("20210228", "20210228")]
+    [TestCase("20211231", "20211231")]
+    public void EndOfMonth(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res1 = DataTools.EndOfMonth(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "EndOfMonth(DateTime)");
+
+      DateTime res2 = DataTools.EndOfMonth(dt.Year, dt.Month);
+      Assert.AreEqual(sWanted, Creators.ToString(res2), "EndOfMonth(int, int)");
+
+      bool res3 = DataTools.IsEndOfMonth(dt);
+      Assert.AreEqual(res1 == dt, res3, "EndOfMonth()");
+    }
+
+    [TestCase("20210101", "20210101")]
+    [TestCase("20210331", "20210101")]
+    [TestCase("20210401", "20210401")]
+    [TestCase("20210630", "20210401")]
+    [TestCase("20210701", "20210701")]
+    [TestCase("20210930", "20210701")]
+    [TestCase("20211001", "20211001")]
+    [TestCase("20211231", "20211001")]
+    public void BottomOfQuarter(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res1 = DataTools.BottomOfQuarter(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "BottomOfQuarter(DateTime)");
+
+      bool res2 = DataTools.IsBottomOfQuarter(dt);
+      Assert.AreEqual(res1 == dt, res2, "IsBottomOfQuarter()");
+    }
+
+    [TestCase("20210101", "20210331")]
+    [TestCase("20210331", "20210331")]
+    [TestCase("20210401", "20210630")]
+    [TestCase("20210630", "20210630")]
+    [TestCase("20210701", "20210930")]
+    [TestCase("20210930", "20210930")]
+    [TestCase("20211001", "20211231")]
+    [TestCase("20211231", "20211231")]
+    public void EndOfQuarter(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res1 = DataTools.EndOfQuarter(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res1), "EndOfQuarter(DateTime)");
+
+      bool res2 = DataTools.IsEndOfQuarter(dt);
+      Assert.AreEqual(res1 == dt, res2, "IsEndOfQuarter()");
+    }
+
+    [TestCase("20210924", DayOfWeek.Monday, "20210920")]
+    [TestCase("20210924", DayOfWeek.Thursday, "20210923")]
+    [TestCase("20210924", DayOfWeek.Friday, "20210924")]
+    [TestCase("20210924", DayOfWeek.Saturday, "20210918")]
+    public void BottomOfWeek(string sValue, DayOfWeek dow, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res = DataTools.BottomOfWeek(dt, dow);
+      Assert.AreEqual(sWanted, Creators.ToString(res));
+    }
+
+    [TestCase("20210919", "20210913")]
+    [TestCase("20210920", "20210920")]
+    [TestCase("20210921", "20210920")]
+    public void BottomOfWeekMonday(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res = DataTools.BottomOfWeekMonday(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res));
+    }
+
+    [TestCase("20210924", DayOfWeek.Monday, "20210927")]
+    [TestCase("20210924", DayOfWeek.Thursday, "20210930")]
+    [TestCase("20210924", DayOfWeek.Friday, "20210924")]
+    [TestCase("20210924", DayOfWeek.Saturday, "20210925")]
+    public void EndOfWeek(string sValue, DayOfWeek dow, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res = DataTools.EndOfWeek(dt, dow);
+      Assert.AreEqual(sWanted, Creators.ToString(res));
+    }
+
+    [TestCase("20210918", "20210919")]
+    [TestCase("20210919", "20210919")]
+    [TestCase("20210920", "20210926")]
+    public void EndOfWeekSunday(string sValue, string sWanted)
+    {
+      DateTime dt = Creators.CreateDate(sValue);
+
+      DateTime res = DataTools.EndOfWeekSunday(dt);
+      Assert.AreEqual(sWanted, Creators.ToString(res));
+    }
   }
 }

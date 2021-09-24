@@ -9,26 +9,37 @@ namespace ExtTools.tests
   [TestFixture]
   class DataToolsTests_String
   {
-    [TestCase("ABC", "DEF", ",", Result = "ABC,DEF")]
-    [TestCase("ABC", "", ",", Result = "ABC")]
-    [TestCase("", "DEF", ",", Result = "DEF")]
-    [TestCase("", "", ",", Result = "")]
-    public string AddStrIfNoEmpty(string resStr, string addedStr, string separator)
+    [TestCase("ABC", "DEF", ",", "ABC,DEF")]
+    [TestCase("ABC", "", ",", "ABC")]
+    [TestCase("", "DEF", ",", "DEF")]
+    [TestCase("", "", ",", "")]
+    public void AddStrIfNotEmpty(string sBase, string addedStr, string separator, string wanted)
     {
-      DataTools.AddStrIfNoEmpty(ref resStr, addedStr, separator);
-      return resStr;
+      string resStr1 = sBase;
+      DataTools.AddStrIfNotEmpty(ref resStr1, addedStr, separator);
+      Assert.AreEqual(wanted, resStr1, "String overload");
+
+      StringBuilder sb2 = new StringBuilder();
+      sb2.Append(sBase);
+      DataTools.AddStrIfNotEmpty(sb2, addedStr, separator);
+      Assert.AreEqual(wanted, sb2.ToString(), "StringBuilder overload");
     }
 
-    [TestCase("0|200|255", false, Result = "00c8ff")]
-    [TestCase("0|200|255", true, Result = "00C8FF")]
-    public string BytesToHex(string sBytes, bool upperCase)
+    [TestCase("0|200|255", false, "00c8ff")]
+    [TestCase("0|200|255", true, "00C8FF")]
+    public void BytesToHex(string sBytes, bool upperCase, string wanted)
     {
       string[] a1 = sBytes.Split('|');
       byte[] b = new byte[a1.Length];
       for (int i = 0; i < a1.Length; i++)
         b[i] = (byte)StdConvert.ToInt32(a1[i]);
 
-      return DataTools.BytesToHex(b, upperCase);
+      string res1 = DataTools.BytesToHex(b, upperCase);
+      Assert.AreEqual(wanted, res1, "String overload");
+
+      StringBuilder sb = new StringBuilder();
+      DataTools.BytesToHex(sb, b, upperCase);
+      Assert.AreEqual(wanted, sb.ToString(), "StringBuilder overload");
     }
 
     [Test]
@@ -48,23 +59,6 @@ namespace ExtTools.tests
     public string ChangeUpperLowerInvariant(string s)
     {
       return DataTools.ChangeUpperLowerInvariant(s);
-    }
-
-    [TestCase("ABC,DEF", Result = new string[] { "ABC", "DEF" })]
-    [TestCase("ABC,DEF,", Result = new string[] { "ABC", "DEF", "" })]
-    [TestCase("ABC,DEF,,", Result = new string[] { "ABC", "DEF", "", "" })]
-    [TestCase(",,ABC,DEF", Result = new string[] { "", "", "ABC", "DEF" })]
-    [TestCase("ABC,,DEF", Result = new string[] { "ABC", "", "DEF" })]
-    [TestCase("ABC,,,DEF", Result = new string[] { "ABC", "", "", "DEF" })]
-    [TestCase("\"ABC\",\"DE\"\"FG\"", Result = new string[] { "ABC", "DE\"FG" })]
-    [TestCase(" ABC, \"DEF\" ", Result = new string[] { "ABC", "DEF" }, Description = "with spaces")]
-    [TestCase("", Result = null)]
-    //[TestCase("\"ABC", ExpectedException = typeof(ParsingException), Description="last quote missing")]
-    //[TestCase("ABC\"", ExpectedException = typeof(ParsingException), Description = "first quote missing")]
-    [TestCase("\"AB\"CD\"", ExpectedException = typeof(ParsingException), Description = "middle quote missing")]
-    public string[] CommaStringToArray(string s)
-    {
-      return DataTools.CommaStringToArray(s);
     }
 
     [TestCase("abCD00", Result = "171|205|0")]
@@ -105,28 +99,44 @@ namespace ExtTools.tests
       return DataTools.GetCharCount(s, searchChar);
     }
 
-    [TestCase("ABCD", "DB", Result = 1)]
-    [TestCase("ABCD", "YZ", Result = -1)]
-    [TestCase("ABCD", "", Result = -1)]
-    [TestCase("ABCD", null, Result = -1)]
-    [TestCase("", "ABC", Result = -1)]
-    [TestCase(null, "ABC", Result = -1)]
-    [TestCase("ABCDEFGHIJ", "1234567890", Result = -1)] // используется CharArrayIndexer
-    [TestCase("ABCDEFGHIJ6", "1234567890", Result = 10)] // используется CharArrayIndexer
-    public int IndexOfAny(string str, string searchChars)
+    [TestCase("ABCD", "DB", 1)]
+    [TestCase("ABCD", "YZ", -1)]
+    [TestCase("ABCD", "", -1)]
+    [TestCase("ABCD", null, -1)]
+    [TestCase("", "ABC", -1)]
+    [TestCase(null, "ABC", -1)]
+    [TestCase("ABCDEFGHIJ", "1234567890", -1)] // используется CharArrayIndexer
+    [TestCase("ABCDEFGHIJ6", "1234567890", 10)] // используется CharArrayIndexer
+    public void IndexOfAny(string str, string searchChars, int wanted)
     {
-      return DataTools.IndexOfAny(str, searchChars);
+      int res1 = DataTools.IndexOfAny(str, searchChars);
+      Assert.AreEqual(wanted, res1, "String overload");
+
+      if (searchChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(searchChars);
+        int res2 = DataTools.IndexOfAny(str, ix);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
     }
 
-    [TestCase("ABCD", "DB", Result = 0)]
-    [TestCase("ABCD", "AC", Result = 1)]
-    [TestCase("ABCD", "", Result = 0)]
-    [TestCase("ABCD", null, Result = 0)]
-    [TestCase("", "ABC", Result = -1)]
-    [TestCase(null, "ABC", Result = -1)]
-    public int IndexOfAnyOther(string str, string searchChars)
+    [TestCase("ABCD", "DB", 0)]
+    [TestCase("ABCD", "AC", 1)]
+    [TestCase("ABCD", "", 0)]
+    [TestCase("ABCD", null, 0)]
+    [TestCase("", "ABC", -1)]
+    [TestCase(null, "ABC", -1)]
+    public void IndexOfAnyOther(string str, string searchChars, int wanted)
     {
-      return DataTools.IndexOfAnyOther(str, searchChars);
+      int res1 = DataTools.IndexOfAnyOther(str, searchChars);
+      Assert.AreEqual(wanted, res1, "String overload");
+
+      if (searchChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(searchChars);
+        int res2 = DataTools.IndexOfAnyOther(str, ix);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
     }
 
     [TestCase("ABCDEF", 2, "cde", StringComparison.OrdinalIgnoreCase, Result = true)]
@@ -167,44 +177,64 @@ namespace ExtTools.tests
       return s1;
     }
 
-    [TestCase("AB", 5, '#', Result = "#AB##")]
-    [TestCase("AB", 2, '#', Result = "AB")]
-    [TestCase("AB", 1, '#', Result = "A")]
-    [TestCase("", 1, '#', Result = "#")]
-    [TestCase(null, 1, '#', Result = "#")]
-    public string PadCenter(string s, int length, char paddingChar)
+    [TestCase("AB", 5, "#AB##")]
+    [TestCase("AB", 2, "AB")]
+    [TestCase("AB", 1, "A")]
+    [TestCase("", 1, "#")]
+    [TestCase(null, 1, "#")]
+    public void PadCenter(string s, int length, string wanted)
     {
-      return DataTools.PadCenter(s, length, paddingChar);
+      string res1 = DataTools.PadCenter(s, length, '#');
+      Assert.AreEqual(wanted, res1, "overload with padding char");
+
+      string res2 = DataTools.PadCenter(s, length);
+      Assert.AreEqual(wanted.Replace('#', ' '), res2, "overload with 2 args");
     }
 
-    [TestCase("AB", 5, '#', Result = "###AB")]
-    [TestCase("AB", 2, '#', Result = "AB")]
-    [TestCase("AB", 1, '#', Result = "B")]
-    [TestCase("", 1, '#', Result = "#")]
-    [TestCase(null, 1, '#', Result = "#")]
-    public string PadLeft(string s, int length, char paddingChar)
+    [TestCase("AB", 5, "###AB")]
+    [TestCase("AB", 2, "AB")]
+    [TestCase("AB", 1, "B")]
+    [TestCase("", 1, "#")]
+    [TestCase(null, 1, "#")]
+    public void PadLeft(string s, int length, string wanted)
     {
-      return DataTools.PadLeft(s, length, paddingChar);
+      string res1 = DataTools.PadLeft(s, length, '#');
+      Assert.AreEqual(wanted, res1, "overload with padding char");
+
+      string res2 = DataTools.PadLeft(s, length);
+      Assert.AreEqual(wanted.Replace('#', ' '), res2, "overload with 2 args");
     }
 
-    [TestCase("AB", 5, '#', Result = "AB###")]
-    [TestCase("AB", 2, '#', Result = "AB")]
-    [TestCase("AB", 1, '#', Result = "A")]
-    [TestCase("", 1, '#', Result = "#")]
-    public string PadRight(string s, int length, char paddingChar)
+    [TestCase("AB", 5, "AB###")]
+    [TestCase("AB", 2, "AB")]
+    [TestCase("AB", 1, "A")]
+    [TestCase("", 1, "#")]
+    public void PadRight(string s, int length, string wanted)
     {
-      return DataTools.PadRight(s, length, paddingChar);
+      string res1 = DataTools.PadRight(s, length, '#');
+      Assert.AreEqual(wanted, res1, "overload with padding char");
+
+      string res2 = DataTools.PadRight(s, length);
+      Assert.AreEqual(wanted.Replace('#', ' '), res2, "overload with 2 args");
     }
 
-    [TestCase("ABCDEF", "DCBZ", Result = "AEF")]
-    [TestCase("ABCDEF", "XYZ", Result = "ABCDEF")]
-    [TestCase("", "XYZ", Result = "")]
-    [TestCase(null, "XYZ", Result = "")]
-    [TestCase("ABCDEF", "", Result = "ABCDEF")]
-    [TestCase("ABCDEF", null, Result = "ABCDEF")]
-    public string RemoveChars(string str, string removedChars)
+    [TestCase("ABCDEF", "DCBZ", "AEF")]
+    [TestCase("ABCDEF", "XYZ", "ABCDEF")]
+    [TestCase("", "XYZ", "")]
+    [TestCase(null, "XYZ", "")]
+    [TestCase("ABCDEF", "", "ABCDEF")]
+    [TestCase("ABCDEF", null, "ABCDEF")]
+    public void RemoveChars(string str, string removedChars, string wanted)
     {
-      return DataTools.RemoveChars(str, removedChars);
+      string res1 = DataTools.RemoveChars(str, removedChars);
+      Assert.AreEqual(wanted, res1, "string overload");
+
+      if (removedChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(removedChars);
+        string res2 = DataTools.RemoveChars(str, ix);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
     }
 
     [TestCase("ABCCD", 'C', Result = "ABCD")]
@@ -218,73 +248,94 @@ namespace ExtTools.tests
       return DataTools.RemoveDoubleChars(str, searchChar);
     }
 
-    [TestCase("ABCDEF", "DCBZ", Result = "BCD")]
-    [TestCase("ABCDEF", "XYZ", Result = "")]
-    [TestCase("", "XYZ", Result = "")]
-    [TestCase(null, "XYZ", Result = "")]
-    [TestCase("ABCDEF", "", Result = "")]
-    [TestCase("ABCDEF", null, Result = "")]
-    public string RemoveOtherChars(string str, string validChars)
+    [TestCase("ABCDEF", "DCBZ", "BCD")]
+    [TestCase("ABCDEF", "XYZ", "")]
+    [TestCase("", "XYZ", "")]
+    [TestCase(null, "XYZ", "")]
+    [TestCase("ABCDEF", "", "")]
+    [TestCase("ABCDEF", null, "")]
+    public void RemoveOtherChars(string str, string validChars, string wanted)
     {
-      return DataTools.RemoveOtherChars(str, validChars);
+      string res1 = DataTools.RemoveOtherChars(str, validChars);
+      Assert.AreEqual(wanted, res1, "string overload");
+      if (validChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(validChars);
+        string res2 = DataTools.RemoveOtherChars(str, ix);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
     }
 
-    [TestCase("ABCDEF", "DBZ", '0', Result = "A0C0EF")]
-    [TestCase("", "DB", '0', Result = "")]
-    [TestCase(null, "DB", '0', Result = "")]
-    [TestCase("ABCDEF", "", '0', Result = "ABCDEF")]
-    [TestCase("ABCDEF", null, '0', Result = "ABCDEF")]
-    [TestCase("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEVWXYZ", '0', Result = "00000FGHIJKLMNOPQRSTU00000")] // используется индексатор
-    public string ReplaceAny(string str, string searchChars, char replaceChar)
+    [TestCase("ABCDEF", "DBZ", '0', "A0C0EF")]
+    [TestCase("", "DB", '0', "")]
+    [TestCase(null, "DB", '0', "")]
+    [TestCase("ABCDEF", "", '0', "ABCDEF")]
+    [TestCase("ABCDEF", null, '0', "ABCDEF")]
+    [TestCase("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEVWXYZ", '0', "00000FGHIJKLMNOPQRSTU00000")] // используется индексатор
+    public void ReplaceAny(string str, string searchChars, char replaceChar, string wanted)
     {
-      string res = DataTools.ReplaceAny(str, searchChars, replaceChar);
+      string res1 = DataTools.ReplaceAny(str, searchChars, replaceChar);
+      Assert.AreEqual(wanted, res1, "string overload");
 
-      if (str != null)
-        Assert.AreEqual(str.Length, res.Length);
-      return res;
+      if (searchChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(searchChars);
+        string res2 = DataTools.ReplaceAny(str, ix, replaceChar);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
     }
 
-    [TestCase("ABCDEF", "DBZ", '0', Result = "0B0D00")]
-    [TestCase("", "DB", '0', Result = "")]
-    [TestCase(null, "DB", '0', Result = "")]
-    [TestCase("ABCDEF", "", '0', Result = "000000")]
-    [TestCase("ABCDEF", null, '0', Result = "000000")]
-    [TestCase("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEVWXYZ", '0', Result = "ABCDE0000000000000000VWXYZ")] // используется индексатор
-    public string ReplaceAnyOther(string str, string searchChars, char replaceChar)
+    [TestCase("ABCDEF", "DBZ", '0', "0B0D00")]
+    [TestCase("", "DB", '0', "")]
+    [TestCase(null, "DB", '0', "")]
+    [TestCase("ABCDEF", "", '0', "000000")]
+    [TestCase("ABCDEF", null, '0', "000000")]
+    [TestCase("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEVWXYZ", '0', "ABCDE0000000000000000VWXYZ")] // используется индексатор
+    public void ReplaceAnyOther(string str, string searchChars, char replaceChar, string wanted)
     {
-      string res = DataTools.ReplaceAnyOther(str, searchChars, replaceChar);
+      string res1 = DataTools.ReplaceAnyOther(str, searchChars, replaceChar);
+      Assert.AreEqual(wanted, res1, "string overload");
 
-      if (str != null)
-        Assert.AreEqual(str.Length, res.Length);
-      return res;
+      if (searchChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(searchChars);
+        string res2 = DataTools.ReplaceAnyOther(str, ix, replaceChar);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
     }
 
 
-    [TestCase("ABCDEF", "DFA", "123", Result = "3BC1E2")]
-    [TestCase("", "DF", "12", Result = "")]
-    [TestCase(null, "DF", "12", Result = "")]
-    [TestCase("ABCDEF", "", "", Result = "ABCDEF")]
-    [TestCase("ABCDEF", "ABC", "12", ExpectedException = typeof(ArgumentException))]
-    public string ReplaceChars(string str, string searchChars, string replaceChars)
+    [TestCase("ABCDEF", "DFA", "123", "3BC1E2")]
+    [TestCase("", "DF", "12", "")]
+    [TestCase(null, "DF", "12", "")]
+    [TestCase("ABCDEF", "", "", "ABCDEF")]
+    public void ReplaceChars(string str, string searchChars, string replaceChars, string wanted)
     {
-      string res = DataTools.ReplaceChars(str, searchChars, replaceChars);
+      string res1 = DataTools.ReplaceChars(str, searchChars, replaceChars);
+      Assert.AreEqual(wanted, res1, "string overload");
 
-      if (str != null)
-        Assert.AreEqual(str.Length, res.Length);
-      return res;
+      Dictionary<char, char> dict = new Dictionary<char, char>();
+      for (int i = 0; i < searchChars.Length; i++)
+        dict.Add(searchChars[i], replaceChars[i]);
+      string res2 = DataTools.ReplaceChars(str, dict);
+      Assert.AreEqual(wanted, res2, "Dictionary overload");
     }
 
-    [TestCase("AHBCEF", 'B', 'C', '0', Result = "AH00EF")]
-    [TestCase("", 'B', 'C', '0', Result = "")]
-    [TestCase(null, 'B', 'C', '0', Result = "")]
-    [TestCase("AHBCEF", 'C', 'B', '0', Result = "AHBCEF")]
-    public string ReplaceCharRange(string str, char firstChar, char lastChar, char replaceChar)
+    [Test]
+    public void ReplaceChars_exception()
+    {
+      Assert.Catch<ArgumentException>(delegate() { DataTools.ReplaceChars("ABCDEF", "ABC", "12"); });
+    }
+
+
+    [TestCase("AHBCEF", 'B', 'C', '0', "AH00EF")]
+    [TestCase("", 'B', 'C', '0', "")]
+    [TestCase(null, 'B', 'C', '0', "")]
+    [TestCase("AHBCEF", 'C', 'B', '0', "AHBCEF")]
+    public void ReplaceCharRange(string str, char firstChar, char lastChar, char replaceChar, string wanted)
     {
       string res = DataTools.ReplaceCharRange(str, firstChar, lastChar, replaceChar);
-
-      if (str != null)
-        Assert.AreEqual(str.Length, res.Length);
-      return res;
+      Assert.AreEqual(wanted, res);
     }
 
     [TestCase("1AB", '0', Result = "0AB")]
@@ -354,10 +405,10 @@ namespace ExtTools.tests
       return DataTools.ToUpperFirstInvariant(s);
     }
 
-    [TestCase("1|2|3", Result = "1,2,3")]
-    [TestCase("1", Result = "1")]
-    [TestCase("", Result = "")]
-    public static string ToStringArray_int32(string sValues)
+    [TestCase("1|2|3", "1,2,3")]
+    [TestCase("1", "1")]
+    [TestCase("", "")]
+    public void ToStringArray(string sValues, string wanted)
     {
       // Arrange
       Int32[] a2;
@@ -378,23 +429,21 @@ namespace ExtTools.tests
       string s2 = String.Join(",", DataTools.ToStringArray<Int32>(lst2));
       string s3 = String.Join(",", DataTools.ToStringArray<Int32>((IEnumerable<Int32>)lst2));
       string s4 = String.Join(",", DataTools.ToStringArray((System.Collections.IList)lst2));
-      string s5 = String.Join(",", DataTools.ToStringArray( (System.Collections.IEnumerable)lst2));
+      string s5 = String.Join(",", DataTools.ToStringArray((System.Collections.IEnumerable)lst2));
 
       // Assert
-      Assert.AreEqual(s1, s2, "Overloads with string[] and IList<Int32> returns different results");
-      Assert.AreEqual(s1, s3, "Overloads with string[] and IEnumerable<Int32> returns different results");
-      Assert.AreEqual(s1, s4, "Overloads with string[] and System.Collections.IList returns different results");
-      Assert.AreEqual(s1, s5, "Overloads with string[] and System.Collections.IEnumerable returns different results");
-
-      // Result
-      return s1;
+      Assert.AreEqual(wanted, s1, "string[]");
+      Assert.AreEqual(wanted, s2, "IList<Int32>");
+      Assert.AreEqual(wanted, s3, "IEnumerable<Int32>");
+      Assert.AreEqual(wanted, s4, "System.Collections.IList");
+      Assert.AreEqual(wanted, s5, "System.Collections.IEnumerable");
     }
 
 
-    [TestCase(",", "1|2|3", Result = "1,2,3")]
-    [TestCase(",", "1", Result = "1")]
-    [TestCase(",", "",Result = "")]
-    public static string ToStringJoin_int32(string separator, string sValues)
+    [TestCase(",", "1|2|3",  "1,2,3")]
+    [TestCase(",", "1", "1")]
+    [TestCase(",", "", "")]
+    public void ToStringJoin(string separator, string sValues, string wanted)
     {
       // Arrange
       Int32[] a2;
@@ -418,13 +467,11 @@ namespace ExtTools.tests
       string s5 = DataTools.ToStringJoin(separator, (System.Collections.IEnumerable)lst2);
 
       // Assert
-      Assert.AreEqual(s1, s2, "Overloads with string[] and IList<Int32> returns different results");
-      Assert.AreEqual(s1, s3, "Overloads with string[] and IEnumerable<Int32> returns different results");
-      Assert.AreEqual(s1, s4, "Overloads with string[] and System.Collections.IList returns different results");
-      Assert.AreEqual(s1, s5, "Overloads with string[] and System.Collections.IEnumerable returns different results");
-
-      // Result
-      return s1;
+      Assert.AreEqual(wanted, s1, "string[] and IList<Int32>");
+      Assert.AreEqual(wanted, s2, "IList<Int32>");
+      Assert.AreEqual(wanted, s3, "IEnumerable<Int32>");
+      Assert.AreEqual(wanted, s4, "System.Collections.IList");
+      Assert.AreEqual(wanted, s5, "System.Collections.IEnumerable");
     }
 
     [Test]

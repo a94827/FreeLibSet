@@ -19114,7 +19114,7 @@ namespace AgeyevAV
     /// <param name="resStr">Собираемая строка (по ссылке)</param>
     /// <param name="addedStr">Добавляемая строка</param>
     /// <param name="separator">Разделитель</param>
-    public static void AddStrIfNoEmpty(ref string resStr, string addedStr, string separator)
+    public static void AddStrIfNotEmpty(ref string resStr, string addedStr, string separator)
     {
       if (String.IsNullOrEmpty(addedStr))
         return;
@@ -19139,7 +19139,7 @@ namespace AgeyevAV
     /// <param name="resStr">Собираемая строка (по ссылке)</param>
     /// <param name="addedStr">Добавляемая строка</param>
     /// <param name="separator">Разделитель</param>
-    public static void AddStrIfNoEmpty(StringBuilder resStr, string addedStr, string separator)
+    public static void AddStrIfNotEmpty(StringBuilder resStr, string addedStr, string separator)
     {
       if (String.IsNullOrEmpty(addedStr))
         return;
@@ -19532,7 +19532,7 @@ namespace AgeyevAV
     public static string ReplaceAny(string str, CharArrayIndexer searchChars, char replaceChar)
     {
       if (String.IsNullOrEmpty(str))
-        return str;
+        return String.Empty;
 
       if (searchChars.Count == 0)
         return str;
