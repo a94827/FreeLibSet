@@ -631,7 +631,7 @@ namespace AgeyevAV.ExtDB
           if (Obj == null && _Owner.Source != null)
           {
 
-            if (DataTools.IndexOf(AllTableNames, tableName, _List.IgnoreCase) >= 0)
+            if (DataTools.IndexOf(AllTableNames, tableName, _List.IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) >= 0)
             {
               Obj = _Owner.Source.GetTableStruct(tableName);
               _List.Add(Obj);

@@ -310,7 +310,7 @@ namespace AgeyevAV.ExtForms
       }
       else
       {
-        if (!Directory.Exists(FileTools.RemoveDirNameSlash(_TheForm.efpMainCB.Text)))
+        if (!Directory.Exists(Path.Path))
         {
           EFPApp.ShowTempMessage("Каталог не существует");
           _TheForm.DialogResult = DialogResult.Cancel;

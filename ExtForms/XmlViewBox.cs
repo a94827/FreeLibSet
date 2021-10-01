@@ -239,7 +239,7 @@ namespace AgeyevAV.ExtForms
         if (_XmlDocument == null)
         {
           if (!String.IsNullOrEmpty(_XmlFilePath))
-            _XmlDocument = FileTools.ReadXmlDocument(_XmlFilePath);
+            _XmlDocument = FileTools.ReadXmlDocument(new AbsPath(_XmlFilePath));
           else if (_XmlBytes != null)
             _XmlDocument = DataTools.XmlDocumentFromByteArray(_XmlBytes);
         }

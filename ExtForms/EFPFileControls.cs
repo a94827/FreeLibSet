@@ -549,7 +549,8 @@ namespace AgeyevAV.ExtForms
         else
           dlg.Description = Description;
         dlg.ShowNewFolderButton = ShowNewFolderButton;
-        dlg.SelectedPath = FileTools.RemoveDirNameSlash(MainProvider.Text);
+        AbsPath dir = new AbsPath(MainProvider.Text);
+        dlg.SelectedPath = dir.Path;
         if (EFPApp.ShowDialog(dlg) == DialogResult.OK)
         {
           AbsPath Path = new AbsPath(dlg.SelectedPath);
@@ -802,33 +803,31 @@ namespace AgeyevAV.ExtForms
         return;
       }
 
-      bool IsSlashed = s[s.Length - 1] == System.IO.Path.DirectorySeparatorChar;
-      s = FileTools.RemoveDirNameSlash(s);
-      s = Path.GetFullPath(s);
+      bool IsSlashed = s[s.Length - 1] == System.IO.Path.DirectorySeparatorChar; // Папка или файл?
+      AbsPath path = new AbsPath(s);
       if (!IsSlashed)
       {
         if (IsFileName.HasValue)
         {
           if (IsFileName.Value)
-            s = Path.GetDirectoryName(s);
+            path = path.ParentDir;
         }
         else
         {
-          if (!Directory.Exists(s))
+          if (!Directory.Exists(path.Path))
           {
-            string s1 = Path.GetDirectoryName(s);
-            if (File.Exists(s) || Directory.Exists(s1))
-              s = s1;
+            if (File.Exists(path.Path) || Directory.Exists(path.ParentDir.Path))
+              path = path.ParentDir;
             else
             {
-              if (!String.IsNullOrEmpty(Path.GetExtension(s)))
-                s = s1; // раз есть расширение, значит введено, наверное, имя файла
+              if (!String.IsNullOrEmpty(path.Extension))
+                path = path.ParentDir;  // раз есть расширение, значит введено, наверное, имя файла
             }
           }
         }
       }
 
-      if (EFPApp.ShowWindowsExplorer(new AbsPath(s)))
+      if (EFPApp.ShowWindowsExplorer(new AbsPath(path.Path)))
         base.OnClick();
     }
 

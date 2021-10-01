@@ -451,7 +451,7 @@ namespace AgeyevAV.ExtForms
           if (Control.XmlDocument == null)
             throw new BugException("Control.XmlDocument==null");
 #endif
-          FileTools.WriteXmlDocument(Res.Path, Control.XmlDocument);
+          FileTools.WriteXmlDocument(Res, Control.XmlDocument);
           break;
 
         default:
@@ -626,7 +626,7 @@ namespace AgeyevAV.ExtForms
       }
 
       FileAssociationsHandler.FilePath = EFPApp.SharedTempDir.GetTempFileName("HTML");
-      FileTools.WriteStream(FileAssociationsHandler.FilePath.Path, Owner.Control.DocumentStream);
+      FileTools.WriteStream(FileAssociationsHandler.FilePath, Owner.Control.DocumentStream);
     }
 
     #endregion
@@ -647,9 +647,9 @@ namespace AgeyevAV.ExtForms
         EFPApp.ShowTempMessage("Нет документа");
         return null;
       }
-      string TempFileName = EFPApp.SharedTempDir.GetTempFileName("HTML").Path;
-      FileTools.WriteStream(TempFileName, Owner.Control.DocumentStream);
-      return TempFileName;
+      AbsPath tempFilePath = EFPApp.SharedTempDir.GetTempFileName("HTML");
+      FileTools.WriteStream(tempFilePath, Owner.Control.DocumentStream);
+      return tempFilePath.Path;
     }
 
     /// <summary>

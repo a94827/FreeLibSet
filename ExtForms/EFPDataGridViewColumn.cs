@@ -1585,7 +1585,7 @@ namespace AgeyevAV.ExtForms
 
     /// <summary>
     /// Перечислитель по столбцам EFPDataGridViewColumn.
-    /// Порядок перечисления соответсвтует DataGridViewColumn.Index, а не порядку отображения столбцов в просмотре.
+    /// Порядок перечисления соответствует DataGridViewColumn.Index, а не порядку отображения столбцов в просмотре.
     /// Скрытые столбцы также перечисляются.
     /// </summary>
     public struct Enumerator : IEnumerator<EFPDataGridViewColumn>

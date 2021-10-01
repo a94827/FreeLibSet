@@ -392,22 +392,22 @@ namespace AgeyevAV
     /// <returns></returns>
     private static string GetWindows10Version(out bool addVer)
     {
-      string Path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "user32.dll");
+      AbsPath path = new AbsPath(new AbsPath(Environment.GetFolderPath(Environment.SpecialFolder.System)), "user32.dll");
       //if (!System.IO.File.Exists(Path))
       //{
       //  addVer = true;
       //  return "Windows 8 (?)";
       //}
 
-      Version Ver = FileTools.GetFileVersion(Path); // 27.12.2020 Здесь есть проверка существования файла
-      if (Ver == null)
+      Version ver = FileTools.GetFileVersion(path); // 27.12.2020 Здесь есть проверка существования файла
+      if (ver == null)
       {
         addVer = true;
         return "Windows 8 (?)"; // 27.12.2020
       }
 
-      string s = GetWindows10Version2(Ver);
-      s += " (" + Ver.ToString() + ")";
+      string s = GetWindows10Version2(ver);
+      s += " (" + ver.ToString() + ")";
       addVer = false;
       return s;
     }

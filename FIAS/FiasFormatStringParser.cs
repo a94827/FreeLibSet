@@ -377,7 +377,7 @@ namespace AgeyevAV.FIAS
     private static readonly StringArrayIndexer _ComponentTypeIndexer;
 
     /// <summary>
-    /// Значения для поля FiasParsedFormatString.ItemType, соответсвующие массиву ComponentTypes
+    /// Значения для поля FiasParsedFormatString.ItemType, соответствующие массиву ComponentTypes
     /// </summary>
     private static readonly int[] _ComponentTypeValues;
 

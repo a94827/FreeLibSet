@@ -974,9 +974,9 @@ namespace AgeyevAV.DBF
     /// Используется кодировка по умолчанию DefaultEncoding.
     /// Если в файле есть мемо-поля, одновременно открывается и DBT-файл.
     /// </summary>
-    /// <param name="filePath">Путь к DBF-файлу на диске.</param>
-    public DbfFile(string filePath)
-      : this(filePath, DefaultEncoding, true)
+    /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
+    public DbfFile(AbsPath dbfPath)
+      : this(dbfPath, DefaultEncoding, true)
     {
     }
 
@@ -985,11 +985,11 @@ namespace AgeyevAV.DBF
     /// Используется кодировка по умолчанию DefaultEncoding.
     /// Если в файле есть мемо-поля, одновременно открывается и DBT-файл.
     /// </summary>
-    /// <param name="filePath">Путь к DBF-файлу на диске.</param>
+    /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
     /// <param name="isReadOnly">true - открыть файл только для чтения,
     /// false - открыть файл для чтения и изменения</param>
-    public DbfFile(string filePath, bool isReadOnly)
-      : this(filePath, DefaultEncoding, isReadOnly)
+    public DbfFile(AbsPath dbfPath, bool isReadOnly)
+      : this(dbfPath, DefaultEncoding, isReadOnly)
     {
     }
 
@@ -997,10 +997,10 @@ namespace AgeyevAV.DBF
     /// Открывает существующий файл только для чтения.
     /// Если в файле есть мемо-поля, одновременно открывается и DBT-файл.
     /// </summary>
-    /// <param name="filePath">Путь к DBF-файлу на диске.</param>
+    /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
     /// <param name="encoding">Используемая кодировка</param>
-    public DbfFile(string filePath, Encoding encoding)
-      : this(filePath, encoding, true)
+    public DbfFile(AbsPath dbfPath, Encoding encoding)
+      : this(dbfPath, encoding, true)
     {
     }
 
@@ -1008,39 +1008,42 @@ namespace AgeyevAV.DBF
     /// Открывает существующий файл.
     /// Если в файле есть мемо-поля, одновременно открывается и DBT-файл.
     /// </summary>
-    /// <param name="filePath">Путь к DBF-файлу на диске.</param>
+    /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
     /// <param name="encoding">Используемая кодировка</param>
     /// <param name="isReadOnly">true - открыть файл только для чтения,
     /// false - открыть файл для чтения и изменения</param>
-    public DbfFile(string filePath, Encoding encoding, bool isReadOnly)
+    public DbfFile(AbsPath dbfPath, Encoding encoding, bool isReadOnly)
     {
-      if (!File.Exists(filePath))
-        throw new FileNotFoundException("Файл не найден: \"" + filePath + "\"");
+      if (dbfPath.IsEmpty)
+        throw new ArgumentNullException("dbfPath");
+
+      if (!File.Exists(dbfPath.Path))
+        throw new FileNotFoundException("Файл не найден: \"" + dbfPath.Path + "\"");
 
       ShouldDisposeStreams = true;
 
       if (isReadOnly)
-        fsDBF = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        fsDBF = new FileStream(dbfPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
       else
-        fsDBF = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); // ?? права
+        fsDBF = new FileStream(dbfPath.Path, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); // ?? права
       try
       {
         if (fsDBF.Length < 1)
-          throw new DbfFileFormatException("Файл \"" + filePath + "\" имеет нулевую длину");
+          throw new DbfFileFormatException("Файл \"" + dbfPath + "\" имеет нулевую длину");
 
         // Определяем наличие МЕМО-файла
         int Code = fsDBF.ReadByte();
         fsDBF.Position = 0L; // обязательно возвращаем на начало
         if (Code == 0x83)
         {
-          string DBTFilePath = Path.ChangeExtension(filePath, ".DBT");
-          if (!File.Exists(DBTFilePath))
-            throw new FileNotFoundException("МЕМО-файл не найден: \"" + DBTFilePath + "\"");
+          AbsPath dbtPath = dbfPath.ChangeExtension(".DBT");
+          if (!File.Exists(dbtPath.Path))
+            throw new FileNotFoundException("МЕМО-файл не найден: \"" + dbtPath.Path + "\"");
 
           if (isReadOnly)
-            fsDBT = new FileStream(DBTFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            fsDBT = new FileStream(dbtPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
           else
-            fsDBT = new FileStream(DBTFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); // ?? права
+            fsDBT = new FileStream(dbtPath.Path, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); // ?? права
         }
 
         _Encoding = encoding;
@@ -1321,10 +1324,10 @@ namespace AgeyevAV.DBF
     /// Используется кодировка по умолчанию DefaultEncoding.
     /// Список <paramref name="dbStruct"/> переводится в состояние "только чтение".
     /// </summary>
-    /// <param name="filePath">Путь к DBF-файлу на диске.</param>
+    /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
     /// <param name="dbStruct">Заполненный список описаний полей</param>
-    public DbfFile(string filePath, DbfStruct dbStruct)
-      : this(filePath, dbStruct, DefaultEncoding, DbfFileFormat.Undefined)
+    public DbfFile(AbsPath dbfPath, DbfStruct dbStruct)
+      : this(dbfPath, dbStruct, DefaultEncoding, DbfFileFormat.Undefined)
     {
     }
 
@@ -1336,11 +1339,11 @@ namespace AgeyevAV.DBF
     /// используется формат dBase4.
     /// Список <paramref name="dbStruct"/> переводится в состояние "только чтение".
     /// </summary>
-    /// <param name="filePath">Путь к DBF-файлу на диске.</param>
+    /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
     /// <param name="dbStruct">Заполненный список описаний полей</param>
     /// <param name="encoding">Используемая кодировка</param>
-    public DbfFile(string filePath, DbfStruct dbStruct, Encoding encoding)
-      : this(filePath, dbStruct, encoding, DbfFileFormat.Undefined)
+    public DbfFile(AbsPath dbfPath, DbfStruct dbStruct, Encoding encoding)
+      : this(dbfPath, dbStruct, encoding, DbfFileFormat.Undefined)
     {
     }
 
@@ -1350,7 +1353,7 @@ namespace AgeyevAV.DBF
     /// Если файл(ы) существует, он удаляется.
     /// Список <paramref name="dbStruct"/> переводится в состояние "только чтение".
     /// </summary>
-    /// <param name="filePath">Путь к DBF-файлу на диске.</param>
+    /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
     /// <param name="dbStruct">Заполненный список описаний полей</param>
     /// <param name="encoding">Используемая кодировка</param>
     /// <param name="fileFormat">Формат файла. Если задано значение Undefined,
@@ -1358,11 +1361,11 @@ namespace AgeyevAV.DBF
     /// используется формат dBase4.
     /// Если формат задан, но в списке полей есть несовместимые с ним типы, генерируется исключение.
     ///</param>
-    public DbfFile(string filePath, DbfStruct dbStruct, Encoding encoding, DbfFileFormat fileFormat)
+    public DbfFile(AbsPath dbfPath, DbfStruct dbStruct, Encoding encoding, DbfFileFormat fileFormat)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(filePath))
-        throw new ArgumentNullException("filePath");
+      if (dbfPath.IsEmpty)
+        throw new ArgumentNullException("dbfPath");
       if (dbStruct == null)
         throw new ArgumentNullException("dbStruct");
 #endif
@@ -1381,12 +1384,12 @@ namespace AgeyevAV.DBF
 
       try
       {
-        fsDBF = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
+        fsDBF = new FileStream(dbfPath.Path, FileMode.Create, FileAccess.ReadWrite);
 
         if (dbStruct.HasMemo)
         {
-          string DbtFilePath = Path.ChangeExtension(filePath, ".dbt");
-          fsDBT = new FileStream(DbtFilePath, FileMode.Create, FileAccess.ReadWrite);
+          AbsPath dbtFilePath = dbfPath.ChangeExtension(".dbt");
+          fsDBT = new FileStream(dbtFilePath.Path, FileMode.Create, FileAccess.ReadWrite);
         }
 
         InitNew();

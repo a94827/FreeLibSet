@@ -60,6 +60,7 @@
     <Compile Include="Cache.cs" />
     <Compile Include="Cfg.cs" />
     <Compile Include="DataTableRepeater.cs" />
+    <Compile Include="DataTools.Xml.cs" />
     <Compile Include="DataViewSortBuilder.cs" />
     <Compile Include="DataRowValueExtractor.cs" />
     <Compile Include="DataTools.cs" />
@@ -129,6 +130,14 @@
     <Compile Include="WTS.cs" />
     <Compile Include="YearMonth.cs" />
     <Compile Include="ZipFileCreator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataTools.DateTime.cs" />
+    <Compile Include="DataTools.String.cs" />
+    <Compile Include="DelimitedTextConvert.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataTools.Csv.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

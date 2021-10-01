@@ -255,36 +255,36 @@ namespace AgeyevAV.IO
     /// <summary>
     /// Загружает данные из заданного файла, используя кодировку, принятую по умолчанию
     /// </summary>
-    /// <param name="fileName">Имя файла</param>
-    public void Load(string fileName)
+    /// <param name="filePath">Путь к файлу. Файл должен существовать</param>
+    public void Load(AbsPath filePath)
     {
-      if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
 
-      using (StreamReader oReader = new StreamReader(fileName))
+      using (StreamReader oReader = new StreamReader(filePath.Path))
       {
         DoLoad(oReader);
         oReader.Close();
       }
-      _FileName = fileName;
+      _FilePath = filePath;
     }
 
     /// <summary>
     /// Загружает данные из заданного файла
     /// </summary>
-    /// <param name="fileName">Имя файла</param>
+    /// <param name="filePath">Путь к файлу. Файл должен существовать</param>
     /// <param name="encoding">Кодировка</param>
-    public void Load(string fileName, Encoding encoding)
+    public void Load(AbsPath filePath, Encoding encoding)
     {
-      if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
 
-      using (StreamReader oReader = new StreamReader(fileName, encoding))
+      using (StreamReader oReader = new StreamReader(filePath.Path, encoding))
       {
         DoLoad(oReader);
         oReader.Close();
       }
-      _FileName = fileName;
+      _FilePath = filePath;
     }
 
     /// <summary>
@@ -305,7 +305,7 @@ namespace AgeyevAV.IO
 
     private void DoLoad(StreamReader oReader)
     {
-      _FileName = null;
+      _FilePath = AbsPath.Empty;
 
       Regex regexcomment = new Regex("^([\\s]*#.*)", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
       Regex regexsection = new Regex("^[\\s]*\\[[\\s]*([^\\[\\s].*[^\\s\\]])[\\s]*\\][\\s]*$", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
@@ -353,39 +353,39 @@ namespace AgeyevAV.IO
     /// Записывает данные в файл, используя кодировку, принятую по умолчанию.
     /// Этот метод нельзя вызывать при IsReadOnly=true.
     /// </summary>
-    /// <param name="fileName">Имя файла</param>
-    public void Save(string fileName)
+    /// <param name="filePath">Имя файла</param>
+    public void Save(AbsPath filePath)
     {
-      if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
 
       CheckNotReadOnly();
-      using (StreamWriter oWriter = new StreamWriter(fileName, false))
+      using (StreamWriter oWriter = new StreamWriter(filePath.Path, false))
       {
         DoSave(oWriter);
         oWriter.Close();
       }
-      _FileName = fileName;
+      _FilePath = filePath;
     }
 
     /// <summary>
     /// Записывает данные в файл в указанной кодировке.
     /// Этот метод нельзя вызывать при IsReadOnly=true.
     /// </summary>
-    /// <param name="fileName">Имя файла</param>
+    /// <param name="filePath">Имя файла</param>
     /// <param name="encoding">Кодировка</param>
-    public void Save(string fileName, Encoding encoding)
+    public void Save(AbsPath filePath, Encoding encoding)
     {
-      if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
 
       CheckNotReadOnly();
-      using (StreamWriter oWriter = new StreamWriter(fileName, false, encoding))
+      using (StreamWriter oWriter = new StreamWriter(filePath.Path, false, encoding))
       {
         DoSave(oWriter);
         oWriter.Close();
       }
-      _FileName = fileName;
+      _FilePath = filePath;
     }
 
     /// <summary>
@@ -407,7 +407,7 @@ namespace AgeyevAV.IO
 
     private void DoSave(StreamWriter oWriter)
     {
-      _FileName = null;
+      _FilePath = AbsPath.Empty;
       foreach (IniSection Sect in _Sections)
       {
         oWriter.WriteLine(String.Format("[{0}]", Sect.Section));
@@ -418,7 +418,7 @@ namespace AgeyevAV.IO
       }
     }
 
-    private string _FileName;
+    private AbsPath _FilePath;
 
     /// <summary>
     /// Возвращает имя файла, для которого был вызван Load() или Save() или "no file"
@@ -426,10 +426,10 @@ namespace AgeyevAV.IO
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      if (String.IsNullOrEmpty(_FileName))
+      if (_FilePath.IsEmpty)
         return "no file";
       else
-        return _FileName;
+        return _FilePath.Path;
     }
 
     #endregion

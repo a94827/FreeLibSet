@@ -283,7 +283,7 @@ namespace AgeyevAV.FIAS
       int cnt = 0;
 
       LoadAOTypesTable(con);
-      using (DbfFile dbf = new DbfFile(filePath.Path))
+      using (DbfFile dbf = new DbfFile(filePath))
       {
         while (dbf.Read())
         {
@@ -313,7 +313,7 @@ namespace AgeyevAV.FIAS
       DbCommand cmdFTS3 = CreateFTS3Command(con);
       try
       {
-        using (DbfFile dbf = new DbfFile(filePath.Path))
+        using (DbfFile dbf = new DbfFile(filePath))
         {
           DBxDataWriterInfo writerInfo = CreateWriterInfo("AddrOb");
           writerInfo.ExpectedRowCount = dbf.RecordCount;
@@ -486,7 +486,7 @@ namespace AgeyevAV.FIAS
       BeginLoadFile(filePath);
       int cnt = 0;
 
-      using (DbfFile dbf = new DbfFile(filePath.Path))
+      using (DbfFile dbf = new DbfFile(filePath))
       {
         DBxDataWriterInfo writerInfo = CreateWriterInfo("House");
         writerInfo.ExpectedRowCount = dbf.RecordCount;
@@ -586,7 +586,7 @@ namespace AgeyevAV.FIAS
       BeginLoadFile(filePath);
       int cnt = 0;
 
-      using (DbfFile dbf = new DbfFile(filePath.Path))
+      using (DbfFile dbf = new DbfFile(filePath))
       {
         DBxDataWriterInfo writerInfo = CreateWriterInfo("Room");
         writerInfo.ExpectedRowCount = dbf.RecordCount;

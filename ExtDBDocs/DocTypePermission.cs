@@ -335,7 +335,7 @@ namespace AgeyevAV.ExtDB.Docs
 
         if (!String.IsNullOrEmpty(docTypeName))
         {
-          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, true) >= 0)
+          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
             return p;
         }
       }
@@ -581,7 +581,7 @@ namespace AgeyevAV.ExtDB.Docs
 
         if (!String.IsNullOrEmpty(docTypeName))
         {
-          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, true) >= 0)
+          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
             return p;
         }
       }
@@ -611,7 +611,7 @@ namespace AgeyevAV.ExtDB.Docs
 
         if (!String.IsNullOrEmpty(docTypeName))
         {
-          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, true) >= 0)
+          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
             return p.Allowed;
         }
       }

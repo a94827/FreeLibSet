@@ -525,7 +525,7 @@ namespace AgeyevAV.Logging
           Dir += subDir;
         if (prefix == null)
           prefix = String.Empty;
-        if (Directory.Exists(FileTools.RemoveDirNameSlash(Dir.Path)))
+        if (Directory.Exists(Dir.Path))
         {
           string[] Names = Directory.GetFiles(Dir.Path, prefix + "*.log");
 

@@ -161,7 +161,7 @@ namespace AgeyevAV
               InitVersionUnix(); // 17.05.2016
               break;
             default:
-              _Version = FileTools.GetFileVersion(OfficePath.Path);
+              _Version = FileTools.GetFileVersion(OfficePath);
               break;
           }
         }

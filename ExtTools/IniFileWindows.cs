@@ -66,13 +66,6 @@ namespace AgeyevAV.Win32
 
     #endregion
 
-    #region Поля
-
-    //The path of the file we are operating on.
-    private string _Path;
-
-    #endregion
-
     #region P/Invoke declares
 
     /// <summary>
@@ -151,7 +144,7 @@ namespace AgeyevAV.Win32
     /// Initializes a new instance of the <see cref="AgeyevAV.Win32.IniFileWindows"/> class.
     /// </summary>
     /// <param name="path">The ini file to read and write from.</param>
-    public IniFileWindows(string path)
+    public IniFileWindows(AbsPath path)
       : this(path, false)
     {
     }
@@ -161,9 +154,9 @@ namespace AgeyevAV.Win32
     /// </summary>
     /// <param name="path">The ini file to read and write from.</param>
     /// <param name="isReadOnly">true, если разрешено только чтение, но не запись значений</param>
-    public IniFileWindows(string path, bool isReadOnly)
+    public IniFileWindows(AbsPath path, bool isReadOnly)
     {
-      if (String.IsNullOrEmpty(path))
+      if (path.IsEmpty)
         throw new ArgumentNullException("path");
 
       switch (Environment.OSVersion.Platform)
@@ -183,7 +176,7 @@ namespace AgeyevAV.Win32
       // root Windows directory if it is not specified.  By calling 
       // GetFullPath, we make sure we are always passing the full path
       // the win32 functions.
-      _Path = System.IO.Path.GetFullPath(path);
+      _Path = path;
       _IsReadOnly = isReadOnly;
     }
 
@@ -191,7 +184,8 @@ namespace AgeyevAV.Win32
     /// Gets the full path of ini file this object instance is operating on.
     /// </summary>
     /// <value>A file path.</value>
-    public string Path { get { return _Path; } }
+    public AbsPath Path { get { return _Path; } }
+    private AbsPath _Path;
 
     /// <summary>
     /// Выводит путь к INI-файлу (свойство Path)
@@ -199,7 +193,7 @@ namespace AgeyevAV.Win32
     /// <returns></returns>
     public override string ToString()
     {
-      return Path;
+      return _Path.Path;
     }
 
     #endregion
@@ -253,7 +247,7 @@ namespace AgeyevAV.Win32
                                             defaultValue,
                                             retval,
                                             IniFileWindows.MaxSectionSize,
-                                            _Path);
+                                            _Path.Path);
 
       return retval.ToString();
     }
@@ -376,7 +370,7 @@ namespace AgeyevAV.Win32
         int len = NativeMethods.GetPrivateProfileSection(sectionName,
                                                          ptr,
                                                          IniFileWindows.MaxSectionSize,
-                                                         _Path);
+                                                         _Path.Path);
 
         keyValuePairs = ConvertNullSeperatedStringToStringArray(ptr, len);
       }
@@ -487,7 +481,7 @@ namespace AgeyevAV.Win32
                                                     null,
                                                     ptr,
                                                     IniFileWindows.MaxSectionSize,
-                                                    _Path);
+                                                    _Path.Path);
 
         retval = ConvertNullSeperatedStringToStringArray(ptr, len);
       }
@@ -520,7 +514,7 @@ namespace AgeyevAV.Win32
       {
         //Get the section names into the buffer.
         len = NativeMethods.GetPrivateProfileSectionNames(ptr,
-            IniFileWindows.MaxSectionSize, _Path);
+            IniFileWindows.MaxSectionSize, _Path.Path);
 
         retval = ConvertNullSeperatedStringToStringArray(ptr, len);
       }
@@ -583,7 +577,7 @@ namespace AgeyevAV.Win32
     {
       CheckNotReadOnly();
 
-      if (!NativeMethods.WritePrivateProfileString(sectionName, keyName, value, _Path))
+      if (!NativeMethods.WritePrivateProfileString(sectionName, keyName, value, _Path.Path))
       {
         throw new System.ComponentModel.Win32Exception();
       }

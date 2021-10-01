@@ -651,7 +651,7 @@ namespace AgeyevAV.Config
     /// <summary>
     /// Получить логическое значение
     /// Если в хранилище нет такой строки или там записано нечисловое значение, возвращается false.
-    /// Нулевое значение соответсвует false, ненулевое - true.
+    /// Нулевое значение соответствует false, ненулевое - true.
     /// </summary>
     /// <param name="name">Имя</param>
     /// <returns>Значение</returns>
@@ -665,7 +665,7 @@ namespace AgeyevAV.Config
     /// Получить логическое значение.
     /// Если в хранилище нет такой строки или там записано нечисловое значение, сохраняется существующее 
     /// значение <paramref name="value"/>.
-    /// Нулевое значение соответсвует false, ненулевое - true.
+    /// Нулевое значение соответствует false, ненулевое - true.
     /// </summary>
     /// <param name="name">Имя</param>
     /// <param name="value">Сюда будет помещено прочитанное значение в случае успеха</param>
@@ -683,7 +683,7 @@ namespace AgeyevAV.Config
     /// Получить логическое значение.
     /// Если в хранилище нет такой строки или там записано нечисловое значение, возвращается 
     /// значение <paramref name="defValue"/>.
-    /// Нулевое значение соответсвует false, ненулевое - true.
+    /// Нулевое значение соответствует false, ненулевое - true.
     /// </summary>
     /// <param name="name">Имя</param>
     /// <param name="defValue">Значение по умолчанию</param>
@@ -2811,31 +2811,31 @@ namespace AgeyevAV.Config
     /// <summary>
     /// Конструктор, использующий конвертер по умолчанию
     /// </summary>
-    /// <param name="fileName">Путь к XML-файлу</param>
-    public XmlCfgFile(string fileName)
-      : this(fileName, CfgConverter.Default)
+    /// <param name="filePath">Путь к XML-файлу</param>
+    public XmlCfgFile(AbsPath filePath)
+      : this(filePath, CfgConverter.Default)
     {
     }
 
     /// <summary>
     /// Конструктор с возможность указания конвертера
     /// </summary>
-    /// <param name="fileName">Путь к XML-файлу</param>
+    /// <param name="filePath">Путь к XML-файлу</param>
     /// <param name="converter">Конвертер, используемый для преобразования значений</param>
-    public XmlCfgFile(string fileName, CfgConverter converter)
+    public XmlCfgFile(AbsPath filePath, CfgConverter converter)
       : base(converter)
     {
-      if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
       if (converter == null)
         throw new ArgumentNullException("converter");
 
-      _FileName = fileName;
+      _FilePath = filePath;
       _Encoding = DefaultEncoding;
 
-      if (File.Exists(fileName))
+      if (File.Exists(filePath.Path))
       {
-        Document.Load(fileName);
+        Document.Load(filePath.Path);
         base.RootNode = Document.DocumentElement;
         if (base.RootNode == null)
         {
@@ -2852,10 +2852,10 @@ namespace AgeyevAV.Config
     #region Свойства
 
     /// <summary>
-    /// Имя XML-файла, включая путь. Задается в конструкторе.
+    /// Путь к XML-файлу. Задается в конструкторе.
     /// </summary>
-    public string FileName { get { return _FileName; } }
-    private readonly string _FileName;
+    public AbsPath FilePath { get { return _FilePath; } }
+    private readonly AbsPath _FilePath;
 
     /// <summary>
     /// Возвращает FileName
@@ -2863,7 +2863,7 @@ namespace AgeyevAV.Config
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return FileName;
+      return FilePath.Path;
     }
 
     #endregion
@@ -2920,7 +2920,7 @@ namespace AgeyevAV.Config
       XmlDeclaration xmldecl = Document.CreateXmlDeclaration("1.0", Encoding.WebName, null);
       Document.InsertBefore(xmldecl, Document.DocumentElement);
 
-      FileTools.WriteXmlDocument(FileName, Document);
+      FileTools.WriteXmlDocument(FilePath, Document);
     }
 
     #endregion

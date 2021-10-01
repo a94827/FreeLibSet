@@ -1109,7 +1109,7 @@ namespace AgeyevAV.Shell
         }
 
         IniFile File = new IniFile(true);
-        File.Load(DesktopFilePath.Path);
+        File.Load(DesktopFilePath);
         string DisplayName = File["Desktop Entry", "Name[" + LanguageStr + "]"]; // Name[ru]
         if (String.IsNullOrEmpty(DisplayName))
           DisplayName = File["Desktop Entry", "Name"];
@@ -1239,7 +1239,7 @@ namespace AgeyevAV.Shell
           System.Diagnostics.Trace.WriteLine("  from " + MimeinfoCacheFilePath);
 #endif
           AgeyevAV.IO.IniFile Ini = new IniFile(true);
-          Ini.Load(_MimeinfoCacheFilePath);
+          Ini.Load(new AbsPath(_MimeinfoCacheFilePath));
           foreach (IniKeyValue Pair in Ini.GetKeyValues("MIME Cache"))
             _MimeDesktopFiles[Pair.Key] = Pair.Value;
           _MimeinfoCacheFileTime = System.IO.File.GetLastWriteTime(_MimeinfoCacheFilePath);
@@ -1255,7 +1255,7 @@ namespace AgeyevAV.Shell
           System.Diagnostics.Trace.WriteLine("  from " + DefaultsListFilePath);
 #endif
           AgeyevAV.IO.IniFile Ini = new IniFile(true);
-          Ini.Load(_DefaultsListFilePath);
+          Ini.Load(new AbsPath(_DefaultsListFilePath));
           foreach (IniKeyValue Pair in Ini.GetKeyValues("Default Applications"))
             _MimeDesktopFiles[Pair.Key] = Pair.Value;
           _DefaultsListFileTime = System.IO.File.GetLastWriteTime(_DefaultsListFilePath);

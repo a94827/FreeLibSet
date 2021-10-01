@@ -1150,7 +1150,7 @@ namespace AgeyevAV.FIAS
   /// Класс является потокобезопасным.
   /// Перехватываются ошибки преобразования. Для них возвращаются пустые строки.
   /// </summary>
-  public sealed class FiasAddressTextCache
+  public sealed class FiasAddressTextCache : MarshalByRefObject
   {
     #region Конструктор
 
@@ -1234,7 +1234,7 @@ namespace AgeyevAV.FIAS
       lock (_Handler)
       {
         FiasAddress address;
-        if (_ConvertWithoutFill.TryParse(addressCode, out address)) 
+        if (_ConvertWithoutFill.TryParse(addressCode, out address))
         {
           _Handler.FillAddress(address);
 

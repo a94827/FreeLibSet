@@ -130,50 +130,136 @@ namespace AgeyevAV.IO
 
     #endregion
 
-    #region Имена каталогов
-
-    // !!! Будут удалены
+    // Аргументы имен файлов и каталогов должны иметь тип AbsPath, а не String для большинтва методов
 
     /// <summary>
-    /// Добавление к имени каталога символа "\"
-    /// Если каталог не задан, то возвращается пустая строка
+    /// Функции и структуры, специфические для платформы Windows
     /// </summary>
-    /// <param name="dirName">Имя каталога, которое может содержать или не содержать на конце слэш</param>
-    /// <returns>Имя каталога со слэшем на конце</returns>
-    public static string AddDirNameSlash(string dirName)
+    private static class WindowsNative
     {
-      if (String.IsNullOrEmpty(dirName))
-        return String.Empty;
-      if (!dirName.EndsWith("\\"))
-        dirName += "\\";
-      return dirName;
-    }
+      internal static bool IsWindowsPlatform
+      {
+        get
+        {
+          switch (Environment.OSVersion.Platform)
+          {
+            case PlatformID.Win32NT:
+            case PlatformID.Win32Windows:
+            case PlatformID.Win32S:
+              return true;
+            default:
+              return false;
+          }
+        }
+      }
 
-    /// <summary>
-    /// Удаление из имени каталога конечного слэша (если он есть).
-    /// После этого имя каталога можно передавать стандартным функциям .Net Framework
-    /// Если каталог не задан, то возвращается пустая строка
-    /// Слэш не убирается, если задан корневой каталог вида "C:\"
-    /// </summary>
-    /// <param name="dirName">Имя каталога, которое может содержать или не содержать на конце слэш</param>
-    /// <returns>Имя каталога без слэша</returns>
-    public static string RemoveDirNameSlash(string dirName)
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+      internal static extern int GetLongPathName(
+              [MarshalAs(UnmanagedType.LPTStr)]
+                        string path,
+              [MarshalAs(UnmanagedType.LPTStr)]
+                        StringBuilder longPath,
+              int longPathLength
+      );
+
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+      internal static extern int GetShortPathName(
+              [MarshalAs(UnmanagedType.LPTStr)]
+                        string path,
+              [MarshalAs(UnmanagedType.LPTStr)]
+                        StringBuilder shortPath,
+              int shortPathLength
+      );
+      [DllImport("netapi32.dll", EntryPoint = "NetServerEnum")]
+      internal static extern NERR NetServerEnum([MarshalAs(UnmanagedType.LPWStr)] string ServerName, int Level, out IntPtr BufPtr, int PrefMaxLen, ref int EntriesRead, ref int TotalEntries, SV_101_TYPES ServerType, [MarshalAs(UnmanagedType.LPWStr)] string Domain, int ResumeHandle);
+
+      [DllImport("netapi32.dll", EntryPoint = "NetApiBufferFree")]
+      internal static extern NERR NetApiBufferFree(IntPtr Buffer);
+
+      [Flags]
+      internal enum SV_101_TYPES : uint
+      {
+        SV_TYPE_WORKSTATION = 0x00000001,
+        SV_TYPE_SERVER = 0x00000002,
+        SV_TYPE_SQLSERVER = 0x00000004,
+        SV_TYPE_DOMAIN_CTRL = 0x00000008,
+        SV_TYPE_DOMAIN_BAKCTRL = 0x00000010,
+        SV_TYPE_TIME_SOURCE = 0x00000020,
+        SV_TYPE_AFP = 0x00000040,
+        SV_TYPE_NOVELL = 0x00000080,
+        SV_TYPE_DOMAIN_MEMBER = 0x00000100,
+        SV_TYPE_PRINTQ_SERVER = 0x00000200,
+        SV_TYPE_DIALIN_SERVER = 0x00000400,
+        SV_TYPE_XENIX_SERVER = 0x00000800,
+        SV_TYPE_SERVER_UNIX = SV_TYPE_XENIX_SERVER,
+        SV_TYPE_NT = 0x00001000,
+        SV_TYPE_WFW = 0x00002000,
+        SV_TYPE_SERVER_MFPN = 0x00004000,
+        SV_TYPE_SERVER_NT = 0x00008000,
+        SV_TYPE_POTENTIAL_BROWSER = 0x00010000,
+        SV_TYPE_BACKUP_BROWSER = 0x00020000,
+        SV_TYPE_MASTER_BROWSER = 0x00040000,
+        SV_TYPE_DOMAIN_MASTER = 0x00080000,
+        SV_TYPE_SERVER_OSF = 0x00100000,
+        SV_TYPE_SERVER_VMS = 0x00200000,
+        SV_TYPE_WINDOWS = 0x00400000,
+        SV_TYPE_DFS = 0x00800000,
+        SV_TYPE_CLUSTER_NT = 0x01000000,
+        SV_TYPE_TERMINALSERVER = 0x02000000,
+        SV_TYPE_CLUSTER_VS_NT = 0x04000000,
+        SV_TYPE_DCE = 0x10000000,
+        SV_TYPE_ALTERNATE_XPORT = 0x20000000,
+        SV_TYPE_LOCAL_LIST_ONLY = 0x40000000,
+        SV_TYPE_DOMAIN_ENUM = 0x80000000,
+        SV_TYPE_ALL = 0xFFFFFFFF,
+      }
+
+      [StructLayout(LayoutKind.Sequential)]
+      internal struct SERVER_INFO_101
+      {
+        [MarshalAs(UnmanagedType.U4)]
+        public uint sv101_platform_id;
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string sv101_name;
+        [MarshalAs(UnmanagedType.U4)]
+        public uint sv101_version_major;
+        [MarshalAs(UnmanagedType.U4)]
+        public uint sv101_version_minor;
+        [MarshalAs(UnmanagedType.U4)]
+        public uint sv101_type;
+        [MarshalAs(UnmanagedType.LPWStr)]
+        public string sv101_comment;
+      }
+
+
+#if XXX
+    internal enum PLATFORM_ID : uint
     {
-      if (String.IsNullOrEmpty(dirName))
-        return String.Empty;
-
-      // 13.01.2012
-      if (dirName.Length == 3 && dirName.Substring(1, 2) == ":\\")
-        return dirName;
-
-      if (dirName.EndsWith("\\"))
-        return dirName.Substring(0, dirName.Length - 1);
-      return dirName;
+      PLATFORM_ID_DOS = 300,
+      PLATFORM_ID_OS2 = 400,
+      PLATFORM_ID_NT = 500,
+      PLATFORM_ID_OSF = 600,
+      PLATFORM_ID_VMS = 700,
     }
+#endif
 
 
-
-    #endregion
+      internal enum NERR
+      {
+        NERR_Success = 0,
+        ERROR_ACCESS_DENIED = 5,
+        ERROR_NOT_ENOUGH_MEMORY = 8,
+        ERROR_BAD_NETPATH = 53,
+        ERROR_NETWORK_BUSY = 54,
+        ERROR_INVALID_PARAMETER = 87,
+        ERROR_INVALID_LEVEL = 124,
+        ERROR_MORE_DATA = 234,
+        ERROR_EXTENDED_ERROR = 1208,
+        ERROR_NO_NETWORK = 1222,
+        ERROR_INVALID_HANDLE_STATE = 1609,
+        ERROR_NO_BROWSER_SERVERS_FOUND = 6118,
+      }
+    }
 
     #region Имена файлов
 
@@ -188,9 +274,11 @@ namespace AgeyevAV.IO
 
     /// <summary>
     /// Получить последовательное имя файла для заданного базового имени и
-    /// индекса файла. Например, если FileName="C:\f0001.bmp", а Index=4,
-    /// то будет возвращено "C:\f0004.bmp"
-    /// Для Index=0 всегда возвращается исходное имя файла FileName
+    /// индекса файла. Например, если <paramref name="fileName"/>="f0001.bmp", а <paramref name="filIndex"/>,
+    /// то будет возвращено "f0004.bmp"
+    /// Для <paramref name="fileIndex"/>=0 всегда возвращается исходное имя файла <paramref name="fileName"/>.
+    /// Учитывается расширение файла, но не делается предположений о наличии или отсутствии каталога.
+    /// Метод не выполняет обращений к файловой системе.
     /// </summary>
     /// <param name="fileName">Исходное имя файла</param>
     /// <param name="fileIndex">Номер файла</param>
@@ -243,6 +331,8 @@ namespace AgeyevAV.IO
     /// <summary>
     /// Возвращает массив последовательных имен файлов. См. метод GetSerialFileName().
     /// Количество элементов в массиве будет равно <paramref name="fileCount"/>.
+    /// Учитывается расширение файла, но не делается предположений о наличии или отсутствии каталога.
+    /// Метод не выполняет обращений к файловой системе.
     /// </summary>
     /// <param name="fileName">Исходное имя файла</param>
     /// <param name="fileCount">Количество файлов</param>
@@ -260,14 +350,14 @@ namespace AgeyevAV.IO
     #region Маски ? и * (Wildcards)
 
     /// <summary>
-    /// Проверяет относительное имя файла на соответсвие шаблону.
+    /// Проверяет относительное имя файла на соответствие шаблону.
     /// Имя файла и шаблон может содержать символ разделителя каталога. Для успешной проверки число разделителей в шаблоне и в имени файла должно совпадать
     /// (одинаковый уровень вложения). Каждая часть пути проверяется отдельно с помощью TestFileNameWildcards
     /// в расширении
     /// </summary>
     /// <param name="fileName">Проверяемое имя файла</param>
     /// <param name="template">Шаблон</param>
-    /// <returns>true, если имя файла соответсвует шаблону</returns>
+    /// <returns>true, если имя файла соответствует шаблону</returns>
     public static bool TestRelFileNameWildcards(string fileName, string template)
     {
 #if DEBUG
@@ -299,13 +389,13 @@ namespace AgeyevAV.IO
     }
 
     /// <summary>
-    /// Проверяет имя файла на соответсвие шаблону. Имя файла и шаблон не могут содержать символ разделителя каталога. 
+    /// Проверяет имя файла на соответствие шаблону. Имя файла и шаблон не могут содержать символ разделителя каталога. 
     /// Шаблон может содержать символы "?" и "*". Звездочка "*" может присутствовать не более, чем по одному разу в имени и расширении
     /// в расширении
     /// </summary>
     /// <param name="fileName">Проверяемое имя файла</param>
     /// <param name="template">Шаблон</param>
-    /// <returns>true, если имя файла соответсвует шаблону</returns>
+    /// <returns>true, если имя файла соответствует шаблону</returns>
     public static bool TestFileNameWildcards(string fileName, string template)
     {
 #if DEBUG
@@ -413,6 +503,8 @@ namespace AgeyevAV.IO
     #endregion
 
     #region Проверка имени файла и каталога
+
+    // Эти методы используют аргументы String, а не AbsPath, т.к. их целью является проверка наличия символов backslash в конце пути
 
     #region Режим FormatOnly
 
@@ -1048,78 +1140,59 @@ namespace AgeyevAV.IO
 
     #endregion
 
-    #region Короткие имена файлов
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-    private static extern int GetLongPathName(
-            [MarshalAs(UnmanagedType.LPTStr)]
-                        string path,
-            [MarshalAs(UnmanagedType.LPTStr)]
-                        StringBuilder longPath,
-            int longPathLength
-    );
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-    private static extern int GetShortPathName(
-            [MarshalAs(UnmanagedType.LPTStr)]
-                        string path,
-            [MarshalAs(UnmanagedType.LPTStr)]
-                        StringBuilder shortPath,
-            int shortPathLength
-    );
+    #region Короткие имена файлов 8.3 в Windows
 
     /// <summary>
-    /// Для Windows возвращает длинное имя файла, соответствующее короткому имени в формате 8.3
+    /// Для Windows возвращает длинное имя файла, соответствующее короткому имени в формате 8.3.
+    /// Для других платформ возвращает аргумент неизменным.
     /// </summary>
-    /// <param name="shortName">Короткое имя</param>
+    /// <param name="shortPath">Путь с указанием короткого имени файла</param>
     /// <returns>Длинное имя</returns>
-    public static string GetLongPathName(string shortName)
+    public static AbsPath GetLongPath(AbsPath shortPath)
     {
-      if (String.IsNullOrEmpty(shortName))
-        return String.Empty;
-      if (shortName.Length == 3 && shortName.EndsWith(":\\"))
-        return shortName; // только имя диска, например, "C:\"
-      bool AddSlash = shortName.EndsWith("\\");
-      if (AddSlash)
-        shortName = shortName.Substring(0, shortName.Length - 1);
-      StringBuilder LongPath = new StringBuilder(255);
-      int res = GetLongPathName(shortName, LongPath, LongPath.Capacity);
-      if (res == 0 || res > LongPath.Capacity)
-        MyThrowWin32Exception(shortName);
-      string LongName = LongPath.ToString();
-      if (AddSlash)
-        LongName += "\\";
-      return LongName;
+      if (shortPath.IsEmpty)
+        return AbsPath.Empty;
+
+      if (!WindowsNative.IsWindowsPlatform)
+        return shortPath;
+
+      if (shortPath.Path.Length == 3 && shortPath.Path.EndsWith(":\\"))
+        return shortPath; // только имя диска, например, "C:\"
+      StringBuilder sbLongPath = new StringBuilder(255);
+      int res = WindowsNative.GetLongPathName(shortPath.Path, sbLongPath, sbLongPath.Capacity);
+      if (res == 0 || res > sbLongPath.Capacity)
+        MyThrowWin32Exception(shortPath);
+      return new AbsPath(sbLongPath.ToString());
     }
 
     /// <summary>
-    /// Для Windows возвращает короткое имя файла в формате 8.3, соответствующее длинному имени
+    /// Для Windows возвращает короткое имя файла в формате 8.3, соответствующее длинному имени.
+    /// Для других платформ возвращает аргумент неизменным.
     /// </summary>
-    /// <param name="longName">Длинное имя</param>
+    /// <param name="longPath">Длинное имя</param>
     /// <returns>Короткое имя</returns>
-    public static string GetShortPathName(string longName)
+    public static AbsPath GetShortPath(AbsPath longPath)
     {
-      if (String.IsNullOrEmpty(longName))
-        return String.Empty;
-      if (longName.Length == 3 && longName.EndsWith(":\\"))
-        return longName; // только имя диска, например, "C:\"
-      bool AddSlash = longName.EndsWith("\\");
-      if (AddSlash)
-        longName = longName.Substring(0, longName.Length - 1);
-      StringBuilder ShortPath = new StringBuilder(255);
-      int res = GetShortPathName(longName, ShortPath, ShortPath.Capacity);
-      if (res == 0 || res > ShortPath.Capacity)
-        MyThrowWin32Exception(longName);
-      string ShortName = ShortPath.ToString();
-      if (AddSlash)
-        ShortName += "\\";
-      return ShortName;
+      if (longPath.IsEmpty)
+        return AbsPath.Empty;
+
+      if (!WindowsNative.IsWindowsPlatform)
+        return longPath;
+
+      if (longPath.Path.Length == 3 && longPath.Path.EndsWith(":\\"))
+        return longPath; // только имя диска, например, "C:\"
+
+      StringBuilder sbShortPath = new StringBuilder(255);
+      int res = WindowsNative.GetShortPathName(longPath.Path, sbShortPath, sbShortPath.Capacity);
+      if (res == 0 || res > sbShortPath.Capacity)
+        MyThrowWin32Exception(longPath);
+      return new AbsPath(sbShortPath.ToString());
     }
 
-    private static void MyThrowWin32Exception(string path)
+    private static void MyThrowWin32Exception(AbsPath path)
     {
       Win32Exception e1 = new Win32Exception();
-      Win32Exception e2 = new Win32Exception(e1.ErrorCode, e1.Message + ". Имя: \"" + path + "\"");
+      Win32Exception e2 = new Win32Exception(e1.ErrorCode, e1.Message + ". Имя: \"" + path.Path + "\"");
       throw e2;
     }
 
@@ -1130,11 +1203,14 @@ namespace AgeyevAV.IO
     /// <summary>
     /// Записать двоичный поток в файл
     /// </summary>
-    /// <param name="fileName">Имя файла</param>
+    /// <param name="filePath">Имя файла</param>
     /// <param name="sourceStream">Исходный поток</param>
-    public static void WriteStream(string fileName, Stream sourceStream)
+    public static void WriteStream(AbsPath filePath, Stream sourceStream)
     {
-      using (FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
+
+      using (FileStream fs = new FileStream(filePath.Path, FileMode.Create, FileAccess.Write))
       {
         CopyStream(sourceStream, fs);
       }
@@ -1370,15 +1446,18 @@ namespace AgeyevAV.IO
     /// </summary>
     /// <param name="filePath">Имя файла для записи</param>
     /// <param name="xmlDoc">Записываемый документ</param>
-    public static void WriteXmlDocument(string filePath, XmlDocument xmlDoc)
+    public static void WriteXmlDocument(AbsPath filePath, XmlDocument xmlDoc)
     {
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
+
       Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
       XmlWriterSettings Settings = new XmlWriterSettings();
       Settings.NewLineChars = "\r\n";
       Settings.Encoding = enc;
       Settings.Indent = true;
       Settings.IndentChars = "  ";
-      XmlWriter wrt = XmlWriter.Create(filePath, Settings);
+      XmlWriter wrt = XmlWriter.Create(filePath.Path, Settings);
       try
       {
         xmlDoc.WriteTo(wrt);
@@ -1399,6 +1478,11 @@ namespace AgeyevAV.IO
     /// <param name="xmlDoc">Записываемый документ</param>
     public static void WriteXmlDocument(Stream outStream, XmlDocument xmlDoc)
     {
+      if (outStream==null)
+        throw new ArgumentNullException("outStream");
+      if (xmlDoc== null)
+        throw new ArgumentNullException("xmlDoc");
+
       Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
       XmlWriterSettings Settings = new XmlWriterSettings();
       Settings.NewLineChars = "\r\n";
@@ -1428,10 +1512,13 @@ namespace AgeyevAV.IO
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
     /// <returns>XML-документ</returns>
-    public static XmlDocument ReadXmlDocument(string filePath)
+    public static XmlDocument ReadXmlDocument(AbsPath filePath)
     {
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
+
       XmlDocument Doc = new XmlDocument();
-      Doc.Load(filePath);
+      Doc.Load(filePath.Path);
       return Doc;
     }
 
@@ -1443,6 +1530,9 @@ namespace AgeyevAV.IO
     /// <returns>XML-документ</returns>
     public static XmlDocument ReadXmlDocument(Stream inStream)
     {
+      if (inStream == null)
+        throw new ArgumentNullException("inStream");
+
       XmlDocument Doc = new XmlDocument();
       Doc.Load(inStream);
       return Doc;
@@ -1462,24 +1552,24 @@ namespace AgeyevAV.IO
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-8
     /// </summary>
-    private static readonly byte[] XmlStartUtf8Bytes = new byte[] { 0xEF, 0xBB, 0xBF, 0x3c, 0x3f, 0x78, 0x6d, 0x6c, 0x20 };
+    private static readonly byte[] XmlStartUtf8Bytes = new byte[] { 0xEF, 0xBB, 0xBF, 0x3c, 0x3f , 0x78 , 0x6d , 0x6c , 0x20 };
 
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-16
     /// </summary>
-    private static readonly byte[] XmlStartUtf16Bytes = new byte[] { 0xFF, 0xFE, 0x3c, 0x00, 0x3f, 0x00, 0x78, 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20, 0x00 };
+    private static readonly byte[] XmlStartUtf16Bytes = new byte[] { 0xFF, 0xFE , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00 , 0x6d, 0x00, 0x6c, 0x00, 0x20, 0x00 };
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-16BE
     /// </summary>
-    private static readonly byte[] XmlStartUtf16BEBytes = new byte[] { 0xFE, 0xFF, 0x00, 0x3c, 0x00, 0x3f, 0x00, 0x78, 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20 };
+    private static readonly byte[] XmlStartUtf16BEBytes = new byte[] { 0xFE, 0xFF , 0x00 , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20 };
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-32
     /// </summary>
-    private static readonly byte[] XmlStartUtf32Bytes = new byte[] { 0xFF, 0xFE, 0x00, 0x00,
-                                                                     0x3c, 0x00, 0x00, 0x00,
+    private static readonly byte[] XmlStartUtf32Bytes = new byte[] { 0xFF , 0xFE , 0x00 , 0x00 ,
+                                                                     0x3c , 0x00 , 0x00 , 0x00 ,
                                                                      0x3f, 0x00, 0x00, 0x00,
                                                                      0x78, 0x00, 0x00, 0x00,
                                                                      0x6d, 0x00, 0x00, 0x00,
@@ -1536,14 +1626,14 @@ namespace AgeyevAV.IO
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
     /// <returns>true, если есть смысл попытаться преобразовать файл в XML-формат</returns>
-    public static bool IsValidXmlStart(string filePath)
+    public static bool IsValidXmlStart(AbsPath filePath)
     {
-      if (String.IsNullOrEmpty(filePath))
+      if (filePath.IsEmpty)
         return false;
-      if (!File.Exists(filePath))
+      if (!File.Exists(filePath.Path))
         return false;
 
-      using (FileStream Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+      using (FileStream Stream = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read))
       {
         return IsValidXmlStart(Stream);
       }
@@ -1566,11 +1656,14 @@ namespace AgeyevAV.IO
     /// </summary>
     /// <param name="filePath">Путь создаваемого файла</param>
     /// <param name="ds"></param>
-    public static void WriteDataSetBinary(string filePath, DataSet ds)
+    public static void WriteDataSetBinary(AbsPath filePath, DataSet ds)
     {
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
+
       ds.RemotingFormat = SerializationFormat.Binary;
       ds.AcceptChanges();
-      FileStream fs = new FileStream(filePath, FileMode.Create);
+      FileStream fs = new FileStream(filePath.Path, FileMode.Create);
       try
       {
         //DebugTools.DebugDataSet(ds, FilePath);
@@ -1589,10 +1682,13 @@ namespace AgeyevAV.IO
     /// </summary>
     /// <param name="filePath">Путь к файлу. Файл должен существовать</param>
     /// <returns>Загруженный набор данных</returns>
-    public static DataSet ReadDataSetBinary(string filePath)
+    public static DataSet ReadDataSetBinary(AbsPath filePath)
     {
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
+
       DataSet ds;
-      FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+      FileStream fs = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
       try
       {
         BinaryFormatter bf = new BinaryFormatter();
@@ -1615,15 +1711,15 @@ namespace AgeyevAV.IO
     /// </summary>
     /// <param name="filePath">Путь к EXE, DLL или другому файлу</param>
     /// <returns>Версия файла</returns>
-    public static Version GetFileVersion(string filePath)
+    public static Version GetFileVersion(AbsPath filePath)
     {
-      if (String.IsNullOrEmpty(filePath))
+      if (filePath.IsEmpty)
         return null;
 
-      if (!File.Exists(filePath))
+      if (!File.Exists(filePath.Path))
         return null;
 
-      FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(filePath);
+      FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(filePath.Path);
       return GetFileVersion(fvi);
     }
 
@@ -1769,7 +1865,7 @@ namespace AgeyevAV.IO
     /// <returns>true-дискета, false - не дискета</returns>
     public static bool IsFloppyDriveDir(AbsPath path)
     {
-      if (System.IO.Path.DirectorySeparatorChar != '\\')
+      if (!WindowsNative.IsWindowsPlatform)
         return false; // ???
 
       if (path.IsEmpty)
@@ -1796,97 +1892,6 @@ namespace AgeyevAV.IO
 
     #region Список компьютеров в сети
 
-    [DllImport("netapi32.dll", EntryPoint = "NetServerEnum")]
-    private static extern NERR NetServerEnum([MarshalAs(UnmanagedType.LPWStr)] string ServerName, int Level, out IntPtr BufPtr, int PrefMaxLen, ref int EntriesRead, ref int TotalEntries, SV_101_TYPES ServerType, [MarshalAs(UnmanagedType.LPWStr)] string Domain, int ResumeHandle);
-
-    [DllImport("netapi32.dll", EntryPoint = "NetApiBufferFree")]
-    private static extern NERR NetApiBufferFree(IntPtr Buffer);
-
-
-    [Flags]
-    private enum SV_101_TYPES : uint
-    {
-      SV_TYPE_WORKSTATION = 0x00000001,
-      SV_TYPE_SERVER = 0x00000002,
-      SV_TYPE_SQLSERVER = 0x00000004,
-      SV_TYPE_DOMAIN_CTRL = 0x00000008,
-      SV_TYPE_DOMAIN_BAKCTRL = 0x00000010,
-      SV_TYPE_TIME_SOURCE = 0x00000020,
-      SV_TYPE_AFP = 0x00000040,
-      SV_TYPE_NOVELL = 0x00000080,
-      SV_TYPE_DOMAIN_MEMBER = 0x00000100,
-      SV_TYPE_PRINTQ_SERVER = 0x00000200,
-      SV_TYPE_DIALIN_SERVER = 0x00000400,
-      SV_TYPE_XENIX_SERVER = 0x00000800,
-      SV_TYPE_SERVER_UNIX = SV_TYPE_XENIX_SERVER,
-      SV_TYPE_NT = 0x00001000,
-      SV_TYPE_WFW = 0x00002000,
-      SV_TYPE_SERVER_MFPN = 0x00004000,
-      SV_TYPE_SERVER_NT = 0x00008000,
-      SV_TYPE_POTENTIAL_BROWSER = 0x00010000,
-      SV_TYPE_BACKUP_BROWSER = 0x00020000,
-      SV_TYPE_MASTER_BROWSER = 0x00040000,
-      SV_TYPE_DOMAIN_MASTER = 0x00080000,
-      SV_TYPE_SERVER_OSF = 0x00100000,
-      SV_TYPE_SERVER_VMS = 0x00200000,
-      SV_TYPE_WINDOWS = 0x00400000,
-      SV_TYPE_DFS = 0x00800000,
-      SV_TYPE_CLUSTER_NT = 0x01000000,
-      SV_TYPE_TERMINALSERVER = 0x02000000,
-      SV_TYPE_CLUSTER_VS_NT = 0x04000000,
-      SV_TYPE_DCE = 0x10000000,
-      SV_TYPE_ALTERNATE_XPORT = 0x20000000,
-      SV_TYPE_LOCAL_LIST_ONLY = 0x40000000,
-      SV_TYPE_DOMAIN_ENUM = 0x80000000,
-      SV_TYPE_ALL = 0xFFFFFFFF,
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct SERVER_INFO_101
-    {
-      [MarshalAs(UnmanagedType.U4)]
-      public uint sv101_platform_id;
-      [MarshalAs(UnmanagedType.LPWStr)]
-      public string sv101_name;
-      [MarshalAs(UnmanagedType.U4)]
-      public uint sv101_version_major;
-      [MarshalAs(UnmanagedType.U4)]
-      public uint sv101_version_minor;
-      [MarshalAs(UnmanagedType.U4)]
-      public uint sv101_type;
-      [MarshalAs(UnmanagedType.LPWStr)]
-      public string sv101_comment;
-    }
-
-
-#if XXX
-    private enum PLATFORM_ID : uint
-    {
-      PLATFORM_ID_DOS = 300,
-      PLATFORM_ID_OS2 = 400,
-      PLATFORM_ID_NT = 500,
-      PLATFORM_ID_OSF = 600,
-      PLATFORM_ID_VMS = 700,
-    }
-#endif
-
-
-    private enum NERR
-    {
-      NERR_Success = 0,
-      ERROR_ACCESS_DENIED = 5,
-      ERROR_NOT_ENOUGH_MEMORY = 8,
-      ERROR_BAD_NETPATH = 53,
-      ERROR_NETWORK_BUSY = 54,
-      ERROR_INVALID_PARAMETER = 87,
-      ERROR_INVALID_LEVEL = 124,
-      ERROR_MORE_DATA = 234,
-      ERROR_EXTENDED_ERROR = 1208,
-      ERROR_NO_NETWORK = 1222,
-      ERROR_INVALID_HANDLE_STATE = 1609,
-      ERROR_NO_BROWSER_SERVERS_FOUND = 6118,
-    }
-
     /// <summary>
     /// Свойство возвращает true, если функция GetNetworkMachineNames() поддерживается
     /// </summary>
@@ -1905,7 +1910,10 @@ namespace AgeyevAV.IO
     /// <returns></returns>
     public static string[] GetNetworkMachineNames()
     {
-      string[] a = GetServerList(SV_101_TYPES.SV_TYPE_ALL);
+      if (!WindowsNative.IsWindowsPlatform)
+        throw new NotSupportedException();
+
+      string[] a = GetServerList(WindowsNative.SV_101_TYPES.SV_TYPE_ALL);
 
       // Надо, чтобы наш компьютер был в списке
       string CompName = Environment.MachineName;
@@ -1923,9 +1931,9 @@ namespace AgeyevAV.IO
       return a;
     }
 
-    private static string[] GetServerList(SV_101_TYPES type101)
+    private static string[] GetServerList(WindowsNative.SV_101_TYPES type101)
     {
-      SERVER_INFO_101 si;
+      WindowsNative.SERVER_INFO_101 si;
       IntPtr pInfo = IntPtr.Zero;
       int etriesread = 0;
       int totalentries = 0;
@@ -1933,13 +1941,13 @@ namespace AgeyevAV.IO
 
       try
       {
-        NERR err = NetServerEnum(null, 101, out pInfo, -1, ref etriesread, ref totalentries, type101, null, 0);
-        if ((err == NERR.NERR_Success || err == NERR.ERROR_MORE_DATA) && pInfo != IntPtr.Zero)
+        WindowsNative.NERR err = WindowsNative.NetServerEnum(null, 101, out pInfo, -1, ref etriesread, ref totalentries, type101, null, 0);
+        if ((err == WindowsNative.NERR.NERR_Success || err == WindowsNative.NERR.ERROR_MORE_DATA) && pInfo != IntPtr.Zero)
         {
           int ptr = pInfo.ToInt32();
           for (int i = 0; i < etriesread; i++)
           {
-            si = (SERVER_INFO_101)Marshal.PtrToStructure(new IntPtr(ptr), typeof(SERVER_INFO_101));
+            si = (WindowsNative.SERVER_INFO_101)Marshal.PtrToStructure(new IntPtr(ptr), typeof(WindowsNative.SERVER_INFO_101));
             srvs.Add(si.sv101_name);
 
             ptr += Marshal.SizeOf(si);
@@ -1950,7 +1958,7 @@ namespace AgeyevAV.IO
       {
         if (pInfo != IntPtr.Zero)
         {
-          NetApiBufferFree(pInfo);
+          WindowsNative.NetApiBufferFree(pInfo);
         }
       }
 
@@ -2146,9 +2154,10 @@ namespace AgeyevAV.IO
     /// Выполняет поиск выполняемого файла с использованием переменной PATH.
     /// Если файл не найден, возвращает AbsPath.Empty.
     /// Поиск в текущем каталоге НЕ выполняется. 
-    /// Если задан абсолю
+    /// Если задан абсолютный путь к файлу, то проверяется наличие файла на диске. Если файл существует, возвращается <paramref name="fileName"/> без изменений.
+    /// Иначе возвращается AbsPath.Empty.
     /// </summary>
-    /// <param name="fileName">Имя выполняемого файла (с расширением)</param>
+    /// <param name="fileName">Имя выполняемого файла (с расширением). Может быть задан абсолютный или относительный путь.</param>
     /// <returns></returns>
     public static AbsPath FindExecutableFilePath(string fileName)
     {
@@ -2183,6 +2192,52 @@ namespace AgeyevAV.IO
         catch { } // может не быть доступа к каталогу
       }
       return AbsPath.Empty;
+    }
+
+    #endregion
+
+    #region Вычисление ХЭШ-сумм
+
+
+    /// <summary>
+    /// Получение хэш-суммы данных из потока по алгоритму MD5.
+    /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами
+    /// Если Stream=null, то возвращается хэш-сумма для массива нулевой длины
+    /// </summary>
+    /// <param name="strm">Поток данных для чтения</param>
+    /// <returns>Строка хэш-суммы</returns>
+    public static string MD5Sum(Stream strm)
+    {
+      if (strm == null)
+        return DataTools.MD5Sum(new byte[0]);
+      System.Security.Cryptography.MD5 md5Hasher = System.Security.Cryptography.MD5.Create();
+      byte[] HashRes = md5Hasher.ComputeHash(strm);
+      return DataTools.BytesToHex(HashRes, false);
+    }
+
+    /// <summary>
+    /// Получение хэш-суммы для файла по алгоритму MD5.
+    /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами.
+    /// Файл должен существовать.
+    /// </summary>
+    /// <param name="filePath">Имя файла (с указанием пути)</param>
+    /// <returns>Строка хэш-суммы</returns>
+    public static string MD5Sum(AbsPath filePath)
+    {
+      if (filePath.IsEmpty)
+        throw new ArgumentNullException("filePath");
+
+      string str;
+      FileStream fs = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+      try
+      {
+        str = MD5Sum(fs);
+      }
+      finally
+      {
+        fs.Close();
+      }
+      return str;
     }
 
     #endregion
@@ -2815,11 +2870,14 @@ namespace AgeyevAV.IO
   {
     #region Функции Widnows
 
-    [DllImport("kernel32.dll")]
-    extern static Int32 Wow64DisableWow64FsRedirection(out IntPtr oldValue);
+    private static class WindowsNative
+    {
+      [DllImport("kernel32.dll")]
+      internal extern static Int32 Wow64DisableWow64FsRedirection(out IntPtr oldValue);
 
-    [DllImport("kernel32.dll")]
-    extern static Int32 Wow64RevertWow64FsRedirection(IntPtr oldValue);
+      [DllImport("kernel32.dll")]
+      internal extern static Int32 Wow64RevertWow64FsRedirection(IntPtr oldValue);
+    }
 
     #endregion
 
@@ -2833,7 +2891,7 @@ namespace AgeyevAV.IO
     {
       if (OSSupported)
       {
-        if (Wow64DisableWow64FsRedirection(out OldValue) != 0)
+        if (WindowsNative.Wow64DisableWow64FsRedirection(out OldValue) != 0)
           _Active = true;
       }
     }
@@ -2847,7 +2905,7 @@ namespace AgeyevAV.IO
       if (_Active)
       {
         _Active = false;
-        Wow64RevertWow64FsRedirection(OldValue);
+        WindowsNative.Wow64RevertWow64FsRedirection(OldValue);
       }
       base.Dispose(disposing);
     }

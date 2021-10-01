@@ -756,7 +756,7 @@ namespace AgeyevAV.FIAS
     /// Используется для инициализации объекта FiasHandler на стороне сервера.
     /// Передается клиенту через net remoting для создания собственного объекта FiasCachedSource.
     /// </summary>
-    public IFiasSource Source { get { return _Source; } }
+    public FiasCachedSource Source { get { return _Source; } }
     private FiasDBCachedSource _Source;
 
 

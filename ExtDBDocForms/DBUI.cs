@@ -3891,7 +3891,7 @@ namespace AgeyevAV.ExtForms.Docs
             AccessMode = dtp.Mode;
             break;
           }
-          else if (DataTools.IndexOf(dtp.DocTypeNames, DocType.Name, true) >= 0)
+          else if (DataTools.IndexOf(dtp.DocTypeNames, DocType.Name, StringComparison.OrdinalIgnoreCase) >= 0)
           {
             AccessMode = dtp.Mode;
             break;

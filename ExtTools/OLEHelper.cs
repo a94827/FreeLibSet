@@ -478,8 +478,8 @@ namespace AgeyevAV.OLE
     /// <returns>Версия</returns>
     public static Version GetLocalServer32Version(string progID)
     {
-      AbsPath Path = GetLocalServer32Path(progID);
-      return FileTools.GetFileVersion(Path.Path);
+      AbsPath filePath = GetLocalServer32Path(progID);
+      return FileTools.GetFileVersion(filePath);
     }
 
     #endregion

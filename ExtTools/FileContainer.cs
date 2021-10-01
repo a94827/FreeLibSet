@@ -270,7 +270,7 @@ namespace AgeyevAV.IO
 
       _FileInfo = new StoredFileInfo(path);
       _Contents = File.ReadAllBytes(path.Path);
-      _SubDir = FileTools.AddDirNameSlash(subDir);
+      _SubDir = AddDirNameSlash(subDir);
     }
 
     /// <summary>
@@ -303,7 +303,7 @@ namespace AgeyevAV.IO
 
       _FileInfo = fileInfo;
       _Contents = contents;
-      _SubDir = FileTools.AddDirNameSlash(subDir);
+      _SubDir = AddDirNameSlash(subDir);
     }
 
     /// <summary>
@@ -337,7 +337,7 @@ namespace AgeyevAV.IO
       //_FileInfo = new StoredFileInfo(fileName, contents.Length);
       _FileInfo = new StoredFileInfo(fileName, _Contents.Length); // 27.12.2020
 
-      _SubDir = FileTools.AddDirNameSlash(subDir);
+      _SubDir = AddDirNameSlash(subDir);
     }
 
     /// <summary>
@@ -375,7 +375,7 @@ namespace AgeyevAV.IO
       else
         len = _Contents.Length;
       _FileInfo = new StoredFileInfo(fileName, len);
-      _SubDir = FileTools.AddDirNameSlash(subDir);
+      _SubDir = AddDirNameSlash(subDir);
     }
 
     /// <summary>
@@ -393,6 +393,22 @@ namespace AgeyevAV.IO
     //protected FileContainer(SerializationInfo info, StreamingContext context)
     //{
     //}
+
+
+    /// <summary>
+    /// Добавление к имени каталога символа "\"
+    /// Если каталог не задан, то возвращается пустая строка
+    /// </summary>
+    /// <param name="dirName">Имя каталога, которое может содержать или не содержать на конце слэш</param>
+    /// <returns>Имя каталога со слэшем на конце</returns>
+    private static string AddDirNameSlash(string dirName)
+    {
+      if (String.IsNullOrEmpty(dirName))
+        return String.Empty;
+      if (!dirName.EndsWith("\\"))
+        dirName += "\\";
+      return dirName;
+    }
 
     #endregion
 

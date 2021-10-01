@@ -164,7 +164,7 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
-    /// Получить элемент перечисления DBxAccessMode, соответсвующий коду из списка ValueCodes.
+    /// Получить элемент перечисления DBxAccessMode, соответствующий коду из списка ValueCodes.
     /// Если задан недопустимый код, выбрасывается исключение
     /// </summary>
     /// <param name="code">Код</param>

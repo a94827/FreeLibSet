@@ -2644,7 +2644,7 @@ namespace AgeyevAV.ExtDB.Docs
     /// <summary>
     /// Альтернативная установка фильтра
     /// Выбор единственного выбранного значения.
-    /// Значение (-1) соответсвует пестому фильтру (FilterFlags=null)
+    /// Значение (-1) соответствует пестому фильтру (FilterFlags=null)
     /// </summary>
     public int SingleFilterItemIndex
     {
