@@ -3350,6 +3350,8 @@ namespace AgeyevAV.ExtForms
       if (frm == null)
       {
         frm = new TForm();
+        EFPFormProvider.FindFormProviderRequired(frm); // для проверки
+
         ShowFormOrDialog(frm);
       }
       return frm;
