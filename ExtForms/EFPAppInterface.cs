@@ -611,7 +611,7 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Упорядочивание дочерних окон.
     /// Для интефрейса SDI применяется ко всем окнам.
-    /// Для MDI и TDI применяется только к текушему главному окну
+    /// Для MDI и TDI применяется только к текущему главному окну
     /// </summary>
     /// <param name="mdiLayout">Способ упорядочения</param>
     public virtual void LayoutChildForms(MdiLayout mdiLayout)
@@ -983,7 +983,7 @@ namespace AgeyevAV.ExtForms
   }
 
   /// <summary>
-  /// Текушее состояние интерфейса
+  /// Текущее состояние интерфейса
   /// </summary>
   public sealed class EFPAppInterfaceState
   {

@@ -109,7 +109,7 @@ namespace AgeyevAV.ExtDB
     /// Если метод вызывается для создания ссылочных полей, не забудьте добавить точку в конце префикса.
     /// </summary>
     /// <param name="prefix">Добавляемый префикс</param>
-    /// <returns>Новое выражение. Для константы возвращается текуший объект</returns>
+    /// <returns>Новое выражение. Для константы возвращается текущий объект</returns>
     public abstract DBxExpression SetColumnNamePrefix(string prefix);
   }
 
@@ -404,7 +404,7 @@ namespace AgeyevAV.ExtDB
     /// Возвращает текущий объект без изменений
     /// </summary>
     /// <param name="prefix">Игнорируется</param>
-    /// <returns>Текуший объект</returns>
+    /// <returns>Текущий объект</returns>
     public override DBxExpression SetColumnNamePrefix(string prefix)
     {
       return this; // не требуется изменений

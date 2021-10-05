@@ -363,7 +363,7 @@ namespace AgeyevAV.ExtGraphics
     #region Объект шрифта
 
     /// <summary>
-    /// Возвращает текуший шрифт, созданный на основе свойств FontName, FontHeight,
+    /// Возвращает текущий шрифт, созданный на основе свойств FontName, FontHeight,
     /// Bold, Italic, Underline, Strikeout. Так как конкретный шрифт может не поддерживать
     /// заданный набор стилей, возможно будет создан шрифт с другими стилями.
     /// </summary>

@@ -603,7 +603,7 @@ namespace AgeyevAV.ExtForms
           break;
 
         case EFPAppStdCommandItems.CloseAllButThis:
-          ci.MenuText = "Закрыть все, кроме текушего окна";
+          ci.MenuText = "Закрыть все, кроме текущего окна";
           ci.ImageKey = "CloseAllButThis";
           break;
 

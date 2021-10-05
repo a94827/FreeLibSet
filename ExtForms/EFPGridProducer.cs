@@ -805,7 +805,7 @@ namespace AgeyevAV.ExtForms
     /// имеющимися столбцами и ToolTip'ами
     /// </summary>
     /// <param name="addAll">Если true, то будут вызваны методы GridConfig.Columns.Add() и
-    /// ToolTips.Add() для имеющихся на текуший момент значениями</param>
+    /// ToolTips.Add() для имеющихся на текущий момент значениями</param>
     public void NewDefaultConfig(bool addAll)
     {
       DefaultConfig = new EFPDataGridViewConfig();

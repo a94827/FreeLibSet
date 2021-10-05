@@ -546,7 +546,7 @@ namespace AgeyevAV.RI
     #region Свойства
 
     /// <summary>
-    /// Текушее значение
+    /// Текущее значение
     /// </summary>
     public int Value
     {
@@ -757,7 +757,7 @@ namespace AgeyevAV.RI
     #region Свойства
 
     /// <summary>
-    /// Текушее значение
+    /// Текущее значение
     /// </summary>
     public float Value
     {
@@ -960,7 +960,7 @@ namespace AgeyevAV.RI
     #region Свойства
 
     /// <summary>
-    /// Текушее значение
+    /// Текущее значение
     /// </summary>
     public double Value
     {
@@ -1163,7 +1163,7 @@ namespace AgeyevAV.RI
     #region Свойства
 
     /// <summary>
-    /// Текушее значение
+    /// Текущее значение
     /// </summary>
     public decimal Value
     {
@@ -3181,7 +3181,7 @@ namespace AgeyevAV.RI
     #region SelectedIndex
 
     /// <summary>
-    /// Текушее значение (индекс в массиве Items).
+    /// Текущее значение (индекс в массиве Items).
     /// По умолчанию - 0 - выбран первый элемент списка
     /// </summary>
     public int SelectedIndex

@@ -1222,7 +1222,7 @@ namespace AgeyevAV.Parsing
     }
 
     /// <summary>
-    /// Возвращает тип текушей или последней лексемы
+    /// Возвращает тип текущей или последней лексемы
     /// </summary>
     public string CurrTokenType
     {

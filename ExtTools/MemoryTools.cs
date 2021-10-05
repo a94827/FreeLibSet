@@ -321,7 +321,7 @@ namespace AgeyevAV.Diagnostics
     #region AvailableMemoryState
 
     /// <summary>
-    /// ¬озвращает текушее состо€ние оперативной пам€ти
+    /// ¬озвращает текущее состо€ние оперативной пам€ти
     /// </summary>
     public static AvailableMemoryState AvailableMemoryState
     {

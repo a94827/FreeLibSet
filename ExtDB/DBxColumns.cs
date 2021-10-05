@@ -596,7 +596,7 @@ namespace AgeyevAV.ExtDB
 
     /// <summary>
     /// Возвращает true, если имеется хотя бы одно поле, имя которого начинается с <paramref name="columnNamePrefix"/>.
-    /// Если <paramref name="columnNamePrefix"/> - пустая строка, то возвращается true, если в текушем массиве есть хотя бы одно поле
+    /// Если <paramref name="columnNamePrefix"/> - пустая строка, то возвращается true, если в текущем массиве есть хотя бы одно поле
     /// </summary>
     /// <param name="columnNamePrefix">Префикс имени поля для поиска</param>
     /// <returns>true, если есть поле с подходящим именем</returns>

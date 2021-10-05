@@ -9,7 +9,6 @@ namespace AgeyevAV
 {
   partial class DataTools
   {
-
     #region Работа с XmlDocument
 
     /// <summary>

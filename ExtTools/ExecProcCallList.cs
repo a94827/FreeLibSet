@@ -1502,7 +1502,7 @@ namespace AgeyevAV.Remoting
     #region Обработка сигнала таймера
 
     /// <summary>
-    /// Индекс текушей процедуры в списке FItems.
+    /// Индекс текущей процедуры в списке FItems.
     /// Меняется от 0 до _Items.Count-1 по кругу при каждом вызове метода Process()
     /// </summary>
     private int _CurrIndex;

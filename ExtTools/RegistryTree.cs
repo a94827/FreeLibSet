@@ -54,7 +54,7 @@ namespace AgeyevAV.Win32
     #region Свойства
 
     /// <summary>
-    /// Текуший раздел реестра
+    /// Текущий раздел реестра
     /// </summary>
     public RegistryKey Key { get { return _Key; } }
     private RegistryKey _Key;

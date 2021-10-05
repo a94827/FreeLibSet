@@ -294,7 +294,8 @@ namespace AgeyevAV.ExtForms
 
     /// <summary>
     /// Это событие вызывается однократно после установки Active=true.
-    /// Событие вызывается с некоторой задержкой
+    /// Событие вызывается с некоторой задержкой.
+    /// Обработчик события может снова установить свойство Active=true, например, если в данный момент действие не может быть выполнено.
     /// </summary>
     public event EventHandler Tick;
 
@@ -303,7 +304,7 @@ namespace AgeyevAV.ExtForms
     /// </summary>
     public void PerformTick()
     {
-      Active = false;
+      Active = false; // До вызова события. Обработчик может снова установить Active=true.
       if (Tick != null)
         Tick(this, EventArgs.Empty);
     }
@@ -313,7 +314,7 @@ namespace AgeyevAV.ExtForms
     #region Свойство Active
 
     /// <summary>
-    /// Установка значения true "взводит курок". После этого будет с задеркой вызвано событие Tick,
+    /// Установка значения true "взводит курок". После этого будет с задержкой вызвано событие Tick,
     /// после чего свойство будет сброшено в false.
     /// </summary>
     public bool Active
