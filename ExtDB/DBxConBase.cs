@@ -406,7 +406,7 @@ namespace AgeyevAV.ExtDB
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
     /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, Hashtable columnNamesAndValues)
+    public Int32 FindRecord(string tableName, IDictionary columnNamesAndValues)
     {
       string[] ColumnNames;
       object[] Values;
@@ -660,7 +660,7 @@ namespace AgeyevAV.ExtDB
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
     /// <returns>Массив идентификаторов строк</returns>
-    public IdList GetIds(string tableName, Hashtable columnNamesAndValues)
+    public IdList GetIds(string tableName, IDictionary columnNamesAndValues)
     {
       string[] ColumnNames;
       object[] Values;
@@ -1626,12 +1626,27 @@ namespace AgeyevAV.ExtDB
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNamesAndValues">Имена устанавливаемых столбцов и значения</param>
-    public void SetValues(string tableName, Int32 id, Hashtable columnNamesAndValues)
+    public void SetValues(string tableName, Int32 id, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      SetValues(tableName, id, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      SetValues(tableName, id, new DBxColumns(columnNames), values);
+    }
+    
+    /// <summary>
+    /// Записать значения полей. Выполняет SQL-запрос "UPDATE".
+    /// Ссылочные поля (с точками) не поддерживаются.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="where">Фильтр по измененяемым строкам таблицы.</param>
+    /// <param name="columnNamesAndValues">Имена устанавливаемых столбцов и значения</param>
+    public virtual void SetValues(string tableName, DBxFilter where, IDictionary columnNamesAndValues)
+    {
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      SetValues(tableName, where, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -1751,7 +1766,7 @@ namespace AgeyevAV.ExtDB
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена устанавливаемых полей и значения</param>
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
-    public Int32 AddRecordWithIdResult(string tableName, Hashtable columnNamesAndValues)
+    public Int32 AddRecordWithIdResult(string tableName, IDictionary columnNamesAndValues)
     {
       string[] ColumnNames;
       object[] Values;
@@ -1793,7 +1808,7 @@ namespace AgeyevAV.ExtDB
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена столбцов и значения полей</param>
-    public void AddRecord(string tableName, Hashtable columnNamesAndValues)
+    public void AddRecord(string tableName, IDictionary columnNamesAndValues)
     {
       string[] ColumnNames;
       object[] Values;
@@ -2149,7 +2164,7 @@ namespace AgeyevAV.ExtDB
 
     #endregion
 
-    #region Для Hashtable
+    #region Для IDictionary
 
     /// <summary>
     /// Добавление множества записей из таблицы данных.
@@ -2161,7 +2176,7 @@ namespace AgeyevAV.ExtDB
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValuesArray">Массив хэш-таблиц, по одной таблице в массмвк для каждой записи.
     /// Каждая хэш таблица содержит пары "ИмяПоля"-"Значение" для одной записи</param>
-    public void AddRecords(string tableName, Hashtable[] columnNamesAndValuesArray)
+    public void AddRecords(string tableName, IDictionary[] columnNamesAndValuesArray)
     {
 #if DEBUG
       if (columnNamesAndValuesArray == null)
@@ -2769,7 +2784,7 @@ namespace AgeyevAV.ExtDB
     /// <param name="columnNamesAndValues">Имена и значения полей</param>
     /// <param name="id">Возвращается идентификатор Id найденной или новой записи. Не может быть 0</param>
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
-    public bool FindOrAddRecord(string tableName, Hashtable columnNamesAndValues, out Int32 id)
+    public bool FindOrAddRecord(string tableName, IDictionary columnNamesAndValues, out Int32 id)
     {
       string[] ColumnNames;
       object[] Values;
@@ -2835,7 +2850,7 @@ namespace AgeyevAV.ExtDB
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена и значения полей</param>
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
-    public Int32 FindOrAddRecord(string tableName, Hashtable columnNamesAndValues)
+    public Int32 FindOrAddRecord(string tableName, IDictionary columnNamesAndValues)
     {
       Int32 Id;
       FindOrAddRecord(tableName, columnNamesAndValues, out Id);

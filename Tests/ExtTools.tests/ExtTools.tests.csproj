@@ -37,6 +37,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DepComparerTests.cs" />
+    <Compile Include="DepEqualTests.cs" />
+    <Compile Include="DepIfTests.cs" />
+    <Compile Include="DepInArrayTests.cs" />
+    <Compile Include="DepInRangeTests.cs" />
     <Compile Include="DictionaryWithMRUTests.cs" />
     <Compile Include="Creators.cs" />
     <Compile Include="DataToolsTests_DataRow.cs" />

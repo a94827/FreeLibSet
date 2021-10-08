@@ -455,11 +455,11 @@ namespace AgeyevAV.RI
     private CanBeEmptyMode _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли поле быть пустым
+    /// Может ли поле быть пустым.
     /// Значение по умолчанию: false (поле является обязательным).
     /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
     /// При CanBeEmptyMode=Warning это свойство возвращает true.
-    /// Установка значения true эквивалента установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -696,11 +696,11 @@ namespace AgeyevAV.RI
     private CanBeEmptyMode _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли поле быть пустым
+    /// Может ли поле быть пустым.
     /// Значение по умолчанию: false (поле является обязательным).
     /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
     /// При CanBeEmptyMode=Warning это свойство возвращает true.
-    /// Установка значения true эквивалента установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -1533,11 +1533,11 @@ namespace AgeyevAV.RI
     private CanBeEmptyMode _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли поле быть пустым
+    /// Может ли поле быть пустым.
     /// Значение по умолчанию: false (поле является обязательным).
     /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
     /// При CanBeEmptyMode=Warning это свойство возвращает true.
-    /// Установка значения true эквивалента установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -1749,12 +1749,12 @@ namespace AgeyevAV.RI
     private CanBeEmptyMode _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли поле быть пустым
-    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию: false (поле является обязательным).
     /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
     /// При CanBeEmptyMode=Warning это свойство возвращает true.
-    /// Установка значения true эквивалента установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -2605,11 +2605,11 @@ namespace AgeyevAV.RI
     private CanBeEmptyMode _CanBeEmptyMode;
 
     /// <summary>
-    /// Могут ли поля быть пустыми
+    /// Могут ли поля быть пустыми.
     /// Значение по умолчанию: false (поле является обязательным).
     /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
     /// При CanBeEmptyMode=Warning это свойство возвращает true.
-    /// Установка значения true эквивалента установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {

@@ -5,7 +5,11 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-09-29T17:18:11.387000000"/>
+	<meta name="changed" content="2021-10-08T14:42:47.045000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -367,12 +371,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun" }
 		h1.ctl { font-family: "Mangal" }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		h2 { margin-top: 0.35cm; margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h2.western { font-family: "Liberation Serif", serif }
 		h2.cjk { font-family: "SimSun" }
@@ -408,6 +412,28 @@
 		</td>
 	</tr>
 	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="244" sdnum="1049;">
+			<p lang="en-US" align="center">244</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">06.10.2021-08.10.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. DataTools.PairsToNamesAndValues() <span lang="ru-RU">получает
+			аргумент </span>IDictionary, <span lang="ru-RU">а не </span>Hashtable</p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Изменения в
+			</span><span lang="en-US">DepValue (<a href="#v091p1">v.91 </a></span><a href="#v091p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Классы</span> DepComparer&lt;&gt;<span lang="ru-RU">,
+			</span>DepInRange&lt;&gt;, DepIf&lt;&gt;</p>
+			<p lang="en-US">- <span lang="ru-RU">Внутреннее изменение. Убран
+			метод </span>DepValue&lt;T&gt;.IsEqualValues()</p>
+			<p lang="en-US">- <span lang="ru-RU">В конструкторах классов
+			</span>DepXXX() <span lang="ru-RU">используется </span>DepConst&lt;T&gt;,
+			<span lang="ru-RU">если задаваемый аргумент является константой.
+			Раньше использовался </span>DepValueObject&lt;T&gt;</p>
+		</td>
+	</tr>
+	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="243" sdnum="1049;">
 			<p lang="en-US" align="center">243</p>
 		</td>
@@ -435,21 +461,20 @@
 			</span><span lang="ru-RU">в </span><span lang="en-US">FileTools
 			</span><span lang="ru-RU">перенесены перегрузки методов </span><span lang="en-US">MD5Sum</span><span lang="ru-RU">()</span><span lang="en-US">,
 			</span><span lang="ru-RU">связанные с файлами и потоками</span></p>
-			<p><a name="v243p6"></a><span lang="ru-RU">6. Изменения</span><span lang="ru-RU">,
-			связанные с заменой путей к файлам с типа </span><span lang="en-US">String
+			<p><a name="v243p6"></a><span lang="ru-RU">6. Изменения, связанные
+			с заменой путей к файлам с типа </span><span lang="en-US">String
 			</span><span lang="ru-RU">на </span><span lang="en-US">AbsPath
 			(<a href="#v012p1">v.12 </a></span><a href="#v012p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">убраны методы
-			</span><span lang="en-US">FileTools</span><span lang="en-US">.</span><span lang="ru-RU">AddDirNameSlash()</span>
-			<span lang="ru-RU">и </span><span lang="en-US">Remove</span><span lang="ru-RU">DirNameSlash</span><span lang="en-US">()</span><span lang="en-US">
-			</span><span lang="en-US">(<a href="#v001p2">v.1 </a></span><a href="#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span><span lang="en-US">
-			</span>
-			</p>
+			</span><span lang="en-US">FileTools.</span><span lang="ru-RU">AddDirNameSlash()</span>
+			<span lang="ru-RU">и </span><span lang="en-US">Remove</span><span lang="ru-RU">DirNameSlash</span><span lang="en-US">()</span>
+			<span lang="en-US">(<a href="#v001p2">v.1 </a></span><a href="#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span>
+						</p>
 			<p><span lang="en-US">-</span> <span lang="ru-RU">методы
-			</span><span lang="en-US">FileTools</span><span lang="en-US">.</span><span lang="en-US">GetShortPathName()
-			</span><span lang="ru-RU">и </span><span lang="en-US">GetLongPathName()
-			</span><span lang="ru-RU">заменены на </span><span lang="en-US">GetShortPath()
-			</span><span lang="ru-RU">и </span><span lang="en-US">GetLongPath()</span><span lang="ru-RU">.
+			</span><span lang="en-US">FileTools.GetShortPathName() </span><span lang="ru-RU">и
+			</span><span lang="en-US">GetLongPathName() </span><span lang="ru-RU">заменены
+			на </span><span lang="en-US">GetShortPath() </span><span lang="ru-RU">и
+			</span><span lang="en-US">GetLongPath()</span><span lang="ru-RU">.
 			</span>
 			</p>
 			<p>- конструкторы классов <span lang="en-US">XmlCfgFile</span>,
@@ -4674,8 +4699,8 @@
 			<p align="center">13.09.2016-16.09.2016</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">1. Классы пространства имен
-			DependedValues перенесены из <a href="ExtForms_11.htm#v132p1">ExtForms</a>.
+			<p style="margin-bottom: 0.5cm"><a name="v091p1"></a>1. Классы
+			пространства имен DependedValues перенесены из <a href="ExtForms_11.htm#v132p1">ExtForms</a>.
 			Большая часть классов, производных от DepValue, объявлена
 			сериализуемыми.</p>
 			<p style="margin-bottom: 0.5cm">&ndash; Изменена реализация

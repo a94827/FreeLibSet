@@ -11977,7 +11977,7 @@ namespace AgeyevAV
     /// <param name="columnNamesAndValues">Исходные поля и значения</param>
     /// <param name="FieldNames">Результирующий массив имен полей</param>
     /// <param name="FieldValues">Результирующий массив значений</param>
-    public static void PairsToNamesAndValues(Hashtable columnNamesAndValues,
+    public static void PairsToNamesAndValues(IDictionary columnNamesAndValues,
       out string[] FieldNames, out object[] FieldValues)
     {
       if (columnNamesAndValues == null)

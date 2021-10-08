@@ -115,6 +115,7 @@ namespace AgeyevAV.FIAS
         Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasHandler.FillAddresses() started. addresses.Length=" + addresses.Length.ToString());
 
       ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(new string[]{
+       "Поиск неизвестных GUIDов",
        "Построение списка GUIDов",
        "Загрузка страниц",
        addresses.Length==1 ? "Заполнение адреса" : "Заполнение адресов ("+addresses.Length.ToString()+")"
@@ -123,7 +124,10 @@ namespace AgeyevAV.FIAS
       {
         #region Собираем GUIDы
 
-        ReplaceUnknownGuids(addresses);
+        if (ReplaceUnknownGuids(addresses))
+          spl.Complete();
+        else
+          spl.Skip();
 
         PageLoader loader = new PageLoader(_Source);
         spl.PercentMax = addresses.Length;
@@ -164,7 +168,7 @@ namespace AgeyevAV.FIAS
         Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasHandler.FillAddresses() finished.");
     }
 
-    private void ReplaceUnknownGuids(FiasAddress[] addresses)
+    private bool ReplaceUnknownGuids(FiasAddress[] addresses)
     {
       SingleScopeList<Guid> UnknownGuids = null;
       for (int i = 0; i < addresses.Length; i++)
@@ -177,7 +181,7 @@ namespace AgeyevAV.FIAS
         }
       }
       if (UnknownGuids == null)
-        return;
+        return false;
 
       IDictionary<Guid, FiasGuidInfo> dictGuid = Source.GetGuidInfo(UnknownGuids.ToArray(), FiasTableType.Unknown);
 
@@ -259,6 +263,8 @@ namespace AgeyevAV.FIAS
           }
         }
       }
+
+      return true;
     }
 
     /*

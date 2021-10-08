@@ -524,7 +524,7 @@ namespace AgeyevAV.ExtForms.Docs
         if (GrayedEx.Value != _StartGrayed)
           _ChangeInfo.Changed = true;
         else
-          _ChangeInfo.Changed = !DepValue<TValue>.IsEqualValues(CurrentValueEx.Value, _StartValue);
+          _ChangeInfo.Changed = !Object.Equals(CurrentValueEx.Value, _StartValue);
       }
       else
         _ChangeInfo.Changed = false;
@@ -905,8 +905,8 @@ namespace AgeyevAV.ExtForms.Docs
           _ChangeInfo.Changed = true;
         else
         {
-          bool Eq1 = DepValue<TValue1>.IsEqualValues(CurrentValue1Ex.Value, _StartValue1);
-          bool Eq2 = DepValue<TValue2>.IsEqualValues(CurrentValue2Ex.Value, _StartValue2);
+          bool Eq1 = Object.Equals(CurrentValue1Ex.Value, _StartValue1);
+          bool Eq2 = Object.Equals(CurrentValue2Ex.Value, _StartValue2);
           _ChangeInfo.Changed = !(Eq1 && Eq2);
         }
       }

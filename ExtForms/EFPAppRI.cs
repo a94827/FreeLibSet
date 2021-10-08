@@ -558,7 +558,7 @@ namespace AgeyevAV.ExtForms.RI
             controlProvider.EnabledEx = riItem.EnabledEx;
           else
           {
-            controlProvider.Enabled = _RIItem.Enabled; // обязательное присвоение, иначе свойство обнулится
+            controlProvider.Enabled = riItem.Enabled; // обязательное присвоение, иначе свойство обнулится
             riItem.EnabledEx = controlProvider.EnabledEx;
           }
         }

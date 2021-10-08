@@ -1341,7 +1341,7 @@ namespace AgeyevAV.ExtDB.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
     /// <returns>Массив идентификаторов строк</returns>
-    public IdList GetIds(string tableName, System.Collections.Hashtable columnNamesAndValues)
+    public IdList GetIds(string tableName, System.Collections.IDictionary columnNamesAndValues)
     {
       string[] ColumnNames;
       object[] Values;
@@ -1411,7 +1411,7 @@ namespace AgeyevAV.ExtDB.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
     /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, System.Collections.Hashtable columnNamesAndValues)
+    public Int32 FindRecord(string tableName, System.Collections.IDictionary columnNamesAndValues)
     {
       string[] ColumnNames;
       object[] Values;

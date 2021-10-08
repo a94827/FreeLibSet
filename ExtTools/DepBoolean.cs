@@ -65,7 +65,7 @@ namespace AgeyevAV.DependedValues
         return;
 
       DepInput<Boolean> NewInput = new DepInput<Boolean>();
-      NewInput.OwnerInfo=new DepOwnerInfo(this, "["+_Inputs.Count.ToString()+"]");
+      NewInput.OwnerInfo = new DepOwnerInfo(this, "[" + _Inputs.Count.ToString() + "]");
       NewInput.Source = depenedValue;
       NewInput.ValueChanged += new EventHandler(SourceValueChanged);
 
@@ -258,7 +258,7 @@ namespace AgeyevAV.DependedValues
       Add(a);
       Add(b);
     }
-  
+
     /// <summary>
     /// Создает объект, реализующий функцию OR для произвольного числав вргументов
     /// </summary>
@@ -456,8 +456,9 @@ namespace AgeyevAV.DependedValues
 
     #endregion
   }
+
   /// <summary>
-  /// Сравнение двух значений
+  /// Сравнение двух значений 
   /// Содержит значение true, когда аргументы Arg1 и Arg2 равны друг другу
   /// </summary>
   /// <typeparam name="T">Тип сравниваемых значений.</typeparam>
@@ -472,38 +473,6 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     public DepEqual()
     {
-      DoInit();
-    }
-
-    /// <summary>
-    /// Создает объект, выполняющий сравнение двух управляемых объектов.
-    /// </summary>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    public DepEqual(DepValue<T> arg1, DepValue<T> arg2)
-    {
-      DoInit();
-      this.Arg1 = arg1;
-      this.Arg2 = arg2;
-    }
-
-    /// <summary>
-    /// Создает объект, выполняющий сравнение управляемого значения с константой
-    /// </summary>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент (константа)</param>
-    public DepEqual(DepValue<T> arg1, T arg2)
-    {
-      DoInit();
-      this.Arg1 = arg1;
-      DepValueObject<T> Arg2Obj = new DepValueObject<T>();
-      Arg2Obj.OwnerInfo = new DepOwnerInfo(this, "Arg2 (const)");
-      Arg2Obj.OwnerSetValue(arg2);
-      this.Arg2 = Arg2Obj;
-    }
-
-    private void DoInit()
-    {
       _Arg1 = new DepInput<T>();
       _Arg1.OwnerInfo = new DepOwnerInfo(this, "Arg1");
       _Arg1.ValueChanged += new EventHandler(ArgValueChanged);
@@ -514,6 +483,28 @@ namespace AgeyevAV.DependedValues
 
       // Сразу устанавливаем значение
       ArgValueChanged(null, null);
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий сравнение двух управляемых объектов.
+    /// </summary>
+    /// <param name="arg1">Первый аргумент</param>
+    /// <param name="arg2">Второй аргумент</param>
+    public DepEqual(DepValue<T> arg1, DepValue<T> arg2)
+      : this()
+    {
+      this.Arg1 = arg1;
+      this.Arg2 = arg2;
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий сравнение управляемого значения с константой
+    /// </summary>
+    /// <param name="arg1">Первый аргумент</param>
+    /// <param name="arg2">Второй аргумент (константа)</param>
+    public DepEqual(DepValue<T> arg1, T arg2)
+      : this(arg1, new DepConst<T>(arg2))
+    {
     }
 
     #endregion
@@ -562,7 +553,358 @@ namespace AgeyevAV.DependedValues
 
     private void ArgValueChanged(object sender, EventArgs args)
     {
-      OwnerSetValue(DepValue<T>.IsEqualValues(Arg1.Value, Arg2.Value));
+      OwnerSetValue(Object.Equals(Arg1.Value, Arg2.Value));
+    }
+
+    #endregion
+  }
+
+
+  #region Перечисление DepCompareKind
+
+  /// <summary>
+  /// Режимы сравнения поля с константой для фильтра ValueFilter
+  /// </summary>
+  [Serializable]
+  public enum DepCompareKind
+  {
+    /// <summary>
+    /// Сравнение на равенство
+    /// </summary>
+    Equal,
+
+    /// <summary>
+    /// "Меньше"
+    /// </summary>
+    LessThan,
+
+    /// <summary>
+    /// "Меньше или равно"
+    /// </summary>
+    LessOrEqualThan,
+
+    /// <summary>
+    /// "Больше"
+    /// </summary>
+    GreaterThan,
+
+    /// <summary>
+    /// Больше или равно"
+    /// </summary>
+    GreaterOrEqualThan,
+
+    /// <summary>
+    /// "Не равно"
+    /// </summary>
+    NotEqual,
+  }
+
+  #endregion
+
+
+  /// <summary>
+  /// Сравнение двух значений, с поддержкой шести операций сравнения.
+  /// Содержит результат сравнения аргументов Arg1 и Arg2.
+  /// В отличие от шаблонного класса DepEqual, для DepCompare требуется, чтобы тип <typeparamref name="T"/> поддерживал сравнение на "больше/меньше".
+  /// Для этого, либо класс должен реализовывать интерфейс IComparable of T, либо должно быть задано свойство Comparer.
+  /// </summary>
+  /// <typeparam name="T">Тип сравниваемых значений</typeparam>
+  [Serializable]
+  public sealed class DepComparer<T> : DepValueObject<Boolean>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает пустой объект с неприсоединенными аргументами.
+    /// Эта версия подразумевает, что будут установлены свойства Arg1, Arg2 и Kind.
+    /// Свойство Kind имеет значение Equal
+    /// </summary>
+    public DepComparer()
+    {
+      _Arg1 = new DepInput<T>();
+      _Arg1.OwnerInfo = new DepOwnerInfo(this, "Arg1");
+      _Arg1.ValueChanged += new EventHandler(ArgValueChanged);
+
+      _Arg2 = new DepInput<T>();
+      _Arg2.OwnerInfo = new DepOwnerInfo(this, "Arg2");
+      _Arg2.ValueChanged += new EventHandler(ArgValueChanged);
+
+      _Kind = DepCompareKind.Equal;
+
+      // Сразу устанавливаем значение
+      OwnerSetValue(true);
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий сравнение двух управляемых объектов.
+    /// </summary>
+    /// <param name="arg1">Первый аргумент</param>
+    /// <param name="arg2">Второй аргумент</param>
+    /// <param name="kind">Операция сравнения</param>
+    public DepComparer(DepValue<T> arg1, DepValue<T> arg2, DepCompareKind kind)
+      : this()
+    {
+      this.Arg1 = arg1;
+      this.Arg2 = arg2;
+      this.Kind = kind;
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий сравнение управляемого значения с константой
+    /// </summary>
+    /// <param name="arg1">Первый аргумент</param>
+    /// <param name="arg2">Второй аргумент (константа)</param>
+    /// <param name="kind">Операция сравнения</param>
+    public DepComparer(DepValue<T> arg1, T arg2, DepCompareKind kind)
+      : this(arg1, new DepConst<T>(arg2), kind)
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Первый аргумент
+    /// </summary>
+    public DepValue<T> Arg1
+    {
+      get { return _Arg1; }
+      set { _Arg1.Source = value; }
+    }
+    private DepInput<T> _Arg1;
+
+    /// <summary>
+    /// Второй аргумент
+    /// </summary>
+    public DepValue<T> Arg2
+    {
+      get { return _Arg2; }
+      set { _Arg2.Source = value; }
+    }
+    private DepInput<T> _Arg2;
+
+    /// <summary>
+    /// Операция сравнения
+    /// </summary>
+    public DepCompareKind Kind
+    {
+      get { return _Kind; }
+      set
+      {
+        if (value == _Kind)
+          return;
+        _Kind = value;
+        ArgValueChanged(null, null);
+      }
+    }
+    private DepCompareKind _Kind;
+
+    /// <summary>
+    /// Сравниватель для значений.
+    /// Если свойство не установлено в явном виде, возвращается Comparer of T.Default
+    /// </summary>
+    public IComparer<T> Comparer
+    {
+      get
+      {
+        if (_Comparer == null)
+          return Comparer<T>.Default;
+        else
+          return _Comparer;
+      }
+      set
+      {
+        if (Object.ReferenceEquals(value, _Comparer))
+          return;
+        _Comparer = value;
+        ArgValueChanged(null, null);
+      }
+    }
+    private IComparer<T> _Comparer;
+
+    #endregion
+
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "OPERATOR xxx", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "OPERATOR " + Kind.ToString();
+      else
+        return base.ToString();
+    }
+
+    #endregion
+
+    #region Внутренняя реализация
+
+    private void ArgValueChanged(object sender, EventArgs args)
+    {
+      OwnerSetValue(Compare(Arg1.Value, Arg2.Value, Kind, Comparer));
+    }
+
+    internal static bool Compare(T value1, T value2, DepCompareKind kind, IComparer<T> comparer)
+    {
+      switch (kind)
+      {
+        case DepCompareKind.Equal: return comparer.Compare(value1, value2) == 0;
+        case DepCompareKind.LessThan: return comparer.Compare(value1, value2) < 0;
+        case DepCompareKind.LessOrEqualThan: return comparer.Compare(value1, value2) <= 0;
+        case DepCompareKind.GreaterThan: return comparer.Compare(value1, value2) > 0;
+        case DepCompareKind.GreaterOrEqualThan: return comparer.Compare(value1, value2) >= 0;
+        case DepCompareKind.NotEqual: return comparer.Compare(value1, value2) != 0;
+        default:
+          throw new ArgumentException("Неизвестная операция " + kind.ToString(), "kind");
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Проверка попадания значения в диапазон.
+  /// Тип <typeparamref name="T"/> должен реализовывать интерфейс IComparable of T, либо должно быть задано свойство Comparer.
+  /// Полуоткрытые интервалы не поддерживаются. Используйте класс DepComparer.
+  /// </summary>
+  /// <typeparam name="T">Тип сравниваемых значений</typeparam>
+  [Serializable]
+  public sealed class DepInRange<T> : DepValueObject<Boolean>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает пустой объект с неприсоединенными аргументами.
+    /// Эта версия подразумевает, что будут установлены свойства Arg1, Arg2 и Kind.
+    /// Свойство Kind имеет значение Equal
+    /// </summary>
+    public DepInRange()
+    {
+      _TestedValue = new DepInput<T>();
+      _TestedValue.OwnerInfo = new DepOwnerInfo(this, "Value");
+      _TestedValue.ValueChanged += new EventHandler(ArgValueChanged);
+
+      _Minimum = new DepInput<T>();
+      _Minimum.OwnerInfo = new DepOwnerInfo(this, "Minimum");
+      _Minimum.ValueChanged += new EventHandler(ArgValueChanged);
+
+      _Maximum = new DepInput<T>();
+      _Maximum.OwnerInfo = new DepOwnerInfo(this, "Maximum");
+      _Maximum.ValueChanged += new EventHandler(ArgValueChanged);
+
+      // Сразу устанавливаем значение
+      OwnerSetValue(true);
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий сравнение с управляемыми объектами.
+    /// </summary>
+    /// <param name="testedValue">Проверяемое значение</param>
+    /// <param name="minimum">Минимальное значение</param>
+    /// <param name="maximum">Максимальное значение</param>
+    public DepInRange(DepValue<T> testedValue, DepValue<T> minimum, DepValue<T> maximum)
+      : this()
+    {
+      this.TestedValue = testedValue;
+      this.Minimum = minimum;
+      this.Maximum = maximum;
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий сравнение с константным диапазоном
+    /// </summary>
+    /// <param name="testedValue">Проверяемое значение</param>
+    /// <param name="minimum">Минимальное значение</param>
+    /// <param name="maximum">Максимальное значение</param>
+    public DepInRange(DepValue<T> testedValue, T minimum, T maximum)
+      : this(testedValue, new DepConst<T>(minimum), new DepConst<T>(maximum))
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Проверяемое значение
+    /// </summary>
+    public DepValue<T> TestedValue
+    {
+      get { return _TestedValue; }
+      set { _TestedValue.Source = value; }
+    }
+    private DepInput<T> _TestedValue;
+
+    /// <summary>
+    /// Минимальное значение
+    /// </summary>
+    public DepValue<T> Minimum
+    {
+      get { return _Minimum; }
+      set { _Minimum.Source = value; }
+    }
+    private DepInput<T> _Minimum;
+
+    /// <summary>
+    /// Максимальное значение
+    /// </summary>
+    public DepValue<T> Maximum
+    {
+      get { return _Maximum; }
+      set { _Maximum.Source = value; }
+    }
+    private DepInput<T> _Maximum;
+
+    /// <summary>
+    /// Сравниватель для значений.
+    /// Если свойство не установлено в явном виде, возвращается Comparer of T.Default
+    /// </summary>
+    public IComparer<T> Comparer
+    {
+      get
+      {
+        if (_Comparer == null)
+          return Comparer<T>.Default;
+        else
+          return _Comparer;
+      }
+      set
+      {
+        if (Object.ReferenceEquals(value, _Comparer))
+          return;
+        _Comparer = value;
+        ArgValueChanged(null, null);
+      }
+    }
+    private IComparer<T> _Comparer;
+
+    #endregion
+
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "INRANGE", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "INRANGE";
+      else
+        return base.ToString();
+    }
+
+    #endregion
+
+    #region Внутренняя реализация
+
+    private void ArgValueChanged(object sender, EventArgs args)
+    {
+      OwnerSetValue(Comparer.Compare(TestedValue.Value, Minimum.Value)>=0 && Comparer.Compare(TestedValue.Value, Maximum.Value)<=0);
     }
 
     #endregion
@@ -633,6 +975,129 @@ namespace AgeyevAV.DependedValues
         return "INARRAY";
       else
         return base.ToString();
+    }
+
+    #endregion
+  }
+
+
+  /// <summary>
+  /// Реализация условного оператора (функция IIF, тернарный оператор в CSharp), который возвращает одно из двух значений, в зависимости от третьего значения.
+  /// </summary>
+  /// <typeparam name="T">Тип значений</typeparam>
+  [Serializable]
+  public sealed class DepIf<T> : DepValueObject<T>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает пустой объект с неприсоединенными аргументами.
+    /// Эта версия подразумевает, что будут установлены свойства ConditionArg, TrueArg и FalseArg
+    /// </summary>
+    public DepIf()
+    {
+      _ConditionArg = new DepInput<bool>();
+      _ConditionArg.OwnerInfo = new DepOwnerInfo(this, "ConditionArg");
+      _ConditionArg.ValueChanged += new EventHandler(ArgValueChanged);
+
+      _TrueArg = new DepInput<T>();
+      _TrueArg.OwnerInfo = new DepOwnerInfo(this, "TrueArg");
+      _TrueArg.ValueChanged += new EventHandler(ArgValueChanged);
+
+      _FalseArg = new DepInput<T>();
+      _FalseArg.OwnerInfo = new DepOwnerInfo(this, "FalseArg");
+      _FalseArg.ValueChanged += new EventHandler(ArgValueChanged);
+
+      // Сразу устанавливаем значение
+      ArgValueChanged(null, null);
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий выбор из двух управляемых объектов.
+    /// </summary>
+    /// <param name="conditionArg">Управляющий аргумент</param>
+    /// <param name="trueArg">Аргумент, значение которого используется, если <paramref name="conditionArg"/> возвращает true</param>
+    /// <param name="falseArg">Аргумент, значение которого используется, если <paramref name="conditionArg"/> возвращает false</param>
+    public DepIf(DepValue<bool> conditionArg, DepValue<T> trueArg, DepValue<T> falseArg)
+      : this()
+    {
+      this.ConditionArg = conditionArg;
+      this.TrueArg = trueArg;
+      this.FalseArg = falseArg;
+    }
+
+    /// <summary>
+    /// Создает объект, выполняющий выбор из двух фиксированных значений.
+    /// </summary>
+    /// <param name="conditionArg">Управляющий аргумент</param>
+    /// <param name="trueArg">Аргумент, значение которого используется, если <paramref name="conditionArg"/> возвращает true</param>
+    /// <param name="falseArg">Аргумент, значение которого используется, если <paramref name="conditionArg"/> возвращает false</param>
+    public DepIf(DepValue<bool> conditionArg, T trueArg, T falseArg)
+      : this(conditionArg, new DepConst<T>(trueArg), new DepConst<T>(falseArg))
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Аргумент - условие
+    /// </summary>
+    public DepValue<bool> ConditionArg
+    {
+      get { return _ConditionArg; }
+      set { _ConditionArg.Source = value; }
+    }
+    private DepInput<bool> _ConditionArg;
+
+    /// <summary>
+    /// Первый аргумент
+    /// </summary>
+    public DepValue<T> TrueArg
+    {
+      get { return _TrueArg; }
+      set { _TrueArg.Source = value; }
+    }
+    private DepInput<T> _TrueArg;
+
+    /// <summary>
+    /// Второй аргумент
+    /// </summary>
+    public DepValue<T> FalseArg
+    {
+      get { return _FalseArg; }
+      set { _FalseArg.Source = value; }
+    }
+    private DepInput<T> _FalseArg;
+
+
+    #endregion
+
+    #region ToString()
+
+    /// <summary>
+    /// Возвращает "EQUAL", если свойство OwnerInfo не установлено
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      if (OwnerInfo.Owner == null)
+        return "IF";
+      else
+        return base.ToString();
+    }
+
+    #endregion
+
+    #region Внутренняя реализация
+
+    private void ArgValueChanged(object sender, EventArgs args)
+    {
+      if (ConditionArg.Value)
+        OwnerSetValue(TrueArg.Value);
+      else
+        OwnerSetValue(FalseArg.Value);
     }
 
     #endregion

@@ -524,7 +524,7 @@ namespace AgeyevAV.ExtDB
 
   #endregion
 
-  #region Перечисление ValueFilterKind
+  #region Перечисление CompareKind
 
   /// <summary>
   /// Режимы сравнения поля с константой для фильтра ValueFilter

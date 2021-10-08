@@ -114,7 +114,7 @@ namespace AgeyevAV.DependedValues
       _InsideSetValue = true;
       try
       {
-        if (!IsEqualValues(value, _Value))
+        if (!Object.Equals(value, _Value))
         {
           _Value = value;
 
@@ -343,27 +343,6 @@ namespace AgeyevAV.DependedValues
         }
       }
       theInput.NextOutput = null;
-    }
-
-    #endregion
-
-    #region Сравнение двух значений на равенство
-
-    /// <summary>
-    /// Возвращает true, если два значения типа T одинаковы.
-    /// Использует метод object.Equals() для сравнения. Правильно обрабатывает 
-    /// значения null
-    /// </summary>
-    /// <param name="a">Первое знечение</param>
-    /// <param name="b">Второе значение</param>
-    /// <returns>true, если значения равны</returns>
-    public static bool IsEqualValues(T a, T b)
-    {
-      if (a == null)
-        return b == null;
-      if (b == null)
-        return false;
-      return a.Equals(b);
     }
 
     #endregion

@@ -1054,6 +1054,10 @@ namespace AgeyevAV.ExtDB.Npgsql
             ColStr.ColumnType = DBxColumnType.Xml;
             break;
 
+          case "uuid": // 06.10.2021
+            ColStr.ColumnType = DBxColumnType.Guid;
+            break;
+
           default:
             break;
         }
