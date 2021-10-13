@@ -49,6 +49,7 @@ namespace AgeyevAV.DependedValues
 
   /// <summary>
   /// Вычислитель выражения с одним аргументом.
+  /// В качестве функции вычислителя можно использовать методы класса DepTools. Это особенно актуально для удаленного пользовательского интерфейса, когда нельзя создавать делегаты на методы в прикладном коде.
   /// </summary>
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="T1">Тип исходных данных</typeparam>
@@ -180,7 +181,8 @@ namespace AgeyevAV.DependedValues
   #endregion
 
   /// <summary>
-  /// Вычислитель выражения с двумя аргументами
+  /// Вычислитель выражения с двумя аргументами.
+  /// В качестве функции вычислителя можно использовать методы класса DepTools. Это особенно актуально для удаленного пользовательского интерфейса, когда нельзя создавать делегаты на методы в прикладном коде.
   /// </summary>
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="T1">Тип исходных данных аргумента 1</typeparam>
@@ -191,7 +193,7 @@ namespace AgeyevAV.DependedValues
     #region Конструкторы
 
     /// <summary>
-    /// Конструктор с ссылкой на исходные данные и обработчиком DepFunction2
+    /// Конструктор с ссылками на исходные данные и обработчиком DepFunction2
     /// </summary>
     /// <param name="source1">Источник исходных данных аргумента 1</param>
     /// <param name="source2">Источник исходных данных аргумента 2</param>
@@ -222,6 +224,17 @@ namespace AgeyevAV.DependedValues
       SourceValueChanged(null, null);
     }
 
+    /// <summary>
+    /// Конструктор с гибридными аргументами обработчиком DepFunction2
+    /// </summary>
+    /// <param name="source1">Источник исходных данных аргумента 1</param>
+    /// <param name="value2">Фиксированное значение 2</param>
+    /// <param name="function">Обработчик для вычисления значения</param>
+    public DepExpr2(DepValue<T1> source1, T2 value2,
+      DepFunction2<TResult, T1, T2> function)
+      :this(source1, new DepConst<T2>(value2), function)
+    {
+    }
 
     /// <summary>
     /// Защищенный конструктор без использования обработчика.
@@ -345,7 +358,8 @@ namespace AgeyevAV.DependedValues
   #endregion
 
   /// <summary>
-  /// Вычислитель выражения с тремя аргументами
+  /// Вычислитель выражения с тремя аргументами.
+  /// В качестве функции вычислителя можно использовать методы класса DepTools. Это особенно актуально для удаленного пользовательского интерфейса, когда нельзя создавать делегаты на методы в прикладном коде.
   /// </summary>
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="T1">Тип исходных данных аргумента 1</typeparam>
@@ -357,7 +371,7 @@ namespace AgeyevAV.DependedValues
     #region Конструкторы
 
     /// <summary>
-    /// Конструктор с ссылкой на исходные данные и обработчиком DepFunction3
+    /// Конструктор с ссылками на исходные данные и обработчиком DepFunction3
     /// </summary>
     /// <param name="source1">Источник исходных данных аргумента 1</param>
     /// <param name="source2">Источник исходных данных аргумента 2</param>
@@ -393,6 +407,33 @@ namespace AgeyevAV.DependedValues
       _Source2.Source = source2;
       _Source3.Source = source3;
       SourceValueChanged(null, null);
+    }
+
+
+    /// <summary>
+    /// Конструктор с гибридными аргументами и обработчиком DepFunction3
+    /// </summary>
+    /// <param name="source1">Источник исходных данных аргумента 1</param>
+    /// <param name="source2">Источник исходных данных аргумента 2</param>
+    /// <param name="value3">Фиксированное значение 3</param>
+    /// <param name="function">Обработчик для вычисления значения</param>
+    public DepExpr3(DepValue<T1> source1, DepValue<T2> source2, T3 value3,
+      DepFunction3<TResult, T1, T2, T3> function)
+      :this(source1, source2, new DepConst<T3>(value3), function)
+    {
+    }
+
+    /// <summary>
+    /// Конструктор с гибридными аргументами и обработчиком DepFunction3
+    /// </summary>
+    /// <param name="source1">Источник исходных данных аргумента 1</param>
+    /// <param name="value2">Фиксированное значение 2</param>
+    /// <param name="value3">Фиксированное значение 3</param>
+    /// <param name="function">Обработчик для вычисления значения</param>
+    public DepExpr3(DepValue<T1> source1, T2 value2, T3 value3,
+      DepFunction3<TResult, T1, T2, T3> function)
+      : this(source1, new DepConst<T2>(value2), new DepConst<T3>(value3), function)
+    {
     }
 
 

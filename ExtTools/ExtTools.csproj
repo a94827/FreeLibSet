@@ -70,7 +70,6 @@
     <Compile Include="DepBoolean.cs" />
     <Compile Include="DepChangeInfo.cs" />
     <Compile Include="DepExpr.cs" />
-    <Compile Include="DepString.cs" />
     <Compile Include="DepSync.cs" />
     <Compile Include="DepValue.cs" />
     <Compile Include="DisposableObject.cs" />
@@ -138,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTools.Csv.cs" />
+    <Compile Include="DepTools.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
