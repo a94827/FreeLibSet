@@ -221,6 +221,22 @@ namespace AgeyevAV.ExtForms.RI
   }
 
   /// <summary>
+  /// Расширяет IEFPAppRIItem возможностью проверки значений
+  /// </summary>
+  public interface IEFPAppRIControlItem : IEFPAppRIItem
+  {
+    /// <summary>
+    /// Обработчик для проверки ошибок.
+    /// </summary>
+    event EFPValidatingEventHandler Validating;
+
+    /// <summary>
+    /// Выполнить проверку значений.
+    /// </summary>
+    void Validate();
+  }
+
+  /// <summary>
   /// Интерфейс формы
   /// </summary>
   public interface IEFPAppRIFormItem : IEFPAppRIItem
@@ -280,10 +296,100 @@ namespace AgeyevAV.ExtForms.RI
       {
         IEFPAppRIItem res = this[i].Create(item, baseProvider);
         if (res != null)
+        {
+          InitValidators(item, res);
+          Control item2 = item as Control;
+          if (item2 != null)
+          {
+          }
+
           return res;
+        }
       }
 
       throw new ArgumentException("В списке EFPApp.RICreators не один из объектов не смог создать управляющий элемент для элемента удаленного интерфейса типа " + item.GetType().ToString());
+    }
+
+    #endregion
+
+    #region Проверка корректности
+
+    internal static void InitValidators(AgeyevAV.RI.RIItem riItem, IEFPAppRIItem efpItem)
+    {
+      AgeyevAV.RI.Control riControl = riItem as AgeyevAV.RI.Control;
+      if (riControl == null)
+        return;
+      if (!riControl.HasValidators)
+        return;
+
+      IEFPAppRIControlItem efpControl = efpItem as IEFPAppRIControlItem;
+      if (efpControl == null)
+        throw new InvalidOperationException("Класс " + efpItem.GetType().ToString() + " не реализует интерфейс IEFPAppRIItemWithValidating для проверки корректности введенных значений. Нельзя использовать списки валидаторов " + riItem.GetType().ToString() + ".Validators");
+
+      ItemValidator iv = new ItemValidator(riControl, efpControl);
+      efpControl.Validating += new EFPValidatingEventHandler(iv.Validating);
+      foreach (AgeyevAV.RI.Validator v in riControl.Validators)
+      {
+        v.Expression.ValueChanged += new EventHandler(iv.Validate);
+        if (v.ActiveEx != null)
+          v.ActiveEx.ValueChanged += new EventHandler(iv.Validate);
+      }
+    }
+
+    private class ItemValidator
+    {
+      #region Конструктор
+
+      public ItemValidator(AgeyevAV.RI.Control riControl, IEFPAppRIControlItem efpControl)
+      {
+        _RIControl = riControl;
+        _EFPControl = efpControl;
+      }
+
+      #endregion
+
+      #region Свойства
+
+      private AgeyevAV.RI.Control _RIControl;
+
+      private IEFPAppRIControlItem _EFPControl;
+
+      #endregion
+
+      #region Обработчик
+
+      public void Validating(object sender, EFPValidatingEventArgs args)
+      {
+        if (args.ValidateState == EFPValidateState.Error)
+          return;
+
+        foreach (AgeyevAV.RI.Validator v in _RIControl.Validators)
+        {
+          if (v.ActiveEx != null)
+          {
+            if (!v.ActiveEx.Value)
+              continue;
+          }
+
+          if (!v.Expression.Value)
+          {
+            if (v.IsError)
+            {
+              args.SetError(v.Message);
+              return;
+            }
+            else if (args.ValidateState == EFPValidateState.Ok)
+              args.SetWarning(v.Message);
+          }
+        }
+      }
+
+      public void Validate(object sender, EventArgs args)
+      {
+        _EFPControl.Validate();
+      }
+
+      #endregion
     }
 
     #endregion
@@ -709,7 +815,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region TextBox
 
-    private class TextBoxItem : AgeyevAV.ExtForms.EFPTextBox, IEFPAppRIItem
+    private class TextBoxItem : AgeyevAV.ExtForms.EFPTextBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -737,7 +843,7 @@ namespace AgeyevAV.ExtForms.RI
             base.TextEx = riItem.TextEx;
           else
           {
-            base.Text = _RIItem.Text; // обязательное присвоение, иначе свойство обнулится
+            base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
             riItem.TextEx = base.TextEx;
           }
         }
@@ -749,7 +855,7 @@ namespace AgeyevAV.ExtForms.RI
             base.ReadOnlyEx = riItem.ReadOnlyEx;
           else
           {
-            base.ReadOnly = _RIItem.ReadOnly; // обязательное присвоение, иначе свойство обнулится
+            base.ReadOnly = riItem.ReadOnly; // обязательное присвоение, иначе свойство обнулится
             riItem.ReadOnlyEx = base.ReadOnlyEx;
           }
         }
@@ -805,7 +911,7 @@ namespace AgeyevAV.ExtForms.RI
             base.IntValueEx = riItem.ValueEx;
           else
           {
-            base.IntValue = _RIItem.Value; // обязательное присвоение, иначе свойство обнулится
+            base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.IntValueEx;
           }
         }
@@ -862,7 +968,7 @@ namespace AgeyevAV.ExtForms.RI
             base.IntValueEx = riItem.ValueEx;
           else
           {
-            base.IntValue = _RIItem.Value; // обязательное присвоение, иначе свойство обнулится
+            base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.IntValueEx;
           }
         }
@@ -888,7 +994,7 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class SingleEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIItem
+    private class SingleEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -910,7 +1016,7 @@ namespace AgeyevAV.ExtForms.RI
             base.SingleValueEx = riItem.ValueEx;
           else
           {
-            base.SingleValue = _RIItem.Value; // обязательное присвоение, иначе свойство обнулится
+            base.SingleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.SingleValueEx;
           }
         }
@@ -936,7 +1042,7 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class DoubleEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIItem
+    private class DoubleEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -958,7 +1064,7 @@ namespace AgeyevAV.ExtForms.RI
             base.DoubleValueEx = riItem.ValueEx;
           else
           {
-            base.DoubleValue = _RIItem.Value; // обязательное присвоение, иначе свойство обнулится
+            base.DoubleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.DoubleValueEx;
           }
         }
@@ -984,7 +1090,7 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class DecimalEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIItem
+    private class DecimalEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1004,7 +1110,7 @@ namespace AgeyevAV.ExtForms.RI
             base.DecimalValueEx = riItem.ValueEx;
           else
           {
-            base.DecimalValue = _RIItem.Value; // обязательное присвоение, иначе свойство обнулится
+            base.DecimalValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.DecimalValueEx;
           }
         }
@@ -1034,7 +1140,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region CheckBox
 
-    private class CheckBoxItem : AgeyevAV.ExtForms.EFPCheckBox, IEFPAppRIItem
+    private class CheckBoxItem : AgeyevAV.ExtForms.EFPCheckBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1052,7 +1158,7 @@ namespace AgeyevAV.ExtForms.RI
             base.CheckedEx = riItem.CheckedEx;
           else
           {
-            base.Checked = _RIItem.Checked; // обязательное присвоение, иначе свойство обнулится
+            base.Checked = riItem.Checked; // обязательное присвоение, иначе свойство обнулится
             riItem.CheckedEx = base.CheckedEx;
           }
         }
@@ -1064,7 +1170,7 @@ namespace AgeyevAV.ExtForms.RI
             this.CheckStateEx2 = riItem.CheckStateEx;
           else
           {
-            base.CheckState = (System.Windows.Forms.CheckState)(int)(_RIItem.CheckState); // обязательное присвоение, иначе свойство обнулится
+            base.CheckState = (System.Windows.Forms.CheckState)(int)(riItem.CheckState); // обязательное присвоение, иначе свойство обнулится
             riItem.CheckStateEx = this.CheckStateEx2;
           }
         }
@@ -1140,7 +1246,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region RadioGroup
 
-    private class RadioGroupItem : AgeyevAV.ExtForms.EFPRadioButtons, IEFPAppRIItem
+    private class RadioGroupItem : AgeyevAV.ExtForms.EFPRadioButtons, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1159,7 +1265,7 @@ namespace AgeyevAV.ExtForms.RI
             base.SelectedIndexEx = riItem.SelectedIndexEx;
           else
           {
-            base.SelectedIndex = _RIItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
+            base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedIndexEx = base.SelectedIndexEx;
           }
         }
@@ -1171,7 +1277,7 @@ namespace AgeyevAV.ExtForms.RI
             base.SelectedCodeEx = riItem.SelectedCodeEx;
           else
           {
-            base.SelectedCode = _RIItem.SelectedCode; // обязательное присвоение, иначе свойство обнулится
+            base.SelectedCode = riItem.SelectedCode; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedCodeEx = base.SelectedCodeEx;
           }
         }
@@ -1201,7 +1307,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region DateBox
 
-    private class DateBoxItem : AgeyevAV.ExtForms.EFPDateBox, IEFPAppRIItem
+    private class DateBoxItem : AgeyevAV.ExtForms.EFPDateBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1230,7 +1336,7 @@ namespace AgeyevAV.ExtForms.RI
             base.ValueEx = riItem.ValueEx;
           else
           {
-            base.Value = _RIItem.Value; // обязательное присвоение, иначе свойство обнулится
+            base.Value = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.ValueEx;
           }
         }
@@ -1260,7 +1366,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region DateRangeBox
 
-    private class DateRangeBoxItem : AgeyevAV.ExtForms.EFPDateRangeBox, IEFPAppRIItem
+    private class DateRangeBoxItem : AgeyevAV.ExtForms.EFPDateRangeBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1278,12 +1384,36 @@ namespace AgeyevAV.ExtForms.RI
         }
         base.LastDate.CanBeEmpty = base.FirstDate.CanBeEmpty;
         base.LastDate.WarningIfEmpty = base.FirstDate.CanBeEmpty;
-        
+
         base.FirstDate.Minimum = riItem.MinimumFirstDate;
         base.FirstDate.Maximum = riItem.MaximumFirstDate;
         base.LastDate.Minimum = riItem.MinimumLastDate;
         base.LastDate.Maximum = riItem.MaximumLastDate;
         EFPAppRITools.InitControlItem(this, riItem);
+
+        if (riItem.HasFirstDateExProperty)
+        {
+          if (riItem.FirstDateEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.FirstDate.ValueEx = riItem.FirstDateEx;
+          else
+          {
+            base.FirstDate.Value = riItem.FirstDate; // обязательное присвоение, иначе свойство обнулится
+            riItem.FirstDateEx = base.FirstDate.ValueEx;
+          }
+        }
+
+        if (riItem.HasLastDateExProperty)
+        {
+          if (riItem.LastDateEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.LastDate.ValueEx = riItem.LastDateEx;
+          else
+          {
+            base.LastDate.Value = riItem.LastDate; // обязательное присвоение, иначе свойство обнулится
+            riItem.LastDateEx = base.LastDate.ValueEx;
+          }
+        }
       }
 
       AgeyevAV.RI.DateRangeBox _RIItem;
@@ -1312,7 +1442,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region DateOrRangeBox
 
-    private class DateOrRangeBoxItem : AgeyevAV.ExtForms.EFPDateOrRangeBox, IEFPAppRIItem
+    private class DateOrRangeBoxItem : AgeyevAV.ExtForms.EFPDateOrRangeBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1359,7 +1489,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region YearMonthBox
 
-    private class YearMonthBoxItem : AgeyevAV.ExtForms.EFPYearMonthBox, IEFPAppRIItem
+    private class YearMonthBoxItem : AgeyevAV.ExtForms.EFPYearMonthBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1370,6 +1500,42 @@ namespace AgeyevAV.ExtForms.RI
         Minimum = riItem.Minimum;
         Maximum = riItem.Maximum;
         EFPAppRITools.InitControlItem(this, riItem);
+
+        if (riItem.HasYearExProperty)
+        {
+          if (riItem.YearEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.YearEx = riItem.YearEx;
+          else
+          {
+            base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
+            riItem.YearEx = base.YearEx;
+          }
+        }
+
+        if (riItem.HasMonthExProperty)
+        {
+          if (riItem.MonthEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.MonthEx = riItem.MonthEx;
+          else
+          {
+            base.Month = riItem.Month; // обязательное присвоение, иначе свойство обнулится
+            riItem.MonthEx = base.MonthEx;
+          }
+        }
+
+        if (riItem.HasYMExProperty)
+        {
+          if (riItem.YMEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.YMEx = riItem.YMEx;
+          else
+          {
+            base.YM = riItem.YM; // обязательное присвоение, иначе свойство обнулится
+            riItem.YMEx = base.YMEx;
+          }
+        }
       }
 
       AgeyevAV.RI.YearMonthBox _RIItem;
@@ -1398,7 +1564,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region YearMonthRangeBox
 
-    private class YearMonthRangeBoxItem : AgeyevAV.ExtForms.EFPYearMonthRangeBox, IEFPAppRIItem
+    private class YearMonthRangeBoxItem : AgeyevAV.ExtForms.EFPYearMonthRangeBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1409,6 +1575,66 @@ namespace AgeyevAV.ExtForms.RI
         Minimum = riItem.Minimum;
         Maximum = riItem.Maximum;
         EFPAppRITools.InitControlItem(this, riItem);
+
+        if (riItem.HasYearExProperty)
+        {
+          if (riItem.YearEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.YearEx = riItem.YearEx;
+          else
+          {
+            base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
+            riItem.YearEx = base.YearEx;
+          }
+        }
+
+        if (riItem.HasFirstMonthExProperty)
+        {
+          if (riItem.FirstMonthEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.FirstMonthEx = riItem.FirstMonthEx;
+          else
+          {
+            base.FirstMonth = riItem.FirstMonth; // обязательное присвоение, иначе свойство обнулится
+            riItem.FirstMonthEx = base.FirstMonthEx;
+          }
+        }
+
+        if (riItem.HasLastMonthExProperty)
+        {
+          if (riItem.LastMonthEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.LastMonthEx = riItem.LastMonthEx;
+          else
+          {
+            base.LastMonth = riItem.LastMonth; // обязательное присвоение, иначе свойство обнулится
+            riItem.LastMonthEx = base.LastMonthEx;
+          }
+        }
+
+        if (riItem.HasFirstYMExProperty)
+        {
+          if (riItem.FirstYMEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.FirstYMEx = riItem.FirstYMEx;
+          else
+          {
+            base.FirstYM = riItem.FirstYM; // обязательное присвоение, иначе свойство обнулится
+            riItem.FirstYMEx = base.FirstYMEx;
+          }
+        }
+
+        if (riItem.HasLastYMExProperty)
+        {
+          if (riItem.LastYMEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.LastYMEx = riItem.LastYMEx;
+          else
+          {
+            base.LastYM = riItem.LastYM; // обязательное присвоение, иначе свойство обнулится
+            riItem.LastYMEx = base.LastYMEx;
+          }
+        }
       }
 
       AgeyevAV.RI.YearMonthRangeBox _RIItem;
@@ -1451,7 +1677,7 @@ namespace AgeyevAV.ExtForms.RI
         base.Control.AutoSize = true; // 26.03.2016
 
         switch (riItem.ColorType)
-        { 
+        {
           case InfoLabelColorType.Info:
             break;
           case InfoLabelColorType.Simple:
@@ -1482,7 +1708,7 @@ namespace AgeyevAV.ExtForms.RI
 
     #region Комбоблоки
 
-    private class ListComboBoxItem : AgeyevAV.ExtForms.EFPListComboBox, IEFPAppRIItem
+    private class ListComboBoxItem : AgeyevAV.ExtForms.EFPListComboBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1505,7 +1731,7 @@ namespace AgeyevAV.ExtForms.RI
             base.SelectedIndexEx = riItem.SelectedIndexEx;
           else
           {
-            base.SelectedIndex = _RIItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
+            base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedIndexEx = base.SelectedIndexEx;
           }
         }
@@ -1517,7 +1743,7 @@ namespace AgeyevAV.ExtForms.RI
             base.SelectedCodeEx = riItem.SelectedCodeEx;
           else
           {
-            base.SelectedCode = _RIItem.SelectedCode; // обязательное присвоение, иначе свойство обнулится
+            base.SelectedCode = riItem.SelectedCode; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedCodeEx = base.SelectedCodeEx;
           }
         }
@@ -1543,7 +1769,7 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class TextComboBoxItem : AgeyevAV.ExtForms.EFPTextComboBox, IEFPAppRIItem
+    private class TextComboBoxItem : AgeyevAV.ExtForms.EFPTextComboBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1574,7 +1800,7 @@ namespace AgeyevAV.ExtForms.RI
             base.TextEx = riItem.TextEx;
           else
           {
-            base.Text = _RIItem.Text; // обязательное присвоение, иначе свойство обнулится
+            base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
             riItem.TextEx = base.TextEx;
           }
         }
@@ -1605,12 +1831,12 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class CsvCodesComboBoxItem : AgeyevAV.ExtForms.EFPCsvCodesComboBox, IEFPAppRIItem
+    private class CsvCodesComboBoxItem : AgeyevAV.ExtForms.EFPCsvCodesComboBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
       public CsvCodesComboBoxItem(AgeyevAV.RI.CsvCodesComboBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.UserTextComboBox(), riItem.Codes)
+        : base(baseProvider, new AgeyevAV.ExtForms.UserTextComboBox( ), riItem.Codes)
       {
         switch (riItem.CanBeEmptyMode)
         {
@@ -1625,6 +1851,18 @@ namespace AgeyevAV.ExtForms.RI
 
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
+
+        if (riItem.HasSelectedCodesExProperty)
+        {
+          if (riItem.SelectedCodesEx.Source != null)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.SelectedCodesEx = riItem.SelectedCodesEx;
+          else
+          {
+            base.SelectedCodes = riItem.SelectedCodes; // обязательное присвоение, иначе свойство обнулится
+            riItem.SelectedCodesEx = base.SelectedCodesEx;
+          }
+        }
       }
 
       AgeyevAV.RI.CsvCodesComboBox _RIItem;
@@ -1735,7 +1973,7 @@ namespace AgeyevAV.ExtForms.RI
       #region Конструктор
 
       public EFPTextBoxWithButton(EFPBaseProvider baseProvider)
-        : base(baseProvider, new TextBoxWithButton(), true)
+        : base(baseProvider, new TextBoxWithButton( ), true)
       {
         TheTextBox = new EFPTextBox(baseProvider, Control.TheTextBox);
       }
@@ -1763,7 +2001,7 @@ namespace AgeyevAV.ExtForms.RI
     }
 
 
-    private class FolderBrowserTextBoxItem : EFPTextBoxWithButton, IEFPAppRIItem
+    private class FolderBrowserTextBoxItem : EFPTextBoxWithButton, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -1810,7 +2048,7 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class FileTextBoxItem : EFPTextBoxWithButton, IEFPAppRIItem
+    private class FileTextBoxItem : EFPTextBoxWithButton, IEFPAppRIControlItem
     {
       #region Конструктор
 

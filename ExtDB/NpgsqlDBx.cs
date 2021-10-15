@@ -1647,7 +1647,7 @@ namespace AgeyevAV.ExtDB.Npgsql
 
       bool Modified = false;
       bool Found = false;
-      string PKName = table.TableName + "_PKEY";
+      string PKName = table.TableName + "_pkey";
 
       dvIndexColumns.RowFilter = "TABLE_NAME='" + table.TableName + "' AND INDEX_NAME='" + PKName + "'";
       foreach (DataRowView drvCol in dvIndexColumns)
@@ -1657,10 +1657,16 @@ namespace AgeyevAV.ExtDB.Npgsql
           Found = true;
         else
         {
+          // 13.10.2021.
+          // ќграничение может иметь им€ в любом регистре.
+          // ALTER TABLE DROP CONSTRAINT требует указани€ имени ограничени€ с учетом регистра.
+          // Ѕерем им€, как оно записано в базе данных.
+          string PKName2 = DataTools.GetString(drvCol.Row, "INDEX_NAME"); 
+
           //if (IndexName.StartsWith("Index"))
           //  continue; // составной пользовательский индекс, в который входит поле "Id"
-          SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" DROP CONSTRAINT \"" + PKName + "\"");
-          errors.AddInfo("”далено неправильное ограничение первичного ключа \"" + PKName + "\" в таблице \"" + table.TableName + "\"");
+          SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" DROP CONSTRAINT \"" + PKName2 + "\"");
+          errors.AddInfo("”далено неправильное ограничение первичного ключа \"" + PKName2 + "\" в таблице \"" + table.TableName + "\"");
           Modified = true;
           break;
         }

@@ -539,6 +539,10 @@ namespace AgeyevAV.ExtForms
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если в настоящий момент обрабатывается событие Control.TextChanged.
+    /// </summary>
+    protected bool InsideTextChanged { get { return _InsideTextChanged; } }
     private bool _InsideTextChanged;
 
     /// <summary>

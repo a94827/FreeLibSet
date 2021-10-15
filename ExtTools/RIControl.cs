@@ -59,6 +59,96 @@ namespace AgeyevAV.RI
   }
 
   /// <summary>
+  /// Описание для одного объекта валидации, присоединенного к управляющему элементу.
+  /// Валидаторы могут добавляться к списку Control.Validators.
+  /// 
+  /// Класс однократной записи.
+  /// </summary>
+  [Serializable]
+  public sealed class Validator
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект
+    /// </summary>
+    /// <param name="expression">Выражение валидации</param>
+    /// <param name="message">Сообщение</param>
+    /// <param name="isError">true-ошибка, false-предупреждение</param>
+    public Validator(DepValue<bool> expression, string message, bool isError)
+      :this(expression, message, isError, null)
+    {
+    }
+
+    /// <summary>
+    /// Создает объект
+    /// </summary>
+    /// <param name="expression">Выражение валидации</param>
+    /// <param name="message">Сообщение</param>
+    /// <param name="isError">true-ошибка, false-предупреждение</param>
+    /// <param name="activeEx">Выражение, определяющее необходимость выполнения проверки. Может быть null, если проверка выполняется всегда</param>
+    public Validator(DepValue<bool> expression, string message, bool isError, DepValue<bool> activeEx)
+    {
+      if (expression == null)
+        throw new ArgumentNullException("expression");
+      if (String.IsNullOrEmpty(message))
+        throw new ArgumentNullException("message");
+
+      _Expression = expression;
+      _Message = message;
+      _IsError = isError;
+      _ActiveEx = activeEx;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Выражение для выполнения проверки.
+    /// Вычисление должно возвращать true, если условие валидации выполнено.
+    /// Если вычисленное значение равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
+    /// в зависимости от свойства IsError.
+    /// </summary>
+    public DepValue<bool> Expression { get { return _Expression; } }
+    private readonly DepValue<bool> _Expression;
+
+    /// <summary>
+    /// Сообщение, которое будет выдано, если результатом вычисления Expression является false.
+    /// </summary>
+    public string Message { get { return _Message; } }
+    private readonly string _Message;
+
+    /// <summary>
+    /// True, если нарушение условия является ошибкой, false-если предупреждением.
+    /// Если хотя бы один из объектов с IsError=true не проходит валидацию, нельзя закрыть блок диалога нажатием кнопки "ОК".
+    /// Предупреждения не препятствуют закрытию диалога.
+    /// </summary>
+    public bool IsError { get { return _IsError; } }
+    private readonly bool _IsError;
+
+    /// <summary>
+    /// Необязательное предусловие для выполнения проверки. Если выражение возвращает true, то проверка выполняется,
+    /// если false - то отключается.
+    /// Если свойство не установлено (обычно), то проверка выполняется.
+    /// </summary>
+    public DepValue<bool> ActiveEx { get { return _ActiveEx; } }
+    private readonly DepValue<bool> _ActiveEx;
+
+    /// <summary>
+    /// Возвращает свойство Message (для отладки)
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return Message;
+    }
+
+    #endregion
+  }
+
+
+  /// <summary>
   /// Базовый класс для управляющих элементов, которые могут располагаться на полосе RIBand
   /// </summary>
   [Serializable]
@@ -143,6 +233,106 @@ namespace AgeyevAV.RI
     }
 
     #endregion
+
+    #region Проверка элемента
+
+    /// <summary>
+    /// Реализация свойства RIItem.Validators
+    /// </summary>
+    [Serializable]
+    public sealed class ValidatorList : ListWithReadOnly<Validator>
+    {
+      #region Защищенный конструктор
+
+      internal ValidatorList()
+      { 
+      }
+
+      #endregion
+
+      #region Методы
+
+      /// <summary>
+      /// Создает объект Validator с IsError=true и добавляет его в список
+      /// </summary>
+      /// <param name="expression">Выражение валидации</param>
+      /// <param name="message">Сообщение</param>
+      public Validator AddError(DepValue<bool> expression, string message)
+      {
+        Validator item = new Validator(expression, message, true);
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Создает объект Validator с IsError=false и добавляет его в список
+      /// </summary>
+      /// <param name="expression">Выражение валидации</param>
+      /// <param name="message">Сообщение</param>
+      public Validator AddWarning(DepValue<bool> expression, string message)
+      {
+        Validator item = new Validator(expression, message, false);
+        Add(item);
+        return item;
+      }
+
+      internal new void SetReadOnly()
+      {
+        base.SetReadOnly();
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Список объектов для проверки корректности значения элемента (валидаторов).
+    /// Поддерживаются ошибки и предупреждения с подсветкой и выдачей всплывающей подсказки.
+    /// При нажатии кнопки "ОК" в диалоге устанавливается фокус на первый управляющий элемент, для которого валидатор вернул ошибку, и закрытие диалога предотвращается.
+    /// Валидатор считается "сработавшим", если вычисляемое выражение (Validator.Expression) возвращает false. 
+    /// Как правило, в качестве аргументов выражения выступают управляемые свойства текущего элемента управления, но могут использоваться и свойства других элементов.
+    /// Если у управляющего элемента есть проверки, задаваемые свойствами (например, CanBeEmpty=false для TextBox), то такие проверки выполняются до опроса объектов из списка Validators.
+    /// 
+    /// Если проверку корректности введенного значения нельзя реализовать с помощью объектов Validator, используйте обработчик события Dialog.Validating,
+    /// которое вызывается на стороне сервера.
+    /// </summary>
+    public ValidatorList Validators
+    {
+      get
+      {
+        if (_Validators == null)
+          _Validators = new ValidatorList();
+        return _Validators;
+      }
+    }
+    private ValidatorList _Validators;
+
+    /// <summary>
+    /// Возвращает true, если список Validators не пустой.
+    /// Используется для оптимизации, вместо обращения к Validators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+    /// </summary>
+    public bool HasValidators
+    {
+      get
+      {
+        if (_Validators == null)
+          return false;
+        else
+          return _Validators.Count > 0;
+      }
+    }
+
+    /// <summary>
+    /// Блокирует список Validators от изменений
+    /// </summary>
+    protected override void OnSetFixed()
+    {
+      base.OnSetFixed();
+
+      if (_Validators != null)
+        _Validators.SetReadOnly();
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -179,7 +369,6 @@ namespace AgeyevAV.RI
 
     #endregion
   }
-
 
   /// <summary>
   /// Поле ввода однострочного текста
@@ -2144,17 +2333,68 @@ namespace AgeyevAV.RI
 
     #region Редактируемое значение
 
+    #region FirstDate
+
     /// <summary>
     /// Начальная дата диапазона
     /// </summary>
     public DateTime? FirstDate
     {
       get { return _FirstDate; }
-      set { _FirstDate = value; }
+      set 
+      { 
+        _FirstDate = value;
+        if (_FirstDateEx != null)
+          _FirstDateEx.Value = value;
+      }
     }
     private DateTime? _FirstDate;
 
     private DateTime? _OldFirstDate;
+
+    /// <summary>
+    /// Управляемое значение для FirstDate.
+    /// </summary>
+    public DepValue<DateTime?> FirstDateEx
+    {
+      get
+      {
+        InitFirstDateEx();
+        return _FirstDateEx;
+      }
+      set
+      {
+        InitFirstDateEx();
+        _FirstDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _FirstDateEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства FirstDateEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasFirstDateExProperty { get { return _FirstDateEx != null; } }
+
+    private void InitFirstDateEx()
+    {
+      if (_FirstDateEx == null)
+      {
+        _FirstDateEx = new DepInput<DateTime?>();
+        _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
+        _FirstDateEx.Value = FirstDate;
+        _FirstDateEx.ValueChanged += new EventHandler(FirstDateEx_ValueChanged);
+      }
+    }
+
+    private void FirstDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstDate = _FirstDateEx.Value;
+    }
+
+    #endregion
+
+    #region LastDate
 
     /// <summary>
     /// Конечная дата диапазона
@@ -2162,11 +2402,60 @@ namespace AgeyevAV.RI
     public DateTime? LastDate
     {
       get { return _LastDate; }
-      set { _LastDate = value; }
+      set 
+      { 
+        _LastDate = value;
+        if (_LastDateEx != null)
+          _LastDateEx.Value = value;
+      }
     }
     private DateTime? _LastDate;
 
     private DateTime? _OldLastDate;
+
+    /// <summary>
+    /// Управляемое значение для LastDate.
+    /// </summary>
+    public DepValue<DateTime?> LastDateEx
+    {
+      get
+      {
+        InitLastDateEx();
+        return _LastDateEx;
+      }
+      set
+      {
+        InitLastDateEx();
+        _LastDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _LastDateEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства LastDateEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasLastDateExProperty { get { return _LastDateEx != null; } }
+
+    private void InitLastDateEx()
+    {
+      if (_LastDateEx == null)
+      {
+        _LastDateEx = new DepInput<DateTime?>();
+        _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
+        _LastDateEx.Value = LastDate;
+        _LastDateEx.ValueChanged += new EventHandler(LastDateEx_ValueChanged);
+      }
+    }
+
+    private void LastDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      LastDate = _LastDateEx.Value;
+    }
+
+    #endregion
+
+    #region DateRange
 
     /// <summary>
     /// Вспомогательное свойство для доступа к интервалу дат.
@@ -2196,6 +2485,8 @@ namespace AgeyevAV.RI
         }
       }
     }
+
+    #endregion
 
     #endregion
 
@@ -2689,17 +2980,71 @@ namespace AgeyevAV.RI
 
     #region Свойства
 
+    #region Year
+
     /// <summary>
     /// Текущее значение - выбранный год
     /// </summary>
     public int Year
     {
       get { return _Year; }
-      set { _Year = value; }
+      set 
+      { 
+        _Year = value;
+        if (_YearEx != null)
+          _YearEx.Value = value;
+        if (_YMEx != null)
+          _YMEx.Value = YM;
+      }
     }
     private int _Year;
 
     private int _OldYear;
+
+
+    /// <summary>
+    /// Управляемое значение для Year.
+    /// </summary>
+    public DepValue<int> YearEx
+    {
+      get
+      {
+        InitYearEx();
+        return _YearEx;
+      }
+      set
+      {
+        InitYearEx();
+        _YearEx.Source = value;
+      }
+    }
+    private DepInput<int> _YearEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства YearEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasYearExProperty { get { return _YearEx != null; } }
+
+    private void InitYearEx()
+    {
+      if (_YearEx == null)
+      {
+        _YearEx = new DepInput<int>();
+        _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
+        _YearEx.Value = Year;
+        _YearEx.ValueChanged += new EventHandler(YearEx_ValueChanged);
+      }
+    }
+
+    private void YearEx_ValueChanged(object sender, EventArgs args)
+    {
+      Year = _YearEx.Value;
+    }
+
+    #endregion
+
+    #region Month
 
     /// <summary>
     /// Текущее значение - выбранный месяц (1-12)
@@ -2707,14 +3052,65 @@ namespace AgeyevAV.RI
     public int Month
     {
       get { return _Month; }
-      set { _Month = value; }
+      set 
+      { 
+        _Month = value;
+        if (_MonthEx != null)
+          _MonthEx.Value = value;
+        if (_YMEx != null)
+          _YMEx.Value = YM;
+      }
     }
     private int _Month;
 
     private int _OldMonth;
 
     /// <summary>
-    /// Текущее значение - год и месяц всесте
+    /// Управляемое значение для Month.
+    /// </summary>
+    public DepValue<int> MonthEx
+    {
+      get
+      {
+        InitMonthEx();
+        return _MonthEx;
+      }
+      set
+      {
+        InitMonthEx();
+        _MonthEx.Source = value;
+      }
+    }
+    private DepInput<int> _MonthEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства MonthEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasMonthExProperty { get { return _MonthEx != null; } }
+
+    private void InitMonthEx()
+    {
+      if (_MonthEx == null)
+      {
+        _MonthEx = new DepInput<int>();
+        _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
+        _MonthEx.Value = Month;
+        _MonthEx.ValueChanged += new EventHandler(MonthEx_ValueChanged);
+      }
+    }
+
+    private void MonthEx_ValueChanged(object sender, EventArgs args)
+    {
+      Month = _MonthEx.Value;
+    }
+
+    #endregion
+
+    #region YM
+
+    /// <summary>
+    /// Текущее значение - год и месяц вместе
     /// </summary>
     public YearMonth YM
     {
@@ -2725,8 +3121,54 @@ namespace AgeyevAV.RI
           throw new ArgumentNullException();
         Year = value.Year;
         Month = value.Month;
+
+        // YMEx.ValueChanged() был вызван
       }
     }
+
+    /// <summary>
+    /// Управляемое значение для Value.
+    /// </summary>
+    public DepValue<YearMonth> YMEx
+    {
+      get
+      {
+        InitYMEx();
+        return _YMEx;
+      }
+      set
+      {
+        InitYMEx();
+        _YMEx.Source = value;
+      }
+    }
+    private DepInput<YearMonth> _YMEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства YMEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasYMExProperty { get { return _YMEx != null; } }
+
+    private void InitYMEx()
+    {
+      if (_YMEx == null)
+      {
+        _YMEx = new DepInput<YearMonth>();
+        _YMEx.OwnerInfo = new DepOwnerInfo(this, "YMEx");
+        _YMEx.Value = YM;
+        _YMEx.ValueChanged += new EventHandler(YMEx_ValueChanged);
+      }
+    }
+
+    private void YMEx_ValueChanged(object sender, EventArgs args)
+    {
+      YM = _YMEx.Value;
+    }
+
+    #endregion
+
+    #region Minumum и Maximum
 
     /// <summary>
     /// Минимальное значение, которое можно ввести.
@@ -2760,6 +3202,9 @@ namespace AgeyevAV.RI
     }
     private YearMonth _Maximum;
 
+    #endregion
+
+    #region DateRange
 
     /// <summary>
     /// Вспомогательное свойство для чтения/записи значений как интервала дат.
@@ -2783,6 +3228,8 @@ namespace AgeyevAV.RI
         Month = value.FirstDate.Month;
       }
     }
+
+    #endregion
 
     #endregion
 
@@ -2900,17 +3347,72 @@ namespace AgeyevAV.RI
 
     #region Свойства
 
+    #region Year
+
     /// <summary>
     /// Выбранный год
     /// </summary>
     public int Year
     {
       get { return _Year; }
-      set { _Year = value; }
+      set 
+      { 
+        _Year = value;
+        if (_YearEx != null)
+          _YearEx.Value = value;
+        if (_FirstYMEx != null)
+          _FirstYMEx.Value = this.FirstYM;
+        if (_LastYMEx != null)
+          _LastYMEx.Value = this.LastYM;
+      }
     }
     private int _Year;
 
     private int _OldYear;
+
+    /// <summary>
+    /// Управляемое значение для Year.
+    /// </summary>
+    public DepValue<int> YearEx
+    {
+      get
+      {
+        InitYearEx();
+        return _YearEx;
+      }
+      set
+      {
+        InitYearEx();
+        _YearEx.Source = value;
+      }
+    }
+    private DepInput<int> _YearEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства YearEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasYearExProperty { get { return _YearEx != null; } }
+
+    private void InitYearEx()
+    {
+      if (_YearEx == null)
+      {
+        _YearEx = new DepInput<int>();
+        _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
+        _YearEx.Value = Year;
+        _YearEx.ValueChanged += new EventHandler(YearEx_ValueChanged);
+      }
+    }
+
+    private void YearEx_ValueChanged(object sender, EventArgs args)
+    {
+      Year = _YearEx.Value;
+    }
+
+    #endregion
+
+    #region FirstMonth
 
     /// <summary>
     /// Выбранный первый месяц (1 .. 12)
@@ -2918,11 +3420,62 @@ namespace AgeyevAV.RI
     public int FirstMonth
     {
       get { return _FirstMonth; }
-      set { _FirstMonth = value; }
+      set 
+      { 
+        _FirstMonth = value;
+        if (_FirstMonthEx != null)
+          _FirstMonthEx.Value = value;
+        if (_FirstYMEx != null)
+          _FirstYMEx.Value = this.FirstYM;
+      }
     }
     private int _FirstMonth;
 
     private int _OldFirstMonth;
+
+    /// <summary>
+    /// Управляемое значение для FirstMonth.
+    /// </summary>
+    public DepValue<int> FirstMonthEx
+    {
+      get
+      {
+        InitFirstMonthEx();
+        return _FirstMonthEx;
+      }
+      set
+      {
+        InitFirstMonthEx();
+        _FirstMonthEx.Source = value;
+      }
+    }
+    private DepInput<int> _FirstMonthEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства FirstMonthEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasFirstMonthExProperty { get { return _FirstMonthEx != null; } }
+
+    private void InitFirstMonthEx()
+    {
+      if (_FirstMonthEx == null)
+      {
+        _FirstMonthEx = new DepInput<int>();
+        _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
+        _FirstMonthEx.Value = FirstMonth;
+        _FirstMonthEx.ValueChanged += new EventHandler(FirstMonthEx_ValueChanged);
+      }
+    }
+
+    private void FirstMonthEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstMonth = _FirstMonthEx.Value;
+    }
+
+    #endregion
+
+    #region LastMonth
 
     /// <summary>
     /// Выбранный последний месяц (1 .. 12)
@@ -2930,11 +3483,62 @@ namespace AgeyevAV.RI
     public int LastMonth
     {
       get { return _LastMonth; }
-      set { _LastMonth = value; }
+      set 
+      { 
+        _LastMonth = value;
+        if (_LastMonthEx != null)
+          _LastMonthEx.Value = value;
+        if (_LastYMEx != null)
+          _LastYMEx.Value = this.LastYM;
+      }
     }
     private int _LastMonth;
 
     private int _OldLastMonth;
+
+    /// <summary>
+    /// Управляемое значение для LastMonth.
+    /// </summary>
+    public DepValue<int> LastMonthEx
+    {
+      get
+      {
+        InitLastMonthEx();
+        return _LastMonthEx;
+      }
+      set
+      {
+        InitLastMonthEx();
+        _LastMonthEx.Source = value;
+      }
+    }
+    private DepInput<int> _LastMonthEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства LastMonthEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasLastMonthExProperty { get { return _LastMonthEx != null; } }
+
+    private void InitLastMonthEx()
+    {
+      if (_LastMonthEx == null)
+      {
+        _LastMonthEx = new DepInput<int>();
+        _LastMonthEx.OwnerInfo = new DepOwnerInfo(this, "LastMonthEx");
+        _LastMonthEx.Value = LastMonth;
+        _LastMonthEx.ValueChanged += new EventHandler(LastMonthEx_ValueChanged);
+      }
+    }
+
+    private void LastMonthEx_ValueChanged(object sender, EventArgs args)
+    {
+      LastMonth = _LastMonthEx.Value;
+    }
+
+    #endregion
+
+    #region FirstYM
 
     /// <summary>
     /// Первый месяц и год в виде структуры YearMonth
@@ -2948,8 +3552,54 @@ namespace AgeyevAV.RI
           throw new ArgumentNullException();
         Year = value.Year;
         FirstMonth = value.Month;
+
+        // Управляемые свойства установлены
       }
     }
+
+    /// <summary>
+    /// Управляемое значение для FirstYM.
+    /// </summary>
+    public DepValue<YearMonth> FirstYMEx
+    {
+      get
+      {
+        InitFirstYMEx();
+        return _FirstYMEx;
+      }
+      set
+      {
+        InitFirstYMEx();
+        _FirstYMEx.Source = value;
+      }
+    }
+    private DepInput<YearMonth> _FirstYMEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства FirstYMEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasFirstYMExProperty { get { return _FirstYMEx != null; } }
+
+    private void InitFirstYMEx()
+    {
+      if (_FirstYMEx == null)
+      {
+        _FirstYMEx = new DepInput<YearMonth>();
+        _FirstYMEx.OwnerInfo = new DepOwnerInfo(this, "FirstYMEx");
+        _FirstYMEx.Value = FirstYM;
+        _FirstYMEx.ValueChanged += new EventHandler(FirstYMEx_ValueChanged);
+      }
+    }
+
+    private void FirstYMEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstYM = _FirstYMEx.Value;
+    }
+
+    #endregion
+
+    #region LastYM
 
     /// <summary>
     /// Последний месяц и год в виде структуры YearMonth
@@ -2963,8 +3613,53 @@ namespace AgeyevAV.RI
           throw new ArgumentNullException();
         Year = value.Year;
         LastMonth = value.Month;
+        // Управляемые свойства установлены
       }
     }
+
+    /// <summary>
+    /// Управляемое значение для LastYM.
+    /// </summary>
+    public DepValue<YearMonth> LastYMEx
+    {
+      get
+      {
+        InitLastYMEx();
+        return _LastYMEx;
+      }
+      set
+      {
+        InitLastYMEx();
+        _LastYMEx.Source = value;
+      }
+    }
+    private DepInput<YearMonth> _LastYMEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства LastYMEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasLastYMExProperty { get { return _LastYMEx != null; } }
+
+    private void InitLastYMEx()
+    {
+      if (_LastYMEx == null)
+      {
+        _LastYMEx = new DepInput<YearMonth>();
+        _LastYMEx.OwnerInfo = new DepOwnerInfo(this, "LastYMEx");
+        _LastYMEx.Value = LastYM;
+        _LastYMEx.ValueChanged += new EventHandler(LastYMEx_ValueChanged);
+      }
+    }
+
+    private void LastYMEx_ValueChanged(object sender, EventArgs args)
+    {
+      LastYM = _LastYMEx.Value;
+    }
+
+    #endregion
+
+    #region DateRange
 
     /// <summary>
     /// Вспомогательное свойство для чтения/записи значений как интервала дат.
@@ -2989,6 +3684,10 @@ namespace AgeyevAV.RI
       }
     }
 
+    #endregion
+
+    #region YMRange
+
     /// <summary>
     /// Свойства FirstYM и LastYM вместе
     /// </summary>
@@ -3009,6 +3708,10 @@ namespace AgeyevAV.RI
         this.LastMonth = value.LastYM.Month;
       }
     }
+
+    #endregion
+
+    #region Minimum и Maximum
 
     /// <summary>
     /// Минимальное значение, которое можно ввести.
@@ -3041,6 +3744,8 @@ namespace AgeyevAV.RI
       }
     }
     private YearMonth _Maximum;
+
+    #endregion
 
     #endregion
 
@@ -3724,6 +4429,7 @@ namespace AgeyevAV.RI
 
   /// <summary>
   /// Комбоблок для выбора одного или нескольких кодов, разделенных запятыми.
+  /// Текущий выбор пользователя задает свойство SelectedCodes
   /// </summary>
   [Serializable]
   public class CsvCodesComboBox : Control
@@ -3746,6 +4452,8 @@ namespace AgeyevAV.RI
     #endregion
 
     #region Свойства
+
+    #region Codes и Names
 
     /// <summary>
     /// Список доступных кодов. Задается в конструкторе
@@ -3773,6 +4481,9 @@ namespace AgeyevAV.RI
     }
     private string[] _Names;
 
+    #endregion
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -3804,6 +4515,10 @@ namespace AgeyevAV.RI
       set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
 
+    #endregion
+
+    #region SelectedCodes
+
     /// <summary>
     /// Основное свойство - выбранные коды.
     /// По умолчанию - пустой массив кодов
@@ -3816,10 +4531,54 @@ namespace AgeyevAV.RI
         if (value == null)
           value = DataTools.EmptyStrings;
         _SelectedCodes = value;
+        if (_SelectedCodesEx != null)
+          _SelectedCodesEx.Value = value;
       }
     }
     private string[] _SelectedCodes;
     private string[] _OldSelectedCodes;
+
+    /// <summary>
+    /// Управляемое значение для SelectedCodes.
+    /// </summary>
+    public DepValue<string[]> SelectedCodesEx
+    {
+      get
+      {
+        InitSelectedCodesEx();
+        return _SelectedCodesEx;
+      }
+      set
+      {
+        InitSelectedCodesEx();
+        _SelectedCodesEx.Source = value;
+      }
+    }
+    private DepInput<string[]> _SelectedCodesEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства SelectedCodesEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasSelectedCodesExProperty { get { return _SelectedCodesEx != null; } }
+
+    private void InitSelectedCodesEx()
+    {
+      if (_SelectedCodesEx == null)
+      {
+        _SelectedCodesEx = new DepInput<string[]>();
+        _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
+        _SelectedCodesEx.Value = SelectedCodes;
+        _SelectedCodesEx.ValueChanged += new EventHandler(SelectedCodesEx_ValueChanged);
+      }
+    }
+
+    private void SelectedCodesEx_ValueChanged(object sender, EventArgs args)
+    {
+      SelectedCodes = _SelectedCodesEx.Value;
+    }
+
+    #endregion
 
     #endregion
 
@@ -3902,11 +4661,14 @@ namespace AgeyevAV.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      string s = part.GetString(Name);
-      if (s.Length == 0)
-        _SelectedCodes = DataTools.EmptyStrings;
-      else
-        _SelectedCodes = s.Split(',');
+      if (part.HasValue(Name)) // 14.10.2021
+      {
+        string s = part.GetString(Name);
+        if (s.Length == 0)
+          _SelectedCodes = DataTools.EmptyStrings;
+        else
+          _SelectedCodes = s.Split(',');
+      }
     }
 
     #endregion
@@ -4007,7 +4769,8 @@ namespace AgeyevAV.RI
     #region Свойства
 
     /// <summary>
-    /// Выбранный каталог (вход и выход)
+    /// Выбранный каталог (вход и выход).
+    /// В текущей реализации нет управляемого свойства PathEx.
     /// </summary>
     public AbsPath Path { get { return _Path; } set { _Path = value; } }
     private AbsPath _Path;
@@ -4198,6 +4961,7 @@ namespace AgeyevAV.RI
     /// <summary>
     /// Выбранный файл.
     /// Выбрать можно только один файл, множественный выбор не поддерживается.
+    /// В текущей реализации нет управляемого свойства PathEx.
     /// </summary>
     public AbsPath Path { get { return _Path; } set { _Path = value; } }
     private AbsPath _Path;
@@ -5054,7 +5818,11 @@ namespace AgeyevAV.RI
     }
 
     /// <summary>
-    /// Событие вызывается на вызывающей стороне для проверки корректности введенных значений
+    /// Событие вызывается на вызывающей стороне для проверки корректности введенных значений при нажатии кнопки "ОК".
+    /// Обработчик должен проверить значения, введенные пользователем и вызвать Control.SetError() для индикации ошибки.
+    /// 
+    /// Рекомендуется по возможности использовать списки Control.Validators для реализации проверок. 
+    /// Такие проверки выполняются динамически при каждом изменении пользовательского ввода, а не только при нажатии кнопки "ОК".
     /// </summary>
     public event EventHandler Validating
     {

@@ -1357,6 +1357,47 @@ namespace AgeyevAV.ExtForms
       }
     }
 
+    /// <summary>
+    /// Управляемое значение для SelectedCodes.
+    /// </summary>
+    public DepValue<string[]> SelectedCodesEx
+    {
+      get
+      {
+        InitSelectedCodesEx();
+        return _SelectedCodesEx;
+      }
+      set
+      {
+        InitSelectedCodesEx();
+        _SelectedCodesEx.Source = value;
+      }
+    }
+    private DepInput<string[]> _SelectedCodesEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства SelectedCodesEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде.
+    /// </summary>
+    public bool HasSelectedCodesExProperty { get { return _SelectedCodesEx != null; } }
+
+    private void InitSelectedCodesEx()
+    {
+      if (_SelectedCodesEx == null)
+      {
+        _SelectedCodesEx = new DepInput<string[]>();
+        _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
+        _SelectedCodesEx.Value = SelectedCodes;
+        _SelectedCodesEx.ValueChanged += new EventHandler(SelectedCodesEx_ValueChanged);
+      }
+    }
+
+    private void SelectedCodesEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!InsideTextChanged) // избегаем помех при вводе текста
+        SelectedCodes = _SelectedCodesEx.Value;
+    }
+
     #endregion
 
     #region Локальное меню
@@ -1395,6 +1436,17 @@ namespace AgeyevAV.ExtForms
     #endregion
 
     #region Проверка
+
+    /// <summary>
+    /// Обработка SelectedCodesEx.
+    /// </summary>
+    protected override void OnTextChanged()
+    {
+      base.OnTextChanged();
+
+      if (_SelectedCodesEx != null)
+        _SelectedCodesEx.Value = SelectedCodes;
+    }
 
     /// <summary>
     /// Проверка корректности значения.

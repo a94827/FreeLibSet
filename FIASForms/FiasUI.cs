@@ -439,7 +439,7 @@ namespace AgeyevAV.ExtForms.FIAS
       return null;
     }
 
-    private class FiasAddressPanelItem : EFPFiasAddressPanel, AgeyevAV.ExtForms.RI.IEFPAppRIItem
+    private class FiasAddressPanelItem : EFPFiasAddressPanel, AgeyevAV.ExtForms.RI.IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -448,10 +448,22 @@ namespace AgeyevAV.ExtForms.FIAS
       {
         base.PostalCodeEditable = riItem.PostalCodeEditable;
         base.MinRefBookLevel = riItem.MinRefBookLevel;
-        base.CanBeEmpty = riItem.CanBeEmpty;
-        base.WarningIfEmpty = riItem.WarningIfEmpty;
-        base.CanBePartial = riItem.CanBePartial;
-        base.WarningIfPartial = riItem.WarningIfPartial;
+        switch (riItem.CanBeEmptyMode)
+        {
+          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          default:
+            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
+        }
+        switch (riItem.CanBePartialMode)
+        {
+          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
+          default:
+            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
+        }
 
         riItem.InternalSetSource(ui.Source);
         _RIItem = riItem;
@@ -477,7 +489,7 @@ namespace AgeyevAV.ExtForms.FIAS
       #endregion
     }
 
-    private class FiasAddressComboBoxItem : EFPFiasAddressComboBox, AgeyevAV.ExtForms.RI.IEFPAppRIItem
+    private class FiasAddressComboBoxItem : EFPFiasAddressComboBox, AgeyevAV.ExtForms.RI.IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -487,10 +499,22 @@ namespace AgeyevAV.ExtForms.FIAS
         base.EditorLevel = riItem.EditorLevel;
         base.PostalCodeEditable = riItem.PostalCodeEditable;
         base.MinRefBookLevel = riItem.MinRefBookLevel;
-        base.CanBeEmpty = riItem.CanBeEmpty;
-        base.WarningIfEmpty = riItem.WarningIfEmpty;
-        base.CanBePartial = riItem.CanBePartial;
-        base.WarningIfPartial = riItem.WarningIfPartial;
+        switch (riItem.CanBeEmptyMode)
+        {
+          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          default:
+            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
+        }
+        switch (riItem.CanBePartialMode)
+        {
+          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
+          default:
+            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
+        }
 
         base.TextFormat = riItem.TextFormat;
         base.Control.Width = 300; // ??
@@ -534,10 +558,22 @@ namespace AgeyevAV.ExtForms.FIAS
         _WinDlg.EditorLevel = riDialog.EditorLevel;
         _WinDlg.PostalCodeEditable = riDialog.PostalCodeEditable;
         _WinDlg.MinRefBookLevel = riDialog.MinRefBookLevel;
-        _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
-        _WinDlg.WarningIfEmpty = riDialog.WarningIfEmpty;
-        _WinDlg.CanBePartial = riDialog.CanBePartial;
-        _WinDlg.WarningIfPartial = riDialog.WarningIfPartial;
+        switch (riDialog.CanBeEmptyMode)
+        {
+          case AgeyevAV.RI.CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          default:
+            throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
+        }
+        switch (riDialog.CanBePartialMode)
+        {
+          case AgeyevAV.RI.CanBeEmptyMode.Error: _WinDlg.CanBePartial = false; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Warning: _WinDlg.CanBePartial = true; _WinDlg.WarningIfPartial = true; break;
+          case AgeyevAV.RI.CanBeEmptyMode.Ok: _WinDlg.CanBePartial = true; break;
+          default:
+            throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
+        }
         _WinDlg.ReadOnly = riDialog.ReadOnly;
       }
 

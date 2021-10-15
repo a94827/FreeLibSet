@@ -432,82 +432,6 @@ namespace AgeyevAV.RI
 
     #endregion
 
-    #region Результат проверки
-
-    /// <summary>
-    /// Установить состояние ошибки для элемента.
-    /// Этот метод может вызываться из обработчика события Dialog.Validating.
-    /// Очищать сообщение об ошибке в обработчике Validating (вызовом ClearErrors()) обычно нет необходимости.
-    /// </summary>
-    /// <param name="message">Текст сообщения об ошибке. Не может быть пустой строкой</param>
-    public void SetError(string message)
-    {
-      if (String.IsNullOrEmpty(message))
-        throw new ArgumentNullException("message");
-      _ErrorMessage = message;
-    }
-
-    /// <summary>
-    /// Очищает список ошибок.
-    /// Для контейнера также выполняет очистку для всех дочерних элементов.
-    /// Этот метод не используется в прикладном коде.
-    /// </summary>
-    public virtual void ClearErrors()
-    {
-      _ErrorMessage = null;
-    }
-
-    /// <summary>
-    /// Текущее сообщение об ошибке.
-    /// Возвращает пустую строку, если нет ошибки.
-    /// </summary>
-    public string ErrorMessage
-    {
-      get
-      {
-        if (_ErrorMessage == null)
-          return String.Empty;
-        else
-          return _ErrorMessage;
-      }
-    }
-    /// <summary>
-    /// Храним null вместо "", чтобы сэкономить на сериализации
-    /// </summary>
-    private string _ErrorMessage;
-
-    private string OldErrorMessage
-    {
-      get
-      {
-        if (_OldErrorMessage == null)
-          return String.Empty;
-        else
-          return _OldErrorMessage;
-      }
-    }
-    private string _OldErrorMessage;
-
-    /// <summary>
-    /// Рекурсивный поиск элемента с ошибкой.
-    /// Возвращает первый элемент, у которого установлено свойство RIItem.ErrorMessage.
-    /// Возвращает null, если ошибок нет
-    /// </summary>
-    /// <returns>Найденный элемент или null</returns>
-    public RIItem FindError()
-    {
-      List<RIItem> Items = new List<RIItem>();
-      GetItems(Items);
-      for (int i = 0; i < Items.Count; i++)
-      {
-        if (!String.IsNullOrEmpty(Items[i].ErrorMessage))
-          return Items[i];
-      }
-      return null;
-    }
-
-    #endregion
-
     #region Чтение и запись значений
 
     #region Передача изменений между сервером и клиентом при сериализации
@@ -686,6 +610,82 @@ namespace AgeyevAV.RI
     {
       if (_IsFixed)
         throw new InvalidOperationException("Элемент защищен от изменения управляющих свойств и добавления дочерних элементов");
+    }
+
+    #endregion
+
+    #region Проверка элемента
+
+    /// <summary>
+    /// Установить состояние ошибки для элемента.
+    /// Этот метод может вызываться из обработчика события Dialog.Validating.
+    /// Очищать сообщение об ошибке в обработчике Validating (вызовом ClearErrors()) обычно нет необходимости.
+    /// </summary>
+    /// <param name="message">Текст сообщения об ошибке. Не может быть пустой строкой</param>
+    public void SetError(string message)
+    {
+      if (String.IsNullOrEmpty(message))
+        throw new ArgumentNullException("message");
+      _ErrorMessage = message;
+    }
+
+    /// <summary>
+    /// Очищает список ошибок.
+    /// Для контейнера также выполняет очистку для всех дочерних элементов.
+    /// Этот метод не используется в прикладном коде.
+    /// </summary>
+    public virtual void ClearErrors()
+    {
+      _ErrorMessage = null;
+    }
+
+    /// <summary>
+    /// Текущее сообщение об ошибке.
+    /// Возвращает пустую строку, если нет ошибки.
+    /// </summary>
+    public string ErrorMessage
+    {
+      get
+      {
+        if (_ErrorMessage == null)
+          return String.Empty;
+        else
+          return _ErrorMessage;
+      }
+    }
+    /// <summary>
+    /// Храним null вместо "", чтобы сэкономить на сериализации
+    /// </summary>
+    private string _ErrorMessage;
+
+    private string OldErrorMessage
+    {
+      get
+      {
+        if (_OldErrorMessage == null)
+          return String.Empty;
+        else
+          return _OldErrorMessage;
+      }
+    }
+    private string _OldErrorMessage;
+
+    /// <summary>
+    /// Рекурсивный поиск элемента с ошибкой.
+    /// Возвращает первый элемент, у которого установлено свойство RIItem.ErrorMessage.
+    /// Возвращает null, если ошибок нет
+    /// </summary>
+    /// <returns>Найденный элемент или null</returns>
+    public RIItem FindError()
+    {
+      List<RIItem> Items = new List<RIItem>();
+      GetItems(Items);
+      for (int i = 0; i < Items.Count; i++)
+      {
+        if (!String.IsNullOrEmpty(Items[i].ErrorMessage))
+          return Items[i];
+      }
+      return null;
     }
 
     #endregion

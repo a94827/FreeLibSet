@@ -42,7 +42,7 @@ namespace AgeyevAV.FIAS.RI
   /// Обычно удобнее использовать комбоблок FiasAddressComboBox
   /// </summary>
   [Serializable]
-  public class FiasAddressPanel:Control
+  public class FiasAddressPanel : Control
   {
     #region Конструктор
 
@@ -100,10 +100,10 @@ namespace AgeyevAV.FIAS.RI
     public bool PostalCodeEditable
     {
       get { return _PostalCodeEditable; }
-      set 
+      set
       {
         CheckNotFixed();
-        _PostalCodeEditable = value; 
+        _PostalCodeEditable = value;
       }
     }
     private bool _PostalCodeEditable;
@@ -119,10 +119,10 @@ namespace AgeyevAV.FIAS.RI
     public FiasLevel MinRefBookLevel
     {
       get { return _MinRefBookLevel; }
-      set 
+      set
       {
         CheckNotFixed();
-        _MinRefBookLevel = value; 
+        _MinRefBookLevel = value;
       }
     }
     private FiasLevel _MinRefBookLevel;
@@ -132,7 +132,7 @@ namespace AgeyevAV.FIAS.RI
     /// </summary>
     public FiasAddress Address
     {
-      get 
+      get
       {
         if (_Source == null)
           throw new BugException("_Source=null");
@@ -159,67 +159,66 @@ namespace AgeyevAV.FIAS.RI
     #region Свойства CanBeEmpty и CanBePartial
 
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// По умолчанию - false - адрес должен быть заполнен.
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
+    /// </summary>
+    public CanBeEmptyMode CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private CanBeEmptyMode _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return _CanBeEmpty; }
-      set
-      {
-        CheckNotFixed();
-        _CanBeEmpty = value;
-      }
+      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
+      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
-    private bool _CanBeEmpty;
+
 
     /// <summary>
-    /// Выдавать предупреждение, если адрес не заполнен
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBeEmpty=true, иначе будет выдаваться ошибка, а не предупреждение.
+    /// Может ли адрес быть заполненным частично (например, введен только регион)?
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error адрес должен быть заполнен согласно свойству EditorLevel.
     /// </summary>
-    public bool WarningIfEmpty
+    public CanBeEmptyMode CanBePartialMode
     {
-      get { return _WarningIfEmpty; }
+      get { return _CanBePartialMode; }
       set
       {
         CheckNotFixed();
-        _WarningIfEmpty = value;
+        _CanBePartialMode = value;
       }
     }
-    private bool _WarningIfEmpty;
+    private CanBeEmptyMode _CanBePartialMode;
+
 
     /// <summary>
     /// Может ли адрес быть заполненным частично (например, введен только регион)?
     /// По умолчанию - false - адрес должен быть заполнен согласно свойству EditorLevel.
     /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// Это свойство дублирует CanBePartialMode, но не позволяет установить режим предупреждения.
+    /// При CanBePartialMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBePartialMode=Ok, а false - CanBePartialMode=Error.
     /// </summary>
     public bool CanBePartial
     {
-      get { return _CanBePartial; }
-      set
-      {
-        CheckNotFixed();
-        _CanBePartial = value;
-      }
+      get { return CanBePartialMode != CanBeEmptyMode.Error; }
+      set { CanBePartialMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
-    private bool _CanBePartial;
-
-    /// <summary>
-    /// Выдавать предупреждение, если адрес заполнен частично (например, введен только регион).
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBePartial=true, иначе будет выдаваться ошибка, а не предупреждение.
-    /// </summary>
-    public bool WarningIfPartial
-    {
-      get { return _WarningIfPartial; }
-      set
-      {
-        CheckNotFixed();
-        _WarningIfPartial = value;
-      }
-    }
-    private bool _WarningIfPartial;
 
     #endregion
 
@@ -444,67 +443,66 @@ namespace AgeyevAV.FIAS.RI
     #region Свойства CanBeEmpty и CanBePartial
 
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// По умолчанию - false - адрес должен быть заполнен.
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
+    /// </summary>
+    public CanBeEmptyMode CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private CanBeEmptyMode _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return _CanBeEmpty; }
-      set
-      {
-        CheckNotFixed();
-        _CanBeEmpty = value;
-      }
+      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
+      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
-    private bool _CanBeEmpty;
+
 
     /// <summary>
-    /// Выдавать предупреждение, если адрес не заполнен
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBeEmpty=true, иначе будет выдаваться ошибка, а не предупреждение.
+    /// Может ли адрес быть заполненным частично (например, введен только регион)?
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error адрес должен быть заполнен согласно свойству EditorLevel.
     /// </summary>
-    public bool WarningIfEmpty
+    public CanBeEmptyMode CanBePartialMode
     {
-      get { return _WarningIfEmpty; }
+      get { return _CanBePartialMode; }
       set
       {
         CheckNotFixed();
-        _WarningIfEmpty = value;
+        _CanBePartialMode = value;
       }
     }
-    private bool _WarningIfEmpty;
+    private CanBeEmptyMode _CanBePartialMode;
+
 
     /// <summary>
     /// Может ли адрес быть заполненным частично (например, введен только регион)?
     /// По умолчанию - false - адрес должен быть заполнен согласно свойству EditorLevel.
     /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// Это свойство дублирует CanBePartialMode, но не позволяет установить режим предупреждения.
+    /// При CanBePartialMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBePartialMode=Ok, а false - CanBePartialMode=Error.
     /// </summary>
     public bool CanBePartial
     {
-      get { return _CanBePartial; }
-      set
-      {
-        CheckNotFixed();
-        _CanBePartial = value;
-      }
+      get { return CanBePartialMode != CanBeEmptyMode.Error; }
+      set { CanBePartialMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
-    private bool _CanBePartial;
-
-    /// <summary>
-    /// Выдавать предупреждение, если адрес заполнен частично (например, введен только регион).
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBePartial=true, иначе будет выдаваться ошибка, а не предупреждение.
-    /// </summary>
-    public bool WarningIfPartial
-    {
-      get { return _WarningIfPartial; }
-      set
-      {
-        CheckNotFixed();
-        _WarningIfPartial = value;
-      }
-    }
-    private bool _WarningIfPartial;
 
     #endregion
 
@@ -726,67 +724,66 @@ namespace AgeyevAV.FIAS.RI
     #region Свойства CanBeEmpty и CanBePartial
 
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// По умолчанию - false - адрес должен быть заполнен.
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
+    /// </summary>
+    public CanBeEmptyMode CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private CanBeEmptyMode _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return _CanBeEmpty; }
-      set
-      {
-        CheckNotFixed();
-        _CanBeEmpty = value;
-      }
+      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
+      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
-    private bool _CanBeEmpty;
+
 
     /// <summary>
-    /// Выдавать предупреждение, если адрес не заполнен
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBeEmpty=true, иначе будет выдаваться ошибка, а не предупреждение.
+    /// Может ли адрес быть заполненным частично (например, введен только регион)?
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error адрес должен быть заполнен согласно свойству EditorLevel.
     /// </summary>
-    public bool WarningIfEmpty
+    public CanBeEmptyMode CanBePartialMode
     {
-      get { return _WarningIfEmpty; }
+      get { return _CanBePartialMode; }
       set
       {
         CheckNotFixed();
-        _WarningIfEmpty = value;
+        _CanBePartialMode = value;
       }
     }
-    private bool _WarningIfEmpty;
+    private CanBeEmptyMode _CanBePartialMode;
+
 
     /// <summary>
     /// Может ли адрес быть заполненным частично (например, введен только регион)?
     /// По умолчанию - false - адрес должен быть заполнен согласно свойству EditorLevel.
     /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// Это свойство дублирует CanBePartialMode, но не позволяет установить режим предупреждения.
+    /// При CanBePartialMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBePartialMode=Ok, а false - CanBePartialMode=Error.
     /// </summary>
     public bool CanBePartial
     {
-      get { return _CanBePartial; }
-      set
-      {
-        CheckNotFixed();
-        _CanBePartial = value;
-      }
+      get { return CanBePartialMode != CanBeEmptyMode.Error; }
+      set { CanBePartialMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
-    private bool _CanBePartial;
-
-    /// <summary>
-    /// Выдавать предупреждение, если адрес заполнен частично (например, введен только регион).
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBePartial=true, иначе будет выдаваться ошибка, а не предупреждение.
-    /// </summary>
-    public bool WarningIfPartial
-    {
-      get { return _WarningIfPartial; }
-      set
-      {
-        CheckNotFixed();
-        _WarningIfPartial = value;
-      }
-    }
-    private bool _WarningIfPartial;
 
     #endregion
 

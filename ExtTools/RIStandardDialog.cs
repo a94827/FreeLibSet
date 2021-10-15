@@ -383,6 +383,7 @@ namespace AgeyevAV.RI
   /// <summary>
   /// Диалог ввода строки текста.
   /// Есть возможность ввода пароля.
+  /// Для ввода многострочного текста используйте MultiLineTextInputDialog.
   /// </summary>
   [Serializable]
   public class TextInputDialog : BaseInputDialog

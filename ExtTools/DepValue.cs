@@ -36,13 +36,43 @@ using System.Runtime.InteropServices;
 namespace AgeyevAV.DependedValues
 {
   /// <summary>
+  /// Нетипизированный интерфейс, реализуемый шаблонным классом DepValue. Нет других классов, реализующих этот интерфейс.
+  /// </summary>
+  public interface IDepValue
+  {
+    #region Свойства и событие
+
+    /// <summary>
+    /// Информация об объекте-владельце и реализуемом свойстве. Может быть не инициализировано.
+    /// </summary>
+    DepOwnerInfo OwnerInfo { get; set; }
+
+    /// <summary>
+    /// Текущее значение
+    /// </summary>
+    object Value { get; set;}
+
+    /// <summary>
+    /// true, если в настоящее время выполняется установка значения
+    /// </summary>
+    bool InsideSetValue { get; }
+
+    /// <summary>
+    /// Извещение посылается при изменении значения свойства ValueEx
+    /// </summary>
+    event EventHandler ValueChanged;
+
+    #endregion
+  }
+
+  /// <summary>
   /// Абстрактный базовый класс для доступа к значению производного типа.
   /// Свойства объектов объявляются с этим типом.
-  /// Реализация свойств выполняется с помощью классов EFPInput и EFPValueObject
+  /// Реализация свойств выполняется с помощью классов DepInput и DepValueObject
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
-  public abstract class DepValue<T>
+  public abstract class DepValue<T> : IDepValue
   {
     #region Конструктор
 
@@ -94,6 +124,8 @@ namespace AgeyevAV.DependedValues
       }
     }
     private T _Value;
+
+    object IDepValue.Value { get { return this.Value; } set { this.Value = (T)value; } }
 
     /// <summary>
     /// Этот метод обычно вызывает BaseSetValue(), но может выполнять дополнительные действия по установке значения
@@ -253,9 +285,9 @@ namespace AgeyevAV.DependedValues
     #region Список зависимых значений
 
     // Зависимые значения строятся с помощью связанного списка
-    // Используются свойства EFPValue.FirstOutput и EFPInput.NextOutput
+    // Используются свойства DepValue.FirstOutput и DepInput.NextOutput
 
-    private DepInput<T> FirstOutput;
+    internal DepInput<T> FirstOutput;
 
     /// <summary>
     /// Количество зависимых объектов, присоединенных к данному
@@ -372,15 +404,6 @@ namespace AgeyevAV.DependedValues
     {
       return _OwnerInfo.ToString() + ", Value=" + Value.ToString();
     }
-
-    #endregion
-
-    #region Операторы
-
-    //public static explicit operator T(EFPValue<T> value)
-    //{
-    //  return value.ValueEx;
-    //}
 
     #endregion
   }
@@ -519,7 +542,7 @@ namespace AgeyevAV.DependedValues
 
 
   /// <summary>
-  /// Реализация EFPValue, позволяющая устанавливать значения "снаружи" вручную,
+  /// Реализация DepValue, позволяющая устанавливать значения "снаружи" вручную,
   /// или с помощью источника данных Source
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
@@ -539,7 +562,7 @@ namespace AgeyevAV.DependedValues
       // 09.11.2009
       // Проверки не нужны, т.к.:
       // - при установке Value проверка будет выполнена повторно;
-      // - в EFPInputWithCheck может потребоваться обработка для значения, которое
+      // - в DepInputWithCheck может потребоваться обработка для значения, которое
       // - совпадает с базовым
       //if (NewVal == null && base.Value == null)
       //  return;

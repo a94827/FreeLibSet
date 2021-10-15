@@ -120,7 +120,7 @@ namespace AgeyevAV
       get 
       {
         if (_Value == 0)
-          return new DateTime();
+          return DateRange.Whole.FirstDate;
         else
           return new DateTime(Year, Month, 1); 
       }
@@ -134,7 +134,7 @@ namespace AgeyevAV
       get 
       {
         if (_Value == 0)
-          return new DateTime();
+          return DateRange.Whole.LastDate; // 14.10.2021
         else
           return new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month)); 
       }
