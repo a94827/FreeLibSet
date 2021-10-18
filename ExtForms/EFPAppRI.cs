@@ -1213,37 +1213,37 @@ namespace AgeyevAV.ExtForms.RI
         get
         {
           InitCheckStateEx2();
-          return FCheckStateEx2;
+          return _CheckStateEx2;
         }
         set
         {
           InitCheckStateEx2();
-          FCheckStateEx2.Source = value;
+          _CheckStateEx2.Source = value;
         }
       }
-      private DepInput<AgeyevAV.RI.CheckState> FCheckStateEx2;
+      private DepInput<AgeyevAV.RI.CheckState> _CheckStateEx2;
 
       private void InitCheckStateEx2()
       {
-        if (FCheckStateEx2 == null)
+        if (_CheckStateEx2 == null)
         {
-          FCheckStateEx2 = new DepInput<AgeyevAV.RI.CheckState>();
-          FCheckStateEx2.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx2");
-          FCheckStateEx2.Value = (AgeyevAV.RI.CheckState)(int)CheckState;
-          FCheckStateEx2.ValueChanged += new EventHandler(FCheckStateEx2_ValueChanged);
+          _CheckStateEx2 = new DepInput<AgeyevAV.RI.CheckState>();
+          _CheckStateEx2.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx2");
+          _CheckStateEx2.Value = (AgeyevAV.RI.CheckState)(int)CheckState;
+          _CheckStateEx2.ValueChanged += new EventHandler(CheckStateEx2_ValueChanged);
 
           base.CheckStateEx.ValueChanged += new EventHandler(CheckStateEx_ValueChanged);
         }
       }
 
-      void CheckStateEx_ValueChanged(object Sender, EventArgs Args)
+      void CheckStateEx_ValueChanged(object sender, EventArgs args)
       {
-        FCheckStateEx2.Value = (AgeyevAV.RI.CheckState)(int)(base.CheckState);
+        _CheckStateEx2.Value = (AgeyevAV.RI.CheckState)(int)(base.CheckState);
       }
 
-      private void FCheckStateEx2_ValueChanged(object Sender, EventArgs Args)
+      private void CheckStateEx2_ValueChanged(object sender, EventArgs args)
       {
-        base.CheckState = (System.Windows.Forms.CheckState)(int)FCheckStateEx2.Value;
+        base.CheckState = (System.Windows.Forms.CheckState)(int)_CheckStateEx2.Value;
       }
 
       #endregion

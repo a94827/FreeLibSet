@@ -71,9 +71,9 @@ namespace AgeyevAV.DependedValues
   }
 
   /// <summary>
-  /// Абстрактный базовый класс для доступа к значению производного типа.
+  /// Абстрактный базовый класс для типизированного доступа к значению.
   /// Свойства объектов объявляются с этим типом.
-  /// Реализация свойств выполняется с помощью классов DepInput и DepValueObject
+  /// Неабстрактные реализации - классы DepInput (или производных), DepValueObject и DepConst.
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
@@ -257,7 +257,8 @@ namespace AgeyevAV.DependedValues
 
     /// <summary>
     /// Источник для значения.
-    /// Непереопределенное свойство возвращает null и не поддерживает присвоение значения
+    /// Переопределяется классом DepInput.
+    /// Непереопределенное свойство возвращает null и не поддерживает присвоение значения.
     /// </summary>
     public virtual DepValue<T> Source
     {
@@ -385,21 +386,6 @@ namespace AgeyevAV.DependedValues
         }
       }
       theInput.NextOutput = null;
-    }
-
-    #endregion
-
-    #region Виртуальный метод для доступа к источнику данных
-
-    /// <summary>
-    /// Переопределенный метод в DepInput возвращает источник данных.
-    /// Базовый метод возвращает null.
-    /// Этот метод не предназначен для использования в пользовательском коде
-    /// </summary>
-    /// <returns></returns>
-    public virtual DepValue<T> GetSource()
-    {
-      return null;
     }
 
     #endregion
@@ -648,15 +634,6 @@ namespace AgeyevAV.DependedValues
       }
     }
     private DepValue<T> _Source;
-
-    /// <summary>
-    /// Возвращает свойство Source
-    /// </summary>
-    /// <returns></returns>
-    public override DepValue<T> GetSource()
-    {
-      return _Source;
-    }
 
     /// <summary>
     /// Используется для связанного списка
