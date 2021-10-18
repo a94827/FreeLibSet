@@ -59,66 +59,26 @@ namespace AgeyevAV.DependedValues
     #region Конструкторы
 
     /// <summary>
-    /// Конструктор с ссылкой на исходные данные и обработчиком DepFunction1
+    /// Конструктор
     /// </summary>
-    /// <param name="source">Источник исходных данных</param>
-    /// <param name="function">Обработчик для вычисления значения</param>
-    public DepExpr1(DepValue<T1> source, DepFunction1<TResult, T1> function)
+    /// <param name="arg">Источник исходных данных. Не может быть null.</param>
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExpr1(DepValue<T1> arg, DepFunction1<TResult, T1> function)
     {
 #if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-      if (function == null)
-        throw new ArgumentNullException("function");
+      if (arg == null)
+        throw new ArgumentNullException("arg");
 #endif
-      _Source = new DepInput<T1>();
-      _Source.OwnerInfo = new DepOwnerInfo(this, "Source");
-      _Source.ValueChanged += new EventHandler(SourceValueChanged);
-      _Function = function;
-      _Source.Source = source;
-      SourceValueChanged(null, null);
-    }
-
-    /// <summary>
-    /// Защищенный конструктор без использования обработчика.
-    /// Требуется, чтобы в производном классе был переопределен метод Calculate() и вызван метод Init().
-    /// Эта версия используется, если метод Calculate() не может вызываться немедленно, т.к. не 
-    /// инициализированы поля производного класса
-    /// </summary>
-    protected DepExpr1()
-    {
-    }
-
-    /// <summary>
-    /// Этот метод может использоваться в конструкторе производного класса, если
-    /// был вызван конструктор этого класса без аргументов.
-    /// Инициализирует свойство Source.
-    /// </summary>
-    /// <param name="source">Источник исходных данных</param>
-    protected void Init(DepValue<T1> source)
-    {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-      if (_Source != null)
-        throw new InvalidOperationException("Повторный вызов Init()");
-#endif
-
-      _Source = new DepInput<T1>();
-      _Source.OwnerInfo = new DepOwnerInfo(this, "Source");
-      _Source.ValueChanged += new EventHandler(SourceValueChanged);
-      _Source.Source = source;
-      SourceValueChanged(null, null);
-    }
-
-    /// <summary>
-    /// Защищенный конструктор без использования обработчика.
-    /// Требуется, чтобы в производном классе был переопределен метод Calculate()
-    /// </summary>
-    /// <param name="source">Источник исходных данных</param>
-    protected DepExpr1(DepValue<T1> source)
-    {
-      Init(source);
+      _Arg = arg;
+      if (!_Arg.IsConst)
+        _Arg.ValueChanged += new EventHandler(SourceValueChanged);
+      if (function != null)
+      {
+        _Function = function;
+        SourceValueChanged(null, null);
+      }
     }
 
     #endregion
@@ -128,14 +88,25 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Исходные данные для расчета
     /// </summary>
-    public new DepValue<T1> Source { get { return _Source; } }
-    private DepInput<T1> _Source;
+    public DepValue<T1> Arg { get { return _Arg; } }
+    private readonly DepValue<T1> _Arg;
 
     /// <summary>
     /// Делегат для вычисления функции
     /// </summary>
     // public DepFunction1<TResult, T1> Function { get { return FFunction; } }
-    private DepFunction1<TResult, T1> _Function;
+    private readonly DepFunction1<TResult, T1> _Function;
+
+    /// <summary>
+    /// Возвращает true, если аргумент является константой
+    /// </summary>
+    public override bool IsConst
+    {
+      get
+      {
+        return _Arg.IsConst;
+      }
+    }
 
     #endregion
 
@@ -148,14 +119,14 @@ namespace AgeyevAV.DependedValues
 
     /// <summary>
     /// Вычисление значения.
-    /// Этот метод должен быть переопределен в производном классе, если внешний обработчик Function не используетс
+    /// Этот метод должен быть переопределен в производном классе, если конструктору не был передан делегат Function.
     /// </summary>
     /// <returns></returns>
     protected virtual TResult Calculate()
     {
       if (_Function == null)
         throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
-      return _Function(_Source.Value);
+      return _Function(_Arg.Value);
     }
 
     #endregion
@@ -193,100 +164,48 @@ namespace AgeyevAV.DependedValues
     #region Конструкторы
 
     /// <summary>
-    /// Конструктор с ссылками на исходные данные и обработчиком DepFunction2
+    /// Конструктор с двумя источниками данных.
     /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
-    /// <param name="source2">Источник исходных данных аргумента 2</param>
-    /// <param name="function">Обработчик для вычисления значения</param>
-    public DepExpr2(DepValue<T1> source1, DepValue<T2> source2,
+    /// <param name="arg1">Источник исходных данных аргумента 1. Не может быть null.</param>
+    /// <param name="arg2">Источник исходных данных аргумента 2. Не может быть null.</param>
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExpr2(DepValue<T1> arg1, DepValue<T2> arg2,
       DepFunction2<TResult, T1, T2> function)
     {
 #if DEBUG
-      if (source1 == null)
-        throw new ArgumentNullException("source1");
-      if (source2 == null)
-        throw new ArgumentNullException("source2");
-      if (function == null)
-        throw new ArgumentNullException("function");
+      if (arg1 == null)
+        throw new ArgumentNullException("arg1");
+      if (arg2 == null)
+        throw new ArgumentNullException("arg2");
 #endif
 
-      _Source1 = new DepInput<T1>();
-      _Source1.OwnerInfo = new DepOwnerInfo(this, "Source1");
-      _Source1.ValueChanged += new EventHandler(SourceValueChanged);
+      _Arg1 = arg1;
+      _Arg2 = arg2;
+      if (!_Arg1.IsConst)
+        _Arg1.ValueChanged += new EventHandler(SourceValueChanged);
+      if (!_Arg2.IsConst)
+        _Arg2.ValueChanged += new EventHandler(SourceValueChanged);
 
-      _Source2 = new DepInput<T2>();
-      _Source2.OwnerInfo = new DepOwnerInfo(this, "Source2");
-      _Source2.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Function = function;
-      _Source1.Source = source1;
-      _Source2.Source = source2;
-      SourceValueChanged(null, null);
+      if (function != null)
+      {
+        _Function = function;
+        SourceValueChanged(null, null);
+      }
     }
 
     /// <summary>
-    /// Конструктор с гибридными аргументами обработчиком DepFunction2
+    /// Конструктор с гибридными аргументами
     /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
+    /// <param name="arg1">Источник исходных данных аргумента 1. Не может быть null.</param>
     /// <param name="value2">Фиксированное значение 2</param>
-    /// <param name="function">Обработчик для вычисления значения</param>
-    public DepExpr2(DepValue<T1> source1, T2 value2,
-      DepFunction2<TResult, T1, T2> function)
-      :this(source1, new DepConst<T2>(value2), function)
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExpr2(DepValue<T1> arg1, T2 value2, DepFunction2<TResult, T1, T2> function)
+      : this(arg1, new DepConst <T2>(value2), function)
     {
-    }
-
-    /// <summary>
-    /// Защищенный конструктор без использования обработчика.
-    /// Требуется, чтобы в производном классе был переопределен метод Calculate() и вызван метод Init().
-    /// Эта версия используется, если метод Calculate() не может вызываться немедленно, т.к. не 
-    /// инициализированы поля производного класса
-    /// </summary>
-    protected DepExpr2()
-    {
-    }
-
-    /// <summary>
-    /// Защищенный конструктор без использования обработчика.
-    /// Требуется, чтобы в производном классе был переопределен метод Calculate
-    /// Инициализирует свойства Source1 и Source2
-    /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
-    /// <param name="source2">Источник исходных данных аргумента 2</param>
-    protected DepExpr2(DepValue<T1> source1, DepValue<T2> source2)
-    {
-      Init(source1, source2);
-    }
-
-    /// <summary>
-    /// Этот метод может использоваться в конструкторе производного класса, если
-    /// был вызван конструктор этого класса без аргументов.
-    /// Инициализирует свойства Source1 и Source2
-    /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
-    /// <param name="source2">Источник исходных данных аргумента 2</param>
-    protected void Init(DepValue<T1> source1, DepValue<T2> source2)
-    {
-#if DEBUG
-      if (source1 == null)
-        throw new ArgumentNullException("source1");
-      if (source2 == null)
-        throw new ArgumentNullException("source2");
-      if (_Source1 != null || _Source2 != null)
-        throw new InvalidOperationException("Повторный вызов Init()");
-#endif
-
-      _Source1 = new DepInput<T1>();
-      _Source1.OwnerInfo = new DepOwnerInfo(this, "Source1");
-      _Source1.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Source2 = new DepInput<T2>();
-      _Source2.OwnerInfo = new DepOwnerInfo(this, "Source2");
-      _Source2.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Source1.Source = source1;
-      _Source2.Source = source2;
-      SourceValueChanged(null, null);
     }
 
     #endregion
@@ -296,21 +215,31 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Исходные данные для расчета. Первый аргумент
     /// </summary>
-    public DepValue<T1> Source1 { get { return _Source1; } }
-    private DepInput<T1> _Source1;
+    public DepValue<T1> Arg1 { get { return _Arg1; } }
+    private readonly DepValue<T1> _Arg1;
 
     /// <summary>
     /// Исходные данные для расчета. Второй аргумент
     /// </summary>
-    public DepValue<T2> Source2 { get { return _Source2; } }
-    private DepInput<T2> _Source2;
+    public DepValue<T2> Arg2 { get { return _Arg2; } }
+    private readonly DepValue<T2> _Arg2;
 
     /// <summary>
     /// Делегат для вычисления функции
     /// </summary>
     // public DepFunction2<TResult, T1, T2> Function { get { return FFunction; } }
-    private DepFunction2<TResult, T1, T2> _Function;
+    private readonly DepFunction2<TResult, T1, T2> _Function;
 
+    /// <summary>
+    /// Возвращает true, если все аргументы являются константами
+    /// </summary>
+    public override bool IsConst
+    {
+      get
+      {
+        return _Arg1.IsConst && _Arg2.IsConst;
+      }
+    }
 
     #endregion
 
@@ -330,7 +259,7 @@ namespace AgeyevAV.DependedValues
     {
       if (_Function == null)
         throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
-      return _Function(_Source1.Value, _Source2.Value);
+      return _Function(_Arg1.Value, _Arg2.Value);
     }
 
     #endregion
@@ -371,132 +300,71 @@ namespace AgeyevAV.DependedValues
     #region Конструкторы
 
     /// <summary>
-    /// Конструктор с ссылками на исходные данные и обработчиком DepFunction3
+    /// Конструктор с двумя источниками данных.
     /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
-    /// <param name="source2">Источник исходных данных аргумента 2</param>
-    /// <param name="source3">Источник исходных данных аргумента 3</param>
-    /// <param name="function">Обработчик для вычисления значения</param>
-    public DepExpr3(DepValue<T1> source1, DepValue<T2> source2, DepValue<T3> source3,
+    /// <param name="arg1">Источник исходных данных аргумента 1. Не может быть null.</param>
+    /// <param name="arg2">Источник исходных данных аргумента 2. Не может быть null.</param>
+    /// <param name="arg3">Источник исходных данных аргумента 3. Не может быть null.</param>
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExpr3(DepValue<T1> arg1, DepValue<T2> arg2, DepValue<T3> arg3,
       DepFunction3<TResult, T1, T2, T3> function)
     {
 #if DEBUG
-      if (source1 == null)
-        throw new ArgumentNullException("source1");
-      if (source2 == null)
-        throw new ArgumentNullException("source2");
-      if (source3 == null)
-        throw new ArgumentNullException("source3");
-      if (function == null)
-        throw new ArgumentNullException("function");
+      if (arg1 == null)
+        throw new ArgumentNullException("arg1");
+      if (arg2 == null)
+        throw new ArgumentNullException("arg2");
+      if (arg3 == null)
+        throw new ArgumentNullException("arg3");
 #endif
 
-      _Source1 = new DepInput<T1>();
-      _Source1.OwnerInfo = new DepOwnerInfo(this, "Source1");
-      _Source1.ValueChanged += new EventHandler(SourceValueChanged);
+      _Arg1 = arg1;
+      _Arg2 = arg2;
+      _Arg3 = arg3;
+      if (!_Arg1.IsConst)
+        _Arg1.ValueChanged += new EventHandler(SourceValueChanged);
+      if (!_Arg2.IsConst)
+        _Arg2.ValueChanged += new EventHandler(SourceValueChanged);
+      if (!_Arg3.IsConst)
+        _Arg3.ValueChanged += new EventHandler(SourceValueChanged);
 
-      _Source2 = new DepInput<T2>();
-      _Source2.OwnerInfo = new DepOwnerInfo(this, "Source2");
-      _Source2.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Source3 = new DepInput<T3>();
-      _Source3.OwnerInfo = new DepOwnerInfo(this, "Source3");
-      _Source3.ValueChanged += new EventHandler(SourceValueChanged);
-      _Function = function;
-      _Source1.Source = source1;
-      _Source2.Source = source2;
-      _Source3.Source = source3;
-      SourceValueChanged(null, null);
+      if (function != null)
+      {
+        _Function = function;
+        SourceValueChanged(null, null);
+      }
     }
 
-
     /// <summary>
-    /// Конструктор с гибридными аргументами и обработчиком DepFunction3
+    /// Конструктор с гибридными аргументами
     /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
-    /// <param name="source2">Источник исходных данных аргумента 2</param>
+    /// <param name="arg1">Источник исходных данных аргумента 1. Не может быть null.</param>
+    /// <param name="arg2">Источник исходных данных аргумента 2. Не может быть null.</param>
     /// <param name="value3">Фиксированное значение 3</param>
-    /// <param name="function">Обработчик для вычисления значения</param>
-    public DepExpr3(DepValue<T1> source1, DepValue<T2> source2, T3 value3,
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExpr3(DepValue<T1> arg1, DepValue<T2> arg2, T3 value3,
       DepFunction3<TResult, T1, T2, T3> function)
-      :this(source1, source2, new DepConst<T3>(value3), function)
+      : this(arg1, arg2, new DepConst <T3>(value3), function)
     {
     }
 
     /// <summary>
-    /// Конструктор с гибридными аргументами и обработчиком DepFunction3
+    /// Конструктор с гибридными аргументами
     /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
+    /// <param name="arg1">Источник исходных данных аргумента 1. Не может быть null.</param>
     /// <param name="value2">Фиксированное значение 2</param>
     /// <param name="value3">Фиксированное значение 3</param>
-    /// <param name="function">Обработчик для вычисления значения</param>
-    public DepExpr3(DepValue<T1> source1, T2 value2, T3 value3,
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExpr3(DepValue<T1> arg1, T2 value2, T3 value3,
       DepFunction3<TResult, T1, T2, T3> function)
-      : this(source1, new DepConst<T2>(value2), new DepConst<T3>(value3), function)
+      : this(arg1, new DepConst <T2>(value2), new DepConst <T3>(value3), function)
     {
-    }
-
-
-    /// <summary>
-    /// Защищенный конструктор без использования обработчика.
-    /// Требуется, чтобы в производном классе был переопределен метод Calculate() и вызван метод Init().
-    /// Эта версия используется, если метод Calculate() не может вызываться немедленно, т.к. не 
-    /// инициализированы поля производного класса
-    /// </summary>
-    protected DepExpr3()
-    {
-    }
-
-    /// <summary>
-    /// Защищенный онструктор с ссылкой на исходные данные, без обработчика DepFunction3.
-    /// Требуется, чтобы в производном классе был переопределен метод Calculate()
-    /// Инициализирует свойства Source1, Source2 и Source3.
-    /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
-    /// <param name="source2">Источник исходных данных аргумента 2</param>
-    /// <param name="source3">Источник исходных данных аргумента 3</param>
-    protected DepExpr3(DepValue<T1> source1, DepValue<T2> source2, DepValue<T3> source3)
-    {
-      Init(source1, source2, source3);
-    }
-
-    /// <summary>
-    /// Этот метод может использоваться в конструкторе производного класса, если
-    /// был вызван конструктор этого класса без аргументов.
-    /// Инициализирует свойства Source1, Source2 и Source3
-    /// </summary>
-    /// <param name="source1">Источник исходных данных аргумента 1</param>
-    /// <param name="source2">Источник исходных данных аргумента 2</param>
-    /// <param name="source3">Источник исходных данных аргумента 3</param>
-    protected void Init(DepValue<T1> source1, DepValue<T2> source2, DepValue<T3> source3)
-    {
-#if DEBUG
-      if (source1 == null)
-        throw new ArgumentNullException("source1");
-      if (source2 == null)
-        throw new ArgumentNullException("source2");
-      if (source3 == null)
-        throw new ArgumentNullException("source3");
-      if (_Source1 != null || _Source2 != null || _Source3 != null)
-        throw new InvalidOperationException("Повторный вызов Init()");
-#endif
-
-      _Source1 = new DepInput<T1>();
-      _Source1.OwnerInfo = new DepOwnerInfo(this, "Source1");
-      _Source1.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Source2 = new DepInput<T2>();
-      _Source2.OwnerInfo = new DepOwnerInfo(this, "Source2");
-      _Source2.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Source3 = new DepInput<T3>();
-      _Source3.OwnerInfo = new DepOwnerInfo(this, "Source3");
-      _Source3.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Source1.Source = source1;
-      _Source2.Source = source2;
-      _Source3.Source = source3;
-      SourceValueChanged(null, null);
     }
 
     #endregion
@@ -506,26 +374,37 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Исходные данные для расчета. Первый аргумент
     /// </summary>
-    public DepValue<T1> Source1 { get { return _Source1; } }
-    private DepInput<T1> _Source1;
+    public DepValue<T1> Arg1 { get { return _Arg1; } }
+    private readonly DepValue<T1> _Arg1;
 
     /// <summary>
     /// Исходные данные для расчета. Второй аргумент
     /// </summary>
-    public DepValue<T2> Source2 { get { return _Source2; } }
-    private DepInput<T2> _Source2;
+    public DepValue<T2> Arg2 { get { return _Arg2; } }
+    private readonly DepValue<T2> _Arg2;
 
     /// <summary>
     /// Исходные данные для расчета. Третий аргумент
     /// </summary>
-    public DepValue<T3> Source3 { get { return _Source3; } }
-    private DepInput<T3> _Source3;
+    public DepValue<T3> Arg3 { get { return _Arg3; } }
+    private readonly DepValue<T3> _Arg3;
 
     /// <summary>
     /// Делегат для вычисления функции
     /// </summary>
     //public DepFunction3<TResult, T1, T2, T3> Function { get { return FFunction; } }
-    private DepFunction3<TResult, T1, T2, T3> _Function;
+    private readonly DepFunction3<TResult, T1, T2, T3> _Function;
+
+    /// <summary>
+    /// Возвращает true, если все аргументы являются константами
+    /// </summary>
+    public override bool IsConst
+    {
+      get
+      {
+        return _Arg1.IsConst && _Arg2.IsConst && _Arg3.IsConst;
+      }
+    }
 
 
     #endregion
@@ -546,11 +425,126 @@ namespace AgeyevAV.DependedValues
     {
       if (_Function == null)
         throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
-      return _Function(_Source1.Value, _Source2.Value, _Source3.Value);
+      return _Function(_Arg1.Value, _Arg2.Value, _Arg3.Value);
     }
 
     #endregion
   }
 
+  #endregion
+
+  #region Выражения со списком однотипных аргументов
+#if !XXX
+  /// <summary>
+  /// Прототип вычислителя с массивом однотиных аргументов
+  /// </summary>
+  /// <typeparam name="TResult">Тип вычисляемого значения</typeparam>
+  /// <typeparam name="TArg">Тип аргумента</typeparam>
+  /// <param name="args">Массив аргументов</param>
+  /// <returns>Результат вычисления</returns>
+  public delegate TResult DepFunctionA<TResult, TArg>(TArg[] args);
+
+  /// <summary>
+  /// Вычислитель выражения с переменным числом однотипных аргументов
+  /// В качестве функции вычислителя можно использовать методы класса DepTools. Это особенно актуально для удаленного пользовательского интерфейса, когда нельзя создавать делегаты на методы в прикладном коде.
+  /// Если создается класс-наследник с дополнительными аргументами, не забудьте переопределить свойство IsConst.
+  /// </summary>
+  /// <typeparam name="TResult">Тип результата выражения</typeparam>
+  /// <typeparam name="TArg">Тип исходных данных</typeparam>
+  [Serializable]
+  public class DepExprA<TResult, TArg> : DepValueObject<TResult>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="args">Массив источников исходных данных. Не может быть null или содержать элементы null</param>
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExprA(DepValue<TArg>[] args, DepFunctionA<TResult, TArg> function)
+    {
+#if DEBUG
+      if (args == null)
+        throw new ArgumentNullException("args");
+      for (int i = 0; i < args.Length; i++)
+      {
+        if (args[i] == null)
+          throw new ArgumentNullException("args");
+      }
+#endif
+      _Args = args;
+      for (int i = 0; i < _Args.Length; i++)
+      {
+        if (!_Args[i].IsConst)
+          _Args[i].ValueChanged += SourceValueChanged;
+      }
+
+      if (function != null)
+      {
+        _Function = function;
+        SourceValueChanged(null, null);
+      }
+    }
+
+
+
+    #endregion
+
+    #region Список аргументов
+
+    /// <summary>
+    /// Исходные данные для расчета
+    /// </summary>
+    public DepValue<TArg>[] Args { get { return _Args; } }
+    private DepValue<TArg>[] _Args;
+
+    /// <summary>
+    /// Возвращает true, если все аргументы являются константами
+    /// </summary>
+    public override bool IsConst
+    {
+      get
+      {
+        for (int i = 0; i < Args.Length; i++)
+        {
+          if (!Args[i].IsConst)
+            return false;
+        }
+        return true;
+      }
+    }
+
+    #endregion
+
+    #region Вычисление значения
+
+    private void SourceValueChanged(object sender, EventArgs args)
+    {
+      OwnerSetValue(Calculate());
+    }
+
+    private DepFunctionA<TResult, TArg> _Function;
+
+    /// <summary>
+    /// Вычисление значения.
+    /// Этот метод должен быть переопределен в производном классе, если внешний обработчик Function не используетс
+    /// </summary>
+    /// <returns></returns>
+    protected virtual TResult Calculate()
+    {
+      if (_Function == null)
+        throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
+      TArg[] a = new TArg[_Args.Length];
+      for (int i = 0; i < _Args.Length; i++)
+        a[i] = _Args[i].Value;
+      return _Function(a);
+    }
+
+    #endregion
+  }
+
+#endif
   #endregion
 }

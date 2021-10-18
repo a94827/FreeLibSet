@@ -53,12 +53,17 @@ namespace AgeyevAV.DependedValues
     object Value { get; set;}
 
     /// <summary>
+    /// Возвращает true, если текущий объект является константой
+    /// </summary>
+    bool IsConst { get;}
+
+    /// <summary>
     /// true, если в настоящее время выполняется установка значения
     /// </summary>
     bool InsideSetValue { get; }
 
     /// <summary>
-    /// Извещение посылается при изменении значения свойства ValueEx
+    /// Извещение посылается при изменении значения свойства Value
     /// </summary>
     event EventHandler ValueChanged;
 
@@ -164,6 +169,11 @@ namespace AgeyevAV.DependedValues
         _InsideSetValue = false;
       }
     }
+
+    /// <summary>
+    /// Является ли текущее значение константой
+    /// </summary>
+    public virtual bool IsConst { get { return false; } }
 
     /// <summary>
     /// true, если в настоящее время выполняется установка значения
@@ -535,6 +545,30 @@ namespace AgeyevAV.DependedValues
     public override string ToString()
     {
       return "Константа " + Value.ToString();
+    }
+
+    /// <summary>
+    /// Возвращает true
+    /// </summary>
+    public override bool IsConst { get { return true; } }
+
+    #endregion
+
+    #region Статические методы
+
+    /// <summary>
+    /// Создает массив констант из массива значений.
+    /// </summary>
+    /// <param name="values">Массив значений</param>
+    /// <returns>Массив констант</returns>
+    public static DepConst<T>[] CreateArray(T[] values)
+    {
+      if (values == null)
+        return null;
+      DepConst<T>[] a = new DepConst<T>[values.Length];
+      for (int i = 0; i < values.Length; i++)
+        a[i] = new DepConst<T>(values[i]);
+      return a;
     }
 
     #endregion

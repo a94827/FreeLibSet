@@ -47,8 +47,7 @@ namespace ExtTools.tests
     [Test]
     public void Comparer()
     {
-      DepInRange<int> sut = new DepInRange<int>(new DepConst<int>(2), new DepConst<int>(3), new DepConst<int>(1));
-      sut.Comparer = new InvertedTestComparer();
+      DepInRange<int> sut = new DepInRange<int>(new DepConst<int>(2), new DepConst<int>(3), new DepConst<int>(1), new InvertedTestComparer());
       Assert.AreEqual(true, sut.Value, "Inverted comparer");
     }
   }

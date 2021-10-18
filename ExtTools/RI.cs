@@ -453,11 +453,11 @@ namespace AgeyevAV.RI
     /// <param name="part">Секция для записи значений</param>
     public virtual void WriteChanges(CfgPart part)
     {
-      //if (ErrorMessage != OldErrorMessage)
-      //{
-      part.SetString("Error", ErrorMessage);
-      _OldErrorMessage = _ErrorMessage;
-      //}
+      if (ErrorMessage != OldErrorMessage)
+      {
+        part.SetString("Error", ErrorMessage);
+        _OldErrorMessage = _ErrorMessage;
+      }
     }
 
     /// <summary>
@@ -596,7 +596,7 @@ namespace AgeyevAV.RI
 
     /// <summary>
     /// Устанавливает свойство IsFixed в true.
-    /// Переопределяется составнымт элементами, такими, как RIBand, для установки свойства дочерних элементов
+    /// Переопределяется составными элементами, такими, как RIBand, для установки свойства дочерних элементов
     /// </summary>
     protected virtual void OnSetFixed()
     {
@@ -877,11 +877,12 @@ namespace AgeyevAV.RI
 
       dialog.SetFixed(); // блокируем добавление элементов
       dialog.ReadValues(Saver); // прочитали предыдущие значения
-      TempCfg Cfg = new TempCfg();
-      dialog.WriteChanges(Cfg);
 
       while (true)
       {
+        TempCfg Cfg = new TempCfg();
+        dialog.WriteChanges(Cfg);
+
         NamedValues DispArgs = new NamedValues();
         DispArgs["Action"] = "ShowDialog";
         DispArgs["Dialog"] = dialog;
@@ -915,11 +916,12 @@ namespace AgeyevAV.RI
 
       dialog.SetFixed(); // блокируем внесение изменений
       dialog.ReadValues(Saver);
-      TempCfg Cfg = new TempCfg();
-      dialog.WriteChanges(Cfg);
 
       while (true)
       {
+        TempCfg Cfg = new TempCfg();
+        dialog.WriteChanges(Cfg);
+
         NamedValues DispArgs = new NamedValues();
         DispArgs["Action"] = "ShowStandardDialog";
         DispArgs["Dialog"] = dialog;

@@ -298,11 +298,6 @@ namespace AgeyevAV.ExtForms.RI
         if (res != null)
         {
           InitValidators(item, res);
-          Control item2 = item as Control;
-          if (item2 != null)
-          {
-          }
-
           return res;
         }
       }
@@ -656,6 +651,7 @@ namespace AgeyevAV.ExtForms.RI
       {
         _ControlProvider = controlProvider;
         _RIItem = riItem;
+        // Не надо. Диалог показывается только один раз. _ControlProvider.Attached += new EventHandler(ControlProvider_Attached);
         _ControlProvider.Validating += new EFPValidatingEventHandler(ControlProvider_Validating);
         if (riItem.HasEnabledExProperty)
         {
@@ -682,6 +678,17 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Проверка элемента
 
+      //void ControlProvider_Attached(object sender, EventArgs args)
+      //{
+      //  _ValueChangedFlag = false;
+      //}
+
+      /// <summary>
+      /// Если в процессе редактирования значение изменилось, флаг устанавливается в true для
+      /// отключения вывода сообщения об ошибке
+      /// </summary>
+      private bool _ValueChangedFlag;
+
       void ControlProvider_Validating(object sender, EFPValidatingEventArgs args)
       {
         if (args.ValidateState == EFPValidateState.Error)
@@ -691,8 +698,24 @@ namespace AgeyevAV.ExtForms.RI
         if (_ControlProvider.BaseProvider.FormProvider.ValidateReason == EFPFormValidateReason.Closing)
           return;
 
-        if (!String.IsNullOrEmpty(_RIItem.ErrorMessage))
-          args.SetError(_RIItem.ErrorMessage);
+        if (String.IsNullOrEmpty(_RIItem.ErrorMessage))
+          return;
+
+        if (_ValueChangedFlag) // пользователь поменял текущее значение
+          return;
+
+        IEFPAppRIItem efpItem = _ControlProvider as IEFPAppRIItem;
+        if (efpItem != null)
+        {
+          efpItem.ReadValues();
+          if (_RIItem.HasChanges)
+          {
+            _ValueChangedFlag = true;
+            return;
+          }
+        }
+
+        args.SetError(_RIItem.ErrorMessage);
       }
 
       #endregion
@@ -1836,7 +1859,7 @@ namespace AgeyevAV.ExtForms.RI
       #region Конструктор
 
       public CsvCodesComboBoxItem(AgeyevAV.RI.CsvCodesComboBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.UserTextComboBox( ), riItem.Codes)
+        : base(baseProvider, new AgeyevAV.ExtForms .UserTextComboBox() , riItem.Codes)
       {
         switch (riItem.CanBeEmptyMode)
         {
@@ -1973,7 +1996,7 @@ namespace AgeyevAV.ExtForms.RI
       #region Конструктор
 
       public EFPTextBoxWithButton(EFPBaseProvider baseProvider)
-        : base(baseProvider, new TextBoxWithButton( ), true)
+        : base(baseProvider, new TextBoxWithButton() , true)
       {
         TheTextBox = new EFPTextBox(baseProvider, Control.TheTextBox);
       }

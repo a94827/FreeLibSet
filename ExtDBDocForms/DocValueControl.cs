@@ -101,7 +101,7 @@ namespace AgeyevAV.ExtForms.Docs
           ((DepValueObject<Boolean>)(_GrayedEx)).OwnerSetValue(true);
         }
         else
-          MakeGrayCheckBox();
+          CreateGrayCheckBox();
       }
       else
       {
@@ -251,7 +251,7 @@ namespace AgeyevAV.ExtForms.Docs
     /// <summary>
     /// Создание отдельного CheckBox'а для отработки свойства Grayed
     /// </summary>
-    private void MakeGrayCheckBox()
+    private void CreateGrayCheckBox()
     {
       // В процессе замены label может потеряться исходное свойство DisplayName элемента
       string OrgDisplayName = ControlProvider.DisplayName;
@@ -263,12 +263,17 @@ namespace AgeyevAV.ExtForms.Docs
         GrayCheckBox = MakeNewCheckBox();
       efpGrayCheckBox = new EFPCheckBox(ControlProvider.BaseProvider, GrayCheckBox);
 
-      // Создаем зацикленную цепочку из CheckBox.Grayed и двух EFPNot.
+      // Создаем зацикленную цепочку из CheckBox.CheckedEx, двух DepNot и DepInput посередине.
       DepNot not1 = new DepNot(efpGrayCheckBox.CheckedEx);
-      DepNot not2 = new DepNot(not1);
-      efpGrayCheckBox.CheckedEx = not2;
+      not1.OwnerInfo = new DepOwnerInfo(this, "GrayCheckBox Chain - NOT #1");
+      DepInput<bool> inp2 = new DepInput<bool>(); // 15.10.2021 DepNot.Arg больше не является DepInput'ом
+      inp2.OwnerInfo = new DepOwnerInfo(this, "GrayCheckBox Chain - INPUT #2");
+      inp2.Source = not1;
+      DepNot not3 = new DepNot(inp2);
+      not3.OwnerInfo = new DepOwnerInfo(this, "GrayCheckBox Chain - NOT #3");
+      efpGrayCheckBox.CheckedEx = not3;
 
-      this.GrayedEx = not2.Source; // нельзя использовать not1, т.к. это не EFPInput
+      this.GrayedEx = not3.Arg; // нельзя использовать not1, т.к. это не EFPInput
 
 
       ControlProvider.Label = GrayCheckBox;
@@ -324,7 +329,7 @@ namespace AgeyevAV.ExtForms.Docs
       ControlProvider.Control.Location = new Point(16, 0);
       ControlProvider.Control.Size = new Size(ThePanel.ClientSize.Width - 16, ThePanel.ClientSize.Height);
       ControlProvider.Control.TabIndex = 1;
-      ThePanel.Controls.Add(ControlProvider.Control);
+      ThePanel.Controls.Add(ControlProvider.Control );
       return TheCheckBox;
     }
 
@@ -603,11 +608,11 @@ namespace AgeyevAV.ExtForms.Docs
   }
 
   /// <summary>
-  /// Шаблон заготовки для конкретных управляющих элементов
-  /// Доопределяет свойство Control
-  /// </summary>
-  /// <typeparam name="TValue">Тип редактируемого значения</typeparam>
-  /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента</typeparam>
+      /// Шаблон заготовки для конкретных управляющих элементов
+      /// Доопределяет свойство Control
+      /// </summary>
+      /// <typeparam name="TValue">Тип редактируемого значения</typeparam>
+      /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента</typeparam>
   public abstract class DocValueControl<TValue, TControlProvider> : DocValueControlBase2<TValue>
     where TControlProvider : IEFPControl
   {
@@ -643,12 +648,12 @@ namespace AgeyevAV.ExtForms.Docs
   }
 
   /// <summary>
-  /// Шаблон заготовки для управляющего элемента, редактирующего сразу 2 поля
-  /// Не определяет свойство Control нужного типа.
-  /// Второе значение может не редактироваться (DocValue2=null)
-  /// </summary>
-  /// <typeparam name="TValue1">Тип первого редактируемого значения</typeparam>
-  /// <typeparam name="TValue2">Тип второго редактируемого значения</typeparam>
+      /// Шаблон заготовки для управляющего элемента, редактирующего сразу 2 поля
+      /// Не определяет свойство Control нужного типа.
+      /// Второе значение может не редактироваться (DocValue2=null)
+      /// </summary>
+      /// <typeparam name="TValue1">Тип первого редактируемого значения</typeparam>
+      /// <typeparam name="TValue2">Тип второго редактируемого значения</typeparam>
   public abstract class TwoDocValueControlBase2<TValue1, TValue2> : DocValueControlBase, IDocEditItem
   {
     #region Конструктор
@@ -1007,7 +1012,7 @@ namespace AgeyevAV.ExtForms.Docs
   /// <typeparam name="TValue1">Тип первого редактируемого значения</typeparam>
   /// <typeparam name="TValue2">Тип второго редактируемого значения</typeparam>
   /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента</typeparam>
-  public abstract class TwoDocValueControl<TValue1, TValue2, TControlProvider> : TwoDocValueControlBase2<TValue1, TValue2>
+  public abstract class TwoDocValueControl<TValue1, TValue2, TControlProvider > : TwoDocValueControlBase2<TValue1, TValue2>
     where TControlProvider : IEFPControl
   {
     #region Конструктор

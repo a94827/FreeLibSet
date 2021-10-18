@@ -133,19 +133,16 @@ namespace ExtTools.tests
 
       v2.Value = 3;
       Assert.AreEqual("True|False|True", resprod.ToString(), "Second value changed");
-
-      sut.Kind = DepCompareKind.Equal;
-      Assert.AreEqual("True|False|True|False", resprod.ToString(), "Comparison kind changed");
     }
 
     [Test]
     public void Comparer()
     {
-      DepComparer<int> sut = new DepComparer<int>(new DepConst<int>(1), new DepConst<int>(2), DepCompareKind.LessThan);
-      Assert.AreEqual(true, sut.Value, "Default comparer");
+      DepComparer<int> sut1 = new DepComparer<int>(new DepConst<int>(1), new DepConst<int>(2), DepCompareKind.LessThan);
+      Assert.AreEqual(true, sut1.Value, "Default comparer");
 
-      sut.Comparer = new InvertedTestComparer();
-      Assert.AreEqual(false, sut.Value, "Inverted comparer");
+      DepComparer<int> sut2 = new DepComparer<int>(new DepConst<int>(1), new DepConst<int>(2), DepCompareKind.LessThan, new InvertedTestComparer());
+      Assert.AreEqual(false, sut2.Value, "Inverted comparer");
     }
   }
 }

@@ -50,7 +50,7 @@ namespace AgeyevAV.DependedValues
     /// Может использоваться в конструкторе класса DepExpr1.
     /// </summary>
     /// <param name="s">Строка</param>
-    /// <returns>Длина строкаи</returns>
+    /// <returns>Длина строки</returns>
     public static int Length(string s)
     {
       if (Object.ReferenceEquals(s, null))
@@ -628,6 +628,148 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
+    #region Min()/Max()
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static DateTime Min(params DateTime[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      DateTime res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] < res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<DateTime, DateTime> MinEx(params DepValue<DateTime>[] values)
+    {
+      return new DepExprA<DateTime, DateTime>(values, Min);
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static DateTime Max(params DateTime[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      DateTime res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] > res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<DateTime, DateTime> MaxEx(params DepValue<DateTime>[] values)
+    {
+      return new DepExprA<DateTime, DateTime>(values, Max);
+    }
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static DateTime? Min(params DateTime?[] values)
+    {
+      DateTime? res = null;
+      for (int i = 0; i < values.Length; i++)
+      {
+        if (values[i].HasValue)
+        {
+          if (res.HasValue)
+          {
+            if (values[i].Value < res.Value)
+              res = values[i];
+          }
+          else
+            res = values[i];
+        }
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<DateTime?, DateTime?> MinEx(params DepValue<DateTime?>[] values)
+    {
+      return new DepExprA<DateTime?, DateTime?>(values, Min);
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static DateTime? Max(params DateTime?[] values)
+    {
+      DateTime? res = null;
+      for (int i = 0; i < values.Length; i++)
+      {
+        if (values[i].HasValue)
+        {
+          if (res.HasValue)
+          {
+            if (values[i].Value > res.Value)
+              res = values[i];
+          }
+          else
+            res = values[i];
+        }
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<DateTime?, DateTime?> MaxEx(params DepValue<DateTime?>[] values)
+    {
+      return new DepExprA<DateTime?, DateTime?>(values, Max);
+    }
+
+    #endregion
+
     #endregion
 
     #region YearMonth
@@ -919,8 +1061,8 @@ namespace AgeyevAV.DependedValues
     /// Возвращает длину массива Array.Length.
     /// Если ссылка на массив равна null, возвращает 0.
     /// </summary>
-    /// <param name="s">Строка</param>
-    /// <returns>Длина строкаи</returns>
+    /// <param name="array">Массив</param>
+    /// <returns>Длина массива</returns>
     public static int Length<T>(T[] array)
     {
       if (Object.ReferenceEquals(array, null))
@@ -933,15 +1075,287 @@ namespace AgeyevAV.DependedValues
     /// Возвращает длину массива Array.Length.
     /// Если ссылка на массив равна null, возвращает 0.
     /// </summary>
-    /// <param name="s">Строка</param>
+    /// <param name="array">Массив</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<int, T[]> LengthEx<T>(DepValue<T[]> s)
+    public static DepExpr1<int, T[]> LengthEx<T>(DepValue<T[]> array)
     {
-      return new DepExpr1<int, T[]>(s, Length<T>);
+      return new DepExpr1<int, T[]>(array, Length<T>);
     }
 
     #endregion
 
+
+    #endregion
+
+    #region Математические функции
+
+    #region Min()/Max()
+
+    #region Int32
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static int Min(params int[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      int res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] < res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<int, int> MinEx(params DepValue<int>[] values)
+    {
+      return new DepExprA<int, int>(values, Min);
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static int Max(params int[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      int res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] > res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<int, int> MaxEx(params DepValue<int>[] values)
+    {
+      return new DepExprA<int, int>(values, Max);
+    }
+
+    #endregion
+
+    #region Single
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static float Min(params float[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      float res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] < res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<float, float> MinEx(params DepValue<float>[] values)
+    {
+      return new DepExprA<float, float>(values, Min);
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static float Max(params float[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      float res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] > res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<float, float> MaxEx(params DepValue<float>[] values)
+    {
+      return new DepExprA<float, float>(values, Max);
+    }
+
+    #endregion
+
+    #region Double
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static double Min(params double[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      double res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] < res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<double, double> MinEx(params DepValue<double>[] values)
+    {
+      return new DepExprA<double, double>(values, Min);
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static double Max(params double[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      double res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] > res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<double, double> MaxEx(params DepValue<double>[] values)
+    {
+      return new DepExprA<double, double>(values, Max);
+    }
+
+    #endregion
+
+    #region Decimal
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static decimal Min(params decimal[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      decimal res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] < res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает минимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<decimal, decimal> MinEx(params DepValue<decimal>[] values)
+    {
+      return new DepExprA<decimal, decimal>(values, Min);
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисленное значение</returns>
+    public static decimal Max(params decimal[] values)
+    {
+      if (values.Length == 0)
+        throw new ArgumentException("Список аргументов пустой");
+
+      decimal res = values[0];
+      for (int i = 1; i < values.Length; i++)
+      {
+        if (values[i] > res)
+          res = values[i];
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает максимальное значение.
+    /// Список аргументов не может быть пустым.
+    /// </summary>
+    /// <param name="values">Список аргументов</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExprA<decimal, decimal> MaxEx(params DepValue<decimal>[] values)
+    {
+      return new DepExprA<decimal, decimal>(values, Max);
+    }
+
+    #endregion
+
+    #endregion
 
     #endregion
   }

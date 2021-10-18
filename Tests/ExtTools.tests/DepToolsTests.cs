@@ -4,6 +4,8 @@ using System.Text;
 using NUnit.Framework;
 using AgeyevAV.DependedValues;
 
+// TODO: Не все методы
+
 namespace ExtTools.tests
 {
   [TestFixture]

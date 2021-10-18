@@ -35,99 +35,12 @@ using System.Text;
 namespace AgeyevAV.DependedValues
 {
   /// <summary>
-  /// Базовый класс для DepAnd и DepOr
-  /// </summary>
-  [Serializable]
-  public abstract class DepAndOrBase : DepValueObject<Boolean>
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Защищенный конструктор
-    /// </summary>
-    protected DepAndOrBase()
-    {
-      _Inputs = new List<DepInput<Boolean>>();
-    }
-
-    #endregion
-
-    #region Методы
-
-    /// <summary>
-    /// Добавляет зависимое значение
-    /// </summary>
-    /// <param name="depenedValue">Добавляемое значение. 
-    /// Если null, то никаких действий не выполняется</param>
-    public void Add(DepValue<Boolean> depenedValue)
-    {
-      if (depenedValue == null)
-        return;
-
-      DepInput<Boolean> NewInput = new DepInput<Boolean>();
-      NewInput.OwnerInfo = new DepOwnerInfo(this, "[" + _Inputs.Count.ToString() + "]");
-      NewInput.Source = depenedValue;
-      NewInput.ValueChanged += new EventHandler(SourceValueChanged);
-
-      _Inputs.Add(NewInput);
-      SourceValueChanged(null, null);
-    }
-
-    /// <summary>
-    /// Удаляет зависимое значение.
-    /// Этот метод вряд ли понадобится.
-    /// </summary>
-    /// <param name="depenedValue">Удялемое значение.
-    /// Если null, то никаких действий не выполняется</param>
-    public void Remove(DepValue<Boolean> depenedValue)
-    {
-      if (depenedValue == null)
-        return;
-
-      for (int i = 0; i < _Inputs.Count; i++)
-      {
-        if (_Inputs[i].Source == depenedValue)
-        {
-          _Inputs.RemoveAt(i);
-          break;
-        }
-      }
-      SourceValueChanged(null, null);
-    }
-
-    /// <summary>
-    /// Список входных значений
-    /// </summary>
-    protected List<DepInput<Boolean>> Inputs { get { return _Inputs; } }
-    private List<DepInput<Boolean>> _Inputs;
-
-    private void SourceValueChanged(object sender, EventArgs args)
-    {
-      DoCalc();
-    }
-
-    /// <summary>
-    /// Абстрактный метод, выполняющий расчет значения
-    /// </summary>
-    protected abstract void DoCalc();
-
-    #endregion
-  }
-
-  /// <summary>
   /// Логическое "И"
   /// </summary>
   [Serializable]
-  public sealed class DepAnd : DepAndOrBase
+  public sealed class DepAnd : DepExprA<bool, bool>
   {
     #region Конструкторы
-
-    /// <summary>
-    /// Создает пустой объект, для которого надо будет вызвать метод Add()
-    /// </summary>
-    public DepAnd()
-    {
-    }
 
     /// <summary>
     /// Создает объект, реализующий функцию AND для двух аргументов
@@ -135,19 +48,19 @@ namespace AgeyevAV.DependedValues
     /// <param name="a">Первое значение</param>
     /// <param name="b">Второе значение</param>
     public DepAnd(DepValue<Boolean> a, DepValue<Boolean> b)
+      : base(new DepValue<bool>[2] { a, b }, null)
     {
-      Add(a);
-      Add(b);
+      OwnerSetValue(Calculate());
     }
 
     /// <summary>
-    /// Создает объект, реализующий функцию AND для произвольного числав вргументов
+    /// Создает объект, реализующий функцию AND для произвольного числав aргументов
     /// </summary>
-    /// <param name="a">Массив аргументов</param>
-    public DepAnd(params DepValue<Boolean>[] a)
+    /// <param name="args">Массив аргументов</param>
+    public DepAnd(params DepValue<Boolean>[] args)
+      : base(args, null)
     {
-      for (int i = 0; i < a.Length; i++)
-        Add(a[i]);
+      OwnerSetValue(Calculate());
     }
 
     #endregion
@@ -155,19 +68,17 @@ namespace AgeyevAV.DependedValues
     #region Переопределенные методы
 
     /// <summary>
-    /// Вычисляет функцию AND
+    /// Вычисление значения
     /// </summary>
-    protected override void DoCalc()
+    /// <returns></returns>
+    protected override bool Calculate()
     {
-      if (Inputs.Count == 0)
-        OwnerSetValue(true);
-      else
+      for (int i = 0; i < Args.Length; i++)
       {
-        bool x = Inputs[0].Value;
-        for (int i = 1; i < Inputs.Count; i++)
-          x = x & Inputs[i].Value;
-        OwnerSetValue(x);
+        if (!Args[i].Value)
+          return false;
       }
+      return true;
     }
 
     #endregion
@@ -193,41 +104,31 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Присоединение ко входу с логикой "И" к существующим источникам.
     /// Если <paramref name="resValue"/> не имеет источника, то <paramref name="srcValue"/> присоединяется в качестве источника
-    /// непосредственно. Если источник есть, проверяется, не является ли он DepAnd. Если
-    /// является, то проверяется, имеет ли он только один выход на ResValue, или есть другие
-    /// объекты, которые от него зависят. Если <paramref name="resValue"/> - единственный выход DepAnd, то <paramref name="srcValue"/>
-    /// добавляется к нему. Иначе создается новый объект DepAnd, существующий источник
-    /// переключается на него, а затем добавляется <paramref name="srcValue"/>.
+    /// непосредственно. Если источник есть, то создается новый объект DepAnd.
     /// </summary>
     /// <param name="resValue">Зависимое значение</param>
     /// <param name="srcValue">Исходное значение</param>
     public static void AttachInput(DepValue<Boolean> resValue, DepValue<Boolean> srcValue)
     {
+      DepValue<Boolean> resValue2 = resValue as DepInput<bool>;
+
+#if DEBUG
       if (resValue == null)
         throw new ArgumentNullException("resValue");
+      if (resValue2 == null)
+        throw new ArgumentException("К элементу " + resValue.ToString() + " нельзя присоединять источник");
       if (srcValue == null)
         throw new ArgumentNullException("srcValue");
+#endif
 
-      if (resValue.Source == null)
-      {
-        resValue.Source = srcValue;
-        return;
-      }
 
-      if (resValue.Source is DepAnd)
-      {
-        if (resValue.Source.OutputCount == 1)
-        {
-          ((DepAnd)(resValue.Source)).Add(srcValue);
-          return;
-        }
-      }
-
-      // Добавляем новый AND
-      DepAnd NewAnd = new DepAnd();
-      NewAnd.Add(resValue.Source);
-      NewAnd.Add(srcValue);
-      resValue.Source = NewAnd;
+      if (resValue2.Source == null)
+        resValue2.Source = srcValue;
+      else
+        // 15.10.2021
+        // Больше нельзя добавлять входы к сушествуюшему объекту.
+        // Если создать новый DepAnd взамен существующего, то от старого источника останутся привязанные обработчики события ValueChanged.
+        resValue2.Source = new DepAnd(resValue2.Source, srcValue);
     }
 
     #endregion
@@ -237,16 +138,9 @@ namespace AgeyevAV.DependedValues
   /// Логическое "ИЛИ"
   /// </summary>
   [Serializable]
-  public sealed class DepOr : DepAndOrBase
+  public sealed class DepOr : DepExprA<bool, bool>
   {
     #region Конструкторы
-
-    /// <summary>
-    /// Создает пустой объект, для которого нужно будет вызвать метод Add()
-    /// </summary>
-    public DepOr()
-    {
-    }
 
     /// <summary>
     /// Создает объект, вычисляющую функцию OR для двух аргументов
@@ -254,19 +148,19 @@ namespace AgeyevAV.DependedValues
     /// <param name="a"></param>
     /// <param name="b"></param>
     public DepOr(DepValue<Boolean> a, DepValue<Boolean> b)
+      : base(new DepValue<bool>[2] { a, b }, null)
     {
-      Add(a);
-      Add(b);
+      OwnerSetValue(Calculate());
     }
 
     /// <summary>
-    /// Создает объект, реализующий функцию OR для произвольного числав вргументов
+    /// Создает объект, реализующий функцию OR для произвольного числав aргументов
     /// </summary>
-    /// <param name="a">Массив аргументов</param>
-    public DepOr(params DepValue<Boolean>[] a)
+    /// <param name="args">Массив аргументов</param>
+    public DepOr(params DepValue<Boolean>[] args)
+      : base(args, null)
     {
-      for (int i = 0; i < a.Length; i++)
-        Add(a[i]);
+      OwnerSetValue(Calculate());
     }
 
     #endregion
@@ -274,19 +168,17 @@ namespace AgeyevAV.DependedValues
     #region Переопределенные методы
 
     /// <summary>
-    /// Вычисляет функцию OR
+    /// Вычисление значения
     /// </summary>
-    protected override void DoCalc()
+    /// <returns></returns>
+    protected override bool Calculate()
     {
-      if (Inputs.Count == 0)
-        OwnerSetValue(false);
-      else
+      for (int i = 0; i < Args.Length; i++)
       {
-        bool x = Inputs[0].Value;
-        for (int i = 1; i < Inputs.Count; i++)
-          x = x | Inputs[i].Value;
-        OwnerSetValue(x);
+        if (Args[i].Value)
+          return true;
       }
+      return false;
     }
 
     #endregion
@@ -312,41 +204,31 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Присоединение ко входу с логикой "ИЛИ" к существующим источникам.
     /// Если <paramref name="resValue"/> не имеет источника, то <paramref name="srcValue"/> присоединяется в качестве источника
-    /// непосредственно. Если источник есть, проверяется, не является ли он DepOr. Если
-    /// является, то проверяется, имеет ли он только один выход на ResValue, или есть другие
-    /// объекты, которые от него зависят. Если ResValue-единственный выход DepOr, то <paramref name="srcValue"/>
-    /// добавляется к нему. Иначе создается новый объект DepOr, существующий источник
-    /// переключается на него, а затем добавляется <paramref name="srcValue"/>.
+    /// непосредственно. Если источник есть, то создается новый объект DepOr.
     /// </summary>
     /// <param name="resValue">Зависимое значение</param>
     /// <param name="srcValue">Исходное значение</param>
     public static void AttachInput(DepValue<Boolean> resValue, DepValue<Boolean> srcValue)
     {
+      DepValue<Boolean> resValue2 = resValue as DepInput<bool>;
+
+#if DEBUG
       if (resValue == null)
         throw new ArgumentNullException("resValue");
+      if (resValue2 == null)
+        throw new ArgumentException("К элементу " + resValue.ToString() + " нельзя присоединять источник");
       if (srcValue == null)
         throw new ArgumentNullException("srcValue");
+#endif
 
-      if (resValue.Source == null)
-      {
-        resValue.Source = srcValue;
-        return;
-      }
 
-      if (resValue.Source is DepOr)
-      {
-        if (resValue.Source.OutputCount == 1)
-        {
-          ((DepOr)(resValue.Source)).Add(srcValue);
-          return;
-        }
-      }
-
-      // Добавляем новый OR
-      DepOr NewOr = new DepOr();
-      NewOr.Add(resValue.Source);
-      NewOr.Add(srcValue);
-      resValue.Source = NewOr;
+      if (resValue2.Source == null)
+        resValue2.Source = srcValue;
+      else
+        // 15.10.2021
+        // Больше нельзя добавлять входы к сушествуюшему объекту.
+        // Если создать новый DepAnd взамен существующего, то от старого источника останутся привязанные обработчики события ValueChanged.
+        resValue2.Source = new DepOr(resValue2.Source, srcValue);
     }
 
     #endregion
@@ -356,57 +238,31 @@ namespace AgeyevAV.DependedValues
   /// Логическое "НЕ"
   /// </summary>
   [Serializable]
-  public sealed class DepNot : DepValueObject<Boolean>
+  public sealed class DepNot : DepExpr1<Boolean, Boolean>
   {
     #region Конструкторы
-
-    /// <summary>
-    /// Создает объект с неприсоединенным исходным значением.
-    /// </summary>
-    public DepNot()
-    {
-      _Source = new DepInput<Boolean>();
-      _Source.OwnerInfo = new DepOwnerInfo(this, "Source");
-      _Source.ValueChanged += new EventHandler(SourceValueChanged);
-      SourceValueChanged(null, null);
-    }
 
     /// <summary>
     /// Создает объект, вычисляющий функцию NOT для заданного аргумента
     /// </summary>
     /// <param name="arg">Аргумент</param>
     public DepNot(DepValue<Boolean> arg)
+      : base(arg, null)
     {
-      _Source = new DepInput<Boolean>();
-      _Source.OwnerInfo = new DepOwnerInfo(this, "Source");
-      _Source.ValueChanged += new EventHandler(SourceValueChanged);
-      _Source.Source = arg;
-      SourceValueChanged(null, null);
+      OwnerSetValue(Calculate());
     }
 
     #endregion
 
-    #region Свойство Source
+    #region Вычисление
 
     /// <summary>
-    /// Исходное значение (аргумент) для вычисления функции NOT
+    /// Вычисляет выражение
     /// </summary>
-    public override DepValue<Boolean> Source
+    /// <returns></returns>
+    protected override bool Calculate()
     {
-      get
-      {
-        return _Source;
-      }
-      set
-      {
-        _Source.Source = value;
-      }
-    }
-    private DepInput<Boolean> _Source;
-
-    private void SourceValueChanged(object sender, EventArgs args)
-    {
-      OwnerSetValue(!Source.Value);
+      return !Arg.Value;
     }
 
     #endregion
@@ -463,27 +319,9 @@ namespace AgeyevAV.DependedValues
   /// </summary>
   /// <typeparam name="T">Тип сравниваемых значений.</typeparam>
   [Serializable]
-  public sealed class DepEqual<T> : DepValueObject<Boolean>
+  public sealed class DepEqual<T> : DepExpr2<Boolean, T, T>
   {
     #region Конструкторы
-
-    /// <summary>
-    /// Создает пустой объект с неприсоединенными аргументами.
-    /// Эта версия подразумевает, что будут установлены свойства Arg1 и Arg2
-    /// </summary>
-    public DepEqual()
-    {
-      _Arg1 = new DepInput<T>();
-      _Arg1.OwnerInfo = new DepOwnerInfo(this, "Arg1");
-      _Arg1.ValueChanged += new EventHandler(ArgValueChanged);
-
-      _Arg2 = new DepInput<T>();
-      _Arg2.OwnerInfo = new DepOwnerInfo(this, "Arg2");
-      _Arg2.ValueChanged += new EventHandler(ArgValueChanged);
-
-      // Сразу устанавливаем значение
-      ArgValueChanged(null, null);
-    }
 
     /// <summary>
     /// Создает объект, выполняющий сравнение двух управляемых объектов.
@@ -491,10 +329,9 @@ namespace AgeyevAV.DependedValues
     /// <param name="arg1">Первый аргумент</param>
     /// <param name="arg2">Второй аргумент</param>
     public DepEqual(DepValue<T> arg1, DepValue<T> arg2)
-      : this()
+      : base(arg1, arg2, null)
     {
-      this.Arg1 = arg1;
-      this.Arg2 = arg2;
+      OwnerSetValue(Calculate());
     }
 
     /// <summary>
@@ -506,30 +343,6 @@ namespace AgeyevAV.DependedValues
       : this(arg1, new DepConst<T>(arg2))
     {
     }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Первый аргумент
-    /// </summary>
-    public DepValue<T> Arg1
-    {
-      get { return _Arg1; }
-      set { _Arg1.Source = value; }
-    }
-    private DepInput<T> _Arg1;
-
-    /// <summary>
-    /// Второй аргумент
-    /// </summary>
-    public DepValue<T> Arg2
-    {
-      get { return _Arg2; }
-      set { _Arg2.Source = value; }
-    }
-    private DepInput<T> _Arg2;
 
     #endregion
 
@@ -549,11 +362,15 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
-    #region Внутренняя реализация
+    #region Вычисление
 
-    private void ArgValueChanged(object sender, EventArgs args)
+    /// <summary>
+    /// Вычисление
+    /// </summary>
+    /// <returns></returns>
+    protected override bool Calculate()
     {
-      OwnerSetValue(Object.Equals(Arg1.Value, Arg2.Value));
+      return Object.Equals(Arg1.Value, Arg2.Value);
     }
 
     #endregion
@@ -610,29 +427,28 @@ namespace AgeyevAV.DependedValues
   /// </summary>
   /// <typeparam name="T">Тип сравниваемых значений</typeparam>
   [Serializable]
-  public sealed class DepComparer<T> : DepValueObject<Boolean>
+  public sealed class DepComparer<T> : DepExpr2<Boolean, T, T>
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает пустой объект с неприсоединенными аргументами.
-    /// Эта версия подразумевает, что будут установлены свойства Arg1, Arg2 и Kind.
-    /// Свойство Kind имеет значение Equal
+    /// Создает объект, выполняющий сравнение двух управляемых объектов с произвольным компаратором.
     /// </summary>
-    public DepComparer()
+    /// <param name="arg1">Первый аргумент</param>
+    /// <param name="arg2">Второй аргумент</param>
+    /// <param name="kind">Операция сравнения</param>
+    /// <param name="comparer">Компаратор. Если null, то используется стандартный компаратор</param>
+    public DepComparer(DepValue<T> arg1, DepValue<T> arg2, DepCompareKind kind, IComparer<T> comparer)
+      : base(arg1, arg2, null)
     {
-      _Arg1 = new DepInput<T>();
-      _Arg1.OwnerInfo = new DepOwnerInfo(this, "Arg1");
-      _Arg1.ValueChanged += new EventHandler(ArgValueChanged);
+      _Kind = kind;
 
-      _Arg2 = new DepInput<T>();
-      _Arg2.OwnerInfo = new DepOwnerInfo(this, "Arg2");
-      _Arg2.ValueChanged += new EventHandler(ArgValueChanged);
+      if (comparer == null)
+        _Comparer = Comparer<T>.Default;
+      else
+        _Comparer = comparer;
 
-      _Kind = DepCompareKind.Equal;
-
-      // Сразу устанавливаем значение
-      OwnerSetValue(true);
+      OwnerSetValue(Calculate());
     }
 
     /// <summary>
@@ -642,11 +458,8 @@ namespace AgeyevAV.DependedValues
     /// <param name="arg2">Второй аргумент</param>
     /// <param name="kind">Операция сравнения</param>
     public DepComparer(DepValue<T> arg1, DepValue<T> arg2, DepCompareKind kind)
-      : this()
+      : this(arg1, arg2, kind, null)
     {
-      this.Arg1 = arg1;
-      this.Arg2 = arg2;
-      this.Kind = kind;
     }
 
     /// <summary>
@@ -665,63 +478,17 @@ namespace AgeyevAV.DependedValues
     #region Свойства
 
     /// <summary>
-    /// Первый аргумент
-    /// </summary>
-    public DepValue<T> Arg1
-    {
-      get { return _Arg1; }
-      set { _Arg1.Source = value; }
-    }
-    private DepInput<T> _Arg1;
-
-    /// <summary>
-    /// Второй аргумент
-    /// </summary>
-    public DepValue<T> Arg2
-    {
-      get { return _Arg2; }
-      set { _Arg2.Source = value; }
-    }
-    private DepInput<T> _Arg2;
-
-    /// <summary>
     /// Операция сравнения
     /// </summary>
-    public DepCompareKind Kind
-    {
-      get { return _Kind; }
-      set
-      {
-        if (value == _Kind)
-          return;
-        _Kind = value;
-        ArgValueChanged(null, null);
-      }
-    }
-    private DepCompareKind _Kind;
+    public DepCompareKind Kind { get { return _Kind; } }
+    private readonly DepCompareKind _Kind;
 
     /// <summary>
     /// Сравниватель для значений.
-    /// Если свойство не установлено в явном виде, возвращается Comparer of T.Default
+    /// Если свойство не было установлено в явном виде, возвращается Comparer of T.Default
     /// </summary>
-    public IComparer<T> Comparer
-    {
-      get
-      {
-        if (_Comparer == null)
-          return Comparer<T>.Default;
-        else
-          return _Comparer;
-      }
-      set
-      {
-        if (Object.ReferenceEquals(value, _Comparer))
-          return;
-        _Comparer = value;
-        ArgValueChanged(null, null);
-      }
-    }
-    private IComparer<T> _Comparer;
+    public IComparer<T> Comparer { get { return _Comparer; } }
+    private readonly IComparer<T> _Comparer;
 
     #endregion
 
@@ -741,11 +508,15 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
-    #region Внутренняя реализация
+    #region Вычисление
 
-    private void ArgValueChanged(object sender, EventArgs args)
+    /// <summary>
+    /// Выполняет расчет
+    /// </summary>
+    /// <returns></returns>
+    protected override bool Calculate()
     {
-      OwnerSetValue(Compare(Arg1.Value, Arg2.Value, Kind, Comparer));
+      return Compare(Arg1.Value, Arg2.Value, Kind, Comparer);
     }
 
     internal static bool Compare(T value1, T value2, DepCompareKind kind, IComparer<T> comparer)
@@ -773,31 +544,26 @@ namespace AgeyevAV.DependedValues
   /// </summary>
   /// <typeparam name="T">Тип сравниваемых значений</typeparam>
   [Serializable]
-  public sealed class DepInRange<T> : DepValueObject<Boolean>
+  public sealed class DepInRange<T> : DepExpr3<Boolean, T, T, T>
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает пустой объект с неприсоединенными аргументами.
-    /// Эта версия подразумевает, что будут установлены свойства Arg1, Arg2 и Kind.
-    /// Свойство Kind имеет значение Equal
+    /// Создает объект, выполняющий сравнение с управляемыми объектами с произвольным компаратором.
     /// </summary>
-    public DepInRange()
+    /// <param name="testedValue">Проверяемое значение</param>
+    /// <param name="minimum">Минимальное значение</param>
+    /// <param name="maximum">Максимальное значение</param>
+    /// <param name="comparer">Компаратор. Если null, то используется стандартный компаратор</param>
+    public DepInRange(DepValue<T> testedValue, DepValue<T> minimum, DepValue<T> maximum, IComparer<T> comparer)
+      : base(testedValue, minimum, maximum, null)
     {
-      _TestedValue = new DepInput<T>();
-      _TestedValue.OwnerInfo = new DepOwnerInfo(this, "Value");
-      _TestedValue.ValueChanged += new EventHandler(ArgValueChanged);
+      if (comparer == null)
+        _Comparer = Comparer<T>.Default;
+      else
+        _Comparer = comparer;
 
-      _Minimum = new DepInput<T>();
-      _Minimum.OwnerInfo = new DepOwnerInfo(this, "Minimum");
-      _Minimum.ValueChanged += new EventHandler(ArgValueChanged);
-
-      _Maximum = new DepInput<T>();
-      _Maximum.OwnerInfo = new DepOwnerInfo(this, "Maximum");
-      _Maximum.ValueChanged += new EventHandler(ArgValueChanged);
-
-      // Сразу устанавливаем значение
-      OwnerSetValue(true);
+      OwnerSetValue(Calculate());
     }
 
     /// <summary>
@@ -807,11 +573,8 @@ namespace AgeyevAV.DependedValues
     /// <param name="minimum">Минимальное значение</param>
     /// <param name="maximum">Максимальное значение</param>
     public DepInRange(DepValue<T> testedValue, DepValue<T> minimum, DepValue<T> maximum)
-      : this()
+      : this(testedValue, minimum, maximum, null)
     {
-      this.TestedValue = testedValue;
-      this.Minimum = minimum;
-      this.Maximum = maximum;
     }
 
     /// <summary>
@@ -830,57 +593,11 @@ namespace AgeyevAV.DependedValues
     #region Свойства
 
     /// <summary>
-    /// Проверяемое значение
-    /// </summary>
-    public DepValue<T> TestedValue
-    {
-      get { return _TestedValue; }
-      set { _TestedValue.Source = value; }
-    }
-    private DepInput<T> _TestedValue;
-
-    /// <summary>
-    /// Минимальное значение
-    /// </summary>
-    public DepValue<T> Minimum
-    {
-      get { return _Minimum; }
-      set { _Minimum.Source = value; }
-    }
-    private DepInput<T> _Minimum;
-
-    /// <summary>
-    /// Максимальное значение
-    /// </summary>
-    public DepValue<T> Maximum
-    {
-      get { return _Maximum; }
-      set { _Maximum.Source = value; }
-    }
-    private DepInput<T> _Maximum;
-
-    /// <summary>
     /// Сравниватель для значений.
-    /// Если свойство не установлено в явном виде, возвращается Comparer of T.Default
+    /// Если свойство не было установлено в явном виде, возвращается Comparer of T.Default
     /// </summary>
-    public IComparer<T> Comparer
-    {
-      get
-      {
-        if (_Comparer == null)
-          return Comparer<T>.Default;
-        else
-          return _Comparer;
-      }
-      set
-      {
-        if (Object.ReferenceEquals(value, _Comparer))
-          return;
-        _Comparer = value;
-        ArgValueChanged(null, null);
-      }
-    }
-    private IComparer<T> _Comparer;
+    public IComparer<T> Comparer { get { return _Comparer; } }
+    private readonly IComparer<T> _Comparer;
 
     #endregion
 
@@ -900,11 +617,16 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
-    #region Внутренняя реализация
+    #region Вычисление
 
-    private void ArgValueChanged(object sender, EventArgs args)
+    /// <summary>
+    /// Выполняет расчет
+    /// </summary>
+    /// <returns></returns>
+    protected override bool Calculate()
     {
-      OwnerSetValue(Comparer.Compare(TestedValue.Value, Minimum.Value)>=0 && Comparer.Compare(TestedValue.Value, Maximum.Value)<=0);
+      return Comparer.Compare(Arg1.Value, Arg2.Value) >= 0 &&
+        Comparer.Compare(Arg1.Value, Arg3.Value) <= 0;
     }
 
     #endregion
@@ -928,11 +650,14 @@ namespace AgeyevAV.DependedValues
     /// <param name="arg">Проверяемое значение</param>
     /// <param name="items">Массив элементов для поиска. Не может быть null</param>
     public DepInArray(DepValue<T> arg, T[] items)
+      : base(arg, null)
     {
       if (items == null)
         throw new ArgumentNullException("items");
       _Items = items;
-      base.Init(arg);
+
+      // Теперь можно вычислить значение
+      OwnerSetValue(Calculate());
     }
 
     #endregion
@@ -958,7 +683,7 @@ namespace AgeyevAV.DependedValues
     {
       if (_Items == null)
         return false;
-      return Array.IndexOf<T>(_Items, Source.Value) >= 0;
+      return Array.IndexOf<T>(_Items, Arg.Value) >= 0;
     }
 
     #endregion
@@ -986,31 +711,9 @@ namespace AgeyevAV.DependedValues
   /// </summary>
   /// <typeparam name="T">Тип значений</typeparam>
   [Serializable]
-  public sealed class DepIf<T> : DepValueObject<T>
+  public sealed class DepIf<T> : DepExpr3<T, bool, T, T>
   {
     #region Конструкторы
-
-    /// <summary>
-    /// Создает пустой объект с неприсоединенными аргументами.
-    /// Эта версия подразумевает, что будут установлены свойства ConditionArg, TrueArg и FalseArg
-    /// </summary>
-    public DepIf()
-    {
-      _ConditionArg = new DepInput<bool>();
-      _ConditionArg.OwnerInfo = new DepOwnerInfo(this, "ConditionArg");
-      _ConditionArg.ValueChanged += new EventHandler(ArgValueChanged);
-
-      _TrueArg = new DepInput<T>();
-      _TrueArg.OwnerInfo = new DepOwnerInfo(this, "TrueArg");
-      _TrueArg.ValueChanged += new EventHandler(ArgValueChanged);
-
-      _FalseArg = new DepInput<T>();
-      _FalseArg.OwnerInfo = new DepOwnerInfo(this, "FalseArg");
-      _FalseArg.ValueChanged += new EventHandler(ArgValueChanged);
-
-      // Сразу устанавливаем значение
-      ArgValueChanged(null, null);
-    }
 
     /// <summary>
     /// Создает объект, выполняющий выбор из двух управляемых объектов.
@@ -1019,11 +722,9 @@ namespace AgeyevAV.DependedValues
     /// <param name="trueArg">Аргумент, значение которого используется, если <paramref name="conditionArg"/> возвращает true</param>
     /// <param name="falseArg">Аргумент, значение которого используется, если <paramref name="conditionArg"/> возвращает false</param>
     public DepIf(DepValue<bool> conditionArg, DepValue<T> trueArg, DepValue<T> falseArg)
-      : this()
+      : base(conditionArg, trueArg, falseArg, null)
     {
-      this.ConditionArg = conditionArg;
-      this.TrueArg = trueArg;
-      this.FalseArg = falseArg;
+      OwnerSetValue(Calculate());
     }
 
     /// <summary>
@@ -1036,41 +737,6 @@ namespace AgeyevAV.DependedValues
       : this(conditionArg, new DepConst<T>(trueArg), new DepConst<T>(falseArg))
     {
     }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Аргумент - условие
-    /// </summary>
-    public DepValue<bool> ConditionArg
-    {
-      get { return _ConditionArg; }
-      set { _ConditionArg.Source = value; }
-    }
-    private DepInput<bool> _ConditionArg;
-
-    /// <summary>
-    /// Первый аргумент
-    /// </summary>
-    public DepValue<T> TrueArg
-    {
-      get { return _TrueArg; }
-      set { _TrueArg.Source = value; }
-    }
-    private DepInput<T> _TrueArg;
-
-    /// <summary>
-    /// Второй аргумент
-    /// </summary>
-    public DepValue<T> FalseArg
-    {
-      get { return _FalseArg; }
-      set { _FalseArg.Source = value; }
-    }
-    private DepInput<T> _FalseArg;
-
 
     #endregion
 
@@ -1090,14 +756,141 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
-    #region Внутренняя реализация
+    #region Вычисление
 
-    private void ArgValueChanged(object sender, EventArgs args)
+    /// <summary>
+    /// Выполняет расчет
+    /// </summary>
+    /// <returns></returns>
+    protected override T Calculate()
     {
-      if (ConditionArg.Value)
-        OwnerSetValue(TrueArg.Value);
+      if (Arg1.Value)
+        return Arg2.Value;
       else
-        OwnerSetValue(FalseArg.Value);
+        return Arg3.Value;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Выбор одного из значений по индексу
+  /// </summary>
+  [Serializable]
+  public sealed class DepByIndex<T> : DepExprA<T, T>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект для заданного списка входов
+    /// </summary>
+    /// <param name="indexArg">Источник данных типа Int32, определяющий выбор значения.
+    /// Не может быть null/</param>
+    /// <param name="args">Источники данных, из которых выполняется выбор.
+    /// Не может быть null или содержать элементы null.</param>
+    /// <param name="defaultArg">Источник данных, используемый, когда в источнике данных <paramref name="indexArg"/> содержится значение вне диапазона.
+    /// Если источник не задан, используется константа, возвращающая значение по умолчанию для типа <typeparamref name="T"/>.</param>
+    public DepByIndex(DepValue<int> indexArg, DepValue<T>[] args, DepValue<T> defaultArg)
+      : base(args, null)
+    {
+#if DEBUG
+      if (indexArg == null)
+        throw new ArgumentNullException("indexArg");
+#endif
+
+      _IndexArg = indexArg;
+      if (!_IndexArg.IsConst)
+        _IndexArg.ValueChanged += new EventHandler(SourceValueChanged);
+
+      if (defaultArg == null)
+        _DefaultArg = new DepConst<T>(default(T));
+      else
+      {
+        _DefaultArg = defaultArg;
+        if (!_DefaultArg.IsConst)
+          _DefaultArg.ValueChanged += new EventHandler(SourceValueChanged);
+      }
+
+      SourceValueChanged(null, null); // вычисляем исходное значение
+    }
+
+    /// <summary>
+    /// Создает объект для заданного списка входов
+    /// </summary>
+    /// <param name="indexArg">Источник данных типа Int32, определяющий выбор значения.
+    /// Не может быть null/</param>
+    /// <param name="args">Источники данных, из которых выполняется выбор.
+    /// Не может быть null или содержать элементы null.</param>
+    /// <param name="defaultValue">Значение, возвращаемое, когда в источнике данных <paramref name="indexArg"/> содержится значение вне диапазона.</param>
+    public DepByIndex(DepValue<int> indexArg, DepValue<T> [] args, T defaultValue)
+      : this(indexArg, args, new DepConst<T>(defaultValue))
+    {
+    }
+
+    /// <summary>
+    /// Создает объект для заданного списка фиксированных значений
+    /// </summary>
+    /// <param name="indexArg">Источник данных типа Int32, определяющий выбор значения.
+    /// Не может быть null/</param>
+    /// <param name="values">Массив значений, из которого выполняется выбор.
+    /// Не может быть null или содержать элементы null.</param>
+    /// <param name="defaultValue">Значение, возвращаемое, когда в источнике данных <paramref name="indexArg"/> содержится значение вне диапазона.</param>
+    public DepByIndex(DepValue<int> indexArg, T[] values, T defaultValue)
+      : this(indexArg, DepConst<T>.CreateArray(values), new DepConst<T>(defaultValue))
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Аргумент - индекс
+    /// </summary>
+    public DepValue<int> IndexArg { get { return _IndexArg; } }
+    private readonly DepValue<int> _IndexArg;
+
+    /// <summary>
+    /// Значение, возвращаемое, если индекс находится вне диапазона
+    /// </summary>
+    public DepValue<T> DefaultArg { get { return _DefaultArg; } }
+    private readonly DepValue<T> _DefaultArg;
+
+    /// <summary>
+    /// Возвращает true, если все аргументы - константы.
+    /// Фактически, всегда должно возвращать false, иначе это бесполезное использование класса.
+    /// </summary>
+    public override bool IsConst
+    {
+      get
+      {
+        if (!_IndexArg.IsConst)
+          return false; // обычно на этом и заканчивается, иначе, зачем было создавать объект
+        if (!base.IsConst)
+          return false;
+        return _DefaultArg.IsConst;
+      }
+    }
+
+    #endregion
+
+    #region Расчет
+
+    private void SourceValueChanged(object sender, EventArgs args)
+    {
+      OwnerSetValue(Calculate());
+    }
+
+    /// <summary>
+    /// Выполняет расчет
+    /// </summary>
+    /// <returns></returns>
+    protected override T Calculate()
+    {
+      if (IndexArg.Value < 0 || IndexArg.Value >= Args.Length)
+        return DefaultArg.Value;
+      else
+        return Args[IndexArg.Value].Value;
     }
 
     #endregion

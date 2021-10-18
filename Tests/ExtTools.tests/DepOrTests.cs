@@ -37,5 +37,45 @@ namespace ExtTools.tests
       v2.Value = true;
       Assert.AreEqual("False|True", resprod.ToString(), "Change #2");
     }
+
+    [Test]
+    public void AttachInput_with_bare()
+    {
+      DepInput<bool> sut = new DepInput<bool>();
+      DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);
+      Assert.AreEqual("False", resprod.ToString(), "Original");
+
+      DepInput<bool> att = new DepInput<bool>();
+      att.Value = false;
+
+      DepOr.AttachInput(sut, att);
+      Assert.AreEqual("False", resprod.ToString(), "Attached");
+
+      att.Value = true;
+      Assert.AreEqual("False|True", resprod.ToString(), "Attached value changed");
+    }
+
+    [Test]
+    public void AttachInput_with_input()
+    {
+      DepInput<bool> sut = new DepInput<bool>();
+      DepInput<bool> main = new DepInput<bool>();
+      main.Value = false;
+      sut.Source = main;
+      DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);
+      Assert.AreEqual("False", resprod.ToString(), "Original");
+
+      DepInput<bool> att = new DepInput<bool>();
+      att.Value = true;
+
+      DepOr.AttachInput(sut, att);
+      Assert.AreEqual("False|True", resprod.ToString(), "Attached");
+
+      att.Value = false;
+      Assert.AreEqual("False|True|False", resprod.ToString(), "Attached value changed");
+
+      main.Value = true;
+      Assert.AreEqual("False|True|False|True", resprod.ToString(), "Main value changed");
+    }
   }
 }
