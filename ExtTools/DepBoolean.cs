@@ -110,7 +110,7 @@ namespace AgeyevAV.DependedValues
     /// <param name="srcValue">Исходное значение</param>
     public static void AttachInput(DepValue<Boolean> resValue, DepValue<Boolean> srcValue)
     {
-      DepValue<Boolean> resValue2 = resValue as DepInput<bool>;
+      DepInput<Boolean> resValue2 = resValue as DepInput<bool>;
 
 #if DEBUG
       if (resValue == null)
@@ -210,7 +210,7 @@ namespace AgeyevAV.DependedValues
     /// <param name="srcValue">Исходное значение</param>
     public static void AttachInput(DepValue<Boolean> resValue, DepValue<Boolean> srcValue)
     {
-      DepValue<Boolean> resValue2 = resValue as DepInput<bool>;
+      DepInput<Boolean> resValue2 = resValue as DepInput<bool>;
 
 #if DEBUG
       if (resValue == null)

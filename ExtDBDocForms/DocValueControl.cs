@@ -96,16 +96,15 @@ namespace AgeyevAV.ExtForms.Docs
       {
         if (isReadOnly)
         {
-          _GrayedEx = new DepValueObject<Boolean>();
+          _GrayedEx = new DepConst<Boolean>(true);
           _GrayedEx.OwnerInfo = new DepOwnerInfo(this, "GrayedEx");
-          ((DepValueObject<Boolean>)(_GrayedEx)).OwnerSetValue(true);
         }
         else
           CreateGrayCheckBox();
       }
       else
       {
-        _GrayedEx = new DepValueObject<Boolean>();
+        _GrayedEx = new DepConst<Boolean>(false);
         _GrayedEx.OwnerInfo = new DepOwnerInfo(this, "GrayedEx");
       }
     }
@@ -217,6 +216,23 @@ namespace AgeyevAV.ExtForms.Docs
       }
     }
     private DepValue<Boolean> _GrayedEx;
+
+    /// <summary>
+    /// Свойство GrayedEx.Value
+    /// </summary>
+    protected bool Grayed
+    {
+      get { return _GrayedEx.Value; }
+      set
+      {
+        if (value == _GrayedEx.Value)
+          return;
+        DepInput<bool> grayedEx2 = _GrayedEx as DepInput<bool>;
+        if (grayedEx2 == null)
+          throw new ArgumentNullException("Свойство GrayedEx (" + GrayedEx.ToString() + ") не является DepInput");
+        grayedEx2.Value = value;
+      }
+    }
 
     void GrayedEx_ValueChanged(object sender, EventArgs args)
     {
@@ -384,8 +400,8 @@ namespace AgeyevAV.ExtForms.Docs
     /// <summary>
     /// Текущее редактируемое значение
     /// </summary>
-    public DepValue<TValue> CurrentValueEx { get { return _CurrentValueEx; } }
-    private DepValue<TValue> _CurrentValueEx;
+    public DepInput<TValue> CurrentValueEx { get { return _CurrentValueEx; } }
+    private DepInput<TValue> _CurrentValueEx;
 
     /// <summary>
     /// Устанавливает свойство CurrentValueEx и присоединяет к нему обработчик на метод ControlChanged.
@@ -397,7 +413,9 @@ namespace AgeyevAV.ExtForms.Docs
         throw new ArgumentNullException();
       if (_CurrentValueEx != null)
         throw new InvalidOperationException("Повторная установка свойства CurrentValueEx");
-      _CurrentValueEx = value;
+      _CurrentValueEx = (value as DepInput<TValue>);
+      if (_CurrentValueEx == null)
+        throw new ArgumentException("Свойство "+value.ToString()+" не является DepInput", "value");
       _CurrentValueEx.ValueChanged += new EventHandler(ControlChanged);
     }
 
@@ -441,7 +459,7 @@ namespace AgeyevAV.ExtForms.Docs
         return;
 
       if (DocValue.Grayed && (!DocValue.IsReadOnly))
-        GrayedEx.Value = DocValue.Grayed;
+        Grayed = DocValue.Grayed;
       OnValueToControl();
       InitEnabled();
 
@@ -714,14 +732,14 @@ namespace AgeyevAV.ExtForms.Docs
     /// <summary>
     /// Текущее редактируемое значение (первое)
     /// </summary>
-    public DepValue<TValue1> CurrentValue1Ex { get { return _CurrentValue1Ex; } }
-    private DepValue<TValue1> _CurrentValue1Ex;
+    public DepInput<TValue1> CurrentValue1Ex { get { return _CurrentValue1Ex; } }
+    private DepInput<TValue1> _CurrentValue1Ex;
 
     /// <summary>
     /// Текущее редактируемое значение (второе)
     /// </summary>
-    public DepValue<TValue2> CurrentValue2Ex { get { return _CurrentValue2Ex; } }
-    private DepValue<TValue2> _CurrentValue2Ex;
+    public DepInput<TValue2> CurrentValue2Ex { get { return _CurrentValue2Ex; } }
+    private DepInput<TValue2> _CurrentValue2Ex;
 
     /// <summary>
     /// Устанавливает свойства CurrentValue1Ex и CurrentValue2Ex и присоединяет к ним обработчики на метод ControlChanged.
@@ -735,8 +753,12 @@ namespace AgeyevAV.ExtForms.Docs
       if (_CurrentValue1Ex != null || _CurrentValue2Ex != null)
         throw new InvalidOperationException("Повторный вызов метода");
 
-      _CurrentValue1Ex = value1;
-      _CurrentValue2Ex = value2;
+      _CurrentValue1Ex = value1 as DepInput<TValue1>;
+      _CurrentValue2Ex = value2 as DepInput<TValue2>;
+      if (_CurrentValue1Ex == null)
+        throw new ArgumentException("Свойство " + value1.ToString() + " не является DepInput", "value1");
+      if (_CurrentValue2Ex == null)
+        throw new ArgumentException("Свойство " + value2.ToString() + " не является DepInput", "value2");
 
       _CurrentValue1Ex.ValueChanged += new EventHandler(ControlChanged);
       _CurrentValue2Ex.ValueChanged += new EventHandler(ControlChanged);
@@ -795,7 +817,7 @@ namespace AgeyevAV.ExtForms.Docs
       bool f2 = DocValue2.Grayed && (!DocValue2.IsReadOnly);
       if (f1 || f2)
       {
-        GrayedEx.Value = DocValue1.Grayed || DocValue2.Grayed;
+        Grayed = DocValue1.Grayed || DocValue2.Grayed;
       }
 
       OnValueToControl();

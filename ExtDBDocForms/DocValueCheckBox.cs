@@ -78,7 +78,7 @@ namespace AgeyevAV.ExtForms.Docs
     {
       if (DocValue.Grayed)
       {
-        GrayedEx.Value = (ControlProvider.CheckState == CheckState.Indeterminate);
+        Grayed = (ControlProvider.CheckState == CheckState.Indeterminate);
         if (!GrayedEx.Value)
           CurrentValueEx.Value = ControlProvider.CheckState == CheckState.Checked;
         else
@@ -214,7 +214,7 @@ namespace AgeyevAV.ExtForms.Docs
     {
       if (ControlProvider1.ThreeState)
       {
-        GrayedEx.Value = (ControlProvider1.CheckState == CheckState.Indeterminate);
+        Grayed = (ControlProvider1.CheckState == CheckState.Indeterminate);
         if (!GrayedEx.Value)
           CurrentValueEx.Value = GetControlValue2();
       }

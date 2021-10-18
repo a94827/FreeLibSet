@@ -391,6 +391,15 @@ namespace AgeyevAV.ExtForms.Docs
     /// <returns>true, если документ удален</returns>
     protected abstract bool GetDeletedValue(out string message);
 
+    /// <summary>
+    /// Извещает, что свойство Deleted, возможно, изменилось
+    /// </summary>
+    public void SetDeletedChanged()
+    {
+      if (_DeletedEx != null)
+        _DeletedEx.SetDelayed();
+    }
+
     #endregion
 
     #region Переопределенные методы
@@ -1137,8 +1146,7 @@ namespace AgeyevAV.ExtForms.Docs
         }
         UI.DocTypes[DocType.Name].PerformEditing(DocId, Control.EditButtonKind == UserComboBoxEditButtonKind.View);
         InitTextAndImage();
-        string Msg;
-        base.DeletedEx.Value = GetDeletedValue(out Msg);
+        SetDeletedChanged();
         Validate();
         DocIdEx.OnValueChanged();
       }

@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-10-18T09:56:57.759000000"/>
+	<meta name="changed" content="2021-10-18T18:23:05.839000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -380,12 +381,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun" }
 		h1.ctl { font-family: "Mangal" }
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		h2 { margin-top: 0.35cm; margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h2.western { font-family: "Liberation Serif", serif }
 		h2.cjk { font-family: "SimSun" }
@@ -425,7 +426,7 @@
 			<p lang="en-US" align="center">244</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">06.10.2021-<span lang="ru-RU">15</span>.10.2021</p>
+			<p lang="en-US" align="center">06.10.2021-<span lang="ru-RU">1</span><span lang="ru-RU">8</span>.10.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. DataTools.PairsToNamesAndValues() <span lang="ru-RU">получает
@@ -434,6 +435,17 @@
 			в </span><span lang="en-US">DepValue (<a href="#v091p1">v.91 </a></span><a href="#v091p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
 			<p lang="en-US">- <span lang="ru-RU">Внутреннее изменение. Убран
 			метод </span>DepValue&lt;T&gt;.IsEqualValues()</p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство </span>DepValue&lt;T&gt;.Value
+			<span lang="ru-RU">теперь доступно только для чтения. </span>DepInput&lt;T&gt;<span lang="ru-RU">
+			переопределяет свойство. Свойство </span>Source <span lang="ru-RU">объявлено
+			на уровне </span>DepInput&lt;T&gt;, <span lang="ru-RU">а не
+			</span>DepValue&lt;T&gt;. <span lang="ru-RU">Свойство
+			</span>DepValue&lt;T&gt;.HasSource. <span lang="ru-RU">Изменена
+			внутренняя реализация классов </span>DepValue&lt;T&gt;,
+			DepValueObject&lt;T&gt;, DepInput&lt;T&gt;, DepInputDelayed&lt;T&gt;<span lang="ru-RU">
+			и </span>DepInputWithCheck()<span lang="ru-RU">.</span></p>
+			<p>- <span lang="ru-RU">Нетипизированный интерфейс </span><span lang="en-US">IDepValue.</span></p>
+			<p>- Свойство <span lang="en-US">DepValue.IsConst</span></p>
 			<p lang="en-US">- <span lang="ru-RU">В конструкторах классов
 			</span>DepXXX() <span lang="ru-RU">используется </span>DepConst&lt;T&gt;,
 			<span lang="ru-RU">если задаваемый аргумент является константой.
@@ -450,7 +462,8 @@
 			</span><span lang="en-US">DepExpr1/2/3&lt;&gt;</span> <span lang="ru-RU">убраны
 			объекты-посредники </span><span lang="en-US">DepInput&lt;&gt; </span><span lang="ru-RU">с
 			возможностью присвоения значения после создания объектов. Вместо
-			этого свойства </span><span lang="en-US">Source1/2/3 </span><span lang="ru-RU">ссылаются
+			этого свойства </span><span lang="en-US">Source1/2/3
+			</span><span lang="ru-RU">непосредственно </span><span lang="ru-RU">ссылаются
 			на аргументы, переданные конструктору (или </span><span lang="en-US">DepConst&lt;&gt;).</span></p>
 			<p><span lang="ru-RU">-</span> <span lang="ru-RU">Новый класс
 			</span><span lang="en-US">DepExprA&lt;&gt;</span><span lang="ru-RU">.</span></p>
@@ -466,7 +479,7 @@
 			модифицировать или заменять объекты</span><span lang="en-US">-</span><span lang="ru-RU">источники
 			</span><span lang="en-US">DepAnd/DepOr, </span><span lang="ru-RU">т.к.
 			это привело бы к утечке памяти из-за оставшихся обработчиков</span></p>
-			<p lang="en-US">- <span lang="ru-RU">Новые к</span><span lang="ru-RU">лассы</span>
+			<p lang="en-US">- <span lang="ru-RU">Новые классы</span>
 			DepComparer&lt;T&gt;<span lang="ru-RU">, </span>DepInRange&lt;T&gt;,
 			DepIf&lt;T&gt;, DepByIndex&lt;T&gt;.</p>
 			<p>- Новый статический класс <span lang="en-US">DepTools </span>с
@@ -476,11 +489,9 @@
 			</p>
 			<p>- Классы <span lang="en-US">DepToString() </span>и <span lang="en-US">DepSubstring
 			</span>убраны<span lang="en-US">.</span></p>
-			<p>- <span lang="ru-RU">Нетипизированный интерфейс </span><span lang="en-US">IDepValue.</span></p>
-			<p>- Свойство <span lang="en-US">DepValue.IsConst</span></p>
-			<p lang="en-US"><a name="v244p3"></a>3. <span lang="ru-RU">Динамический
+			<p><a name="v244p3"></a><span lang="en-US">3. </span><span lang="ru-RU">Динамический
 			контроль корректности пользовательского ввода в удаленном
-			интерфейсе. Свойство </span>Control.Validators.</p>
+			интерфейсе. Свойство </span><span lang="en-US">Control.Validators.</span></p>
 			<p><a name="v244p4"></a>4. Управляемые свойства
 			<span lang="en-US">DateRangeBox.FirstDateEx, LastDateEx;
 			YearMonthBox.YearEx, MonthEx, YMEx; YearMonthRangeBox.YearEx,

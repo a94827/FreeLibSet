@@ -755,6 +755,12 @@ namespace AgeyevAV.ExtForms.Docs
       _CodeValueEx.Value = value.ToString();
     }
 
+    public int IntValue
+    {
+      get { return _IntValueEx.Value; }
+      set { _IntValueEx.Value = value; }
+    }
+
     /// <summary>
     /// Текущее значение переслимого типа
     /// </summary>
@@ -857,7 +863,7 @@ namespace AgeyevAV.ExtForms.Docs
       if (DocValue.IsNull)
         _ValueProxy.CurrentValue = _ValueProxy.DefaultValue;
       else
-        _ValueProxy.IntValueEx.Value = DocValue.AsInteger;
+        _ValueProxy.IntValue = DocValue.AsInteger;
     }
 
     /// <summary>
@@ -1181,7 +1187,7 @@ namespace AgeyevAV.ExtForms.Docs
     void SelectedIndexValueChanged(object sender, EventArgs args)
     {
       if (DocValue.Grayed)
-        GrayedEx.Value = (ControlProvider.SelectedIndex < 0);
+        Grayed = (ControlProvider.SelectedIndex < 0);
       if (ControlProvider.SelectedIndex >= 0)
         CurrentValueEx.Value = (ControlProvider.SelectedIndex > 0);
       ControlChanged(sender, args);
@@ -1272,7 +1278,7 @@ namespace AgeyevAV.ExtForms.Docs
     void SelectedIndexValueChanged(object sender, EventArgs args)
     {
       if (DocValue.Grayed)
-        GrayedEx.Value = (ControlProvider.SelectedIndex < 0);
+        Grayed = (ControlProvider.SelectedIndex < 0);
       if (ControlProvider.SelectedIndex >= 0)
         CurrentValueEx.Value = (ControlProvider.SelectedIndex > 0);
       ControlChanged(sender, args);

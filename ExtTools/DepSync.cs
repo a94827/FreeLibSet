@@ -681,7 +681,7 @@ namespace AgeyevAV.DependedValues
     public object SyncValue
     {
       get { return ValueEx.Value; }
-      set { ValueEx.Value = (T)value; }
+      set { _ValueEx.Value = (T)value; }
     }
 
     /// <summary>

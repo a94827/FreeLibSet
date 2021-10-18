@@ -35,6 +35,64 @@ using System.Runtime.InteropServices;
 
 namespace AgeyevAV.DependedValues
 {
+
+  /// <summary>
+  /// Информация об объекте-владельце и реализуемом свойстве.
+  /// Хранится в DepValuе и используется для отладочных целей.
+  /// Структура не является сериализуемой
+  /// </summary>
+  [StructLayout(LayoutKind.Auto)]
+  public struct DepOwnerInfo
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает новый объект
+    /// </summary>
+    /// <param name="owner">Объект-владелец</param>
+    /// <param name="property">Имя свойства</param>
+    public DepOwnerInfo(object owner, string property)
+    {
+      _Owner = owner;
+      _Property = property;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Объект-владелец
+    /// </summary>
+    public object Owner { get { return _Owner; } }
+    private object _Owner;
+
+    /// <summary>
+    /// Реализуемое свойство
+    /// </summary>
+    public string Property { get { return _Property; } }
+    private string _Property;
+
+    /// <summary>
+    /// Выводит Owner.ToString() и Property
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+      if (_Owner == null)
+        return "Unknown";
+      else
+      {
+        string s = _Owner.ToString();
+        if (!String.IsNullOrEmpty(_Property))
+          s += ", Property=\"" + _Property + "\"";
+        return s;
+      }
+    }
+
+    #endregion
+  }
+
   /// <summary>
   /// Нетипизированный интерфейс, реализуемый шаблонным классом DepValue. Нет других классов, реализующих этот интерфейс.
   /// </summary>
@@ -50,7 +108,7 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Текущее значение
     /// </summary>
-    object Value { get; set;}
+    object Value { get;}
 
     /// <summary>
     /// Возвращает true, если текущий объект является константой
@@ -87,7 +145,6 @@ namespace AgeyevAV.DependedValues
     public DepValue()
     {
       _InsideSetValue = false;
-      _Delayed = false;
     }
 
     #endregion
@@ -110,70 +167,54 @@ namespace AgeyevAV.DependedValues
     #region Текущее значение
 
     /// <summary>
-    /// Текущее значение
+    /// Текущее значение.
+    /// Переопределяется в DepInputDelayed
     /// </summary>
-    public T Value
-    {
-      get
-      {
-        if (_Delayed)
-        {
-          _Value = GetDelayedValue();
-          _Delayed = false;
-        }
-        return _Value;
-      }
-      set
-      {
-        DoSetValue(value);
-      }
-    }
+    public T Value { get { return GetValue(); } }
     private T _Value;
 
-    object IDepValue.Value { get { return this.Value; } set { this.Value = (T)value; } }
+    /// <summary>
+    /// Текущее значение.
+    /// Переопределяется в DepInputDelayed
+    /// </summary>
+    protected virtual T GetValue()
+    {
+      return _Value;
+    }
+
+    object IDepValue.Value { get { return this.Value; } }
 
     /// <summary>
-    /// Этот метод обычно вызывает BaseSetValue(), но может выполнять дополнительные действия по установке значения
+    /// Защищенный метод установки значения.
+    /// Устанавливает поле и вызывает событие ValueChanged. После этого вызывается DepInput.SetValueChanged() для всех входов, подключенных к этому элементу
+    /// На время вызова события и SetValueChanged() устанавливается свойство InseideSetValue.
+    /// Реентрантные вызовы ничего не делают.
+    /// Если <paramref name="value"/> совпадает с текущим значением, никаих действий не выполняется.
     /// </summary>
-    /// <param name="value">Устанавливаемоен значение</param>
-    protected abstract void DoSetValue(T value);
-
-    /// <summary>
-    /// Защищенный метод установки значения без вызова DoSetValue()
-    /// </summary>
-    /// <param name="value">Устанавливаемоен значение</param>
+    /// <param name="value">Устанавливаемое значение</param>
     protected void BaseSetValue(T value)
     {
+      // Можно было бы переименовать в SetValue() и сделать virtual, но так понятнее, когда выполняется отладка.
+
       // Предотвращаем зациклинивание, когда установка значения приводит через
       // цепочку значений к повторной установке этого же значения
       if (_InsideSetValue)
         return;
+
+      if (Object.Equals(value, _Value))
+        return;
+
       _InsideSetValue = true;
       try
       {
-        if (!Object.Equals(value, _Value))
-        {
-          _Value = value;
-
-          OnValueChanged();
-          DepInput<T> CurrOutput = FirstOutput;
-          while (CurrOutput != null)
-          {
-            CurrOutput.SetValueChanged();
-            CurrOutput = CurrOutput.NextOutput;
-          }
-        }
+        _Value = value;
+        OnValueChanged();
       }
       finally
       {
         _InsideSetValue = false;
       }
     }
-
-    /// <summary>
-    /// Является ли текущее значение константой
-    /// </summary>
-    public virtual bool IsConst { get { return false; } }
 
     /// <summary>
     /// true, если в настоящее время выполняется установка значения
@@ -181,51 +222,52 @@ namespace AgeyevAV.DependedValues
     public bool InsideSetValue { get { return _InsideSetValue; } }
     private bool _InsideSetValue;
 
-    /// <summary>
-    /// Признак того, что значение будет получено позже, если понадобится
-    /// </summary>
-    private bool _Delayed;
+    #endregion
+
+    #region Событие
 
     /// <summary>
-    /// Уставливает признак отложенной установки в true.
-    /// Посылает событие ValueChanged текущему объекту и зависимым объектам
+    /// Извещение посылается при изменении значения свойства ValueEx
     /// </summary>
-    protected void SetDelayed()
+    public event EventHandler ValueChanged;
+
+    /// <summary>
+    /// Вызов события ValueChanged.
+    /// Затем извещаются объекты DepInput, подключенные к текущему объекту
+    /// </summary>
+    public void OnValueChanged()
     {
-      if (_InsideSetValue)
-        return;
-      _InsideSetValue = true;
-      try
-      {
-        _Delayed = true;
+      if (ValueChanged != null)
+        ValueChanged(this, EventArgs.Empty);
 
-        if (ValueChanged != null)
-          ValueChanged(this, EventArgs.Empty);
-
-        DepInput<T> CurrOutput = FirstOutput;
-        while (CurrOutput != null)
-        {
-          CurrOutput.SetValueChanged();
-          CurrOutput = CurrOutput.NextOutput;
-        }
-      }
-      finally
+      DepInput<T> CurrOutput = FirstOutput;
+      while (CurrOutput != null)
       {
-        _InsideSetValue = false;
+        CurrOutput.SetValueChanged();
+        CurrOutput = CurrOutput.NextOutput;
       }
     }
 
+    #endregion
+
+    #region Вспомогательные свойства
+
     /// <summary>
-    /// Получить отложенное значение.
-    /// Непереопределенный метод генерирует исключение.
+    /// Возвращает true для DepInput, если он подключен к внешнему источнику данных.
+    /// Непереопределенный метод возвращает false.
     /// </summary>
-    /// <returns>Значение</returns>
-    protected virtual T GetDelayedValue()
-    {
-      throw new NotImplementedException("Получение отложенных значений не реализовано");
-    }
+    public virtual bool HasSource { get { return false; } }
 
+    /// <summary>
+    /// Является ли текущее значение константой.
+    /// Непереопределенный метод возвращает false.
+    /// </summary>
+    public virtual bool IsConst { get { return false; } }
 
+    #endregion
+
+    #region Вспомогательные методы
+#if XXX
     /// <summary>
     /// Обмен местами двух значений.
     /// Нестатическая версия метода.
@@ -251,46 +293,7 @@ namespace AgeyevAV.DependedValues
       v2.Value = x;
     }
 
-    #endregion
-
-    #region Абстрактное свойство
-
-    /// <summary>
-    /// Источник для значения.
-    /// Переопределяется классом DepInput.
-    /// Непереопределенное свойство возвращает null и не поддерживает присвоение значения.
-    /// </summary>
-    public virtual DepValue<T> Source
-    {
-      get
-      {
-        return null;
-      }
-      set
-      {
-        if (value != null)
-          throw new InvalidOperationException("Этот объект не поддерживает установку свойства Source");
-      }
-    }
-
-    #endregion
-
-    #region Событие
-
-    /// <summary>
-    /// Извещение посылается при изменении значения свойства ValueEx
-    /// </summary>
-    public event EventHandler ValueChanged;
-
-    /// <summary>
-    /// Вызов события ValueChanged
-    /// </summary>
-    public void OnValueChanged()
-    {
-      if (ValueChanged != null)
-        ValueChanged(this, EventArgs.Empty);
-    }
-
+#endif
     #endregion
 
     #region Список зависимых значений
@@ -404,82 +407,16 @@ namespace AgeyevAV.DependedValues
     #endregion
   }
 
-  /// <summary>
-  /// Информация об объекте-владельце и реализуемом свойстве.
-  /// Хранится в DepValuе и используется для отладочных целей.
-  /// Структура не является сериализуемой
-  /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DepOwnerInfo
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает новый объект
-    /// </summary>
-    /// <param name="owner">Объект-владелец</param>
-    /// <param name="property">Имя свойства</param>
-    public DepOwnerInfo(object owner, string property)
-    {
-      _Owner = owner;
-      _Property = property;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Объект-владелец
-    /// </summary>
-    public object Owner { get { return _Owner; } }
-    private object _Owner;
-
-    /// <summary>
-    /// Реализуемое свойство
-    /// </summary>
-    public string Property { get { return _Property; } }
-    private string _Property;
-
-    /// <summary>
-    /// Выводит Owner.ToString() и Property
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString()
-    {
-      if (_Owner == null)
-        return "Unknown";
-      else
-      {
-        string s = _Owner.ToString();
-        if (!String.IsNullOrEmpty(_Property))
-          s += ", Property=\"" + _Property + "\"";
-        return s;
-      }
-    }
-
-    #endregion
-  }
-
 
   /// <summary>
-  /// Неабстрактная реализация DepValue
+  /// Неабстрактная реализация DepValue.
+  /// Используется для "выходных" свойств, предназначенных только для чтения, но не для изменения внешним кодом
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
   public class DepValueObject<T> : DepValue<T>
   {
     #region Установка значения
-
-    /// <summary>
-    /// Этот метод генерирует исключение.
-    /// Следует использовать OwnerSetValue() для установки значения
-    /// </summary>
-    /// <param name="value"></param>
-    protected override void DoSetValue(T value)
-    {
-      throw new InvalidOperationException("Установка этого значения не допускается");
-    }
 
     /// <summary>
     /// Этот метод вызывается объектом-владельцем для установки значения
@@ -514,15 +451,6 @@ namespace AgeyevAV.DependedValues
     #endregion
 
     #region Переопределяемые методы
-
-    /// <summary>
-    /// Генерирует исключение
-    /// </summary>
-    /// <param name="value"></param>
-    protected override void DoSetValue(T value)
-    {
-      throw new InvalidOperationException("Изменение значения константы не допускается");
-    }
 
     /// <summary>
     /// Текстовое представление "Константа XXX"
@@ -569,7 +497,26 @@ namespace AgeyevAV.DependedValues
   [Serializable]
   public class DepInput<T> : DepValue<T>
   {
-    #region Извещение об изменении значения внешним источником
+    #region Установка значения
+
+    /// <summary>
+    /// Чтение и установка значения
+    /// </summary>
+    public new T Value
+    {
+      get { return GetValue(); }
+      set { SetValue(value); }
+    }
+
+    /// <summary>
+    /// Вызов BaseSetValue().
+    /// Переопределяется в DepInputDelayed и DepInputWithCheck
+    /// </summary>
+    /// <param name="value"></param>
+    protected virtual void SetValue(T value)
+    {
+      BaseSetValue(value);
+    }
 
     internal void SetValueChanged()
     {
@@ -590,20 +537,7 @@ namespace AgeyevAV.DependedValues
       //  return;
 
       // Значение на входе изменилось
-      base.Value = NewVal;
-    }
-
-    #endregion
-
-    #region Переопределяемый метод
-
-    /// <summary>
-    /// Вызывает BaseSetValue()
-    /// </summary>
-    /// <param name="value"></param>
-    protected override void DoSetValue(T value)
-    {
-      BaseSetValue(value);
+      BaseSetValue(NewVal);
     }
 
     #endregion
@@ -615,12 +549,9 @@ namespace AgeyevAV.DependedValues
     /// Установка свойства приводит к "отцеплению" объекта от текущего источника, если он был, 
     /// и присоединению к новому источнику, если задано значение, отличное от null
     /// </summary>
-    public override DepValue<T> Source
+    public DepValue<T> Source
     {
-      get
-      {
-        return _Source;
-      }
+      get { return _Source; }
       set
       {
         if (value == _Source)
@@ -639,6 +570,11 @@ namespace AgeyevAV.DependedValues
     /// Используется для связанного списка
     /// </summary>
     internal DepInput<T> NextOutput;
+
+    /// <summary>
+    /// Возвращает true, если текущий объект подключен к источнику данных (Source!=null)
+    /// </summary>
+    public override bool HasSource { get { return _Source != null; } }
 
     #endregion
   }
@@ -669,8 +605,7 @@ namespace AgeyevAV.DependedValues
   #endregion
 
   /// <summary>
-  /// Реализация DepInput, обеспечивающая отложенное получение значения, когда
-  /// Source не установлен.
+  /// Реализация DepInput, обеспечивающая отложенное получение значения, когда внешний источник Source не установлен.
   /// Этот класс не является сериализуемым
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
@@ -679,12 +614,54 @@ namespace AgeyevAV.DependedValues
     #region Установка и получение отложенного значения
 
     /// <summary>
-    /// Установка признака наличия отложенного значения
+    /// Получение текущего значения.
+    /// Вызывает GetDelayedValue(), если был вызов SetDelayed().
     /// </summary>
-    public new void SetDelayed()
+    /// <returns></returns>
+    protected override T GetValue()
     {
+      if (_Delayed)
+      {
+        BaseSetValue(GetDelayedValue());
+        _Delayed = false;
+      }
+      return base.GetValue();
+    }
+
+    /// <summary>
+    /// Установка текущего значения.
+    /// Отменяет предыдущий вызов SetDelayed().
+    /// </summary>
+    /// <param name="value"></param>
+    protected override void SetValue(T value)
+    {
+      _Delayed = false;
+      base.SetValue(value);
+    }
+
+    /// <summary>
+    /// Признак того, что значение будет получено позже, если понадобится
+    /// </summary>
+    private bool _Delayed;
+
+    /// <summary>
+    /// Уставливает признак отложенной установки в true.
+    /// Посылает событие ValueChanged текущему объекту и зависимым объектам.
+    /// Если зависимым объектам потребуется текущее значение, они запросят свойство Value,
+    /// при этом будет вызван метод ValueNeeded.
+    /// Если нет подключенных зависимых объектов, получение текущего значения откладывается.
+    /// </summary>
+    public void SetDelayed()
+    {
+      if (InsideSetValue)
+        return;
+
       if (Source == null)
-        base.SetDelayed();
+      {
+        _Delayed = true;
+
+        OnValueChanged();
+      }
     }
 
     /// <summary>
@@ -695,19 +672,22 @@ namespace AgeyevAV.DependedValues
     /// <summary>
     /// Чтобы не создавать каждый раз объект аргументов
     /// </summary>
-    private DepValueNeededEventArgs<T> ValueNeededArgs = new DepValueNeededEventArgs<T>();
+    private DepValueNeededEventArgs<T> _ValueNeededArgs;
 
     /// <summary>
     /// Вызывает событие ValueNeeded
     /// </summary>
     /// <returns></returns>
-    protected override T GetDelayedValue()
+    protected T GetDelayedValue()
     {
       if (ValueNeeded == null)
         throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
-      ValueNeededArgs.Value = default(T);
-      ValueNeeded(this, ValueNeededArgs);
-      return ValueNeededArgs.Value;
+
+      if (_ValueNeededArgs == null)
+        _ValueNeededArgs = new DepValueNeededEventArgs<T>();
+      _ValueNeededArgs.Value = default(T);
+      ValueNeeded(this, _ValueNeededArgs);
+      return _ValueNeededArgs.Value;
     }
 
     #endregion
@@ -773,18 +753,6 @@ namespace AgeyevAV.DependedValues
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   public class DepInputWithCheck<T> : DepInput<T>
   {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает новый объект
-    /// </summary>
-    public DepInputWithCheck()
-    {
-      _CheckValueArgs = new DepInputCheckEventArgs<T>(this);
-    }
-
-    #endregion
-
     #region Событие CheckValue
 
     /// <summary>
@@ -800,16 +768,21 @@ namespace AgeyevAV.DependedValues
     #region Переопределенный метод
 
     /// <summary>
-    /// Вызывает событие CheckValue, если есть обработчик события
+    /// Установка текущего значения.
+    /// Вызывает обработчик события CheckValue, если он установлен.
+    /// Обработчик события может изменить устанавливаемое значение или совсем отменить установку.
     /// </summary>
     /// <param name="value"></param>
-    protected override void DoSetValue(T value)
+    protected override void SetValue(T value)
     {
-      if (InsideSetValue) // на всякий случай
+      if (InsideSetValue) // чтобы не выполнять лишней проверки
         return;
 
       if (CheckValue != null)
       {
+        if (_CheckValueArgs == null)
+          _CheckValueArgs = new DepInputCheckEventArgs<T>(this);
+
         _CheckValueArgs.NewValue = value;
         _CheckValueArgs.Cancel = false;
         CheckValue(this, _CheckValueArgs);
@@ -818,7 +791,7 @@ namespace AgeyevAV.DependedValues
         value = _CheckValueArgs.NewValue;
       }
 
-      base.DoSetValue(value);
+      base.SetValue(value);
     }
 
     #endregion
@@ -831,7 +804,7 @@ namespace AgeyevAV.DependedValues
     /// <param name="value"></param>
     public void OwnerSetValue(T value)
     {
-      base.DoSetValue(value);
+      base.BaseSetValue(value);
     }
 
     #endregion

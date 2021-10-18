@@ -655,7 +655,7 @@ namespace AgeyevAV.ExtForms.RI
         _ControlProvider.Validating += new EFPValidatingEventHandler(ControlProvider_Validating);
         if (riItem.HasEnabledExProperty)
         {
-          if (riItem.EnabledEx.Source != null)
+          if (riItem.EnabledEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             controlProvider.EnabledEx = riItem.EnabledEx;
           else
@@ -861,7 +861,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasTextExProperty)
         {
-          if (riItem.TextEx.Source != null)
+          if (riItem.TextEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.TextEx = riItem.TextEx;
           else
@@ -873,7 +873,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasReadOnlyExProperty)
         {
-          if (riItem.ReadOnlyEx.Source != null)
+          if (riItem.ReadOnlyEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.ReadOnlyEx = riItem.ReadOnlyEx;
           else
@@ -929,7 +929,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasValueExProperty)
         {
-          if (riItem.ValueEx.Source != null)
+          if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.IntValueEx = riItem.ValueEx;
           else
@@ -986,7 +986,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasValueExProperty)
         {
-          if (riItem.ValueEx.Source != null)
+          if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.IntValueEx = riItem.ValueEx;
           else
@@ -1034,7 +1034,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasValueExProperty)
         {
-          if (riItem.ValueEx.Source != null)
+          if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SingleValueEx = riItem.ValueEx;
           else
@@ -1082,7 +1082,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasValueExProperty)
         {
-          if (riItem.ValueEx.Source != null)
+          if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.DoubleValueEx = riItem.ValueEx;
           else
@@ -1128,7 +1128,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasValueExProperty)
         {
-          if (riItem.ValueEx.Source != null)
+          if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.DecimalValueEx = riItem.ValueEx;
           else
@@ -1176,7 +1176,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasCheckedExProperty)
         {
-          if (riItem.CheckedEx.Source != null)
+          if (riItem.CheckedEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.CheckedEx = riItem.CheckedEx;
           else
@@ -1188,7 +1188,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasCheckStateExProperty)
         {
-          if (riItem.CheckStateEx.Source != null)
+          if (riItem.CheckStateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             this.CheckStateEx2 = riItem.CheckStateEx;
           else
@@ -1283,7 +1283,7 @@ namespace AgeyevAV.ExtForms.RI
         //base.UnselectedCode = RIItem.UnselectedCode;
         if (riItem.HasSelectedIndexExProperty)
         {
-          if (riItem.SelectedIndexEx.Source != null)
+          if (riItem.SelectedIndexEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedIndexEx = riItem.SelectedIndexEx;
           else
@@ -1295,7 +1295,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasSelectedCodeExProperty)
         {
-          if (riItem.SelectedCodeEx.Source != null)
+          if (riItem.SelectedCodeEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedCodeEx = riItem.SelectedCodeEx;
           else
@@ -1354,7 +1354,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasValueExProperty)
         {
-          if (riItem.ValueEx.Source != null)
+          if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.ValueEx = riItem.ValueEx;
           else
@@ -1416,7 +1416,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasFirstDateExProperty)
         {
-          if (riItem.FirstDateEx.Source != null)
+          if (riItem.FirstDateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.FirstDate.ValueEx = riItem.FirstDateEx;
           else
@@ -1428,7 +1428,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasLastDateExProperty)
         {
-          if (riItem.LastDateEx.Source != null)
+          if (riItem.LastDateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.LastDate.ValueEx = riItem.LastDateEx;
           else
@@ -1526,7 +1526,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasYearExProperty)
         {
-          if (riItem.YearEx.Source != null)
+          if (riItem.YearEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.YearEx = riItem.YearEx;
           else
@@ -1538,7 +1538,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasMonthExProperty)
         {
-          if (riItem.MonthEx.Source != null)
+          if (riItem.MonthEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.MonthEx = riItem.MonthEx;
           else
@@ -1550,7 +1550,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasYMExProperty)
         {
-          if (riItem.YMEx.Source != null)
+          if (riItem.YMEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.YMEx = riItem.YMEx;
           else
@@ -1601,7 +1601,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasYearExProperty)
         {
-          if (riItem.YearEx.Source != null)
+          if (riItem.YearEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.YearEx = riItem.YearEx;
           else
@@ -1613,7 +1613,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasFirstMonthExProperty)
         {
-          if (riItem.FirstMonthEx.Source != null)
+          if (riItem.FirstMonthEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.FirstMonthEx = riItem.FirstMonthEx;
           else
@@ -1625,7 +1625,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasLastMonthExProperty)
         {
-          if (riItem.LastMonthEx.Source != null)
+          if (riItem.LastMonthEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.LastMonthEx = riItem.LastMonthEx;
           else
@@ -1637,7 +1637,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasFirstYMExProperty)
         {
-          if (riItem.FirstYMEx.Source != null)
+          if (riItem.FirstYMEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.FirstYMEx = riItem.FirstYMEx;
           else
@@ -1649,7 +1649,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasLastYMExProperty)
         {
-          if (riItem.LastYMEx.Source != null)
+          if (riItem.LastYMEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.LastYMEx = riItem.LastYMEx;
           else
@@ -1749,7 +1749,7 @@ namespace AgeyevAV.ExtForms.RI
         //base.UnselectedCode = RIItem.UnselectedCode;
         if (riItem.HasSelectedIndexExProperty)
         {
-          if (riItem.SelectedIndexEx.Source != null)
+          if (riItem.SelectedIndexEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedIndexEx = riItem.SelectedIndexEx;
           else
@@ -1761,7 +1761,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasSelectedCodeExProperty)
         {
-          if (riItem.SelectedCodeEx.Source != null)
+          if (riItem.SelectedCodeEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedCodeEx = riItem.SelectedCodeEx;
           else
@@ -1818,7 +1818,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasTextExProperty)
         {
-          if (riItem.TextEx.Source != null)
+          if (riItem.TextEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.TextEx = riItem.TextEx;
           else
@@ -1877,7 +1877,7 @@ namespace AgeyevAV.ExtForms.RI
 
         if (riItem.HasSelectedCodesExProperty)
         {
-          if (riItem.SelectedCodesEx.Source != null)
+          if (riItem.SelectedCodesEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedCodesEx = riItem.SelectedCodesEx;
           else

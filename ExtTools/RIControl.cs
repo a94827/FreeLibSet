@@ -76,7 +76,7 @@ namespace AgeyevAV.RI
     /// <param name="message">Сообщение</param>
     /// <param name="isError">true-ошибка, false-предупреждение</param>
     public Validator(DepValue<bool> expression, string message, bool isError)
-      :this(expression, message, isError, null)
+      : this(expression, message, isError, null)
     {
     }
 
@@ -191,7 +191,8 @@ namespace AgeyevAV.RI
         if (value && (_EnabledEx == null))
           return;
 
-        EnabledEx.Value = value;
+        if (_EnabledEx != null)
+          _EnabledEx.Value = value;
       }
     }
 
@@ -229,7 +230,13 @@ namespace AgeyevAV.RI
         _EnabledEx = new DepInput<bool>();
         _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
         _EnabledEx.Value = true;
+        _EnabledEx.ValueChanged += new EventHandler(EnabledEx_ValueChanged);
       }
+    }
+
+    void EnabledEx_ValueChanged(object sender, EventArgs args)
+    {
+      Enabled = _EnabledEx.Value;
     }
 
     #endregion
@@ -245,7 +252,7 @@ namespace AgeyevAV.RI
       #region Защищенный конструктор
 
       internal ValidatorList()
-      { 
+      {
       }
 
       #endregion
@@ -493,7 +500,8 @@ namespace AgeyevAV.RI
         if ((!value) && (_ReadOnlyEx == null))
           return;
 
-        ReadOnlyEx.Value = value;
+        if (_ReadOnlyEx != null)
+          _ReadOnlyEx.Value = value;
       }
     }
 
@@ -2341,8 +2349,8 @@ namespace AgeyevAV.RI
     public DateTime? FirstDate
     {
       get { return _FirstDate; }
-      set 
-      { 
+      set
+      {
         _FirstDate = value;
         if (_FirstDateEx != null)
           _FirstDateEx.Value = value;
@@ -2402,8 +2410,8 @@ namespace AgeyevAV.RI
     public DateTime? LastDate
     {
       get { return _LastDate; }
-      set 
-      { 
+      set
+      {
         _LastDate = value;
         if (_LastDateEx != null)
           _LastDateEx.Value = value;
@@ -2988,8 +2996,8 @@ namespace AgeyevAV.RI
     public int Year
     {
       get { return _Year; }
-      set 
-      { 
+      set
+      {
         _Year = value;
         if (_YearEx != null)
           _YearEx.Value = value;
@@ -3052,8 +3060,8 @@ namespace AgeyevAV.RI
     public int Month
     {
       get { return _Month; }
-      set 
-      { 
+      set
+      {
         _Month = value;
         if (_MonthEx != null)
           _MonthEx.Value = value;
@@ -3355,8 +3363,8 @@ namespace AgeyevAV.RI
     public int Year
     {
       get { return _Year; }
-      set 
-      { 
+      set
+      {
         _Year = value;
         if (_YearEx != null)
           _YearEx.Value = value;
@@ -3420,8 +3428,8 @@ namespace AgeyevAV.RI
     public int FirstMonth
     {
       get { return _FirstMonth; }
-      set 
-      { 
+      set
+      {
         _FirstMonth = value;
         if (_FirstMonthEx != null)
           _FirstMonthEx.Value = value;
@@ -3483,8 +3491,8 @@ namespace AgeyevAV.RI
     public int LastMonth
     {
       get { return _LastMonth; }
-      set 
-      { 
+      set
+      {
         _LastMonth = value;
         if (_LastMonthEx != null)
           _LastMonthEx.Value = value;
