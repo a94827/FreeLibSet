@@ -1120,21 +1120,20 @@ namespace AgeyevAV.ExtForms.Docs
         {
           string ColName = resRow.Table.Columns[i].ColumnName;
 
-          // 12.02.2021
-          // Так тоже не работает, в АССОО-2, по крайней мере
-          // При обращению к кэшу будут получены старые данные. Х.З. почему
-
-
-          //if (ServiceColumnIndexer.Contains(ColName))
-          //{
-          //  object value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetValue(DataTools.GetInt(resRow, "Id"), ColName);
-          //  if (value == null)
-          //    resRow[i] = DBNull.Value; 
-          //  else
-          //    resRow[i] = value;
-
-          //  return;
-          //}
+          // 12.02.2021, 18.10.2021
+          switch (ColName)
+          { 
+            case "CreateTime":
+            case "CreateUserId":
+            case "ChangeTime":
+            case "ChangeUserId":
+              object value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetValue(DataTools.GetInt(resRow, "Id"), ColName);
+              if (value == null)
+                resRow[i] = DBNull.Value;
+              else
+                resRow[i] = value;
+              continue;
+          }
 
           // 13.11.2020
           // Строка srcRow может быть помечена на удаление

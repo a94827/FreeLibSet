@@ -398,7 +398,7 @@ namespace AgeyevAV.ExtForms.Docs
 
       // Сброс буферизации выполняем независимо от того, выполняется ли возврат строк от сервера
       // (признака ReloadData)
-      // Сброс кэша выполняется до сброса табличных просмотров
+      // Сброс кэша выполняется до обновления табличных просмотров
       DBxDocProvider.ClearCache(dataSet, UI.TextHandlers.DBCache);
 
       if (reloadData)
