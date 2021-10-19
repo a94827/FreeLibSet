@@ -472,7 +472,8 @@ namespace AgeyevAV
   }
 
   /// <summary>
-  /// Исключение, выбрасываемое, когда не удалось выполнить разбор строки
+  /// Исключение, выбрасываемое, когда не удалось выполнить разбор строки.
+  /// Кроме подсистемы Parsing, используется при разборе CSV-строк.
   /// </summary>
   [Serializable]
   public class ParsingException : ApplicationException

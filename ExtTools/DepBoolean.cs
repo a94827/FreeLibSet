@@ -38,7 +38,7 @@ namespace AgeyevAV.DependedValues
   /// Логическое "И"
   /// </summary>
   [Serializable]
-  public sealed class DepAnd : DepExprA<bool, bool>
+  public sealed class DepAnd : DepExprTA<bool, bool>
   {
     #region Конструкторы
 
@@ -138,7 +138,7 @@ namespace AgeyevAV.DependedValues
   /// Логическое "ИЛИ"
   /// </summary>
   [Serializable]
-  public sealed class DepOr : DepExprA<bool, bool>
+  public sealed class DepOr : DepExprTA<bool, bool>
   {
     #region Конструкторы
 
@@ -777,7 +777,7 @@ namespace AgeyevAV.DependedValues
   /// Выбор одного из значений по индексу
   /// </summary>
   [Serializable]
-  public sealed class DepByIndex<T> : DepExprA<T, T>
+  public sealed class DepByIndex<T> : DepExprTA<T, T>
   {
     #region Конструктор
 
@@ -837,6 +837,34 @@ namespace AgeyevAV.DependedValues
     /// <param name="defaultValue">Значение, возвращаемое, когда в источнике данных <paramref name="indexArg"/> содержится значение вне диапазона.</param>
     public DepByIndex(DepValue<int> indexArg, T[] values, T defaultValue)
       : this(indexArg, DepConst<T>.CreateArray(values), new DepConst<T>(defaultValue))
+    {
+    }
+
+    /// <summary>
+    /// Создает объект для заданного списка входов.
+    /// Если значение, возвращаемое <paramref name="indexArg"/>, находится вне диапазона,
+    /// возвращается пустое значение default(T).
+    /// </summary>
+    /// <param name="indexArg">Источник данных типа Int32, определяющий выбор значения.
+    /// Не может быть null/</param>
+    /// <param name="args">Источники данных, из которых выполняется выбор.
+    /// Не может быть null или содержать элементы null.</param>
+    public DepByIndex(DepValue<int> indexArg, params DepValue<T>[] args)
+      : this(indexArg, args, new DepConst<T>(default(T)))
+    {
+    }
+
+    /// <summary>
+    /// Создает объект для заданного списка фиксированных значений
+    /// Если значение, возвращаемое <paramref name="indexArg"/>, находится вне диапазона,
+    /// возвращается пустое значение default(T).
+    /// </summary>
+    /// <param name="indexArg">Источник данных типа Int32, определяющий выбор значения.
+    /// Не может быть null/</param>
+    /// <param name="values">Массив значений, из которого выполняется выбор.
+    /// Не может быть null или содержать элементы null.</param>
+    public DepByIndex(DepValue<int> indexArg, params T[] values)
+      : this(indexArg, DepConst<T>.CreateArray(values), new DepConst<T>(default(T)))
     {
     }
 

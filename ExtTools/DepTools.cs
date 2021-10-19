@@ -71,6 +71,30 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
+    #region IsNotEmpty()
+
+    /// <summary>
+    /// Возвращает true, если строка непустая (!String.IsNullOrEmpty())
+    /// </summary>
+    /// <param name="value">Проверяемая строка</param>
+    /// <returns>Признак непустой строки</returns>
+    public static bool IsNotEmpty(string value)
+    {
+      return !String.IsNullOrEmpty(value);
+    }
+
+    /// <summary>
+    /// Возвращает true, если строка непустая (!String.IsNullOrEmpty())
+    /// </summary>
+    /// <param name="value">Проверяемая строка</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExpr1<bool, string> IsNotEmptyEx(DepValue<string> value)
+    {
+      return new DepExpr1<bool, string>(value, IsNotEmpty);
+    }
+
+    #endregion
+
     #region Substring()
 
     /// <summary>
@@ -656,9 +680,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<DateTime, DateTime> MinEx(params DepValue<DateTime>[] values)
+    public static DepExprTA<DateTime, DateTime> MinEx(params DepValue<DateTime>[] values)
     {
-      return new DepExprA<DateTime, DateTime>(values, Min);
+      return new DepExprTA<DateTime, DateTime>(values, Min);
     }
 
     /// <summary>
@@ -687,9 +711,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<DateTime, DateTime> MaxEx(params DepValue<DateTime>[] values)
+    public static DepExprTA<DateTime, DateTime> MaxEx(params DepValue<DateTime>[] values)
     {
-      return new DepExprA<DateTime, DateTime>(values, Max);
+      return new DepExprTA<DateTime, DateTime>(values, Max);
     }
 
     /// <summary>
@@ -725,9 +749,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<DateTime?, DateTime?> MinEx(params DepValue<DateTime?>[] values)
+    public static DepExprTA<DateTime?, DateTime?> MinEx(params DepValue<DateTime?>[] values)
     {
-      return new DepExprA<DateTime?, DateTime?>(values, Min);
+      return new DepExprTA<DateTime?, DateTime?>(values, Min);
     }
 
     /// <summary>
@@ -763,9 +787,33 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<DateTime?, DateTime?> MaxEx(params DepValue<DateTime?>[] values)
+    public static DepExprTA<DateTime?, DateTime?> MaxEx(params DepValue<DateTime?>[] values)
     {
-      return new DepExprA<DateTime?, DateTime?>(values, Max);
+      return new DepExprTA<DateTime?, DateTime?>(values, Max);
+    }
+
+    #endregion
+
+    #region IsNotEmpty()
+
+    /// <summary>
+    /// Возвращает true, если есть Nullable-значение (свойство HasValue)
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <returns>Признак непустой строки</returns>
+    public static bool IsNotEmpty(DateTime? value)
+    {
+      return value.HasValue;
+    }
+
+    /// <summary>
+    /// Возвращает true, если строка непустая (!String.IsNullOrEmpty())
+    /// </summary>
+    /// <param name="value">Проверяемая строка</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExpr1<bool, DateTime?> IsNotEmptyEx(DepValue<DateTime?> value)
+    {
+      return new DepExpr1<bool, DateTime?>(value, IsNotEmpty);
     }
 
     #endregion
@@ -905,6 +953,30 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
+    #region IsNotEmpty()
+
+    /// <summary>
+    /// Возвращает true, если значение непустое (YearMonth.IsEmpty=false)
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <returns>Значение свойства</returns>
+    public static bool IsNotEmpty(YearMonth value)
+    {
+      return !value.IsEmpty;
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение непустое (YearMonth.IsEmpty=false)
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExpr1<bool, YearMonth> IsNotEmptyEx(DepValue<YearMonth> value)
+    {
+      return new DepExpr1<bool, YearMonth>(value, IsNotEmpty);
+    }
+
+    #endregion
+
     #endregion
 
     #region Nullable
@@ -932,6 +1004,17 @@ namespace AgeyevAV.DependedValues
       where T:struct
     {
       return new DepExpr2<T, T?, T>(value, nullValue, ReplaceNull);
+    }
+
+    /// <summary>
+    /// Замена для Nullable-значения (оператор ?? в C#) на значение по умолчанию default(T).
+    /// </summary>
+    /// <param name="value">Значение, которое может быть null</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExpr2<T, Nullable<T>, T> ReplaceNullEx<T>(DepValue<T?> value)
+      where T : struct
+    {
+      return new DepExpr2<T, T?, T>(value, default(T), ReplaceNull);
     }
 
     #endregion
@@ -1084,7 +1167,6 @@ namespace AgeyevAV.DependedValues
 
     #endregion
 
-
     #endregion
 
     #region Математические функции
@@ -1119,9 +1201,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<int, int> MinEx(params DepValue<int>[] values)
+    public static DepExprTA<int, int> MinEx(params DepValue<int>[] values)
     {
-      return new DepExprA<int, int>(values, Min);
+      return new DepExprTA<int, int>(values, Min);
     }
 
     /// <summary>
@@ -1150,9 +1232,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<int, int> MaxEx(params DepValue<int>[] values)
+    public static DepExprTA<int, int> MaxEx(params DepValue<int>[] values)
     {
-      return new DepExprA<int, int>(values, Max);
+      return new DepExprTA<int, int>(values, Max);
     }
 
     #endregion
@@ -1185,9 +1267,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<float, float> MinEx(params DepValue<float>[] values)
+    public static DepExprTA<float, float> MinEx(params DepValue<float>[] values)
     {
-      return new DepExprA<float, float>(values, Min);
+      return new DepExprTA<float, float>(values, Min);
     }
 
     /// <summary>
@@ -1216,9 +1298,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<float, float> MaxEx(params DepValue<float>[] values)
+    public static DepExprTA<float, float> MaxEx(params DepValue<float>[] values)
     {
-      return new DepExprA<float, float>(values, Max);
+      return new DepExprTA<float, float>(values, Max);
     }
 
     #endregion
@@ -1251,9 +1333,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<double, double> MinEx(params DepValue<double>[] values)
+    public static DepExprTA<double, double> MinEx(params DepValue<double>[] values)
     {
-      return new DepExprA<double, double>(values, Min);
+      return new DepExprTA<double, double>(values, Min);
     }
 
     /// <summary>
@@ -1282,9 +1364,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<double, double> MaxEx(params DepValue<double>[] values)
+    public static DepExprTA<double, double> MaxEx(params DepValue<double>[] values)
     {
-      return new DepExprA<double, double>(values, Max);
+      return new DepExprTA<double, double>(values, Max);
     }
 
     #endregion
@@ -1317,9 +1399,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<decimal, decimal> MinEx(params DepValue<decimal>[] values)
+    public static DepExprTA<decimal, decimal> MinEx(params DepValue<decimal>[] values)
     {
-      return new DepExprA<decimal, decimal>(values, Min);
+      return new DepExprTA<decimal, decimal>(values, Min);
     }
 
     /// <summary>
@@ -1348,9 +1430,9 @@ namespace AgeyevAV.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprA<decimal, decimal> MaxEx(params DepValue<decimal>[] values)
+    public static DepExprTA<decimal, decimal> MaxEx(params DepValue<decimal>[] values)
     {
-      return new DepExprA<decimal, decimal>(values, Max);
+      return new DepExprTA<decimal, decimal>(values, Max);
     }
 
     #endregion

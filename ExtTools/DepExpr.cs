@@ -434,25 +434,27 @@ namespace AgeyevAV.DependedValues
   #endregion
 
   #region Выражения со списком однотипных аргументов
-#if !XXX
+
   /// <summary>
-  /// Прототип вычислителя с массивом однотиных аргументов
+  /// Прототип вычислителя с массивом однотиных аргументов.
+  /// "TA"="Typed Array".
   /// </summary>
   /// <typeparam name="TResult">Тип вычисляемого значения</typeparam>
   /// <typeparam name="TArg">Тип аргумента</typeparam>
   /// <param name="args">Массив аргументов</param>
   /// <returns>Результат вычисления</returns>
-  public delegate TResult DepFunctionA<TResult, TArg>(TArg[] args);
+  public delegate TResult DepFunctionTA<TResult, TArg>(TArg[] args);
 
   /// <summary>
-  /// Вычислитель выражения с переменным числом однотипных аргументов
+  /// Вычислитель выражения с переменным числом однотипных аргументов.
   /// В качестве функции вычислителя можно использовать методы класса DepTools. Это особенно актуально для удаленного пользовательского интерфейса, когда нельзя создавать делегаты на методы в прикладном коде.
   /// Если создается класс-наследник с дополнительными аргументами, не забудьте переопределить свойство IsConst.
+  /// "TA"="Typed Array".
   /// </summary>
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="TArg">Тип исходных данных</typeparam>
   [Serializable]
-  public class DepExprA<TResult, TArg> : DepValueObject<TResult>
+  public class DepExprTA<TResult, TArg> : DepValueObject<TResult>
   {
     #region Конструкторы
 
@@ -463,7 +465,7 @@ namespace AgeyevAV.DependedValues
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
     /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
-    public DepExprA(DepValue<TArg>[] args, DepFunctionA<TResult, TArg> function)
+    public DepExprTA(DepValue<TArg>[] args, DepFunctionTA<TResult, TArg> function)
     {
 #if DEBUG
       if (args == null)
@@ -525,7 +527,7 @@ namespace AgeyevAV.DependedValues
       OwnerSetValue(Calculate());
     }
 
-    private DepFunctionA<TResult, TArg> _Function;
+    private DepFunctionTA<TResult, TArg> _Function;
 
     /// <summary>
     /// Вычисление значения.
@@ -545,6 +547,118 @@ namespace AgeyevAV.DependedValues
     #endregion
   }
 
+  #endregion
+
+  #region Выражения со списком разнотипных аргументов
+
+  /// <summary>
+  /// Прототип вычислителя с массивом аргументов типа Object.
+  /// "OA"="Object Array".
+  /// </summary>
+  /// <typeparam name="TResult">Тип вычисляемого значения</typeparam>
+  /// <param name="args">Массив аргументов</param>
+  /// <returns>Результат вычисления</returns>
+  public delegate TResult DepFunctionOA<TResult>(object[] args);
+
+  /// <summary>
+  /// Вычислитель выражения с переменным числом аргументов типа Object.
+  /// В качестве функции вычислителя можно использовать методы класса DepTools. Это особенно актуально для удаленного пользовательского интерфейса, когда нельзя создавать делегаты на методы в прикладном коде.
+  /// Если создается класс-наследник с дополнительными аргументами, не забудьте переопределить свойство IsConst.
+  /// "OA"="Object Array".
+  /// </summary>
+  /// <typeparam name="TResult">Тип результата выражения</typeparam>
+  /// <typeparam name="TArg">Тип исходных данных</typeparam>
+  [Serializable]
+  public class DepExprOA<TResult> : DepValueObject<TResult>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="args">Массив источников исходных данных. Не может быть null или содержать элементы null</param>
+    /// <param name="function">Обработчик для вычисления значения. 
+    /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
+    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    public DepExprOA(IDepValue[] args, DepFunctionOA<TResult> function)
+    {
+#if DEBUG
+      if (args == null)
+        throw new ArgumentNullException("args");
+      for (int i = 0; i < args.Length; i++)
+      {
+        if (args[i] == null)
+          throw new ArgumentNullException("args");
+      }
 #endif
+      _Args = args;
+      for (int i = 0; i < _Args.Length; i++)
+      {
+        if (!_Args[i].IsConst)
+          _Args[i].ValueChanged += SourceValueChanged;
+      }
+
+      if (function != null)
+      {
+        _Function = function;
+        SourceValueChanged(null, null);
+      }
+    }
+
+    #endregion
+
+    #region Список аргументов
+
+    /// <summary>
+    /// Исходные данные для расчета
+    /// </summary>
+    public IDepValue[] Args { get { return _Args; } }
+    private IDepValue[] _Args;
+
+    /// <summary>
+    /// Возвращает true, если все аргументы являются константами
+    /// </summary>
+    public override bool IsConst
+    {
+      get
+      {
+        for (int i = 0; i < Args.Length; i++)
+        {
+          if (!Args[i].IsConst)
+            return false;
+        }
+        return true;
+      }
+    }
+
+    #endregion
+
+    #region Вычисление значения
+
+    private void SourceValueChanged(object sender, EventArgs args)
+    {
+      OwnerSetValue(Calculate());
+    }
+
+    private DepFunctionOA<TResult> _Function;
+
+    /// <summary>
+    /// Вычисление значения.
+    /// Этот метод должен быть переопределен в производном классе, если внешний обработчик Function не используетс
+    /// </summary>
+    /// <returns></returns>
+    protected virtual TResult Calculate()
+    {
+      if (_Function == null)
+        throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
+      object[] a = new object[_Args.Length];
+      for (int i = 0; i < _Args.Length; i++)
+        a[i] = _Args[i].Value;
+      return _Function(a);
+    }
+
+    #endregion
+  }
+
   #endregion
 }

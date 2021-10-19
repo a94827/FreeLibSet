@@ -22,7 +22,7 @@ namespace AgeyevAV
     /// </summary>
     /// <param name="s">Строка</param>
     /// <returns>Массив строк-элементов</returns>
-    /// <exception cref="AgeyevAV.ParsingException">Нарушение структуры CSV</exception>
+    /// <exception cref="AgeyevAV.Parsing.ParsingException">Нарушение структуры CSV</exception>
     public static string[] CommaStringToArray(string s)
     {
       return CommaStringToArray(s, ',');
