@@ -229,7 +229,12 @@ namespace AgeyevAV.ExtForms.Docs
           return;
         DepInput<bool> grayedEx2 = _GrayedEx as DepInput<bool>;
         if (grayedEx2 == null)
-          throw new ArgumentNullException("Свойство GrayedEx (" + GrayedEx.ToString() + ") не является DepInput");
+        {
+          grayedEx2 = new DepInput<bool>();
+          grayedEx2.OwnerInfo=new DepOwnerInfo(this, "Internal GrayedEx input");
+          grayedEx2.Source = _GrayedEx;
+          _GrayedEx = grayedEx2;
+        }
         grayedEx2.Value = value;
       }
     }
@@ -345,7 +350,7 @@ namespace AgeyevAV.ExtForms.Docs
       ControlProvider.Control.Location = new Point(16, 0);
       ControlProvider.Control.Size = new Size(ThePanel.ClientSize.Width - 16, ThePanel.ClientSize.Height);
       ControlProvider.Control.TabIndex = 1;
-      ThePanel.Controls.Add(ControlProvider.Control );
+      ThePanel.Controls.Add(ControlProvider.Control);
       return TheCheckBox;
     }
 
@@ -415,7 +420,11 @@ namespace AgeyevAV.ExtForms.Docs
         throw new InvalidOperationException("Повторная установка свойства CurrentValueEx");
       _CurrentValueEx = (value as DepInput<TValue>);
       if (_CurrentValueEx == null)
-        throw new ArgumentException("Свойство "+value.ToString()+" не является DepInput", "value");
+      {
+        _CurrentValueEx = new DepInput<TValue>();
+        _CurrentValueEx.OwnerInfo = new DepOwnerInfo(this, "CurrentValueEx");
+        _CurrentValueEx.Source = value;
+      }
       _CurrentValueEx.ValueChanged += new EventHandler(ControlChanged);
     }
 
@@ -626,11 +635,11 @@ namespace AgeyevAV.ExtForms.Docs
   }
 
   /// <summary>
-      /// Шаблон заготовки для конкретных управляющих элементов
-      /// Доопределяет свойство Control
-      /// </summary>
-      /// <typeparam name="TValue">Тип редактируемого значения</typeparam>
-      /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента</typeparam>
+  /// Шаблон заготовки для конкретных управляющих элементов
+  /// Доопределяет свойство Control
+  /// </summary>
+  /// <typeparam name="TValue">Тип редактируемого значения</typeparam>
+  /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента</typeparam>
   public abstract class DocValueControl<TValue, TControlProvider> : DocValueControlBase2<TValue>
     where TControlProvider : IEFPControl
   {
@@ -666,12 +675,12 @@ namespace AgeyevAV.ExtForms.Docs
   }
 
   /// <summary>
-      /// Шаблон заготовки для управляющего элемента, редактирующего сразу 2 поля
-      /// Не определяет свойство Control нужного типа.
-      /// Второе значение может не редактироваться (DocValue2=null)
-      /// </summary>
-      /// <typeparam name="TValue1">Тип первого редактируемого значения</typeparam>
-      /// <typeparam name="TValue2">Тип второго редактируемого значения</typeparam>
+  /// Шаблон заготовки для управляющего элемента, редактирующего сразу 2 поля
+  /// Не определяет свойство Control нужного типа.
+  /// Второе значение может не редактироваться (DocValue2=null)
+  /// </summary>
+  /// <typeparam name="TValue1">Тип первого редактируемого значения</typeparam>
+  /// <typeparam name="TValue2">Тип второго редактируемого значения</typeparam>
   public abstract class TwoDocValueControlBase2<TValue1, TValue2> : DocValueControlBase, IDocEditItem
   {
     #region Конструктор
@@ -756,9 +765,17 @@ namespace AgeyevAV.ExtForms.Docs
       _CurrentValue1Ex = value1 as DepInput<TValue1>;
       _CurrentValue2Ex = value2 as DepInput<TValue2>;
       if (_CurrentValue1Ex == null)
-        throw new ArgumentException("Свойство " + value1.ToString() + " не является DepInput", "value1");
+      {
+        _CurrentValue1Ex = new DepInput<TValue1>();
+        _CurrentValue1Ex.OwnerInfo = new DepOwnerInfo(this, "CurrentValue1Ex");
+        _CurrentValue1Ex.Source = value1;
+      }
       if (_CurrentValue2Ex == null)
-        throw new ArgumentException("Свойство " + value2.ToString() + " не является DepInput", "value2");
+      {
+        _CurrentValue2Ex = new DepInput<TValue2>();
+        _CurrentValue2Ex.OwnerInfo = new DepOwnerInfo(this, "CurrentValue2Ex");
+        _CurrentValue2Ex.Source = value2;
+      }
 
       _CurrentValue1Ex.ValueChanged += new EventHandler(ControlChanged);
       _CurrentValue2Ex.ValueChanged += new EventHandler(ControlChanged);
@@ -1034,7 +1051,7 @@ namespace AgeyevAV.ExtForms.Docs
   /// <typeparam name="TValue1">Тип первого редактируемого значения</typeparam>
   /// <typeparam name="TValue2">Тип второго редактируемого значения</typeparam>
   /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента</typeparam>
-  public abstract class TwoDocValueControl<TValue1, TValue2, TControlProvider > : TwoDocValueControlBase2<TValue1, TValue2>
+  public abstract class TwoDocValueControl<TValue1, TValue2, TControlProvider> : TwoDocValueControlBase2<TValue1, TValue2>
     where TControlProvider : IEFPControl
   {
     #region Конструктор

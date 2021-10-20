@@ -567,7 +567,6 @@ namespace AgeyevAV.DependedValues
   /// "OA"="Object Array".
   /// </summary>
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
-  /// <typeparam name="TArg">Тип исходных данных</typeparam>
   [Serializable]
   public class DepExprOA<TResult> : DepValueObject<TResult>
   {
