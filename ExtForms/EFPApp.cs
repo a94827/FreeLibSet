@@ -3086,8 +3086,12 @@ namespace AgeyevAV.ExtForms
 #else
         // Это - на всякий случай:
         //if (Object.ReferenceEquals(ActiveDialog, form))
-        if (Object.ReferenceEquals(_DialogStack.Peek(), form)) // 20.09.2021 - ActiveDialog не вернет текущий диалог, т.к. он уже закрыт
-          _DialogStack.Pop();
+        // 20.09.2021 - ActiveDialog не вернет текущий диалог, т.к. он уже закрыт
+        if (_DialogStack.Count > 0) // 21.10.2021 - Может быть, что стек уже пуст
+        {
+          if (Object.ReferenceEquals(_DialogStack.Peek(), form)) 
+            _DialogStack.Pop();
+        }
 #endif
 
         _ExternalDialogOwnerWindowSetFlag = Runner.PrevExternalDialogOwnerWindowSetFlag;

@@ -303,6 +303,7 @@ namespace AgeyevAV.DependedValues
 
     internal DepInput<T> FirstOutput;
 
+#if XXX
     /// <summary>
     /// Количество зависимых объектов, присоединенных к данному
     /// </summary>
@@ -320,39 +321,50 @@ namespace AgeyevAV.DependedValues
         return n;
       }
     }
+#endif
 
     /// <summary>
-    /// Массив зависимых объектов, присоединенных к данному
+    /// Свойство возвращает true, если к данному DepValue подключены один или несколько выходов.
+    /// Свойство предназначено для отладочных целей.
+    /// </summary>
+    public bool HasOutputs { get { return FirstOutput != null; } }
+
+    /// <summary>
+    /// Возвращает массив зависимых объектов, присоединенных к данному DepValue.
+    /// Свойство предназначено для отладочных целей.
     /// </summary>
     /// <returns>Массив выходов</returns>
-    public DepInput<T>[] GetOutputs()
+    public DepInput<T>[] Outputs
     {
-      #region Подсчет
-
-      int n = 0;
-      DepInput<T> CurrInput = FirstOutput;
-      while (CurrInput != null)
+      get
       {
-        n++;
-        CurrInput = CurrInput.NextOutput;
+        #region Подсчет
+
+        int n = 0;
+        DepInput<T> CurrInput = FirstOutput;
+        while (CurrInput != null)
+        {
+          n++;
+          CurrInput = CurrInput.NextOutput;
+        }
+
+        #endregion
+
+        #region Создание списка
+
+        DepInput<T>[] Outputs = new DepInput<T>[n];
+        n = 0;
+        CurrInput = FirstOutput;
+        while (CurrInput != null)
+        {
+          Outputs[n] = CurrInput;
+          n++;
+          CurrInput = CurrInput.NextOutput;
+        }
+        return Outputs;
+
+        #endregion
       }
-
-      #endregion
-
-      #region Создание списка
-
-      DepInput<T>[] Outputs = new DepInput<T>[n];
-      n = 0;
-      CurrInput = FirstOutput;
-      while (CurrInput != null)
-      {
-        Outputs[n] = CurrInput;
-        n++;
-        CurrInput = CurrInput.NextOutput;
-      }
-      return Outputs;
-
-      #endregion
     }
 
     internal void AddOutput(DepInput<T> theInput)
@@ -537,7 +549,8 @@ namespace AgeyevAV.DependedValues
       //  return;
 
       // Значение на входе изменилось
-      BaseSetValue(NewVal);
+      //BaseSetValue(NewVal);
+      SetValue(NewVal); // 21.10.2021. Иначе не будет работать DepInputWithCheck()
     }
 
     #endregion
