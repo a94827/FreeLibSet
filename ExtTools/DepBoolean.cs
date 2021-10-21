@@ -297,13 +297,16 @@ namespace AgeyevAV.DependedValues
       if (srcValue == null)
         throw new ArgumentNullException("srcValue");
 
-      DepInput<Boolean>[] Inputs = srcValue.GetOutputs();
-      for (int i = 0; i < Inputs.Length; i++)
+      if (srcValue.HasOutputs)
       {
-        if (Inputs[i].OwnerInfo.Owner != null)
+        DepInput<Boolean>[] children = srcValue.Outputs;
+        for (int i = 0; i < children.Length; i++)
         {
-          if (Inputs[i].OwnerInfo.Owner is DepNot)
-            return (DepNot)(Inputs[i].OwnerInfo.Owner);
+          if (children[i].OwnerInfo.Owner != null)
+          {
+            if (children[i].OwnerInfo.Owner is DepNot)
+              return (DepNot)(children[i].OwnerInfo.Owner);
+          }
         }
       }
       // Нет подходящего объекта
