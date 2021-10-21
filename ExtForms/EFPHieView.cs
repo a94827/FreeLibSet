@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.Data;
-using AgeyevAV;
-using AgeyevAV.Config;
-using AgeyevAV.Remoting;
+
+using FreeLibSet.Config;
+using FreeLibSet.Remoting;
 
 /*
  * The BSD License
@@ -41,7 +41,7 @@ using AgeyevAV.Remoting;
  */
 
 #if XXX
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
 
   /// <summary>

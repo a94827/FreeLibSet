@@ -10,10 +10,12 @@ using System.Drawing;
 using System.Data;
 using System.Globalization;
 using System.Xml;
-using AgeyevAV.IO;
-using AgeyevAV.Logging;
-using AgeyevAV.DependedValues;
-using AgeyevAV.Parsing;
+using FreeLibSet.IO;
+using FreeLibSet.Logging;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Parsing;
+using FreeLibSet.Shell;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -44,7 +46,7 @@ using AgeyevAV.Parsing;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms.Diagnostics
 {
   /// <summary>
   /// Отладочные средства
@@ -132,7 +134,7 @@ namespace AgeyevAV.ExtForms
           // Записываем исключение в logout
           AbsPath LogFilePath = AbsPath.Empty;
           if (e != null && useLogout)
-            LogFilePath = LogoutException(e, title);
+            LogFilePath = LogoutTools.LogoutExceptionToFile(e, title);
 
           // Показываем форму
           if (!_InsideShowException)
@@ -149,7 +151,7 @@ namespace AgeyevAV.ExtForms
                 AbsPath LogFilePath2 = AbsPath.Empty;
                 try
                 {
-                  LogFilePath2 = LogoutException(e2, "Ошибка при выводе отладочного окна просмотра ошибки");
+                  LogFilePath2 = LogoutTools.LogoutExceptionToFile(e2, "Ошибка при выводе отладочного окна просмотра ошибки");
                 }
                 catch { }
                 StringBuilder sb = new StringBuilder();
@@ -185,18 +187,6 @@ namespace AgeyevAV.ExtForms
           }
         }
       }
-    }
-
-    /// <summary>
-    /// Вывод информации об исключении в файл.
-    /// Вызывает LogoutTools.LogoutException().
-    /// Этот метод может вызываться из любого потока.
-    /// </summary>
-    /// <param name="e">Объект исключения</param>
-    /// <param name="title">Заголовок</param>
-    public static AbsPath LogoutException(Exception e, string title)
-    {
-      return LogoutTools.LogoutExceptionToFile(e, title);
     }
 
     #endregion
@@ -1750,7 +1740,7 @@ namespace AgeyevAV.ExtForms
         args.WritePair("AsyncProcList", "Count=" + EFPApp.ExecProcCallCount.ToString());
         if (EFPApp.ExecProcCallCount > 0)
         {
-          AgeyevAV.Remoting.IExecProc[] Procs = EFPApp.ExecProcList.ToArray();
+          FreeLibSet.Remoting.IExecProc[] Procs = EFPApp.ExecProcList.ToArray();
           args.IndentLevel++;
           try
           {
@@ -1766,7 +1756,7 @@ namespace AgeyevAV.ExtForms
         args.WritePair("RemoteUICallBacks", "Count=" + EFPApp.RemoteUICallBackCount.ToString());
         if (EFPApp.RemoteUICallBackCount > 0)
         {
-          AgeyevAV.Remoting.IExecProcCallBack[] Procs = new AgeyevAV.Remoting.IExecProcCallBack[EFPApp.RemoteUICallBacks.Count];
+          FreeLibSet.Remoting.IExecProcCallBack[] Procs = new FreeLibSet.Remoting.IExecProcCallBack[EFPApp.RemoteUICallBacks.Count];
           EFPApp.RemoteUICallBacks.CopyTo(Procs, 0);
 
           args.IndentLevel++;

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +35,7 @@ using AgeyevAV.ExtDB;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region DocTypeGetImageEventHandler
 

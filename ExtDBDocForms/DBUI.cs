@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Data;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.ComponentModel;
-using AgeyevAV.ExtForms.NodeControls;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Logging;
-using AgeyevAV.Remoting;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Forms;
+using FreeLibSet.Logging;
+using FreeLibSet.Remoting;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -42,7 +44,7 @@ using AgeyevAV.Remoting;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Делегаты
 

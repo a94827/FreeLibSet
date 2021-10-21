@@ -43,7 +43,7 @@ using System.ComponentModel;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class NodeIcon : BindableControl
   {

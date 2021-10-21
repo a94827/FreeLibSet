@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -31,7 +33,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.DependedValues
+namespace FreeLibSet.DependedValues
 {
   /// <summary>
   /// Функции, которые можно использовать с классами DepExprX для вычислений в удаленном пользовательском интерфейсе (RI).

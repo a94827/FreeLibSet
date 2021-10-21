@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Провайдер табличного просмотра, предназначенного для редактирования данных DataTable "по месту".
@@ -289,7 +290,7 @@ namespace AgeyevAV.ExtForms
   /// Прикладной код может создавать объект для таблицы, которая будет присоединена к EFPInputGridView.
   /// Класс InputGridDataDialog имеет свойство Columns для работы со столбцами.
   /// </summary>
-  public class EFPInputDataGridViewColumnProperties : AgeyevAV.RI.InputGridDataColumnProperties
+  public class EFPInputDataGridViewColumnProperties : FreeLibSet.RI.InputGridDataColumnProperties
   {
     // Класс переопределяет методы для типа данных HorizontalAlignment
 
@@ -327,7 +328,7 @@ namespace AgeyevAV.ExtForms
     /// <param name="value">Устанавливаемое значение</param>
     public /*new */void SetAlign(string columnName, HorizontalAlignment value)
     {
-      base.SetAlign(columnName, (AgeyevAV.RI.HorizontalAlignment)(int)value);
+      base.SetAlign(columnName, (FreeLibSet.RI.HorizontalAlignment)(int)value);
     }
 
     /// <summary>
@@ -341,7 +342,7 @@ namespace AgeyevAV.ExtForms
     /// <param name="value">Устанавливаемое значение</param>
     public /*new */void SetAlign(DataColumn column, HorizontalAlignment value)
     {
-      base.SetAlign(column, (AgeyevAV.RI.HorizontalAlignment)(int)value);
+      base.SetAlign(column, (FreeLibSet.RI.HorizontalAlignment)(int)value);
     }
 
     /// <summary>

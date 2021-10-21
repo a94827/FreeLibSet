@@ -35,7 +35,7 @@ using System.ComponentModel;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Опции форматирования выражений
@@ -938,7 +938,7 @@ namespace AgeyevAV.ExtDB
     /// Статический экземпляр форматизатора SQL-запросов для объекта DataView
     /// Используется для получения текстового представления
     /// </summary>
-    public static readonly DBxSqlFormatter Default = new AgeyevAV.ExtDB.Data.DataViewDBxSqlFormatter();
+    public static readonly DBxSqlFormatter Default = new FreeLibSet.Data.DataViewDBxSqlFormatter();
 
     #endregion
   }

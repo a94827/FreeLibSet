@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Windows.Forms;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Маленькая табличка фильтров

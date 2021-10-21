@@ -7,7 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using AgeyevAV.IO;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   internal partial class FileCopierForm : Form
   {

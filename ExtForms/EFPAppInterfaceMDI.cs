@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Многодокументный интерфейс MDI.

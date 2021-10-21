@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   partial class DataTools
   {

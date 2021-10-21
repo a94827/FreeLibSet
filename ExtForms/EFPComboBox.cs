@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using AgeyevAV.DependedValues;
-using AgeyevAV.TextMasks;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Formatting;
+using FreeLibSet.Controls;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -41,7 +44,7 @@ using AgeyevAV.TextMasks;
 // EFPTextComboBox, напротив, предназначен для комбоблока, который используется 
 // для редактирования текстового значения. В нем основным свойством является "Text"
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Обработчик для комбоблока, предназначенного для ввода текста

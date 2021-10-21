@@ -5,7 +5,7 @@ using System.Data;
 
 // Пока не знаю, чего хочу
 #if XXXX
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Провайдер доступа к документам, использующий буферизацию таблиц

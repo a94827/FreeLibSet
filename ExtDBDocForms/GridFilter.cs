@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Windows.Forms;
 using System.Data;
-using AgeyevAV;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Config;
+
+using FreeLibSet.Data;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Интерфейс IDBxDocSelFilter
 

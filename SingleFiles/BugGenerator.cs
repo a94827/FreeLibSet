@@ -32,7 +32,7 @@ using System.Threading;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet
 {
   /// <summary>
   /// Генерация ошибок (для тестирования)

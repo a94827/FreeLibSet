@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Обработчик для Button

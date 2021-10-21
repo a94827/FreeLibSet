@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data.Docs;
 using System.Data;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data;
 using System.ComponentModel;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Редактор выборки документов

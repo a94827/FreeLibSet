@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
 using System.Data;
 using System.Diagnostics;
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
 
   /// <summary>

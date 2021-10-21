@@ -1,4 +1,4 @@
-﻿using AgeyevAV.DependedValues;
+﻿using FreeLibSet.DependedValues;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,7 +33,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Обработчик для CheckBox

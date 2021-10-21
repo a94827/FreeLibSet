@@ -8,7 +8,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.ComponentModel;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -39,7 +42,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс для реализации посредников между списком тем и
@@ -3027,7 +3030,7 @@ namespace AgeyevAV.ExtForms
         if (_TheListBox.SelectedItem == null)
           return;
 
-        DebugTools.DebugObject(_TheListBox.SelectedItem, "EFPCommandItem №" + (_TheListBox.SelectedIndex + 1).ToString());
+        FreeLibSet.Forms.Diagnostics.DebugTools.DebugObject(_TheListBox.SelectedItem, "EFPCommandItem №" + (_TheListBox.SelectedIndex + 1).ToString());
       }
 
       #endregion

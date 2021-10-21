@@ -8,9 +8,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -42,7 +43,7 @@ using System.Text;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Окно с процентным индикатором

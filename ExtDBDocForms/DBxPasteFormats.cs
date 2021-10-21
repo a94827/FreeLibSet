@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Data;
 using System.Windows.Forms;
-using AgeyevAV;
-using AgeyevAV.ExtDB.Docs;
+
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
+using FreeLibSet.Forms.Diagnostics;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using AgeyevAV.ExtDB.Docs;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   // Классы для реализации форматов вставки из буфера обмена
 

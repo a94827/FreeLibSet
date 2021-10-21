@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics;
 using System.Xml;
 using System.Reflection;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using System.Reflection;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.IO
+namespace FreeLibSet.IO
 {
   #region Перечисление TestPathMode
 

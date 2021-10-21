@@ -4,6 +4,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using System.Xml;
 
 #pragma warning disable 1591 // неохота делать
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Редактирование данных в XML-формате

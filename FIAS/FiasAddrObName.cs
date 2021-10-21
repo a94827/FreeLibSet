@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -31,7 +32,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// Хранит наименование адресного объекта, разбитое на лексемы, чтобы его можно было сравнивать при неточном сравнении.

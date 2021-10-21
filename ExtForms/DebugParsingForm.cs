@@ -5,8 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Parsing;
-using AgeyevAV;
+using FreeLibSet.Parsing;
+using FreeLibSet.Core;
+
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using AgeyevAV;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms.Diagnostics
 {
   /// <summary>
   /// Отладочная форма для просмотра выражений
@@ -149,10 +150,10 @@ namespace AgeyevAV.ExtForms
         {
           switch (tk.ErrorMessage.Value.Kind)
           {
-            case AgeyevAV.ErrorMessageKind.Error:
+            case FreeLibSet.Core.ErrorMessageKind.Error:
               efpText.Control.SelectionBackColor = EFPApp.Colors.GridErrorBackColor;
               break;
-            case AgeyevAV.ErrorMessageKind.Warning:
+            case FreeLibSet.Core.ErrorMessageKind.Warning:
               efpText.Control.SelectionBackColor = EFPApp.Colors.GridWarningBackColor;
               break;
           }

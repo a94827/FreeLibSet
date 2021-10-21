@@ -34,7 +34,7 @@ using System.Text;
 // Реализация вычисления произвольных выражений
 // Эти классы могут быть сериализуемыми, если обработчик может быть передан, или, если используется производный класс
 
-namespace AgeyevAV.DependedValues
+namespace FreeLibSet.DependedValues
 {
   #region Выражения с одним аргументом
 

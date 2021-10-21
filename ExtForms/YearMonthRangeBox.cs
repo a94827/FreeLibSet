@@ -5,11 +5,11 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
 using System.Windows.Forms.Design;
 using System.Collections;
 using System.Windows.Forms.Design.Behavior;
 using System.ComponentModel.Design;
+using FreeLibSet.Formatting;
 
 /*
  * The BSD License
@@ -42,7 +42,7 @@ using System.ComponentModel.Design;
 
 #pragma warning disable 1591 // используются атрибуты
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Поле выбора диапазона месяцев в пределах года

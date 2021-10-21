@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class RefDocGridFilterForm
   {

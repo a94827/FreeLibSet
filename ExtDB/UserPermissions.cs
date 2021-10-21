@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV;
-using AgeyevAV.Config;
+
+using FreeLibSet.Config;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -95,7 +97,7 @@ using AgeyevAV.Config;
  * - Экземпляр UserPermissionClassesUI принадлежит DBUI 
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Базовый класс для пользовательского разрешения

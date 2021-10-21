@@ -5,7 +5,8 @@ using NUnit.Framework;
 using System.Collections;
 using System.Reflection;
 using System.Diagnostics;
-using AgeyevAV;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 namespace ExtTools.tests
 {

@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Xml;
 using System.Globalization;
 using System.IO;
 using System.Diagnostics;
-using AgeyevAV.Win32;
+using FreeLibSet.Win32;
+using FreeLibSet.Core;
 
-namespace AgeyevAV
+namespace FreeLibSet.Shell
 {
   #region Перечисление OpenOfficeKind
 

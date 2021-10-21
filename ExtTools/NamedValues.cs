@@ -10,6 +10,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Collections;
 using System.Threading;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using System.Threading;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-namespace AgeyevAV.Remoting
+namespace FreeLibSet.Remoting
 {
   /// <summary>
   /// Коллекция значений с доступом по имени.

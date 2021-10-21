@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections;
 using System.Data;
 using System.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +35,7 @@ using System.IO;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Генератор SQL-выражения для FillSelect().

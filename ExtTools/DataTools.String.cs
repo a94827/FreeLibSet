@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using System.Collections;
+using FreeLibSet.Collections;
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   partial class DataTools
   {

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Collections.Generic;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -35,7 +37,7 @@ using AgeyevAV.ExtDB.Docs;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Абстрактный базовый класс инициализации формы
 

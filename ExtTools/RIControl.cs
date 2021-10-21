@@ -1,9 +1,12 @@
-﻿using AgeyevAV.Config;
-using AgeyevAV.DependedValues;
-using AgeyevAV.IO;
+﻿using FreeLibSet.Config;
+using FreeLibSet.DependedValues;
+using FreeLibSet.IO;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Collections;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +37,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.RI
+namespace FreeLibSet.RI
 {
   /// <summary>
   /// Значения для свойств CanBeEmptyMode различных управляющих элементов

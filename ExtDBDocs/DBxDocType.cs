@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.Collections;
 using System.Threading;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +37,7 @@ using System.Threading;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   #region Делегаты
 

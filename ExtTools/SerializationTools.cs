@@ -33,7 +33,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Remoting
+namespace FreeLibSet.Remoting
 {
   /// <summary>
   /// Статические методы для сериализации данных

@@ -8,7 +8,7 @@
     <ProjectGuid>{30085CAC-C3D4-423B-8B72-12DD3AA7441A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgeyevAV.FIAS</RootNamespace>
+    <RootNamespace>FreeLibSet.FIAS</RootNamespace>
     <AssemblyName>FIAS</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />

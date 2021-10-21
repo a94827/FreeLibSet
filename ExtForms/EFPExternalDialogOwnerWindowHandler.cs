@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Временный установщик свойства EFPApp.ExternalDialogOwnerWindow

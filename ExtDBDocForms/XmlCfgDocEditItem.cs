@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Config;
-using AgeyevAV.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Config;
+using FreeLibSet.DependedValues;
 
 /*
  * The BSD License
@@ -34,7 +34,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>

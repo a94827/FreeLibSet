@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV;
+
 using System.Runtime.InteropServices;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +36,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Класс для замены фиктивных идентификаторов, используемых для созданных

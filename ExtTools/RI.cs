@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Config;
-using AgeyevAV.Remoting;
-using AgeyevAV.IO;
-using AgeyevAV.TextMasks;
+using FreeLibSet.Config;
+using FreeLibSet.Remoting;
+using FreeLibSet.IO;
+using FreeLibSet.Formatting;
 using System.Runtime.Serialization;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -102,7 +103,7 @@ using AgeyevAV.DependedValues;
  * Интерфейс IRemoteInterface объявляет методы MessageBox(), ShowDialog()
  */
 
-namespace AgeyevAV.RI
+namespace FreeLibSet.RI
 {
   #region Перечисления для MessageBox
 

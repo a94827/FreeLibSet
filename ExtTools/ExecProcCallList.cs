@@ -6,8 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.Threading;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -42,7 +43,7 @@ using System.Threading;
  * Вызов процедур ExecProc с централизованной обработкой
  */
 
-namespace AgeyevAV.Remoting
+namespace FreeLibSet.Remoting
 {
   #region Делегаты события Finished
 
@@ -388,7 +389,7 @@ namespace AgeyevAV.Remoting
         throw new InvalidOperationException("Процедура " + DisplayName + " уже запущена");
       // 19.08.2020
       // Проверка убрана, так как она провоцирует лишний сетевой вызов
-      //if (!AgeyevAV.Remoting.ExecProc.GetCanStart(ExecProc.State))
+      //if (!FreeLibSet.Remoting.ExecProc.GetCanStart(ExecProc.State))
       //  throw new InvalidOperationException(" Процедура " + ExecProc.DisplayName + " не готова к запуску, так как находится в состоянии " + ExecProc.State.ToString());
     }
 

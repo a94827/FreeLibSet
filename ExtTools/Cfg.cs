@@ -4,9 +4,11 @@ using System.Text;
 using System.Globalization;
 using System.Xml;
 using System.IO;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Diagnostics;
-using AgeyevAV.Win32;
+using FreeLibSet.Win32;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +40,7 @@ using AgeyevAV.Win32;
  */
 
 
-namespace AgeyevAV.Config
+namespace FreeLibSet.Config
 {
   #region Базовые классы
 

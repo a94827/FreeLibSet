@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Drawing;
 
 /*
@@ -43,7 +43,7 @@ using System.Drawing;
 #pragma warning disable 1591
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   public struct NodeControlInfo
   {

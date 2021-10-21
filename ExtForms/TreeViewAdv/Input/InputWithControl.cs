@@ -39,7 +39,7 @@ using System.Text;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   internal class InputWithControl : NormalInputState
   {

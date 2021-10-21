@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV;
+
 using System.Threading;
 using System.Data;
 using System.Data.Common;
 using System.Collections;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.Runtime.Serialization;
 using System.Diagnostics;
+using FreeLibSet.Core;
+using FreeLibSet.Data;
 
 /*
  * The BSD License
@@ -39,7 +41,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Методы для работы с транзакциями, реализованные в DBxCon и DBxConBase

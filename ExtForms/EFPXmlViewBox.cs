@@ -6,9 +6,12 @@ using System.Xml;
 using System.IO;
 using System.Drawing;
 using System.Diagnostics;
-using AgeyevAV.IO;
-using AgeyevAV.DependedValues;
+using FreeLibSet.IO;
+using FreeLibSet.DependedValues;
 using System.ComponentModel;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
+using FreeLibSet.Shell;
 
 /*
  * The BSD License
@@ -39,7 +42,7 @@ using System.ComponentModel;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Провайдер управляющего элемента для просмотра HTML-страниц.

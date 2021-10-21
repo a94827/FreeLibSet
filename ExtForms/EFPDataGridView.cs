@@ -5,12 +5,16 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Data;
 using System.ComponentModel;
-using AgeyevAV.IO;
-using AgeyevAV.TextMasks;
+using FreeLibSet.IO;
+using FreeLibSet.Formatting;
 using System.Diagnostics;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using FreeLibSet.Core;
+using FreeLibSet.Data;
+using FreeLibSet.Shell;
+using FreeLibSet.Logging;
 
 /*
  * The BSD License
@@ -41,7 +45,7 @@ using System.Runtime.Serialization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисления
 
@@ -5884,7 +5888,7 @@ namespace AgeyevAV.ExtForms
                 }
                 catch { }
 
-                AgeyevAV.Logging.LogoutTools.LogoutException(e, "Ошибка установки DataGridViewColumn.SortGlyphDirection");
+                FreeLibSet.Logging.LogoutTools.LogoutException(e, "Ошибка установки DataGridViewColumn.SortGlyphDirection");
               }
             }
           }
@@ -5914,7 +5918,7 @@ namespace AgeyevAV.ExtForms
               }
               catch { }
 
-              AgeyevAV.Logging.LogoutTools.LogoutException(e, "Ошибка установки DataGridViewColumn.SortGlyphDirection");
+              FreeLibSet.Logging.LogoutTools.LogoutException(e, "Ошибка установки DataGridViewColumn.SortGlyphDirection");
             }
           }
         }
@@ -7623,7 +7627,7 @@ namespace AgeyevAV.ExtForms
       }
       catch (Exception e)
       {
-        DebugTools.LogoutException(e, "Ошибка CellFormatting");
+        LogoutTools.LogoutException(e, "Ошибка CellFormatting");
         EFPApp.ShowTempMessage("Ошибка CellFormatting. " + e.Message);
       }
     }

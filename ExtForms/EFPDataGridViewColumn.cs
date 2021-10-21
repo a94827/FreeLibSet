@@ -4,9 +4,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Globalization;
-using AgeyevAV;
-using AgeyevAV.DBF;
-using AgeyevAV.TextMasks;
+
+using FreeLibSet.DBF;
+using FreeLibSet.Formatting;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -47,7 +49,7 @@ using AgeyevAV.TextMasks;
  * На самом деле объекты EFPDataGridViewColumn хранятся в DataGridViewColumn.Tag, а не
  * в коллекции EFPDataGridViewColumns. 
  */
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region GridProducerColumnCellToolTipTextNeededEventHandler
 

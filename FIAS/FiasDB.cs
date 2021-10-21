@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using System.Data.Common;
-using AgeyevAV.Diagnostics;
-using AgeyevAV.IO;
+using FreeLibSet.Diagnostics;
+using FreeLibSet.IO;
 using System.Diagnostics;
-using AgeyevAV.Config;
-using AgeyevAV.Remoting;
-using AgeyevAV.Logging;
+using FreeLibSet.Config;
+using FreeLibSet.Remoting;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   #region Делегаты
 
@@ -152,7 +153,7 @@ namespace AgeyevAV.FIAS
         _InternalSettings.ProviderName = String.Empty;
       _InternalSettings.UseIdTables = false;
       _InternalSettings.FTSMode = FiasFTSMode.None;
-      if (db is AgeyevAV.ExtDB.SQLite.SQLiteDBx)
+      if (db is FreeLibSet.Data.SQLite.SQLiteDBx)
       {
         _InternalSettings.UseOADates = true;
         _InternalSettings.FTSMode = FiasFTSMode.FTS3;
@@ -249,7 +250,7 @@ namespace AgeyevAV.FIAS
 
       if (_UpdateStruct)
       {
-        if (db is AgeyevAV.ExtDB.SQLite.SQLiteDBx)
+        if (db is FreeLibSet.Data.SQLite.SQLiteDBx)
         {
           DbConnectionStringBuilder csb = db.ProviderFactory.CreateConnectionStringBuilder();
           csb.ConnectionString = db.MainEntry.UnpasswordedConnectionString;
@@ -308,7 +309,7 @@ namespace AgeyevAV.FIAS
 
     private static DBx CreateDefaultDB()
     {
-      return new AgeyevAV.ExtDB.SQLite.SQLiteDBx("DataSource=fias.db"); // ???
+      return new FreeLibSet.ExtDB.SQLite.SQLiteDBx("DataSource=fias.db"); // ???
     } */
 
     /// <summary>
@@ -376,7 +377,7 @@ namespace AgeyevAV.FIAS
 
         //bool NoPK = true; // Не использовать первичный ключ типа GUID в таблицах. Будет неявный первичный ключ по rowid.
         // А для полей AOID и прочих, используем индекс.
-        bool NoPK = (_DB is AgeyevAV.ExtDB.SQLite.SQLiteDBx); // 30.07.2020
+        bool NoPK = (_DB is FreeLibSet.Data.SQLite.SQLiteDBx); // 30.07.2020
 
 
         #region "ClassifUpdate"

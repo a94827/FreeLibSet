@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +34,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   #region Перечисление DBxDocPermissionReason
 

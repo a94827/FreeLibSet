@@ -1,10 +1,14 @@
-﻿using AgeyevAV.DependedValues;
+﻿using FreeLibSet.DependedValues;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
+using FreeLibSet.Controls;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
+using FreeLibSet.Formatting;
 
 /*
  * The BSD License
@@ -35,7 +39,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Провайдер поля ввода даты.

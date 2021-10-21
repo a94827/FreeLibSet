@@ -1,8 +1,11 @@
-﻿using AgeyevAV.DependedValues;
+﻿using FreeLibSet.DependedValues;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using FreeLibSet.Controls;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +36,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Провайдер для UserComboBox, предназначенного для выбора значения с помощью кнопки выбора

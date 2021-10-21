@@ -3,7 +3,7 @@ using System.Collections;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.Generic;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 
 /*
  * The BSD License
@@ -34,7 +34,7 @@ using AgeyevAV.ExtForms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Одна страница редактора документа

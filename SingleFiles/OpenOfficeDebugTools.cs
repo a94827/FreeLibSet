@@ -43,7 +43,7 @@ using System.Diagnostics;
  * входящих в состав OpenOffice SDK
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Отладочные средства взаимодействия OpenOffice / LibreOfice через CLI

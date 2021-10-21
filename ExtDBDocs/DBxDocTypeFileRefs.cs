@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Описание одного поля, хранящего ссылку на файл.

@@ -7,7 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 using System.IO;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   internal partial class SimpleAboutDialogForm : Form
   {
@@ -70,7 +71,7 @@ namespace AgeyevAV.ExtForms
 
     void efpInfo_Click(object sender, EventArgs args)
     {
-      DebugTools.ShowDebugInfo("Отладочная информация о программе");
+      FreeLibSet.Forms.Diagnostics.DebugTools.ShowDebugInfo("Отладочная информация о программе");
     }
 
     #endregion
@@ -104,7 +105,7 @@ namespace AgeyevAV.ExtForms
           TheTabControl.TabPages.Add(tpGAC);
           EFPDataGridView ghGAC = InitModulesPage(efpForm, tpGAC);
 
-          DataTable Table = DebugTools.GetAssembliesInfo(true);
+          DataTable Table = FreeLibSet.Forms.Diagnostics.DebugTools.GetAssembliesInfo(true);
 
           DataView dvMain = new DataView(Table);
           dvMain.RowFilter = "GAC=FALSE";

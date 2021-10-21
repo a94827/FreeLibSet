@@ -8,7 +8,7 @@
     <ProjectGuid>{84EBD5A9-93BA-485D-81E3-F17B23B34580}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgeyevAV.ExtForms.FIAS</RootNamespace>
+    <RootNamespace>FreeLibSet.Forms.FIAS</RootNamespace>
     <AssemblyName>FIASForms</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />

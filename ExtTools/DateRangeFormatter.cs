@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using FreeLibSet.Formatting;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using System.Globalization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Calendar
 {
 
   /// <summary>

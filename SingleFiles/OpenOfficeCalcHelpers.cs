@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.ComponentModel;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Diagnostics;
 
 /*
@@ -63,7 +63,7 @@ namespace unoidl.com.sun.star.sheet
 }
 
 
-namespace AgeyevAV.OpenOffice.Calc
+namespace FreeLibSet.OpenOffice.Calc
 {
   /// <summary>
   /// Доступ к книге (документу ODS).

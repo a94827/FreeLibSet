@@ -40,7 +40,7 @@ using System.Runtime.InteropServices;
 
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   internal static class NativeMethods
   {

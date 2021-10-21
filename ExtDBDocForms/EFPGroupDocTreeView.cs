@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtForms.NodeControls;
-using AgeyevAV.Logging;
-using AgeyevAV.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Logging;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>

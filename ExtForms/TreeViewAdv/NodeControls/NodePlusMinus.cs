@@ -42,7 +42,7 @@ using System.Windows.Forms.VisualStyles;
  */
 
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   internal class NodePlusMinus : NodeControl
   {

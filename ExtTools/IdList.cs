@@ -4,8 +4,10 @@ using System.Text;
 using System.Collections;
 using System.Runtime.Serialization;
 using System.Data;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
-namespace AgeyevAV
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Список идентификаторов Int32 с однократным вхождением.

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
 
 /*
  * The BSD License
@@ -40,7 +40,7 @@ using AgeyevAV.Remoting;
 
 #if XXX
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
 #region Перечисления
 

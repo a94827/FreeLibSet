@@ -5,8 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV;
-using AgeyevAV.Config;
+
+using FreeLibSet.Config;
 
 /*
  * The BSD License
@@ -37,7 +37,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма установки фильтров для табличного просмотра
@@ -621,7 +621,7 @@ namespace AgeyevAV.ExtForms
     {
       TempCfg Sect = new TempCfg();
       Filters.WriteConfig(Sect);
-      DebugTools.DebugXml(Sect.Document, "Текущие фильтры");
+      FreeLibSet.Forms.Diagnostics.DebugTools.DebugXml(Sect.Document, "Текущие фильтры");
     }
 
     #endregion

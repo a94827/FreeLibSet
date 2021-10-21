@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Data;
-using AgeyevAV;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Config;
-using AgeyevAV.Logging;
+
+using FreeLibSet.Data;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Config;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region EFPDBxGridViewDocSelEventArgs
 
@@ -1307,7 +1308,7 @@ namespace AgeyevAV.ExtForms.Docs
       }
       catch (Exception e)
       {
-        DebugTools.ShowException(e, "Ошибка установки маркировки строки");
+        EFPApp.ShowException(e, "Ошибка установки маркировки строки");
       }
     }
 

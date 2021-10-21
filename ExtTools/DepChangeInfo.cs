@@ -31,7 +31,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.DependedValues
+namespace FreeLibSet.DependedValues
 {
   /// <summary>
   /// Базовый класс для DepChangeInfoItem и DepChangeInfoList

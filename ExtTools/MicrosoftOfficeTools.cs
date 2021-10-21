@@ -5,11 +5,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Globalization;
 using System.Reflection;
-using AgeyevAV.OLE;
-using AgeyevAV.IO;
+using FreeLibSet.OLE;
+using FreeLibSet.IO;
 using System.Threading;
 using System.Runtime.InteropServices;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -40,7 +41,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Shell
 {
   /// <summary>
   /// Поддержка для Microsoft Office

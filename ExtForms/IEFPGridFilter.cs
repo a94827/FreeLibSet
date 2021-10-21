@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +34,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Èםעונפויסû
 

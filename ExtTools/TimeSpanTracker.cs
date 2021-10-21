@@ -32,7 +32,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Diagnostics
 {
   /// <summary>
   /// Отслеживание прошедшего времени.

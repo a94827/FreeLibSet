@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class UserActionsReportParamsForm
   {
@@ -35,11 +35,11 @@
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.cbOneType = new System.Windows.Forms.CheckBox();
       this.cbDocType = new System.Windows.Forms.ComboBox();
-      this.cbUser = new AgeyevAV.ExtForms.UserSelComboBox();
+      this.cbUser = new FreeLibSet.Controls.UserSelComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnLastDay = new System.Windows.Forms.Button();
-      this.edPeriod = new AgeyevAV.ExtForms.DateRangeBox();
+      this.edPeriod = new FreeLibSet.Controls.DateRangeBox();
       this.panel1.SuspendLayout();
       this.panel2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -194,11 +194,11 @@
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.GroupBox groupBox1;
-    private DateRangeBox edPeriod;
+    private FreeLibSet.Controls.DateRangeBox edPeriod;
     private System.Windows.Forms.GroupBox groupBox3;
     private System.Windows.Forms.CheckBox cbOneType;
     private System.Windows.Forms.ComboBox cbDocType;
-    public UserSelComboBox cbUser;
+    public FreeLibSet.Controls.UserSelComboBox cbUser;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Button btnLastDay;
   }

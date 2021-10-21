@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
 using System.Drawing;
-using AgeyevAV.Config;
-using AgeyevAV.Logging;
+using FreeLibSet.Config;
+using FreeLibSet.Logging;
 using System.Runtime.CompilerServices;
+using FreeLibSet.Collections;
+using FreeLibSet.Forms.Diagnostics;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +41,7 @@ using System.Runtime.CompilerServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление EFPFormValidateReason
 
@@ -502,7 +505,7 @@ namespace AgeyevAV.ExtForms
         }
         catch (Exception e)
         {
-          DebugTools.LogoutException(e, "Включение tool forms"); // без вывода диалога
+          LogoutTools.LogoutException(e, "Включение tool forms"); // без вывода диалога
         }
         Form.Activate(); // добавлено 17.12.2010 для работы формы предварительного просмотра
 
@@ -568,7 +571,7 @@ namespace AgeyevAV.ExtForms
         }
         catch (Exception e)
         {
-          DebugTools.LogoutException(e, "Отключение tool forms");
+          LogoutTools.LogoutException(e, "Отключение tool forms");
         }
       }
 
@@ -689,7 +692,7 @@ namespace AgeyevAV.ExtForms
       InitControl(Form); // перенесено из конструктора 24.09.2018
 
       if (CloseModalFormByEscape && Modal)
-        FormButtonStub.AssignCancel(Form);
+        FreeLibSet.Controls.FormButtonStub.AssignCancel(Form);
     }
 
     /// <summary>

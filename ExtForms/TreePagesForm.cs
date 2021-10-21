@@ -40,7 +40,7 @@ using System.Windows.Forms;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма диалога с закладками и иерархическим списком слева для выбора закладки

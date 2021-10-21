@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс Формы для параметров отчета с использованимем расширенных

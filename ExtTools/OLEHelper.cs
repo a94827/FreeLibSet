@@ -5,8 +5,9 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Diagnostics;
 using System.IO;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Globalization;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using System.Globalization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.OLE
+namespace FreeLibSet.OLE
 {
   /// <summary>
   /// Вспомогательный класс для работы с серверами OLE, например,

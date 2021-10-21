@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>                                                
   /// Контейнер для размещения управляющих элементов один под другим

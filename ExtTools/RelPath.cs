@@ -31,7 +31,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.IO
+namespace FreeLibSet.IO
 {
   /// <summary>
   /// Относительный или абсолютный путь к файлу или каталогу

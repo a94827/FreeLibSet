@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.RI;
-using AgeyevAV.Config;
+using FreeLibSet.RI;
+using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using AgeyevAV.Config;
 
 // Удаленный пользовательский интерфейс
 
-namespace AgeyevAV.FIAS.RI
+namespace FreeLibSet.FIAS.RI
 {
   /// <summary>
   /// Удаленный интерфейс для панели ввода компонентов адреса.

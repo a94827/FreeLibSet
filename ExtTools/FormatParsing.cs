@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Parsing;
+using FreeLibSet.Parsing;
 
 /*
  * The BSD License
@@ -38,7 +38,7 @@ using AgeyevAV.Parsing;
  */
 
 #if XXX
-namespace AgeyevAV.FormatParsing
+namespace FreeLibSet.FormatParsing
 {
   #region Перечисление FormatKind
 

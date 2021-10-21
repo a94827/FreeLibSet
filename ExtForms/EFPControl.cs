@@ -4,10 +4,13 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
-using AgeyevAV.DependedValues;
-using AgeyevAV.Config;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Config;
 using System.ComponentModel;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -38,7 +41,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление EFPControlState
 

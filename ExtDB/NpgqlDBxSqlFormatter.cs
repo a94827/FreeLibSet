@@ -32,7 +32,7 @@ using System.Globalization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Npgsql
+namespace FreeLibSet.Data.Npgsql
 {
   /// <summary>
   /// Форматизатор SQL-выражений для PostGreSQL

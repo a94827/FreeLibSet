@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Windows.Forms;
 using System.Data;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -34,7 +37,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region IEFPGridProducer
 

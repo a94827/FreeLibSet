@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   partial class SelectCompositionForm
   {
@@ -30,12 +30,12 @@ namespace AgeyevAV.ExtForms
     {
       this.panel1 = new System.Windows.Forms.Panel();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.cbParamSet = new AgeyevAV.ExtForms.ParamSetComboBox();
+      this.cbParamSet = new FreeLibSet.Controls.ParamSetComboBox();
       this.panel2 = new System.Windows.Forms.Panel();
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnOk = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.lblInfo = new AgeyevAV.ExtForms.InfoLabel();
+      this.lblInfo = new FreeLibSet.Controls.InfoLabel();
       this.pbPreview = new System.Windows.Forms.PictureBox();
       this.panel3 = new System.Windows.Forms.Panel();
       this.btnXml = new System.Windows.Forms.Button();
@@ -125,7 +125,7 @@ namespace AgeyevAV.ExtForms
       // lblInfo
       // 
       this.lblInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.lblInfo.IconSize = AgeyevAV.ExtForms.MessageBoxIconSize.Large;
+      this.lblInfo.IconSize = FreeLibSet.Controls.MessageBoxIconSize.Large;
       this.lblInfo.Location = new System.Drawing.Point(3, 16);
       this.lblInfo.Name = "lblInfo";
       this.lblInfo.Size = new System.Drawing.Size(578, 378);
@@ -188,8 +188,8 @@ namespace AgeyevAV.ExtForms
     private System.Windows.Forms.Button btnCancel;
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.GroupBox groupBox1;
-    private ParamSetComboBox cbParamSet;
-    private InfoLabel lblInfo;
+    private FreeLibSet.Controls.ParamSetComboBox cbParamSet;
+    private FreeLibSet.Controls.InfoLabel lblInfo;
     private System.Windows.Forms.PictureBox pbPreview;
     private System.Windows.Forms.Panel panel3;
     private System.Windows.Forms.Button btnXml;

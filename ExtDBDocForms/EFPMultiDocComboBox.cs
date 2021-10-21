@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
 using System.Windows.Forms;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +37,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   // Комбоблоки выбора нескольких документов
 

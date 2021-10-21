@@ -4,9 +4,9 @@ using System.Text;
 using System.Diagnostics;
 using System.Runtime;
 using System.Runtime.InteropServices;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 
-namespace AgeyevAV.Diagnostics
+namespace FreeLibSet.Diagnostics
 {
   /// <summary>
   /// Ќаличие свободной оперативной пам€ти

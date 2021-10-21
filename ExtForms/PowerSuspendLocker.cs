@@ -33,7 +33,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Win32
 {
   /// <summary>
   /// Объект для предотвращения перехода системы в спящий режим

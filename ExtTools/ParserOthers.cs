@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Text;
+using FreeLibSet.Text;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using AgeyevAV.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Parsing
+namespace FreeLibSet.Parsing
 {
   /// <summary>
   /// Парсер для распознания пробельных символов 

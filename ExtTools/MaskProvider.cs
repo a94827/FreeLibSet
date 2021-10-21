@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Globalization;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Globalization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.TextMasks
+namespace FreeLibSet.Formatting
 {
   /// <summary>
   /// Интерфейс провайдера ввода текста по маске

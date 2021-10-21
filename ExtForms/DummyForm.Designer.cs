@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Forms
 {
   partial class DummyForm
   {

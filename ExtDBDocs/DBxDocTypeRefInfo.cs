@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   #region Перечисление DBxDocTypeRefType
 

@@ -42,7 +42,7 @@ using System.Security.Permissions;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   [Serializable]
   public sealed class TreeNodeAdv : ISerializable

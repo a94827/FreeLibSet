@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
+using FreeLibSet.Calendar;
 
 /*
  * The BSD License
@@ -102,7 +104,7 @@ using AgeyevAV.Remoting;
  * объект ParsingErrorItemData, который содержит некоторую часть данных из объекта Token
  */
 
-namespace AgeyevAV.Parsing
+namespace FreeLibSet.Parsing
 {
   /// <summary>
   /// Коллекция функций Excel, которые можно добавить в список FunctionParser.Functions

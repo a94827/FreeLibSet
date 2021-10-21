@@ -35,7 +35,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   internal partial class DummyForm : Form
   {

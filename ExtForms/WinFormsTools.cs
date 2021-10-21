@@ -6,8 +6,9 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Globalization;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Набор статических методов для работы с классами System.Windows.Forms и System.Drawing.
@@ -2584,7 +2585,7 @@ namespace AgeyevAV.ExtForms
     /// <param name="faItem">Ассоциация файла</param>
     /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - больщой (32x32)</param>
     /// <returns>Значок или null</returns>
-    public static Image ExtractIconImage(AgeyevAV.Shell.FileAssociationItem faItem, bool smallIcon)
+    public static Image ExtractIconImage(FreeLibSet.Shell.FileAssociationItem faItem, bool smallIcon)
     {
       if (faItem == null)
         return null;

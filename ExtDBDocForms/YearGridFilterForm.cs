@@ -5,11 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.ExtDB;
-using AgeyevAV;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Config;
+using FreeLibSet.Forms;
+using FreeLibSet.Data;
+
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Config;
 
 /*
  * The BSD License
@@ -40,7 +40,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   internal partial class YearGridFilterForm : Form
   {

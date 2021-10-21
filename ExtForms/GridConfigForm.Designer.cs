@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Forms
 {
   partial class GridConfigForm
   {
@@ -39,7 +39,7 @@
       this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
       this.MainPanel = new System.Windows.Forms.Panel();
-      this.SetComboBox = new AgeyevAV.ExtForms.ParamSetComboBox();
+      this.SetComboBox = new FreeLibSet.Controls.ParamSetComboBox();
       this.panel1.SuspendLayout();
       this.grpSets.SuspendLayout();
       this.panDefault.SuspendLayout();
@@ -195,7 +195,7 @@
     private System.Windows.Forms.Button btnCopy;
     private System.Windows.Forms.Button btnPaste;
     private System.Windows.Forms.GroupBox grpSets;
-    public ParamSetComboBox SetComboBox;
+    public FreeLibSet.Controls.ParamSetComboBox SetComboBox;
     private System.Windows.Forms.Panel panDefault;
     private System.Windows.Forms.Button btnDefault;
     private System.Windows.Forms.Panel panel3;

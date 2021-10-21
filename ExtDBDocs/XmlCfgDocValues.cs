@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Доступ к конфигурационным данным как к строке данных.

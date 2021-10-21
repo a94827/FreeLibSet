@@ -32,7 +32,7 @@ using System.Runtime.Serialization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// »сключение выбрасываетс€, если настройки, заданные в классе FiasDBSettings, не позвол€ют выполнить

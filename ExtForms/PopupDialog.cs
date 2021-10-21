@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 
 #if XXX
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// 

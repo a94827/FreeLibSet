@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class DocInfoForm
   {
@@ -57,8 +57,8 @@
       this.grpRefDet = new System.Windows.Forms.GroupBox();
       this.grRefDet = new System.Windows.Forms.DataGridView();
       this.panSpbRefDet = new System.Windows.Forms.Panel();
-      this.lblUserDocsInfo = new AgeyevAV.ExtForms.InfoLabel();
-      this.lblNoRefs = new AgeyevAV.ExtForms.InfoLabel();
+      this.lblUserDocsInfo = new FreeLibSet.Controls.InfoLabel();
+      this.lblNoRefs = new FreeLibSet.Controls.InfoLabel();
       this.btnDebug = new System.Windows.Forms.Button();
       this.TheTabControl.SuspendLayout();
       this.tpInfo.SuspendLayout();
@@ -507,8 +507,8 @@
     private System.Windows.Forms.GroupBox grpRefDet;
     private System.Windows.Forms.DataGridView grRefDet;
     private System.Windows.Forms.Panel panSpbRefDet;
-    public InfoLabel lblUserDocsInfo;
-    public InfoLabel lblNoRefs;
+    public FreeLibSet.Controls.InfoLabel lblUserDocsInfo;
+    public FreeLibSet.Controls.InfoLabel lblNoRefs;
     public System.Windows.Forms.Panel Panel1;
     public System.Windows.Forms.Panel Panel2;
     private System.Windows.Forms.Button btnDebug;

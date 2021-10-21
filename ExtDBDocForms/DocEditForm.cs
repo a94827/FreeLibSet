@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
 
 /*
  * The BSD License
@@ -36,7 +36,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Класс формы для редактора документов

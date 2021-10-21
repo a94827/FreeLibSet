@@ -5,11 +5,13 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Drawing;
-using AgeyevAV.ExtDB;
-using AgeyevAV.DBF;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.TextMasks;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Data;
+using FreeLibSet.DBF;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Formatting;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -41,7 +43,7 @@ using AgeyevAV.ExtForms.NodeControls;
  */
 
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Расширенный класс продюсера табличного просмотра EFPDBxGridView и EFPDBxTreeView.

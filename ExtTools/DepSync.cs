@@ -109,7 +109,7 @@ using System.Text;
  * DepSyncCollection.AddConst()
  */
 
-namespace AgeyevAV.DependedValues
+namespace FreeLibSet.DependedValues
 {
   #region Интерфейс IDepSyncObject
 

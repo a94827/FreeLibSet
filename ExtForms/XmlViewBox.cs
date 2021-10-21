@@ -6,7 +6,8 @@ using System.Xml;
 using System.IO;
 using System.ComponentModel;
 using System.Drawing;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using AgeyevAV.IO;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Источник данных XML-документа (свойство XmlViewBox.SourceKind)

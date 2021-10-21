@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.IO;
-using AgeyevAV.Shell;
+using FreeLibSet.IO;
+using FreeLibSet.Shell;
 using System.Drawing;
 using System.ComponentModel;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// –еализаци€ команд "ќткрыть" и "ќткрыть с помощью" дл€ локального меню управл€ющего элемента,

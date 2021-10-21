@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Data;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using AgeyevAV.ExtDB;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Возможные значения свойства OrderMode в EFPDocSelGridView и EFPDocSelTextGridView

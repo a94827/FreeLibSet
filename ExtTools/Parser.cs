@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Text;
-using AgeyevAV.Remoting;
+using FreeLibSet.Text;
+using FreeLibSet.Remoting;
 using System.Globalization;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -104,7 +106,7 @@ using System.Globalization;
  * объект ParsingErrorItemData, который содержит некоторую часть данных из объекта Token
  */
 
-namespace AgeyevAV.Parsing
+namespace FreeLibSet.Parsing
 {
   #region IExpression
 

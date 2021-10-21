@@ -32,7 +32,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   // Классы исключений, используемые в модуле ExtDB
 

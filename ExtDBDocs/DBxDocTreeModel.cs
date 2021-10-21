@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Trees;
+using FreeLibSet.Models.Tree;
 using System.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
 
   /// <summary>

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms.VisualStyles;
 using System.ComponentModel;
 using System.Collections.Generic;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Collections.Generic;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс для главного меню программы и контекстных меню

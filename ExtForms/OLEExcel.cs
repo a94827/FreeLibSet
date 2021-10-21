@@ -4,7 +4,9 @@ using System.Text;
 using System.Reflection;
 using System.Drawing;
 using System.Windows.Forms;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Shell;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -37,7 +39,7 @@ using AgeyevAV.IO;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.OLE.Excel
+namespace FreeLibSet.OLE.Excel
 {
   #region Перечисления
 

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 
 #if XXX
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Конфигурация уровней иерархии в просмотре EFPHieView.

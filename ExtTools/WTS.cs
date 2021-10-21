@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace AgeyevAV.Win32
+namespace FreeLibSet.Win32
 {
   #region Перечисление WTSConnectState
 

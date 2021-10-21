@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.Drawing;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Главное окно интерфейса

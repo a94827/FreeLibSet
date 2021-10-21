@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Объект, желающий получать сигналы от таймера, должен реализовывать этот
@@ -218,7 +219,7 @@ namespace AgeyevAV.ExtForms
               e.Data["IEFPTimeHandler"] = a[i].ToString();
             }
             catch { }
-            DebugTools.LogoutException(e, "Ошибка при вызове IEFPTimeHandler.TimerTick");
+            LogoutTools.LogoutException(e, "Ошибка при вызове IEFPTimeHandler.TimerTick");
           }
 
           // 07.05.2017
@@ -242,7 +243,7 @@ namespace AgeyevAV.ExtForms
       }
       catch (Exception e)
       {
-        DebugTools.LogoutException(e, "Ошибка при обработке сигнала таймера");
+        LogoutTools.LogoutException(e, "Ошибка при обработке сигнала таймера");
       }
     }
 
@@ -669,7 +670,7 @@ namespace AgeyevAV.ExtForms
               e.Data["IEFPIdleHandler"] = a[i].ToString();
             }
             catch { }
-            DebugTools.LogoutException(e, "Ошибка при вызове IEFPIdleHandler.HandleIdle");
+            LogoutTools.LogoutException(e, "Ошибка при вызове IEFPIdleHandler.HandleIdle");
           }
 
           // Обработчики могут удаляться не только в конце списка
@@ -693,7 +694,7 @@ namespace AgeyevAV.ExtForms
       }
       catch (Exception e)
       {
-        DebugTools.LogoutException(e, "Ошибка при обработке сигнала таймера");
+        LogoutTools.LogoutException(e, "Ошибка при обработке сигнала таймера");
       }
 
       IdleCalledFlag = true;

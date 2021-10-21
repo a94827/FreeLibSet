@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
 using System.Data;
 using System.ComponentModel;
-using AgeyevAV.Logging;
-using AgeyevAV.Config;
-using AgeyevAV.Remoting;
+using FreeLibSet.Logging;
+using FreeLibSet.Config;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -41,7 +42,7 @@ using AgeyevAV.Remoting;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Интерфейс IEFPDocView
 

@@ -5,9 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма настройки табличного просмотра с помощью интерфейса IEFPGridProducerEditor

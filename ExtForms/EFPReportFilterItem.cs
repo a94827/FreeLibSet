@@ -34,7 +34,7 @@ using System.Text;
 /*
  * Строки табличек фильтров в отчетах (для отчета в-целом и для отдельных страниц
  */
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Описание одной строки фильтра отчета.

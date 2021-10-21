@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using System.ComponentModel;
 using System.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Data;
  */
 
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>

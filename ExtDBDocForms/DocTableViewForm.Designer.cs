@@ -1,5 +1,5 @@
 using System.Windows.Forms;
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   partial class DocTableViewForm
   {
@@ -37,7 +37,7 @@ namespace AgeyevAV.ExtForms.Docs
       this.ControlPanel = new System.Windows.Forms.Panel();
       this.TheSplitter = new System.Windows.Forms.SplitContainer();
       this.panel2 = new System.Windows.Forms.Panel();
-      this.GroupTree = new AgeyevAV.ExtForms.TreeViewAdv();
+      this.GroupTree = new FreeLibSet.Controls.TreeViewAdv();
       this.GroupSpeedPanel = new System.Windows.Forms.Panel();
       this.MainPanel = new System.Windows.Forms.Panel();
       this.GroupCBPanel = new System.Windows.Forms.Panel();
@@ -235,7 +235,7 @@ namespace AgeyevAV.ExtForms.Docs
     private Button TheNoButton;
     internal SplitContainer TheSplitter;
     private Panel panel2;
-    internal TreeViewAdv GroupTree;
+    internal FreeLibSet.Controls.TreeViewAdv GroupTree;
     internal Panel GroupSpeedPanel;
     internal Panel MainPanel;
     internal Panel GroupCBPanel;

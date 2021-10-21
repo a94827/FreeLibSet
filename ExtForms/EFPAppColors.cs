@@ -32,7 +32,7 @@ using System.Drawing;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Дополнительные цвета для раскрашивания табличных просмотров и других

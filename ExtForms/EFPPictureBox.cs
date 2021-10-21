@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +35,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
 
   /// <summary>
@@ -439,7 +440,7 @@ namespace AgeyevAV.ExtForms
       frm.FormBorderStyle = FormBorderStyle.FixedDialog;
       frm.MaximizeBox = false;
       // Закрытие формы по <Esc>
-      FormButtonStub.AssignCancel(frm);
+      FreeLibSet.Controls.FormButtonStub.AssignCancel(frm);
 
       EFPFormProvider efpForm = new EFPFormProvider(frm);
 

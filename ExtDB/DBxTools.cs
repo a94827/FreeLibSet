@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.Data.Common;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// —татические методы дл€ работы с базами данных.

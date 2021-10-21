@@ -5,10 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.DependedValues;
+using FreeLibSet.Forms;
+using FreeLibSet.DependedValues;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Редактор группы.

@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using AgeyevAV;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 namespace ExtTools.tests
 {

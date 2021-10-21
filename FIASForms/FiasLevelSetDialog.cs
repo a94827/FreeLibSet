@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.FIAS;
+using FreeLibSet.FIAS;
 using System.Windows.Forms;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -34,7 +35,7 @@ using System.Windows.Forms;
  */
 
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Диалог для выбора уровней адреса.

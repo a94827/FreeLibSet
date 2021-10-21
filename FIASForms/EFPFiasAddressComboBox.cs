@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.FIAS;
+using FreeLibSet.FIAS;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +34,7 @@ using AgeyevAV.FIAS;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Провайдер комбоблока для выбора адреса.

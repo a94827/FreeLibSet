@@ -4,7 +4,7 @@ using System.Text;
 using System.Data;
 
 #if XXX
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Переходник между EFPDataGridView и EFPHieView.

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Этот класс используется в качестве базового класса для специфических форматизаторов баз данных и для DataViewDBxSqlFormatter

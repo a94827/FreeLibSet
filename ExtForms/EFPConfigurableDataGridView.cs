@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.ComponentModel;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Интерфейс управляющего элемента с фильтрами

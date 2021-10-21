@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using System.Data;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   /// <summary>
   /// Расширение интерфейса IDisposable свойством IsDisposed для проверки разрушения объекта.
@@ -500,7 +501,7 @@ namespace AgeyevAV
       #endregion
     }
 
-    internal static void LogoutInfo(AgeyevAV.Logging.LogoutInfoNeededEventArgs args)
+    internal static void LogoutInfo(FreeLibSet.Logging.LogoutInfoNeededEventArgs args)
     {
       string[] objTypes;
       int[] counts;
@@ -538,7 +539,7 @@ namespace AgeyevAV
       }
     }
 
-    private static void DoLogoutList(AgeyevAV.Logging.LogoutInfoNeededEventArgs args, List<DebugItem> lst)
+    private static void DoLogoutList(FreeLibSet.Logging.LogoutInfoNeededEventArgs args, List<DebugItem> lst)
     {
       for (int i = 0; i < lst.Count; i++)
       {
@@ -563,7 +564,7 @@ namespace AgeyevAV
           try
           {
             args.IndentLevel++;
-            AgeyevAV.Logging.LogoutTools.LogoutObject(args, a);
+            FreeLibSet.Logging.LogoutTools.LogoutObject(args, a);
           }
           finally
           {

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.Data;
 using System.Windows.Forms;
+using FreeLibSet.Controls;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +37,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Интерфейс, реализующий чтение и запись значений полей формы в данные конфигурации.

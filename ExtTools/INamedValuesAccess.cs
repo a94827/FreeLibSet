@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   /// <summary>
   /// Интерфейс доступа только для чтения к именованным значениям.
@@ -74,7 +76,10 @@ namespace AgeyevAV
 
     #endregion
   }
+}
 
+namespace FreeLibSet.Data
+{
   /// <summary>
   /// Расширение интерфейса INamedValuesAccess для доступа к значениям строки DataRow.
   /// Реализуется классами DataTableValueArray и

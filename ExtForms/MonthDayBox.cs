@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using FreeLibSet.Formatting;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using System.Windows.Forms.Design;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Управляющий элемент для ввода месяца и дня

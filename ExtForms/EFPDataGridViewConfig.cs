@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV;
-using AgeyevAV.Config;
+
+using FreeLibSet.Config;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -34,7 +36,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Конфигурация табличного просмотра с возможностью записи в CfgPart

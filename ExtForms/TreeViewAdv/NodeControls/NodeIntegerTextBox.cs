@@ -42,7 +42,7 @@ using System.Windows.Forms;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
 
   public class NodeIntegerTextBox : NodeTextBox

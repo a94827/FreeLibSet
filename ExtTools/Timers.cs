@@ -35,7 +35,7 @@ using System.Threading;
 
 #if XXX
 
-namespace AgeyevAV.Timers
+namespace FreeLibSet.Timers
 {
   /// <summary>
   /// Таймер, похожий на System.Timers.Timer. Не использует пул потоков, вместо этого 

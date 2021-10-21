@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using FreeLibSet.Core;
+using FreeLibSet.Data;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -32,7 +35,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Хранилище идентификаторов первых строк страниц таблиц, которые должны быть очищены в результате изменения или удаления строк

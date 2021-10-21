@@ -4,10 +4,12 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Globalization;
-using AgeyevAV;
-using AgeyevAV.DBF;
-using AgeyevAV.TextMasks;
-using AgeyevAV.ExtForms.NodeControls;
+
+using FreeLibSet.DBF;
+using FreeLibSet.Formatting;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -43,7 +45,7 @@ using AgeyevAV.ExtForms.NodeControls;
  * TreeViewAdv определяет объекты TreeColumn, у которых есть заголовок, признак видимости, сортировка.
  * Также есть объекты NodeControl, которые выводят значения
  */
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
 
 #if XXX

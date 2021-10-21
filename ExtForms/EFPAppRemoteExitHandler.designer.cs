@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   partial class EFPAppRemoteExitForm
   {
@@ -31,7 +31,7 @@ namespace AgeyevAV.ExtForms
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EFPAppRemoteExitForm));
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.messageBoxIconBox1 = new AgeyevAV.ExtForms.MessageBoxIconBox();
+      this.messageBoxIconBox1 = new FreeLibSet.Controls.MessageBoxIconBox();
       this.grpMessage = new System.Windows.Forms.GroupBox();
       this.edMessage = new System.Windows.Forms.TextBox();
       this.panel1 = new System.Windows.Forms.Panel();
@@ -77,7 +77,7 @@ namespace AgeyevAV.ExtForms
       // 
       this.messageBoxIconBox1.Dock = System.Windows.Forms.DockStyle.Left;
       this.messageBoxIconBox1.Icon = System.Windows.Forms.MessageBoxIcon.Warning;
-      this.messageBoxIconBox1.IconSize = AgeyevAV.ExtForms.MessageBoxIconSize.Large;
+      this.messageBoxIconBox1.IconSize = FreeLibSet.Controls.MessageBoxIconSize.Large;
       this.messageBoxIconBox1.Location = new System.Drawing.Point(3, 16);
       this.messageBoxIconBox1.Name = "messageBoxIconBox1";
       this.messageBoxIconBox1.Size = new System.Drawing.Size(32, 111);
@@ -220,7 +220,7 @@ namespace AgeyevAV.ExtForms
     private System.Windows.Forms.ProgressBar ThePB;
     private System.Windows.Forms.TextBox edMessage;
     private System.Windows.Forms.Label label1;
-    private MessageBoxIconBox messageBoxIconBox1;
+    private FreeLibSet.Controls.MessageBoxIconBox messageBoxIconBox1;
     public System.Windows.Forms.GroupBox grpMessage;
   }
 }

@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms.Diagnostics
 {
   partial class ShowExceptionMsgBoxForm
   {
@@ -31,7 +31,7 @@ namespace AgeyevAV.ExtForms
       this.panel1 = new System.Windows.Forms.Panel();
       this.panel2 = new System.Windows.Forms.Panel();
       this.panel3 = new System.Windows.Forms.Panel();
-      this.messageBoxIconBox1 = new AgeyevAV.ExtForms.MessageBoxIconBox();
+      this.messageBoxIconBox1 = new FreeLibSet.Controls.MessageBoxIconBox();
       this.MsgLabel = new System.Windows.Forms.Label();
       this.btnOk = new System.Windows.Forms.Button();
       this.btnMore = new System.Windows.Forms.Button();
@@ -74,7 +74,7 @@ namespace AgeyevAV.ExtForms
       // messageBoxIconBox1
       // 
       this.messageBoxIconBox1.Icon = System.Windows.Forms.MessageBoxIcon.Hand;
-      this.messageBoxIconBox1.IconSize = AgeyevAV.ExtForms.MessageBoxIconSize.Large;
+      this.messageBoxIconBox1.IconSize = FreeLibSet.Controls.MessageBoxIconSize.Large;
       this.messageBoxIconBox1.Location = new System.Drawing.Point(16, 58);
       this.messageBoxIconBox1.Name = "messageBoxIconBox1";
       this.messageBoxIconBox1.Size = new System.Drawing.Size(32, 32);
@@ -138,7 +138,7 @@ namespace AgeyevAV.ExtForms
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.Panel panel3;
-    private MessageBoxIconBox messageBoxIconBox1;
+    private FreeLibSet.Controls.MessageBoxIconBox messageBoxIconBox1;
     public System.Windows.Forms.Label MsgLabel;
   }
 }

@@ -74,7 +74,7 @@ using System.Windows.Forms.Design.Behavior;
  *     списка для выбора даты из календарика
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
 #if XXX
   public class SelectableLabel:Label
@@ -143,7 +143,7 @@ namespace AgeyevAV.ExtForms
         _TheImageList.ImageSize = new System.Drawing.Size(12, 12);
         _TheImageList.TransparentColor = Color.Magenta;
 
-        DummyForm frm = new DummyForm();
+        FreeLibSet.Forms.DummyForm frm = new FreeLibSet.Forms.DummyForm();
         for (int i = 0; i < frm.UserComboBoxImageList.Images.Count; i++)
           _TheImageList.Images.Add(frm.UserComboBoxImageList.Images.Keys[i], frm.UserComboBoxImageList.Images[i]);
         frm.Dispose();

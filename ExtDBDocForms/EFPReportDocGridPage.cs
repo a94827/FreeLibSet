@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using System.Data;
 using System.Windows.Forms;
 
@@ -34,7 +34,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// —траница отчета, содержаща€ таблицу со списком документов одного вида

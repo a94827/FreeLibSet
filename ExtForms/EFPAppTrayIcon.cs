@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Значок в системном трее.
@@ -276,7 +277,7 @@ namespace AgeyevAV.ExtForms
 
         base.WndProc(ref m);
 
-        PowerSuspendLocker.WndProc(ref m);
+        FreeLibSet.Win32.PowerSuspendLocker.WndProc(ref m);
       }
 
       #endregion

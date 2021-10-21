@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Windows.Forms.VisualStyles;
 using System.Drawing.Imaging;
-using AgeyevAV.ExtGraphics;
+using FreeLibSet.Drawing;
 
 /*
  * The BSD License
@@ -46,7 +46,7 @@ using AgeyevAV.ExtGraphics;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   [TypeConverter(typeof(TreeColumn.TreeColumnConverter)), DesignTimeVisible(false), ToolboxItem(false)]
   public class TreeColumn : Component

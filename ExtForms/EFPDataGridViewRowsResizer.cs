@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Реализация автоподбора высоты строки

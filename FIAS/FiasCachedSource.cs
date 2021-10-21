@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Caching;
+using FreeLibSet.Caching;
 using System.Data;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
 
   // Первоначально предполагалось хранить простой словарь по ключам-GUIDам дочерних объектов (зданий, помещений)

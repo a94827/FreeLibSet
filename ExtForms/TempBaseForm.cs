@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс для TempMessageForm и TempWaitForm.

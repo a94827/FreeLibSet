@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Data;
 using System.Drawing;
 using System.Collections.Generic;
-using AgeyevAV;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +40,7 @@ using AgeyevAV.ExtDB;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Делегаты
 

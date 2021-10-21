@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class EditGroupDoc
   {
@@ -16,7 +16,7 @@
       if (disposing && (components != null))
       {
         components.Dispose();
-      }
+      }                                                   
       base.Dispose(disposing);
     }
 
@@ -32,7 +32,7 @@
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.MainPanel1 = new System.Windows.Forms.Panel();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.cbParent = new AgeyevAV.ExtForms.UserSelComboBox();
+      this.cbParent = new FreeLibSet.Controls.UserSelComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.edName = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
@@ -146,7 +146,7 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.TextBox edName;
     private System.Windows.Forms.Label label1;
-    private AgeyevAV.ExtForms.UserSelComboBox cbParent;
+    private FreeLibSet.Controls.UserSelComboBox cbParent;
     private System.Windows.Forms.Label label2;
   }
 }

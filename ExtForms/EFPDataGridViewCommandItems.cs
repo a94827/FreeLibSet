@@ -14,6 +14,7 @@ using System.Drawing;
 using System.Data;
 using System.Globalization;
 using System.ComponentModel;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -44,7 +45,7 @@ using System.ComponentModel;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region DataObjectEventHandler
 

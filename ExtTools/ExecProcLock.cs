@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.Threading;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using System.Threading;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Remoting
+namespace FreeLibSet.Remoting
 {
   /// <summary>
   /// Блокировка доступа к какому-либо ресурсу из процедуры ExecProc. На время

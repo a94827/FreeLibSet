@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.IO;
-using AgeyevAV.Remoting;
+using FreeLibSet.IO;
+using FreeLibSet.Remoting;
 using System.Threading;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Функции работы с файлами и каталогами.

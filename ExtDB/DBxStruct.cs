@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /*
    * Структура базы данных

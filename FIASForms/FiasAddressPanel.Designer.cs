@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
 #pragma warning disable 1591
 

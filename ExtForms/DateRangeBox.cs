@@ -11,6 +11,8 @@ using System.ComponentModel.Design;
 using System.Collections;
 using System.Windows.Forms.Design.Behavior;
 using System.Diagnostics;
+using FreeLibSet.Calendar;
+using FreeLibSet.Forms;
 
 /*
  * The BSD License
@@ -43,7 +45,7 @@ using System.Diagnostics;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Управляющий элемент для ввода двух полей даты как диапазона. 

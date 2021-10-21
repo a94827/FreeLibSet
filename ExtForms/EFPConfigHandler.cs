@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using AgeyevAV.Config;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление EFPConfigPurpose
 

@@ -3,13 +3,16 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Config;
-using AgeyevAV.ExtDB;
-using AgeyevAV.Logging;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Trees;
+using FreeLibSet.Forms;
+using FreeLibSet.Config;
+using FreeLibSet.Data;
+using FreeLibSet.Logging;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Models.Tree;
 using System.Collections.Generic;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -40,7 +43,7 @@ using System.Collections.Generic;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Перечисление DocTableViewMode
 
@@ -620,7 +623,7 @@ namespace AgeyevAV.ExtForms.Docs
     /// </summary>
     private TabControl _TheTabControl;
 
-    private TreeViewAdv _DocTree;
+    private FreeLibSet.Controls.TreeViewAdv _DocTree;
     private Panel _DocTreeSpeedPanel;
 
     private DataGridView _DocGrid;

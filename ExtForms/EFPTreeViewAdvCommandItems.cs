@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using AgeyevAV.ExtForms.NodeControls;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Команды локального меню древовидного просмотра

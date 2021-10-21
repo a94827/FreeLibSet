@@ -1,6 +1,6 @@
 ﻿#pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   partial class EFPTextSearchForm
   {

@@ -35,7 +35,7 @@ using System.ComponentModel;
 
 // Система проверки корректности введенных значений
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region EFPErrorInfo
 

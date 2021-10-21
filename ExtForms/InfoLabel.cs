@@ -37,7 +37,7 @@ using System.Windows.Forms;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Значок для MessageBox

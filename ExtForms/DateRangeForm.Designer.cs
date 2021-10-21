@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Forms
 {
   partial class DateRangeForm
   {
@@ -30,7 +30,7 @@
     {
       this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
-      this.edRange = new AgeyevAV.ExtForms.DateRangeBox();
+      this.edRange = new FreeLibSet.Controls.DateRangeBox();
       this.MainLabel = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
@@ -94,7 +94,7 @@
 
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.Button btnCancel;
-    private AgeyevAV.ExtForms.DateRangeBox edRange;
+    private FreeLibSet.Controls.DateRangeBox edRange;
     public System.Windows.Forms.Label MainLabel;
   }
 }

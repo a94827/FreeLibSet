@@ -11,15 +11,18 @@ using System.Collections;
 using System.Reflection;
 using System.Globalization;
 using System.Runtime;
-using AgeyevAV.IO;
-using AgeyevAV.Caching;
+using FreeLibSet.IO;
+using FreeLibSet.Caching;
 using System.Runtime.Remoting;
 using System.Threading;
 using System.Xml;
 using System.Runtime.Remoting.Proxies;
 using System.Runtime.InteropServices;
-using AgeyevAV.Diagnostics;
-using AgeyevAV.Win32;
+using FreeLibSet.Diagnostics;
+using FreeLibSet.Win32;
+using FreeLibSet.Core;
+using FreeLibSet.Calendar;
+using FreeLibSet.Data;
 
 /*
  * The BSD License
@@ -50,7 +53,7 @@ using AgeyevAV.Win32;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Logging
+namespace FreeLibSet.Logging
 {
   /*
    * Назначение
@@ -3215,7 +3218,7 @@ namespace AgeyevAV.Logging
   /// Возвращает аргумент с именем "Text"
   /// Предотвращает одновременное получение информации двумя пользователями во избежание переполнения
   /// </summary>
-  public class LogoutExecProc : AgeyevAV.Remoting.ExecProc
+  public class LogoutExecProc : FreeLibSet.Remoting.ExecProc
   {
     // TODO: Когда будет готово, вместо выдачи исключения ожидать освобождения блокировки
 
@@ -3229,9 +3232,9 @@ namespace AgeyevAV.Logging
     /// </summary>
     /// <param name="args"></param>
     /// <returns></returns>
-    protected override AgeyevAV.Remoting.NamedValues OnExecute(AgeyevAV.Remoting.NamedValues args)
+    protected override FreeLibSet.Remoting.NamedValues OnExecute(FreeLibSet.Remoting.NamedValues args)
     {
-      AgeyevAV.Remoting.NamedValues Res = new AgeyevAV.Remoting.NamedValues();
+      FreeLibSet.Remoting.NamedValues Res = new FreeLibSet.Remoting.NamedValues();
 
       lock (_SyncRoot)
       {

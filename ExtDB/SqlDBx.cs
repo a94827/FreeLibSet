@@ -4,7 +4,8 @@ using System.Text;
 using System.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using AgeyevAV.IO;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.SqlClient
+namespace FreeLibSet.Data.SqlClient
 {
   #region Перечисление SqlServerEngineEdition
 

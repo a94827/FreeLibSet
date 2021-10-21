@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   #region InitDBxEventHandler
 
@@ -259,7 +260,7 @@ namespace AgeyevAV.ExtDB.Docs
           csb.AttachDBFilename = DBDir.SlashedPath + dbName + ".mdf";
           csb.IntegratedSecurity = true;
 
-          DB = new AgeyevAV.ExtDB.SqlClient.SqlDBx(csb);
+          DB = new FreeLibSet.Data.SqlClient.SqlDBx(csb);
         }
         else
         {

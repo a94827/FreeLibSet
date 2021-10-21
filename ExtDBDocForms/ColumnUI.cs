@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
-using AgeyevAV;
-using AgeyevAV.Config;
-using AgeyevAV.ExtDB.Docs;
+
+using FreeLibSet.Config;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using AgeyevAV.ExtDB.Docs;
  * Сохранение значений редактируемых полей документов и поддокументов на стороне клиента
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region ColumnNewMode
 

@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using AgeyevAV;
+
 using System.Reflection;
 using System.Collections.Generic;
+using FreeLibSet.Core;
 
 /*
  * Взято из http://www.codeproject.com/Articles/1376/NET-TWAIN-image-scanner
@@ -20,7 +21,7 @@ using System.Collections.Generic;
 
 #pragma warning disable 1591
 
-namespace TwainLib
+namespace FreeLibSet.Win32.Twain
 {
   #region Перечисление TwainCommand
 
@@ -78,14 +79,14 @@ namespace TwainLib
     #endregion
   }
 
-  internal class Twain : DisposableObject
+  internal class TwainObject : DisposableObject
   {
     #region Конструктор и Dispose
 
     private const short CountryUSA = 1;
     private const short LanguageUSA = 13;
 
-    public Twain()
+    public TwainObject()
     {
       appid = new TwIdentity();
       appid.Id = IntPtr.Zero;

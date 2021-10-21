@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
-using AgeyevAV;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
+
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
 using System.Xml;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -43,7 +45,7 @@ using AgeyevAV.IO;
 
 // Конкретные реализации DocValueControl
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Переходник для TextBox или любого другого провайдера управляющего элемента,

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Npgsql;
 using System.Data;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Data.Common;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Data.Common;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Npgsql
+namespace FreeLibSet.Data.Npgsql
 {
   /// <summary>
   /// База данных PostGreSQL через провайдер Npgsql.

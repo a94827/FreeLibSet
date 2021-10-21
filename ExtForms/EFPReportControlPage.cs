@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV;
+
 using System.Xml;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -38,7 +40,7 @@ using System.Xml;
 
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Закладка с произвольным управляющим элементом.

@@ -37,7 +37,7 @@ using System.Text;
 
 #if XXX
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   public class EFPDBxGridViewHieHandler:EFPDataGridViewHieHandler
   {

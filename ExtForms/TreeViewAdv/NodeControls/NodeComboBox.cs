@@ -46,7 +46,7 @@ using System.Drawing.Design;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class NodeComboBox : BaseTextControl
   {

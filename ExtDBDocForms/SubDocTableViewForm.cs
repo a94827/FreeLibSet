@@ -5,9 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Config;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Logging;
+using FreeLibSet.Config;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Logging;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +40,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Форма для просмотра или выбора поддокументов.
@@ -454,7 +456,7 @@ namespace AgeyevAV.ExtForms.Docs
     /// </summary>
     private TabControl _TheTabControl;
 
-    private TreeViewAdv _SubDocTree;
+    private FreeLibSet.Controls.TreeViewAdv _SubDocTree;
     private Panel _SubDocTreeSpeedPanel;
 
     private DataGridView _SubDocGrid;

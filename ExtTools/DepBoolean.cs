@@ -1,4 +1,4 @@
-﻿using AgeyevAV.DependedValues;
+﻿using FreeLibSet.DependedValues;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,7 +32,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.DependedValues
+namespace FreeLibSet.DependedValues
 {
   /// <summary>
   /// Логическое "И"

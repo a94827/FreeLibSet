@@ -5,11 +5,14 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Компонент для выбора элементов из списка доступных с возможностью сортировки
@@ -21,7 +24,10 @@ namespace AgeyevAV.ExtForms
       InitializeComponent();
     }
   }
+}
 
+namespace FreeLibSet.Forms
+{
   /// <summary>
   /// Аргументы события EFPTwoListSelector.ItemInfoNeeded
   /// </summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
 using System.ComponentModel;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -40,7 +41,7 @@ using System.ComponentModel;
 // Технически ограничение не является обязательным и его можно было бы не вводить, 
 // но использование структур приводит к постоянному boxing'у структуры для вызова метода интерфейса, что является неэффективным.
 
-namespace AgeyevAV
+namespace FreeLibSet.Collections
 {
   #region Интерфейс IObjectWithCode
 

@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Forms
 {
   partial class EFPGridProducerEditor
   {
@@ -37,7 +37,7 @@
       this.panel2 = new System.Windows.Forms.Panel();
       this.cbStartColumn = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.edFrozenColumns = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      this.edFrozenColumns = new FreeLibSet.Controls.ExtNumericUpDown();
       this.label1 = new System.Windows.Forms.Label();
       this.TheTabControl = new System.Windows.Forms.TabControl();
       this.panGrColumns = new System.Windows.Forms.Panel();
@@ -316,7 +316,7 @@
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.ComboBox cbStartColumn;
     private System.Windows.Forms.Label label2;
-    private AgeyevAV.ExtForms.ExtNumericUpDown edFrozenColumns;
+    private FreeLibSet.Controls.ExtNumericUpDown edFrozenColumns;
     private System.Windows.Forms.Label label1;
     public System.Windows.Forms.TabControl TheTabControl;
     private System.Windows.Forms.Panel panGrToolTips;

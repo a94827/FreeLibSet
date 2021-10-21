@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +35,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtGraphics
+namespace FreeLibSet.Drawing
 {
   /// <summary>
   /// Функции для работы с графикой

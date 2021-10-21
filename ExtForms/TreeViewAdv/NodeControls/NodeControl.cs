@@ -44,7 +44,7 @@ using System.Windows.Forms.VisualStyles;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   [DesignTimeVisible(false), ToolboxItem(false)]
   public abstract class NodeControl : Component

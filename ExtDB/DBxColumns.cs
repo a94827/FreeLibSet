@@ -4,6 +4,8 @@ using System.Text;
 using System.Collections.Specialized;
 using System.Data;
 using System.Runtime.Serialization;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -34,7 +36,7 @@ using System.Runtime.Serialization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Массив имен полей.

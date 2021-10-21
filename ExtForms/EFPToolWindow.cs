@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Drawing;
-using AgeyevAV.ExtForms;
 using System.Runtime.InteropServices;
 
 /*
@@ -38,7 +37,7 @@ using System.Runtime.InteropServices;
 
 // Запуск форм в единственном экземпляре
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс для панелей инструментов, например, калькулятора

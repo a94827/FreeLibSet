@@ -3,6 +3,8 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс для EFPAppToolBar и EFPPanelToolBar

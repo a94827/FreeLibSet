@@ -4,10 +4,11 @@ using System.Drawing;
 using System.Data;
 using System.ComponentModel;
 using System.Collections.Generic;
-using AgeyevAV.ExtForms;
-using AgeyevAV;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Forms;
+
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using AgeyevAV.ExtDB;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Интерфейс IEFPSubDocView
 

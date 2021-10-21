@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Globalization;
-using AgeyevAV.TextMasks;
 
 /*
  * The BSD License
@@ -34,7 +33,7 @@ using AgeyevAV.TextMasks;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Formatting
 {
   #region Перечисление DateFormatYMDOrder
 

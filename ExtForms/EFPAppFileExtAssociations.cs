@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Shell;
-using AgeyevAV.IO;
+using FreeLibSet.Shell;
+using FreeLibSet.IO;
 using System.Drawing;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 
 /*
  * The BSD License
@@ -35,7 +35,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Реализация свойства EFPApp.FileExtAssociations.

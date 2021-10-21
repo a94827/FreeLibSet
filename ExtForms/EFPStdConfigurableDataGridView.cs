@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Data;
+using FreeLibSet.Data;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Расширение провайдера табличного просмотра для использования класса продюсера EFPGridProducer, вместо интефрейса IEFPGridProducer.

@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Forms.Diagnostics
 {
   partial class DebugParsingForm
   {

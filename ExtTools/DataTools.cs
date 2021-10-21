@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Collections;
+using FreeLibSet.Data;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -39,7 +41,7 @@ using System.Collections;
  */
 
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   /// <summary>
   /// Вспомогательные функции при работе с данными

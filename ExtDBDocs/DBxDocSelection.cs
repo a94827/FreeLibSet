@@ -4,8 +4,9 @@ using System.Text;
 using System.Data;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
-using AgeyevAV;
-using AgeyevAV.Config;
+
+using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Выборка документов. В одной выборке могут присутствовать документы разных

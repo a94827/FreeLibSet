@@ -5,7 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -93,7 +94,7 @@ using AgeyevAV.Logging;
  * метод Dispose() при закрытии Мастера
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   internal partial class WizardForm : Form
   {
@@ -373,7 +374,7 @@ namespace AgeyevAV.ExtForms
       catch (Exception e)
       {
         TheWizard.AddExceptionInfo(e);
-        DebugTools.LogoutException(e, "Ошибка WizardForm.FormClosing");
+        LogoutTools.LogoutException(e, "Ошибка WizardForm.FormClosing");
         args.Cancel = false; // пусть закрывают
       }
     }

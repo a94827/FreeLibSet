@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using AgeyevAV.ExtGraphics;
+using FreeLibSet.Drawing;
 
 /*
  * The BSD License
@@ -34,7 +34,7 @@ using AgeyevAV.ExtGraphics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Интерфейс измерителя размеров элементов табличного просмотра.

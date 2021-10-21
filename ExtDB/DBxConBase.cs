@@ -6,8 +6,10 @@ using System.Data.Common;
 using System.Text;
 using System.Threading;
 using System.ComponentModel;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
 
   /// <summary>

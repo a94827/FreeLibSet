@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.IO;
-using AgeyevAV.DBF;
+using FreeLibSet.DBF;
 using System.Data;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using System.Xml;
 using System.Data.Common;
 using System.Diagnostics;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// Источник обновления классификатора ФИАС
@@ -1813,7 +1814,7 @@ namespace AgeyevAV.FIAS
       {
         con.TraceEnabled = false; // иначе будет очень много записей, если логгирование включено
         Trace.WriteLine("  DBxConBase.TraceEnabled was set to false for updating connection");
-        if (con is AgeyevAV.ExtDB.SQLite.SQLiteDBxCon)
+        if (con is FreeLibSet.Data.SQLite.SQLiteDBxCon)
         {
           con.SQLExecuteNonQuery("PRAGMA locking_mode=EXCLUSIVE");
           con.SQLExecuteNonQuery("PRAGMA count_changes=OFF");

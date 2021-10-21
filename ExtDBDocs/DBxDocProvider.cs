@@ -8,14 +8,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Runtime.Serialization;
-using AgeyevAV.IO;
-using AgeyevAV.Config;
+using FreeLibSet.IO;
+using FreeLibSet.Config;
 using System.Xml;
 using System.Threading;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
 using System.Diagnostics;
-using AgeyevAV.Caching;
+using FreeLibSet.Caching;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -46,7 +48,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Провайдер для работы с документами

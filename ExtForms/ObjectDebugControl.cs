@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
-using AgeyevAV.ExtForms;
 using System.Collections;
 using System.Collections.Specialized;
 
@@ -38,7 +37,7 @@ using System.Collections.Specialized;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms.Diagnostics
 {
   /// <summary>
   /// Просмотр свойств объекта

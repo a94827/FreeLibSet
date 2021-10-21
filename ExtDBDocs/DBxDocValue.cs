@@ -4,8 +4,10 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Data;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   #region Перечисление DBxDocValuePreferredType
 

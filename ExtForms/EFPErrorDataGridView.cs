@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
 using System.Windows.Forms;
-using AgeyevAV;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +33,7 @@ using AgeyevAV;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Расширение класса табличного просмотра для просмотра списка ошибок

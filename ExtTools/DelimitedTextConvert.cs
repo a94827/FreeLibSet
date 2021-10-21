@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 #if XXX
-namespace AgeyevAV
+namespace FreeLibSet
 {
   public class DelimitedTextConvert
   {

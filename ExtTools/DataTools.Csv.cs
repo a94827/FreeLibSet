@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
 	partial class DataTools
 	{
@@ -22,7 +22,7 @@ namespace AgeyevAV
     /// </summary>
     /// <param name="s">Строка</param>
     /// <returns>Массив строк-элементов</returns>
-    /// <exception cref="AgeyevAV.ParsingException">Нарушение структуры CSV</exception>
+    /// <exception cref="FreeLibSet.Core.ParsingException">Нарушение структуры CSV</exception>
     public static string[] CommaStringToArray(string s)
     {
       return CommaStringToArray(s, ',');
@@ -41,7 +41,7 @@ namespace AgeyevAV
     /// <param name="s">Строка</param>
     /// <param name="fieldDelimiter"></param>
     /// <returns>Массив строк-элементов</returns>
-    /// <exception cref="AgeyevAV.ParsingException">Нарушение структуры CSV</exception>
+    /// <exception cref="FreeLibSet.Core.ParsingException">Нарушение структуры CSV</exception>
     public static string[] CommaStringToArray(string s, char fieldDelimiter)
     {
       const int PhaseWaitStr = 1;   // ждем начала строки

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Win32;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using Microsoft.Win32;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Win32
+namespace FreeLibSet.Win32
 {
   /// <summary>
   /// Этот объект используется при переборе реестра методом RegistryTree.Enumerate()

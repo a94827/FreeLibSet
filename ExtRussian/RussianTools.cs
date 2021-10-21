@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -31,7 +32,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Russian
+namespace FreeLibSet.Russian
 {
   /// <summary>
   /// Разнообразные статические функции для русского языка

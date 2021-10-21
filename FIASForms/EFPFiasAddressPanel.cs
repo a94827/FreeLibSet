@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.FIAS;
-using AgeyevAV.DependedValues;
+using FreeLibSet.FIAS;
+using FreeLibSet.DependedValues;
 using System.Data;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -35,7 +37,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Провайдер панели редактора адреса
@@ -1320,7 +1322,7 @@ namespace AgeyevAV.ExtForms.FIAS
 
       DataRow row = null;
       string OldFilter = dv.RowFilter;
-      AgeyevAV.ExtDB.DBxFilter filter = new AgeyevAV.ExtDB.StartsWithFilter(columnName, value);
+      FreeLibSet.Data.DBxFilter filter = new FreeLibSet.Data.StartsWithFilter(columnName, value);
       filter.AddToDataViewRowFilter(dv);
       if (dv.Count > 0)
         row = dv[0].Row;
@@ -1330,7 +1332,7 @@ namespace AgeyevAV.ExtForms.FIAS
         if (DoGetFirstNumPart(ref value))
         {
           dv.RowFilter = OldFilter;
-          filter = new AgeyevAV.ExtDB.StartsWithFilter(columnName, value);
+          filter = new FreeLibSet.Data.StartsWithFilter(columnName, value);
           filter.AddToDataViewRowFilter(dv);
           if (dv.Count > 0)
             row = dv[0].Row;

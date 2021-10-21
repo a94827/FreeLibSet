@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using System.Runtime.InteropServices;
  * Работа с закрытыми интервалами дат
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Calendar
 {
   /// <summary>
   /// Интервал дат (закрытый)

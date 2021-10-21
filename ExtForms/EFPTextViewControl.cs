@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -34,7 +35,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс для EFPLabel, EFPButton, EFPGroupBox и других классов,

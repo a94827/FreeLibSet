@@ -1,4 +1,4 @@
-﻿using AgeyevAV.ExtForms;
+﻿using FreeLibSet.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,9 +6,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data.Docs;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Расширение формы поиска текста кнопкой "Выборка документов"
@@ -175,7 +175,7 @@ namespace AgeyevAV.ExtForms.Docs
 
     private void CreateDocSel()
     {
-      TreeNodeAdv[] Nodes = base.FindAllNodes();
+      FreeLibSet.Controls.TreeNodeAdv[] Nodes = base.FindAllNodes();
       if (Nodes == null)
       {
         EFPApp.ShowTempMessage("Нет подходящих строк");

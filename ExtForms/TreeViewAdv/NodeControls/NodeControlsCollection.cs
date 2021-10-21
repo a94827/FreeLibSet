@@ -43,7 +43,7 @@ using System.Drawing.Design;
  */
 
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   internal class NodeControlsCollection : Collection<NodeControl>
   {

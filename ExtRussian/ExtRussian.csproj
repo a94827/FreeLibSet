@@ -7,7 +7,7 @@
     <ProjectGuid>{98F68490-6102-4888-AD7B-5649ECC01ADC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgeyevAV.Russian</RootNamespace>
+    <RootNamespace>FreeLibSet.Russian</RootNamespace>
     <AssemblyName>ExtRussian</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

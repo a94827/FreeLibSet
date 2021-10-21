@@ -1,9 +1,11 @@
-﻿using AgeyevAV.Config;
-using AgeyevAV.IO;
+﻿using FreeLibSet.Config;
+using FreeLibSet.IO;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -34,7 +36,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.RI
+namespace FreeLibSet.RI
 {
   /// <summary>
   /// Базовый класс для стандартных блоков диалогв

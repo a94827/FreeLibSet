@@ -8,7 +8,7 @@
     <ProjectGuid>{29AFED76-67DD-4EEF-860C-84413DB7BE28}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgeyevAV.ExtForms.Docs</RootNamespace>
+    <RootNamespace>FreeLibSet.Forms.Docs</RootNamespace>
     <AssemblyName>ExtDBDocForms</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />

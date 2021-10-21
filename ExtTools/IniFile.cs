@@ -34,8 +34,10 @@ using System.Diagnostics;
 using System;
 using System.Text;
 using System.Collections.Generic;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.IO
+namespace FreeLibSet.IO
 {
   /// <summary>
   /// Пара "Ключ-Значение" для извлечения из Ini-файла

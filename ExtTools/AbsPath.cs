@@ -32,7 +32,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.IO
+namespace FreeLibSet.IO
 {
   /*
    * AbsPath.cs может использоваться не только в библиотеке ExtTools.cs, 

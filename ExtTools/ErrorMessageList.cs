@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   #region Перечисление ErrorMessageKind
 

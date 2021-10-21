@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.RI;
+using FreeLibSet.RI;
 using System.Threading;
-using AgeyevAV.Config;
-using AgeyevAV.Logging;
-using AgeyevAV.DependedValues;
+using FreeLibSet.Config;
+using FreeLibSet.Logging;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -51,7 +53,7 @@ using AgeyevAV.DependedValues;
  * отвечает за создание дочерних элементов, при этом выполняется рекурсивное обращение к EFPApp.RICreators
  */
 
-namespace AgeyevAV.ExtForms.RI
+namespace FreeLibSet.Forms.RI
 {
   /// <summary>
   /// Реализация удаленного пользовательского интерфейса.
@@ -309,9 +311,9 @@ namespace AgeyevAV.ExtForms.RI
 
     #region Проверка корректности
 
-    internal static void InitValidators(AgeyevAV.RI.RIItem riItem, IEFPAppRIItem efpItem)
+    internal static void InitValidators(FreeLibSet.RI.RIItem riItem, IEFPAppRIItem efpItem)
     {
-      AgeyevAV.RI.Control riControl = riItem as AgeyevAV.RI.Control;
+      FreeLibSet.RI.Control riControl = riItem as FreeLibSet.RI.Control;
       if (riControl == null)
         return;
       if (!riControl.HasValidators)
@@ -323,7 +325,7 @@ namespace AgeyevAV.ExtForms.RI
 
       ItemValidator iv = new ItemValidator(riControl, efpControl);
       efpControl.Validating += new EFPValidatingEventHandler(iv.Validating);
-      foreach (AgeyevAV.RI.Validator v in riControl.Validators)
+      foreach (FreeLibSet.RI.Validator v in riControl.Validators)
       {
         v.Expression.ValueChanged += new EventHandler(iv.Validate);
         if (v.ActiveEx != null)
@@ -335,7 +337,7 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public ItemValidator(AgeyevAV.RI.Control riControl, IEFPAppRIControlItem efpControl)
+      public ItemValidator(FreeLibSet.RI.Control riControl, IEFPAppRIControlItem efpControl)
       {
         _RIControl = riControl;
         _EFPControl = efpControl;
@@ -345,7 +347,7 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.Control _RIControl;
+      private FreeLibSet.RI.Control _RIControl;
 
       private IEFPAppRIControlItem _EFPControl;
 
@@ -358,7 +360,7 @@ namespace AgeyevAV.ExtForms.RI
         if (args.ValidateState == EFPValidateState.Error)
           return;
 
-        foreach (AgeyevAV.RI.Validator v in _RIControl.Validators)
+        foreach (FreeLibSet.RI.Validator v in _RIControl.Validators)
         {
           if (v.ActiveEx != null)
           {
@@ -752,52 +754,52 @@ namespace AgeyevAV.ExtForms.RI
 
     public IEFPAppRIItem Create(RIItem riItem, EFPBaseProvider baseProvider)
     {
-      if (riItem is AgeyevAV.RI.Label)
-        return new LabelItem((AgeyevAV.RI.Label)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.TextBox)
-        return new TextBoxItem((AgeyevAV.RI.TextBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.IntEditBox)
+      if (riItem is FreeLibSet.RI.Label)
+        return new LabelItem((FreeLibSet.RI.Label)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.TextBox)
+        return new TextBoxItem((FreeLibSet.RI.TextBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.IntEditBox)
       {
-        if (((AgeyevAV.RI.IntEditBox)riItem).ShowUpDown)
-          return new IntEditBoxItem2((AgeyevAV.RI.IntEditBox)riItem, baseProvider);
+        if (((FreeLibSet.RI.IntEditBox)riItem).ShowUpDown)
+          return new IntEditBoxItem2((FreeLibSet.RI.IntEditBox)riItem, baseProvider);
         else
-          return new IntEditBoxItem1((AgeyevAV.RI.IntEditBox)riItem, baseProvider);
+          return new IntEditBoxItem1((FreeLibSet.RI.IntEditBox)riItem, baseProvider);
       }
-      if (riItem is AgeyevAV.RI.SingleEditBox)
-        return new SingleEditBoxItem((AgeyevAV.RI.SingleEditBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.DoubleEditBox)
-        return new DoubleEditBoxItem((AgeyevAV.RI.DoubleEditBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.DecimalEditBox)
-        return new DecimalEditBoxItem((AgeyevAV.RI.DecimalEditBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.DateBox)
-        return new DateBoxItem((AgeyevAV.RI.DateBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.DateRangeBox)
-        return new DateRangeBoxItem((AgeyevAV.RI.DateRangeBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.DateOrRangeBox)
-        return new DateOrRangeBoxItem((AgeyevAV.RI.DateOrRangeBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.YearMonthBox)
-        return new YearMonthBoxItem((AgeyevAV.RI.YearMonthBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.YearMonthRangeBox)
-        return new YearMonthRangeBoxItem((AgeyevAV.RI.YearMonthRangeBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.CheckBox)
-        return new CheckBoxItem((AgeyevAV.RI.CheckBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.RadioGroup)
-        return new RadioGroupItem((AgeyevAV.RI.RadioGroup)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.InfoLabel)
-        return new InfoLabelItem((AgeyevAV.RI.InfoLabel)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.ListComboBox)
-        return new ListComboBoxItem((AgeyevAV.RI.ListComboBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.TextComboBox)
-        return new TextComboBoxItem((AgeyevAV.RI.TextComboBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.CsvCodesComboBox)
-        return new CsvCodesComboBoxItem((AgeyevAV.RI.CsvCodesComboBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.SingleEditBox)
+        return new SingleEditBoxItem((FreeLibSet.RI.SingleEditBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.DoubleEditBox)
+        return new DoubleEditBoxItem((FreeLibSet.RI.DoubleEditBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.DecimalEditBox)
+        return new DecimalEditBoxItem((FreeLibSet.RI.DecimalEditBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.DateBox)
+        return new DateBoxItem((FreeLibSet.RI.DateBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.DateRangeBox)
+        return new DateRangeBoxItem((FreeLibSet.RI.DateRangeBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.DateOrRangeBox)
+        return new DateOrRangeBoxItem((FreeLibSet.RI.DateOrRangeBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.YearMonthBox)
+        return new YearMonthBoxItem((FreeLibSet.RI.YearMonthBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.YearMonthRangeBox)
+        return new YearMonthRangeBoxItem((FreeLibSet.RI.YearMonthRangeBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.CheckBox)
+        return new CheckBoxItem((FreeLibSet.RI.CheckBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.RadioGroup)
+        return new RadioGroupItem((FreeLibSet.RI.RadioGroup)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.InfoLabel)
+        return new InfoLabelItem((FreeLibSet.RI.InfoLabel)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.ListComboBox)
+        return new ListComboBoxItem((FreeLibSet.RI.ListComboBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.TextComboBox)
+        return new TextComboBoxItem((FreeLibSet.RI.TextComboBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.CsvCodesComboBox)
+        return new CsvCodesComboBoxItem((FreeLibSet.RI.CsvCodesComboBox)riItem, baseProvider);
 
-      if (riItem is AgeyevAV.RI.FolderBrowserTextBox)
-        return new FolderBrowserTextBoxItem((AgeyevAV.RI.FolderBrowserTextBox)riItem, baseProvider);
-      if (riItem is AgeyevAV.RI.OpenFileTextBox)
-        return new FileTextBoxItem((AgeyevAV.RI.OpenFileTextBox)riItem, baseProvider, AgeyevAV.ExtForms.FileDialogMode.Read);
-      if (riItem is AgeyevAV.RI.SaveFileTextBox)
-        return new FileTextBoxItem((AgeyevAV.RI.SaveFileTextBox)riItem, baseProvider, AgeyevAV.ExtForms.FileDialogMode.Write);
+      if (riItem is FreeLibSet.RI.FolderBrowserTextBox)
+        return new FolderBrowserTextBoxItem((FreeLibSet.RI.FolderBrowserTextBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.OpenFileTextBox)
+        return new FileTextBoxItem((FreeLibSet.RI.OpenFileTextBox)riItem, baseProvider, FreeLibSet.Forms.FileDialogMode.Read);
+      if (riItem is FreeLibSet.RI.SaveFileTextBox)
+        return new FileTextBoxItem((FreeLibSet.RI.SaveFileTextBox)riItem, baseProvider, FreeLibSet.Forms.FileDialogMode.Write);
 
       return null;
     }
@@ -806,11 +808,11 @@ namespace AgeyevAV.ExtForms.RI
 
     #region Label
 
-    private class LabelItem : AgeyevAV.ExtForms.EFPLabel, IEFPAppRIItem
+    private class LabelItem : FreeLibSet.Forms.EFPLabel, IEFPAppRIItem
     {
       #region Конструктор
 
-      public LabelItem(AgeyevAV.RI.Label riItem, EFPBaseProvider baseProvider)
+      public LabelItem(FreeLibSet.RI.Label riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new System.Windows.Forms.Label())
       {
         base.Text = riItem.Text;
@@ -838,11 +840,11 @@ namespace AgeyevAV.ExtForms.RI
 
     #region TextBox
 
-    private class TextBoxItem : AgeyevAV.ExtForms.EFPTextBox, IEFPAppRIControlItem
+    private class TextBoxItem : FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public TextBoxItem(AgeyevAV.RI.TextBox riItem, EFPBaseProvider baseProvider)
+      public TextBoxItem(FreeLibSet.RI.TextBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new System.Windows.Forms.TextBox())
       {
         _RIItem = riItem;
@@ -889,7 +891,7 @@ namespace AgeyevAV.ExtForms.RI
         base.WarningRegExMessage = riItem.WarningRegExMessage;
       }
 
-      AgeyevAV.RI.TextBox _RIItem;
+      FreeLibSet.RI.TextBox _RIItem;
 
       #endregion
 
@@ -913,12 +915,12 @@ namespace AgeyevAV.ExtForms.RI
     /// Поле ввода целого числа.
     /// Версия без стрелочек
     /// </summary>
-    private class IntEditBoxItem1 : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIItem
+    private class IntEditBoxItem1 : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIItem
     {
       #region Конструктор
 
-      public IntEditBoxItem1(AgeyevAV.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.NumEditBox())
+      public IntEditBoxItem1(FreeLibSet.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
       {
         _RIItem = riItem;
         if (riItem.Minimum.HasValue)
@@ -940,7 +942,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.IntEditBox _RIItem;
+      FreeLibSet.RI.IntEditBox _RIItem;
 
       #endregion
 
@@ -964,12 +966,12 @@ namespace AgeyevAV.ExtForms.RI
     /// Поле ввода целого числа.
     /// Версия со стрелочками
     /// </summary>
-    private class IntEditBoxItem2 : AgeyevAV.ExtForms.EFPExtNumericUpDown, IEFPAppRIItem
+    private class IntEditBoxItem2 : FreeLibSet.Forms.EFPExtNumericUpDown, IEFPAppRIItem
     {
       #region Конструктор
 
-      public IntEditBoxItem2(AgeyevAV.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.ExtNumericUpDown())
+      public IntEditBoxItem2(FreeLibSet.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.ExtNumericUpDown())
       {
         base.Control.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Right;
         base.Control.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -997,7 +999,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.IntEditBox _RIItem;
+      FreeLibSet.RI.IntEditBox _RIItem;
 
       #endregion
 
@@ -1017,12 +1019,12 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class SingleEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIControlItem
+    private class SingleEditBoxItem : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public SingleEditBoxItem(AgeyevAV.RI.SingleEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.NumEditBox())
+      public SingleEditBoxItem(FreeLibSet.RI.SingleEditBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
       {
         _RIItem = riItem;
         base.Control.DecimalPlaces = riItem.DecimalPlaces;
@@ -1045,7 +1047,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.SingleEditBox _RIItem;
+      FreeLibSet.RI.SingleEditBox _RIItem;
 
       #endregion
 
@@ -1065,12 +1067,12 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class DoubleEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIControlItem
+    private class DoubleEditBoxItem : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public DoubleEditBoxItem(AgeyevAV.RI.DoubleEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.NumEditBox())
+      public DoubleEditBoxItem(FreeLibSet.RI.DoubleEditBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
       {
         _RIItem = riItem;
         base.Control.DecimalPlaces = riItem.DecimalPlaces;
@@ -1093,7 +1095,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.DoubleEditBox _RIItem;
+      FreeLibSet.RI.DoubleEditBox _RIItem;
 
       #endregion
 
@@ -1113,12 +1115,12 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class DecimalEditBoxItem : AgeyevAV.ExtForms.EFPNumEditBox, IEFPAppRIControlItem
+    private class DecimalEditBoxItem : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public DecimalEditBoxItem(AgeyevAV.RI.DecimalEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.NumEditBox())
+      public DecimalEditBoxItem(FreeLibSet.RI.DecimalEditBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
       {
         _RIItem = riItem;
         base.Control.DecimalPlaces = riItem.DecimalPlaces;
@@ -1139,7 +1141,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.DecimalEditBox _RIItem;
+      FreeLibSet.RI.DecimalEditBox _RIItem;
 
       #endregion
 
@@ -1163,11 +1165,11 @@ namespace AgeyevAV.ExtForms.RI
 
     #region CheckBox
 
-    private class CheckBoxItem : AgeyevAV.ExtForms.EFPCheckBox, IEFPAppRIControlItem
+    private class CheckBoxItem : FreeLibSet.Forms.EFPCheckBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public CheckBoxItem(AgeyevAV.RI.CheckBox riItem, EFPBaseProvider baseProvider)
+      public CheckBoxItem(FreeLibSet.RI.CheckBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new System.Windows.Forms.CheckBox())
       {
         Control.ThreeState = riItem.ThreeState;
@@ -1199,16 +1201,16 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.CheckBox _RIItem;
+      FreeLibSet.RI.CheckBox _RIItem;
 
       #endregion
 
       #region Переопределенное свойство CheckStateEx
 
-      // Перечисления Syatem.Windows.Forms.CheckState и AgeyevAV.RI.CheckState совпадают,
+      // Перечисления Syatem.Windows.Forms.CheckState и FreeLibSet.RI.CheckState совпадают,
       // но это разные перечисления. Нужен переходник
 
-      public DepValue<AgeyevAV.RI.CheckState> CheckStateEx2
+      public DepValue<FreeLibSet.RI.CheckState> CheckStateEx2
       {
         get
         {
@@ -1221,15 +1223,15 @@ namespace AgeyevAV.ExtForms.RI
           _CheckStateEx2.Source = value;
         }
       }
-      private DepInput<AgeyevAV.RI.CheckState> _CheckStateEx2;
+      private DepInput<FreeLibSet.RI.CheckState> _CheckStateEx2;
 
       private void InitCheckStateEx2()
       {
         if (_CheckStateEx2 == null)
         {
-          _CheckStateEx2 = new DepInput<AgeyevAV.RI.CheckState>();
+          _CheckStateEx2 = new DepInput<FreeLibSet.RI.CheckState>();
           _CheckStateEx2.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx2");
-          _CheckStateEx2.Value = (AgeyevAV.RI.CheckState)(int)CheckState;
+          _CheckStateEx2.Value = (FreeLibSet.RI.CheckState)(int)CheckState;
           _CheckStateEx2.ValueChanged += new EventHandler(CheckStateEx2_ValueChanged);
 
           base.CheckStateEx.ValueChanged += new EventHandler(CheckStateEx_ValueChanged);
@@ -1238,7 +1240,7 @@ namespace AgeyevAV.ExtForms.RI
 
       void CheckStateEx_ValueChanged(object sender, EventArgs args)
       {
-        _CheckStateEx2.Value = (AgeyevAV.RI.CheckState)(int)(base.CheckState);
+        _CheckStateEx2.Value = (FreeLibSet.RI.CheckState)(int)(base.CheckState);
       }
 
       private void CheckStateEx2_ValueChanged(object sender, EventArgs args)
@@ -1269,12 +1271,12 @@ namespace AgeyevAV.ExtForms.RI
 
     #region RadioGroup
 
-    private class RadioGroupItem : AgeyevAV.ExtForms.EFPRadioButtons, IEFPAppRIControlItem
+    private class RadioGroupItem : FreeLibSet.Forms.EFPRadioButtons, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public RadioGroupItem(AgeyevAV.RI.RadioGroup riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.RadioGroupBox(riItem.Items))
+      public RadioGroupItem(FreeLibSet.RI.RadioGroup riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.RadioGroupBox(riItem.Items))
       {
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
@@ -1306,7 +1308,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.RadioGroup _RIItem;
+      FreeLibSet.RI.RadioGroup _RIItem;
 
       #endregion
 
@@ -1330,12 +1332,12 @@ namespace AgeyevAV.ExtForms.RI
 
     #region DateBox
 
-    private class DateBoxItem : AgeyevAV.ExtForms.EFPDateBox, IEFPAppRIControlItem
+    private class DateBoxItem : FreeLibSet.Forms.EFPDateBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public DateBoxItem(AgeyevAV.RI.DateBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.DateBox())
+      public DateBoxItem(FreeLibSet.RI.DateBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.DateBox())
       {
         _RIItem = riItem;
 
@@ -1365,7 +1367,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.DateBox _RIItem;
+      FreeLibSet.RI.DateBox _RIItem;
 
       #endregion
 
@@ -1389,12 +1391,12 @@ namespace AgeyevAV.ExtForms.RI
 
     #region DateRangeBox
 
-    private class DateRangeBoxItem : AgeyevAV.ExtForms.EFPDateRangeBox, IEFPAppRIControlItem
+    private class DateRangeBoxItem : FreeLibSet.Forms.EFPDateRangeBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public DateRangeBoxItem(AgeyevAV.RI.DateRangeBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.DateRangeBox())
+      public DateRangeBoxItem(FreeLibSet.RI.DateRangeBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.DateRangeBox())
       {
         _RIItem = riItem;
         switch (riItem.CanBeEmptyMode)
@@ -1439,7 +1441,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.DateRangeBox _RIItem;
+      FreeLibSet.RI.DateRangeBox _RIItem;
 
       #endregion
 
@@ -1465,12 +1467,12 @@ namespace AgeyevAV.ExtForms.RI
 
     #region DateOrRangeBox
 
-    private class DateOrRangeBoxItem : AgeyevAV.ExtForms.EFPDateOrRangeBox, IEFPAppRIControlItem
+    private class DateOrRangeBoxItem : FreeLibSet.Forms.EFPDateOrRangeBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public DateOrRangeBoxItem(AgeyevAV.RI.DateOrRangeBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.UserMaskedComboBox())
+      public DateOrRangeBoxItem(FreeLibSet.RI.DateOrRangeBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.UserMaskedComboBox())
       {
         _RIItem = riItem;
 
@@ -1488,7 +1490,7 @@ namespace AgeyevAV.ExtForms.RI
         EFPAppRITools.InitControlItem(this, riItem);
       }
 
-      AgeyevAV.RI.DateOrRangeBox _RIItem;
+      FreeLibSet.RI.DateOrRangeBox _RIItem;
 
       #endregion
 
@@ -1512,12 +1514,12 @@ namespace AgeyevAV.ExtForms.RI
 
     #region YearMonthBox
 
-    private class YearMonthBoxItem : AgeyevAV.ExtForms.EFPYearMonthBox, IEFPAppRIControlItem
+    private class YearMonthBoxItem : FreeLibSet.Forms.EFPYearMonthBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public YearMonthBoxItem(AgeyevAV.RI.YearMonthBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.YearMonthBox())
+      public YearMonthBoxItem(FreeLibSet.RI.YearMonthBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.YearMonthBox())
       {
         _RIItem = riItem;
         Minimum = riItem.Minimum;
@@ -1561,7 +1563,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.YearMonthBox _RIItem;
+      FreeLibSet.RI.YearMonthBox _RIItem;
 
       #endregion
 
@@ -1587,12 +1589,12 @@ namespace AgeyevAV.ExtForms.RI
 
     #region YearMonthRangeBox
 
-    private class YearMonthRangeBoxItem : AgeyevAV.ExtForms.EFPYearMonthRangeBox, IEFPAppRIControlItem
+    private class YearMonthRangeBoxItem : FreeLibSet.Forms.EFPYearMonthRangeBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public YearMonthRangeBoxItem(AgeyevAV.RI.YearMonthRangeBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.YearMonthRangeBox())
+      public YearMonthRangeBoxItem(FreeLibSet.RI.YearMonthRangeBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.YearMonthRangeBox())
       {
         _RIItem = riItem;
         Minimum = riItem.Minimum;
@@ -1660,7 +1662,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.YearMonthRangeBox _RIItem;
+      FreeLibSet.RI.YearMonthRangeBox _RIItem;
 
       #endregion
 
@@ -1688,12 +1690,12 @@ namespace AgeyevAV.ExtForms.RI
 
     #region InfoLabel
 
-    private class InfoLabelItem : AgeyevAV.ExtForms.EFPInfoLabel, IEFPAppRIItem
+    private class InfoLabelItem : FreeLibSet.Forms.EFPInfoLabel, IEFPAppRIItem
     {
       #region Конструктор
 
-      public InfoLabelItem(AgeyevAV.RI.InfoLabel riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms.InfoLabel())
+      public InfoLabelItem(FreeLibSet.RI.InfoLabel riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.InfoLabel())
       {
         base.Text = riItem.Text;
         base.Control.Icon = (System.Windows.Forms.MessageBoxIcon)(int)(riItem.Icon);
@@ -1731,11 +1733,11 @@ namespace AgeyevAV.ExtForms.RI
 
     #region Комбоблоки
 
-    private class ListComboBoxItem : AgeyevAV.ExtForms.EFPListComboBox, IEFPAppRIControlItem
+    private class ListComboBoxItem : FreeLibSet.Forms.EFPListComboBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public ListComboBoxItem(AgeyevAV.RI.ListComboBox riItem, EFPBaseProvider baseProvider)
+      public ListComboBoxItem(FreeLibSet.RI.ListComboBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new System.Windows.Forms.ComboBox())
       {
         base.Control.Items.AddRange(riItem.Items);
@@ -1772,7 +1774,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.ListComboBox _RIItem;
+      FreeLibSet.RI.ListComboBox _RIItem;
 
       #endregion
 
@@ -1792,11 +1794,11 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class TextComboBoxItem : AgeyevAV.ExtForms.EFPTextComboBox, IEFPAppRIControlItem
+    private class TextComboBoxItem : FreeLibSet.Forms.EFPTextComboBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public TextComboBoxItem(AgeyevAV.RI.TextComboBox riItem, EFPBaseProvider baseProvider)
+      public TextComboBoxItem(FreeLibSet.RI.TextComboBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new System.Windows.Forms.ComboBox())
       {
         base.Control.Items.AddRange(riItem.Items);
@@ -1834,7 +1836,7 @@ namespace AgeyevAV.ExtForms.RI
         base.WarningRegExMessage = riItem.WarningRegExMessage;
       }
 
-      AgeyevAV.RI.TextComboBox _RIItem;
+      FreeLibSet.RI.TextComboBox _RIItem;
 
       #endregion
 
@@ -1854,12 +1856,12 @@ namespace AgeyevAV.ExtForms.RI
       #endregion
     }
 
-    private class CsvCodesComboBoxItem : AgeyevAV.ExtForms.EFPCsvCodesComboBox, IEFPAppRIControlItem
+    private class CsvCodesComboBoxItem : FreeLibSet.Forms.EFPCsvCodesComboBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public CsvCodesComboBoxItem(AgeyevAV.RI.CsvCodesComboBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new AgeyevAV.ExtForms .UserTextComboBox() , riItem.Codes)
+      public CsvCodesComboBoxItem(FreeLibSet.RI.CsvCodesComboBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.UserTextComboBox(), riItem.Codes)
       {
         switch (riItem.CanBeEmptyMode)
         {
@@ -1888,7 +1890,7 @@ namespace AgeyevAV.ExtForms.RI
         }
       }
 
-      AgeyevAV.RI.CsvCodesComboBox _RIItem;
+      FreeLibSet.RI.CsvCodesComboBox _RIItem;
 
       #endregion
 
@@ -1996,7 +1998,7 @@ namespace AgeyevAV.ExtForms.RI
       #region Конструктор
 
       public EFPTextBoxWithButton(EFPBaseProvider baseProvider)
-        : base(baseProvider, new TextBoxWithButton() , true)
+        : base(baseProvider, new TextBoxWithButton(), true)
       {
         TheTextBox = new EFPTextBox(baseProvider, Control.TheTextBox);
       }
@@ -2028,7 +2030,7 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public FolderBrowserTextBoxItem(AgeyevAV.RI.FolderBrowserTextBox riItem, EFPBaseProvider baseProvider)
+      public FolderBrowserTextBoxItem(FreeLibSet.RI.FolderBrowserTextBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider)
       {
         switch (riItem.CanBeEmptyMode)
@@ -2051,7 +2053,7 @@ namespace AgeyevAV.ExtForms.RI
 
       EFPFolderBrowserButton TheButton;
 
-      AgeyevAV.RI.FolderBrowserTextBox _RIItem;
+      FreeLibSet.RI.FolderBrowserTextBox _RIItem;
 
       #endregion
 
@@ -2065,7 +2067,7 @@ namespace AgeyevAV.ExtForms.RI
 
       public void ReadValues()
       {
-        _RIItem.Path = new AgeyevAV.IO.AbsPath(base.TheTextBox.Text);
+        _RIItem.Path = new FreeLibSet.IO.AbsPath(base.TheTextBox.Text);
       }
 
       #endregion
@@ -2075,7 +2077,7 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public FileTextBoxItem(AgeyevAV.RI.FileTextBox riItem, EFPBaseProvider baseProvider, AgeyevAV.ExtForms.FileDialogMode mode)
+      public FileTextBoxItem(FreeLibSet.RI.FileTextBox riItem, EFPBaseProvider baseProvider, FreeLibSet.Forms.FileDialogMode mode)
         : base(baseProvider)
       {
         switch (riItem.CanBeEmptyMode)
@@ -2098,7 +2100,7 @@ namespace AgeyevAV.ExtForms.RI
 
       EFPFileDialogButton TheButton;
 
-      AgeyevAV.RI.FileTextBox _RIItem;
+      FreeLibSet.RI.FileTextBox _RIItem;
 
       #endregion
 
@@ -2112,7 +2114,7 @@ namespace AgeyevAV.ExtForms.RI
 
       public void ReadValues()
       {
-        _RIItem.Path = new AgeyevAV.IO.AbsPath(base.TheTextBox.Text);
+        _RIItem.Path = new FreeLibSet.IO.AbsPath(base.TheTextBox.Text);
       }
 
       #endregion
@@ -2143,53 +2145,53 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Ввод значений
 
-      if (riItem is AgeyevAV.RI.TextInputDialog)
-        return new TextInputDialogItem((AgeyevAV.RI.TextInputDialog)riItem);
-      if (riItem is AgeyevAV.RI.ComboTextInputDialog)
-        return new ComboTextInputDialogItem((AgeyevAV.RI.ComboTextInputDialog)riItem);
-      if (riItem is AgeyevAV.RI.IntInputDialog)
-        return new IntInputDialogItem((AgeyevAV.RI.IntInputDialog)riItem);
-      if (riItem is AgeyevAV.RI.SingleInputDialog)
-        return new SingleInputDialogItem((AgeyevAV.RI.SingleInputDialog)riItem);
-      if (riItem is AgeyevAV.RI.DoubleInputDialog)
-        return new DoubleInputDialogItem((AgeyevAV.RI.DoubleInputDialog)riItem);
-      if (riItem is AgeyevAV.RI.DecimalInputDialog)
-        return new DecimalInputDialogItem((AgeyevAV.RI.DecimalInputDialog)riItem);
-      if (riItem is AgeyevAV.RI.DateInputDialog)
-        return new DateInputDialogItem((AgeyevAV.RI.DateInputDialog)riItem);
-      if (riItem is AgeyevAV.RI.MultiLineTextInputDialog)
-        return new MultiLineTextInputDialogItem((AgeyevAV.RI.MultiLineTextInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.TextInputDialog)
+        return new TextInputDialogItem((FreeLibSet.RI.TextInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.ComboTextInputDialog)
+        return new ComboTextInputDialogItem((FreeLibSet.RI.ComboTextInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.IntInputDialog)
+        return new IntInputDialogItem((FreeLibSet.RI.IntInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.SingleInputDialog)
+        return new SingleInputDialogItem((FreeLibSet.RI.SingleInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.DoubleInputDialog)
+        return new DoubleInputDialogItem((FreeLibSet.RI.DoubleInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.DecimalInputDialog)
+        return new DecimalInputDialogItem((FreeLibSet.RI.DecimalInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.DateInputDialog)
+        return new DateInputDialogItem((FreeLibSet.RI.DateInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.MultiLineTextInputDialog)
+        return new MultiLineTextInputDialogItem((FreeLibSet.RI.MultiLineTextInputDialog)riItem);
 
       #endregion
 
       #region Диапазон значений
 
-      if (riItem is AgeyevAV.RI.IntRangeDialog)
-        return new IntRangeDialogItem((AgeyevAV.RI.IntRangeDialog)riItem);
-      if (riItem is AgeyevAV.RI.SingleRangeDialog)
-        return new SingleRangeDialogItem((AgeyevAV.RI.SingleRangeDialog)riItem);
-      if (riItem is AgeyevAV.RI.DoubleRangeDialog)
-        return new DoubleRangeDialogItem((AgeyevAV.RI.DoubleRangeDialog)riItem);
-      if (riItem is AgeyevAV.RI.DecimalRangeDialog)
-        return new DecimalRangeDialogItem((AgeyevAV.RI.DecimalRangeDialog)riItem);
-      if (riItem is AgeyevAV.RI.DateRangeDialog)
-        return new DateRangeDialogItem((AgeyevAV.RI.DateRangeDialog)riItem);
+      if (riItem is FreeLibSet.RI.IntRangeDialog)
+        return new IntRangeDialogItem((FreeLibSet.RI.IntRangeDialog)riItem);
+      if (riItem is FreeLibSet.RI.SingleRangeDialog)
+        return new SingleRangeDialogItem((FreeLibSet.RI.SingleRangeDialog)riItem);
+      if (riItem is FreeLibSet.RI.DoubleRangeDialog)
+        return new DoubleRangeDialogItem((FreeLibSet.RI.DoubleRangeDialog)riItem);
+      if (riItem is FreeLibSet.RI.DecimalRangeDialog)
+        return new DecimalRangeDialogItem((FreeLibSet.RI.DecimalRangeDialog)riItem);
+      if (riItem is FreeLibSet.RI.DateRangeDialog)
+        return new DateRangeDialogItem((FreeLibSet.RI.DateRangeDialog)riItem);
 
       #endregion
 
       #region Диалоги выбора из списка
 
-      if (riItem is AgeyevAV.RI.ListSelectDialog)
-        return new ListSelectDialogItem((AgeyevAV.RI.ListSelectDialog)riItem);
-      if (riItem is AgeyevAV.RI.RadioSelectDialog)
-        return new RadioSelectDialogItem((AgeyevAV.RI.RadioSelectDialog)riItem);
+      if (riItem is FreeLibSet.RI.ListSelectDialog)
+        return new ListSelectDialogItem((FreeLibSet.RI.ListSelectDialog)riItem);
+      if (riItem is FreeLibSet.RI.RadioSelectDialog)
+        return new RadioSelectDialogItem((FreeLibSet.RI.RadioSelectDialog)riItem);
 
       #endregion
 
       #region Ввод табличных данных
 
-      if (riItem is AgeyevAV.RI.InputGridDataDialog)
-        return new InputGridDataDialogItem((AgeyevAV.RI.InputGridDataDialog)riItem);
+      if (riItem is FreeLibSet.RI.InputGridDataDialog)
+        return new InputGridDataDialogItem((FreeLibSet.RI.InputGridDataDialog)riItem);
 
       #endregion
 
@@ -2230,7 +2232,7 @@ namespace AgeyevAV.ExtForms.RI
 
       public void ReadValues()
       {
-        _RIDialog.Path = new AgeyevAV.IO.AbsPath(_WinDlg.SelectedPath);
+        _RIDialog.Path = new FreeLibSet.IO.AbsPath(_WinDlg.SelectedPath);
       }
 
       public DialogResult ShowDialog()
@@ -2279,7 +2281,7 @@ namespace AgeyevAV.ExtForms.RI
 
       public void ReadValues()
       {
-        _RIDialog.Path = new AgeyevAV.IO.AbsPath(_WinDlg.FileName);
+        _RIDialog.Path = new FreeLibSet.IO.AbsPath(_WinDlg.FileName);
       }
 
       public DialogResult ShowDialog()
@@ -2298,10 +2300,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public TextInputDialogItem(AgeyevAV.RI.TextInputDialog riDialog)
+      public TextInputDialogItem(FreeLibSet.RI.TextInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.TextInputDialog();
+        _WinDlg = new FreeLibSet.Forms.TextInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
 
@@ -2327,8 +2329,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.TextInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.TextInputDialog _WinDlg;
+      private FreeLibSet.RI.TextInputDialog _RIDialog;
+      private FreeLibSet.Forms.TextInputDialog _WinDlg;
 
       #endregion
 
@@ -2356,10 +2358,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public ComboTextInputDialogItem(AgeyevAV.RI.ComboTextInputDialog riDialog)
+      public ComboTextInputDialogItem(FreeLibSet.RI.ComboTextInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.ComboTextInputDialog();
+        _WinDlg = new FreeLibSet.Forms.ComboTextInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
 
@@ -2385,8 +2387,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.ComboTextInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.ComboTextInputDialog _WinDlg;
+      private FreeLibSet.RI.ComboTextInputDialog _RIDialog;
+      private FreeLibSet.Forms.ComboTextInputDialog _WinDlg;
 
       #endregion
 
@@ -2414,10 +2416,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public IntInputDialogItem(AgeyevAV.RI.IntInputDialog riDialog)
+      public IntInputDialogItem(FreeLibSet.RI.IntInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.IntInputDialog();
+        _WinDlg = new FreeLibSet.Forms.IntInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2430,8 +2432,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.IntInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.IntInputDialog _WinDlg;
+      private FreeLibSet.RI.IntInputDialog _RIDialog;
+      private FreeLibSet.Forms.IntInputDialog _WinDlg;
 
       #endregion
 
@@ -2459,10 +2461,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public SingleInputDialogItem(AgeyevAV.RI.SingleInputDialog riDialog)
+      public SingleInputDialogItem(FreeLibSet.RI.SingleInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.SingleInputDialog();
+        _WinDlg = new FreeLibSet.Forms.SingleInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2475,8 +2477,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.SingleInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.SingleInputDialog _WinDlg;
+      private FreeLibSet.RI.SingleInputDialog _RIDialog;
+      private FreeLibSet.Forms.SingleInputDialog _WinDlg;
 
       #endregion
 
@@ -2504,10 +2506,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public DoubleInputDialogItem(AgeyevAV.RI.DoubleInputDialog riDialog)
+      public DoubleInputDialogItem(FreeLibSet.RI.DoubleInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.DoubleInputDialog();
+        _WinDlg = new FreeLibSet.Forms.DoubleInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2520,8 +2522,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.DoubleInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.DoubleInputDialog _WinDlg;
+      private FreeLibSet.RI.DoubleInputDialog _RIDialog;
+      private FreeLibSet.Forms.DoubleInputDialog _WinDlg;
 
       #endregion
 
@@ -2549,10 +2551,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public DecimalInputDialogItem(AgeyevAV.RI.DecimalInputDialog riDialog)
+      public DecimalInputDialogItem(FreeLibSet.RI.DecimalInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.DecimalInputDialog();
+        _WinDlg = new FreeLibSet.Forms.DecimalInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2565,8 +2567,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.DecimalInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.DecimalInputDialog _WinDlg;
+      private FreeLibSet.RI.DecimalInputDialog _RIDialog;
+      private FreeLibSet.Forms.DecimalInputDialog _WinDlg;
 
       #endregion
 
@@ -2594,10 +2596,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public DateInputDialogItem(AgeyevAV.RI.DateInputDialog riDialog)
+      public DateInputDialogItem(FreeLibSet.RI.DateInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.DateInputDialog();
+        _WinDlg = new FreeLibSet.Forms.DateInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
 
@@ -2619,8 +2621,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.DateInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.DateInputDialog _WinDlg;
+      private FreeLibSet.RI.DateInputDialog _RIDialog;
+      private FreeLibSet.Forms.DateInputDialog _WinDlg;
 
       #endregion
 
@@ -2648,10 +2650,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public MultiLineTextInputDialogItem(AgeyevAV.RI.MultiLineTextInputDialog riDialog)
+      public MultiLineTextInputDialogItem(FreeLibSet.RI.MultiLineTextInputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.MultiLineTextInputDialog();
+        _WinDlg = new FreeLibSet.Forms.MultiLineTextInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.ReadOnly = riDialog.ReadOnly;
@@ -2672,8 +2674,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.MultiLineTextInputDialog _RIDialog;
-      private AgeyevAV.ExtForms.MultiLineTextInputDialog _WinDlg;
+      private FreeLibSet.RI.MultiLineTextInputDialog _RIDialog;
+      private FreeLibSet.Forms.MultiLineTextInputDialog _WinDlg;
 
       #endregion
 
@@ -2703,10 +2705,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public IntRangeDialogItem(AgeyevAV.RI.IntRangeDialog riDialog)
+      public IntRangeDialogItem(FreeLibSet.RI.IntRangeDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.IntRangeDialog();
+        _WinDlg = new FreeLibSet.Forms.IntRangeDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2719,8 +2721,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.IntRangeDialog _RIDialog;
-      private AgeyevAV.ExtForms.IntRangeDialog _WinDlg;
+      private FreeLibSet.RI.IntRangeDialog _RIDialog;
+      private FreeLibSet.Forms.IntRangeDialog _WinDlg;
 
       #endregion
 
@@ -2750,10 +2752,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public SingleRangeDialogItem(AgeyevAV.RI.SingleRangeDialog riDialog)
+      public SingleRangeDialogItem(FreeLibSet.RI.SingleRangeDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.SingleRangeDialog();
+        _WinDlg = new FreeLibSet.Forms.SingleRangeDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2766,8 +2768,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.SingleRangeDialog _RIDialog;
-      private AgeyevAV.ExtForms.SingleRangeDialog _WinDlg;
+      private FreeLibSet.RI.SingleRangeDialog _RIDialog;
+      private FreeLibSet.Forms.SingleRangeDialog _WinDlg;
 
       #endregion
 
@@ -2797,10 +2799,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public DoubleRangeDialogItem(AgeyevAV.RI.DoubleRangeDialog riDialog)
+      public DoubleRangeDialogItem(FreeLibSet.RI.DoubleRangeDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.DoubleRangeDialog();
+        _WinDlg = new FreeLibSet.Forms.DoubleRangeDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2813,8 +2815,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.DoubleRangeDialog _RIDialog;
-      private AgeyevAV.ExtForms.DoubleRangeDialog _WinDlg;
+      private FreeLibSet.RI.DoubleRangeDialog _RIDialog;
+      private FreeLibSet.Forms.DoubleRangeDialog _WinDlg;
 
       #endregion
 
@@ -2844,10 +2846,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public DecimalRangeDialogItem(AgeyevAV.RI.DecimalRangeDialog riDialog)
+      public DecimalRangeDialogItem(FreeLibSet.RI.DecimalRangeDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.DecimalRangeDialog();
+        _WinDlg = new FreeLibSet.Forms.DecimalRangeDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2860,8 +2862,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.DecimalRangeDialog _RIDialog;
-      private AgeyevAV.ExtForms.DecimalRangeDialog _WinDlg;
+      private FreeLibSet.RI.DecimalRangeDialog _RIDialog;
+      private FreeLibSet.Forms.DecimalRangeDialog _WinDlg;
 
       #endregion
 
@@ -2891,10 +2893,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public DateRangeDialogItem(AgeyevAV.RI.DateRangeDialog riDialog)
+      public DateRangeDialogItem(FreeLibSet.RI.DateRangeDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.DateRangeDialog();
+        _WinDlg = new FreeLibSet.Forms.DateRangeDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
 
@@ -2915,8 +2917,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.DateRangeDialog _RIDialog;
-      private AgeyevAV.ExtForms.DateRangeDialog _WinDlg;
+      private FreeLibSet.RI.DateRangeDialog _RIDialog;
+      private FreeLibSet.Forms.DateRangeDialog _WinDlg;
 
       #endregion
 
@@ -2952,10 +2954,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public ListSelectDialogItem(AgeyevAV.RI.ListSelectDialog riDialog)
+      public ListSelectDialogItem(FreeLibSet.RI.ListSelectDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.ListSelectDialog();
+        _WinDlg = new FreeLibSet.Forms.ListSelectDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.MultiSelect = riDialog.MultiSelect;
         _WinDlg.Items = riDialog.Items;
@@ -2969,8 +2971,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.ListSelectDialog _RIDialog;
-      private AgeyevAV.ExtForms.ListSelectDialog _WinDlg;
+      private FreeLibSet.RI.ListSelectDialog _RIDialog;
+      private FreeLibSet.Forms.ListSelectDialog _WinDlg;
 
       #endregion
 
@@ -3002,10 +3004,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public RadioSelectDialogItem(AgeyevAV.RI.RadioSelectDialog riDialog)
+      public RadioSelectDialogItem(FreeLibSet.RI.RadioSelectDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.RadioSelectDialog();
+        _WinDlg = new FreeLibSet.Forms.RadioSelectDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Items = riDialog.Items;
         _WinDlg.GroupTitle = riDialog.GroupTitle;
@@ -3015,8 +3017,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.RadioSelectDialog _RIDialog;
-      private AgeyevAV.ExtForms.RadioSelectDialog _WinDlg;
+      private FreeLibSet.RI.RadioSelectDialog _RIDialog;
+      private FreeLibSet.Forms.RadioSelectDialog _WinDlg;
 
       #endregion
 
@@ -3048,10 +3050,10 @@ namespace AgeyevAV.ExtForms.RI
     {
       #region Конструктор
 
-      public InputGridDataDialogItem(AgeyevAV.RI.InputGridDataDialog riDialog)
+      public InputGridDataDialogItem(FreeLibSet.RI.InputGridDataDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new AgeyevAV.ExtForms.InputGridDataDialog();
+        _WinDlg = new FreeLibSet.Forms.InputGridDataDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.FixedRows = riDialog.FixedRows;
@@ -3063,8 +3065,8 @@ namespace AgeyevAV.ExtForms.RI
 
       #region Свойства
 
-      private AgeyevAV.RI.InputGridDataDialog _RIDialog;
-      private AgeyevAV.ExtForms.InputGridDataDialog _WinDlg;
+      private FreeLibSet.RI.InputGridDataDialog _RIDialog;
+      private FreeLibSet.Forms.InputGridDataDialog _WinDlg;
 
       #endregion
 

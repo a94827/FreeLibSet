@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Drawing;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region ListControlImageEventHandler
 

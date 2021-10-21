@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   partial class GroupGridFilterForm
   {
@@ -30,7 +30,7 @@ namespace AgeyevAV.ExtForms.Docs
     {
       this.panel1 = new System.Windows.Forms.Panel();
       this.grpTree = new System.Windows.Forms.GroupBox();
-      this.tvGroup = new AgeyevAV.ExtForms.TreeViewAdv();
+      this.tvGroup = new FreeLibSet.Controls.TreeViewAdv();
       this.cbIncludeNestedGroups = new System.Windows.Forms.CheckBox();
       this.MainPanel.SuspendLayout();
       this.panel1.SuspendLayout();
@@ -102,7 +102,7 @@ namespace AgeyevAV.ExtForms.Docs
 
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.GroupBox grpTree;
-    private TreeViewAdv tvGroup;
+    private FreeLibSet.Controls.TreeViewAdv tvGroup;
     private System.Windows.Forms.CheckBox cbIncludeNestedGroups;
   }
 }

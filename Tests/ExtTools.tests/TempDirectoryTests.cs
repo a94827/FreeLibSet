@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using AgeyevAV.IO;
-using AgeyevAV;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 namespace ExtTools.tests
 {

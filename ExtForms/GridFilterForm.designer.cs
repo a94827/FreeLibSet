@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Forms
 {
   partial class GridFilterForm
   {
@@ -32,7 +32,7 @@
       this.btnCopy = new System.Windows.Forms.Button();
       this.btnPaste = new System.Windows.Forms.Button();
       this.grpSets = new System.Windows.Forms.GroupBox();
-      this.SetComboBox = new AgeyevAV.ExtForms.ParamSetComboBox();
+      this.SetComboBox = new FreeLibSet.Controls.ParamSetComboBox();
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnOk = new System.Windows.Forms.Button();
       this.panSpb = new System.Windows.Forms.Panel();
@@ -162,7 +162,7 @@
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.Panel panSpb;
     private System.Windows.Forms.GroupBox grpSets;
-    private ParamSetComboBox SetComboBox;
+    private FreeLibSet.Controls.ParamSetComboBox SetComboBox;
     private System.Windows.Forms.DataGridView FilterGrid;
     private System.Windows.Forms.Button btnCopy;
     private System.Windows.Forms.Button btnPaste;

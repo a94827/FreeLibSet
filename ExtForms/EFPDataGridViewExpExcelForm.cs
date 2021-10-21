@@ -5,13 +5,13 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
 using System.Drawing.Printing;
 using System.Xml;
 using System.IO;
-using AgeyevAV;
-using AgeyevAV.OLE.Excel;
-using AgeyevAV.IO;
+
+using FreeLibSet.OLE.Excel;
+using FreeLibSet.IO;
+using FreeLibSet.Shell;
 
 /*
  * The BSD License
@@ -42,7 +42,7 @@ using AgeyevAV.IO;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма настройки параметров при передаче в Excel
@@ -466,7 +466,7 @@ namespace AgeyevAV.ExtForms
             clr = CellArgs.CellStyle.ForeColor;
             if ((!clr.IsEmpty) && (!clr.IsSystemColor))
             {
-              AgeyevAV.OLE.Excel.Font Font = CurrCell.Font;
+              FreeLibSet.OLE.Excel.Font Font = CurrCell.Font;
               Font.Color = clr;
             }
           }

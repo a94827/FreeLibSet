@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 
 /*
  * The BSD License
@@ -33,7 +33,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Параметры для вызова метода интерфейса IEFPCormCreator.CreateForm()

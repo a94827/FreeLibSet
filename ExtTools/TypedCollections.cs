@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections;
 using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,8 +37,9 @@ using System.Runtime.InteropServices;
 
 // Типизированные коллекции общего назначения
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
+
   #region Интерфейс IReadOnlyObject
 
   /// <summary>
@@ -65,7 +67,10 @@ namespace AgeyevAV
   }
 
   #endregion
+}
 
+namespace FreeLibSet.Collections
+{
   /// <summary>
   /// Список пар "Код"-"Значение", отсортированный не по ключу, как SortedList, а по порядку добавления элементов
   /// Порядок пар, возвращаемых GetEnumerator(), также соответствует порядку добавления
@@ -5331,8 +5336,8 @@ namespace AgeyevAV
       {
         switch (value)
         {
-          case AgeyevAV.UnknownItemPosition.First:
-          case AgeyevAV.UnknownItemPosition.Last:
+          case FreeLibSet.Collections.UnknownItemPosition.First:
+          case FreeLibSet.Collections.UnknownItemPosition.Last:
             FUnknownItemPosition = value;
             break;
           default:
@@ -5375,7 +5380,7 @@ namespace AgeyevAV
           return intf2.CompareTo(y);
       }
 
-      if (UnknownItemPosition == AgeyevAV.UnknownItemPosition.Last)
+      if (UnknownItemPosition == FreeLibSet.Collections.UnknownItemPosition.Last)
       {
         if (px < 0)
           px = int.MaxValue;

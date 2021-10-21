@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using System.ComponentModel;
 using System.Drawing;
+using FreeLibSet.Forms;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using System.Drawing;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Расширение поля ввода для ввода числовых значений (по типу

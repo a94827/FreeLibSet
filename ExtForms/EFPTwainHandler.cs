@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TwainLib;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections;
 using System.Threading;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
+using FreeLibSet.Win32.Twain;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Реализация сканирования через интерфейс TWAIN.
@@ -113,7 +114,7 @@ namespace AgeyevAV.ExtForms
 
     #region Свойства
 
-    private Twain _MainObj;
+    private TwainObject _MainObj;
 
     #endregion
 
@@ -189,7 +190,7 @@ namespace AgeyevAV.ExtForms
 
       if (_MainObj == null)
       {
-        _MainObj = new Twain();
+        _MainObj = new TwainObject();
         _MainObj.Init(EFPApp.MainWindowHandle);
       }
     }
@@ -240,7 +241,7 @@ namespace AgeyevAV.ExtForms
 
           for (int i = 0; i < pics.Count; i++)
           {
-            IntPtr bmpptr = Twain.GlobalLock(pics[i]);
+            IntPtr bmpptr = TwainObject.GlobalLock(pics[i]);
             Rectangle bmprect;
             IntPtr pixptr = GetPixelInfo(bmpptr, out bmprect);
 

@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using System.Diagnostics;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +36,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// Вспомогательные статические методы и свойства для работы с ФИАС.
@@ -885,7 +887,7 @@ namespace AgeyevAV.FIAS
 
     #region Почтовый индекс
 
-    internal static readonly AgeyevAV.TextMasks.SimpleDigitalMaskProvider PostalCodeMaskProvider = new AgeyevAV.TextMasks.SimpleDigitalMaskProvider(6);
+    internal static readonly FreeLibSet.Formatting.SimpleDigitalMaskProvider PostalCodeMaskProvider = new FreeLibSet.Formatting.SimpleDigitalMaskProvider(6);
 
     #endregion
 

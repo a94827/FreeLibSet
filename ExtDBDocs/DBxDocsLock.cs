@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
 using System.Data;
 using System.Collections;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.Runtime.Serialization;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -39,7 +41,7 @@ using System.Runtime.Serialization;
 
 // Кратковременные и долговременные блокировки документов
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Хранилище блокировок по разнотипным документам

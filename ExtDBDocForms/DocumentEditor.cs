@@ -5,15 +5,17 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.ComponentModel;
 using System.Collections;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
-using AgeyevAV.Logging;
-using AgeyevAV.Remoting;
+
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Logging;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
+using FreeLibSet.Forms.Diagnostics;
 
 /*
  * The BSD License
@@ -44,7 +46,7 @@ using AgeyevAV.Remoting;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Редактор документов всех видов

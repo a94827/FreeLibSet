@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Windows.Forms;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
 
 /*
  * The BSD License
@@ -42,7 +42,7 @@ using AgeyevAV.ExtDB.Docs;
  * Специальные версии для управляющих эоементов и включающего флажка CheckBox
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Decimal
 

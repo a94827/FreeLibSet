@@ -5,9 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV;
-using AgeyevAV.Config;
-using AgeyevAV.Logging;
+
+using FreeLibSet.Config;
+using FreeLibSet.Logging;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -99,7 +101,7 @@ using AgeyevAV.Logging;
  * Для поиска извлекаются данные только этих частей и помещаются во временную секцию
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс формы для параметров отчета с использованимем расширенных
@@ -169,7 +171,7 @@ namespace AgeyevAV.ExtForms
     /// <summary>
     /// Комбоблок выбора готового набора параметров
     /// </summary>
-    public ParamSetComboBox SetComboBox { get { return FSetComboBox; } }
+    public FreeLibSet.Controls.ParamSetComboBox SetComboBox { get { return FSetComboBox; } }
 
     #endregion
 
@@ -748,7 +750,7 @@ namespace AgeyevAV.ExtForms
         }
         catch (Exception e)
         {
-          DebugTools.ShowException(e, "Ошибка чтения списка истории параметров отчета");
+          EFPApp.ShowException(e, "Ошибка чтения списка истории параметров отчета");
         }
 
         if (_UseAuxText)
@@ -1356,7 +1358,7 @@ namespace AgeyevAV.ExtForms
     /// </summary>
     /// <param name="Config"></param>
     /// <param name="Part"></param>
-    public override void WriteConfig(AgeyevAV.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void WriteConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
     {
       switch (Part)
       {
@@ -1371,7 +1373,7 @@ namespace AgeyevAV.ExtForms
     /// </summary>
     /// <param name="Config"></param>
     /// <param name="Part"></param>
-    public override void ReadConfig(AgeyevAV.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void ReadConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
     {
       switch (Part)
       {

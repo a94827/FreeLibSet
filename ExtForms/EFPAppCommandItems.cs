@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using System.ComponentModel;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление EFPAppStdCommandItems
 

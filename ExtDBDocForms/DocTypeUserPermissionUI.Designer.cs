@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class EditDocTypePermissionForm
   {
@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.MainPanel = new System.Windows.Forms.Panel();
-      this.grpMode = new AgeyevAV.ExtForms.RadioGroupBox();
+      this.grpMode = new FreeLibSet.Controls.RadioGroupBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label1 = new System.Windows.Forms.Label();
       this.panel1 = new System.Windows.Forms.Panel();
@@ -149,7 +149,7 @@
     #endregion
 
     private System.Windows.Forms.GroupBox groupBox1;
-    private AgeyevAV.ExtForms.RadioGroupBox grpMode;
+    private FreeLibSet.Controls.RadioGroupBox grpMode;
     private System.Windows.Forms.ComboBox cbDocType;
     public System.Windows.Forms.Panel MainPanel;
     private System.Windows.Forms.Panel panel1;

@@ -36,7 +36,7 @@ using System.ComponentModel;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Маленькая кнопка без фокуса ввода для размещения справа от управляющего элемента

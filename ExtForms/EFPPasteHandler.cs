@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +35,7 @@ using System.IO;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление
 
@@ -824,7 +825,7 @@ namespace AgeyevAV.ExtForms
       EFPPreviewDataObjectEventArgs Args = new EFPPreviewDataObjectEventArgs(this, data, reason);
       if (Preview == null)
       {
-        DebugTools.DebugObject(Args.GetData(), PreviewTitle);
+        FreeLibSet.Forms.Diagnostics.DebugTools.DebugObject(Args.GetData(), PreviewTitle);
         return true;
       }
 

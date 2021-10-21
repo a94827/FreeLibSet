@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма для RadioSelectDialog

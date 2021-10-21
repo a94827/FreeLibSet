@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   /// <summary>
   /// Структура для подсчета минимального и максимального значений целого числа.

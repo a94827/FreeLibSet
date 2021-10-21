@@ -2,13 +2,14 @@
 using System.Data;
 using System.Windows.Forms;
 using System.Collections;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Collections.Generic;
 using System.ComponentModel;
-using AgeyevAV;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtDB.Docs;
+
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using AgeyevAV.ExtDB.Docs;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Интерфейс ISubDocumentEditorCaller
 
@@ -623,7 +624,7 @@ namespace AgeyevAV.ExtForms.Docs
 
     private void ciDebugChanges_Click(object sender, EventArgs args)
     {
-      DebugTools.DebugChangeInfo(ChangeInfo, "Изменения значений");
+      FreeLibSet.Forms.Diagnostics.DebugTools.DebugChangeInfo(ChangeInfo, "Изменения значений");
     }
 
     #endregion

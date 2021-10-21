@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Data.Common;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.Data;
 using System.Diagnostics;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Обработчик двоичных данных и файлов, хранящихся в базе данных.

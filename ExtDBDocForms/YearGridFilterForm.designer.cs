@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class YearGridFilterForm
   {
@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.edYear = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      this.edYear = new FreeLibSet.Controls.ExtNumericUpDown();
       this.panel1 = new System.Windows.Forms.Panel();
       this.rbFilter = new System.Windows.Forms.RadioButton();
       this.rbNoFilter = new System.Windows.Forms.RadioButton();
@@ -154,7 +154,7 @@
     #endregion
 
     private System.Windows.Forms.GroupBox groupBox1;
-    private AgeyevAV.ExtForms.ExtNumericUpDown edYear;
+    private FreeLibSet.Controls.ExtNumericUpDown edYear;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.RadioButton rbFilter;
     private System.Windows.Forms.RadioButton rbNoFilter;

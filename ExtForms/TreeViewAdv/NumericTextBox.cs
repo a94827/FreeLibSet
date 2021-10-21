@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Globalization;
+using FreeLibSet.Forms;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -41,7 +43,7 @@ using System.Globalization;
 
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Restricts the entry of characters to digits, the negative sign,

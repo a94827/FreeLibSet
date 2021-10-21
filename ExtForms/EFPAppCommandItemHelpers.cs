@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Реализации стандартных команд главного меню.

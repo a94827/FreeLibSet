@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using System.Data.Common;
 using System.Data;
 using System.Diagnostics;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using AgeyevAV.Remoting;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// Небуферизованный источник данных для загрузки страниц классификатора.
@@ -78,7 +80,7 @@ namespace AgeyevAV.FIAS
 
     public FiasDBStat DBStat { get { return _FiasDB.DBStat; } }
 
-    AgeyevAV.Remoting.DistributedCallData IFiasSource.StartDistributedCall(AgeyevAV.Remoting.NamedValues args, object userData)
+    FreeLibSet.Remoting.DistributedCallData IFiasSource.StartDistributedCall(FreeLibSet.Remoting.NamedValues args, object userData)
     {
       throw new InvalidOperationException("Этот метод должен вызываться для FiasDB.Source");
     }

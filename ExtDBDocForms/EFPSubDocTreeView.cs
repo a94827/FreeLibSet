@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
 using System.ComponentModel;
 using System.Data;
-using AgeyevAV.Trees;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -37,7 +39,7 @@ using AgeyevAV.Trees;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Провайдер иерархического просмотра подддокументов

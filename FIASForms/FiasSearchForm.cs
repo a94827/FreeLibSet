@@ -5,8 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.FIAS;
-using AgeyevAV.Config;
+using FreeLibSet.FIAS;
+using FreeLibSet.Config;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Форма поиска адресного объекта

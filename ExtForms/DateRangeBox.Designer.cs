@@ -1,6 +1,6 @@
 ﻿#pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   partial class DateRangeBox
   {
@@ -33,15 +33,15 @@ namespace AgeyevAV.ExtForms
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DateRangeBox));
       this.TheLP = new System.Windows.Forms.TableLayoutPanel();
-      this.TheRightButton = new AgeyevAV.ExtForms.ControlRightButton();
+      this.TheRightButton = new FreeLibSet.Controls.ControlRightButton();
       this.TheImageList = new System.Windows.Forms.ImageList(this.components);
       this.lblPeriod = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.FirstDate = new AgeyevAV.ExtForms.DateBox();
+      this.FirstDate = new FreeLibSet.Controls.DateBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.TheMenuButton = new AgeyevAV.ExtForms.ControlRightButton();
-      this.LastDate = new AgeyevAV.ExtForms.DateBox();
-      this.TheLeftButton = new AgeyevAV.ExtForms.ControlRightButton();
+      this.TheMenuButton = new FreeLibSet.Controls.ControlRightButton();
+      this.LastDate = new FreeLibSet.Controls.DateBox();
+      this.TheLeftButton = new FreeLibSet.Controls.ControlRightButton();
       this.TheLP.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -204,8 +204,8 @@ namespace AgeyevAV.ExtForms
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label lblPeriod;
-    public AgeyevAV.ExtForms.DateBox FirstDate;
-    public AgeyevAV.ExtForms.DateBox LastDate;
+    public FreeLibSet.Controls.DateBox FirstDate;
+    public FreeLibSet.Controls.DateBox LastDate;
     private System.Windows.Forms.ImageList TheImageList;
     private ControlRightButton TheMenuButton;
     internal ControlRightButton TheLeftButton;

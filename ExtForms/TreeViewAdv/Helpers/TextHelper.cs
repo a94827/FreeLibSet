@@ -41,7 +41,7 @@ using System.Drawing;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   internal static class TextHelper
   {

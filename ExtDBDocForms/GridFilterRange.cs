@@ -1,7 +1,10 @@
-﻿using AgeyevAV.ExtDB.Docs;
+﻿using FreeLibSet.Data.Docs;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -34,7 +37,7 @@ using System.Text;
 
 // Фильтры табличного просмотра по одному полю. В фильтрах можно задавать диапаон значений для поля.
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>

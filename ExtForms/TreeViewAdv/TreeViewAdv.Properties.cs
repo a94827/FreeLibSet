@@ -6,8 +6,8 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
 
-using AgeyevAV.ExtForms.NodeControls;
-using AgeyevAV.Trees;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Models.Tree;
 
 /*
  * The BSD License
@@ -48,7 +48,7 @@ using AgeyevAV.Trees;
 #pragma warning disable 1591
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   public partial class TreeViewAdv
   {

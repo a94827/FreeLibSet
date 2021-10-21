@@ -42,7 +42,7 @@ using System.ComponentModel.Design;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   public class StringCollectionEditor : CollectionEditor
   {

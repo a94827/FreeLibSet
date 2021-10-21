@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Trees;
+using FreeLibSet.Models.Tree;
 
 /*
  * The BSD License
@@ -41,7 +41,7 @@ using AgeyevAV.Trees;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
 	/// <summary>
 	/// Converts IEnumerable interface to ITreeModel. 

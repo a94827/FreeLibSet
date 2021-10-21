@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.DependedValues;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
+using FreeLibSet.Controls;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Базовый класс для EFPDocComboBoxBase и EFPMultiDocComboBoxBase.

@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   partial class FiasSearchForm
   {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// »звлечение значени€ пол€ с заданным именем из строк DataRow.

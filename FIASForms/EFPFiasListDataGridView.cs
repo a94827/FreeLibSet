@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.FIAS;
+using FreeLibSet.FIAS;
 using System.Data;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +36,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Табличный просмотр справочника адресных объектов, домов или помещений

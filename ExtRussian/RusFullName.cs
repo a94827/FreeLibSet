@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -31,7 +33,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Russian
+namespace FreeLibSet.Russian
 {
   #region Перечисление RusFullNamePart
 

@@ -8,7 +8,7 @@
     <ProjectGuid>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgeyevAV</RootNamespace>
+    <RootNamespace>FreeLibSet.Core</RootNamespace>
     <AssemblyName>ExtTools</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="DataTools.Csv.cs" />
     <Compile Include="DepTools.cs" />
+    <Compile Include="FileAssociations.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

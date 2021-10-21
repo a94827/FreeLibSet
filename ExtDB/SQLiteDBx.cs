@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
 using System.Data;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Data.Common;
 using System.Diagnostics;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -39,7 +40,7 @@ using AgeyevAV.Logging;
 
 // Провайдер для доступа к базе данных SQLite
 
-namespace AgeyevAV.ExtDB.SQLite
+namespace FreeLibSet.Data.SQLite
 {
   /// <summary>
   /// База данных PostGreSQL через провайдер Npgsql.

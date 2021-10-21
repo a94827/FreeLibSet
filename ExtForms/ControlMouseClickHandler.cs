@@ -33,7 +33,7 @@ using System.Drawing;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Обработчик событий от мыши для управляющего элемента, в котором не установлены

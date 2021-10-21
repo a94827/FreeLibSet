@@ -4,8 +4,11 @@ using System.Text;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using AgeyevAV.Trees;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Controls;
+using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +39,7 @@ using AgeyevAV.ExtForms.NodeControls;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Цветовые атрибуты
 #if XXX

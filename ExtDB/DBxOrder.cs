@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
-using AgeyevAV;
+
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -47,7 +48,7 @@ using AgeyevAV;
  * 5. DataOrderIsNullColumn хранит тип данных (?)
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Последовательность полей для сортировки с признаками DESC.

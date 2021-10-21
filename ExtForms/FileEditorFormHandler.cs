@@ -1,4 +1,4 @@
-﻿using AgeyevAV.IO;
+﻿using FreeLibSet.IO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,7 +35,7 @@ using System.Windows.Forms;
 
 #pragma warning disable 1591 // пока не утрясется
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Реализация общих функций для редактора файла

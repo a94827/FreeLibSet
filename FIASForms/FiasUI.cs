@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.FIAS;
+using FreeLibSet.FIAS;
 using System.Windows.Forms;
 using System.Data;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -35,7 +37,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Настройки пользовательского интерфейса для работы с ФИАС.
@@ -44,7 +46,7 @@ namespace AgeyevAV.ExtForms.FIAS
   /// Обращение к методам должно выполняться из основного потока приложения, в котором вызван EFApp.InitApp().
   /// Для поддержки удаленного интерфейса добавьте ссылку на объект FiasUI в список EFPApp.RICreators,
   /// </summary>
-  public sealed class FiasUI : AgeyevAV.ExtForms.RI.IEFPAppRICreator
+  public sealed class FiasUI : FreeLibSet.Forms.RI.IEFPAppRICreator
   {
     #region Конструктор
 
@@ -427,40 +429,40 @@ namespace AgeyevAV.ExtForms.FIAS
 
     #region IEFPAppRICreator Members
 
-    AgeyevAV.ExtForms.RI.IEFPAppRIItem AgeyevAV.ExtForms.RI.IEFPAppRICreator.Create(AgeyevAV.RI.RIItem item, EFPBaseProvider baseProvider)
+    FreeLibSet.Forms.RI.IEFPAppRIItem FreeLibSet.Forms.RI.IEFPAppRICreator.Create(FreeLibSet.RI.RIItem item, EFPBaseProvider baseProvider)
     {
-      if (item is AgeyevAV.FIAS.RI.FiasAddressPanel)
-        return new FiasAddressPanelItem(this, (AgeyevAV.FIAS.RI.FiasAddressPanel)item, baseProvider);
-      if (item is AgeyevAV.FIAS.RI.FiasAddressComboBox)
-        return new FiasAddressComboBoxItem(this, (AgeyevAV.FIAS.RI.FiasAddressComboBox)item, baseProvider);
-      if (item is AgeyevAV.FIAS.RI.FiasAddressDialog)
-        return new FiasAddressDialogItem(this, (AgeyevAV.FIAS.RI.FiasAddressDialog)item);
+      if (item is FreeLibSet.FIAS.RI.FiasAddressPanel)
+        return new FiasAddressPanelItem(this, (FreeLibSet.FIAS.RI.FiasAddressPanel)item, baseProvider);
+      if (item is FreeLibSet.FIAS.RI.FiasAddressComboBox)
+        return new FiasAddressComboBoxItem(this, (FreeLibSet.FIAS.RI.FiasAddressComboBox)item, baseProvider);
+      if (item is FreeLibSet.FIAS.RI.FiasAddressDialog)
+        return new FiasAddressDialogItem(this, (FreeLibSet.FIAS.RI.FiasAddressDialog)item);
 
       return null;
     }
 
-    private class FiasAddressPanelItem : EFPFiasAddressPanel, AgeyevAV.ExtForms.RI.IEFPAppRIControlItem
+    private class FiasAddressPanelItem : EFPFiasAddressPanel, FreeLibSet.Forms.RI.IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public FiasAddressPanelItem(FiasUI ui, AgeyevAV.FIAS.RI.FiasAddressPanel riItem, EFPBaseProvider baseProvider)
+      public FiasAddressPanelItem(FiasUI ui, FreeLibSet.FIAS.RI.FiasAddressPanel riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new FiasAddressPanel(), ui, riItem.EditorLevel)
       {
         base.PostalCodeEditable = riItem.PostalCodeEditable;
         base.MinRefBookLevel = riItem.MinRefBookLevel;
         switch (riItem.CanBeEmptyMode)
         {
-          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
         switch (riItem.CanBePartialMode)
         {
-          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -469,7 +471,7 @@ namespace AgeyevAV.ExtForms.FIAS
         _RIItem = riItem;
       }
 
-      AgeyevAV.FIAS.RI.FiasAddressPanel _RIItem;
+      FreeLibSet.FIAS.RI.FiasAddressPanel _RIItem;
 
       #endregion
 
@@ -489,11 +491,11 @@ namespace AgeyevAV.ExtForms.FIAS
       #endregion
     }
 
-    private class FiasAddressComboBoxItem : EFPFiasAddressComboBox, AgeyevAV.ExtForms.RI.IEFPAppRIControlItem
+    private class FiasAddressComboBoxItem : EFPFiasAddressComboBox, FreeLibSet.Forms.RI.IEFPAppRIControlItem
     {
       #region Конструктор
 
-      public FiasAddressComboBoxItem(FiasUI ui, AgeyevAV.FIAS.RI.FiasAddressComboBox riItem, EFPBaseProvider baseProvider)
+      public FiasAddressComboBoxItem(FiasUI ui, FreeLibSet.FIAS.RI.FiasAddressComboBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new UserSelComboBox(), ui)
       {
         base.EditorLevel = riItem.EditorLevel;
@@ -501,17 +503,17 @@ namespace AgeyevAV.ExtForms.FIAS
         base.MinRefBookLevel = riItem.MinRefBookLevel;
         switch (riItem.CanBeEmptyMode)
         {
-          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
         switch (riItem.CanBePartialMode)
         {
-          case AgeyevAV.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -523,7 +525,7 @@ namespace AgeyevAV.ExtForms.FIAS
         _RIItem = riItem;
       }
 
-      AgeyevAV.FIAS.RI.FiasAddressComboBox _RIItem;
+      FreeLibSet.FIAS.RI.FiasAddressComboBox _RIItem;
 
       #endregion
 
@@ -543,16 +545,16 @@ namespace AgeyevAV.ExtForms.FIAS
       #endregion
     }
 
-    private class FiasAddressDialogItem: AgeyevAV.ExtForms.RI.IEFPAppRIStandardDialogItem
+    private class FiasAddressDialogItem: FreeLibSet.Forms.RI.IEFPAppRIStandardDialogItem
     {
       #region Конструктор
 
-      public FiasAddressDialogItem(FiasUI ui, AgeyevAV.FIAS.RI.FiasAddressDialog riDialog)
+      public FiasAddressDialogItem(FiasUI ui, FreeLibSet.FIAS.RI.FiasAddressDialog riDialog)
       {
         riDialog.InternalSetSource(ui.Source);
         _RIDialog = riDialog;
 
-        _WinDlg = new AgeyevAV.ExtForms.FIAS.FiasAddressDialog(ui);
+        _WinDlg = new FreeLibSet.Forms.FIAS.FiasAddressDialog(ui);
         _WinDlg.Title = riDialog.Title;
         //_WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.EditorLevel = riDialog.EditorLevel;
@@ -560,25 +562,25 @@ namespace AgeyevAV.ExtForms.FIAS
         _WinDlg.MinRefBookLevel = riDialog.MinRefBookLevel;
         switch (riDialog.CanBeEmptyMode)
         {
-          case AgeyevAV.RI.CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }
         switch (riDialog.CanBePartialMode)
         {
-          case AgeyevAV.RI.CanBeEmptyMode.Error: _WinDlg.CanBePartial = false; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Warning: _WinDlg.CanBePartial = true; _WinDlg.WarningIfPartial = true; break;
-          case AgeyevAV.RI.CanBeEmptyMode.Ok: _WinDlg.CanBePartial = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Error: _WinDlg.CanBePartial = false; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Warning: _WinDlg.CanBePartial = true; _WinDlg.WarningIfPartial = true; break;
+          case FreeLibSet.RI.CanBeEmptyMode.Ok: _WinDlg.CanBePartial = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }
         _WinDlg.ReadOnly = riDialog.ReadOnly;
       }
 
-      private AgeyevAV.FIAS.RI.FiasAddressDialog _RIDialog;
-      private AgeyevAV.ExtForms.FIAS.FiasAddressDialog _WinDlg;
+      private FreeLibSet.FIAS.RI.FiasAddressDialog _RIDialog;
+      private FreeLibSet.Forms.FIAS.FiasAddressDialog _WinDlg;
 
       #endregion
 
@@ -594,9 +596,9 @@ namespace AgeyevAV.ExtForms.FIAS
         _RIDialog.Address = _WinDlg.Address;
       }
 
-      public AgeyevAV.RI.DialogResult ShowDialog()
+      public FreeLibSet.RI.DialogResult ShowDialog()
       {
-        return (AgeyevAV.RI.DialogResult)(int)(_WinDlg.ShowDialog());
+        return (FreeLibSet.RI.DialogResult)(int)(_WinDlg.ShowDialog());
       }
 
       #endregion

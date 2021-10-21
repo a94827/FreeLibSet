@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 using System.IO;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.IO
+namespace FreeLibSet.IO
 {
 
   /// <summary>

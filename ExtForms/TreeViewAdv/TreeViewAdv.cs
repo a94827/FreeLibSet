@@ -8,8 +8,8 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Collections;
 
-using AgeyevAV.ExtForms.NodeControls;
-using AgeyevAV.Trees;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Models.Tree;
 
 /*
  * The BSD License
@@ -55,7 +55,7 @@ using AgeyevAV.Trees;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Extensible advanced <see cref="TreeView"/> implemented in 100% managed C# code.

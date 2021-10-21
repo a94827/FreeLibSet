@@ -5,10 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.IO;
-using AgeyevAV.Logging;
+using FreeLibSet.IO;
+using FreeLibSet.Logging;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms.Diagnostics
 {
   internal partial class ShowExceptionMsgBoxForm : Form
   {

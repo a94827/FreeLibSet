@@ -5,9 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data.Docs;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   internal partial class GroupGridFilterForm : OKCancelForm
   {

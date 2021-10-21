@@ -5,12 +5,13 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV;
-using AgeyevAV.Config;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Forms;
+
+using FreeLibSet.Config;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -41,7 +42,7 @@ using AgeyevAV.ExtDB.Docs;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Форма для фильтра по кодам

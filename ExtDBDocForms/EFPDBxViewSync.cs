@@ -4,7 +4,7 @@ using System.Text;
 using System.Data;
 using System.Runtime.InteropServices;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Синхронизация между EFPDBxTreeView и EFPDBxGridView или любыми другимм просмотрами, реализующими IEFPDBxView,

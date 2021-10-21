@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -81,7 +83,7 @@ using System.Data;
  * 
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   #region Перечисления
 
@@ -1533,7 +1535,7 @@ namespace AgeyevAV.ExtDB.Docs
       return DocProvider.InternalGetBinData1(tableName, columnName, wantedId, docVersion, PreloadIds);
     }
 
-    internal object InternalSetFile(AgeyevAV.IO.FileContainer file)
+    internal object InternalSetFile(FreeLibSet.IO.FileContainer file)
     {
       if (file == null)
         return DBNull.Value;
@@ -1627,11 +1629,11 @@ namespace AgeyevAV.ExtDB.Docs
     }
 
 
-    internal AgeyevAV.IO.StoredFileInfo InternalGetDBFileInfo(object fileId, string docTypeName, Int32 docId, string subDocTypeName, Int32 subDocId, string columnName)
+    internal FreeLibSet.IO.StoredFileInfo InternalGetDBFileInfo(object fileId, string docTypeName, Int32 docId, string subDocTypeName, Int32 subDocId, string columnName)
     {
       Int32 fileId2 = DataTools.GetInt(fileId);
       if (fileId2 == 0)
-        return AgeyevAV.IO.StoredFileInfo.Empty;
+        return FreeLibSet.IO.StoredFileInfo.Empty;
 
       #region Поиск во временной таблице
 
@@ -1644,7 +1646,7 @@ namespace AgeyevAV.ExtDB.Docs
         DataRow Row = tblFileNames.Rows.Find(fileId2);
         if (Row == null)
           throw new InvalidOperationException("Запрошен файл для несуществующего временного идентификатора Id=" + fileId2.ToString());
-        return new AgeyevAV.IO.StoredFileInfo((string)(Row["Name"]),
+        return new FreeLibSet.IO.StoredFileInfo((string)(Row["Name"]),
           (int)(Row["Length"]), DataTools.GetNullableDateTime(Row, "CreationTime"), DataTools.GetNullableDateTime(Row, "LastWriteTime"));
       }
 
@@ -1653,7 +1655,7 @@ namespace AgeyevAV.ExtDB.Docs
       return DocProvider.GetDBFileInfo(fileId2);
     }
 
-    internal AgeyevAV.IO.FileContainer InternalGetDBFile(object fileId, string docTypeName, Int32 docId, string subDocTypeName, Int32 subDocId, string columnName)
+    internal FreeLibSet.IO.FileContainer InternalGetDBFile(object fileId, string docTypeName, Int32 docId, string subDocTypeName, Int32 subDocId, string columnName)
     {
       Int32 fileId2 = DataTools.GetInt(fileId);
       if (fileId2 == 0)
@@ -1670,14 +1672,14 @@ namespace AgeyevAV.ExtDB.Docs
         DataRow Row = tblFileNames.Rows.Find(fileId2);
         if (Row == null)
           throw new InvalidOperationException("Запрошен файл для несуществующего временного идентификатора Id=" + fileId2.ToString());
-        AgeyevAV.IO.StoredFileInfo FileInfo = new AgeyevAV.IO.StoredFileInfo((string)(Row["Name"]),
+        FreeLibSet.IO.StoredFileInfo FileInfo = new FreeLibSet.IO.StoredFileInfo((string)(Row["Name"]),
           (int)(Row["Length"]), DataTools.GetNullableDateTime(Row, "CreationTime"), DataTools.GetNullableDateTime(Row, "LastWriteTime"));
 
         Int32 DataId = (Int32)(Row["Data"]);
         // DataId может быть и фиктивным идентификатором, и реальным
         // Если DataId>0, то все равно придется обращаться к серверу
         byte[] Contents = InternalGetBinData(DataId, docTypeName, docId, subDocTypeName, subDocId, columnName);
-        return new AgeyevAV.IO.FileContainer(FileInfo, Contents);
+        return new FreeLibSet.IO.FileContainer(FileInfo, Contents);
       }
 
       #endregion

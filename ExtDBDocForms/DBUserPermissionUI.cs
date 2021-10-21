@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using AgeyevAV.ExtDB.Docs;
 // Пользовательский интерфейс для конкретных видов разрешений
 // Классы, производные от UserPermissionUI
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Абстрактный класс интефрейса разрешения, задаваемого перечислимым значением.

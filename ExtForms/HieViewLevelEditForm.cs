@@ -5,10 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV;
-using AgeyevAV.Config;
 
-namespace AgeyevAV.ExtForms
+using FreeLibSet.Config;
+
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма настройки уровней.

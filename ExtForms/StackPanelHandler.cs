@@ -35,7 +35,7 @@ using System.Drawing;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /*
    * Реализация сборки панелей блока диалога с вертикальным размещением элементов.

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Parsing;
+using FreeLibSet.Parsing;
 using System.Runtime.InteropServices;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// Выполняет парсинг строки форматирования, применяемой методом FiasHandler.Format()

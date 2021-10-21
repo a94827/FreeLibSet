@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using System.Data;
 using System.Runtime.Serialization;
-using AgeyevAV;
+
 
 /*
  * The BSD License
@@ -36,7 +36,7 @@ using AgeyevAV;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Обработка таблицы "DataVersion" в базе данных документов.

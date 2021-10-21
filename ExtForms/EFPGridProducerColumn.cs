@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Collections.Specialized;
 using System.Windows.Forms;
-using AgeyevAV.TextMasks;
-using AgeyevAV.DBF;
+using FreeLibSet.Formatting;
+using FreeLibSet.DBF;
 using System.Data;
 using System.Globalization;
+using FreeLibSet.Collections;
+using FreeLibSet.Controls;
+using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -40,7 +44,7 @@ using System.Globalization;
 
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Реализация свойства EFPGridProducer.Columns

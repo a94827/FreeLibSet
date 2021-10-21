@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using AgeyevAV.ExtDB.SQLite;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data.SQLite;
+using FreeLibSet.Data;
 using System.Data;
-using AgeyevAV;
+using FreeLibSet.Core;
 
 namespace ExtDB.tests
 {

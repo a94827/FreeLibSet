@@ -1,4 +1,4 @@
-﻿using AgeyevAV.Config;
+﻿using FreeLibSet.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,9 +6,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.TextMasks;
+using FreeLibSet.Formatting;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма для ввода значения в поле

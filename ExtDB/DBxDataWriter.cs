@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Data.Common;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using System.Data.Common;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   #region Перечисление DBxDataWriterMode
 

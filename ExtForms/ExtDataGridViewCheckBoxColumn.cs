@@ -36,7 +36,7 @@ using System.Windows.Forms.VisualStyles;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   public class ExtDataGridViewCheckBoxColumn : DataGridViewCheckBoxColumn
   {

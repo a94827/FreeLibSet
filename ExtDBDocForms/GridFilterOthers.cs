@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Windows.Forms;
-using AgeyevAV;
-using AgeyevAV.ExtForms;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Config;
+
+using FreeLibSet.Forms;
+using FreeLibSet.Data;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Простой фильтр по значению текстового поля (проверка поля на равенство 

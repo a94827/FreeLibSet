@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -50,7 +51,7 @@ using AgeyevAV.Config;
  *    при переходе границы возникнет исключение, т.к. UserPermission и DBxDocPermissions не являются сериализуемыми
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Разрешение на просмотр/редактирование для одного или несколько видов документов.

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 
 /*
  * The BSD License
@@ -33,7 +33,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Интефрейс сохранения изображений предварительного просмотра композиций интерфейса.

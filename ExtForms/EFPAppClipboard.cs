@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Drawing;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Расширение работы с буфером обмена.

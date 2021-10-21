@@ -39,7 +39,7 @@
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
 	partial class TreeViewAdv
 	{
@@ -56,7 +56,7 @@ namespace AgeyevAV.ExtForms
 				if (_markPen != null) _markPen.Dispose();
 			}
 
-      AgeyevAV.ExtForms.NodeControls.ExpandingIcon.IconChanged -= ExpandingIconChanged; // 16.01.2018 - Агеев А.В.
+      FreeLibSet.Controls.TreeViewAdvNodeControls.ExpandingIcon.IconChanged -= ExpandingIconChanged; // 16.01.2018 - Агеев А.В.
 
 			base.Dispose(disposing);
 		}

@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Controls
 {
   partial class MonthDayBox
   {
@@ -28,7 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.edDay = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      this.edDay = new FreeLibSet.Controls.ExtNumericUpDown();
       this.cbMonth = new System.Windows.Forms.ComboBox();
       this.SuspendLayout();
       // 
@@ -64,7 +64,7 @@
 
     #endregion
 
-    private AgeyevAV.ExtForms.ExtNumericUpDown edDay;
+    private FreeLibSet.Controls.ExtNumericUpDown edDay;
     private System.Windows.Forms.ComboBox cbMonth;
   }
 }

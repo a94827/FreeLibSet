@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.IO;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -39,7 +39,7 @@ using System.Runtime.CompilerServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   #region Перечисление WinNTProductType
 

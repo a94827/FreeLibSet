@@ -38,7 +38,7 @@ using System.Windows.Forms;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   internal abstract class InputState
   {

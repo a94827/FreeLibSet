@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV;
+
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections;
@@ -12,14 +12,18 @@ using System.ComponentModel;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Xml;
-using AgeyevAV.Logging;
-using AgeyevAV.Remoting;
+using FreeLibSet.Logging;
+using FreeLibSet.Remoting;
 using System.Runtime.InteropServices;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.Data;
 using System.Reflection;
+using FreeLibSet.Core;
+using FreeLibSet.Shell;
+using FreeLibSet.Forms.Diagnostics;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -50,7 +54,7 @@ using System.Reflection;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /*
    * Терминология для окон
@@ -2045,7 +2049,7 @@ namespace AgeyevAV.ExtForms
     {
       try
       {
-        PowerSuspendLocker.TurnDisplayOn(); // отключение экранной заставки
+        FreeLibSet.Win32.PowerSuspendLocker.TurnDisplayOn(); // отключение экранной заставки
 
         //#if DEBUG
         //      CheckTread();
@@ -3030,7 +3034,7 @@ namespace AgeyevAV.ExtForms
       }
       catch (Exception e)
       {
-        DebugTools.LogoutException(e, "Выключение tool forms"); // без вывода диалога
+        LogoutTools.LogoutException(e, "Выключение tool forms"); // без вывода диалога
       }
 
       // 20.08.2020
@@ -3119,7 +3123,7 @@ namespace AgeyevAV.ExtForms
         }
         catch (Exception e)
         {
-          DebugTools.LogoutException(e, "Включение tool forms"); // без вывода диалога
+          LogoutTools.LogoutException(e, "Включение tool forms"); // без вывода диалога
         }
 
         //if (ExternalDialogOwnerWindow == null)
@@ -4286,7 +4290,7 @@ namespace AgeyevAV.ExtForms
           frm.Text = title;
           frm.Exception = exception;
           if (alwaysLogout) // иначе потом запишем
-            frm.LogFilePath = DebugTools.LogoutException(exception, title);
+            frm.LogFilePath = LogoutTools.LogoutExceptionToFile(exception, title);
           EFPApp.ShowDialog(frm, true);
         }
         catch (Exception e2)
@@ -5415,7 +5419,7 @@ namespace AgeyevAV.ExtForms
 
       if (IsWindowsExplorerSupported)
       {
-        AgeyevAV.Shell.FileAssociationItem FA = EFPApp.FileExtAssociations.ShowDirectory.OpenItem;
+        FreeLibSet.Shell.FileAssociationItem FA = EFPApp.FileExtAssociations.ShowDirectory.OpenItem;
         try
         {
           EFPApp.BeginWait("Запуск " + FA.DisplayName, "WindowsExplorer");
@@ -5869,8 +5873,8 @@ namespace AgeyevAV.ExtForms
     /// Методы интерфейса могут вызываться только из основного потока приложения.
     /// Ссылка на этот объект должна передаваться конструктору RIExecProc.
     /// </summary>
-    public static AgeyevAV.RI.IRemoteInterface RemoteInterface { get { return _RemoteInterface; } }
-    private static readonly AgeyevAV.ExtForms.RI.EFPAppRemoteInterface _RemoteInterface = new AgeyevAV.ExtForms.RI.EFPAppRemoteInterface();
+    public static FreeLibSet.RI.IRemoteInterface RemoteInterface { get { return _RemoteInterface; } }
+    private static readonly FreeLibSet.Forms.RI.EFPAppRemoteInterface _RemoteInterface = new FreeLibSet.Forms.RI.EFPAppRemoteInterface();
 
     ///// <summary>
     ///// Процедура для реализации удаленного интерфейса пользователя
@@ -5885,7 +5889,7 @@ namespace AgeyevAV.ExtForms
     //      return null;
     //    if (_RemoteUIProc == null)
     //    {
-    //      _RemoteUIProc = new AgeyevAV.RI.RIExecProc(new AgeyevAV.ExtForms.RI.EFPAppRemoteInterface());
+    //      _RemoteUIProc = new FreeLibSet.RI.RIExecProc(new FreeLibSet.Forms.RI.EFPAppRemoteInterface());
     //      _RemoteUIProc.DisplayName = "EFPApp.RemoteUIProc";
     //    }
     //    return _RemoteUIProc;
@@ -6003,7 +6007,7 @@ namespace AgeyevAV.ExtForms
       if (Args != null)
       {
         NamedValues Res = null;
-        using (AgeyevAV.RI.RIExecProc proc = new AgeyevAV.RI.RIExecProc(RemoteInterface))
+        using (FreeLibSet.RI.RIExecProc proc = new FreeLibSet.RI.RIExecProc(RemoteInterface))
         {
           try
           {
@@ -6033,7 +6037,7 @@ namespace AgeyevAV.ExtForms
     /// и добавить его в список. Если используется расширение существующего класса, то генератор должен быть
     /// добавлен в начало списка методом Insert()
     /// </summary>
-    public static AgeyevAV.ExtForms.RI.EFPAppRICreators RICreators
+    public static FreeLibSet.Forms.RI.EFPAppRICreators RICreators
     {
       get
       {
@@ -6041,17 +6045,17 @@ namespace AgeyevAV.ExtForms
           return null;
         if (_RICreators == null)
         {
-          _RICreators = new AgeyevAV.ExtForms.RI.EFPAppRICreators();
+          _RICreators = new FreeLibSet.Forms.RI.EFPAppRICreators();
           // Генераторы стандартных элементов интерфейса
-          _RICreators.Add(new AgeyevAV.ExtForms.RI.RIDialogCreator());
-          _RICreators.Add(new AgeyevAV.ExtForms.RI.RIControlCreator());
+          _RICreators.Add(new FreeLibSet.Forms.RI.RIDialogCreator());
+          _RICreators.Add(new FreeLibSet.Forms.RI.RIControlCreator());
           // Генераторы стандартных блоков диалога
-          _RICreators.Add(new AgeyevAV.ExtForms.RI.RIStandardDialogCreator());
+          _RICreators.Add(new FreeLibSet.Forms.RI.RIStandardDialogCreator());
         }
         return _RICreators;
       }
     }
-    private static AgeyevAV.ExtForms.RI.EFPAppRICreators _RICreators = null;
+    private static FreeLibSet.Forms.RI.EFPAppRICreators _RICreators = null;
 
     #endregion
 

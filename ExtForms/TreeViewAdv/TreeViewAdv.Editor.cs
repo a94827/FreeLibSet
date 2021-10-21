@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Drawing;
 
 /*
@@ -43,7 +43,7 @@ using System.Drawing;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   partial class TreeViewAdv
   {

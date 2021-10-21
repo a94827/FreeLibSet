@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Collections;
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
 
   /*

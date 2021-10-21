@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using AgeyevAV;
+
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -52,7 +53,7 @@ using AgeyevAV;
  * !!! Вращение не реализовано !!!
  */
 
-namespace AgeyevAV.ExtGraphics
+namespace FreeLibSet.Drawing
 {
   /// <summary>
   /// Расширенный класс рисования текста. Пригоден как для рисования в форме, так 

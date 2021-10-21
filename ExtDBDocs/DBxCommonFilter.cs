@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.Data;
-using AgeyevAV.Trees;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
+using FreeLibSet.Calendar;
 
 /*
  * The BSD License
@@ -34,7 +37,7 @@ using AgeyevAV.Trees;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Базовый класс для реализации устанавливаемых фильтров.

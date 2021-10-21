@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data;
 using NUnit.Framework;
 
 namespace ExtDB.tests

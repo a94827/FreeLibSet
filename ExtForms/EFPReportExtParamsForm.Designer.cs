@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Forms
 {
   partial class EFPReportExtParamsForm
   {
@@ -30,7 +30,7 @@
     {
       this.BottomPanel = new System.Windows.Forms.Panel();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.FSetComboBox = new AgeyevAV.ExtForms.ParamSetComboBox();
+      this.FSetComboBox = new FreeLibSet.Controls.ParamSetComboBox();
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnOk = new System.Windows.Forms.Button();
       this.MainPanel = new System.Windows.Forms.Panel();
@@ -130,7 +130,7 @@
     /// Основная панель для размещения управляющих элементов диалога параметров
     /// </summary>
     public System.Windows.Forms.Panel MainPanel;
-    private AgeyevAV.ExtForms.ParamSetComboBox FSetComboBox;
+    private FreeLibSet.Controls.ParamSetComboBox FSetComboBox;
     private System.Windows.Forms.Button btnCancel;
     private System.Windows.Forms.Button btnOk;
   }

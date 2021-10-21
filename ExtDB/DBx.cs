@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV;
-using AgeyevAV.Logging;
+
+using FreeLibSet.Logging;
 using System.Data.Common;
 using System.Threading;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -35,7 +37,7 @@ using System.Threading;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /*
    * Расширение работы с БД

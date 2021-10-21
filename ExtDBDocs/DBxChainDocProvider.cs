@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.IO;
-using AgeyevAV.Config;
-using AgeyevAV.Caching;
-using AgeyevAV.Remoting;
+using FreeLibSet.IO;
+using FreeLibSet.Config;
+using FreeLibSet.Caching;
+using FreeLibSet.Remoting;
 using System.Diagnostics;
 
 /*
@@ -37,7 +37,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Аргументы события для восстановления подключения к серверу

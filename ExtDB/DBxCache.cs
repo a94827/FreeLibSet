@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Threading;
-using AgeyevAV.Caching;
+using FreeLibSet.Caching;
 using System.Runtime.Serialization;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
+using FreeLibSet.Data;
 
 /*
  * The BSD License
@@ -39,7 +42,7 @@ using AgeyevAV.Remoting;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Информация о сериализации полей таблицы.
@@ -884,7 +887,7 @@ namespace AgeyevAV.ExtDB
           e.Data["DBxCache.RepeatCount"] = RepeatCount;
 
           if (i == 0 && RepeatCount > 1) // 17.04.2018. Выводим в log-файл, только если обработка ошибок соединений с сервером не обрабатывается в пользовательском коде
-            AgeyevAV.Logging.LogoutTools.LogoutException(e, "Ошибка получения страницы DBxCache");
+            FreeLibSet.Logging.LogoutTools.LogoutException(e, "Ошибка получения страницы DBxCache");
 
           e2 = e;
         }
@@ -2191,7 +2194,7 @@ namespace AgeyevAV.ExtDB
 Message                   = В экземпляре объекта не задана ссылка на объект.
 Properties: 
   Data                      = System.Collections.ListDictionaryInternal
-    [ChainDocProvider]        = "AgeyevAV.ExtDB.Docs.DBxChainDocProvider"
+    [ChainDocProvider]        = "FreeLibSet.ExtDB.Docs.DBxChainDocProvider"
     Count                     = 1
     IsReadOnly                = False
   HelpLink                  = null
@@ -2213,10 +2216,10 @@ Server stack trace:
 Exception rethrown at [0]: 
    в System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
    в System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
-   в AgeyevAV.ExtDB.Docs.DBxDocProvider.LoadCachePage(String TableName, DBxColumns ColumnNames, Int32 FirstId, Int32 LastId)
-   в AgeyevAV.ExtDB.Docs.DBxChainDocProvider.LoadCachePage(String TableName, DBxColumns ColumnNames, Int32 FirstId, Int32 LastId)
-   в AgeyevAV.ExtDB.DBxCache.LoadCachePage(String TableName, DBxColumns ColumnNames, Int32 FirstId, Int32 LastId)
-   в AgeyevAV.ExtDB.DBxTableCache.AgeyevAV.Caching.ICacheFactory<AgeyevAV.ExtDB.DBxTableCache.PageTable>.CreateCacheItem(String[] Keys)
+   в FreeLibSet.ExtDB.Docs.DBxDocProvider.LoadCachePage(String TableName, DBxColumns ColumnNames, Int32 FirstId, Int32 LastId)
+   в FreeLibSet.ExtDB.Docs.DBxChainDocProvider.LoadCachePage(String TableName, DBxColumns ColumnNames, Int32 FirstId, Int32 LastId)
+   в FreeLibSet.ExtDB.DBxCache.LoadCachePage(String TableName, DBxColumns ColumnNames, Int32 FirstId, Int32 LastId)
+   в FreeLibSet.ExtDB.DBxTableCache.FreeLibSet.Caching.ICacheFactory<FreeLibSet.ExtDB.DBxTableCache.PageTable>.CreateCacheItem(String[] Keys)
      * 
      * Для исправления ошибки, в классе DBxCacheTablePage храним и "полезный" объект DataTable и
      * сериализуемый байтовый массив. Объект DataTable не сериализуем, а восстанавливаем после

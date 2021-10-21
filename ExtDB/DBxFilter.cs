@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Collections;
 using System.Text;
-using AgeyevAV;
+
+using FreeLibSet.Core;
+using FreeLibSet.Calendar;
 
 /*
  * The BSD License
@@ -78,7 +80,7 @@ using AgeyevAV;
  *    }
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   #region Перечисления
 

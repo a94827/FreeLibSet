@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using NUnit.Framework;
-using AgeyevAV;
+using FreeLibSet.Core;
 
 namespace ExtTools.tests
 {

@@ -10,14 +10,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Threading;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics;
-using AgeyevAV.Diagnostics;
-using AgeyevAV.Logging;
-using AgeyevAV.Remoting;
+using FreeLibSet.Diagnostics;
+using FreeLibSet.Logging;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -123,7 +124,7 @@ using AgeyevAV.Remoting;
 
 #if OLD_CACHE
 
-namespace AgeyevAV.Caching
+namespace FreeLibSet.Caching
 {
   /*
    * Буферизация объектов в оперативной памяти и/или в файлах на диске
@@ -3609,7 +3610,7 @@ namespace AgeyevAV.Caching
 }
 
 #else //! OLD_CACHE
-namespace AgeyevAV.Caching
+namespace FreeLibSet.Caching
 {
   /*
    * Буферизация объектов в оперативной памяти и/или в файлах на диске

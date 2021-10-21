@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using System.ComponentModel;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление ZoomDirection
 

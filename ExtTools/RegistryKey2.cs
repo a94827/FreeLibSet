@@ -4,6 +4,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using System.IO;
 // Работа с Реестром Windows с управлением способром виртулиазации для 64-битных версий Windows
 // В Net Framework 4 это реализовано классом RegistryKey, но в Net Framework 2 такой возможности нет
 
-namespace AgeyevAV.Win32
+namespace FreeLibSet.Win32
 {
   #region Перечисление RegistryView2
 

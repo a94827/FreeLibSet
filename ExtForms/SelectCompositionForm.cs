@@ -5,10 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.IO;
+using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма выбора сохраненной композиции рабочего стола

@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using System.Drawing;
-using AgeyevAV.Trees;
+using FreeLibSet.Models.Tree;
 
 /*
  * The BSD License
@@ -44,7 +44,7 @@ using AgeyevAV.Trees;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
 
   /// <summary>

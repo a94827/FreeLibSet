@@ -32,7 +32,7 @@ using System.Threading;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   /// <summary>
   /// Интерфейс для простого процентного индикатора
@@ -836,156 +836,6 @@ namespace AgeyevAV
     #endregion
   }
 
-  #region Интерфейс IAsyncResultWithSplash
-
-  /// <summary>
-  /// Расширение интерфейса асинхронного управления IAsyncResult возможностями работы с процентным индикатором
-  /// </summary>
-  public interface IAsyncResultWithSplash : IAsyncResult
-  {
-    /// <summary>
-    /// Получить информацию о готовности задания (свойство IAsyncResult.IsCompleted) 
-    /// вместе с обновлением заставок процентных индикаторов (метод IServerSplashWatcher.GetSplashInfoPack()) за одно обращение к серверу.
-    /// </summary>
-    /// <param name="splashInfoPack">Порция обновления для экранной заставки</param>
-    /// <returns>Свойство IsCompleted</returns>
-    bool GetIsCompleted(out SplashInfoPack splashInfoPack);
-
-    // Нельзя передавать интерфейс от сервера к клиенту для RemoteExecProc, возникает исключение RemotingException
-    // "Этот посредник удаленного взаимодействия не имеет приемника канала. Это означает, что либо сервер не имеет зарегистрированных каналов для прослушивания, 
-    // либо это приложение не имеет подходящих каналов клиентов для связи с данным сервером."
-    // Нужно продублировать методы IServerSplashWatcher
-    ///// <summary>
-    ///// Объект для извлечения информации о заставках с сервера
-    ///// </summary>
-    //IServerSplashWatcher ServerSplashWatcher { get; }
-
-    /// <summary>
-    /// Сброс данных.
-    /// После вызова этого метода, при следующем вызове GetIsCompleted() будет возвращена полная информация о стеке заставок.
-    /// Используется для исправления ошибок после разрыва соединения.
-    /// Дублирует метод интерфейса IServerSplashWatcher
-    /// </summary>
-    void ResetSplashInfo();
-
-    /// <summary>
-    /// Прервать выполнение процесса.
-    /// Метод устанавливает свойство ISplash.Cancelled=true, если в стеке есть текущая заставка
-    /// Дублирует метод интерфейса IServerSplashWatcher
-    /// </summary>
-    void Cancel();
-  }
-
-  #endregion
-
-  /// <summary>
-  /// Содержит ссылки на интефрейсы IAsyncResultWithSplash и IServerSplashWatcher.
-  /// Метод GetIsCompledted() вызывает метод интерфейса IAsyncResultWithSplash и сохраняет во внутреннем поле объект SplashInfoPack.
-  /// Реализует метод интерфейса IServerSplashWatcher.GetSplashInfoPack(). При этом возвращается сохраненный SplashInfoPack.
-  /// Остальная реализация интерфейса IServerSplashWatcher переадресуется по существующей ссылке
-  /// Используется ExecProcCallItem.
-  /// </summary>
-  public sealed class AsyncResultWithSplashHandler : IServerSplashWatcher
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает объект. Обращается к свойству <paramref name="asyncResult"/>.ServerSplashWatcher для получения ссылки на интерфейс IServerSplashWatcher
-    /// </summary>
-    /// <param name="asyncResult">Интерфейс IAsyncResultWithSplash </param>
-    public AsyncResultWithSplashHandler(IAsyncResultWithSplash asyncResult)
-    {
-      if (asyncResult == null)
-        throw new ArgumentNullException("asyncResult");
-
-      _AsyncResult = asyncResult;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    //public IAsyncResultWithSplash AsyncResult { get { return _AsyncResult; } }
-    private IAsyncResultWithSplash _AsyncResult;
-
-    /// <summary>
-    /// Запоминаем между GetIsCompleted() и IServerSplashWatcher.GetSplashInfoPack()
-    /// </summary>
-    private SplashInfoPack _SplashInfoPack;
-
-#if DEBUG
-    private bool _GetIsCompletedCalled;
-#endif
-
-    #endregion
-
-    #region Основной метод
-
-    /// <summary>
-    /// Вызывает IAsyncResultWithSplash.GetIsCompleted() и запоминает пакет до вызова IServerSplashWatcher.GetSplashInfoPack().
-    /// Методы GetIsCompleted() и GetSplashInfoPack() должны вызываться поочередно.
-    /// </summary>
-    /// <returns>True, если выполнение асинхронного действия завершено</returns>
-    public bool GetIsCompleted()
-    {
-#if DEBUG
-      if (_GetIsCompletedCalled)
-        throw new InvalidOperationException("Повторный вызов GetIsCompleted");
-#endif
-
-      bool res = _AsyncResult.GetIsCompleted(out _SplashInfoPack);
-
-#if DEBUG
-      _GetIsCompletedCalled = true;
-#endif
-
-#if DEBUG_SPLASHWATCHERS
-      if (_ServerSplashWatcher != null && _SplashInfoPack == null)
-        throw new NullReferenceException(_AsyncResult.GetType().ToString() + ".GetIsCompleted() не вернул SplashInfoStack");
-#endif
-
-      return res;
-    }
-
-    #endregion
-
-    #region IServerSplashWatcher Members
-
-    /// <summary>
-    /// Возвращает SplashInfoPack, сохраненный при предыдущем вызове GetIsCompleted().
-    /// Методы GetIsCompleted() и GetSplashInfoPack() должны вызываться поочередно.
-    /// </summary>
-    /// <returns>Информация об изменениях процентного индикатора, которая нужна объекту ClientSplashWatcher</returns>
-    public SplashInfoPack GetSplashInfoPack()
-    {
-#if DEBUG
-      if (!_GetIsCompletedCalled)
-        throw new InvalidOperationException("Не было вызова GetIsCOmpleted() или повторный вызов GetSplashInfoPack()");
-      _GetIsCompletedCalled = false;
-#endif
-
-      return _SplashInfoPack;
-    }
-
-    /// <summary>
-    /// Вызывает соответствующий метод по ссылке на интерфейс IAsyncResultWithSplash
-    /// </summary>
-    public void ResetSplashInfo()
-    {
-      _AsyncResult.ResetSplashInfo();
-    }
-
-    /// <summary>
-    /// Вызывает соответствующий метод по ссылке на интерфейс IAsyncResultWithSplash
-    /// </summary>
-    public void Cancel()
-    {
-      _AsyncResult.Cancel();
-    }
-
-    #endregion
-  }
-
   /// <summary>
   /// Статические методы и свойства для работы с заставками.
   /// Класс является потокобезопасным
@@ -1306,6 +1156,159 @@ namespace AgeyevAV
     }
 
 #endif
+
+    #endregion
+  }
+}
+
+namespace FreeLibSet.Remoting
+{
+  #region Интерфейс IAsyncResultWithSplash
+
+  /// <summary>
+  /// Расширение интерфейса асинхронного управления IAsyncResult возможностями работы с процентным индикатором
+  /// </summary>
+  public interface IAsyncResultWithSplash : IAsyncResult
+  {
+    /// <summary>
+    /// Получить информацию о готовности задания (свойство IAsyncResult.IsCompleted) 
+    /// вместе с обновлением заставок процентных индикаторов (метод IServerSplashWatcher.GetSplashInfoPack()) за одно обращение к серверу.
+    /// </summary>
+    /// <param name="splashInfoPack">Порция обновления для экранной заставки</param>
+    /// <returns>Свойство IsCompleted</returns>
+    bool GetIsCompleted(out SplashInfoPack splashInfoPack);
+
+    // Нельзя передавать интерфейс от сервера к клиенту для RemoteExecProc, возникает исключение RemotingException
+    // "Этот посредник удаленного взаимодействия не имеет приемника канала. Это означает, что либо сервер не имеет зарегистрированных каналов для прослушивания, 
+    // либо это приложение не имеет подходящих каналов клиентов для связи с данным сервером."
+    // Нужно продублировать методы IServerSplashWatcher
+    ///// <summary>
+    ///// Объект для извлечения информации о заставках с сервера
+    ///// </summary>
+    //IServerSplashWatcher ServerSplashWatcher { get; }
+
+    /// <summary>
+    /// Сброс данных.
+    /// После вызова этого метода, при следующем вызове GetIsCompleted() будет возвращена полная информация о стеке заставок.
+    /// Используется для исправления ошибок после разрыва соединения.
+    /// Дублирует метод интерфейса IServerSplashWatcher
+    /// </summary>
+    void ResetSplashInfo();
+
+    /// <summary>
+    /// Прервать выполнение процесса.
+    /// Метод устанавливает свойство ISplash.Cancelled=true, если в стеке есть текущая заставка
+    /// Дублирует метод интерфейса IServerSplashWatcher
+    /// </summary>
+    void Cancel();
+  }
+
+  #endregion
+
+  /// <summary>
+  /// Содержит ссылки на интефрейсы IAsyncResultWithSplash и IServerSplashWatcher.
+  /// Метод GetIsCompledted() вызывает метод интерфейса IAsyncResultWithSplash и сохраняет во внутреннем поле объект SplashInfoPack.
+  /// Реализует метод интерфейса IServerSplashWatcher.GetSplashInfoPack(). При этом возвращается сохраненный SplashInfoPack.
+  /// Остальная реализация интерфейса IServerSplashWatcher переадресуется по существующей ссылке
+  /// Используется ExecProcCallItem.
+  /// </summary>
+  public sealed class AsyncResultWithSplashHandler : IServerSplashWatcher
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект. Обращается к свойству <paramref name="asyncResult"/>.ServerSplashWatcher для получения ссылки на интерфейс IServerSplashWatcher
+    /// </summary>
+    /// <param name="asyncResult">Интерфейс IAsyncResultWithSplash </param>
+    public AsyncResultWithSplashHandler(IAsyncResultWithSplash asyncResult)
+    {
+      if (asyncResult == null)
+        throw new ArgumentNullException("asyncResult");
+
+      _AsyncResult = asyncResult;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    //public IAsyncResultWithSplash AsyncResult { get { return _AsyncResult; } }
+    private IAsyncResultWithSplash _AsyncResult;
+
+    /// <summary>
+    /// Запоминаем между GetIsCompleted() и IServerSplashWatcher.GetSplashInfoPack()
+    /// </summary>
+    private SplashInfoPack _SplashInfoPack;
+
+#if DEBUG
+    private bool _GetIsCompletedCalled;
+#endif
+
+    #endregion
+
+    #region Основной метод
+
+    /// <summary>
+    /// Вызывает IAsyncResultWithSplash.GetIsCompleted() и запоминает пакет до вызова IServerSplashWatcher.GetSplashInfoPack().
+    /// Методы GetIsCompleted() и GetSplashInfoPack() должны вызываться поочередно.
+    /// </summary>
+    /// <returns>True, если выполнение асинхронного действия завершено</returns>
+    public bool GetIsCompleted()
+    {
+#if DEBUG
+      if (_GetIsCompletedCalled)
+        throw new InvalidOperationException("Повторный вызов GetIsCompleted");
+#endif
+
+      bool res = _AsyncResult.GetIsCompleted(out _SplashInfoPack);
+
+#if DEBUG
+      _GetIsCompletedCalled = true;
+#endif
+
+#if DEBUG_SPLASHWATCHERS
+      if (_ServerSplashWatcher != null && _SplashInfoPack == null)
+        throw new NullReferenceException(_AsyncResult.GetType().ToString() + ".GetIsCompleted() не вернул SplashInfoStack");
+#endif
+
+      return res;
+    }
+
+    #endregion
+
+    #region IServerSplashWatcher Members
+
+    /// <summary>
+    /// Возвращает SplashInfoPack, сохраненный при предыдущем вызове GetIsCompleted().
+    /// Методы GetIsCompleted() и GetSplashInfoPack() должны вызываться поочередно.
+    /// </summary>
+    /// <returns>Информация об изменениях процентного индикатора, которая нужна объекту ClientSplashWatcher</returns>
+    public SplashInfoPack GetSplashInfoPack()
+    {
+#if DEBUG
+      if (!_GetIsCompletedCalled)
+        throw new InvalidOperationException("Не было вызова GetIsCOmpleted() или повторный вызов GetSplashInfoPack()");
+      _GetIsCompletedCalled = false;
+#endif
+
+      return _SplashInfoPack;
+    }
+
+    /// <summary>
+    /// Вызывает соответствующий метод по ссылке на интерфейс IAsyncResultWithSplash
+    /// </summary>
+    public void ResetSplashInfo()
+    {
+      _AsyncResult.ResetSplashInfo();
+    }
+
+    /// <summary>
+    /// Вызывает соответствующий метод по ссылке на интерфейс IAsyncResultWithSplash
+    /// </summary>
+    public void Cancel()
+    {
+      _AsyncResult.Cancel();
+    }
 
     #endregion
   }

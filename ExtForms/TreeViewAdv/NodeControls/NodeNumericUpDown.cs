@@ -46,7 +46,7 @@ using System.Drawing.Design;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class NodeNumericUpDown : BaseTextControl
   {
@@ -132,7 +132,7 @@ namespace AgeyevAV.ExtForms.NodeControls
 
     protected override Control CreateEditor(TreeNodeAdv node)
     {
-      AgeyevAV.ExtForms.ExtNumericUpDown num = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      FreeLibSet.Controls.ExtNumericUpDown num = new FreeLibSet.Controls.ExtNumericUpDown();
       num.Increment = Increment;
       num.DecimalPlaces = DecimalPlaces;
       num.Minimum = Minimum;
@@ -148,7 +148,7 @@ namespace AgeyevAV.ExtForms.NodeControls
 
     protected override void DoApplyChanges(TreeNodeAdv node, Control editor)
     {
-      SetValue(node, (editor as AgeyevAV.ExtForms.ExtNumericUpDown).Value);
+      SetValue(node, (editor as FreeLibSet.Controls.ExtNumericUpDown).Value);
     }
   }
 }

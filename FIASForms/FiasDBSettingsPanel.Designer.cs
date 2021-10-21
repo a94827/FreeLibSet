@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   partial class FiasDBSettingsPanel
   {
@@ -29,7 +29,7 @@ namespace AgeyevAV.ExtForms.FIAS
     private void InitializeComponent()
     {
       this.label1 = new System.Windows.Forms.Label();
-      this.cbRegionCodes = new AgeyevAV.ExtForms.UserSelComboBox();
+      this.cbRegionCodes = new FreeLibSet.Controls.UserSelComboBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.cbUseRoom = new System.Windows.Forms.CheckBox();
       this.cbUseHouse = new System.Windows.Forms.CheckBox();
@@ -197,7 +197,7 @@ namespace AgeyevAV.ExtForms.FIAS
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.GroupBox groupBox3;
-    internal UserSelComboBox cbRegionCodes;
+    internal FreeLibSet.Controls.UserSelComboBox cbRegionCodes;
     internal System.Windows.Forms.CheckBox cbUseRoom;
     internal System.Windows.Forms.CheckBox cbUseHouse;
     internal System.Windows.Forms.CheckBox cbUseHistory;

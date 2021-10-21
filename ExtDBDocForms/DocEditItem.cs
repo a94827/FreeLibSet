@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
 
 /*
  * The BSD License
@@ -32,7 +32,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region Èםעונפויס IDocEditItem
 

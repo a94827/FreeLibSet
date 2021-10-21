@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -43,7 +43,7 @@ using System.Windows.Forms;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   // TODO: Убрать это безобразие
 

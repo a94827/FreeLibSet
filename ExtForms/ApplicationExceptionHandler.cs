@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 
 /*
  * The BSD License
@@ -34,7 +34,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
 
   /// <summary>
@@ -158,7 +158,7 @@ namespace AgeyevAV.ExtForms
           if (args.IsTerminating)
             EFPApp.ShowException(e1, "Неперехваченное исключение UnhandledException с завершением работы");
           else
-            DebugTools.LogoutException(e1, "Неперехваченное исключение UnhandledException без завершения работы");
+            LogoutTools.LogoutException(e1, "Неперехваченное исключение UnhandledException без завершения работы");
         }
       }
       catch (Exception e2)
@@ -253,7 +253,7 @@ namespace AgeyevAV.ExtForms
             return;
         }
 
-        DebugTools.ShowException(args.Exception, "Перехват Application.ThreadException"); // Не используем EFPApp.ShowException(), ибо сюда попадать не должно
+        FreeLibSet.Forms.Diagnostics.DebugTools.ShowException(args.Exception, "Перехват Application.ThreadException"); // Не используем EFPApp.ShowException(), ибо сюда попадать не должно
       }
       catch
       {

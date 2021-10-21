@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data.Docs;
 using System.Data;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Collections;
-using AgeyevAV.ExtDB;
-using AgeyevAV.Trees;
-using AgeyevAV.ExtForms.NodeControls;
-using AgeyevAV.Remoting;
+using FreeLibSet.Data;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
+using FreeLibSet.Controls;
 
 #pragma warning disable 0219 // TODO: Убрать лишние переменные
 
@@ -41,7 +43,7 @@ using AgeyevAV.Remoting;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Провайдер иерархического просмотра документов
@@ -471,7 +473,7 @@ namespace AgeyevAV.ExtForms.Docs
     /// Реализация DocumentViewHandler для EFPDocTreeView.
     /// Частично переопределяется в EFPGroupDocTreeView
     /// </summary>
-    protected class IntDocumentViewHandler : AgeyevAV.ExtForms.Docs.DocumentViewHandler
+    protected class IntDocumentViewHandler : FreeLibSet.Forms.Docs.DocumentViewHandler
     {
       #region Конструктор и Dispose
 

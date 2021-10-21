@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Windows.Forms;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
 
 /*
  * The BSD License
@@ -35,7 +35,7 @@ using AgeyevAV.ExtDB.Docs;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Переходник для CheckBox для логического поля

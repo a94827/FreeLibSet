@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Diagnostics;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -33,7 +35,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// Основной объект для работы с адресами, используемый в пользовательском коде.

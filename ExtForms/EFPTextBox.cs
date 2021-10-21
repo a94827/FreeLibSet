@@ -1,13 +1,15 @@
-﻿using AgeyevAV.DependedValues;
-using AgeyevAV.IO;
+﻿using FreeLibSet.DependedValues;
+using FreeLibSet.IO;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.TextMasks;
+using FreeLibSet.Formatting;
 using System.Drawing;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using FreeLibSet.Shell;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +40,7 @@ using System.Text.RegularExpressions;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Интерфейс IEFPTextBox
 
@@ -2638,9 +2640,9 @@ namespace AgeyevAV.ExtForms
 
       try
       {
-        using (AgeyevAV.OLE.Word.WordHelper Helper = new OLE.Word.WordHelper())
+        using (FreeLibSet.OLE.Word.WordHelper Helper = new OLE.Word.WordHelper())
         {
-          AgeyevAV.OLE.Word.Document Doc = Helper.Application.Documents.Add();
+          FreeLibSet.OLE.Word.Document Doc = Helper.Application.Documents.Add();
           Doc.Range().InsertAfter(Text);
           Doc.Saved = true;
         }

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Data;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Config;
-using AgeyevAV.Trees;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Forms;
+using FreeLibSet.Config;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Controls;
+using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -41,7 +44,7 @@ using AgeyevAV.ExtForms.NodeControls;
 #pragma warning disable 0169 // TODO: Убрать лишние переменные
 
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region EFPDBxTreeViewDocSelEventArgs
 
@@ -59,7 +62,7 @@ namespace AgeyevAV.ExtForms.Docs
     /// <param name="reason">Причина, по которой требуется создать выборку</param>
     /// <param name="nodes">Узлы, для которых требуется создать выборку документов.
     /// Если null, то берутся выбранные узлы TreeViewAdv.SelectedNodes</param>
-    public EFPDBxTreeViewDocSelEventArgs(EFPDBxTreeView controlProvider, EFPDBxGridViewDocSelReason reason, TreeNodeAdv[] nodes)
+    public EFPDBxTreeViewDocSelEventArgs(EFPDBxTreeView controlProvider, EFPDBxGridViewDocSelReason reason, FreeLibSet.Controls.TreeNodeAdv[] nodes)
     {
       _ControlProvider = controlProvider;
       _DocSel = new DBxDocSelection(controlProvider.UI.DocProvider.DBIdentity);

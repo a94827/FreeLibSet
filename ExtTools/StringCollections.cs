@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using System.Runtime.Serialization;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using System.Runtime.Serialization;
 // Коллекции, использующие строки (в качестве ключа).
 // Поддерживают режим IgnoreCase
 
-namespace AgeyevAV
+namespace FreeLibSet.Collections
 {
   /// <summary>
   /// Список строк с однократным вхождением.
@@ -1495,8 +1496,8 @@ namespace AgeyevAV
 
         switch (value)
         {
-          case AgeyevAV.UnknownItemPosition.First:
-          case AgeyevAV.UnknownItemPosition.Last:
+          case FreeLibSet.Collections.UnknownItemPosition.First:
+          case FreeLibSet.Collections.UnknownItemPosition.Last:
             _UnknownItemPosition = value;
             break;
           default:
@@ -1533,7 +1534,7 @@ namespace AgeyevAV
         return String.Compare(x, y, IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
       }
 
-      if (UnknownItemPosition == AgeyevAV.UnknownItemPosition.Last)
+      if (UnknownItemPosition == FreeLibSet.Collections.UnknownItemPosition.Last)
       {
         if (px < 0)
           px = int.MaxValue;
@@ -1827,8 +1828,8 @@ namespace AgeyevAV
 
         switch (value)
         {
-          case AgeyevAV.UnknownItemPosition.First:
-          case AgeyevAV.UnknownItemPosition.Last:
+          case FreeLibSet.Collections.UnknownItemPosition.First:
+          case FreeLibSet.Collections.UnknownItemPosition.Last:
             _UnknownItemPosition = value;
             break;
           default:
@@ -1865,7 +1866,7 @@ namespace AgeyevAV
         return x.CompareTo(y);
       }
 
-      if (UnknownItemPosition == AgeyevAV.UnknownItemPosition.Last)
+      if (UnknownItemPosition == FreeLibSet.Collections.UnknownItemPosition.Last)
       {
         if (px < 0)
           px = int.MaxValue;

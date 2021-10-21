@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms
+﻿namespace FreeLibSet.Controls
 {
   partial class YearMonthBox
   {
@@ -31,7 +31,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.cbMonth = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.edYear = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      this.edYear = new FreeLibSet.Controls.ExtNumericUpDown();
       this.SuspendLayout();
       // 
       // label1
@@ -102,6 +102,6 @@
     private System.Windows.Forms.Label label1;
     internal System.Windows.Forms.ComboBox cbMonth;
     private System.Windows.Forms.Label label2;
-    internal AgeyevAV.ExtForms.ExtNumericUpDown edYear;
+    internal FreeLibSet.Controls.ExtNumericUpDown edYear;
   }
 }

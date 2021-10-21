@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.ComponentModel;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 
 /*
  * The BSD License
@@ -44,7 +44,7 @@ using AgeyevAV.IO;
  * Для верхнего уровня предусмотрен IDisposable-класс
  */
 
-namespace AgeyevAV.OpenOffice
+namespace FreeLibSet.OpenOffice
 {
   /// <summary>
   /// Хранит интерфейсы XComponentContext, XMultiServiceFactory и XComponentLoader 

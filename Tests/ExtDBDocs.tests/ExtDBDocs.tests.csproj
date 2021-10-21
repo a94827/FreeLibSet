@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="DBxBinDataHandlerTests.cs" />
     <Compile Include="DBxBinDataValidatorTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtDBDocs\ExtDBDocs.csproj">
@@ -61,6 +60,9 @@
       <Project>{A5E79E2A-EEA5-4B9C-A62F-CF234BC4B325}</Project>
       <Name>ExtDB.tests</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

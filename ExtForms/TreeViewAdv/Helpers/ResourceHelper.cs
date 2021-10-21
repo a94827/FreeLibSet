@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
 
 /*
  * The BSD License
@@ -43,7 +42,7 @@ using AgeyevAV.ExtForms;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   internal static class ResourceHelper
   {

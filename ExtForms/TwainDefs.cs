@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 #pragma warning disable 1591
 
-namespace TwainLib
+namespace FreeLibSet.Win32.Twain
 {
   #region Перечисления
 
@@ -373,17 +373,17 @@ namespace TwainLib
     {
       Cap = (short)cap;
       ConType = (short)TwOn.One;
-      Handle = Twain.GlobalAlloc(0x42, 6);
-      IntPtr pv = Twain.GlobalLock(Handle);
+      Handle = TwainObject.GlobalAlloc(0x42, 6);
+      IntPtr pv = TwainObject.GlobalLock(Handle);
       Marshal.WriteInt16(pv, 0, (short)TwType.Int16);
       Marshal.WriteInt32(pv, 2, (int)sval);
-      Twain.GlobalUnlock(Handle);
+      TwainObject.GlobalUnlock(Handle);
     }
 
     ~TwCapability()
     {
       if (Handle != IntPtr.Zero)
-        Twain.GlobalFree(Handle);
+        TwainObject.GlobalFree(Handle);
     }
 
     #endregion

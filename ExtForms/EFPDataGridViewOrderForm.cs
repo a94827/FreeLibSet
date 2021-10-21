@@ -5,10 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Logging;
-using AgeyevAV.DependedValues;
+using FreeLibSet.Logging;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Выбор порядка сортировки строк табличного просмотра

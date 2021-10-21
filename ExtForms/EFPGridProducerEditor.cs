@@ -5,7 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV;
+using FreeLibSet.Core;
+
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using AgeyevAV;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Управляющие элементы, встраиваемые в редактор настройки табличного просмотра.

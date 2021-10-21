@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class CodeGridFilterForm
   {
@@ -34,7 +34,7 @@
       this.rbNoFilter = new System.Windows.Forms.RadioButton();
       this.CodesGroupBox = new System.Windows.Forms.GroupBox();
       this.cbEmpty = new System.Windows.Forms.CheckBox();
-      this.edCodes = new AgeyevAV.ExtForms.UserTextComboBox();
+      this.edCodes = new FreeLibSet.Controls.UserTextComboBox();
       this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
@@ -184,7 +184,7 @@
     private System.Windows.Forms.RadioButton rbNoFilter;
     private System.Windows.Forms.GroupBox CodesGroupBox;
     private System.Windows.Forms.CheckBox cbEmpty;
-    private AgeyevAV.ExtForms.UserTextComboBox edCodes;
+    private FreeLibSet.Controls.UserTextComboBox edCodes;
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.Button btnCancel;
     private System.Windows.Forms.Label label1;

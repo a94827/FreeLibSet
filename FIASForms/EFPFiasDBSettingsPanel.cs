@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.FIAS;
-using AgeyevAV.DependedValues;
+using FreeLibSet.FIAS;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Controls;
 
 /*
  * The BSD License
@@ -33,7 +34,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Провайдер просмотра настройки базы данных ФИАС (объекта FiasDBSettings).

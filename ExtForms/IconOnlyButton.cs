@@ -39,7 +39,7 @@ using System.Windows.Forms.Design;
 
 #if XXX // пока не знаю, как размещать на форме, чтобы не резервировалось место дл€ увеличени€ панели
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   ///  нопка, на которой отображаетc€ только изображение 16x16

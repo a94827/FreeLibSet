@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Forms;
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using System.Windows.Forms;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
 
   /// <summary>

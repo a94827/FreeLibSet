@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +34,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Описание реальной структуры одной таблицы данных

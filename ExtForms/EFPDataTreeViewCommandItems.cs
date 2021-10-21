@@ -6,7 +6,8 @@ using System.IO;
 using System.Drawing;
 using System.Data;
 using System.Globalization;
-using AgeyevAV.Trees;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using AgeyevAV.Trees;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Команды древовидного просмотра с поддержкой столбцов

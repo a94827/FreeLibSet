@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data.Docs;
 using System.Data;
-using AgeyevAV.ExtDB;
-using AgeyevAV.Remoting;
-using AgeyevAV.Logging;
+using FreeLibSet.Data;
+using FreeLibSet.Remoting;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>
@@ -52,7 +54,7 @@ namespace AgeyevAV.ExtForms.Docs
     {
       _UI = ui;
 
-      base.ExceptionCaught += new AgeyevAV.ExtDB.Docs.DBxRetriableExceptionEventHandler(DocProviderUI_ExceptionCaught);
+      base.ExceptionCaught += new FreeLibSet.Data.Docs.DBxRetriableExceptionEventHandler(DocProviderUI_ExceptionCaught);
     }
 
     #endregion
@@ -259,9 +261,9 @@ namespace AgeyevAV.ExtForms.Docs
     /// <param name="preloadIds">Идентификаторы документов, поддокументов и файлов,
     /// которые желательно загрузить</param>
     /// <returns>Словарь загруженных данных. Ключ - идентификатор файла. Значение - контейнер с файлом</returns>
-    public override Dictionary<Int32, AgeyevAV.IO.FileContainer> InternalGetDBFile2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
+    public override Dictionary<Int32, FreeLibSet.IO.FileContainer> InternalGetDBFile2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
     {
-      Dictionary<Int32, AgeyevAV.IO.FileContainer> res;
+      Dictionary<Int32, FreeLibSet.IO.FileContainer> res;
       BeginWait("Получение файла из базы данных", GetTableImageKey(tableName));
       try
       {
@@ -276,7 +278,7 @@ namespace AgeyevAV.ExtForms.Docs
         DispArgs["DocVersion"] = docVersion;
         DispArgs["PreloadIds"] = preloadIds;
         NamedValues DispRes = ExecuteServerAsync(DispArgs, "Получение содержимого файла");
-        res = (Dictionary<Int32, AgeyevAV.IO.FileContainer>)(DispRes["Data"]);
+        res = (Dictionary<Int32, FreeLibSet.IO.FileContainer>)(DispRes["Data"]);
       }
       finally
       {
@@ -505,7 +507,7 @@ namespace AgeyevAV.ExtForms.Docs
 
     #region Обработка исключений
 
-    void DocProviderUI_ExceptionCaught(object sender, AgeyevAV.ExtDB.Docs.DBxRetriableExceptionEventArgs args)
+    void DocProviderUI_ExceptionCaught(object sender, FreeLibSet.Data.Docs.DBxRetriableExceptionEventArgs args)
     {
       System.Net.Sockets.SocketException se = LogoutTools.GetException<System.Net.Sockets.SocketException>(args.Exception);
       if (se != null)

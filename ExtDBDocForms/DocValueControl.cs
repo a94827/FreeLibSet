@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Drawing;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using AgeyevAV.ExtDB.Docs;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Какие действия следует предпринимать при записи значения, когда DocValueControlBase.UserEnabled=false.

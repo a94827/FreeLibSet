@@ -1,12 +1,14 @@
-﻿using AgeyevAV.IO;
+﻿using FreeLibSet.IO;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.Globalization;
+using FreeLibSet.Core;
+using FreeLibSet.Shell;
 
 /*
  * The BSD License
@@ -37,7 +39,7 @@ using System.Globalization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление EFPDataGridViewExpExcelBoolMode
 

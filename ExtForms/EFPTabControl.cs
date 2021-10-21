@@ -1,4 +1,4 @@
-﻿using AgeyevAV.DependedValues;
+﻿using FreeLibSet.DependedValues;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,7 +34,7 @@ using System.Drawing;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Провайдер для TabControl.

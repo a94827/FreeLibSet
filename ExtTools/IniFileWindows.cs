@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Globalization;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using AgeyevAV.IO;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Win32
+namespace FreeLibSet.Win32
 {
   /*
    * A Complete Win32 INI File Utility Class
@@ -141,7 +142,7 @@ namespace AgeyevAV.Win32
     #region Конструктор
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AgeyevAV.Win32.IniFileWindows"/> class.
+    /// Initializes a new instance of the <see cref="FreeLibSet.Win32.IniFileWindows"/> class.
     /// </summary>
     /// <param name="path">The ini file to read and write from.</param>
     public IniFileWindows(AbsPath path)
@@ -150,7 +151,7 @@ namespace AgeyevAV.Win32
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AgeyevAV.Win32.IniFileWindows"/> class.
+    /// Initializes a new instance of the <see cref="FreeLibSet.Win32.IniFileWindows"/> class.
     /// </summary>
     /// <param name="path">The ini file to read and write from.</param>
     /// <param name="isReadOnly">true, если разрешено только чтение, но не запись значений</param>

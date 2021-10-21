@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   #region EFPDBxErrorGridViewDocSelEventArgs
 

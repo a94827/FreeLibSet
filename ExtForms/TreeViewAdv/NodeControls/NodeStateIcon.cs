@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
-using AgeyevAV.ExtForms;
 
 /*
  * The BSD License
@@ -42,7 +41,7 @@ using AgeyevAV.ExtForms;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class NodeStateIcon : NodeIcon
   {

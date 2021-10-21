@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
 using System.Runtime.Serialization;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -70,7 +72,7 @@ using System.Runtime.Serialization;
  * 3. Асинхронный без ожидания завершения
  */
 
-namespace AgeyevAV.Remoting
+namespace FreeLibSet.Remoting
 {
   #region Перечисление ExecProcState
 

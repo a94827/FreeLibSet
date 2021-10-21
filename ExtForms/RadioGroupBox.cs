@@ -8,6 +8,7 @@ using System.Windows.Forms.Design;
 using System.Collections;
 using System.ComponentModel.Design;
 using System.Windows.Forms.Design.Behavior;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -40,7 +41,7 @@ using System.Windows.Forms.Design.Behavior;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Простой GroupBox с автоматически создаваемыми радиокнопками

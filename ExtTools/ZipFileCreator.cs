@@ -10,6 +10,7 @@ using System.Security.Policy;
 using System.Runtime.Serialization;
 //using SevenZip;
 using System.Threading;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -40,7 +41,7 @@ using System.Threading;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.IO
+namespace FreeLibSet.IO
 {
   /// <summary>
   /// Создание Zip-файлов для составных документов Open Office, MS Ofiice-2007 и других

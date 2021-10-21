@@ -1,4 +1,4 @@
-﻿namespace AgeyevAV.ExtForms.Docs
+﻿namespace FreeLibSet.Forms.Docs
 {
   partial class DateRangeInclusionGridFilterForm
   {
@@ -30,14 +30,14 @@
     {
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.edDate = new AgeyevAV.ExtForms.DateBox();
+      this.edDate = new FreeLibSet.Controls.DateBox();
       this.panel1 = new System.Windows.Forms.Panel();
       this.rbSet = new System.Windows.Forms.RadioButton();
       this.rbWorkDate = new System.Windows.Forms.RadioButton();
       this.rbNone = new System.Windows.Forms.RadioButton();
       this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
-      this.infoLabel1 = new AgeyevAV.ExtForms.InfoLabel();
+      this.infoLabel1 = new FreeLibSet.Controls.InfoLabel();
       this.groupBox1.SuspendLayout();
       this.panel1.SuspendLayout();
       this.SuspendLayout();
@@ -175,12 +175,12 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.Button btnCancel;
-    private AgeyevAV.ExtForms.DateBox edDate;
+    private FreeLibSet.Controls.DateBox edDate;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.RadioButton rbSet;
     private System.Windows.Forms.RadioButton rbWorkDate;
     private System.Windows.Forms.RadioButton rbNone;
     private System.Windows.Forms.Label label2;
-    private InfoLabel infoLabel1;
+    private FreeLibSet.Controls.InfoLabel infoLabel1;
   }
 }

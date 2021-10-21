@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using System.IO;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Форма для реализации ListSelectDialog
 

@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
-using AgeyevAV.FIAS;
+using FreeLibSet.Forms;
+using FreeLibSet.FIAS;
 using System.Windows.Forms;
 using System.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Data;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.FIAS
+namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
   /// Провайдер табличного просмотра детальной информации по адресу

@@ -6,9 +6,11 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Data;
 using System.ComponentModel;
-using AgeyevAV;
-using AgeyevAV.Config;
-using AgeyevAV.Logging;
+
+using FreeLibSet.Config;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -60,7 +62,7 @@ using AgeyevAV.Logging;
  * Им все равно нужны отдельные классы для работы с сервером
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисления
 

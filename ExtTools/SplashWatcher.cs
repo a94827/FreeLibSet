@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +37,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Remoting
 {
 
   /// <summary>

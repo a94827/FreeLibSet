@@ -5,8 +5,9 @@ using System.Collections;
 using Microsoft.Win32;
 using System.Data;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   /// <summary>
   /// Пустой перечислитель.
@@ -838,7 +839,10 @@ namespace AgeyevAV
 
     #endregion
   }
+}
 
+namespace FreeLibSet.Data
+{
   /// <summary>
   /// Поиск строк в таблице с совпадающими значениями полей, входящих в DataView.Sort.
   /// Реализует перечислитель по массивам строк с одинаковыми значениями полей.

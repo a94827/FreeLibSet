@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Runtime.InteropServices;
 // Списки с автоматическим удалением последних элементов
 // (Most-Recently-Used)
 
-namespace AgeyevAV
+namespace FreeLibSet.Collections
 {
   /// <summary>
   /// Коллекция объектов с автоматическим удалением элементов, обращение к которым выполнялось давно

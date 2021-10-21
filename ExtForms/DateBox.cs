@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Globalization;
 using System.ComponentModel;
+using FreeLibSet.Formatting;
+using FreeLibSet.Forms;
 
 /*                                             
  * The BSD License
@@ -37,7 +39,7 @@ using System.ComponentModel;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   /// <summary>
   /// Поле ввода даты.

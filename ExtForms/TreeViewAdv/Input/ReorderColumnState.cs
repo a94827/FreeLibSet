@@ -41,7 +41,7 @@ using System.Windows.Forms;
  */
 
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   internal class ReorderColumnState : ColumnState
   {

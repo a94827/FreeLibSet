@@ -5,7 +5,9 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.DependedValues;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Controls;
+using FreeLibSet.Calendar;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using AgeyevAV.DependedValues;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Провайдер для YearMonthBox

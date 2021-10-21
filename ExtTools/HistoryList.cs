@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -31,7 +32,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV
+namespace FreeLibSet.Collections
 {
   /// <summary>
   /// Структура для хранения списка истории (массива строк).
@@ -385,7 +386,7 @@ namespace AgeyevAV
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
     /// <returns>Перечислитель</returns>
-    public ArrayEnumerator<string> GetEnumerator()
+    public FreeLibSet.Core.ArrayEnumerator<string> GetEnumerator()
     {
       if (_Items == null)
         return new ArrayEnumerator<string>(DataTools.EmptyStrings);

@@ -8,7 +8,7 @@
     <ProjectGuid>{D78C5082-6E86-47A5-8216-36AEB83751FE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgeyevAV.ExtDB</RootNamespace>
+    <RootNamespace>FreeLibSet.Data</RootNamespace>
     <AssemblyName>ExtDB</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileUpgradeFlags>

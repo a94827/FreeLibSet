@@ -9,9 +9,10 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using System.Collections;
-using AgeyevAV.IO;
-using AgeyevAV.Logging;
-using AgeyevAV.Shell;
+using FreeLibSet.IO;
+using FreeLibSet.Logging;
+using FreeLibSet.Shell;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -42,7 +43,7 @@ using AgeyevAV.Shell;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms.Diagnostics
 {
   /// <summary>
   /// Отладка выброшенных исключений

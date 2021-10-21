@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// «аставка ожидани€ удаленного завершени€ работы

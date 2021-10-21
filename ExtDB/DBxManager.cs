@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Генератор объектов DBx для строк подключения.
@@ -204,9 +205,9 @@ namespace AgeyevAV.ExtDB
           if (_Managers == null)
           {
             _Managers = new SyncNamedCollection<DBxManager>();
-            _Managers.Add(AgeyevAV.ExtDB.SqlClient.SqlDBxManager.TheManager);
-            _Managers.Add(AgeyevAV.ExtDB.Npgsql.NpgsqlDBxManager.TheManager);
-            _Managers.Add(AgeyevAV.ExtDB.SQLite.SQLiteDBxManager.TheManager);
+            _Managers.Add(FreeLibSet.Data.SqlClient.SqlDBxManager.TheManager);
+            _Managers.Add(FreeLibSet.Data.Npgsql.NpgsqlDBxManager.TheManager);
+            _Managers.Add(FreeLibSet.Data.SQLite.SQLiteDBxManager.TheManager);
           }
           return _Managers;
         }

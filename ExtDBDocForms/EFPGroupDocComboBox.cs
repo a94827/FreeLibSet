@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.Trees;
-using AgeyevAV.ExtDB;
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Data;
 using System.Data;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Провайдер комбоблока выбора группы документов

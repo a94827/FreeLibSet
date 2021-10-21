@@ -32,7 +32,7 @@ using System.Globalization;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Data
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Форматизатор для объекта System.Data.DataView

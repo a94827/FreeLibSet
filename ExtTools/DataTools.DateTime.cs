@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using System.ComponentModel;
+using FreeLibSet.Calendar;
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
 	partial class DataTools
 	{

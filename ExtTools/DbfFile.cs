@@ -5,8 +5,9 @@ using System.IO;
 using System.Data;
 using System.Globalization;
 using System.Runtime.Serialization;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -38,7 +39,7 @@ using System.Runtime.InteropServices;
  */
 
 
-namespace AgeyevAV.DBF
+namespace FreeLibSet.DBF
 {
   /// <summary>
   /// Описание для одного поля DBF-таблицы.

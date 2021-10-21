@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.IO;
-using AgeyevAV;
-using AgeyevAV.ExtDB;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.IO;
+using FreeLibSet.Data;
 
 namespace ExtDBDocs.tests
 {

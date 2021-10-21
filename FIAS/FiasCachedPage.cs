@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Runtime.InteropServices;
-using AgeyevAV.Remoting;
+using FreeLibSet.Remoting;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -34,7 +36,7 @@ using AgeyevAV.Remoting;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   // Буферизуемые данные
 

@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
-using AgeyevAV.Remoting;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Обработчик просмотра документов. Базовый класс.

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtDB.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Data.Docs;
 using System.Windows.Forms;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Collections;
 
 /*
  * The BSD License
@@ -40,7 +41,7 @@ using AgeyevAV.Config;
  * Общие классы
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Заполняемая информация о разрешении

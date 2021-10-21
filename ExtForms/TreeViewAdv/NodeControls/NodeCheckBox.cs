@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.ComponentModel;
-using AgeyevAV.Trees;
+using FreeLibSet.Models.Tree;
 
 /*
  * The BSD License
@@ -46,7 +46,7 @@ using AgeyevAV.Trees;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms.NodeControls
+namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class NodeCheckBox : InteractiveControl
   {

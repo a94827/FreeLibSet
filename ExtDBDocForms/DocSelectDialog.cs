@@ -1,13 +1,14 @@
 using System;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 using System.Data;
 using System.Drawing;
 using System.Collections.Generic;
-using AgeyevAV;
-using AgeyevAV.DependedValues;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
+
+using FreeLibSet.DependedValues;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -40,7 +41,7 @@ using AgeyevAV.ExtDB;
 
 // Блоки диалога для выбора документов и поддокументов
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Режимы выбора документов и поддокументов в диалогах DocSelectDialog и SubDocSelectDialog 

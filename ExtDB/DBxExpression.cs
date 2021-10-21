@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   /// <summary>
   /// Базовый класс "выражения", которое может быть обычным полем, ссылочным полем (получаемым через JOIN), константой, функцией или математическим выражением.

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections.Specialized;
 using System.Data;
-using AgeyevAV;
+
+using FreeLibSet.Collections;
+using FreeLibSet.Formatting;
+using FreeLibSet.Data;
+using FreeLibSet.Calendar;
 
 /*
  * The BSD License
@@ -34,7 +38,7 @@ using AgeyevAV;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Реализация свойства EFPGridProducer.ToolTips

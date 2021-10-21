@@ -6,6 +6,8 @@ using System.Text;
 using System.Data;
 using System.Collections;
 using System.Runtime.InteropServices;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -36,7 +38,7 @@ using System.Runtime.InteropServices;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.Docs
+namespace FreeLibSet.Data.Docs
 {
   /*
    * Хранение поддокументов
@@ -644,7 +646,7 @@ namespace AgeyevAV.ExtDB.Docs
         SetValue(index, _MultiSubDocs.DocSet.InternalSetBinData(data));
       }
 
-      public AgeyevAV.IO.FileContainer GetDBFile(int index)
+      public FreeLibSet.IO.FileContainer GetDBFile(int index)
       {
         return _MultiSubDocs.DocSet.InternalGetDBFile(GetValue(index, DBxDocValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetFirstDocId(), 
@@ -652,7 +654,7 @@ namespace AgeyevAV.ExtDB.Docs
           GetName(index));
       }
 
-      public AgeyevAV.IO.StoredFileInfo GetDBFileInfo(int index)
+      public FreeLibSet.IO.StoredFileInfo GetDBFileInfo(int index)
       {
         return _MultiSubDocs.DocSet.InternalGetDBFileInfo(GetValue(index, DBxDocValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetFirstDocId(), 
@@ -660,7 +662,7 @@ namespace AgeyevAV.ExtDB.Docs
           GetName(index));
       }
 
-      public void SetDBFile(int Index, AgeyevAV.IO.FileContainer file)
+      public void SetDBFile(int Index, FreeLibSet.IO.FileContainer file)
       {
         SetValue(Index, _MultiSubDocs.DocSet.InternalSetFile(file));
       }
@@ -1150,7 +1152,7 @@ namespace AgeyevAV.ExtDB.Docs
         SetValue(index, _MultiSubDocs.DocSet.InternalSetBinData(data));
       }
 
-      public AgeyevAV.IO.FileContainer GetDBFile(int index)
+      public FreeLibSet.IO.FileContainer GetDBFile(int index)
       {
         return _MultiSubDocs.DocSet.InternalGetDBFile(GetValue(index, DBxDocValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetDocId(),
@@ -1158,7 +1160,7 @@ namespace AgeyevAV.ExtDB.Docs
           GetName(index));
       }
 
-      public AgeyevAV.IO.StoredFileInfo GetDBFileInfo(int index)
+      public FreeLibSet.IO.StoredFileInfo GetDBFileInfo(int index)
       {
         return _MultiSubDocs.DocSet.InternalGetDBFileInfo(GetValue(index, DBxDocValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetDocId(),
@@ -1166,7 +1168,7 @@ namespace AgeyevAV.ExtDB.Docs
           GetName(index));
       }
 
-      public void SetDBFile(int index, AgeyevAV.IO.FileContainer file)
+      public void SetDBFile(int index, FreeLibSet.IO.FileContainer file)
       {
         SetValue(index, _MultiSubDocs.DocSet.InternalSetFile(file));
       }

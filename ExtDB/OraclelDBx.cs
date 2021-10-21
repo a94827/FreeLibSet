@@ -4,7 +4,8 @@ using System.Text;
 using System.Data.OracleClient;
 using System.Data;
 using System.Data.Common;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -37,7 +38,7 @@ using AgeyevAV.IO;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtDB.OracleClient
+namespace FreeLibSet.Data.OracleClient
 {
   /// <summary>
   /// База данных Oracle

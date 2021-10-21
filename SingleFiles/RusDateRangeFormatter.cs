@@ -36,7 +36,7 @@ using System.Globalization;
 // не ссылается на ExtTools.dll
 // Сама библиотека ExtRussian.dll не нужна для использования этого модуля
 
-namespace AgeyevAV.Russian
+namespace FreeLibSet.Russian
 {
   /// <summary>
   /// Форматировщик диапазонов дат по правилам русского языка.

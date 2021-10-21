@@ -32,13 +32,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using AgeyevAV.Win32;
-using AgeyevAV.Logging;
+using FreeLibSet.Win32;
+using FreeLibSet.Logging;
+using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
-namespace AgeyevAV.Shell
+namespace FreeLibSet.Shell
 {
   /// <summary>
   /// Описание команды "Открыть" или "Открыть с помощью"
@@ -1238,7 +1240,7 @@ namespace AgeyevAV.Shell
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("  from " + MimeinfoCacheFilePath);
 #endif
-          AgeyevAV.IO.IniFile Ini = new IniFile(true);
+          FreeLibSet.IO.IniFile Ini = new IniFile(true);
           Ini.Load(new AbsPath(_MimeinfoCacheFilePath));
           foreach (IniKeyValue Pair in Ini.GetKeyValues("MIME Cache"))
             _MimeDesktopFiles[Pair.Key] = Pair.Value;
@@ -1254,7 +1256,7 @@ namespace AgeyevAV.Shell
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("  from " + DefaultsListFilePath);
 #endif
-          AgeyevAV.IO.IniFile Ini = new IniFile(true);
+          FreeLibSet.IO.IniFile Ini = new IniFile(true);
           Ini.Load(new AbsPath(_DefaultsListFilePath));
           foreach (IniKeyValue Pair in Ini.GetKeyValues("Default Applications"))
             _MimeDesktopFiles[Pair.Key] = Pair.Value;

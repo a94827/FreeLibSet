@@ -1,4 +1,4 @@
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   partial class NumRangeForm
   {
@@ -34,8 +34,8 @@ namespace AgeyevAV.ExtForms
       this.btn2eq1 = new System.Windows.Forms.Button();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.edLastValue = new AgeyevAV.ExtForms.NumEditBox();
-      this.edFirstValue = new AgeyevAV.ExtForms.NumEditBox();
+      this.edLastValue = new FreeLibSet.Controls.NumEditBox();
+      this.edFirstValue = new FreeLibSet.Controls.NumEditBox();
       this.btnNo = new System.Windows.Forms.Button();
       this.lblRange = new System.Windows.Forms.Label();
       this.TheGroup.SuspendLayout();
@@ -171,8 +171,8 @@ namespace AgeyevAV.ExtForms
 
     private System.Windows.Forms.Button btnCancel;
     private System.Windows.Forms.Button btnOk;
-    private AgeyevAV.ExtForms.NumEditBox edFirstValue;
-    private AgeyevAV.ExtForms.NumEditBox edLastValue;
+    private FreeLibSet.Controls.NumEditBox edFirstValue;
+    private FreeLibSet.Controls.NumEditBox edLastValue;
     public System.Windows.Forms.GroupBox TheGroup;
     private System.Windows.Forms.Button btn2eq1;
     private System.Windows.Forms.Label label2;

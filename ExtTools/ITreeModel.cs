@@ -4,6 +4,8 @@ using System.Data;
 using System.Text;
 using System.Collections;
 using System.Collections.ObjectModel;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +37,7 @@ using System.Collections.ObjectModel;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.Trees
+namespace FreeLibSet.Models.Tree
 {
   #region Интерфейс ITreeModel взят из Aga.Controls
 

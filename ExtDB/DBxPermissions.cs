@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV;
+
 using System.Runtime.Serialization;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -70,7 +71,7 @@ using System.Runtime.Serialization;
  *    зависящие от запроса. Если проверка не проходит, выбрасывается исключение
  */
 
-namespace AgeyevAV.ExtDB
+namespace FreeLibSet.Data
 {
   #region Перечисление DBxAccessMode
 

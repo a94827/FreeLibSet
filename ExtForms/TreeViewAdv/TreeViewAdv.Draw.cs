@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms.NodeControls;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
 
 /*
  * The BSD License
@@ -43,7 +43,7 @@ using AgeyevAV.ExtForms.NodeControls;
 
 #pragma warning disable 1591
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Controls
 {
   public partial class TreeViewAdv
   {

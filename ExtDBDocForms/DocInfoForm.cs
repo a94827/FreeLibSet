@@ -5,11 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtDB.Docs;
-using AgeyevAV.ExtDB;
-using AgeyevAV.Remoting;
+using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
+using FreeLibSet.Remoting;
 using System.Xml;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -40,7 +41,7 @@ using AgeyevAV.Config;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms.Docs
+namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Окно просмотра информации о документе
@@ -242,7 +243,7 @@ namespace AgeyevAV.ExtForms.Docs
     void efpDebug_Click(object sender, EventArgs args)
     {
       DataSet ds = UI.DocProvider.LoadUnformattedDocData(Params.DocTypeName, Params.DocId);
-      DebugTools.DebugDataSet(ds, "Все таблицы для документа");
+      FreeLibSet.Forms.Diagnostics.DebugTools.DebugDataSet(ds, "Все таблицы для документа");
     }
 
     #endregion

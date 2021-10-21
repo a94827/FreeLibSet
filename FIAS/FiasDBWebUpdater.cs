@@ -5,11 +5,12 @@ using System.Data;
 using System.Net;
 using System.IO;
 using System.Xml;
-using AgeyevAV.IO;
+using FreeLibSet.IO;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Diagnostics;
-//using AgeyevAV.FIAS.WebService;
+using FreeLibSet.Core;
+//using FreeLibSet.FIAS.WebService;
 
 
 /*
@@ -41,7 +42,7 @@ using System.Diagnostics;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.FIAS
+namespace FreeLibSet.FIAS
 {
   /// <summary>
   /// Отвечает за периодическое обновление классификатора, Метод PerformUpdate() вызывается приложением сервера по таймеру.

@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.Logging;
+using FreeLibSet.Logging;
 
 /*
  * The BSD License
@@ -36,7 +36,7 @@ using AgeyevAV.Logging;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Форма для вывода заставок EFPApp.BeginWait()/EndWait

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Remoting.Lifetime;
 
-namespace AgeyevAV
+namespace FreeLibSet.Core
 {
   /// <summary>
   /// Расширение базового класса объекта, передаваемого по ссылке, к которому можно присоединить

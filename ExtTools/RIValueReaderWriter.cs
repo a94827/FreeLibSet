@@ -1,7 +1,8 @@
-﻿using AgeyevAV.Config;
+﻿using FreeLibSet.Config;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -32,7 +33,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.RI
+namespace FreeLibSet.RI
 {
   #region Перечисление RIValueCfgType
 

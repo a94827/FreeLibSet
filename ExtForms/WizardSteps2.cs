@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -35,7 +36,7 @@ using System.Drawing;
 
 // Реализации WizardStep стандартных видов
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Расширение класса WizardStep, содержащее элемент управления GroupBox и два

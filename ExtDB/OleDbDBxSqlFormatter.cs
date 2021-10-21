@@ -31,7 +31,7 @@ using System.Text;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AgeyevAV.ExtDB.OleDb
+namespace FreeLibSet.Data.OleDb
 {
   /// <summary>
   /// Форматизатор SQL-запросов для MS Jet OLE DB Provider

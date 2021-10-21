@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
-using AgeyevAV.Config;
+using FreeLibSet.Config;
 using System.Data;
+using FreeLibSet.Core;
 
-namespace AgeyevAV.ExtForms
+namespace FreeLibSet.Forms
 {
   #region Перечисление EFPAppCompositionHistoryItemKind
 
