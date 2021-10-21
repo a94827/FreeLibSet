@@ -24,14 +24,14 @@ namespace ExtTools.tests
     {
       DepInput<int> indexArg = new DepInput<int>();
       indexArg.Value = 0;
-      DepValue<string> v1 = new DepInput<string>();
+      DepInput<string> v1 = new DepInput<string>();
       v1.Value = "AAA";
-      DepValue<string> v2 = new DepInput<string>();
+      DepInput<string> v2 = new DepInput<string>();
       v2.Value = "BBB";
-      DepValue<string> v3 = new DepInput<string>();
+      DepInput<string> v3 = new DepInput<string>();
       v3.Value = "CCC";
-      DepValue<string> vDef = new DepInput<string>();
-      v3.Value = "ZZZ";
+      DepInput<string> vDef = new DepInput<string>();
+      vDef.Value = "ZZZ";
       DepByIndex<string> sut = new DepByIndex<string>(indexArg, new DepValue<string>[3] { v1, v2, v3 }, vDef);
       DepResultProducer<string> resprod = new DepResultProducer<string>(sut);
       Assert.AreEqual("AAA", resprod.ToString(), "Original");
