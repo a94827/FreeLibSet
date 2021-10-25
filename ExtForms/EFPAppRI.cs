@@ -861,16 +861,14 @@ namespace FreeLibSet.Forms.RI
 
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasTextExProperty)
         {
           if (riItem.TextEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.TextEx = riItem.TextEx;
           else
-          {
-            base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
             riItem.TextEx = base.TextEx;
-          }
         }
 
         if (riItem.HasReadOnlyExProperty)
@@ -929,16 +927,14 @@ namespace FreeLibSet.Forms.RI
           base.Maximum = riItem.Maximum.Value;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasValueExProperty)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.IntValueEx = riItem.ValueEx;
           else
-          {
-            base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.IntValueEx;
-          }
         }
       }
 
@@ -986,16 +982,14 @@ namespace FreeLibSet.Forms.RI
           base.Maximum = int.MaxValue;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        riItem.ValueEx = base.IntValueEx;
         if (riItem.HasValueExProperty)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.IntValueEx = riItem.ValueEx;
           else
-          {
             base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-            riItem.ValueEx = base.IntValueEx;
-          }
         }
       }
 
@@ -1034,16 +1028,14 @@ namespace FreeLibSet.Forms.RI
           base.Maximum = (decimal)(riItem.Maximum.Value);
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.SingleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasValueExProperty)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SingleValueEx = riItem.ValueEx;
           else
-          {
-            base.SingleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.SingleValueEx;
-          }
         }
       }
 
@@ -1082,16 +1074,14 @@ namespace FreeLibSet.Forms.RI
           base.Maximum = (decimal)(riItem.Maximum.Value);
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.DoubleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasValueExProperty)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.DoubleValueEx = riItem.ValueEx;
           else
-          {
-            base.DoubleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.DoubleValueEx;
-          }
         }
       }
 
@@ -1128,16 +1118,14 @@ namespace FreeLibSet.Forms.RI
         base.Maximum = riItem.Maximum;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.DecimalValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasValueExProperty)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.DecimalValueEx = riItem.ValueEx;
           else
-          {
-            base.DecimalValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.DecimalValueEx;
-          }
         }
       }
 
@@ -1176,28 +1164,22 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
 
-        if (riItem.HasCheckedExProperty)
-        {
-          if (riItem.CheckedEx.HasSource)
-            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.CheckedEx = riItem.CheckedEx;
-          else
-          {
-            base.Checked = riItem.Checked; // обязательное присвоение, иначе свойство обнулится
-            riItem.CheckedEx = base.CheckedEx;
-          }
-        }
-
+        base.CheckState = (System.Windows.Forms.CheckState)(int)(riItem.CheckState); // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasCheckStateExProperty)
         {
           if (riItem.CheckStateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             this.CheckStateEx2 = riItem.CheckStateEx;
           else
-          {
-            base.CheckState = (System.Windows.Forms.CheckState)(int)(riItem.CheckState); // обязательное присвоение, иначе свойство обнулится
             riItem.CheckStateEx = this.CheckStateEx2;
-          }
+        }
+        if (riItem.HasCheckedExProperty)
+        {
+          if (riItem.CheckedEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.CheckedEx = riItem.CheckedEx;
+          else
+            riItem.CheckedEx = base.CheckedEx;
         }
       }
 
@@ -1283,16 +1265,14 @@ namespace FreeLibSet.Forms.RI
 
         base.Codes = riItem.Codes;
         //base.UnselectedCode = RIItem.UnselectedCode;
+        riItem.SelectedIndexEx = base.SelectedIndexEx;
         if (riItem.HasSelectedIndexExProperty)
         {
           if (riItem.SelectedIndexEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedIndexEx = riItem.SelectedIndexEx;
           else
-          {
             base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
-            riItem.SelectedIndexEx = base.SelectedIndexEx;
-          }
         }
 
         if (riItem.HasSelectedCodeExProperty)
@@ -1301,10 +1281,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedCodeEx = riItem.SelectedCodeEx;
           else
-          {
-            base.SelectedCode = riItem.SelectedCode; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedCodeEx = base.SelectedCodeEx;
-          }
         }
       }
 
@@ -1354,16 +1331,22 @@ namespace FreeLibSet.Forms.RI
         base.Maximum = riItem.Maximum;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.NValue = riItem.NValue; // обязательное присвоение, иначе свойство обнулится
+        if (riItem.HasNValueExProperty)
+        {
+          if (riItem.NValueEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.NValueEx = riItem.NValueEx;
+          else
+            riItem.NValueEx = base.NValueEx;
+        }
         if (riItem.HasValueExProperty)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.ValueEx = riItem.ValueEx;
           else
-          {
-            base.Value = riItem.Value; // обязательное присвоение, иначе свойство обнулится
             riItem.ValueEx = base.ValueEx;
-          }
         }
       }
 
@@ -1375,13 +1358,13 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        base.Value = _RIItem.Value;
+        base.NValue = _RIItem.NValue;
         base.Validate();
       }
 
       public void ReadValues()
       {
-        _RIItem.Value = base.Value;
+        _RIItem.NValue = base.NValue;
       }
 
       #endregion
@@ -1416,28 +1399,24 @@ namespace FreeLibSet.Forms.RI
         base.LastDate.Maximum = riItem.MaximumLastDate;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.FirstDate.NValue = riItem.FirstDate; // обязательное присвоение, иначе свойство обнулится
+        base.LastDate.NValue = riItem.LastDate; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasFirstDateExProperty)
         {
           if (riItem.FirstDateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.FirstDate.ValueEx = riItem.FirstDateEx;
+            base.FirstDate.NValueEx = riItem.FirstDateEx;
           else
-          {
-            base.FirstDate.Value = riItem.FirstDate; // обязательное присвоение, иначе свойство обнулится
-            riItem.FirstDateEx = base.FirstDate.ValueEx;
-          }
+            riItem.FirstDateEx = base.FirstDate.NValueEx;
         }
 
         if (riItem.HasLastDateExProperty)
         {
           if (riItem.LastDateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.LastDate.ValueEx = riItem.LastDateEx;
+            base.LastDate.NValueEx = riItem.LastDateEx;
           else
-          {
-            base.LastDate.Value = riItem.LastDate; // обязательное присвоение, иначе свойство обнулится
-            riItem.LastDateEx = base.LastDate.ValueEx;
-          }
+            riItem.LastDateEx = base.LastDate.NValueEx;
         }
       }
 
@@ -1449,15 +1428,15 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        base.FirstDate.Value = _RIItem.FirstDate;
-        base.LastDate.Value = _RIItem.LastDate;
+        base.FirstDate.NValue = _RIItem.FirstDate;
+        base.LastDate.NValue = _RIItem.LastDate;
         base.Validate();
       }
 
       public void ReadValues()
       {
-        _RIItem.FirstDate = base.FirstDate.Value;
-        _RIItem.LastDate = base.LastDate.Value;
+        _RIItem.FirstDate = base.FirstDate.NValue;
+        _RIItem.LastDate = base.LastDate.NValue;
       }
 
       #endregion
@@ -1526,16 +1505,15 @@ namespace FreeLibSet.Forms.RI
         Maximum = riItem.Maximum;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
+        base.Month = riItem.Month; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasYearExProperty)
         {
           if (riItem.YearEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.YearEx = riItem.YearEx;
           else
-          {
-            base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
             riItem.YearEx = base.YearEx;
-          }
         }
 
         if (riItem.HasMonthExProperty)
@@ -1544,10 +1522,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.MonthEx = riItem.MonthEx;
           else
-          {
-            base.Month = riItem.Month; // обязательное присвоение, иначе свойство обнулится
             riItem.MonthEx = base.MonthEx;
-          }
         }
 
         if (riItem.HasYMExProperty)
@@ -1556,10 +1531,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.YMEx = riItem.YMEx;
           else
-          {
-            base.YM = riItem.YM; // обязательное присвоение, иначе свойство обнулится
             riItem.YMEx = base.YMEx;
-          }
         }
       }
 
@@ -1601,16 +1573,16 @@ namespace FreeLibSet.Forms.RI
         Maximum = riItem.Maximum;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
+        base.FirstMonth = riItem.FirstMonth; // обязательное присвоение, иначе свойство обнулится
+        base.LastMonth = riItem.LastMonth; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasYearExProperty)
         {
           if (riItem.YearEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.YearEx = riItem.YearEx;
           else
-          {
-            base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
             riItem.YearEx = base.YearEx;
-          }
         }
 
         if (riItem.HasFirstMonthExProperty)
@@ -1619,10 +1591,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.FirstMonthEx = riItem.FirstMonthEx;
           else
-          {
-            base.FirstMonth = riItem.FirstMonth; // обязательное присвоение, иначе свойство обнулится
             riItem.FirstMonthEx = base.FirstMonthEx;
-          }
         }
 
         if (riItem.HasLastMonthExProperty)
@@ -1631,10 +1600,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.LastMonthEx = riItem.LastMonthEx;
           else
-          {
-            base.LastMonth = riItem.LastMonth; // обязательное присвоение, иначе свойство обнулится
             riItem.LastMonthEx = base.LastMonthEx;
-          }
         }
 
         if (riItem.HasFirstYMExProperty)
@@ -1643,10 +1609,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.FirstYMEx = riItem.FirstYMEx;
           else
-          {
-            base.FirstYM = riItem.FirstYM; // обязательное присвоение, иначе свойство обнулится
             riItem.FirstYMEx = base.FirstYMEx;
-          }
         }
 
         if (riItem.HasLastYMExProperty)
@@ -1655,10 +1618,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.LastYMEx = riItem.LastYMEx;
           else
-          {
-            base.LastYM = riItem.LastYM; // обязательное присвоение, иначе свойство обнулится
             riItem.LastYMEx = base.LastYMEx;
-          }
         }
       }
 
@@ -1749,16 +1709,14 @@ namespace FreeLibSet.Forms.RI
 
         base.Codes = riItem.Codes;
         //base.UnselectedCode = RIItem.UnselectedCode;
+        base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasSelectedIndexExProperty)
         {
           if (riItem.SelectedIndexEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedIndexEx = riItem.SelectedIndexEx;
           else
-          {
-            base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedIndexEx = base.SelectedIndexEx;
-          }
         }
 
         if (riItem.HasSelectedCodeExProperty)
@@ -1767,10 +1725,7 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedCodeEx = riItem.SelectedCodeEx;
           else
-          {
-            base.SelectedCode = riItem.SelectedCode; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedCodeEx = base.SelectedCodeEx;
-          }
         }
       }
 
@@ -1818,16 +1773,14 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasTextExProperty)
         {
           if (riItem.TextEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.TextEx = riItem.TextEx;
           else
-          {
-            base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
             riItem.TextEx = base.TextEx;
-          }
         }
 
         base.ErrorRegExPattern = riItem.ErrorRegExPattern;
@@ -1877,16 +1830,14 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
 
+        base.SelectedCodes = riItem.SelectedCodes; // обязательное присвоение, иначе свойство обнулится
         if (riItem.HasSelectedCodesExProperty)
         {
           if (riItem.SelectedCodesEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedCodesEx = riItem.SelectedCodesEx;
           else
-          {
-            base.SelectedCodes = riItem.SelectedCodes; // обязательное присвоение, иначе свойство обнулится
             riItem.SelectedCodesEx = base.SelectedCodesEx;
-          }
         }
       }
 

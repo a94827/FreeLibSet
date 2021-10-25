@@ -139,8 +139,8 @@ namespace FreeLibSet.Forms.Docs
       DateTime? dt = efpUser.UI.DocProvider.GetUserActionsLastTime(efpUser.DocId);
       if (dt.HasValue)
       {
-        efpPeriod.FirstDate.Value = dt.Value.Date;
-        efpPeriod.LastDate.Value = dt.Value.Date;
+        efpPeriod.FirstDate.NValue = dt.Value.Date;
+        efpPeriod.LastDate.NValue = dt.Value.Date;
       }
       else
         efpUser.SetFocus("Для пользователя нет действий");
@@ -331,8 +331,8 @@ namespace FreeLibSet.Forms.Docs
     protected override bool QueryParams()
     {
       UserActionsReportParamsForm ParamForm = new UserActionsReportParamsForm(UI);
-      ParamForm.efpPeriod.FirstDate.Value = Params.FirstDate;
-      ParamForm.efpPeriod.LastDate.Value = Params.LastDate;
+      ParamForm.efpPeriod.FirstDate.NValue = Params.FirstDate;
+      ParamForm.efpPeriod.LastDate.NValue = Params.LastDate;
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
         ParamForm.efpUser.DocId = Params.UserId;
       ParamForm.efpOneType.Checked = !String.IsNullOrEmpty(Params.SingleDocTypeName);
@@ -345,8 +345,8 @@ namespace FreeLibSet.Forms.Docs
       if (EFPApp.ShowDialog(ParamForm, true) != DialogResult.OK)
         return false;
 
-      Params.FirstDate = ParamForm.efpPeriod.FirstDate.Value;
-      Params.LastDate = ParamForm.efpPeriod.LastDate.Value;
+      Params.FirstDate = ParamForm.efpPeriod.FirstDate.NValue;
+      Params.LastDate = ParamForm.efpPeriod.LastDate.NValue;
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
         Params.UserId = ParamForm.efpUser.DocId;
       if (ParamForm.efpOneType.Checked)

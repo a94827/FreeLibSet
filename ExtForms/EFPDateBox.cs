@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(control.ClearButtonToolTipText))
         control.ClearButtonToolTipText = "Очистить дату";
 
-      _SavedValue = control.Value;
+      _SavedNValue = control.NValue;
     }
 
     #endregion
@@ -81,26 +81,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Блокировка при синхронизации выполняется не через свойство EnabledEx, как
-    /// у других управляющих элементов, а через свойство ReadOnly
-    /// </summary>
-    /// <param name="value">True-выключить блокировку, false-включить</param>
-    public override void SyncMasterState(bool value)
-    {
-      InitReadOnlyEx();
-      _NotReadOnlySync.Value = value;
-    }
-
-    /// <summary>
     /// Проверка корректности значения.
     /// Выдает сообщение об ошибке, если дата не входит в диапазон значений {Minimum, Maximum}.
     /// Если дата не введена, а CanBeEmpty=false, также устанавливается ошибка.
     /// </summary>
     protected override void OnValidate()
     {
-      if (Value.HasValue)
+      if (NValue.HasValue)
       {
-        if (!DataTools.DateInRange(Value.Value, Minimum, Maximum))
+        if (!DataTools.DateInRange(NValue.Value, Minimum, Maximum))
         {
           if (WarningIfOutOfRange)
             SetWarning("Дата должна быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum, true));
@@ -123,29 +112,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Синронизированное значение.
-    /// Свойство Value.
-    /// </summary>
-    public override object SyncValue
-    {
-      get
-      {
-        return Value;
-      }
-      set
-      {
-        Value = (Nullable<DateTime>)value;
-      }
-    }
-
-    /// <summary>
+    /// Вызывается при изменении значения свойства EnabledState.
     /// Инициализация "серого" значения.
     /// </summary>
     protected override void OnEnabledStateChanged()
     {
       base.OnEnabledStateChanged();
       if (AllowDisabledValue && EnabledState)
-        _HasSavedValue = true;
+        _HasSavedNValue = true;
       InitControlValue();
     }
 
@@ -163,55 +137,113 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство Value
+    #region Свойство Value/NValue
+
+    // Nullable-свойство NValue является основным, а Value - подчиненным
+
+    #region NValue
 
     /// <summary>
     /// Доступ к выбранной дате.
     /// Значение null используется, если дата не введена.
     /// Если пользователь ввел текст, который нельзя преобразовать в дату, также возвращается null.
+    /// При установке значения свойства удаляется компонент времени.
     /// </summary>
-    public DateTime? Value
+    public DateTime? NValue
     {
-      get { return Control.Value; }
+      get { return Control.NValue; }
       set
       {
         if (value.HasValue)
-          _SavedValue = value.Value.Date;
+          _SavedNValue = value.Value.Date;
         else
-          _SavedValue = null;
-        _HasSavedValue = true;
+          _SavedNValue = null;
+        _HasSavedNValue = true;
         InitControlValue();
       }
     }
 
     /// <summary>
-    /// Сохраняемое значение после установки свойства "Value".
-    /// Используется, если в данный момент используется DisabledValue.
+    /// Управляемое свойство NValue.
     /// </summary>
-    private DateTime? _SavedValue;
-    private bool _HasSavedValue;
+    public DepValue<DateTime?> NValueEx
+    {
+      get
+      {
+        InitNValueEx();
+        return _NValueEx;
+      }
+      set
+      {
+        InitNValueEx();
+        _NValueEx.Source = value;
+      }
+    }
+
+    private void InitNValueEx()
+    {
+      if (_NValueEx == null)
+      {
+        _NValueEx = new DepInputWithCheck<DateTime?>();
+        _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+        _NValueEx.OwnerSetValue(NValue);
+        _NValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(NValueEx_CheckValue);
+        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
+      }
+    }
+
+    private DepInputWithCheck<DateTime?> _NValueEx;
 
     /// <summary>
-    /// Инициализация DateBox.Value.
+    /// Обрезает компонент времени
     /// </summary>
-    protected void InitControlValue()
+    static void NValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime?> args)
     {
-      // Не нужно, иначе может не обновляться
-      //if (InsideValueChanged)
-      //  return;
-      if (AllowDisabledValue && (!EnabledState))
-        Control.Value = DisabledValue;
-      else if (_HasSavedValue)
-      {
-        _HasSavedValue = false;
-        Control.Value = _SavedValue;
-      }
+      if (args.NewValue.HasValue)
+        args.NewValue = args.NewValue.Value.Date;
+    }
+
+    void NValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      // Поле _InsideValueChanged=true, если значение изменено пользователем в управляющем элементе и сейчас работает метод OnValueChanged().
+      // Также поле равно true, если сейчас устанавливается свойство Value или NValue из внешнего кода со следующим стеком вызова
+      // - Установка EFPDateBox.Value или NValue
+      // - Записаны поля _SavedNValue и _HasSavedValue
+      // - Вызов EFPDateBox.InitControlValue()
+      // - Установка свойства DateBox.NValue (DateBox.Value никогда не устанавливается)
+      // - Событие DateBox.ValueChanged
+      // - Вызов метода Control_ValueChanged()
+      // - Установка поля _InsideValueChanged=true
+      // - Вызов метода OnValueChanged() 
+      // - Вызов DepInputWithCheck.OwnerSetValue() для _NValueEx
+      // - Вызов NValueEx_ValueChanged()
+      // Поле _InsideValueChanged=false, если внешний код устанавливает значение NValueEx.Value.
+      // Только в этом случае нужно инициализировать основное свойство EFPDateBox.NValue.
+      // В остальных случаях просто меняется значение управляемого свойства NValueEx и уведомляются подключенные к нему входы.
+
+      if (!_InsideValueChanged)
+        NValue = _NValueEx.Value;
+    }
+
+    #endregion
+
+    #region Value
+
+    /// <summary>
+    /// Доступ к выбранной дате без значения null.
+    /// Если поле не заполнено или пользователь ввел текст, который нельзя преобразовать в дату, возвращается DateTime.MinValue.
+    /// При установке значения свойства удаляется компонент времени.
+    /// </summary>
+    public DateTime Value
+    {
+      get { return NValue ?? DateTime.MinValue; }
+      set { NValue = value; }
     }
 
     /// <summary>
     /// Управляемое свойство Value.
     /// </summary>
-    public DepValue<DateTime?> ValueEx
+    public DepValue<DateTime> ValueEx
     {
       get
       {
@@ -229,26 +261,84 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<DateTime?>();
+        _ValueEx = new DepInputWithCheck<DateTime>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
-        _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(ValueEx_CheckValue);
+        _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime>(ValueEx_CheckValue);
         _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
-    private DepInputWithCheck<DateTime?> _ValueEx;
+    private DepInputWithCheck<DateTime> _ValueEx;
 
+    /// <summary>
+    /// Обрезает компонент времени
+    /// </summary>
+    static void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime> args)
+    {
+      args.NewValue = args.NewValue.Date;
+    }
+
+    void ValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      // См. комментарий в методе NValueEx_ValueChanged()
+
+      if (!_InsideValueChanged)
+        Value = _ValueEx.Value;
+    }
+
+    #endregion
+
+    #region InitControlValue()
+    
+    /// <summary>
+    /// Сохраняемое значение после установки свойства "Value".
+    /// Используется, если в данный момент используется DisabledValue.
+    /// </summary>
+    private DateTime? _SavedNValue;
+
+    /// <summary>
+    /// Поле получает значение true, если было установлено поле _SavedNValue.
+    /// После переноса значения в управляющий элемент вызовом InitControlValue(), поле сбрасывается в false.
+    /// </summary>
+    private bool _HasSavedNValue;
+
+    /// <summary>
+    /// Инициализация DateBox.Value.
+    /// </summary>
+    protected void InitControlValue()
+    {
+      // Не нужно, иначе может не обновляться
+      //if (InsideValueChanged)
+      //  return;
+      if (AllowDisabledValue && (!EnabledState))
+        Control.NValue = DisabledNValue;
+      else if (_HasSavedNValue)
+      {
+        _HasSavedNValue = false; // сбрасываем признак сохраненного значения
+        Control.NValue = _SavedNValue;
+      }
+    }
+
+    #endregion
+
+    #region OnValueChanged()
+
+    /// <summary>
+    /// Обработчик события DateBox.ValueChanged
+    /// </summary>
+    /// <param name="sender">Ссылка на DateBox. Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
     private void Control_ValueChanged(object sender, EventArgs args)
     {
       try
       {
-        if (!_InsideValueChanged)
+        if (!_InsideValueChanged) // предотвращение реентрантного вызова метода OnValueChanged()
         {
-          _InsideValueChanged = true;
+          _InsideValueChanged = true; // Не нужно, чтобы при установке NValueEx/ValueEx.Value рекурсивно устанавливались NValue и Value. Это бы привело к порче значения null.
           try
           {
-            OnValueChanged();
+            OnValueChanged(); // виртуальный метод
           }
           finally
           {
@@ -262,48 +352,46 @@ namespace FreeLibSet.Forms
       }
     }
 
+    /// <summary>
+    /// Флажок для предотвращения рекурсивного вызова OnValueChanged() или установки свойст NValue/Value из NValueEx/ValueEx.
+    /// </summary>
     private bool _InsideValueChanged;
 
     /// <summary>
     /// Метод вызывается при изменении значения в управляющем элементе.
-    /// При переопределении обязательно должен вызываться базовый метод
+    /// При переопределении обязательно должен вызываться базовый метод.
     /// </summary>
     protected virtual void OnValueChanged()
     {
+      // Поле _InsideValueChanged=true
+
+      if (_NValueEx != null)
+        _NValueEx.OwnerSetValue(Control.NValue);
       if (_ValueEx != null)
         _ValueEx.OwnerSetValue(Control.Value);
 
       if (AllowDisabledValue && EnabledState)
-        _SavedValue = Value;
+        _SavedNValue = NValue;
 
       Validate();
       DoSyncValueChanged();
     }
 
-    /// <summary>
-    /// Вызывается, когда изменяется значение "снаружи" элемента
-    /// </summary>
-    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime?> args)
-    {
-      if (args.NewValue.HasValue)
-        args.NewValue = args.NewValue.Value.Date;
-    }
-    void ValueEx_ValueChanged(object sender, EventArgs args)
-    {
-      Value = _ValueEx.Value;
-    }
+    #endregion
 
+    #endregion
 
+    #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, которое содержит true, если есть введенная дата (Value.HasValue=true).
+    /// Управляемое свойство, которое возвращает true, если есть введенная дата (NValue.HasValue=true).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
       get
       {
         if (_IsNotEmptyEx == null)
-          _IsNotEmptyEx = new DepExpr1<bool, DateTime?>(ValueEx, CalcIsNotEmpty);
+          _IsNotEmptyEx = new DepExpr1<bool, DateTime?>(NValueEx, CalcIsNotEmpty);
         return _IsNotEmptyEx;
       }
     }
@@ -316,31 +404,110 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство DisabledValue
+    #region Свойство DisabledValue/DisabledNValue
+
+    #region AllowDisabledValue
 
     /// <summary>
-    /// Значение, которое показывается при Enabled=false и AllowDisabledValue=true
+    /// Разрешает использование свойства DisabledValue или DisabledNValue.
+    /// По умолчанию - false
     /// </summary>
-    public DateTime? DisabledValue
+    public bool AllowDisabledValue
     {
-      get { return _DisabledValue; }
+      get { return _AllowDisabledValue; }
       set
       {
-        if (value == _DisabledValue)
+        if (value == _AllowDisabledValue)
           return;
-        _DisabledValue = value;
-        if (_DisabledValueEx != null)
-          _DisabledValueEx.Value = value;
+        _AllowDisabledValue = value;
         InitControlValue();
       }
     }
-    private DateTime? _DisabledValue;
+    private bool _AllowDisabledValue;
+
+    #endregion
+
+    #region DisabledNValue
+
+    /// <summary>
+    /// Значение, которое показывается в управляющем элементе при EnabledState=false и AllowDisabledValue=true.
+    /// Если это значение равно null, то поле ввода будет показано пустым.
+    /// </summary>
+    public DateTime? DisabledNValue
+    {
+      get { return _DisabledNValue; }
+      set
+      {
+        if (value.HasValue)
+          value = value.Value.Date;
+
+        if (value == _DisabledNValue)
+          return;
+
+        _DisabledNValue = value;
+        if (_DisabledNValueEx != null)
+          _DisabledNValueEx.Value = value;
+        if (_DisabledValueEx != null)
+          _DisabledValueEx.Value = DisabledValue;
+        InitControlValue();
+      }
+    }
+    private DateTime? _DisabledNValue;
+
+    /// <summary>
+    /// Управляемое свойство DisabledNValue.
+    /// Свойство действует при установленном свойстве AllowDisabledValue
+    /// </summary>
+    public DepValue<DateTime?> DisabledNValueEx
+    {
+      get
+      {
+        InitDisabledNValueEx();
+        return _DisabledNValueEx;
+      }
+      set
+      {
+        InitDisabledNValueEx();
+        _DisabledNValueEx.Source = value;
+      }
+    }
+
+    private void InitDisabledNValueEx()
+    {
+      if (_DisabledNValueEx == null)
+      {
+        _DisabledNValueEx = new DepInput<DateTime?>();
+        _DisabledNValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledNValueEx");
+        _DisabledNValueEx.Value = DisabledNValue;
+        _DisabledNValueEx.ValueChanged += new EventHandler(DisabledNValueEx_ValueChanged);
+      }
+    }
+    private DepInput<DateTime?> _DisabledNValueEx;
+
+    private void DisabledNValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      DisabledNValue = _DisabledNValueEx.Value;
+    }
+
+    #endregion
+
+    #region DisabledValue
+
+    /// <summary>
+    /// Значение, которое показывается при EnabledState=false и AllowDisabledValue=true.
+    /// Это свойство дублирует DisabledNValue. Если DisabledNValue=null, то возвращает DateTime.MinValue.
+    /// </summary>
+    public DateTime DisabledValue
+    {
+      get { return DisabledNValue ?? DateTime.MinValue; }
+      set { DisabledNValue = value; }
+    }
 
     /// <summary>
     /// Управляемое свойство DisabledValue.
-    /// Свойство действует при установленном свойстве AllowDisabledText
+    /// Свойство действует при установленном свойстве AllowDisabledValue.
     /// </summary>
-    public DepValue<DateTime?> DisabledValueEx
+    public DepValue<DateTime> DisabledValueEx
     {
       get
       {
@@ -358,37 +525,20 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledValueEx == null)
       {
-        _DisabledValueEx = new DepInput<DateTime?>();
+        _DisabledValueEx = new DepInput<DateTime>();
         _DisabledValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledValueEx");
         _DisabledValueEx.Value = DisabledValue;
         _DisabledValueEx.ValueChanged += new EventHandler(DisabledValueEx_ValueChanged);
       }
     }
-    private DepInput<DateTime?> _DisabledValueEx;
+    private DepInput<DateTime> _DisabledValueEx;
 
-    /// <summary>
-    /// Вызывается, когда снаружи было изменено свойство DisabledCheckStateEx
-    /// </summary>
     private void DisabledValueEx_ValueChanged(object sender, EventArgs args)
     {
       DisabledValue = _DisabledValueEx.Value;
     }
 
-    /// <summary>
-    /// Разрешает использование свойства DisabledValue
-    /// </summary>
-    public bool AllowDisabledValue
-    {
-      get { return _AllowDisabledValue; }
-      set
-      {
-        if (value == _AllowDisabledValue)
-          return;
-        _AllowDisabledValue = value;
-        InitControlValue();
-      }
-    }
-    private bool _AllowDisabledValue;
+    #endregion
 
     #endregion
 
@@ -695,7 +845,13 @@ namespace FreeLibSet.Forms
     public DateTime? Minimum
     {
       get { return _Minimum; }
-      set { _Minimum = value; }
+      set
+      {
+        if (value.HasValue)
+          _Minimum = value.Value.Date;
+        else
+          _Minimum = null;
+      }
     }
     private DateTime? _Minimum;
 
@@ -708,7 +864,13 @@ namespace FreeLibSet.Forms
     public DateTime? Maximum
     {
       get { return _Maximum; }
-      set { _Maximum = value; }
+      set
+      {
+        if (value.HasValue)
+          _Maximum = value.Value.Date;
+        else
+          _Maximum = null;
+      }
     }
     private DateTime? _Maximum;
 
@@ -723,6 +885,31 @@ namespace FreeLibSet.Forms
       set { _WarningIfOutOfRange = value; }
     }
     private bool _WarningIfOutOfRange;
+
+    #endregion
+
+    #region Синхронизация
+
+    /// <summary>
+    /// Блокировка при синхронизации выполняется не через свойство EnabledEx, как
+    /// у других управляющих элементов, а через свойство ReadOnly
+    /// </summary>
+    /// <param name="value">True-выключить блокировку, false-включить</param>
+    public override void SyncMasterState(bool value)
+    {
+      InitReadOnlyEx();
+      _NotReadOnlySync.Value = value;
+    }
+
+    /// <summary>
+    /// Синронизированное значение.
+    /// Свойство NValue.
+    /// </summary>
+    public override object SyncValue
+    {
+      get { return NValue; }
+      set { NValue = (DateTime?)value; }
+    }
 
     #endregion
   }
@@ -801,7 +988,7 @@ namespace FreeLibSet.Forms
         if (value == null)
           _FirstDateInput.Source = null;
         else
-          _FirstDateInput.Source = value.ValueEx;
+          _FirstDateInput.Source = value.NValueEx;
       }
     }
     private EFPDateBox _FirstDateBox;
@@ -826,7 +1013,7 @@ namespace FreeLibSet.Forms
         if (value == null)
           _LastDateInput.Source = null;
         else
-          _LastDateInput.Source = value.ValueEx;
+          _LastDateInput.Source = value.NValueEx;
       }
     }
     private EFPDateBox _LastDateBox;
@@ -899,8 +1086,8 @@ namespace FreeLibSet.Forms
       _LastDate.DisplayName = "Конечная дата";
       new EFPDateBoxRangeCheck(_FirstDate, _LastDate, this);
 
-      _FirstDate.ValueEx.ValueChanged += new EventHandler(InitCommandItemsState);
-      _LastDate.ValueEx.ValueChanged += new EventHandler(InitCommandItemsState);
+      _FirstDate.NValueEx.ValueChanged += new EventHandler(InitCommandItemsState);
+      _LastDate.NValueEx.ValueChanged += new EventHandler(InitCommandItemsState);
       _FirstDate.EditableEx.ValueChanged += new EventHandler(InitCommandItemsState);
       _LastDate.EditableEx.ValueChanged += new EventHandler(InitCommandItemsState);
 
@@ -1130,18 +1317,18 @@ namespace FreeLibSet.Forms
 
     private void ciToday_Click(object sender, EventArgs args)
     {
-      ControlProvider.FirstDate.Value = DateTime.Today;
-      ControlProvider.LastDate.Value = ControlProvider.FirstDate.Value;
+      ControlProvider.FirstDate.NValue = DateTime.Today;
+      ControlProvider.LastDate.NValue = ControlProvider.FirstDate.NValue;
     }
 
     private void ci1To2_Click(object sender, EventArgs args)
     {
-      ControlProvider.LastDate.Value = ControlProvider.FirstDate.Value;
+      ControlProvider.LastDate.NValue = ControlProvider.FirstDate.NValue;
     }
 
     private void ci2To1_Click(object sender, EventArgs args)
     {
-      ControlProvider.FirstDate.Value = ControlProvider.LastDate.Value;
+      ControlProvider.FirstDate.NValue = ControlProvider.LastDate.NValue;
     }
 
 
@@ -1170,17 +1357,17 @@ namespace FreeLibSet.Forms
     {
       DateTime FirstDateValue, LastDateValue;
       GetPeriodValues(mode, out FirstDateValue, out LastDateValue);
-      ControlProvider.FirstDate.Value = FirstDateValue;
-      ControlProvider.LastDate.Value = LastDateValue;
+      ControlProvider.FirstDate.NValue = FirstDateValue;
+      ControlProvider.LastDate.NValue = LastDateValue;
     }
 
     private void GetPeriodValues(int mode, out DateTime firstDateValue, out DateTime lastDateValue)
     {
       DateTime Date;
-      if (ControlProvider.FirstDate.Value.HasValue)
-        Date = ControlProvider.FirstDate.Value.Value;
-      else if (ControlProvider.LastDate.Value.HasValue)
-        Date = ControlProvider.LastDate.Value.Value;
+      if (ControlProvider.FirstDate.NValue.HasValue)
+        Date = ControlProvider.FirstDate.NValue.Value;
+      else if (ControlProvider.LastDate.NValue.HasValue)
+        Date = ControlProvider.LastDate.NValue.Value;
       else
         Date = DateTime.Today;
 
@@ -1225,12 +1412,12 @@ namespace FreeLibSet.Forms
 
     private void ShiftYear(bool forward)
     {
-      DateTime? FirstDate = ControlProvider.FirstDate.Value;
-      DateTime? LastDate = ControlProvider.LastDate.Value;
+      DateTime? FirstDate = ControlProvider.FirstDate.NValue;
+      DateTime? LastDate = ControlProvider.LastDate.NValue;
       if (ShiftYear(ref FirstDate, ref LastDate, forward))
       {
-        ControlProvider.FirstDate.Value = FirstDate;
-        ControlProvider.LastDate.Value = LastDate;
+        ControlProvider.FirstDate.NValue = FirstDate;
+        ControlProvider.LastDate.NValue = LastDate;
       }
       else
         EFPApp.ShowTempMessage("Нельзя изменить год");
@@ -1304,15 +1491,15 @@ namespace FreeLibSet.Forms
 
       if (RangeEnabled)
       {
-        if (ControlProvider.FirstDate.Value.HasValue)
-          SetMenuRightText(ci1To2, Formatter.ToString(ControlProvider.FirstDate.Value.Value, false));
+        if (ControlProvider.FirstDate.NValue.HasValue)
+          SetMenuRightText(ci1To2, Formatter.ToString(ControlProvider.FirstDate.NValue.Value, false));
         else
         {
           SetMenuRightText(ci1To2, String.Empty);
           ci1To2.Enabled = false;
         }
-        if (ControlProvider.LastDate.Value.HasValue)
-          SetMenuRightText(ci2To1, Formatter.ToString(ControlProvider.LastDate.Value.Value, false));
+        if (ControlProvider.LastDate.NValue.HasValue)
+          SetMenuRightText(ci2To1, Formatter.ToString(ControlProvider.LastDate.NValue.Value, false));
         else
         {
           SetMenuRightText(ci2To1, String.Empty);
@@ -1339,8 +1526,8 @@ namespace FreeLibSet.Forms
       ciNextPeriod.Enabled = ControlProvider.Control.TheRightButton.Enabled;
       if (ciNextPeriod.Enabled)
       {
-        dt1 = ControlProvider.FirstDate.Value;
-        dt2 = ControlProvider.LastDate.Value;
+        dt1 = ControlProvider.FirstDate.NValue;
+        dt2 = ControlProvider.LastDate.NValue;
         DateRangeBox.ShiftDateRange(ref dt1, ref dt2, true);
         SetMenuRightText(ciNextPeriod, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
       }
@@ -1350,24 +1537,24 @@ namespace FreeLibSet.Forms
       ciPrevPeriod.Enabled = ControlProvider.Control.TheLeftButton.Enabled;
       if (ciPrevPeriod.Enabled)
       {
-        dt1 = ControlProvider.FirstDate.Value;
-        dt2 = ControlProvider.LastDate.Value;
+        dt1 = ControlProvider.FirstDate.NValue;
+        dt2 = ControlProvider.LastDate.NValue;
         DateRangeBox.ShiftDateRange(ref dt1, ref dt2, false);
         SetMenuRightText(ciPrevPeriod, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
       }
       else
         SetMenuRightText(ciPrevPeriod, String.Empty);
 
-      dt1 = ControlProvider.FirstDate.Value;
-      dt2 = ControlProvider.LastDate.Value;
+      dt1 = ControlProvider.FirstDate.NValue;
+      dt2 = ControlProvider.LastDate.NValue;
       ciNextYear.Enabled = ShiftYear(ref dt1, ref dt2, true);
       if (ciNextYear.Enabled)
         SetMenuRightText(ciNextYear, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
       else
         SetMenuRightText(ciNextYear, String.Empty);
 
-      dt1 = ControlProvider.FirstDate.Value;
-      dt2 = ControlProvider.LastDate.Value;
+      dt1 = ControlProvider.FirstDate.NValue;
+      dt2 = ControlProvider.LastDate.NValue;
       ciPrevYear.Enabled = ShiftYear(ref dt1, ref dt2, false);
       if (ciPrevYear.Enabled)
         SetMenuRightText(ciPrevYear, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
@@ -1402,7 +1589,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Провайдер для стандартного управляющего элемента - календаря
-  /// Позволяет выбирать единственную дату, а не диапазон дат
+  /// Позволяет выбирать единственную дату, а не диапазон дат.
+  /// Пустое значение null не поддерживается.
   /// </summary>
   public class EFPMonthCalendarSingleDay : EFPSyncControl<MonthCalendar>
   {
@@ -1432,15 +1620,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Переопределенные методы
-
-    /// <summary>
-    /// Свойство Value для реализации интерфейса IDepSyncObject
-    /// </summary>
-    public override object SyncValue
-    {
-      get { return Value; }
-      set { Value = (DateTime)value; }
-    }
 
     /// <summary>
     /// Проверяет попадание даты в диапазон {Minimum, Maximum}
@@ -1499,13 +1678,18 @@ namespace FreeLibSet.Forms
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime>(ValueEx_CheckValue);
+        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
     void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime> args)
     {
-      Value = args.NewValue;
-      args.Cancel = true;
+      Value = args.NewValue.Date;
+    }
+
+    void ValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      this.Value = _ValueEx.Value;
     }
 
     private DepInputWithCheck<DateTime> _ValueEx;
@@ -1545,7 +1729,7 @@ namespace FreeLibSet.Forms
     /// Минимальная дата, которую можно ввести.
     /// Если значение свойства установлено и свойство Value меньше заданной даты, будет выдана ошибка
     /// при проверке контроля.
-    /// По умолчанию ограничение не установлено
+    /// По умолчанию - null - ограничение не установлено.
     /// </summary>
     public DateTime? Minimum
     {
@@ -1557,8 +1741,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Максимальная дата, которую можно ввести.
     /// Если значение свойства установлено и свойство Value больше заданной даты, будет выдана ошибка
-    /// при проверке контроля
-    /// По умолчанию ограничение не установлено
+    /// при проверке контроля.
+    /// По умолчанию - null - ограничение не установлено.
     /// </summary>
     public DateTime? Maximum
     {
@@ -1578,6 +1762,25 @@ namespace FreeLibSet.Forms
       set { _WarningIfOutOfRange = value; }
     }
     private bool _WarningIfOutOfRange;
+
+    #endregion
+
+    #region Синхронизация
+
+    /// <summary>
+    /// Свойство Value для реализации интерфейса IDepSyncObject.
+    /// Для совместимости с EFPDateBox, поддерживается "присвоение" значения null.
+    /// В этом случае никаких действий не выполняется, значение остается неизменным
+    /// </summary>
+    public override object SyncValue
+    {
+      get { return Value; }
+      set
+      {
+        if (value != null) // 22.10.2021
+          Value = (DateTime)value;
+      }
+    }
 
     #endregion
 
@@ -1609,6 +1812,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Провайдер для стандартного управляющего элемента - DateTimePicker
   /// Для ввода даты лучше использовать компонент DateBox.
+  /// Разрешает использовать значение null с помощью свойство DateTimePicker.ShowCheckBox.
   /// </summary>
   public class EFPDateTimePicker : EFPSyncControl<DateTimePicker>
   {
@@ -1624,27 +1828,12 @@ namespace FreeLibSet.Forms
     {
       if (!DesignMode)
         control.ValueChanged += new EventHandler(Control_ValueChanged);
-      _SavedValue = control.Value;
+      _SavedNValue = control.Value;
     }
 
     #endregion
 
     #region Переопределенные методы
-
-    /// <summary>
-    /// Свойство Value для интерфейса IDepSyncObject
-    /// </summary>
-    public override object SyncValue
-    {
-      get
-      {
-        return Value;
-      }
-      set
-      {
-        Value = (Nullable<DateTime>)value;
-      }
-    }
 
     /// <summary>
     /// Этот метод вызывается при изменении свойств Control.Visible или Control.Enabled
@@ -1653,7 +1842,7 @@ namespace FreeLibSet.Forms
     {
       base.OnEnabledStateChanged();
       if (AllowDisabledValue && EnabledState)
-        _HasSavedValue = true;
+        _HasSavedNValue = true;
       InitControlValue();
     }
 
@@ -1671,9 +1860,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnValidate()
     {
-      if (Value.HasValue)
+      if (NValue.HasValue)
       {
-        if (!DataTools.DateInRange(Value.Value, Minimum, Maximum))
+        if (!DataTools.DateInRange(NValue.Value, Minimum, Maximum))
         {
           if (WarningIfOutOfRange)
             SetWarning("Дата должна быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum, true));
@@ -1687,12 +1876,16 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство Value
+    #region Свойство Value/NValue
+
+    // См. комментарии в классе EFPDateBox
+
+    #region NValue
 
     /// <summary>
-    /// Доступ к выбранной дате без принудительного создания объекта
+    /// Выбранная дата или null (в режиме ShowCheckBox)
     /// </summary>
-    public DateTime? Value
+    public DateTime? NValue
     {
       get
       {
@@ -1708,49 +1901,77 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        _SavedValue = value;
-        _HasSavedValue = true;
+        _SavedNValue = value;
+        _HasSavedNValue = true;
         InitControlValue();
       }
     }
 
-    private DateTime? _SavedValue;
-    private bool _HasSavedValue;
-
-    private void InitControlValue()
+    /// <summary>
+    /// Управляемое свойство для NValue
+    /// </summary>
+    public DepValue<DateTime?> NValueEx
     {
-      // Не нужно, иначе может не обновляться
-      //if (InsideValueChanged)
-      //  return;
-
-      DateTime? Value2;
-      if (AllowDisabledValue && (!EnabledState))
-        Value2 = DisabledValue;
-      else if (_HasSavedValue)
+      get
       {
-        _HasSavedValue = false;
-        Value2 = _SavedValue;
+        InitNValueEx();
+        return _NValueEx;
       }
-      else
-        return;
-
-      if (Value2.HasValue)
+      set
       {
-        Control.Value = Value2.Value;
-        if (Control.ShowCheckBox)
-          Control.Checked = true;
-      }
-      else
-      {
-        if (Control.ShowCheckBox)
-          Control.Checked = false;
+        InitNValueEx();
+        _NValueEx.Source = value;
       }
     }
 
+    private void InitNValueEx()
+    {
+      if (_NValueEx == null)
+      {
+        _NValueEx = new DepInputWithCheck<DateTime?>();
+        _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+        _NValueEx.OwnerSetValue(NValue);
+        _NValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(NValueEx_CheckValue);
+        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
+      }
+    }
+
+    private DepInputWithCheck<DateTime?> _NValueEx;
+
     /// <summary>
-    /// Свойство ValueEx
+    /// Вызывается, когда изменяется значение "снаружи" элемента
     /// </summary>
-    public DepValue<DateTime?> ValueEx
+    static void NValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime?> args)
+    {
+      if (args.NewValue.HasValue)
+        args.NewValue = args.NewValue.Value.Date;
+    }
+
+    void NValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideValueChanged) // см. комментарий 
+        NValue = NValueEx.Value;
+    }
+
+    #endregion
+
+    #region Value
+
+    /// <summary>
+    /// Доступ к выбранной дате без значения null.
+    /// Если поле не заполнено или пользователь ввел текст, который нельзя преобразовать в дату, возвращается DateTime.MinValue.
+    /// При установке значения свойства удаляется компонент времени.
+    /// </summary>
+    public DateTime Value
+    {
+      get { return NValue ?? DateTime.MinValue; }
+      set { NValue = value; }
+    }
+
+    /// <summary>
+    /// Управляемое свойство Value.
+    /// </summary>
+    public DepValue<DateTime> ValueEx
     {
       get
       {
@@ -1768,15 +1989,70 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<DateTime?>();
+        _ValueEx = new DepInputWithCheck<DateTime>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
-        _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(ValueEx_CheckValue);
+        _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime>(ValueEx_CheckValue);
         _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
-    private DepInputWithCheck<DateTime?> _ValueEx;
+    private DepInputWithCheck<DateTime> _ValueEx;
+
+    /// <summary>
+    /// Обрезает компонент времени
+    /// </summary>
+    static void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime> args)
+    {
+      args.NewValue = args.NewValue.Date;
+    }
+
+    void ValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideValueChanged)
+        Value = _ValueEx.Value;
+    }
+
+    #endregion
+
+    #region InitControlValue()
+
+    private DateTime? _SavedNValue;
+    private bool _HasSavedNValue;
+
+    private void InitControlValue()
+    {
+      // Не нужно, иначе может не обновляться
+      //if (InsideValueChanged)
+      //  return;
+
+      DateTime? Value2;
+      if (AllowDisabledValue && (!EnabledState))
+        Value2 = DisabledValue;
+      else if (_HasSavedNValue)
+      {
+        _HasSavedNValue = false;
+        Value2 = _SavedNValue;
+      }
+      else
+        return;
+
+      if (Value2.HasValue)
+      {
+        Control.Value = Value2.Value;
+        if (Control.ShowCheckBox)
+          Control.Checked = true;
+      }
+      else
+      {
+        if (Control.ShowCheckBox)
+          Control.Checked = false;
+      }
+    }
+
+    #endregion
+
+    #region OnValueChanged()
 
     private void Control_ValueChanged(object sender, EventArgs args)
     {
@@ -1809,32 +2085,21 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected virtual void OnValueChanged()
     {
+      if (_NValueEx != null)
+        _NValueEx.OwnerSetValue(Control.Value);
       if (_ValueEx != null)
         _ValueEx.OwnerSetValue(Control.Value);
       if (_TimeEx != null)
         _TimeEx.OwnerSetValue(Control.Value.TimeOfDay);
 
       if (AllowDisabledValue && EnabledState)
-        _SavedValue = Value;
+        _SavedNValue = NValue;
 
       Validate();
       DoSyncValueChanged();
     }
 
-    /// <summary>
-    /// Вызывается, когда изменяется значение "снаружи" элемента
-    /// </summary>
-    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime?> args)
-    {
-      if (args.NewValue.HasValue)
-        args.NewValue = args.NewValue.Value.Date;
-    }
-    void ValueEx_ValueChanged(object sender, EventArgs args)
-    {
-      Value = ValueEx.Value;
-    }
-
-
+    #endregion
 
     #endregion
 
@@ -1927,7 +2192,7 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        _SavedValue = DateTime.Today + value;
+        _SavedNValue = DateTime.Today + value;
         InitControlValue();
       }
     }
@@ -1955,8 +2220,8 @@ namespace FreeLibSet.Forms
       {
         _TimeEx = new DepInputWithCheck<TimeSpan>();
         _TimeEx.OwnerInfo = new DepOwnerInfo(this, "TimeEx");
-        if (Value.HasValue)
-          _TimeEx.OwnerSetValue(Value.Value.TimeOfDay);
+        if (NValue.HasValue)
+          _TimeEx.OwnerSetValue(NValue.Value.TimeOfDay);
         _TimeEx.CheckValue += new DepInputCheckEventHandler<TimeSpan>(TimeEx_CheckValue);
       }
     }
@@ -1968,7 +2233,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     void TimeEx_CheckValue(object sender, DepInputCheckEventArgs<TimeSpan> args)
     {
-      _SavedValue = DateTime.Today + args.NewValue;
+      _SavedNValue = DateTime.Today + args.NewValue;
       args.Cancel = true;
       InitControlValue();
     }
@@ -2019,6 +2284,8 @@ namespace FreeLibSet.Forms
 
     #region Свойства FormatContainsDate и FormatContainsTime
 
+    !!!
+
     /// <summary>
     /// Возвращает true, если свойства DateTimePicker.Format и CustomFormat определяют формат, содержащий компонент даты
     /// </summary>
@@ -2060,6 +2327,19 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    #region Синхронизация
+
+    /// <summary>
+    /// Свойство NValue для интерфейса IDepSyncObject
+    /// </summary>
+    public override object SyncValue
+    {
+      get { return NValue; }
+      set { NValue = (Nullable<DateTime>)value; }
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -2079,7 +2359,7 @@ namespace FreeLibSet.Forms
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
     public EFPDateOrRangeBox(EFPBaseProvider baseProvider, UserMaskedComboBox control)
-      : base(baseProvider, control, true)
+      : base (baseProvider, control, true)
     {
       control.Mask = EditableDateTimeFormatters.Date.EditMask;
       if (!DesignMode)
@@ -3062,7 +3342,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     public EFPDateOrRangeBoxCommandItems(EFPDateOrRangeBox controlProvider)
-      : base(controlProvider, false, true)
+      : base (controlProvider, false, true)
     {
       _ControlProvider = controlProvider;
 

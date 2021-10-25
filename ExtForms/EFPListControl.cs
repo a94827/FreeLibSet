@@ -166,28 +166,6 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Синхронизированное значение.
-    /// Используется SelectedIndex или SelectedCode, в зависимости от свойства SyncValueType.
-    /// </summary>
-    public override object SyncValue
-    {
-      get
-      {
-        if (SyncValueType == EFPListControlSyncValueType.SelectedIndex)
-          return SelectedIndex;
-        else
-          return SelectedCode;
-      }
-      set
-      {
-        if (SyncValueType == EFPListControlSyncValueType.SelectedIndex)
-          SelectedIndex = (int)value;
-        else
-          SelectedCode = (string)value;
-      }
-    }
-
-    /// <summary>
     /// Инициализация "серого" значения.
     /// </summary>
     protected override void OnEnabledStateChanged()
@@ -607,7 +585,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Управление синхронизацией
+    #region Синхронизация
 
     /// <summary>
     /// Какое свойство будет использовано для синхронизации в SyncGroup
@@ -625,6 +603,28 @@ namespace FreeLibSet.Forms
       }
     }
     private EFPListControlSyncValueType _SyncValueType;
+
+    /// <summary>
+    /// Синхронизированное значение.
+    /// Используется SelectedIndex или SelectedCode, в зависимости от свойства SyncValueType.
+    /// </summary>
+    public override object SyncValue
+    {
+      get
+      {
+        if (SyncValueType == EFPListControlSyncValueType.SelectedIndex)
+          return SelectedIndex;
+        else
+          return SelectedCode;
+      }
+      set
+      {
+        if (SyncValueType == EFPListControlSyncValueType.SelectedIndex)
+          SelectedIndex = (int)value;
+        else
+          SelectedCode = (string)value;
+      }
+    }
 
     #endregion
   }

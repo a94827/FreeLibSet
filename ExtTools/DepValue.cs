@@ -759,9 +759,9 @@ namespace FreeLibSet.DependedValues
   #endregion
 
   /// <summary>
-  /// Расширение класса DepInput добавлением проверки устанавливаемого значения
-  /// с помощью события CheckValue.
-  /// Этот класс не является сериализуемым
+  /// Расширение класса DepInput добавлением проверки устанавливаемого значения с помощью события CheckValue.
+  /// Этот класс не является сериализуемым.
+  /// Используется, например, в EFPDateBox, для обрезки компонента времени в DateTime.
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   public class DepInputWithCheck<T> : DepInput<T>

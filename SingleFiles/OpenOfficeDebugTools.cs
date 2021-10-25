@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Data;
 using System.ComponentModel;
 using System.Diagnostics;
+using FreeLibSet.Core;
+using FreeLibSet.Forms.Diagnostics;
 
 /*
  * The BSD License

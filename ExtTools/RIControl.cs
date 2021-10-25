@@ -2129,27 +2129,89 @@ namespace FreeLibSet.RI
   {
     #region Свойства
 
+    #region Value/NValue
+
+    #region NValue
+
     /// <summary>
-    /// Введенное значение
+    /// Введенное значение.
+    /// Может быть null, если нет введенного значения.
     /// </summary>
-    public DateTime? Value
+    public DateTime? NValue
     {
-      get { return _Value; }
+      get { return _NValue; }
       set
       {
-        _Value = value;
+        _NValue = value;
+        if (_NValueEx != null)
+          _NValueEx.Value = value;
         if (_ValueEx != null)
-          _ValueEx.Value = value;
+          _ValueEx.Value = this.Value;
       }
     }
-    private DateTime? _Value;
+    private DateTime? _NValue;
 
-    private DateTime? _OldValue;
+    private DateTime? _OldNValue;
+
+    /// <summary>
+    /// Управляемое значение для NValue.
+    /// </summary>
+    public DepValue<DateTime?> NValueEx
+    {
+      get
+      {
+        InitNValueEx();
+        return _NValueEx;
+      }
+      set
+      {
+        InitNValueEx();
+        _NValueEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NValueEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool HasNValueExProperty { get { return _NValueEx != null; } }
+
+    private void InitNValueEx()
+    {
+      if (_NValueEx == null)
+      {
+        _NValueEx = new DepInput<DateTime?>();
+        _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+        _NValueEx.Value = NValue;
+        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
+      }
+    }
+
+    private void NValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      NValue = _NValueEx.Value;
+    }
+
+    #endregion
+
+    #region Value
+
+    /// <summary>
+    /// Введенное значение.
+    /// Если нет введенного значения, свойство возвращает DateTime.MinValue.
+    /// Это свойство следует использовать при CanBeEmpty=false.
+    /// </summary>
+    public DateTime Value
+    {
+      get { return NValue ?? DateTime.MinValue; }
+      set { NValue = value; }
+    }
 
     /// <summary>
     /// Управляемое значение для Value.
     /// </summary>
-    public DepValue<DateTime?> ValueEx
+    public DepValue<DateTime> ValueEx
     {
       get
       {
@@ -2162,7 +2224,7 @@ namespace FreeLibSet.RI
         _ValueEx.Source = value;
       }
     }
-    private DepInput<DateTime?> _ValueEx;
+    private DepInput<DateTime> _ValueEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства ValueEx инициализирован.
@@ -2174,7 +2236,7 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<DateTime?>();
+        _ValueEx = new DepInput<DateTime>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.Value = Value;
         _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
@@ -2185,6 +2247,12 @@ namespace FreeLibSet.RI
     {
       Value = _ValueEx.Value;
     }
+
+    #endregion
+
+    #endregion
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -2215,6 +2283,10 @@ namespace FreeLibSet.RI
       get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
       set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
     }
+
+    #endregion
+
+    #region Minimum/Maximum
 
     /// <summary>
     /// Минимальное значение, которое можно ввести.
@@ -2249,6 +2321,8 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #endregion
+
     #region Чтение и запись
 
     /// <summary>
@@ -2263,7 +2337,7 @@ namespace FreeLibSet.RI
       {
         if (base.HasChanges)
           return true;
-        return Value != _OldValue;
+        return NValue != _OldNValue;
       }
     }
 
@@ -2277,8 +2351,8 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetNullableDate("Value", Value);
-      _OldValue = Value;
+      part.SetNullableDate("Value", NValue);
+      _OldNValue = NValue;
     }
 
     /// <summary>
@@ -2290,8 +2364,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      Value = part.GetNullableDate("Value");
-      _OldValue = Value;
+      NValue = part.GetNullableDate("Value");
+      _OldNValue = NValue;
     }
 
     /// <summary>
@@ -2313,8 +2387,8 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      if (Value.HasValue)
-        part.SetDate(Name, Value.Value);
+      if (NValue.HasValue)
+        part.SetDate(Name, NValue.Value);
       else
         part.SetString(Name, String.Empty);
     }
@@ -2328,7 +2402,7 @@ namespace FreeLibSet.RI
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
       if (part.HasValue(Name))
-        Value = part.GetNullableDate(Name);
+        NValue = part.GetNullableDate(Name);
     }
 
     #endregion

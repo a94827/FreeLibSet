@@ -4,6 +4,8 @@ using System.Text;
 using System.Data;
 using System.ComponentModel;
 using FreeLibSet.IO;
+using FreeLibSet.Core;
+using FreeLibSet.Shell;
 
 /*
  * The BSD License

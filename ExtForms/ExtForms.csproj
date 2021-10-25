@@ -491,7 +491,7 @@
       <DependentUpon>TreeViewAdvResources.resx</DependentUpon>
     </Compile>
     <Compile Include="TwainDefs.cs" />
-    <Compile Include="TwainLib.cs" />
+    <Compile Include="TwainObject.cs" />
     <Compile Include="TwoListSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>

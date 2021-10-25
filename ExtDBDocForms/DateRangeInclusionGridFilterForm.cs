@@ -151,7 +151,7 @@ namespace FreeLibSet.Forms.Docs
         else
         {
           Form.efpMode.SelectedIndex = 2;
-          Form.efpDate.Value = Date;
+          Form.efpDate.NValue = Date;
         }
       }
       else
@@ -170,7 +170,7 @@ namespace FreeLibSet.Forms.Docs
           break;
         case 2:
           UseWorkDate = false;
-          Date = Form.efpDate.Value;
+          Date = Form.efpDate.NValue;
           break;
       }
       return true;

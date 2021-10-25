@@ -173,8 +173,8 @@ namespace FreeLibSet.Forms
         _LastDate = ConfigPart.GetNullableDate(ConfigName + "-LastDate");
       }
 
-      form.TheDateRangeBox.FirstDate.Value = _FirstDate;
-      form.TheDateRangeBox.LastDate.Value = _LastDate;
+      form.TheDateRangeBox.FirstDate.NValue = _FirstDate;
+      form.TheDateRangeBox.LastDate.NValue = _LastDate;
 
       EFPFormCheck fc = new EFPFormCheck(form.FormProvider);
       fc.Validating += FormCheck;
@@ -183,8 +183,8 @@ namespace FreeLibSet.Forms
       if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      _FirstDate = form.TheDateRangeBox.FirstDate.Value;
-      _LastDate = form.TheDateRangeBox.LastDate.Value;
+      _FirstDate = form.TheDateRangeBox.FirstDate.NValue;
+      _LastDate = form.TheDateRangeBox.LastDate.NValue;
 
       if (HasConfig)
       {
@@ -207,8 +207,8 @@ namespace FreeLibSet.Forms
 
         EFPValidatingTwoValuesEventArgs<DateTime?, DateTime?> Args2 =
           new EFPValidatingTwoValuesEventArgs<DateTime?, DateTime?>(args,
-          Form.TheDateRangeBox.FirstDate.Value,
-          Form.TheDateRangeBox.LastDate.Value);
+          Form.TheDateRangeBox.FirstDate.NValue,
+          Form.TheDateRangeBox.LastDate.NValue);
 
         Validating(this, Args2);
       }

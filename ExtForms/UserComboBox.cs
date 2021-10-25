@@ -88,7 +88,7 @@ namespace FreeLibSet.Controls
       SetStyle(ControlStyles.StandardDoubleClick, true);
     }
 
-    #endregion
+  #endregion
 
   #region Заглушки для свойств
 
@@ -98,7 +98,7 @@ namespace FreeLibSet.Controls
     [Browsable(false)]
     public new bool UseMnemonic { get { return base.UseMnemonic; } set { base.UseMnemonic = value; } }
 
-    #endregion
+  #endregion
   }
 #endif
 
@@ -1002,6 +1002,13 @@ namespace FreeLibSet.Controls
 [Browsable(false)]
 public new Color BackColor { get { return base.BackColor; } set { base.BackColor = value; } }
       */
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new Padding Padding { get { return base.Padding; } set { base.Padding = value; } }
+
     #endregion
 
     #region Обновление
@@ -1670,7 +1677,7 @@ public new Color BackColor { get { return base.BackColor; } set { base.BackColor
     }
 
     [RefreshProperties(RefreshProperties.Repaint)]
-    public System.Globalization.CultureInfo Culture 
+    public System.Globalization.CultureInfo Culture
     {
       get { return MainControl.Culture; }
       set { MainControl.Culture = value; }
@@ -1746,7 +1753,7 @@ public new Color BackColor { get { return base.BackColor; } set { base.BackColor
     #region Конструктор
 
     public UserSingleGridCellComboBox()
-      :base(CreateMainControl())
+      : base(CreateMainControl())
     {
       MainControl.CellClick += MainControl_CellClick;
       MainControl.MouseClick += MainControl_MouseClick;

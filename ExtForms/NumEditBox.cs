@@ -85,7 +85,7 @@ namespace FreeLibSet.Controls
 
     [Bindable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // 14.06.2019. Перенесено от свойства NullableValue
-    [DefaultValue(typeof(decimal), "0")]
+    //[DefaultValue(typeof(decimal), "0")]
     [RefreshProperties(RefreshProperties.All)]
     [Description("Текущее значение. Если задано DecimalPlace=0, то выполняется преобразование в целое число")]
     [Category("Appearance")]
@@ -153,7 +153,7 @@ namespace FreeLibSet.Controls
         if (value < -1 || value > 10)
           throw new ArgumentOutOfRangeException("value", value, "Число десятичных знаков после запятой должно быть в диапазоне от -1 до 10");
         _DecimalPlaces = value;
-        base.Text = DoFormat(NullableValue);
+        base.Text = DoFormat(NValue);
       }
     }
     private int _DecimalPlaces;
@@ -186,7 +186,7 @@ namespace FreeLibSet.Controls
         if (value && CanBeEmpty)
           CanBeEmpty = false;
         else
-          base.Text = DoFormat(NullableValue);
+          base.Text = DoFormat(NValue);
       }
     }
     private bool _ZeroAsEmptyText;
@@ -208,7 +208,7 @@ namespace FreeLibSet.Controls
         if (value && ZeroAsEmptyText)
           ZeroAsEmptyText = false;
         else
-          base.Text = DoFormat(NullableValue);
+          base.Text = DoFormat(NValue);
       }
     }
     private bool _CanBeEmpty;
@@ -216,12 +216,12 @@ namespace FreeLibSet.Controls
     // Свойство NullableValue должно идти после CanBeEmpty, для правильной сериализации
 
     [Bindable(true)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    //[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [DefaultValue(typeof(decimal?), "null")]
     [RefreshProperties(RefreshProperties.All)]
     [Description("Текущее значение с выделением пустого значения. Если задано DecimalPlace=0, то выполняется преобразование в целое число")]
     [Category("Appearance")]
-    public decimal? NullableValue
+    public decimal? NValue
     {
       get
       {
@@ -318,7 +318,7 @@ namespace FreeLibSet.Controls
 
       decimal Dummy = Value;
       if (_TextIsValid) // 27.12.2014
-        base.Text = DoFormat(NullableValue);
+        base.Text = DoFormat(NValue);
     }
 
 
@@ -422,7 +422,7 @@ namespace FreeLibSet.Controls
     public void EndInit()
     {
       if (CanBeEmpty && Value == 0m)
-        NullableValue = null; // 14.06.2019
+        NValue = null; // 14.06.2019
     }
 
     #endregion

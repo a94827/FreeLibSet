@@ -59,7 +59,7 @@ namespace FreeLibSet.Controls
       : base(new MaskedTextBox())
     {
       MainControl.Mask = EditableDateTimeFormatters.Date.EditMask; // 29.04.2021
-      _Value = null;
+      _NValue = null;
       _InsideInitText = false;
 
       // ReSharper disable once VirtualMemberCallInConstructor
@@ -86,17 +86,19 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Value
+    #region Value/NValue
 
-    [Description("Редактируемое значение")]
+    [Description("Редактируемое значение с поддержкой значения null")]
     [Category("Appearance")]
-    [DefaultValue(null)]
     [Bindable(true)]
-    public Nullable<DateTime> Value
+    //[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [DefaultValue(typeof(DateTime?), "null")]
+    [RefreshProperties(RefreshProperties.All)]
+    public Nullable<DateTime> NValue
     {
       get
       {
-        return _Value;
+        return _NValue;
       }
       set
       {
@@ -105,17 +107,36 @@ namespace FreeLibSet.Controls
         if (value.HasValue)
           value = value.Value.Date;
 
-        if (value == _Value)
+        if (value == _NValue)
           return;
-        _Value = value;
+        _NValue = value;
         InitText();
         OnValueChanged();
       }
     }
-    private Nullable<DateTime> _Value;
+    private Nullable<DateTime> _NValue;
 
 
-    [Description("Вызывается при изменении даты (свойство Value)")]
+    [Description("Редактируемое значение (свойство NValue) без поддежки значения null")]
+    [Category("Appearance")]
+    //[DefaultValue(null)]
+    [Bindable(true)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [RefreshProperties(RefreshProperties.All)]
+    public DateTime Value
+    {
+      get      
+      {
+        return NValue??DateTime.MinValue;
+      }
+      set
+      {
+        NValue = value;
+      }
+    }
+
+
+    [Description("Вызывается при изменении даты (свойства Value или NValue)")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
 
@@ -204,8 +225,8 @@ namespace FreeLibSet.Controls
       try
       {
         MainControl.Text = "";
-        if (_Value.HasValue)
-          MainControl.Text = EditableDateTimeFormatters.Date.ToString(_Value.Value);
+        if (_NValue.HasValue)
+          MainControl.Text = EditableDateTimeFormatters.Date.ToString(_NValue.Value);
 
         MainControl.SelectAll();
       }
@@ -227,11 +248,11 @@ namespace FreeLibSet.Controls
         return;
       // При каждом изменении текста пытаемся установить свойство Value
       DateTime? NewVal = TextToDate(MainControl.Text, DefaultYear);
-      if (NewVal == _Value)
+      if (NewVal == _NValue)
         return;
 
       // Свойство изменилось
-      _Value = NewVal;
+      _NValue = NewVal;
       OnValueChanged();
     }
 
@@ -280,7 +301,7 @@ namespace FreeLibSet.Controls
         try
         {
           base.OnDateSelected(drevent);
-          Owner.Value = SelectionStart;
+          Owner.NValue = SelectionStart;
           Owner.MainControl.SelectAll();
           FindForm().Hide();
         }
@@ -307,7 +328,7 @@ namespace FreeLibSet.Controls
           switch (args.KeyCode)
           {
             case Keys.Return:
-              Owner.Value = SelectionStart;
+              Owner.NValue = SelectionStart;
               Owner.MainControl.SelectAll();
               FindForm().Hide();
               args.Handled = true;
@@ -443,10 +464,10 @@ namespace FreeLibSet.Controls
         Point pt = new Point(3, Height);
         pt = PointToScreen(pt);
         _CalendarForm.Location = pt;
-        if (Value.HasValue)
+        if (NValue.HasValue)
         {
-          if (Value.Value >= _CalendarForm.Calendar.MinDate && Value.Value <= _CalendarForm.Calendar.MaxDate)
-            _CalendarForm.Calendar.SelectionStart = Value.Value;
+          if (NValue.Value >= _CalendarForm.Calendar.MinDate && NValue.Value <= _CalendarForm.Calendar.MaxDate)
+            _CalendarForm.Calendar.SelectionStart = NValue.Value;
           else
             _CalendarForm.Calendar.SelectionStart = DateTime.Today; // 24.05.2019
         }
@@ -498,24 +519,11 @@ namespace FreeLibSet.Controls
     /// <param name="args"></param>
     protected override void OnClearClick(EventArgs args)
     {
-      if (Value.HasValue)
-        Value = null;
+      if (NValue.HasValue)
+        NValue = null;
       else
         InitText(); // чтобы убрать возможные огрызки, введенные пользователем
     }
-    /*
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Bindable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Browsable(false)]
-        public new bool ClearButtonEnabled
-        {
-          get { return base.ClearButtonEnabled; }
-          set 
-          { 
-          }
-        }
-      */
 
     /// <summary>
     /// Не используется, т.к. устанавливается автоматически

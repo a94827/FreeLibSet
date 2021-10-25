@@ -5,6 +5,8 @@ using System.Data;
 using System.ComponentModel;
 using FreeLibSet.IO;
 using System.Diagnostics;
+using FreeLibSet.Core;
+using FreeLibSet.Shell;
 
 /*
  * The BSD License

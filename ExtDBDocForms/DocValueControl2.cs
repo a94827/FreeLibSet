@@ -176,7 +176,7 @@ namespace FreeLibSet.Forms.Docs
     public DocValueDateBox(DBxDocValue docValue, EFPDateBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.ValueEx);
+      SetCurrentValueEx(controlProvider.NValueEx);
       //EFPAnd.AttachInput(ControlProvider.EnabledEx, EnabledEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
@@ -287,7 +287,7 @@ namespace FreeLibSet.Forms.Docs
     public DocValueDateRangeBox(DBxDocValue docValueFirst, DBxDocValue docValueLast, EFPDateRangeBox controlProvider, bool canMultiEdit)
       : base(docValueFirst, docValueLast, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.FirstDate.ValueEx, controlProvider.LastDate.ValueEx);
+      SetCurrentValueEx(controlProvider.FirstDate.NValueEx, controlProvider.LastDate.NValueEx);
       //EFPAnd.AttachInput(ControlProvider.EnabledEx, EnabledEx);
       DepOr.AttachInput(controlProvider.FirstDate.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
       DepOr.AttachInput(controlProvider.LastDate.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
@@ -493,7 +493,7 @@ namespace FreeLibSet.Forms.Docs
     public DocValueDateTimePicker(DBxDocValue docValue, EFPDateTimePicker controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.ValueEx);
+      SetCurrentValueEx(controlProvider.NValueEx);
       DepAnd.AttachInput(ControlProvider.EnabledEx, EnabledEx);
     }
 

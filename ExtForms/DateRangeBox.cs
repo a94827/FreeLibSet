@@ -184,8 +184,8 @@ namespace FreeLibSet.Controls
         return;
       }
 
-      DateTime? dt1 = FirstDate.Value;
-      DateTime? dt2 = LastDate.Value;
+      DateTime? dt1 = FirstDate.NValue;
+      DateTime? dt2 = LastDate.NValue;
 
       if (!ShiftDateRange(ref dt1, ref dt2, forward))
       {
@@ -193,8 +193,8 @@ namespace FreeLibSet.Controls
         return;
       }
 
-      FirstDate.Value = dt1;
-      LastDate.Value = dt2;
+      FirstDate.NValue = dt1;
+      LastDate.NValue = dt2;
     }
 
     /// <summary>
@@ -396,14 +396,14 @@ namespace FreeLibSet.Controls
       if (FirstDate.Visible && FirstDate.Enabled)
       {
         if (LastDate.Visible && LastDate.Enabled)
-          lblPeriod.Text = Formatter.ToString(FirstDate.Value, LastDate.Value, true);
+          lblPeriod.Text = Formatter.ToString(FirstDate.NValue, LastDate.NValue, true);
         else
-          lblPeriod.Text = Formatter.ToString(FirstDate.Value, true);
+          lblPeriod.Text = Formatter.ToString(FirstDate.NValue, true);
       }
       else
       {
         if (LastDate.Visible && LastDate.Enabled)
-          lblPeriod.Text = Formatter.ToString(LastDate.Value, true);
+          lblPeriod.Text = Formatter.ToString(LastDate.NValue, true);
         else
           lblPeriod.Text = String.Empty;
       }
@@ -428,12 +428,12 @@ namespace FreeLibSet.Controls
         // Частичные сдвиги тоже возможны, поэтому проверяем два раза
         if (TheMenuButton.Enabled)
         {
-          DateTime? dt1 = FirstDate.Value;
-          DateTime? dt2 = LastDate.Value;
+          DateTime? dt1 = FirstDate.NValue;
+          DateTime? dt2 = LastDate.NValue;
           TheRightButton.Enabled = ShiftDateRange(ref dt1, ref dt2, true);
 
-          dt1 = FirstDate.Value;
-          dt2 = LastDate.Value;
+          dt1 = FirstDate.NValue;
+          dt2 = LastDate.NValue;
           TheLeftButton.Enabled = ShiftDateRange(ref dt1, ref dt2, false);
         }
         else

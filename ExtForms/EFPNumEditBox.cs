@@ -1029,8 +1029,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public decimal? NullableDecimalValue
     {
-      get { return Control.NullableValue; }
-      set { Control.NullableValue = value; }
+      get { return Control.NValue; }
+      set { Control.NValue = value; }
     }
 
     /// <summary>

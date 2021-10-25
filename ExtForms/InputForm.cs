@@ -1537,13 +1537,13 @@ namespace FreeLibSet.Forms
         efpValue.CanBeEmpty = CanBeEmpty;
         efpValue.WarningIfEmpty = WarningIfEmpty;
 
-        efpValue.Value = Value;
+        efpValue.NValue = Value;
 
 
         if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
           return DialogResult.Cancel;
 
-        Value = efpValue.Value;
+        Value = efpValue.NValue;
       }
       if (HasConfig)
         ConfigPart.SetNullableDate(ConfigName, Value);
@@ -1558,14 +1558,14 @@ namespace FreeLibSet.Forms
 
       EFPDateBox efpValue = (EFPDateBox)sender;
 
-      if (!efpValue.Value.HasValue)
+      if (!efpValue.NValue.HasValue)
         return;
 
       if (Validating == null)
         return;
 
       EFPValidatingValueEventArgs<DateTime> Args2 = new EFPValidatingValueEventArgs<DateTime>(args.Validator,
-        efpValue.Value.Value);
+        efpValue.NValue.Value);
 
       Validating(this, Args2);
     }
