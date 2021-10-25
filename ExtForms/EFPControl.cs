@@ -2403,6 +2403,9 @@ namespace AgeyevAV.ExtForms
       {
         OnAfterLoadConfig();
       }
+
+      if (EFPApp.InsideLoadComposition && ConfigHandler != null && ConfigManager!=null)
+        ConfigHandler.ReadConfig(ConfigManager); // 25.10.2021 Иначе не прочитается
     }
 
     /// <summary>
