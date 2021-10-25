@@ -162,7 +162,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Переходник для DateBox
   /// </summary>
-  public class DocValueDateBox : DocValueControl<Nullable<DateTime>, EFPDateBox>
+  public class DocValueDateBox : DocValueControl<Nullable<DateTime>, EFPDateTimeBox>
   {
     #region Конструктор
 
@@ -173,7 +173,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public DocValueDateBox(DBxDocValue docValue, EFPDateBox controlProvider, bool canMultiEdit)
+    public DocValueDateBox(DBxDocValue docValue, EFPDateTimeBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
       SetCurrentValueEx(controlProvider.NValueEx);

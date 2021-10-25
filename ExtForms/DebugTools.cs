@@ -16,6 +16,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Parsing;
 using FreeLibSet.Shell;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -1241,13 +1242,13 @@ namespace FreeLibSet.Forms.Diagnostics
       }
     }
 
-    private static string GetImageKey(EFPValidateState state)
+    private static string GetImageKey(UIValidateState state)
     {
       switch (state)
       {
-        case EFPValidateState.Error: return "Error";
-        case EFPValidateState.Warning: return "Warning";
-        case EFPValidateState.Ok: return "Ok";
+        case UIValidateState.Error: return "Error";
+        case UIValidateState.Warning: return "Warning";
+        case UIValidateState.Ok: return "Ok";
         default: return "UnknownState";
       }
     }

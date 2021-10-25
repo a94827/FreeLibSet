@@ -164,7 +164,7 @@ namespace FreeLibSet.FIAS.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public ValidationSeverity CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -173,7 +173,7 @@ namespace FreeLibSet.FIAS.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private ValidationSeverity _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -185,8 +185,8 @@ namespace FreeLibSet.FIAS.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != ValidationSeverity.Error; }
+      set { CanBeEmptyMode = value ? ValidationSeverity.None : ValidationSeverity.Error; }
     }
 
 
@@ -195,7 +195,7 @@ namespace FreeLibSet.FIAS.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию - Error адрес должен быть заполнен согласно свойству EditorLevel.
     /// </summary>
-    public CanBeEmptyMode CanBePartialMode
+    public ValidationSeverity CanBePartialMode
     {
       get { return _CanBePartialMode; }
       set
@@ -204,7 +204,7 @@ namespace FreeLibSet.FIAS.RI
         _CanBePartialMode = value;
       }
     }
-    private CanBeEmptyMode _CanBePartialMode;
+    private ValidationSeverity _CanBePartialMode;
 
 
     /// <summary>
@@ -217,8 +217,8 @@ namespace FreeLibSet.FIAS.RI
     /// </summary>
     public bool CanBePartial
     {
-      get { return CanBePartialMode != CanBeEmptyMode.Error; }
-      set { CanBePartialMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBePartialMode != ValidationSeverity.Error; }
+      set { CanBePartialMode = value ? ValidationSeverity.None : ValidationSeverity.Error; }
     }
 
     #endregion
@@ -448,7 +448,7 @@ namespace FreeLibSet.FIAS.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public ValidationSeverity CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -457,7 +457,7 @@ namespace FreeLibSet.FIAS.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private ValidationSeverity _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -469,8 +469,8 @@ namespace FreeLibSet.FIAS.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != ValidationSeverity.Error; }
+      set { CanBeEmptyMode = value ? ValidationSeverity.None : ValidationSeverity.Error; }
     }
 
 
@@ -479,7 +479,7 @@ namespace FreeLibSet.FIAS.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию - Error адрес должен быть заполнен согласно свойству EditorLevel.
     /// </summary>
-    public CanBeEmptyMode CanBePartialMode
+    public ValidationSeverity CanBePartialMode
     {
       get { return _CanBePartialMode; }
       set
@@ -488,7 +488,7 @@ namespace FreeLibSet.FIAS.RI
         _CanBePartialMode = value;
       }
     }
-    private CanBeEmptyMode _CanBePartialMode;
+    private ValidationSeverity _CanBePartialMode;
 
 
     /// <summary>
@@ -501,8 +501,8 @@ namespace FreeLibSet.FIAS.RI
     /// </summary>
     public bool CanBePartial
     {
-      get { return CanBePartialMode != CanBeEmptyMode.Error; }
-      set { CanBePartialMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBePartialMode != ValidationSeverity.Error; }
+      set { CanBePartialMode = value ? ValidationSeverity.None : ValidationSeverity.Error; }
     }
 
     #endregion
@@ -729,7 +729,7 @@ namespace FreeLibSet.FIAS.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public ValidationSeverity CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -738,7 +738,7 @@ namespace FreeLibSet.FIAS.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private ValidationSeverity _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -750,8 +750,8 @@ namespace FreeLibSet.FIAS.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != ValidationSeverity.Error; }
+      set { CanBeEmptyMode = value ? ValidationSeverity.None : ValidationSeverity.Error; }
     }
 
 
@@ -760,7 +760,7 @@ namespace FreeLibSet.FIAS.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию - Error адрес должен быть заполнен согласно свойству EditorLevel.
     /// </summary>
-    public CanBeEmptyMode CanBePartialMode
+    public ValidationSeverity CanBePartialMode
     {
       get { return _CanBePartialMode; }
       set
@@ -769,7 +769,7 @@ namespace FreeLibSet.FIAS.RI
         _CanBePartialMode = value;
       }
     }
-    private CanBeEmptyMode _CanBePartialMode;
+    private ValidationSeverity _CanBePartialMode;
 
 
     /// <summary>
@@ -782,8 +782,8 @@ namespace FreeLibSet.FIAS.RI
     /// </summary>
     public bool CanBePartial
     {
-      get { return CanBePartialMode != CanBeEmptyMode.Error; }
-      set { CanBePartialMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBePartialMode != ValidationSeverity.Error; }
+      set { CanBePartialMode = value ? ValidationSeverity.None : ValidationSeverity.Error; }
     }
 
     #endregion

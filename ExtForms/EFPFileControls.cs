@@ -7,6 +7,7 @@ using System.IO;
 using FreeLibSet.DependedValues;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -74,7 +75,7 @@ namespace FreeLibSet.Forms
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
 
       if (String.IsNullOrEmpty(Text))
@@ -119,7 +120,7 @@ namespace FreeLibSet.Forms
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
 
       if (String.IsNullOrEmpty(Text))
@@ -296,7 +297,7 @@ namespace FreeLibSet.Forms
 
     void DoControlProvider_Validating()
     {
-      if (_ControlProvider.ValidateState == EFPValidateState.Error)
+      if (_ControlProvider.ValidateState == UIValidateState.Error)
         return;
       if (String.IsNullOrEmpty(_ControlProvider.Text))
         return;

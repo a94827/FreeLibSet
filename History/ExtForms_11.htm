@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2021-10-21T11:18:09.222000000"/>
+	<meta name="changed" content="2021-10-25T11:46:48.466000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -261,7 +261,7 @@
 			<p lang="en-US" align="center">300</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">14.10.2021-21.10.2021</p>
+			<p lang="en-US" align="center">14.10.2021-25.10.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><a name="v300p1"></a><span lang="ru-RU">1. Динамический
@@ -287,9 +287,16 @@
 			элемента</span><span lang="en-US">, </span><span lang="ru-RU">установленный
 			</span><span lang="en-US">Control.SetError()</span><span lang="ru-RU">,
 			если пользователь меняет значение в элементе.</span></p>
-			<p lang="en-US">4. <span lang="ru-RU">Еще исправление в
-			</span>EFPApp.ShowDialog(), <span lang="ru-RU">связанное со стеком
-			блоков диалога (</span><a href="#v298p1">v.298 <span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">Еще исправление
+			в </span><span lang="en-US">EFPApp.ShowDialog(), </span><span lang="ru-RU">связанное
+			со стеком блоков диалога (</span><a href="#v298p1"><span lang="en-US">v.298
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p lang="en-US">5. EFPControlBase.LoadConfig() <span lang="ru-RU">вызывает
+			EFPConfigHandler.</span>ReadConfig()<span lang="ru-RU">, если
+			</span>EFPApp.InsideLoadComposition=true<span lang="ru-RU"> (</span><a href="#v199p19">v.199
+			<span lang="ru-RU">п.19</span></a><span lang="ru-RU">)</span>. <span lang="ru-RU">Без
+			этого не загружались настройки фильтров и колонок табличного
+			просмотра</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

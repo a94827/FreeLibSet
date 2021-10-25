@@ -280,7 +280,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
     /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
-    public DocValueDateBox AddDate(EFPDateBox controlProvider, string columnName, bool canMultiEdit)
+    public DocValueDateBox AddDate(EFPDateTimeBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDateBox dvc = new DocValueDateBox(GetDocValue(columnName), controlProvider, canMultiEdit);
       AddDocEditItem(dvc);

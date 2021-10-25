@@ -37,10 +37,10 @@ namespace FreeLibSet.Controls
       this.TheImageList = new System.Windows.Forms.ImageList(this.components);
       this.lblPeriod = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.FirstDate = new FreeLibSet.Controls.DateBox();
+      this.FirstDate = new FreeLibSet.Controls.DateTimeBox();
       this.label2 = new System.Windows.Forms.Label();
       this.TheMenuButton = new FreeLibSet.Controls.ControlRightButton();
-      this.LastDate = new FreeLibSet.Controls.DateBox();
+      this.LastDate = new FreeLibSet.Controls.DateTimeBox();
       this.TheLeftButton = new FreeLibSet.Controls.ControlRightButton();
       this.TheLP.SuspendLayout();
       this.SuspendLayout();
@@ -204,8 +204,8 @@ namespace FreeLibSet.Controls
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label lblPeriod;
-    public FreeLibSet.Controls.DateBox FirstDate;
-    public FreeLibSet.Controls.DateBox LastDate;
+    public FreeLibSet.Controls.DateTimeBox FirstDate;
+    public FreeLibSet.Controls.DateTimeBox LastDate;
     private System.Windows.Forms.ImageList TheImageList;
     private ControlRightButton TheMenuButton;
     internal ControlRightButton TheLeftButton;

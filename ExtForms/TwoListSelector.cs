@@ -9,6 +9,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
+using FreeLibSet.UICore;
 
 #pragma warning disable 1591
 
@@ -562,7 +563,7 @@ namespace FreeLibSet.Forms
 
     void SelectedGridViewProvider_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       if (!CanBeEmpty)
@@ -573,7 +574,7 @@ namespace FreeLibSet.Forms
           return;
         }
       }
-      else if (WarningIfEmpty && args.ValidateState==EFPValidateState.Ok)
+      else if (WarningIfEmpty && args.ValidateState==UIValidateState.Ok)
       {
         if (_SelectedGridViewProvider.Control.RowCount == 0)
           args.SetWarning("Список не должен быть пустым");

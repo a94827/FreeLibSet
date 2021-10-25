@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -129,7 +130,7 @@ namespace FreeLibSet.Forms
     /// Установка свойств Colors и ValidateState является взаимоисключающей. Если одно свойство устанавливается, то второе сбрасывается в null.
     /// Если оба свойства равны null, используются цвета Control.BackColor и ForeColor.
     /// </summary>
-    public EFPValidateState? ValidateState 
+    public UIValidateState? ValidateState 
     { 
       get { return _ValidateState; } 
       set 
@@ -138,7 +139,7 @@ namespace FreeLibSet.Forms
         _Colors = null;
       } 
     }
-    private EFPValidateState? _ValidateState;
+    private UIValidateState? _ValidateState;
 
     /// <summary>
     /// Здесь можно задать сдвиг изображения и картинки вправо на указанное число пикселей
@@ -233,13 +234,13 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="state"></param>
     /// <returns></returns>
-    public static ListItemColors FromValidateState(EFPValidateState state)
+    public static ListItemColors FromValidateState(UIValidateState state)
     {
       switch (state)
       {
-        case EFPValidateState.Ok: return EFPApp.Colors.ListStateOk; 
-        case EFPValidateState.Error: return EFPApp.Colors.ListStateError; 
-        case EFPValidateState.Warning: return EFPApp.Colors.ListStateWarning; 
+        case UIValidateState.Ok: return EFPApp.Colors.ListStateOk; 
+        case UIValidateState.Error: return EFPApp.Colors.ListStateError; 
+        case UIValidateState.Warning: return EFPApp.Colors.ListStateWarning; 
         default:
           throw new ArgumentException("Неизвестное значение " + state.ToString(), "state");
       }
@@ -510,7 +511,7 @@ namespace FreeLibSet.Forms
     /// (обычный черный, красный (ошибка) или сиреневый (предупреждение)).
     /// Если передано значение null, то цвет элемента не задается в явном виде. 
     /// Используется основной цвет текста элемента Control.ForeColor</param>
-    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, EFPValidateState? validateState)
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, UIValidateState? validateState)
     {
       PerformDrawItem(control, args, text, imageKey, validateState, 0);
     }
@@ -530,7 +531,7 @@ namespace FreeLibSet.Forms
     /// Используется основной цвет текста элемента Control.ForeColor</param>
     /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
-    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, EFPValidateState? validateState, int leftMargin)
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, UIValidateState? validateState, int leftMargin)
     {
       Image Image;
       if (String.IsNullOrEmpty(imageKey))
@@ -614,7 +615,7 @@ namespace FreeLibSet.Forms
     /// (обычный черный, красный (ошибка) или сиреневый (предупреждение)).
     /// Если передано значение null, то цвет элемента не задается в явном виде. 
     /// Используется основной цвет текста элемента Control.ForeColor</param>
-    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, EFPValidateState? validateState)
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, UIValidateState? validateState)
     {
       PerformDrawItem(control, args, text, image, validateState, 0);
     }
@@ -634,7 +635,7 @@ namespace FreeLibSet.Forms
     /// Используется основной цвет текста элемента Control.ForeColor</param>
     /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
-    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, EFPValidateState? validateState, int leftMargin)
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, UIValidateState? validateState, int leftMargin)
     {
       ListItemColors Colors;
       if (validateState.HasValue)

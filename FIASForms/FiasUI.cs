@@ -452,17 +452,17 @@ namespace FreeLibSet.Forms.FIAS
         base.MinRefBookLevel = riItem.MinRefBookLevel;
         switch (riItem.CanBeEmptyMode)
         {
-          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case FreeLibSet.RI.ValidationSeverity.Error: base.CanBeEmpty = false; break;
+          case FreeLibSet.RI.ValidationSeverity.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case FreeLibSet.RI.ValidationSeverity.None: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
         switch (riItem.CanBePartialMode)
         {
-          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
+          case FreeLibSet.RI.ValidationSeverity.Error: base.CanBePartial = false; break;
+          case FreeLibSet.RI.ValidationSeverity.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
+          case FreeLibSet.RI.ValidationSeverity.None: base.CanBePartial = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -503,17 +503,17 @@ namespace FreeLibSet.Forms.FIAS
         base.MinRefBookLevel = riItem.MinRefBookLevel;
         switch (riItem.CanBeEmptyMode)
         {
-          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case FreeLibSet.RI.ValidationSeverity.Error: base.CanBeEmpty = false; break;
+          case FreeLibSet.RI.ValidationSeverity.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case FreeLibSet.RI.ValidationSeverity.None: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
         switch (riItem.CanBePartialMode)
         {
-          case FreeLibSet.RI.CanBeEmptyMode.Error: base.CanBePartial = false; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Ok: base.CanBePartial = true; break;
+          case FreeLibSet.RI.ValidationSeverity.Error: base.CanBePartial = false; break;
+          case FreeLibSet.RI.ValidationSeverity.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
+          case FreeLibSet.RI.ValidationSeverity.None: base.CanBePartial = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -562,17 +562,17 @@ namespace FreeLibSet.Forms.FIAS
         _WinDlg.MinRefBookLevel = riDialog.MinRefBookLevel;
         switch (riDialog.CanBeEmptyMode)
         {
-          case FreeLibSet.RI.CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          case FreeLibSet.RI.ValidationSeverity.Error: _WinDlg.CanBeEmpty = false; break;
+          case FreeLibSet.RI.ValidationSeverity.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case FreeLibSet.RI.ValidationSeverity.None: _WinDlg.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }
         switch (riDialog.CanBePartialMode)
         {
-          case FreeLibSet.RI.CanBeEmptyMode.Error: _WinDlg.CanBePartial = false; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Warning: _WinDlg.CanBePartial = true; _WinDlg.WarningIfPartial = true; break;
-          case FreeLibSet.RI.CanBeEmptyMode.Ok: _WinDlg.CanBePartial = true; break;
+          case FreeLibSet.RI.ValidationSeverity.Error: _WinDlg.CanBePartial = false; break;
+          case FreeLibSet.RI.ValidationSeverity.Warning: _WinDlg.CanBePartial = true; _WinDlg.WarningIfPartial = true; break;
+          case FreeLibSet.RI.ValidationSeverity.None: _WinDlg.CanBePartial = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }

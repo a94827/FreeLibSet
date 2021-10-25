@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -165,7 +166,7 @@ namespace FreeLibSet.Forms
 
     private void ValidateForm(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
       if (_CanBeEmpty)
         return;

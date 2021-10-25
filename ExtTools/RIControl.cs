@@ -7,6 +7,7 @@ using System.Text;
 using FreeLibSet.Collections;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -39,118 +40,6 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.RI
 {
-  /// <summary>
-  /// Значения для свойств CanBeEmptyMode различных управляющих элементов
-  /// </summary>
-  [Serializable]
-  public enum CanBeEmptyMode
-  {
-    /// <summary>
-    /// Значение должно быть введено обязательно, иначе выдается ошибка
-    /// </summary>
-    Error,
-
-    /// <summary>
-    /// Значение может быть пустым, но будет выдано предупреждение
-    /// </summary>
-    Warning,
-
-    /// <summary>
-    /// Значение может быть пустым
-    /// </summary>
-    Ok
-  }
-
-  /// <summary>
-  /// Описание для одного объекта валидации, присоединенного к управляющему элементу.
-  /// Валидаторы могут добавляться к списку Control.Validators.
-  /// 
-  /// Класс однократной записи.
-  /// </summary>
-  [Serializable]
-  public sealed class Validator
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает объект
-    /// </summary>
-    /// <param name="expression">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="isError">true-ошибка, false-предупреждение</param>
-    public Validator(DepValue<bool> expression, string message, bool isError)
-      : this(expression, message, isError, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает объект
-    /// </summary>
-    /// <param name="expression">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="isError">true-ошибка, false-предупреждение</param>
-    /// <param name="activeEx">Выражение, определяющее необходимость выполнения проверки. Может быть null, если проверка выполняется всегда</param>
-    public Validator(DepValue<bool> expression, string message, bool isError, DepValue<bool> activeEx)
-    {
-      if (expression == null)
-        throw new ArgumentNullException("expression");
-      if (String.IsNullOrEmpty(message))
-        throw new ArgumentNullException("message");
-
-      _Expression = expression;
-      _Message = message;
-      _IsError = isError;
-      _ActiveEx = activeEx;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Выражение для выполнения проверки.
-    /// Вычисление должно возвращать true, если условие валидации выполнено.
-    /// Если вычисленное значение равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
-    /// в зависимости от свойства IsError.
-    /// </summary>
-    public DepValue<bool> Expression { get { return _Expression; } }
-    private readonly DepValue<bool> _Expression;
-
-    /// <summary>
-    /// Сообщение, которое будет выдано, если результатом вычисления Expression является false.
-    /// </summary>
-    public string Message { get { return _Message; } }
-    private readonly string _Message;
-
-    /// <summary>
-    /// True, если нарушение условия является ошибкой, false-если предупреждением.
-    /// Если хотя бы один из объектов с IsError=true не проходит валидацию, нельзя закрыть блок диалога нажатием кнопки "ОК".
-    /// Предупреждения не препятствуют закрытию диалога.
-    /// </summary>
-    public bool IsError { get { return _IsError; } }
-    private readonly bool _IsError;
-
-    /// <summary>
-    /// Необязательное предусловие для выполнения проверки. Если выражение возвращает true, то проверка выполняется,
-    /// если false - то отключается.
-    /// Если свойство не установлено (обычно), то проверка выполняется.
-    /// </summary>
-    public DepValue<bool> ActiveEx { get { return _ActiveEx; } }
-    private readonly DepValue<bool> _ActiveEx;
-
-    /// <summary>
-    /// Возвращает свойство Message (для отладки)
-    /// </summary>
-    /// <returns>Текстовое представление</returns>
-    public override string ToString()
-    {
-      return Message;
-    }
-
-    #endregion
-  }
-
-
   /// <summary>
   /// Базовый класс для управляющих элементов, которые могут располагаться на полосе RIBand
   /// </summary>
@@ -220,10 +109,19 @@ namespace FreeLibSet.RI
     private DepInput<bool> _EnabledEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства EnabledEx инициализирован.
+    /// Возвращает true, если обработчик свойства EnabledEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasEnabledExProperty { get { return _EnabledEx != null; } }
+    public bool EnabledExConnected
+    {
+      get
+      {
+        if (_EnabledEx == null)
+          return false;
+        else
+          return _EnabledEx.IsConnected;
+      }
+    }
 
 
     private void InitEnabledEx()
@@ -247,54 +145,6 @@ namespace FreeLibSet.RI
     #region Проверка элемента
 
     /// <summary>
-    /// Реализация свойства RIItem.Validators
-    /// </summary>
-    [Serializable]
-    public sealed class ValidatorList : ListWithReadOnly<Validator>
-    {
-      #region Защищенный конструктор
-
-      internal ValidatorList()
-      {
-      }
-
-      #endregion
-
-      #region Методы
-
-      /// <summary>
-      /// Создает объект Validator с IsError=true и добавляет его в список
-      /// </summary>
-      /// <param name="expression">Выражение валидации</param>
-      /// <param name="message">Сообщение</param>
-      public Validator AddError(DepValue<bool> expression, string message)
-      {
-        Validator item = new Validator(expression, message, true);
-        Add(item);
-        return item;
-      }
-
-      /// <summary>
-      /// Создает объект Validator с IsError=false и добавляет его в список
-      /// </summary>
-      /// <param name="expression">Выражение валидации</param>
-      /// <param name="message">Сообщение</param>
-      public Validator AddWarning(DepValue<bool> expression, string message)
-      {
-        Validator item = new Validator(expression, message, false);
-        Add(item);
-        return item;
-      }
-
-      internal new void SetReadOnly()
-      {
-        base.SetReadOnly();
-      }
-
-      #endregion
-    }
-
-    /// <summary>
     /// Список объектов для проверки корректности значения элемента (валидаторов).
     /// Поддерживаются ошибки и предупреждения с подсветкой и выдачей всплывающей подсказки.
     /// При нажатии кнопки "ОК" в диалоге устанавливается фокус на первый управляющий элемент, для которого валидатор вернул ошибку, и закрытие диалога предотвращается.
@@ -305,16 +155,16 @@ namespace FreeLibSet.RI
     /// Если проверку корректности введенного значения нельзя реализовать с помощью объектов Validator, используйте обработчик события Dialog.Validating,
     /// которое вызывается на стороне сервера.
     /// </summary>
-    public ValidatorList Validators
+    public UIValidatorList Validators
     {
       get
       {
         if (_Validators == null)
-          _Validators = new ValidatorList();
+          _Validators = new UIValidatorList();
         return _Validators;
       }
     }
-    private ValidatorList _Validators;
+    private UIValidatorList _Validators;
 
     /// <summary>
     /// Возвращает true, если список Validators не пустой.
@@ -394,6 +244,7 @@ namespace FreeLibSet.RI
     public TextBox()
     {
       _MaxLength = Int16.MaxValue;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -445,10 +296,19 @@ namespace FreeLibSet.RI
     private DepInput<string> _TextEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства TextEx инициализирован.
+    /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasTextExProperty { get { return _TextEx != null; } }
+    public bool TextExConnected
+    {
+      get
+      {
+        if (_TextEx == null)
+          return false;
+        else
+          return _TextEx.IsConnected;
+      }
+    }
 
     private void InitTextEx()
     {
@@ -529,10 +389,19 @@ namespace FreeLibSet.RI
     private DepInput<bool> _ReadOnlyEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ReadOnlyEx инициализирован.
+    /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasReadOnlyExProperty { get { return _ReadOnlyEx != null; } }
+    public bool ReadOnlyExConnected
+    {
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false;
+        else
+          return _ReadOnlyEx.IsConnected;
+      }
+    }
 
     private void InitReadOnlyEx()
     {
@@ -553,7 +422,7 @@ namespace FreeLibSet.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -562,7 +431,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -574,8 +443,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
 
@@ -784,10 +653,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _ValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx инициализирован.
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasValueExProperty { get { return _ValueEx != null; } }
+    public bool ValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
 
     private void InitValueEx()
     {
@@ -996,10 +874,19 @@ namespace FreeLibSet.RI
     private DepInput<float> _ValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx инициализирован.
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasValueExProperty { get { return _ValueEx != null; } }
+    public bool ValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
 
     private void InitValueEx()
     {
@@ -1198,10 +1085,19 @@ namespace FreeLibSet.RI
     private DepInput<Double> _ValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx инициализирован.
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasValueExProperty { get { return _ValueEx != null; } }
+    public bool ValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
 
     private void InitValueEx()
     {
@@ -1401,10 +1297,19 @@ namespace FreeLibSet.RI
     private DepInput<decimal> _ValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx инициализирован.
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasValueExProperty { get { return _ValueEx != null; } }
+    public bool ValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
 
     private void InitValueEx()
     {
@@ -1662,10 +1567,19 @@ namespace FreeLibSet.RI
     private DepInput<CheckState> _CheckStateEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства CheckStateEx инициализирован.
+    /// Возвращает true, если обработчик свойства CheckStateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasCheckStateExProperty { get { return _CheckStateEx != null; } }
+    public bool CheckStateExConnected
+    {
+      get
+      {
+        if (_CheckStateEx == null)
+          return false;
+        else
+          return _CheckStateEx.IsConnected;
+      }
+    }
 
     private void InitCheckStateEx()
     {
@@ -1725,10 +1639,19 @@ namespace FreeLibSet.RI
     private DepInput<bool> _CheckedEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства CheckedEx инициализирован.
+    /// Возвращает true, если обработчик свойства CheckedEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasCheckedExProperty { get { return _CheckedEx != null; } }
+    public bool CheckedExConnected
+    {
+      get
+      {
+        if (_CheckedEx == null)
+          return false;
+        else
+          return _CheckedEx.IsConnected;
+      }
+    }
 
     private void InitCheckedEx()
     {
@@ -1909,10 +1832,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _SelectedIndexEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства SelectedIndexEx инициализирован.
+    /// Возвращает true, если обработчик свойства SelectedIndexEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasSelectedIndexExProperty { get { return _SelectedIndexEx != null; } }
+    public bool SelectedIndexExConnected
+    {
+      get
+      {
+        if (_SelectedIndexEx == null)
+          return false;
+        else
+          return _SelectedIndexEx.IsConnected;
+      }
+    }
 
     private void InitSelectedIndexEx()
     {
@@ -2006,10 +1938,19 @@ namespace FreeLibSet.RI
     private DepInput<string> _SelectedCodeEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства SelectedCodeEx инициализирован.
+    /// Возвращает true, если обработчик свойства SelectedCodeEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasSelectedCodeExProperty { get { return _SelectedCodeEx != null; } }
+    public bool SelectedCodeExConnected
+    {
+      get
+      {
+        if (_SelectedCodeEx == null)
+          return false;
+        else
+          return _SelectedCodeEx.IsConnected;
+      }
+    }
 
     private void InitSelectedCodeEx()
     {
@@ -2127,6 +2068,18 @@ namespace FreeLibSet.RI
   [Serializable]
   public class DateBox : Control
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает управляющий элемент
+    /// </summary>
+    public DateBox()
+    {
+      _CanBeEmptyMode = UIValidateState.Error;
+    }
+
+    #endregion
+
     #region Свойства
 
     #region Value/NValue
@@ -2172,10 +2125,19 @@ namespace FreeLibSet.RI
     private DepInput<DateTime?> _NValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства NValueEx инициализирован.
+    /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasNValueExProperty { get { return _NValueEx != null; } }
+    public bool NValueExConnected
+    {
+      get
+      {
+        if (_NValueEx == null)
+          return false;
+        else
+          return _NValueEx.IsConnected;
+      }
+    }
 
     private void InitNValueEx()
     {
@@ -2227,10 +2189,19 @@ namespace FreeLibSet.RI
     private DepInput<DateTime> _ValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx инициализирован.
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasValueExProperty { get { return _ValueEx != null; } }
+    public bool ValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
 
     private void InitValueEx()
     {
@@ -2259,7 +2230,7 @@ namespace FreeLibSet.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -2268,7 +2239,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -2280,8 +2251,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -2414,6 +2385,18 @@ namespace FreeLibSet.RI
   [Serializable]
   public class DateRangeBox : Control
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает управляющий элемент
+    /// </summary>
+    public DateRangeBox()
+    {
+      _CanBeEmptyMode = UIValidateState.Error;
+    }
+
+    #endregion
+
     #region Свойства
 
     #region Редактируемое значение
@@ -2456,10 +2439,19 @@ namespace FreeLibSet.RI
     private DepInput<DateTime?> _FirstDateEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства FirstDateEx инициализирован.
+    /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasFirstDateExProperty { get { return _FirstDateEx != null; } }
+    public bool FirstDateExConnected
+    {
+      get
+      {
+        if (_FirstDateEx == null)
+          return false;
+        else
+          return _FirstDateEx.IsConnected;
+      }
+    }
 
     private void InitFirstDateEx()
     {
@@ -2517,10 +2509,19 @@ namespace FreeLibSet.RI
     private DepInput<DateTime?> _LastDateEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства LastDateEx инициализирован.
+    /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasLastDateExProperty { get { return _LastDateEx != null; } }
+    public bool LastDateExConnected
+    {
+      get
+      {
+        if (_LastDateEx == null)
+          return false;
+        else
+          return _LastDateEx.IsConnected;
+      }
+    }
 
     private void InitLastDateEx()
     {
@@ -2583,7 +2584,7 @@ namespace FreeLibSet.RI
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// Нет возможности задать режим проверки только для поля начальной или конечной даты.
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -2592,7 +2593,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Могут ли поля быть пустыми.
@@ -2605,8 +2606,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
 
@@ -2841,6 +2842,18 @@ namespace FreeLibSet.RI
   [Serializable]
   public class DateOrRangeBox : Control
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает управляющий элемент
+    /// </summary>
+    public DateOrRangeBox()
+    {
+      _CanBeEmptyMode = UIValidateState.Error;
+    }
+
+    #endregion
+
     #region Свойства
 
     #region Вводимое значение
@@ -2868,7 +2881,7 @@ namespace FreeLibSet.RI
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// Нет возможности задать режим проверки только для поля начальной или конечной даты.
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -2877,7 +2890,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Допускается ли пустой интервал дат.
@@ -2890,8 +2903,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -3106,10 +3119,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _YearEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства YearEx инициализирован.
+    /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasYearExProperty { get { return _YearEx != null; } }
+    public bool YearExConnected
+    {
+      get
+      {
+        if (_YearEx == null)
+          return false;
+        else
+          return _YearEx.IsConnected;
+      }
+    }
 
     private void InitYearEx()
     {
@@ -3169,10 +3191,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _MonthEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства MonthEx инициализирован.
+    /// Возвращает true, если обработчик свойства MonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasMonthExProperty { get { return _MonthEx != null; } }
+    public bool MonthExConnected
+    {
+      get
+      {
+        if (_MonthEx == null)
+          return false;
+        else
+          return _MonthEx.IsConnected;
+      }
+    }
 
     private void InitMonthEx()
     {
@@ -3230,10 +3261,19 @@ namespace FreeLibSet.RI
     private DepInput<YearMonth> _YMEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства YMEx инициализирован.
+    /// Возвращает true, если обработчик свойства YMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasYMExProperty { get { return _YMEx != null; } }
+    public bool YMExConnected
+    {
+      get
+      {
+        if (_YMEx == null)
+          return false;
+        else
+          return _YMEx.IsConnected;
+      }
+    }
 
     private void InitYMEx()
     {
@@ -3474,10 +3514,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _YearEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства YearEx инициализирован.
+    /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasYearExProperty { get { return _YearEx != null; } }
+    public bool YearExConnected
+    {
+      get
+      {
+        if (_YearEx == null)
+          return false;
+        else
+          return _YearEx.IsConnected;
+      }
+    }
 
     private void InitYearEx()
     {
@@ -3537,10 +3586,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _FirstMonthEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства FirstMonthEx инициализирован.
+    /// Возвращает true, если обработчик свойства FirstMonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasFirstMonthExProperty { get { return _FirstMonthEx != null; } }
+    public bool FirstMonthExConnected
+    {
+      get
+      {
+        if (_FirstMonthEx == null)
+          return false;
+        else
+          return _FirstMonthEx != null;
+      }
+    }
 
     private void InitFirstMonthEx()
     {
@@ -3600,10 +3658,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _LastMonthEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства LastMonthEx инициализирован.
+    /// Возвращает true, если обработчик свойства LastMonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasLastMonthExProperty { get { return _LastMonthEx != null; } }
+    public bool LastMonthExConnected
+    {
+      get
+      {
+        if (_LastMonthEx == null)
+          return false;
+        else
+          return _LastMonthEx.IsConnected;
+      }
+    }
 
     private void InitLastMonthEx()
     {
@@ -3661,10 +3728,19 @@ namespace FreeLibSet.RI
     private DepInput<YearMonth> _FirstYMEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства FirstYMEx инициализирован.
+    /// Возвращает true, если обработчик свойства FirstYMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasFirstYMExProperty { get { return _FirstYMEx != null; } }
+    public bool FirstYMExConnected
+    {
+      get
+      {
+        if (_FirstYMEx == null)
+          return false;
+        else
+          return _FirstYMEx.IsConnected;
+      }
+    }
 
     private void InitFirstYMEx()
     {
@@ -3721,10 +3797,19 @@ namespace FreeLibSet.RI
     private DepInput<YearMonth> _LastYMEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства LastYMEx инициализирован.
+    /// Возвращает true, если обработчик свойства LastYMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasLastYMExProperty { get { return _LastYMEx != null; } }
+    public bool LastYMExConnected
+    {
+      get
+      {
+        if (_LastYMEx == null)
+          return false;
+        else
+          return _LastYMEx.IsConnected;
+      }
+    }
 
     private void InitLastYMEx()
     {
@@ -4009,10 +4094,19 @@ namespace FreeLibSet.RI
     private DepInput<int> _SelectedIndexEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства SelectedIndexEx инициализирован.
+    /// Возвращает true, если обработчик свойства SelectedIndexEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasSelectedIndexExProperty { get { return _SelectedIndexEx != null; } }
+    public bool SelectedIndexExConnected
+    {
+      get
+      {
+        if (_SelectedIndexEx == null)
+          return false;
+        else
+          return _SelectedIndexEx.IsConnected;
+      }
+    }
 
     private void InitSelectedIndexEx()
     {
@@ -4101,10 +4195,19 @@ namespace FreeLibSet.RI
     private DepInput<string> _SelectedCodeEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства SelectedCodeEx инициализирован.
+    /// Возвращает true, если обработчик свойства SelectedCodeEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasSelectedCodeExProperty { get { return _SelectedCodeEx != null; } }
+    public bool SelectedCodeExConnected
+    {
+      get
+      {
+        if (_SelectedCodeEx == null)
+          return false;
+        else
+          return _SelectedCodeEx != null;
+      }
+    }
 
     private void InitSelectedCodeEx()
     {
@@ -4237,6 +4340,7 @@ namespace FreeLibSet.RI
         throw new ArgumentNullException("items");
       _Items = items;
       _MaxLength = Int16.MaxValue;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -4294,10 +4398,19 @@ namespace FreeLibSet.RI
     private DepInput<string> _TextEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства TextEx инициализирован.
+    /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasTextExProperty { get { return _TextEx != null; } }
+    public bool TextExConnected
+    {
+      get
+      {
+        if (_TextEx == null)
+          return false;
+        else
+          return _TextEx != null;
+      }
+    }
 
     private void InitTextEx()
     {
@@ -4339,7 +4452,7 @@ namespace FreeLibSet.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -4348,7 +4461,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -4360,8 +4473,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
 
@@ -4532,6 +4645,7 @@ namespace FreeLibSet.RI
       _Codes = codes;
       _SelectedCodes = DataTools.EmptyStrings;
       _OldSelectedCodes = _SelectedCodes;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -4575,7 +4689,7 @@ namespace FreeLibSet.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -4584,7 +4698,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -4596,8 +4710,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -4642,10 +4756,19 @@ namespace FreeLibSet.RI
     private DepInput<string[]> _SelectedCodesEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства SelectedCodesEx инициализирован.
+    /// Возвращает true, если обработчик свойства SelectedCodesEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool HasSelectedCodesExProperty { get { return _SelectedCodesEx != null; } }
+    public bool SelectedCodesExConnected
+    {
+      get
+      {
+        if (_SelectedCodesEx == null)
+          return false;
+        else
+          return _SelectedCodesEx != null;
+      }
+    }
 
     private void InitSelectedCodesEx()
     {
@@ -4851,6 +4974,18 @@ namespace FreeLibSet.RI
   [Serializable]
   public class FolderBrowserTextBox : Control
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает управляющий элемент
+    /// </summary>
+    public FolderBrowserTextBox()
+    {
+      _CanBeEmptyMode = UIValidateState.Error;
+    }
+
+    #endregion
+
     #region Свойства
 
     /// <summary>
@@ -4868,7 +5003,7 @@ namespace FreeLibSet.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -4877,7 +5012,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -4889,8 +5024,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     /// <summary>
@@ -5041,6 +5176,18 @@ namespace FreeLibSet.RI
   [Serializable]
   public abstract class FileTextBox : Control
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает управляющий элемент
+    /// </summary>
+    public FileTextBox()
+    {
+      _CanBeEmptyMode = UIValidateState.Error;
+    }
+
+    #endregion
+
     #region Свойства
 
     /// <summary>
@@ -5059,7 +5206,7 @@ namespace FreeLibSet.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -5068,7 +5215,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -5080,8 +5227,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     /// <summary>

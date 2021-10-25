@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -57,7 +58,7 @@ namespace FreeLibSet.Forms
     {
       if (sender != null)
       {
-        if (args.ValidateState != EFPValidateState.Error)
+        if (args.ValidateState != UIValidateState.Error)
         {
           if (efpFirstValue.NullableDecimalValue.HasValue && efpLastValue.NullableDecimalValue.HasValue)
           {
@@ -69,7 +70,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      if (efpFirstValue.ValidateState == EFPValidateState.Error || efpLastValue.ValidateState == EFPValidateState.Error)
+      if (efpFirstValue.ValidateState == UIValidateState.Error || efpLastValue.ValidateState == UIValidateState.Error)
         lblRange.Text = "Ошибка";
       else
       {
@@ -305,7 +306,7 @@ namespace FreeLibSet.Forms
 
     void efpAnyValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       if (Validating == null)
@@ -585,7 +586,7 @@ namespace FreeLibSet.Forms
 
     void efpAnyValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       NumRangeForm TheForm = (NumRangeForm)(((EFPNumEditBox)sender).Tag);
@@ -702,7 +703,7 @@ namespace FreeLibSet.Forms
 
     void efpAnyValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       if (!HasValidatingHandler)
@@ -822,7 +823,7 @@ namespace FreeLibSet.Forms
 
     void efpAnyValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       if (!HasValidatingHandler)

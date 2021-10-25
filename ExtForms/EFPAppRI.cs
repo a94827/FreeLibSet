@@ -8,6 +8,7 @@ using FreeLibSet.Logging;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -325,7 +326,7 @@ namespace FreeLibSet.Forms.RI
 
       ItemValidator iv = new ItemValidator(riControl, efpControl);
       efpControl.Validating += new EFPValidatingEventHandler(iv.Validating);
-      foreach (FreeLibSet.RI.Validator v in riControl.Validators)
+      foreach (FreeLibSet.UICore.UIValidator v in riControl.Validators)
       {
         v.Expression.ValueChanged += new EventHandler(iv.Validate);
         if (v.ActiveEx != null)
@@ -357,10 +358,10 @@ namespace FreeLibSet.Forms.RI
 
       public void Validating(object sender, EFPValidatingEventArgs args)
       {
-        if (args.ValidateState == EFPValidateState.Error)
+        if (args.ValidateState == UIValidateState.Error)
           return;
 
-        foreach (FreeLibSet.RI.Validator v in _RIControl.Validators)
+        foreach (UIValidator v in _RIControl.Validators)
         {
           if (v.ActiveEx != null)
           {
@@ -375,7 +376,7 @@ namespace FreeLibSet.Forms.RI
               args.SetError(v.Message);
               return;
             }
-            else if (args.ValidateState == EFPValidateState.Ok)
+            else if (args.ValidateState == UIValidateState.Ok)
               args.SetWarning(v.Message);
           }
         }
@@ -655,7 +656,7 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         // Не надо. Диалог показывается только один раз. _ControlProvider.Attached += new EventHandler(ControlProvider_Attached);
         _ControlProvider.Validating += new EFPValidatingEventHandler(ControlProvider_Validating);
-        if (riItem.HasEnabledExProperty)
+        if (riItem.EnabledExConnected)
         {
           if (riItem.EnabledEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -693,7 +694,7 @@ namespace FreeLibSet.Forms.RI
 
       void ControlProvider_Validating(object sender, EFPValidatingEventArgs args)
       {
-        if (args.ValidateState == EFPValidateState.Error)
+        if (args.ValidateState == UIValidateState.Error)
           return;
 
         // Не препятствуем закрытию окна, если проверка вызвана при закрытии формы
@@ -836,7 +837,7 @@ namespace FreeLibSet.Forms.RI
       #endregion
     }
 
-    #endregion
+    #endregion                                                              
 
     #region TextBox
 
@@ -850,9 +851,9 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -862,7 +863,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasTextExProperty)
+        if (riItem.TextExConnected)
         {
           if (riItem.TextEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -871,7 +872,7 @@ namespace FreeLibSet.Forms.RI
             riItem.TextEx = base.TextEx;
         }
 
-        if (riItem.HasReadOnlyExProperty)
+        if (riItem.ReadOnlyExConnected)
         {
           if (riItem.ReadOnlyEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -928,7 +929,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasValueExProperty)
+        if (riItem.ValueExConnected)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -983,7 +984,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         riItem.ValueEx = base.IntValueEx;
-        if (riItem.HasValueExProperty)
+        if (riItem.ValueExConnected)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1029,7 +1030,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.SingleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasValueExProperty)
+        if (riItem.ValueExConnected)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1075,7 +1076,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.DoubleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasValueExProperty)
+        if (riItem.ValueExConnected)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1119,7 +1120,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.DecimalValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasValueExProperty)
+        if (riItem.ValueExConnected)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1165,7 +1166,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.CheckState = (System.Windows.Forms.CheckState)(int)(riItem.CheckState); // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasCheckStateExProperty)
+        if (riItem.CheckStateExConnected)
         {
           if (riItem.CheckStateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1173,7 +1174,7 @@ namespace FreeLibSet.Forms.RI
           else
             riItem.CheckStateEx = this.CheckStateEx2;
         }
-        if (riItem.HasCheckedExProperty)
+        if (riItem.CheckedExConnected)
         {
           if (riItem.CheckedEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1266,7 +1267,7 @@ namespace FreeLibSet.Forms.RI
         base.Codes = riItem.Codes;
         //base.UnselectedCode = RIItem.UnselectedCode;
         riItem.SelectedIndexEx = base.SelectedIndexEx;
-        if (riItem.HasSelectedIndexExProperty)
+        if (riItem.SelectedIndexExConnected)
         {
           if (riItem.SelectedIndexEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1275,7 +1276,7 @@ namespace FreeLibSet.Forms.RI
             base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
         }
 
-        if (riItem.HasSelectedCodeExProperty)
+        if (riItem.SelectedCodeExConnected)
         {
           if (riItem.SelectedCodeEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1309,20 +1310,20 @@ namespace FreeLibSet.Forms.RI
 
     #region DateBox
 
-    private class DateBoxItem : FreeLibSet.Forms.EFPDateBox, IEFPAppRIControlItem
+    private class DateBoxItem : FreeLibSet.Forms.EFPDateTimeBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
       public DateBoxItem(FreeLibSet.RI.DateBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new FreeLibSet.Controls.DateBox())
+        : base(baseProvider, new FreeLibSet.Controls.DateTimeBox())
       {
         _RIItem = riItem;
 
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -1332,7 +1333,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.NValue = riItem.NValue; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasNValueExProperty)
+        if (riItem.NValueExConnected)
         {
           if (riItem.NValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1340,7 +1341,7 @@ namespace FreeLibSet.Forms.RI
           else
             riItem.NValueEx = base.NValueEx;
         }
-        if (riItem.HasValueExProperty)
+        if (riItem.ValueExConnected)
         {
           if (riItem.ValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1384,9 +1385,9 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.FirstDate.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.FirstDate.CanBeEmpty = true; base.FirstDate.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.FirstDate.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.FirstDate.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.FirstDate.CanBeEmpty = true; base.FirstDate.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.FirstDate.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -1401,7 +1402,7 @@ namespace FreeLibSet.Forms.RI
 
         base.FirstDate.NValue = riItem.FirstDate; // обязательное присвоение, иначе свойство обнулится
         base.LastDate.NValue = riItem.LastDate; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasFirstDateExProperty)
+        if (riItem.FirstDateExConnected)
         {
           if (riItem.FirstDateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1410,7 +1411,7 @@ namespace FreeLibSet.Forms.RI
             riItem.FirstDateEx = base.FirstDate.NValueEx;
         }
 
-        if (riItem.HasLastDateExProperty)
+        if (riItem.LastDateExConnected)
         {
           if (riItem.LastDateEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1457,9 +1458,9 @@ namespace FreeLibSet.Forms.RI
 
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -1507,7 +1508,7 @@ namespace FreeLibSet.Forms.RI
 
         base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
         base.Month = riItem.Month; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasYearExProperty)
+        if (riItem.YearExConnected)
         {
           if (riItem.YearEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1516,7 +1517,7 @@ namespace FreeLibSet.Forms.RI
             riItem.YearEx = base.YearEx;
         }
 
-        if (riItem.HasMonthExProperty)
+        if (riItem.MonthExConnected)
         {
           if (riItem.MonthEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1525,7 +1526,7 @@ namespace FreeLibSet.Forms.RI
             riItem.MonthEx = base.MonthEx;
         }
 
-        if (riItem.HasYMExProperty)
+        if (riItem.YMExConnected)
         {
           if (riItem.YMEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1576,7 +1577,7 @@ namespace FreeLibSet.Forms.RI
         base.Year = riItem.Year; // обязательное присвоение, иначе свойство обнулится
         base.FirstMonth = riItem.FirstMonth; // обязательное присвоение, иначе свойство обнулится
         base.LastMonth = riItem.LastMonth; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasYearExProperty)
+        if (riItem.YearExConnected)
         {
           if (riItem.YearEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1585,7 +1586,7 @@ namespace FreeLibSet.Forms.RI
             riItem.YearEx = base.YearEx;
         }
 
-        if (riItem.HasFirstMonthExProperty)
+        if (riItem.FirstMonthExConnected)
         {
           if (riItem.FirstMonthEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1594,7 +1595,7 @@ namespace FreeLibSet.Forms.RI
             riItem.FirstMonthEx = base.FirstMonthEx;
         }
 
-        if (riItem.HasLastMonthExProperty)
+        if (riItem.LastMonthExConnected)
         {
           if (riItem.LastMonthEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1603,7 +1604,7 @@ namespace FreeLibSet.Forms.RI
             riItem.LastMonthEx = base.LastMonthEx;
         }
 
-        if (riItem.HasFirstYMExProperty)
+        if (riItem.FirstYMExConnected)
         {
           if (riItem.FirstYMEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1612,7 +1613,7 @@ namespace FreeLibSet.Forms.RI
             riItem.FirstYMEx = base.FirstYMEx;
         }
 
-        if (riItem.HasLastYMExProperty)
+        if (riItem.LastYMExConnected)
         {
           if (riItem.LastYMEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1710,7 +1711,7 @@ namespace FreeLibSet.Forms.RI
         base.Codes = riItem.Codes;
         //base.UnselectedCode = RIItem.UnselectedCode;
         base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasSelectedIndexExProperty)
+        if (riItem.SelectedIndexExConnected)
         {
           if (riItem.SelectedIndexEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1719,7 +1720,7 @@ namespace FreeLibSet.Forms.RI
             riItem.SelectedIndexEx = base.SelectedIndexEx;
         }
 
-        if (riItem.HasSelectedCodeExProperty)
+        if (riItem.SelectedCodeExConnected)
         {
           if (riItem.SelectedCodeEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1761,9 +1762,9 @@ namespace FreeLibSet.Forms.RI
 
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -1774,7 +1775,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasTextExProperty)
+        if (riItem.TextExConnected)
         {
           if (riItem.TextEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1818,9 +1819,9 @@ namespace FreeLibSet.Forms.RI
       {
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -1831,7 +1832,7 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.SelectedCodes = riItem.SelectedCodes; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.HasSelectedCodesExProperty)
+        if (riItem.SelectedCodesExConnected)
         {
           if (riItem.SelectedCodesEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -1986,9 +1987,9 @@ namespace FreeLibSet.Forms.RI
       {
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.TheTextBox.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.TheTextBox.CanBeEmpty = true; base.TheTextBox.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.TheTextBox.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.TheTextBox.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.TheTextBox.CanBeEmpty = true; base.TheTextBox.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.TheTextBox.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -2033,9 +2034,9 @@ namespace FreeLibSet.Forms.RI
       {
         switch (riItem.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: base.TheTextBox.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: base.TheTextBox.CanBeEmpty = true; base.TheTextBox.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: base.TheTextBox.CanBeEmpty = true; break;
+          case UIValidateState.Error: base.TheTextBox.CanBeEmpty = false; break;
+          case UIValidateState.Warning: base.TheTextBox.CanBeEmpty = true; base.TheTextBox.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: base.TheTextBox.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
         }
@@ -2260,9 +2261,9 @@ namespace FreeLibSet.Forms.RI
 
         switch (riDialog.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
+          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }
@@ -2318,9 +2319,9 @@ namespace FreeLibSet.Forms.RI
 
         switch (riDialog.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
+          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }
@@ -2556,9 +2557,9 @@ namespace FreeLibSet.Forms.RI
 
         switch (riDialog.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
+          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }
@@ -2611,9 +2612,9 @@ namespace FreeLibSet.Forms.RI
 
         switch (riDialog.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
+          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }
@@ -2853,9 +2854,9 @@ namespace FreeLibSet.Forms.RI
 
         switch (riDialog.CanBeEmptyMode)
         {
-          case CanBeEmptyMode.Error: _WinDlg.CanBeEmpty = false; break;
-          case CanBeEmptyMode.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case CanBeEmptyMode.Ok: _WinDlg.CanBeEmpty = true; break;
+          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
+          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
+          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
           default:
             throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
         }

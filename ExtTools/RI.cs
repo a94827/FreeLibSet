@@ -326,34 +326,6 @@ namespace FreeLibSet.RI
 
   #endregion
 
-  #region Перечисление ValidateState
-
-  /// <summary>
-  /// Результат проверки ошибок
-  /// </summary>
-  [Serializable]
-  public enum ValidateState
-  {
-    // Числовые значения совпадают с EFPValidateState в ExtForms.dll
-
-    /// <summary>
-    /// Ошибок не найдено
-    /// </summary>
-    Ok = 0,
-
-    /// <summary>
-    /// Предупреждение
-    /// </summary>
-    Warning = 1,
-
-    /// <summary>
-    /// Ошибка
-    /// </summary>
-    Error = 2
-  }
-
-  #endregion
-
   /// <summary>
   /// Базовый класс для передаваемых элементов пользовательского интерфейса
   /// </summary>

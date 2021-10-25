@@ -8,6 +8,7 @@ using FreeLibSet.Formatting;
 using FreeLibSet.Controls;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -488,7 +489,7 @@ namespace FreeLibSet.Forms
       if (MaskCanBePartial)
         return;
 
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
 
       if (MaskProvider == null)
@@ -974,7 +975,7 @@ namespace FreeLibSet.Forms
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
       int x;
       if (!TryTextToValue(Control.Text, out x))

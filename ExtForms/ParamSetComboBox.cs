@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Forms;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -425,7 +426,7 @@ namespace FreeLibSet.Controls
       string Text;
       string ImageKey;
       bool SepLine = false; // нужно ли нарисовать горизонтальную линию после текущего элемента списка
-      EFPValidateState ValidateState = EFPValidateState.Ok;
+      UIValidateState ValidateState = UIValidateState.Ok;
       if (args.Index < 0 || args.Index >= _Items.Count)
       {
         Text = TheCB.Text;
@@ -441,7 +442,7 @@ namespace FreeLibSet.Controls
           Text += " (" + Item.WriteTime.Value.ToString() + ")";
           if (Item.WriteTime.Value > DateTime.Now)
           {
-            ValidateState = EFPValidateState.Warning;
+            ValidateState = UIValidateState.Warning;
             ImageKey = "Warning";
           }
         }

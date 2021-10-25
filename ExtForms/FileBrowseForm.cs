@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using FreeLibSet.IO;
 using FreeLibSet.Collections;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -517,7 +518,7 @@ namespace FreeLibSet.Forms
       if (_TheForm.DialogResult != DialogResult.OK)
         return;
       _TheForm.efpMainCB.Validate();
-      if (_TheForm.efpMainCB.ValidateState == EFPValidateState.Error)
+      if (_TheForm.efpMainCB.ValidateState == UIValidateState.Error)
         return;
       if (Mode == FileDialogMode.Read)
       {

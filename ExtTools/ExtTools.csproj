@@ -139,6 +139,7 @@
     <Compile Include="DataTools.Csv.cs" />
     <Compile Include="DepTools.cs" />
     <Compile Include="FileAssociations.cs" />
+    <Compile Include="UICore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

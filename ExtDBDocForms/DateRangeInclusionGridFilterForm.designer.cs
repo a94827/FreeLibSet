@@ -30,7 +30,7 @@
     {
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.edDate = new FreeLibSet.Controls.DateBox();
+      this.edDate = new FreeLibSet.Controls.DateTimeBox();
       this.panel1 = new System.Windows.Forms.Panel();
       this.rbSet = new System.Windows.Forms.RadioButton();
       this.rbWorkDate = new System.Windows.Forms.RadioButton();
@@ -175,7 +175,7 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.Button btnCancel;
-    private FreeLibSet.Controls.DateBox edDate;
+    private FreeLibSet.Controls.DateTimeBox edDate;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.RadioButton rbSet;
     private System.Windows.Forms.RadioButton rbWorkDate;

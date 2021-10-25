@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -233,10 +234,10 @@ namespace FreeLibSet.Forms
       {
         switch (ValidateState)
         {
-          case EFPValidateState.Error:
+          case UIValidateState.Error:
             _Controls[i].ForeColor = EFPApp.Colors.LabelErrorForeColor;
             break;
-          case EFPValidateState.Warning:
+          case UIValidateState.Warning:
             _Controls[i].ForeColor = EFPApp.Colors.LabelWarningForeColor;
             break;
           default:

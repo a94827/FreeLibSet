@@ -39,7 +39,7 @@ namespace FreeLibSet.Controls.TreeViewAdvRes {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgeyevAV.ExtForms.TreeViewAdvRes.TreeViewAdvResources", typeof(TreeViewAdvResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FreeLibSet.Forms.TreeViewAdvRes.TreeViewAdvResources", typeof(TreeViewAdvResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

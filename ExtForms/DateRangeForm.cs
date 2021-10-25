@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -197,7 +198,7 @@ namespace FreeLibSet.Forms
 
     private void FormCheck(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       if (Validating != null)

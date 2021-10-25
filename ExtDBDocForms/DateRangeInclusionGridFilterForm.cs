@@ -56,7 +56,7 @@ namespace FreeLibSet.Forms.Docs
 
       efpMode = new EFPRadioButtons(efpForm, rbNone);
 
-      efpDate = new EFPDateBox(efpForm, edDate);
+      efpDate = new EFPDateTimeBox(efpForm, edDate);
       efpDate.CanBeEmpty = false;
       efpDate.DisabledValue = DateTime.Today;
       efpDate.AllowDisabledValue = true;
@@ -70,7 +70,7 @@ namespace FreeLibSet.Forms.Docs
 
     public EFPRadioButtons efpMode;
 
-    public EFPDateBox efpDate;
+    public EFPDateTimeBox efpDate;
 
     #endregion
   }

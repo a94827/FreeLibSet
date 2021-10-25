@@ -46,22 +46,22 @@ namespace FreeLibSet.Controls
   /// Содержит выпадающий список для выбора даты из календаря
   /// </summary>
   [Description("Поле для ввода даты с выпадающим календариком")]
-  [ToolboxBitmap(typeof(DateBox), "DateBox.bmp")]
+  [ToolboxBitmap(typeof(DateTimeBox), "DateTimeBox.bmp")]
   [ToolboxItem(true)]
   [DefaultProperty("Value")]
   [DefaultBindingProperty("Value")]
   [DefaultEvent("ValueChanged")]
-  public class DateBox : UserTextComboBoxBase
+  public class DateTimeBox : UserTextComboBoxBase
   {
     #region Конструктор и Dispose
 
-    public DateBox()
+    public DateTimeBox()
       : base(new MaskedTextBox())
     {
       MainControl.Mask = EditableDateTimeFormatters.Date.EditMask; // 29.04.2021
-      _NValue = null;
-      _InsideInitText = false;
+      _Formatter = EditableDateTimeFormatters.Date;
 
+      PopupButton = true;
       // ReSharper disable once VirtualMemberCallInConstructor
       this.InitButtonsEnabled();
     }
@@ -86,6 +86,42 @@ namespace FreeLibSet.Controls
 
     #endregion
 
+    #region Свойства Kind и Formatter
+
+    [Description("Формат вывода даты и/иди времени")]
+    [Category("Appearance")]
+    [DefaultValue(typeof(EditableDateTimeFormatterKind), "Date")]
+    [RefreshProperties(RefreshProperties.All)]
+    public EditableDateTimeFormatterKind Kind
+    {
+      get { return _Formatter.Kind; }
+      set { Formatter = EditableDateTimeFormatters.Get(value); }
+    }
+
+    /// <summary>
+    /// Форматизатор вывода даты и/или времени
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public EditableDateTimeFormatter Formatter
+    {
+      get { return _Formatter; }
+      set
+      {
+        DateTime? oldValue = NValue;
+        if (value == null)
+          throw new ArgumentNullException("value");
+        _Formatter = value;
+        NValue = oldValue;
+        MainControl.Mask = _Formatter.EditMask; 
+        InitText();
+        PopupButton = _Formatter.ContainsDate;
+      }
+    }
+    private EditableDateTimeFormatter _Formatter;
+
+    #endregion
+
     #region Value/NValue
 
     [Description("Редактируемое значение с поддержкой значения null")]
@@ -104,7 +140,7 @@ namespace FreeLibSet.Controls
       {
         // 26.08.2013
         // Отбрасываем время
-        if (value.HasValue)
+        if (value.HasValue && _Formatter.ContainsDate)
           value = value.Value.Date;
 
         if (value == _NValue)
@@ -125,9 +161,9 @@ namespace FreeLibSet.Controls
     [RefreshProperties(RefreshProperties.All)]
     public DateTime Value
     {
-      get      
+      get
       {
-        return NValue??DateTime.MinValue;
+        return NValue ?? DateTime.MinValue;
       }
       set
       {
@@ -203,7 +239,7 @@ namespace FreeLibSet.Controls
       get
       {
         Size sz = base.DefaultSize;
-        return new Size(120, sz.Height);
+        return new Size(120, sz.Height); // TODO: Определение оптимальной ширины
       }
     }
 
@@ -226,7 +262,7 @@ namespace FreeLibSet.Controls
       {
         MainControl.Text = "";
         if (_NValue.HasValue)
-          MainControl.Text = EditableDateTimeFormatters.Date.ToString(_NValue.Value);
+          MainControl.Text = _Formatter.ToString(_NValue.Value);
 
         MainControl.SelectAll();
       }
@@ -246,23 +282,14 @@ namespace FreeLibSet.Controls
 
       if (_InsideInitText)
         return;
-      // При каждом изменении текста пытаемся установить свойство Value
-      DateTime? NewVal = TextToDate(MainControl.Text, DefaultYear);
+      // При каждом изменении текста пытаемся установить свойство NValue
+      DateTime? NewVal = _Formatter.ToNValue(MainControl.Text, DefaultYear);
       if (NewVal == _NValue)
         return;
 
       // Свойство изменилось
       _NValue = NewVal;
       OnValueChanged();
-    }
-
-    internal static DateTime? TextToDate(string text, int defaultYear)
-    {
-      DateTime value;
-      if (EditableDateTimeFormatters.Date.TryParse(text, out value, defaultYear))
-        return value;
-      else
-        return null;
     }
 
     /// <summary>
@@ -294,21 +321,29 @@ namespace FreeLibSet.Controls
 
     private class MyCalendar : MonthCalendar
     {
-      public DateBox Owner;
+      public DateTimeBox Owner;
 
       protected override void OnDateSelected(DateRangeEventArgs drevent)
       {
         try
         {
           base.OnDateSelected(drevent);
-          Owner.NValue = SelectionStart;
-          Owner.MainControl.SelectAll();
+          SetResult();
           FindForm().Hide();
         }
         catch (Exception e)
         {
           MessageBox.Show(e.Message, "Ошибка вызова OnDateSelected");
         }
+      }
+
+      private void SetResult()
+      {
+        TimeSpan tod = TimeSpan.Zero;
+        if (Owner.NValue.HasValue)
+          tod = Owner.NValue.Value.TimeOfDay;
+        Owner.NValue = SelectionStart.Date + tod;
+        Owner.MainControl.SelectAll();
       }
 
       protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs args)
@@ -328,8 +363,7 @@ namespace FreeLibSet.Controls
           switch (args.KeyCode)
           {
             case Keys.Return:
-              Owner.NValue = SelectionStart;
-              Owner.MainControl.SelectAll();
+              SetResult();
               FindForm().Hide();
               args.Handled = true;
               return;
@@ -359,7 +393,7 @@ namespace FreeLibSet.Controls
     {
       #region Конструктор
 
-      public MyCalendarForm(DateBox owner)
+      public MyCalendarForm(DateTimeBox owner)
       {
         FormBorderStyle = FormBorderStyle.None;
         StartPosition = FormStartPosition.Manual;

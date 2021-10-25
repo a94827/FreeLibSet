@@ -574,6 +574,47 @@ namespace FreeLibSet.Formatting
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если в формате присутствует компонент даты.
+    /// Как минимум, одно из свойств ContainsDate и ContainsTime должно возвращать true.
+    /// </summary>
+    public bool ContainsDate 
+    {
+      get
+      {
+        switch (Kind)
+        { 
+          case EditableDateTimeFormatterKind.Date:
+          case EditableDateTimeFormatterKind.DateTime:
+          case EditableDateTimeFormatterKind.ShortDateTime:
+            return true;
+          default:
+            return false;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Возвращает true, если в формате присутствует компонент времени.
+    /// Как минимум, одно из свойств ContainsDate и ContainsTime должно возвращать true.
+    /// </summary>
+    public bool ContainsTime
+    {
+      get
+      {
+        switch (Kind)
+        {
+          case EditableDateTimeFormatterKind.Time:
+          case EditableDateTimeFormatterKind.ShortTime:
+          case EditableDateTimeFormatterKind.DateTime:
+          case EditableDateTimeFormatterKind.ShortDateTime:
+            return true;
+          default:
+            return false;
+        }
+      }
+    }
+
     #endregion
 
     #region Методы
@@ -645,6 +686,33 @@ namespace FreeLibSet.Formatting
     public DateTime Parse(string s)
     {
       return Parse(s, 0);
+    }
+
+    /// <summary>
+    /// Преобразование строки в Nullable-значение.
+    /// В случае ошибки возвращается null, как для пустой строки.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <param name="defaultYear">Если передано ненулевое значение, свойство DefaultYearSupported=true,
+    /// а в строке нет года, то используется этот год</param>
+    /// <returns>Преобразованное значение или null</returns>
+    public DateTime? ToNValue(string s, int defaultYear)
+    {
+      DateTime value;
+      if (TryParse(s, out value, defaultYear))
+        return value;
+      else
+        return null;
+    }
+    /// <summary>
+    /// Преобразование строки в Nullable-значение.
+    /// В случае ошибки возвращается null, как для пустой строки.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <returns>Преобразованное значение или null</returns>
+    public DateTime? ToNValue(string s)
+    {
+      return ToNValue(s, 0);
     }
 
     #endregion

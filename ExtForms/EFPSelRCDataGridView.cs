@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -57,7 +58,7 @@ namespace FreeLibSet.Forms
     {
       _SourceData = sourceData;
       _ResultValue = sourceData;
-      _ValidateState = EFPValidateState.Ok;
+      _ValidateState = UIValidateState.Ok;
       _ErrorText = null;
     }
 
@@ -86,8 +87,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Результат вызова события Validating
     /// </summary>
-    public EFPValidateState ValidateState { get { return _ValidateState; } }
-    private EFPValidateState _ValidateState;
+    public UIValidateState ValidateState { get { return _ValidateState; } }
+    private UIValidateState _ValidateState;
 
     /// <summary>
     /// Сообщение об ошибке или предупреждении
@@ -101,9 +102,9 @@ namespace FreeLibSet.Forms
     /// <param name="message">Текст сообщения об ошибке</param>
     public void SetError(string message)
     {
-      if (ValidateState != EFPValidateState.Error)
+      if (ValidateState != UIValidateState.Error)
       {
-        _ValidateState = EFPValidateState.Error;
+        _ValidateState = UIValidateState.Error;
         _ErrorText = message;
       }
     }
@@ -114,9 +115,9 @@ namespace FreeLibSet.Forms
     /// <param name="message">Текст сообщения</param>
     public void SetWarning(string message)
     {
-      if (ValidateState == EFPValidateState.Ok)
+      if (ValidateState == UIValidateState.Ok)
       {
-        _ValidateState = EFPValidateState.Warning;
+        _ValidateState = UIValidateState.Warning;
         _ErrorText = message;
       }
     }
@@ -126,18 +127,18 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="state">Состояние</param>
     /// <param name="message">Сообщение</param>
-    public void SetState(EFPValidateState state, string message)
+    public void SetState(UIValidateState state, string message)
     {
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
 
       switch (state)
       {
-        case EFPValidateState.Error:
+        case UIValidateState.Error:
           SetError(message);
           break;
-        case EFPValidateState.Warning:
-          if (ValidateState == EFPValidateState.Ok)
+        case UIValidateState.Warning:
+          if (ValidateState == UIValidateState.Ok)
             SetWarning(message);
           break;
       }
@@ -1096,7 +1097,7 @@ namespace FreeLibSet.Forms
           {
             VArgs.InitSourceData(SourceData[k, i]);
             Cols2[j].PerformValidating(VArgs);
-            if (VArgs.ValidateState != EFPValidateState.Ok)
+            if (VArgs.ValidateState != UIValidateState.Ok)
             {
               IsOK = false;
               break;
@@ -1369,11 +1370,11 @@ namespace FreeLibSet.Forms
               Col.PerformValidating(_ValidatingArgs);
               switch (_ValidatingArgs.ValidateState)
               {
-                case EFPValidateState.Error:
+                case UIValidateState.Error:
                   args.ColorType = EFPDataGridViewColorType.Error;
                   args.ToolTipText = _ValidatingArgs.ErrorText;
                   break;
-                case EFPValidateState.Warning:
+                case UIValidateState.Warning:
                   args.ColorType = EFPDataGridViewColorType.Warning;
                   args.ToolTipText = _ValidatingArgs.ErrorText;
                   break;
@@ -1442,7 +1443,7 @@ namespace FreeLibSet.Forms
             {
               _ValidatingArgs.InitSourceData(SourceData[i, j]);
               SelColumns[j].PerformValidating(_ValidatingArgs);
-              if (_ValidatingArgs.ValidateState == EFPValidateState.Error)
+              if (_ValidatingArgs.ValidateState == UIValidateState.Error)
               {
                 Control.CurrentCell = Control[j + 1, i + 1];
                 base.SetError(_ValidatingArgs.ErrorText);

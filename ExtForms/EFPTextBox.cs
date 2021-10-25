@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using FreeLibSet.Shell;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -299,7 +300,7 @@ namespace FreeLibSet.Forms
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (base.ValidateState == EFPValidateState.Error)
+      if (base.ValidateState == UIValidateState.Error)
         return; // никогда не будет
 
       if (String.IsNullOrEmpty(Text))
@@ -325,7 +326,7 @@ namespace FreeLibSet.Forms
           }
         }
 
-        if (base.ValidateState == EFPValidateState.Ok && (!String.IsNullOrEmpty(WarningRegExPattern)))
+        if (base.ValidateState == UIValidateState.Ok && (!String.IsNullOrEmpty(WarningRegExPattern)))
         {
           if (!Regex.IsMatch(Text, WarningRegExPattern))
           {
@@ -1464,7 +1465,7 @@ namespace FreeLibSet.Forms
       base.OnValidate();
       // На момент вызова свойство Control всегда установлено
 
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
 
       if (MaskCanBePartial)

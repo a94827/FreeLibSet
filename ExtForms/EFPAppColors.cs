@@ -286,18 +286,18 @@ namespace FreeLibSet.Forms
     #region Цвета для элементов списка
 
     /// <summary>
-    /// Использовать стандартные цвета для EFPValidateState.Ok.
+    /// Использовать стандартные цвета для UIValidateState.Ok.
     /// Отличается от Empty, т.к. игнорирует цвета Control.ForeColor и Control.BackColor
     /// </summary>
     public readonly ListItemColors ListStateOk;
 
     /// <summary>
-    /// Элемент с ошибкой EFPValidateState.Error
+    /// Элемент с ошибкой UIValidateState.Error
     /// </summary>
     public readonly ListItemColors ListStateError;
 
     /// <summary>
-    /// Элемент с предупреждением EFPValidateState.Warning
+    /// Элемент с предупреждением UIValidateState.Warning
     /// </summary>
     public readonly ListItemColors ListStateWarning;
 

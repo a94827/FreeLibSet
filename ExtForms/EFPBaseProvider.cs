@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -659,7 +660,7 @@ namespace FreeLibSet.Forms
       public string Title;
       public string MainInfo;
       public string ValueInfo;
-      public EFPValidateState State;
+      public UIValidateState State;
       public string ErrorMessage;
 
       #endregion
@@ -684,7 +685,7 @@ namespace FreeLibSet.Forms
     /// <param name="valueInfo">Подсказка по текущему значению</param>
     /// <param name="state">Наличие ошибки или предупреждения</param>
     /// <param name="errorMessage">Сообщение об ошибке или предупреждении</param>
-    internal virtual void SetToolTip(Control control, string title, string mainInfo, string valueInfo, EFPValidateState state, string errorMessage)
+    internal virtual void SetToolTip(Control control, string title, string mainInfo, string valueInfo, UIValidateState state, string errorMessage)
     {
 #if DEBUG
       if (control == null)
@@ -1011,32 +1012,6 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
-  #region Перечисление EFPValidateState
-
-  /// <summary>
-  /// Результат проверки ошибок
-  /// </summary>
-  [Serializable]
-  public enum EFPValidateState
-  {
-    /// <summary>
-    /// Ошибок не найдено
-    /// </summary>
-    Ok = 0,
-
-    /// <summary>
-    /// Предупреждение
-    /// </summary>
-    Warning = 1,
-
-    /// <summary>
-    /// Ошибка
-    /// </summary>
-    Error = 2
-  }
-
-  #endregion
-
   #region Интерфейс объекта, поддерживающего проверку ошибок
 
   /// <summary>
@@ -1060,7 +1035,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить текущее состояние проверки
     /// </summary>
-    EFPValidateState ValidateState { get; }
+    UIValidateState ValidateState { get; }
   }
 
   /// <summary>
@@ -1087,7 +1062,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void Clear()
     {
-      _ValidateState = EFPValidateState.Ok;
+      _ValidateState = UIValidateState.Ok;
       _Message = null;
     }
 
@@ -1098,9 +1073,9 @@ namespace FreeLibSet.Forms
     /// <param name="message">Текст сообщения</param>
     public void SetError(string message)
     {
-      if (ValidateState != EFPValidateState.Error)
+      if (ValidateState != UIValidateState.Error)
       {
-        _ValidateState = EFPValidateState.Error;
+        _ValidateState = UIValidateState.Error;
         _Message = message;
       }
     }
@@ -1112,9 +1087,9 @@ namespace FreeLibSet.Forms
     /// <param name="message">Текст сообщения</param>
     public void SetWarning(string message)
     {
-      if (ValidateState == EFPValidateState.Ok)
+      if (ValidateState == UIValidateState.Ok)
       {
-        _ValidateState = EFPValidateState.Warning;
+        _ValidateState = UIValidateState.Warning;
         _Message = message;
       }
     }
@@ -1126,8 +1101,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Текущее состояние
     /// </summary>
-    public EFPValidateState ValidateState { get { return _ValidateState; } }
-    private EFPValidateState _ValidateState;
+    public UIValidateState ValidateState { get { return _ValidateState; } }
+    private UIValidateState _ValidateState;
 
     /// <summary>
     /// Текст сообщения об ошибке или предупреждения
@@ -1183,25 +1158,25 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Определить текущее состояние проверки: наличие ошибок или предупреждений
     /// </summary>
-    public EFPValidateState ValidateState { get { return _Validator.ValidateState; } }
+    public UIValidateState ValidateState { get { return _Validator.ValidateState; } }
 
     /// <summary>
     /// Вспомогательный метод, вызывающий SetError() или SetWarning()
     /// </summary>
     /// <param name="state">Состояние</param>
     /// <param name="message">Сообщение</param>
-    public void SetState(EFPValidateState state, string message)
+    public void SetState(UIValidateState state, string message)
     {
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
 
       switch (state)
       {
-        case EFPValidateState.Error:
+        case UIValidateState.Error:
           SetError(message);
           break;
-        case EFPValidateState.Warning:
-          if (ValidateState == EFPValidateState.Ok)
+        case UIValidateState.Warning:
+          if (ValidateState == UIValidateState.Ok)
             SetWarning(message);
           break;
       }
@@ -1343,9 +1318,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void Validate()
     {
-      EFPValidateState PrevState = _ValidateState;
+      UIValidateState PrevState = _ValidateState;
 
-      _ValidateState = EFPValidateState.Ok;
+      _ValidateState = UIValidateState.Ok;
       _ErrorMessage = null;
 
       if (Validating != null)
@@ -1366,7 +1341,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal int ErrorCount
     {
-      get { return (ValidateState == EFPValidateState.Error) ? 1 : 0; }
+      get { return (ValidateState == UIValidateState.Error) ? 1 : 0; }
     }
 
     /// <summary>
@@ -1374,7 +1349,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal int WarningCount
     {
-      get { return (ValidateState == EFPValidateState.Warning) ? 1 : 0; }
+      get { return (ValidateState == UIValidateState.Warning) ? 1 : 0; }
     }
 
     /// <summary>
@@ -1384,9 +1359,9 @@ namespace FreeLibSet.Forms
     /// <param name="errorList">Заполняемый список</param>
     internal void GetErrorMessages(List<EFPErrorInfo> errorList)
     {
-      if (ValidateState == EFPValidateState.Ok)
+      if (ValidateState == UIValidateState.Ok)
         return;
-      EFPErrorInfo Info = new EFPErrorInfo(ErrorMessage, ValidateState == EFPValidateState.Error, FocusControl);
+      EFPErrorInfo Info = new EFPErrorInfo(ErrorMessage, ValidateState == UIValidateState.Error, FocusControl);
       errorList.Add(Info);
     }
 
@@ -1401,9 +1376,9 @@ namespace FreeLibSet.Forms
     /// <param name="message">Текст сообщений</param>
     public void SetError(string message)
     {
-      if (_ValidateState == EFPValidateState.Error)
+      if (_ValidateState == UIValidateState.Error)
         return;
-      _ValidateState = EFPValidateState.Error;
+      _ValidateState = UIValidateState.Error;
       _ErrorMessage = message;
     }
 
@@ -1415,17 +1390,17 @@ namespace FreeLibSet.Forms
     /// <param name="message">Текст сообщений</param>
     public void SetWarning(string message)
     {
-      if (_ValidateState != EFPValidateState.Ok)
+      if (_ValidateState != UIValidateState.Ok)
         return;
-      _ValidateState = EFPValidateState.Error;
+      _ValidateState = UIValidateState.Error;
       _ErrorMessage = message;
     }
 
     /// <summary>
     /// Текущее состояние проверки ошибок
     /// </summary>
-    public EFPValidateState ValidateState { get { return _ValidateState; } }
-    private EFPValidateState _ValidateState;
+    public UIValidateState ValidateState { get { return _ValidateState; } }
+    private UIValidateState _ValidateState;
 
     #endregion
 

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using FreeLibSet.Formatting;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -378,7 +379,7 @@ namespace FreeLibSet.Forms
 
     void efpText_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPTextBox efpText = (EFPTextBox)sender;
@@ -554,7 +555,7 @@ namespace FreeLibSet.Forms
 
     void efpText_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPTextComboBox efpText = (EFPTextComboBox)sender;
@@ -682,7 +683,7 @@ namespace FreeLibSet.Forms
 
     void efpText_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPMaskedTextBox efpText = (EFPMaskedTextBox)sender;
@@ -915,7 +916,7 @@ namespace FreeLibSet.Forms
 
     void efpValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       if (sender is EFPNumEditBox)
@@ -1148,7 +1149,7 @@ namespace FreeLibSet.Forms
 
     void efpValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPNumEditBox efpValue = (EFPNumEditBox)sender;
@@ -1255,7 +1256,7 @@ namespace FreeLibSet.Forms
 
     void efpValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPNumEditBox efpValue = (EFPNumEditBox)sender;
@@ -1363,7 +1364,7 @@ namespace FreeLibSet.Forms
 
     void efpValue_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPNumEditBox efpValue = (EFPNumEditBox)sender;
@@ -1523,12 +1524,12 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        DateBox Control = new DateBox();
+        DateTimeBox Control = new DateTimeBox();
         Control.Dock = DockStyle.Top;
 
         form.MainPanel.Controls.Add(Control);
 
-        EFPDateBox efpValue = new EFPDateBox(form.FormProvider, Control);
+        EFPDateTimeBox efpValue = new EFPDateTimeBox(form.FormProvider, Control);
         efpValue.Label = form.MainLabel;
         efpValue.Minimum = MinValue;
         efpValue.Maximum = MaxValue;
@@ -1553,10 +1554,10 @@ namespace FreeLibSet.Forms
 
     void efpValueDate_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
-      EFPDateBox efpValue = (EFPDateBox)sender;
+      EFPDateTimeBox efpValue = (EFPDateTimeBox)sender;
 
       if (!efpValue.NValue.HasValue)
         return;
@@ -1572,7 +1573,7 @@ namespace FreeLibSet.Forms
 
     void efpValueCal_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPMonthCalendarSingleDay efpValue = (EFPMonthCalendarSingleDay)sender;
@@ -1720,7 +1721,7 @@ namespace FreeLibSet.Forms
 
     void efpText_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       EFPTextBox efpText = (EFPTextBox)sender;

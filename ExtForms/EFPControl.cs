@@ -9,6 +9,7 @@ using FreeLibSet.Config;
 using System.ComponentModel;
 using FreeLibSet.Logging;
 using FreeLibSet.Collections;
+using FreeLibSet.UICore;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
 
@@ -318,7 +319,7 @@ namespace FreeLibSet.Forms
       _BaseProvider = baseProvider;
       _BaseProvider.AddControlProvider(this);
       _Control = control;
-      _ValidateState = EFPValidateState.Ok;
+      _ValidateState = UIValidateState.Ok;
       _LabelNeeded = labelNeeded;
       _Visible = true;
       _PrevVisibleState = false;
@@ -818,7 +819,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #endregion
-
 
     #region Свойство Visible
 
@@ -1850,11 +1850,11 @@ namespace FreeLibSet.Forms
       if (!frm.Visible)
         return;
 
-      EFPValidateState PrevState = _ValidateState;
+      UIValidateState PrevState = _ValidateState;
       string PrevMessage = _ValidateErrorMessage;
       string PrevValueToolTipText = _ValueToolTipText;
 
-      _ValidateState = EFPValidateState.Ok;
+      _ValidateState = UIValidateState.Ok;
       _ValidateErrorMessage = null;
 
       if (Editable)
@@ -1863,7 +1863,29 @@ namespace FreeLibSet.Forms
         {
           OnValidate();
 
-          if ((_ValidateState != EFPValidateState.Error) && (Validating != null))
+          if (_Valifators != null && _ValidateState != UIValidateState.Error)
+          {
+            for (int i = 0; i < _Valifators.Count; i++)
+            {
+              if (_Valifators[i].ActiveEx != null)
+              {
+                if (!_Valifators[i].ActiveEx.Value)
+                  continue;
+                if (!_Valifators[i].Expression.Value)
+                {
+                  if (_Valifators[i].IsError)
+                  {
+                    SetError(_Valifators[i].Message);
+                    break;
+                  }
+                  else
+                    SetWarning(_Valifators[i].Message);
+                }
+              }
+            }
+          }
+
+          if ((_ValidateState != UIValidateState.Error) && (Validating != null))
           {
             if (_ValidatingArgs == null)
               _ValidatingArgs = new EFPValidatingEventArgs(this);
@@ -1890,6 +1912,20 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Список валидаторов элемента, основанных на управляемых значениях
+    /// </summary>
+    public UIValidatorList Validators 
+    {
+      get
+      {
+        if (_Valifators == null)
+          _Valifators = new UIValidatorList();
+        return _Valifators;
+      }
+    }
+    private UIValidatorList _Valifators;
+
+    /// <summary>
     /// Специальная версия выполнения проверки для управляющего элемента, которую
     /// можно использовать в обработчике изменения значения в другом элементе в виде
     /// efp1.Value.ValueChanged+=new EventHandler(efp2.Validate);
@@ -1904,19 +1940,19 @@ namespace FreeLibSet.Forms
 
     internal int ErrorCount
     {
-      get { return (ValidateState == EFPValidateState.Error) ? 1 : 0; }
+      get { return (ValidateState == UIValidateState.Error) ? 1 : 0; }
     }
 
     internal int WarningCount
     {
-      get { return (ValidateState == EFPValidateState.Warning) ? 1 : 0; }
+      get { return (ValidateState == UIValidateState.Warning) ? 1 : 0; }
     }
 
     internal void GetErrorMessages(List<EFPErrorInfo> errorList)
     {
-      if (ValidateState == EFPValidateState.Ok)
+      if (ValidateState == UIValidateState.Ok)
         return;
-      EFPErrorInfo Info = new EFPErrorInfo(ValidateErrorMessage, ValidateState == EFPValidateState.Error, Control);
+      EFPErrorInfo Info = new EFPErrorInfo(ValidateErrorMessage, ValidateState == UIValidateState.Error, Control);
       errorList.Add(Info);
     }
 
@@ -1986,9 +2022,9 @@ namespace FreeLibSet.Forms
         throw new InvalidOperationException("Метод может вызываться только из OnValidate() или обработчика события Validating");
 #endif
 
-      if (_ValidateState == EFPValidateState.Error)
+      if (_ValidateState == UIValidateState.Error)
         return;
-      _ValidateState = EFPValidateState.Error;
+      _ValidateState = UIValidateState.Error;
       _ValidateErrorMessage = message;
     }
 
@@ -2003,17 +2039,17 @@ namespace FreeLibSet.Forms
         throw new InvalidOperationException("Метод может вызываться только из OnValidate() или обработчика события Validating");
 #endif
 
-      if (_ValidateState != EFPValidateState.Ok)
+      if (_ValidateState != UIValidateState.Ok)
         return;
-      _ValidateState = EFPValidateState.Warning;
+      _ValidateState = UIValidateState.Warning;
       _ValidateErrorMessage = message;
     }
 
     /// <summary>
     /// Текущее состояние проверки ошибок
     /// </summary>
-    public EFPValidateState ValidateState { get { return _ValidateState; } }
-    private EFPValidateState _ValidateState;
+    public UIValidateState ValidateState { get { return _ValidateState; } }
+    private UIValidateState _ValidateState;
 
     #endregion
 
@@ -2045,16 +2081,16 @@ namespace FreeLibSet.Forms
 
       switch (ValidateState)
       {
-        case EFPValidateState.Ok:
+        case UIValidateState.Ok:
           if (EFPApp.IsMono)
             Control.ForeColor = _OrgControlForeColor; // 01.10.2013
           else
             Control.ResetForeColor();
           break;
-        case EFPValidateState.Error:
+        case UIValidateState.Error:
           Control.ForeColor = EFPApp.Colors.LabelErrorForeColor;
           break;
-        case EFPValidateState.Warning:
+        case UIValidateState.Warning:
           Control.ForeColor = EFPApp.Colors.LabelWarningForeColor;
           break;
       }
@@ -2078,7 +2114,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="label">Управляющий элемент</param>
     /// <param name="state">Цвет текста</param>
-    public static void SetLabelForeColor(Control label, EFPValidateState state)
+    public static void SetLabelForeColor(Control label, UIValidateState state)
     {
       SetLabelForeColor(label, state, SystemColors.ControlText);
     }
@@ -2091,7 +2127,7 @@ namespace FreeLibSet.Forms
     /// <param name="state">Цвет текста</param>
     /// <param name="defaultForeColor">Основной цвет метки. Обычно равно SystemColors.ControlText.
     /// Если задано Color.Transparent, вызывается метод Control.ResetForeColor()</param>
-    public static void SetLabelForeColor(Control label, EFPValidateState state, Color defaultForeColor)
+    public static void SetLabelForeColor(Control label, UIValidateState state, Color defaultForeColor)
     {
 #if DEBUG
       if (label == null)
@@ -2100,7 +2136,7 @@ namespace FreeLibSet.Forms
 
       switch (state)
       {
-        case EFPValidateState.Ok:
+        case UIValidateState.Ok:
           //if (EFPApp.IsMono)
           //  Label.ForeColor = SystemColors.ControlText; // 01.10.2013
           //else
@@ -2113,10 +2149,10 @@ namespace FreeLibSet.Forms
           else
             label.ForeColor = defaultForeColor;
           break;
-        case EFPValidateState.Error:
+        case UIValidateState.Error:
           label.ForeColor = EFPApp.Colors.LabelErrorForeColor;
           break;
-        case EFPValidateState.Warning:
+        case UIValidateState.Warning:
           label.ForeColor = EFPApp.Colors.LabelWarningForeColor;
           break;
       }
@@ -2406,6 +2442,9 @@ namespace FreeLibSet.Forms
       {
         OnAfterLoadConfig();
       }
+
+      if (EFPApp.InsideLoadComposition && ConfigHandler != null && ConfigManager!=null)
+        ConfigHandler.ReadConfig(ConfigManager); // 25.10.2021 Иначе не прочитается
     }
 
     /// <summary>

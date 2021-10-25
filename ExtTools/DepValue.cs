@@ -259,6 +259,12 @@ namespace FreeLibSet.DependedValues
     public virtual bool HasSource { get { return false; } }
 
     /// <summary>
+    /// Возвращает true, если текущий объект соединен с другими,
+    /// то есть имеет имеет источник (HasSource=true) или есть объекты, подключенные к текущему (HasOutputs=true)
+    /// </summary>
+    public bool IsConnected { get { return HasOutputs || HasSource; } }
+
+    /// <summary>
     /// Является ли текущее значение константой.
     /// Непереопределенный метод возвращает false.
     /// </summary>

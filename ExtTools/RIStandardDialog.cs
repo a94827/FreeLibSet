@@ -6,6 +6,7 @@ using System.Text;
 using System.Data;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -401,6 +402,7 @@ namespace FreeLibSet.RI
       Prompt = "Значение";
       Value = String.Empty;
       MaxLength = 0;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -446,7 +448,7 @@ namespace FreeLibSet.RI
     /// Может ли поле быть пустым.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -455,7 +457,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -466,8 +468,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     /// <summary>
@@ -634,6 +636,7 @@ namespace FreeLibSet.RI
       Prompt = "Значение";
       Value = String.Empty;
       MaxLength = 0;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -687,7 +690,7 @@ namespace FreeLibSet.RI
     /// Может ли поле быть пустым.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -696,7 +699,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -707,8 +710,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     /// <summary>
@@ -1463,6 +1466,7 @@ namespace FreeLibSet.RI
       Title = "Ввод текста";
       Prompt = "Значение";
       Value = null;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -1524,7 +1528,7 @@ namespace FreeLibSet.RI
     /// Может ли поле быть пустым.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -1533,7 +1537,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -1544,8 +1548,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -1651,6 +1655,7 @@ namespace FreeLibSet.RI
       Title = "Ввод текста";
       Prompt = "Текст"; // 17.02.2021
       _Lines = DataTools.EmptyStrings;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -1740,7 +1745,7 @@ namespace FreeLibSet.RI
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -1749,7 +1754,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -1761,8 +1766,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
 
@@ -2585,7 +2590,7 @@ namespace FreeLibSet.RI
       Prompt = "Диапазон";
       FirstValue = null;
       LastValue = null;
-      CanBeEmpty = false;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -2596,7 +2601,7 @@ namespace FreeLibSet.RI
     /// Могут ли поля быть пустыми.
     /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public CanBeEmptyMode CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -2605,7 +2610,7 @@ namespace FreeLibSet.RI
         _CanBeEmptyMode = value;
       }
     }
-    private CanBeEmptyMode _CanBeEmptyMode;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// Могут ли поля быть пустыми.
@@ -2616,8 +2621,8 @@ namespace FreeLibSet.RI
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return CanBeEmptyMode != CanBeEmptyMode.Error; }
-      set { CanBeEmptyMode = value ? CanBeEmptyMode.Ok : CanBeEmptyMode.Error; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
 

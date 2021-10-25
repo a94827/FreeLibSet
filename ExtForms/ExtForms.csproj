@@ -8,7 +8,7 @@
     <ProjectGuid>{DBD17DB7-A65F-4659-9604-B2ACB1BA35A2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgeyevAV.ExtForms</RootNamespace>
+    <RootNamespace>FreeLibSet.Forms</RootNamespace>
     <AssemblyName>ExtForms</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
@@ -98,6 +98,7 @@
     <Compile Include="EFPDataGridViewExpExcel.cs" />
     <Compile Include="EFPConfigurableDataGridView.cs" />
     <Compile Include="EFPDataTreeView.cs" />
+    <Compile Include="EFPDateRangeBox.cs" />
     <Compile Include="EFPDialogPosition.cs" />
     <Compile Include="EFPExternalDialogOwnerWindowHandler.cs" />
     <Compile Include="EFPErrorDataGridView.cs" />
@@ -156,7 +157,7 @@
     <Compile Include="ControlRightButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DateBox.cs">
+    <Compile Include="DateTimeBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DateRangeBox.cs">
@@ -179,7 +180,7 @@
     <Compile Include="EFPCheckBox.cs" />
     <Compile Include="EFPComboBox.cs" />
     <Compile Include="EFPControl.cs" />
-    <Compile Include="EFPDateBox.cs" />
+    <Compile Include="EFPDateTimeBox.cs" />
     <Compile Include="EFPFileControls.cs" />
     <Compile Include="EFPFormProvider.cs" />
     <Compile Include="EFPListControl.cs" />
@@ -628,7 +629,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DateBox.bmp" />
+    <EmbeddedResource Include="DateTimeBox.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ColorComboBox.bmp" />

@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using FreeLibSet.Collections;
 using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -913,7 +914,7 @@ namespace FreeLibSet.Forms
     /// <param name="valueInfo">Информация о текущем введенном значении (обычно, пустая строка)</param>
     /// <param name="state">Наличие ошибки или предупреждения</param>
     /// <param name="errorMessage">Текст ошибки или предупреждения</param>
-    internal override void SetToolTip(Control control, string title, string mainInfo, string valueInfo, EFPValidateState state, string errorMessage)
+    internal override void SetToolTip(Control control, string title, string mainInfo, string valueInfo, UIValidateState state, string errorMessage)
     {
       if (control == null)
         throw new ArgumentNullException("control", "Не задан управляющий элемент");
@@ -925,7 +926,7 @@ namespace FreeLibSet.Forms
         // Вывод подсказок запрещен
         return;
 
-      if (state == EFPValidateState.Ok)
+      if (state == UIValidateState.Ok)
         errorMessage = "";
 
       StringBuilder sb = new StringBuilder();
@@ -955,11 +956,11 @@ namespace FreeLibSet.Forms
       ToolTipIcon icon;
       switch (state)
       {
-        case EFPValidateState.Error:
+        case UIValidateState.Error:
           icon = ToolTipIcon.Error;
           title += " - Ошибка";
           break;
-        case EFPValidateState.Warning:
+        case UIValidateState.Warning:
           icon = ToolTipIcon.Warning;
           title += " - Предупреждение";
           break;
