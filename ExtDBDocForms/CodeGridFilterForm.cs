@@ -12,6 +12,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -100,7 +101,7 @@ namespace FreeLibSet.Forms.Docs
 
     void efpCodes_Validating(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return; // пустое поле
       if (String.IsNullOrEmpty(efpCodes.Text))
         return;
@@ -138,7 +139,7 @@ namespace FreeLibSet.Forms.Docs
         }
         if (!String.IsNullOrEmpty(Msg))
         {
-          if (args.ValidateState == EFPValidateState.Ok)
+          if (args.ValidateState == UIValidateState.Ok)
             args.SetWarning("Позиция №" + (i + 1).ToString() + " (" + s1 + "): " + Msg);
         }
       }

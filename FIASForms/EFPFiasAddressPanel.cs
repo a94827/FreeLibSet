@@ -7,6 +7,7 @@ using FreeLibSet.DependedValues;
 using System.Data;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -434,7 +435,7 @@ namespace FreeLibSet.Forms.FIAS
         }
 
         base.OnValidate();
-        if (ValidateState == EFPValidateState.Error)
+        if (ValidateState == UIValidateState.Error)
           return;
 
         if (_OrgText == base.Text)
@@ -577,7 +578,7 @@ namespace FreeLibSet.Forms.FIAS
           return; // 27.10.2020
 
         base.OnValidate();
-        if (ValidateState == EFPValidateState.Error)
+        if (ValidateState == UIValidateState.Error)
           return;
 
         if (_OrgText == base.Text)
@@ -666,7 +667,7 @@ namespace FreeLibSet.Forms.FIAS
       {
         InitAOTypeEnabled();
 
-        if (args.ValidateState == EFPValidateState.Error)
+        if (args.ValidateState == UIValidateState.Error)
           return;
         if (String.IsNullOrEmpty(_Name.Text))
           return;

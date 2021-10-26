@@ -10,6 +10,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.Logging;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -690,7 +691,7 @@ namespace FreeLibSet.Forms.Docs
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (base.ValidateState == EFPValidateState.Error)
+      if (base.ValidateState == UIValidateState.Error)
         return;
 
       switch (Mode)

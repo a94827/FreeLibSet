@@ -7,6 +7,7 @@ using FreeLibSet.Data;
 using System.Windows.Forms;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -741,7 +742,7 @@ namespace FreeLibSet.Forms.Docs
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return;
 
       try
@@ -1984,7 +1985,7 @@ namespace FreeLibSet.Forms.Docs
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (base.ValidateState == EFPValidateState.Error)
+      if (base.ValidateState == UIValidateState.Error)
         return;
 
       // Проверяем, что поддокумент относится к выбранному документу

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Data.Docs;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -80,7 +81,7 @@ namespace FreeLibSet.Forms.Docs
 
     void efpForm_ValidatingNoRoot(object sender, EFPValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
       if (efpGroup.CurrentId == 0)
         args.SetError("Должна быть выбрана какая-либо группа, а не корневой узел");

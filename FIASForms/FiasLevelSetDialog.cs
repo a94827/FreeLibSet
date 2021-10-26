@@ -4,6 +4,7 @@ using System.Text;
 using FreeLibSet.FIAS;
 using System.Windows.Forms;
 using FreeLibSet.Controls;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -333,7 +334,7 @@ namespace FreeLibSet.Forms.FIAS
     protected override void OnValidate()
     {
       base.OnValidate();
-      if (ValidateState == EFPValidateState.Error)
+      if (ValidateState == UIValidateState.Error)
         return; // формальность
 
       FiasLevelSet extra = _Value - _AvailableLevels;
