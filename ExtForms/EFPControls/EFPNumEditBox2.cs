@@ -72,6 +72,7 @@ namespace FreeLibSet.Forms
       get { return Control.NValue; }
       set
       {
+        _SavedNValue = value;
         _HasSavedNValue = true;
         InitControlValue();
       }

@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2021-10-20T17:35:30.201000000"/>
-	<meta name="changed" content="2021-10-29T11:28:10.278000000"/>
+	<meta name="changed" content="2021-10-29T23:12:47.435000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
 		p { margin-bottom: 0.25cm; line-height: 120% }
@@ -730,20 +730,9 @@ NIntValueEx.</span> Если пустое <span lang="en-US">struct-</span>значение
 </span></font><font color="#ff0000">нестатические классы
 </font><font color="#ff0000"><span lang="en-US">CSVTextConvert </span></font><font color="#ff0000">и
 </font><font color="#ff0000"><span lang="en-US">TabbedTextConvert</span></font></p>
-<p><font color="#ff0000"><span lang="en-US">EFPNumEditBox.NDecimalValue
-</span></font><font color="#ff0000"><span lang="ru-RU">не полностью
-совместим с </span></font><font color="#ff0000"><span lang="en-US">EFPNumEditBase&lt;T&gt;.DecimalValue</span></font><font color="#ff0000"><span lang="ru-RU">,</span></font><font color="#ff0000">
-</font><font color="#ff0000"><span lang="ru-RU">т.к. не используется
-_</span></font><font color="#ff0000"><span lang="en-US">SavedValue </span></font><font color="#ff0000"><span lang="ru-RU">и
-</span></font><font color="#ff0000"><span lang="en-US">DisabledValue.
-</span></font><font color="#ff0000"><span lang="ru-RU">Нет свойств
-</span></font><font color="#ff0000"><span lang="en-US">EFPNumEditBox.DisabledNXxxValue.</span></font></p>
-<p lang="en-US"><font color="#ff0000">RI.Int/Single/Double/DecimalRangeDialog
-</font><font color="#ff0000"><span lang="ru-RU">есть только свойство
-</span></font><font color="#ff0000">CanBeEmpty</font><font color="#ff0000"><span lang="ru-RU">.</span></font></p>
-<p lang="en-US"><font color="#ff0000">BaseFloatRangeDialog.Format -
-</font><font color="#ff0000"><span lang="ru-RU">есть свойства, у
-других - нет</span></font></p>
+<p><font color="#ff0000"><span lang="en-US">RI.Int/Single/Double/DecimalRangeDialog
+</span></font><font color="#ff0000"><span lang="ru-RU">есть только
+свойство </span></font><font color="#ff0000"><span lang="en-US">CanBeEmpty</span></font><font color="#ff0000"><span lang="ru-RU">.</span></font></p>
 <p lang="en-US"><font color="#ff0000">FolderBrowserDialog.PathValidateMode</font></p>
 <p lang="en-US"><font color="#ff0000">FileTextBox.DefaultExt</font></p>
 <p lang="en-US"><font color="#ff0000">OrganizationNameModeComboBox,
@@ -760,5 +749,14 @@ YearQuarterRangeBox, YearHalfYearBox. </span>Нет <span lang="en-US">Ex-</span>св
 </span>и <span lang="en-US">Maximum?</span></font></p>
 <p><font color="#ff0000">Убрать дизайнеры для упр. элементов в
 отдельную сборку.</font></p>
+<p><font color="#ff0000">Передача фокуса ввода в <span lang="en-US">NumEditBox2</span><span lang="en-US">
+(</span><span lang="ru-RU">при наличии </span><span lang="en-US">Increement)</span><span lang="en-US">.
+</span><span lang="ru-RU">Локальное меню. </span><span lang="ru-RU">Убрать
+старые </span><span lang="en-US">NumEditBox</span><span lang="ru-RU">,
+</span><span lang="en-US">ExtNumericUpDown, EFPNumericUpDown</span></font></p>
+<p><font color="#ff0000">В фильтрах по диапазону устанавливать
+свойство <span lang="en-US">Increment</span></font></p>
+<p><font color="#ff0000">Свойство <span lang="en-US">RI.NumEditBoxBase.CanBeEmptyMode
+</span>не реализовано в части предупреждений в <span lang="en-US">EFPNumEditBoxBase.</span></font></p>
 </body>
 </html>

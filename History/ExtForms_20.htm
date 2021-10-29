@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2021-10-28T17:58:06.388000000"/>
+	<meta name="changed" content="2021-10-29T23:10:59.155000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -256,7 +256,7 @@
 			<p lang="en-US" align="center">301</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.10.2021-28.10.2021</p>
+			<p lang="en-US" align="center">21.10.2021-29.10.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Изменения пространств имен</span></p>
@@ -303,21 +303,33 @@
 			<span lang="ru-RU">Свойство </span>Value <span lang="ru-RU">переименовано
 			в </span>DateRange<span lang="ru-RU">. Новые свойства </span>FirstDate,
 			LastDate, FirstDateEx <span lang="ru-RU">и </span>LastDateEx.</p>
-			<p><span lang="en-US">10. </span>Свойство <span lang="en-US">NumEditBox.NullableValue
-			</span>переименовано в <span lang="en-US">NValue.</span></p>
-			<p><span lang="en-US">11. </span><span lang="ru-RU">В диалогах
-			ввода значений переименование </span><span lang="en-US">MinValue/MaxValue
+			<p><strike><span lang="en-US">10. </span>Свойство
+			<span lang="en-US">NumEditBox.NullableValue </span>переименовано в
+			<span lang="en-US">NValue.</span></strike></p>
+			<p><span lang="en-US">10. </span><span lang="ru-RU">Новые
+			управлющие элементы </span><span lang="en-US">IntEditBox,
+			SingleEditBox, DoubleEditBox </span><span lang="ru-RU">и
+			</span><span lang="en-US">DecimalEditBox </span><span lang="ru-RU">с
+			поддержкой произвольного форматирования и инкремента. Провайдеры
+			</span><span lang="en-US">EFPxxxEditBox</span></p>
+			<p><strike><span lang="en-US">11. </span><span lang="ru-RU">В
+			диалогах ввода значений переименование </span><span lang="en-US">MinValue/MaxValue
 			</span><span lang="ru-RU">в </span><span lang="en-US">Minimum/Maximum.
 			</span><span lang="ru-RU">Для числовых типов используются
-			</span><span lang="en-US">nullable-</span><span lang="ru-RU">значения</span></p>
+			</span><span lang="en-US">nullable-</span><span lang="ru-RU">значения</span></strike></p>
+			<p lang="en-US">11. <span lang="ru-RU">Диалоги ввода значений
+			</span>Int/Single/Double/DecimalInputBox <span lang="ru-RU">и
+			</span>RangeBox <span lang="ru-RU">используют новые элементы и
+			свойства </span>Format, FormatProvider <span lang="ru-RU">и
+			</span>Increment.</p>
 			<p lang="en-US">12. <span lang="ru-RU">Убраны методы
 			</span>EFPApp.InputBox() <span lang="ru-RU">и </span>IntInputBox().</p>
-			<p>13. Переименование ComboTextInputDialog в <span lang="en-US">TextComboInputDialog</span><span lang="en-US">.
+			<p>13. Переименование ComboTextInputDialog в <span lang="en-US">TextComboInputDialog.
 			</span><span lang="ru-RU">Добавлено свойство </span><span lang="en-US">Lines.</span></p>
 			<p><span lang="en-US">14. </span><span lang="ru-RU">Методы
 			</span><span lang="en-US">DateRangeBox.ShiftDateRange() </span><span lang="ru-RU">и
 			</span><span lang="en-US">EFPDateRangeBoxCommandItems.ShiftDateRangeYear()
-			перенесены</span><span lang="ru-RU"> в </span><span lang="en-US">UITools.</span></p>
+			перенесены</span> <span lang="ru-RU">в </span><span lang="en-US">UITools.</span></p>
 			<p><span lang="en-US">15. </span><span lang="ru-RU">Переименование
 			свойств </span><span lang="en-US">RadioGroupBox.ImageIndexes </span><span lang="ru-RU">в
 			</span><span lang="en-US">ImageIndices.</span></p>

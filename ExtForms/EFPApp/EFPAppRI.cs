@@ -247,7 +247,7 @@ namespace FreeLibSet.Forms.RI
     /// <summary>
     /// Провайдер формы
     /// </summary>
-    EFPFormProvider FormProvider { get;}
+    EFPFormProvider FormProvider { get; }
   }
 
   /// <summary>
@@ -760,12 +760,7 @@ namespace FreeLibSet.Forms.RI
       if (riItem is FreeLibSet.RI.TextBox)
         return new TextBoxItem((FreeLibSet.RI.TextBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.IntEditBox)
-      {
-        if (((FreeLibSet.RI.IntEditBox)riItem).ShowUpDown)
-          return new IntEditBoxItem2((FreeLibSet.RI.IntEditBox)riItem, baseProvider);
-        else
-          return new IntEditBoxItem1((FreeLibSet.RI.IntEditBox)riItem, baseProvider);
-      }
+        return new IntEditBoxItem((FreeLibSet.RI.IntEditBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.SingleEditBox)
         return new SingleEditBoxItem((FreeLibSet.RI.SingleEditBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.DoubleEditBox)
@@ -914,29 +909,15 @@ namespace FreeLibSet.Forms.RI
     /// Поле ввода целого числа.
     /// Версия без стрелочек
     /// </summary>
-    private class IntEditBoxItem1 : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIItem
+    private class IntEditBoxItem : FreeLibSet.Forms.EFPIntEditBox, IEFPAppRIItem
     {
       #region Конструктор
 
-      public IntEditBoxItem1(FreeLibSet.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
+      public IntEditBoxItem(FreeLibSet.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.IntEditBox())
       {
         _RIItem = riItem;
-        if (riItem.Minimum.HasValue)
-          base.Minimum = riItem.Minimum.Value;
-        if (riItem.Maximum.HasValue)
-          base.Maximum = riItem.Maximum.Value;
-        EFPAppRITools.InitControlItem(this, riItem);
-
-        base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.ValueExConnected)
-        {
-          if (riItem.ValueEx.HasSource)
-            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.IntValueEx = riItem.ValueEx;
-          else
-            riItem.ValueEx = base.IntValueEx;
-        }
+        InitEFPNumEditBox<Int32>(this, riItem);
       }
 
       FreeLibSet.RI.IntEditBox _RIItem;
@@ -947,97 +928,56 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        base.IntValue = _RIItem.Value;
+        base.NValue = _RIItem.NValue;
         base.Validate();
       }
 
       public void ReadValues()
       {
-        _RIItem.Value = base.IntValue;
+        _RIItem.NValue = base.NValue;
       }
 
       #endregion
     }
 
-    /// <summary>
-    /// Поле ввода целого числа.
-    /// Версия со стрелочками
-    /// </summary>
-    private class IntEditBoxItem2 : FreeLibSet.Forms.EFPExtNumericUpDown, IEFPAppRIItem
+    private static void InitEFPNumEditBox<T>(EFPNumEditBoxBase<T> controlProvider, FreeLibSet.RI.BaseNumEditBox<T> riItem)
+      where T : struct, IFormattable, IComparable<T>
     {
-      #region Конструктор
+      controlProvider.CanBeEmpty = riItem.CanBeEmpty; // TODO: CanBeEmptyMode
+      controlProvider.Minimum = riItem.Minimum;
+      controlProvider.Maximum = riItem.Maximum;
+      controlProvider.Control.Format = riItem.Format;
+      controlProvider.Control.Increment = riItem.Increment;
+      EFPAppRITools.InitControlItem(controlProvider, riItem);
 
-      public IntEditBoxItem2(FreeLibSet.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new FreeLibSet.Controls.ExtNumericUpDown())
+      controlProvider.NValue = riItem.NValue; // обязательное присвоение, иначе свойство обнулится
+      if (riItem.NValueExConnected)
       {
-        base.Control.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Right;
-        base.Control.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-        _RIItem = riItem;
-        if (riItem.Minimum.HasValue)
-          base.Minimum = riItem.Minimum.Value;
+        if (riItem.NValueEx.HasSource)
+          // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+          controlProvider.NValueEx = riItem.NValueEx;
         else
-          base.Minimum = int.MinValue;
-        if (riItem.Maximum.HasValue)
-          base.Maximum = riItem.Maximum.Value;
+          riItem.NValueEx = controlProvider.NValueEx;
+      }
+      if (riItem.ValueExConnected)
+      {
+        if (riItem.ValueEx.HasSource)
+          // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+          controlProvider.ValueEx = riItem.ValueEx;
         else
-          base.Maximum = int.MaxValue;
-        EFPAppRITools.InitControlItem(this, riItem);
-
-        riItem.ValueEx = base.IntValueEx;
-        if (riItem.ValueExConnected)
-        {
-          if (riItem.ValueEx.HasSource)
-            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.IntValueEx = riItem.ValueEx;
-          else
-            base.IntValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        }
+          riItem.ValueEx = controlProvider.ValueEx;
       }
-
-      FreeLibSet.RI.IntEditBox _RIItem;
-
-      #endregion
-
-      #region IEFPAppRIItem Members
-
-      public void WriteValues()
-      {
-        base.IntValue = _RIItem.Value;
-        base.Validate();
-      }
-
-      public void ReadValues()
-      {
-        _RIItem.Value = base.IntValue;
-      }
-
-      #endregion
     }
 
-    private class SingleEditBoxItem : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIControlItem
+    private class SingleEditBoxItem : FreeLibSet.Forms.EFPSingleEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
       public SingleEditBoxItem(FreeLibSet.RI.SingleEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
+        : base(baseProvider, new FreeLibSet.Controls.SingleEditBox())
       {
         _RIItem = riItem;
-        base.Control.DecimalPlaces = riItem.DecimalPlaces;
-        if (riItem.Minimum.HasValue)
-          base.Minimum = (decimal)(riItem.Minimum.Value);
-        if (riItem.Maximum.HasValue)
-          base.Maximum = (decimal)(riItem.Maximum.Value);
-        EFPAppRITools.InitControlItem(this, riItem);
-
-        base.SingleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.ValueExConnected)
-        {
-          if (riItem.ValueEx.HasSource)
-            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.SingleValueEx = riItem.ValueEx;
-          else
-            riItem.ValueEx = base.SingleValueEx;
-        }
+        InitEFPNumEditBox<Single>(this, riItem);
       }
 
       FreeLibSet.RI.SingleEditBox _RIItem;
@@ -1048,42 +988,27 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        base.SingleValue = _RIItem.Value;
+        base.NValue = _RIItem.NValue;
         base.Validate();
       }
 
       public void ReadValues()
       {
-        _RIItem.Value = base.SingleValue;
+        _RIItem.NValue = base.NValue;
       }
 
       #endregion
     }
 
-    private class DoubleEditBoxItem : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIControlItem
+    private class DoubleEditBoxItem : FreeLibSet.Forms.EFPDoubleEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
       public DoubleEditBoxItem(FreeLibSet.RI.DoubleEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
+        : base(baseProvider, new FreeLibSet.Controls.DoubleEditBox())
       {
         _RIItem = riItem;
-        base.Control.DecimalPlaces = riItem.DecimalPlaces;
-        if (riItem.Minimum.HasValue)
-          base.Minimum = (decimal)(riItem.Minimum.Value);
-        if (riItem.Maximum.HasValue)
-          base.Maximum = (decimal)(riItem.Maximum.Value);
-        EFPAppRITools.InitControlItem(this, riItem);
-
-        base.DoubleValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.ValueExConnected)
-        {
-          if (riItem.ValueEx.HasSource)
-            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.DoubleValueEx = riItem.ValueEx;
-          else
-            riItem.ValueEx = base.DoubleValueEx;
-        }
+        InitEFPNumEditBox<Double>(this, riItem);
       }
 
       FreeLibSet.RI.DoubleEditBox _RIItem;
@@ -1094,40 +1019,27 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        base.DoubleValue = _RIItem.Value;
+        base.NValue = _RIItem.NValue;
         base.Validate();
       }
 
       public void ReadValues()
       {
-        _RIItem.Value = base.DoubleValue;
+        _RIItem.NValue = base.NValue;
       }
 
       #endregion
     }
 
-    private class DecimalEditBoxItem : FreeLibSet.Forms.EFPNumEditBox, IEFPAppRIControlItem
+    private class DecimalEditBoxItem : FreeLibSet.Forms.EFPDecimalEditBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
       public DecimalEditBoxItem(FreeLibSet.RI.DecimalEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new FreeLibSet.Controls.NumEditBox())
+        : base(baseProvider, new FreeLibSet.Controls.DecimalEditBox())
       {
         _RIItem = riItem;
-        base.Control.DecimalPlaces = riItem.DecimalPlaces;
-        base.Minimum = riItem.Minimum;
-        base.Maximum = riItem.Maximum;
-        EFPAppRITools.InitControlItem(this, riItem);
-
-        base.DecimalValue = riItem.Value; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.ValueExConnected)
-        {
-          if (riItem.ValueEx.HasSource)
-            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.DecimalValueEx = riItem.ValueEx;
-          else
-            riItem.ValueEx = base.DecimalValueEx;
-        }
+        InitEFPNumEditBox<Decimal>(this, riItem);
       }
 
       FreeLibSet.RI.DecimalEditBox _RIItem;
@@ -1138,13 +1050,13 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        base.DecimalValue = _RIItem.Value;
+        base.NValue = _RIItem.NValue;
         base.Validate();
       }
 
       public void ReadValues()
       {
-        _RIItem.Value = base.DecimalValue;
+        _RIItem.NValue = base.NValue;
       }
 
       #endregion
@@ -2413,7 +2325,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
-        _WinDlg.ShowUpDown = riDialog.ShowUpDown;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion
@@ -2458,7 +2371,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
-        _WinDlg.DecimalPlaces = riDialog.DecimalPlaces;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion
@@ -2503,7 +2417,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
-        _WinDlg.DecimalPlaces = riDialog.DecimalPlaces;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion
@@ -2548,7 +2463,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
-        _WinDlg.DecimalPlaces = riDialog.DecimalPlaces;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion
@@ -2703,7 +2619,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
-        //WinDlg.ShowUpDown = Dialog.ShowUpDown;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion
@@ -2751,6 +2668,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.DecimalPlaces = riDialog.DecimalPlaces;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion
@@ -2798,6 +2717,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.DecimalPlaces = riDialog.DecimalPlaces;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion
@@ -2845,6 +2766,8 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.DecimalPlaces = riDialog.DecimalPlaces;
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
+        _WinDlg.Format = riDialog.Format;
+        _WinDlg.Increment = riDialog.Increment;
       }
 
       #endregion

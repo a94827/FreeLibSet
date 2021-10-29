@@ -897,6 +897,7 @@ namespace FreeLibSet.Forms
       form.FormProvider.HelpContext = HelpContext;
       form.MainLabel.Text = Prompt;
 
+      #region Создание управляющего элемента
 
       EFPNumEditBoxBase<T> efpValue = CreateControlProvider(form.FormProvider);
       efpValue.Control.Dock = DockStyle.Top;
@@ -909,6 +910,8 @@ namespace FreeLibSet.Forms
       efpValue.Minimum = Minimum;
       efpValue.Maximum = Maximum;
       efpValue.Validating += new EFPValidatingEventHandler(efpValue_Validating);
+
+      #endregion
 
       if (HasConfig)
       {
@@ -930,6 +933,26 @@ namespace FreeLibSet.Forms
     }
 
 
+    void efpValue_Validating(object sender, EFPValidatingEventArgs args)
+    {
+      if (args.ValidateState == UIValidateState.Error)
+        return;
+
+      EFPNumEditBoxBase<T> efpValue = (EFPNumEditBoxBase<T>)sender;
+
+      if (HasValidatingHandler && efpValue.NValue.HasValue)
+      {
+        EFPValidatingValueEventArgs<T> args2 = new EFPValidatingValueEventArgs<T>(args.Validator,
+        efpValue.Value);
+
+        OnValidating(args2);
+      }
+    }
+
+    #endregion
+
+    #region Абстрактные методы
+
     /// <summary>
     /// Создает управляющий элемент и провайдер для него
     /// </summary>
@@ -948,22 +971,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <returns>Значение</returns>
     protected abstract T? ReadConfigValue();
-
-    void efpValue_Validating(object sender, EFPValidatingEventArgs args)
-    {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
-      EFPNumEditBoxBase<T> efpValue = (EFPNumEditBoxBase<T>)sender;
-
-      if (HasValidatingHandler && efpValue.NValue.HasValue)
-      {
-        EFPValidatingValueEventArgs<T> args2 = new EFPValidatingValueEventArgs<T>(args.Validator,
-        efpValue.Value);
-
-        OnValidating(args2);
-      }
-    }
 
     #endregion
   }

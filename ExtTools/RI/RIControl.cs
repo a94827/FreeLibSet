@@ -596,49 +596,120 @@ namespace FreeLibSet.RI
     #endregion
   }
 
+
   /// <summary>
-  /// Поле ввода целого числа
+  /// Поле ввода числа. Базовый класс для IntEditBox, SingleEditBox, DoubleEditBox и DecimalEditBox
   /// </summary>
   [Serializable]
-  public class IntEditBox : Control
-  {
+  public class BaseNumEditBox<T> : Control
+      where T : struct, IFormattable, IComparable<T>
+{
     #region Конструктор
 
     /// <summary>
     /// Создает поле ввода
     /// </summary>
-    public IntEditBox()
+    public BaseNumEditBox()
     {
+      _Format = String.Empty;
     }
 
     #endregion
 
     #region Свойства
 
+    #region Value/NValue
+
+    #region NValue
+
     /// <summary>
-    /// Текущее значение
+    /// Введенное значение.
+    /// Может быть null, если нет введенного значения.
     /// </summary>
-    public int Value
+    public T? NValue
+    {
+      get { return _NValue; }
+      set
+      {
+        _NValue = value;
+        if (_NValueEx != null)
+          _NValueEx.Value = value;
+        if (_ValueEx != null)
+          _ValueEx.Value = this.Value;
+      }
+    }
+    private T? _NValue;
+
+    protected T? OldNValue;
+
+    /// <summary>
+    /// Управляемое значение для NValue.
+    /// </summary>
+    public DepValue<T?> NValueEx
     {
       get
       {
-        return _Value;
+        InitNValueEx();
+        return _NValueEx;
       }
       set
       {
-        _Value = value;
-        if (_ValueEx != null)
-          _ValueEx.Value = value;
+        InitNValueEx();
+        _NValueEx.Source = value;
       }
     }
-    private int _Value;
+    private DepInput<T?> _NValueEx;
 
-    private int _OldValue;
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool NValueExConnected
+    {
+      get
+      {
+        if (_NValueEx == null)
+          return false;
+        else
+          return _NValueEx.IsConnected;
+      }
+    }
+
+    private void InitNValueEx()
+    {
+      if (_NValueEx == null)
+      {
+        _NValueEx = new DepInput<T?>();
+        _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+        _NValueEx.Value = NValue;
+        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
+      }
+    }
+
+    private void NValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      NValue = _NValueEx.Value;
+    }
+
+    #endregion
+
+    #region Value
+
+    /// <summary>
+    /// Введенное значение.
+    /// Если нет введенного значения, свойство возвращает 0.
+    /// Это свойство следует использовать при CanBeEmpty=false.
+    /// </summary>
+    public T Value
+    {
+      get { return NValue ?? default(T); }
+      set { NValue = value; }
+    }
 
     /// <summary>
     /// Управляемое значение для Value.
     /// </summary>
-    public DepValue<int> ValueEx
+    public DepValue<T> ValueEx
     {
       get
       {
@@ -651,7 +722,7 @@ namespace FreeLibSet.RI
         _ValueEx.Source = value;
       }
     }
-    private DepInput<int> _ValueEx;
+    private DepInput<T> _ValueEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
@@ -672,7 +743,7 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<int>();
+        _ValueEx = new DepInput<T>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.Value = Value;
         _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
@@ -684,12 +755,81 @@ namespace FreeLibSet.RI
       Value = _ValueEx.Value;
     }
 
+    #endregion
+
+    #endregion
+
+    #region CanBeEmpty
+
     /// <summary>
-    /// Минимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
     /// </summary>
-    public int? Minimum
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region Format
+
+    /// <summary>
+    /// Строка формата для числа
+    /// </summary>
+    public string Format
+    {
+      get { return _Format; }
+      set
+      {
+        CheckNotFixed();
+        if (value == null)
+          _Format = String.Empty;
+        else
+          _Format = value;
+      }
+    }
+    private string _Format;
+
+    /// <summary>
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
+    /// Установка значения свойства создает формат.
+    /// </summary>
+    public virtual int DecimalPlaces
+    {
+      get { return FormatStringTools.DecimalPlacesFromNumberFormat(Format); }
+      set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
+    }
+
+    #endregion
+
+    #region Minimum/Maximum
+
+    /// <summary>
+    /// Минимальное значение. По умолчанию - не задано
+    /// </summary>
+    public T? Minimum
     {
       get { return _Minimum; }
       set
@@ -698,14 +838,12 @@ namespace FreeLibSet.RI
         _Minimum = value;
       }
     }
-    private int? _Minimum;
+    private T? _Minimum;
 
     /// <summary>
-    /// Максимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
+    /// Максимальное значение. По умолчанию - не задано
     /// </summary>
-    public int? Maximum
+    public T Maximum
     {
       get { return _Maximum; }
       set
@@ -714,27 +852,57 @@ namespace FreeLibSet.RI
         _Maximum = value;
       }
     }
-    private int? _Maximum;
-
-    /// <summary>
-    /// Если свойство установлено в true, то значение можно выбирать с помощью стрелочек.
-    /// По умолчанию - false - стрелочки не используются.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public bool ShowUpDown
-    {
-      get { return _ShowUpDown; }
-      set
-      {
-        CheckNotFixed();
-        _ShowUpDown = value;
-      }
-    }
-    private bool _ShowUpDown;
+    private T _Maximum;
 
     #endregion
 
-    #region Чтение и запись
+    #region Increment
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// </summary>
+    public T Increment
+    {
+      get { return _Increment; }
+      set
+      {
+        CheckNotFixed();
+        if (value.CompareTo(default(T)) < 0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+        _Increment = value;
+      }
+    }
+    private T _Increment;
+
+    #endregion
+
+    #endregion
+
+    #region Методы
+
+    /// <summary>
+    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
+    /// в секции конфигурации заданного типа.
+    /// </summary>
+    /// <param name="сfgType">Тип секции конфигурации, определяющий место ее хранения</param>
+    /// <returns>true, если элемент может хранить данные</returns>
+    protected override bool OnSupportsCfgType(RIValueCfgType сfgType)
+    {
+      return сfgType == RIValueCfgType.Default;
+    }
+
+    #endregion
+}
+
+  /// <summary>
+  /// Поле ввода целого числа
+  /// </summary>
+  [Serializable]
+  public class IntEditBox : BaseNumEditBox<Int32>
+  {
+    #region Чтение и запись значений
 
     /// <summary>
     /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
@@ -748,7 +916,7 @@ namespace FreeLibSet.RI
       {
         if (base.HasChanges)
           return true;
-        return _Value != _OldValue;
+        return OldNValue != NValue;
       }
     }
 
@@ -762,8 +930,8 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetInt("Value", _Value);
-      _OldValue = _Value;
+      part.SetNullableInt("Value", NValue);
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -775,19 +943,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      _Value = part.GetInt("Value");
-      _OldValue = Value;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.Default;
+      NValue = part.GetNullableInt("Value");
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -798,7 +955,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetInt(Name, Value);
+      part.SetNullableInt(Name, NValue);
     }
 
     /// <summary>
@@ -809,7 +966,21 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      Value = part.GetIntDef(Name, Value);
+      NValue = part.GetNullableInt(Name);
+    }
+
+    #endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Возвращает 0
+    /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public override int DecimalPlaces
+    {
+      get { return 0; }
+      set { }
     }
 
     #endregion
@@ -819,134 +990,9 @@ namespace FreeLibSet.RI
   /// Поле ввода числа одинарной точности
   /// </summary>
   [Serializable]
-  public class SingleEditBox : Control
+  public class SingleEditBox : BaseNumEditBox<Single>
   {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает поле ввода
-    /// </summary>
-    public SingleEditBox()
-    {
-      _DecimalPlaces = -1;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Текущее значение
-    /// </summary>
-    public float Value
-    {
-      get
-      {
-        return _Value;
-      }
-      set
-      {
-        _Value = value;
-        if (_ValueEx != null)
-          _ValueEx.Value = value;
-      }
-    }
-    private float _Value;
-
-    private float _OldValue;
-
-
-    /// <summary>
-    /// Управляемое значение для Value.
-    /// </summary>
-    public DepValue<float> ValueEx
-    {
-      get
-      {
-        InitValueEx();
-        return _ValueEx;
-      }
-      set
-      {
-        InitValueEx();
-        _ValueEx.Source = value;
-      }
-    }
-    private DepInput<float> _ValueEx;
-
-    /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
-    /// </summary>
-    public bool ValueExConnected
-    {
-      get
-      {
-        if (_ValueEx == null)
-          return false;
-        else
-          return _ValueEx.IsConnected;
-      }
-    }
-
-    private void InitValueEx()
-    {
-      if (_ValueEx == null)
-      {
-        _ValueEx = new DepInput<float>();
-        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.Value = Value;
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
-      }
-    }
-
-    private void ValueEx_ValueChanged(object sender, EventArgs args)
-    {
-      Value = _ValueEx.Value;
-    }
-    /// <summary>
-    /// Количество знаков после запятой. По умолчанию: (-1) - разрешается использование любого числа знаков
-    /// Если поле предназначено для ввода целых чисел, следует установить равным 0.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public int DecimalPlaces { get { return _DecimalPlaces; } set { _DecimalPlaces = value; } }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Минимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public float? Minimum
-    {
-      get { return _Minimum; }
-      set
-      {
-        CheckNotFixed();
-        _Minimum = value;
-      }
-    }
-    private float? _Minimum;
-
-    /// <summary>
-    /// Максимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public float? Maximum
-    {
-      get { return _Maximum; }
-      set
-      {
-        CheckNotFixed();
-        _Maximum = value;
-      }
-    }
-    private float? _Maximum;
-
-    #endregion
-
-    #region Чтение и запись
+    #region Чтение и запись значений
 
     /// <summary>
     /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
@@ -960,7 +1006,7 @@ namespace FreeLibSet.RI
       {
         if (base.HasChanges)
           return true;
-        return _Value != _OldValue;
+        return OldNValue != NValue;
       }
     }
 
@@ -974,8 +1020,8 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetSingle("Value", _Value);
-      _OldValue = _Value;
+      part.SetNullableSingle("Value", NValue);
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -987,19 +1033,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      _Value = part.GetSingle("Value");
-      _OldValue = Value;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.Default;
+      NValue = part.GetNullableSingle("Value");
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -1010,7 +1045,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetSingle(Name, Value);
+      part.SetNullableSingle(Name, NValue);
     }
 
     /// <summary>
@@ -1021,7 +1056,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      Value = part.GetSingleDef(Name, Value);
+      NValue = part.GetNullableSingle(Name);
     }
 
     #endregion
@@ -1031,134 +1066,9 @@ namespace FreeLibSet.RI
   /// Поле ввода числа двойной точности
   /// </summary>
   [Serializable]
-  public class DoubleEditBox : Control
+  public class DoubleEditBox : BaseNumEditBox<Double>
   {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает поле ввода
-    /// </summary>
-    public DoubleEditBox()
-    {
-      _DecimalPlaces = -1;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Текущее значение
-    /// </summary>
-    public double Value
-    {
-      get
-      {
-        return _Value;
-      }
-      set
-      {
-        _Value = value;
-        if (_ValueEx != null)
-          _ValueEx.Value = value;
-      }
-    }
-    private double _Value;
-
-    private double _OldValue;
-
-    /// <summary>
-    /// Управляемое значение для Value.
-    /// </summary>
-    public DepValue<double> ValueEx
-    {
-      get
-      {
-        InitValueEx();
-        return _ValueEx;
-      }
-      set
-      {
-        InitValueEx();
-        _ValueEx.Source = value;
-      }
-    }
-    private DepInput<Double> _ValueEx;
-
-    /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
-    /// </summary>
-    public bool ValueExConnected
-    {
-      get
-      {
-        if (_ValueEx == null)
-          return false;
-        else
-          return _ValueEx.IsConnected;
-      }
-    }
-
-    private void InitValueEx()
-    {
-      if (_ValueEx == null)
-      {
-        _ValueEx = new DepInput<double>();
-        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.Value = Value;
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
-      }
-    }
-
-    private void ValueEx_ValueChanged(object sender, EventArgs args)
-    {
-      Value = _ValueEx.Value;
-    }
-
-    /// <summary>
-    /// Количество знаков после запятой. По умолчанию: (-1) - разрешается использование любого числа знаков
-    /// Если поле предназначено для ввода целых чисел, следует установить равным 0.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public int DecimalPlaces { get { return _DecimalPlaces; } set { _DecimalPlaces = value; } }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Минимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public double? Minimum
-    {
-      get { return _Minimum; }
-      set
-      {
-        CheckNotFixed();
-        _Minimum = value;
-      }
-    }
-    private double? _Minimum;
-
-    /// <summary>
-    /// Максимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public double? Maximum
-    {
-      get { return _Maximum; }
-      set
-      {
-        CheckNotFixed();
-        _Maximum = value;
-      }
-    }
-    private double? _Maximum;
-
-    #endregion
-
-    #region Чтение и запись
+    #region Чтение и запись значений
 
     /// <summary>
     /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
@@ -1172,7 +1082,7 @@ namespace FreeLibSet.RI
       {
         if (base.HasChanges)
           return true;
-        return _Value != _OldValue;
+        return OldNValue != NValue;
       }
     }
 
@@ -1186,8 +1096,8 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetDouble("Value", _Value);
-      _OldValue = _Value;
+      part.SetNullableDouble("Value", NValue);
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -1199,19 +1109,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      _Value = part.GetDouble("Value");
-      _OldValue = Value;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.Default;
+      NValue = part.GetNullableDouble("Value");
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -1222,7 +1121,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetDouble(Name, Value);
+      part.SetNullableDouble(Name, NValue);
     }
 
     /// <summary>
@@ -1233,7 +1132,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      Value = part.GetDoubleDef(Name, Value);
+      NValue = part.GetNullableDouble(Name);
     }
 
     #endregion
@@ -1243,134 +1142,9 @@ namespace FreeLibSet.RI
   /// Поле ввода числа типа decimal
   /// </summary>
   [Serializable]
-  public class DecimalEditBox : Control
+  public class DecimalEditBox : BaseNumEditBox<Decimal>
   {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает поле ввода
-    /// </summary>
-    public DecimalEditBox()
-    {
-      _DecimalPlaces = -1;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Текущее значение
-    /// </summary>
-    public decimal Value
-    {
-      get
-      {
-        return _Value;
-      }
-      set
-      {
-        _Value = value;
-        if (_ValueEx != null)
-          _ValueEx.Value = value;
-      }
-    }
-    private decimal _Value; // данные всегда хранятся в формате Decimal
-
-    private decimal _OldValue;
-
-    /// <summary>
-    /// Управляемое значение для Value.
-    /// </summary>
-    public DepValue<decimal> ValueEx
-    {
-      get
-      {
-        InitValueEx();
-        return _ValueEx;
-      }
-      set
-      {
-        InitValueEx();
-        _ValueEx.Source = value;
-      }
-    }
-    private DepInput<decimal> _ValueEx;
-
-    /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
-    /// </summary>
-    public bool ValueExConnected
-    {
-      get
-      {
-        if (_ValueEx == null)
-          return false;
-        else
-          return _ValueEx.IsConnected;
-      }
-    }
-
-    private void InitValueEx()
-    {
-      if (_ValueEx == null)
-      {
-        _ValueEx = new DepInput<decimal>();
-        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.Value = Value;
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
-      }
-    }
-
-    private void ValueEx_ValueChanged(object sender, EventArgs args)
-    {
-      Value = _ValueEx.Value;
-    }
-
-    /// <summary>
-    /// Количество знаков после запятой. По умолчанию: (-1) - разрешается использование любого числа знаков
-    /// Если поле предназначено для ввода целых чисел, следует установить равным 0.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public int DecimalPlaces { get { return _DecimalPlaces; } set { _DecimalPlaces = value; } }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Минимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public decimal? Minimum
-    {
-      get { return _Minimum; }
-      set
-      {
-        CheckNotFixed();
-        _Minimum = value;
-      }
-    }
-    private decimal? _Minimum;
-
-    /// <summary>
-    /// Максимальное значение, которое можно ввести.
-    /// По умолчанию ограничение не установлено.
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public decimal? Maximum
-    {
-      get { return _Maximum; }
-      set
-      {
-        CheckNotFixed();
-        _Maximum = value;
-      }
-    }
-    private decimal? _Maximum;
-
-    #endregion
-
-    #region Чтение и запись
+    #region Чтение и запись значений
 
     /// <summary>
     /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
@@ -1384,7 +1158,7 @@ namespace FreeLibSet.RI
       {
         if (base.HasChanges)
           return true;
-        return _Value != _OldValue;
+        return OldNValue != NValue;
       }
     }
 
@@ -1398,8 +1172,8 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetDecimal("Value", _Value);
-      _OldValue = _Value;
+      part.SetNullableDecimal("Value", NValue);
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -1411,19 +1185,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      _Value = part.GetDecimal("Value");
-      _OldValue = Value;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.Default;
+      NValue = part.GetNullableDecimal("Value");
+      OldNValue = NValue;
     }
 
     /// <summary>
@@ -1434,7 +1197,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetDecimal(Name, Value);
+      part.SetNullableDecimal(Name, NValue);
     }
 
     /// <summary>
@@ -1445,7 +1208,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      Value = part.GetDecimalDef(Name, Value);
+      NValue = part.GetNullableDecimal(Name);
     }
 
     #endregion
@@ -2084,6 +1847,8 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Kind
+
     /// <summary>
     /// Формат вводимого значения.
     /// По умолчанию - Date
@@ -2098,6 +1863,8 @@ namespace FreeLibSet.RI
       }
     }
     private EditableDateTimeFormatterKind _Kind;
+
+    #endregion
 
     #region Value/NValue
 

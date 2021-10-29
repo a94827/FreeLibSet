@@ -850,210 +850,32 @@ namespace FreeLibSet.RI
     #endregion
   }
 
-  /// <summary>
-  /// Диалог ввода целого числа
-  /// </summary>
-  [Serializable]
-  public class IntInputDialog : BaseInputDialog
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает диалог
-    /// </summary>
-    public IntInputDialog()
-    {
-      Title = "Ввод числа";
-      Prompt = "Значение";
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false
-    /// </summary>
-    public bool CanBeEmpty
-    {
-      get { return _CanBeEmpty; }
-      set
-      {
-        CheckNotFixed();
-        _CanBeEmpty = value;
-      }
-    }
-    private bool _CanBeEmpty;
-
-    /// <summary>
-    /// Вход и выход: редактируемое значение.
-    /// Используйте это свойство, если CanBeEmpty=false.
-    /// Пустое значение трактуется как 0.
-    /// </summary>
-    public int Value
-    {
-      get { return NValue ?? 0; }
-      set { NValue = value; }
-    }
-
-    /// <summary>
-    /// Ввод и вывод: Редактируемое значение
-    /// </summary>
-    public int? NValue { get { return _NValue; } set { _NValue = value; } }
-    private int? _NValue;
-    private int? _OldNValue;
-
-    /// <summary>
-    /// Минимальное значение. По умолчанию - null - ограничение не задано 
-    /// </summary>
-    public int? Minimum
-    {
-      get { return _Minimum; }
-      set
-      {
-        CheckNotFixed();
-        _Minimum = value;
-      }
-    }
-    private int? _Minimum;
-
-    /// <summary>
-    /// Максимальное значение. По умолчанию - null - ограничение не задано 
-    /// </summary>
-    public int? Maximum
-    {
-      get { return _Maximum; }
-      set
-      {
-        CheckNotFixed();
-        _Maximum = value;
-      }
-    }
-    private int? _Maximum;
-
-    /// <summary>
-    /// Если свойство установлено в true, то значение можно выбирать с помощью стрелочек.
-    /// По умолчанию - false - стрелочки не используются
-    /// </summary>
-    public bool ShowUpDown
-    {
-      get { return _ShowUpDown; }
-      set
-      {
-        CheckNotFixed();
-        _ShowUpDown = value;
-      }
-    }
-    private bool _ShowUpDown;
-
-    #endregion
-
-    #region Чтение и запись значений
-
-    /// <summary>
-    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
-    /// которые могут меняться при показе блока диалога.
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Свойство не используется в пользовательском коде.
-    /// </summary>
-    public override bool HasChanges
-    {
-      get
-      {
-        if (base.HasChanges)
-          return true;
-        return _OldNValue != NValue;
-      }
-    }
-
-    /// <summary>
-    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
-    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для записи значений</param>
-    public override void WriteChanges(CfgPart part)
-    {
-      base.WriteChanges(part);
-      part.SetNullableInt("Value", NValue);
-      _OldNValue = NValue;
-    }
-
-    /// <summary>
-    /// Прочитать изменения, переданные "с другой стороны".
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для чтения значений</param>
-    public override void ReadChanges(CfgPart part)
-    {
-      base.ReadChanges(part);
-      NValue = part.GetNullableInt("Value");
-      _OldNValue = NValue;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.Default;
-    }
-
-    /// <summary>
-    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для записи</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      part.SetNullableInt(Name, NValue);
-    }
-
-    /// <summary>
-    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для чтения значений</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      NValue = part.GetNullableInt(Name);
-    }
-
-    #endregion
-  }
 
   /// <summary>
-  /// Базовый класс для SingleInputBox, DoubleInputBox и DecimalInputBox
+  /// Базовый класс для IntInputBox, SingleInputBox, DoubleInputBox и DecimalInputBox
   /// </summary>
   /// <typeparam name="T">Тип значения</typeparam>
   [Serializable]
-  public abstract class BaseFloatInputDialog<T> : BaseInputDialog
-    where T : struct
+  public abstract class BaseNumInputDialog<T> : BaseInputDialog
+    where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
 
     /// <summary>
     /// Создает диалог
     /// </summary>
-    public BaseFloatInputDialog()
+    public BaseNumInputDialog()
     {
       Title = "Ввод числа";
       Prompt = "Значение";
-      NValue = null;
-      DecimalPlaces = -1;
+      Format = String.Empty;
     }
 
     #endregion
 
     #region Свойства
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Можно ли вводить пустое значение.
@@ -1069,6 +891,10 @@ namespace FreeLibSet.RI
       }
     }
     private bool _CanBeEmpty;
+
+    #endregion
+
+    #region Value/NValue
 
     /// <summary>
     /// Вход и выход: редактируемое значение.
@@ -1093,35 +919,40 @@ namespace FreeLibSet.RI
     /// </summary>
     protected T? OldNValue;
 
+    #endregion
+
+    #region Format
 
     /// <summary>
-    /// Число десятичных знаков после запятой. По умолчанию: (-1) - число дейсятичных знаков не установлено
-    /// </summary>
-    public int DecimalPlaces
-    {
-      get { return _DecimalPlaces; }
-      set
-      {
-        CheckNotFixed();
-        _DecimalPlaces = value;
-      }
-    }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Альтернативная установка свойства DecimalPlaces
+    /// Строка формата для числа
     /// </summary>
     public string Format
     {
-      get
-      {
-        return FormatStringTools.DecimalPlacesToNumberFormat(DecimalPlaces);
-      }
+      get { return _Format; }
       set
       {
-        DecimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(value);
+        CheckNotFixed();
+        if (value == null)
+          _Format = String.Empty;
+        else
+          _Format = value;
       }
     }
+    private string _Format;
+
+    /// <summary>
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
+    /// Установка значения свойства создает формат.
+    /// </summary>
+    public virtual int DecimalPlaces
+    {
+      get { return FormatStringTools.DecimalPlacesFromNumberFormat(Format); }
+      set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
+    }
+
+    #endregion
+
+    #region Minimum/Maximum
 
     /// <summary>
     /// Минимальное значение. По умолчанию - не задано
@@ -1153,6 +984,30 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #region Increment
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// </summary>
+    public T Increment
+    {
+      get { return _Increment; }
+      set
+      {
+        CheckNotFixed();
+        if (value.CompareTo(default(T)) < 0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+        _Increment = value;
+      }
+    }
+    private T _Increment;
+
+    #endregion
+
+    #endregion
+
     #region Методы
 
     /// <summary>
@@ -1170,10 +1025,100 @@ namespace FreeLibSet.RI
   }
 
   /// <summary>
+  /// Диалог ввода целого числа
+  /// </summary>
+  [Serializable]
+  public class IntInputDialog : BaseNumInputDialog<Int32>
+  {
+    #region Чтение и запись значений
+
+    /// <summary>
+    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
+    /// которые могут меняться при показе блока диалога.
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Свойство не используется в пользовательском коде.
+    /// </summary>
+    public override bool HasChanges
+    {
+      get
+      {
+        if (base.HasChanges)
+          return true;
+        return OldNValue != NValue;
+      }
+    }
+
+    /// <summary>
+    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
+    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для записи значений</param>
+    public override void WriteChanges(CfgPart part)
+    {
+      base.WriteChanges(part);
+      part.SetNullableInt("Value", NValue);
+      OldNValue = NValue;
+    }
+
+    /// <summary>
+    /// Прочитать изменения, переданные "с другой стороны".
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для чтения значений</param>
+    public override void ReadChanges(CfgPart part)
+    {
+      base.ReadChanges(part);
+      NValue = part.GetNullableInt("Value");
+      OldNValue = NValue;
+    }
+
+    /// <summary>
+    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для записи</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      part.SetNullableInt(Name, NValue);
+    }
+
+    /// <summary>
+    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для чтения значений</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      NValue = part.GetNullableInt(Name);
+    }
+
+    #endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Возвращает 0
+    /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public override int DecimalPlaces
+    {
+      get { return 0; }
+      set { }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
   /// Диалог ввода числа одинарной точности
   /// </summary>
   [Serializable]
-  public class SingleInputDialog : BaseFloatInputDialog<float>
+  public class SingleInputDialog : BaseNumInputDialog<float>
   {
     #region Чтение и запись значений
 
@@ -1249,7 +1194,7 @@ namespace FreeLibSet.RI
   /// Диалог ввода числа двойной точности
   /// </summary>
   [Serializable]
-  public class DoubleInputDialog : BaseFloatInputDialog<double>
+  public class DoubleInputDialog : BaseNumInputDialog<double>
   {
     #region Чтение и запись значений
 
@@ -1325,7 +1270,7 @@ namespace FreeLibSet.RI
   /// Диалог ввода числа типа Decimal
   /// </summary>
   [Serializable]
-  public class DecimalInputDialog : BaseFloatInputDialog<decimal>
+  public class DecimalInputDialog : BaseNumInputDialog<decimal>
   {
     #region Чтение и запись значений
 
@@ -1884,215 +1829,30 @@ namespace FreeLibSet.RI
   #region Ввод диапазонов
 
   /// <summary>
-  /// Диалог ввода диапазона целых чисел
-  /// </summary>
-  [Serializable]
-  public class IntRangeDialog : BaseInputDialog
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает диалог
-    /// </summary>
-    public IntRangeDialog()
-    {
-      Title = "Ввод диапазона чисел";
-      Prompt = "Диапазон";
-      CanBeEmpty = false;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false
-    /// </summary>
-    public bool CanBeEmpty
-    {
-      get { return _CanBeEmpty; }
-      set
-      {
-        CheckNotFixed();
-        _CanBeEmpty = value;
-      }
-    }
-    private bool _CanBeEmpty;
-
-    /// <summary>
-    /// Вход и выход - первое редактируемое значение с поддержкой null
-    /// </summary>
-    public int? NFirstValue { get { return _NFirstValue; } set { _NFirstValue = value; } }
-    private int? _NFirstValue;
-    private int? _OldNFirstValue;
-
-    /// <summary>
-    /// Вход и выход - второе редактируемое значение с поддержкой null
-    /// </summary>
-    public int? NLastValue { get { return _NLastValue; } set { _NLastValue = value; } }
-    private int? _NLastValue;
-    private int? _OldNLastValue;
-
-    /// <summary>
-    /// Вход и выход: первое редактируемое значение без поддержки null
-    /// </summary>
-    public int FirstValue
-    {
-      get { return NFirstValue ?? 0; }
-      set { NFirstValue = value; }
-    }
-
-    /// <summary>
-    /// Вход и выход: второе редактируемое значение без поддержки null
-    /// </summary>
-    public int LastValue
-    {
-      get { return NLastValue ?? 0; }
-      set { NLastValue = value; }
-    }
-
-    /// <summary>
-    /// Минимальное значение. 
-    /// </summary>
-    public int? Minimum
-    {
-      get { return _Minimum; }
-      set
-      {
-        CheckNotFixed();
-        _Minimum = value;
-      }
-    }
-    private int? _Minimum;
-
-    /// <summary>
-    /// Максимальное значение. По умолчанию: Int32.MaxValue
-    /// </summary>
-    public int? Maximum
-    {
-      get { return _Maximum; }
-      set
-      {
-        CheckNotFixed();
-        _Maximum = value;
-      }
-    }
-    private int? _Maximum;
-
-    #endregion
-
-    #region Чтение и запись значений
-
-    /// <summary>
-    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
-    /// которые могут меняться при показе блока диалога.
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Свойство не используется в пользовательском коде.
-    /// </summary>
-    public override bool HasChanges
-    {
-      get
-      {
-        if (base.HasChanges)
-          return true;
-        return _OldNFirstValue != NFirstValue || _OldNLastValue != NLastValue;
-      }
-    }
-
-    /// <summary>
-    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
-    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для записи значений</param>
-    public override void WriteChanges(CfgPart part)
-    {
-      base.WriteChanges(part);
-      part.SetNullableInt("FirstValue", NFirstValue);
-      part.SetNullableInt("LastValue", NLastValue);
-      _OldNFirstValue = NFirstValue;
-      _OldNLastValue = NLastValue;
-    }
-
-    /// <summary>
-    /// Прочитать изменения, переданные "с другой стороны".
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для чтения значений</param>
-    public override void ReadChanges(CfgPart part)
-    {
-      base.ReadChanges(part);
-      NFirstValue = part.GetNullableInt("FirstValue");
-      NLastValue = part.GetNullableInt("LastValue");
-      _OldNFirstValue = NFirstValue;
-      _OldNLastValue = NLastValue;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.Default;
-    }
-
-    /// <summary>
-    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для записи</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      part.SetNullableInt(Name + "-FirstValue", NFirstValue);
-      part.SetNullableInt(Name + "-LastValue", NLastValue);
-    }
-
-    /// <summary>
-    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для чтения значений</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      NFirstValue = part.GetNullableInt(Name + "-FirstValue");
-      NLastValue = part.GetNullableInt(Name + "-LastValue");
-    }
-
-    #endregion
-  }
-
-  /// <summary>
   /// Базовый класс для SingleRangeBox, DoubleRangeBox и DecimalRangeBox
   /// </summary>
   /// <typeparam name="T">Тип значения</typeparam>
   [Serializable]
-  public abstract class BaseFloatRangeDialog<T> : BaseInputDialog
-    where T : struct
+  public abstract class BaseNumRangeDialog<T> : BaseInputDialog
+    where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
 
     /// <summary>
     /// Создает диалог
     /// </summary>
-    public BaseFloatRangeDialog()
+    public BaseNumRangeDialog()
     {
       Title = "Ввод диапазона чисел";
       Prompt = "Диапазон";
-      CanBeEmpty = false;
-      _DecimalPlaces = -1;
+      _Format = String.Empty;
     }
 
     #endregion
 
     #region Свойства
+
+    #region CanBempty
 
     /// <summary>
     /// Можно ли вводить пустое значение.
@@ -2108,6 +1868,10 @@ namespace FreeLibSet.RI
       }
     }
     private bool _CanBeEmpty;
+
+    #endregion
+
+    #region First/LastValue/NValue
 
     /// <summary>
     /// Вход и выход: первое редактируемое значение с поддержкой null
@@ -2149,53 +1913,40 @@ namespace FreeLibSet.RI
       set { NLastValue = value; }
     }
 
+    #endregion
+
+    #region Format
 
     /// <summary>
-    /// Число десятичных знаков после запятой. По умолчанию: (-1) - число десятичных знаков не установлено
-    /// </summary>
-    public int DecimalPlaces
-    {
-      get { return _DecimalPlaces; }
-      set
-      {
-        CheckNotFixed();
-        _DecimalPlaces = value;
-      }
-    }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Альтернативная установка свойства DecimalPlaces
+    /// Строка формата для числа
     /// </summary>
     public string Format
     {
-      get
-      {
-        if (DecimalPlaces < 0)
-          return String.Empty;
-        else if (DecimalPlaces == 0)
-          return "0";
-        else
-          return "0." + new string('0', DecimalPlaces);
-      }
+      get { return _Format; }
       set
       {
-        if (String.IsNullOrEmpty(value))
-        {
-          DecimalPlaces = -1;
-          return;
-        }
-
-        int p = value.IndexOf('.');
-        if (p < 0)
-        {
-          DecimalPlaces = 0;
-          return;
-        }
-
-        DecimalPlaces = value.Length - p - 1;
+        CheckNotFixed();
+        if (value == null)
+          _Format = String.Empty;
+        else
+          _Format = value;
       }
     }
+    private string _Format;
+
+    /// <summary>
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
+    /// Установка значения свойства создает формат.
+    /// </summary>
+    public virtual int DecimalPlaces
+    {
+      get { return FormatStringTools.DecimalPlacesFromNumberFormat(Format); }
+      set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
+    }
+
+    #endregion
+
+    #region Minimum/Maximum
 
     /// <summary>
     /// Минимальное значение. 
@@ -2227,6 +1978,30 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #region Increment
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значения в полях можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// </summary>
+    public T Increment
+    {
+      get { return _Increment; }
+      set
+      {
+        CheckNotFixed();
+        if (value.CompareTo(default(T)) < 0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+        _Increment = value;
+      }
+    }
+    private T _Increment;
+
+    #endregion
+
+    #endregion
+
     #region Методы
 
     /// <summary>
@@ -2244,10 +2019,106 @@ namespace FreeLibSet.RI
   }
 
   /// <summary>
+  /// Диалог ввода диапазона целых чисел
+  /// </summary>
+  [Serializable]
+  public class IntRangeDialog : BaseNumRangeDialog<Int32>
+  {
+    #region Чтение и запись значений
+
+    /// <summary>
+    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
+    /// которые могут меняться при показе блока диалога.
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Свойство не используется в пользовательском коде.
+    /// </summary>
+    public override bool HasChanges
+    {
+      get
+      {
+        if (base.HasChanges)
+          return true;
+        return OldNFirstValue != NFirstValue || OldNLastValue != NLastValue;
+      }
+    }
+
+    /// <summary>
+    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
+    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для записи значений</param>
+    public override void WriteChanges(CfgPart part)
+    {
+      base.WriteChanges(part);
+      part.SetNullableInt("FirstValue", NFirstValue);
+      part.SetNullableInt("LastValue", NLastValue);
+      OldNFirstValue = NFirstValue;
+      OldNLastValue = NLastValue;
+    }
+
+    /// <summary>
+    /// Прочитать изменения, переданные "с другой стороны".
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для чтения значений</param>
+    public override void ReadChanges(CfgPart part)
+    {
+      base.ReadChanges(part);
+      NFirstValue = part.GetNullableInt("FirstValue");
+      NLastValue = part.GetNullableInt("LastValue");
+      OldNFirstValue = NFirstValue;
+      OldNLastValue = NLastValue;
+    }
+
+    /// <summary>
+    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для записи</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      part.SetNullableInt(Name + "-FirstValue", NFirstValue);
+      part.SetNullableInt(Name + "-LastValue", NLastValue);
+    }
+
+    /// <summary>
+    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для чтения значений</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      NFirstValue = part.GetNullableInt(Name + "-FirstValue");
+      NLastValue = part.GetNullableInt(Name + "-LastValue");
+    }
+
+    #endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Возвращает 0
+    /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public override int DecimalPlaces
+    {
+      get { return 0; }
+      set { }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
   /// Диалог ввода числа одинарной точности
   /// </summary>
   [Serializable]
-  public class SingleRangeDialog : BaseFloatRangeDialog<float>
+  public class SingleRangeDialog : BaseNumRangeDialog<float>
   {
     #region Чтение и запись значений
 
@@ -2329,7 +2200,7 @@ namespace FreeLibSet.RI
   /// Диалог ввода числа двойной точности
   /// </summary>
   [Serializable]
-  public class DoubleRangeDialog : BaseFloatRangeDialog<double>
+  public class DoubleRangeDialog : BaseNumRangeDialog<double>
   {
     #region Чтение и запись значений
 
@@ -2411,7 +2282,7 @@ namespace FreeLibSet.RI
   /// Диалог ввода числа decimal
   /// </summary>
   [Serializable]
-  public class DecimalRangeDialog : BaseFloatRangeDialog<decimal>
+  public class DecimalRangeDialog : BaseNumRangeDialog<decimal>
   {
     #region Чтение и запись значений
 
