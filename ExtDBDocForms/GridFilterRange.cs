@@ -5,6 +5,8 @@ using System.Text;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
+using FreeLibSet.UICore;
+using FreeLibSet.Formatting;
 
 /*
  * The BSD License
@@ -85,16 +87,16 @@ namespace FreeLibSet.Forms.Docs
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
 
-      Dialog.FirstDate = FirstDate;
-      Dialog.LastDate = LastDate;
+      Dialog.NFirstDate = FirstDate;
+      Dialog.NLastDate = LastDate;
 
       Dialog.DialogPosition = dialogPosition;
 
       if (Dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
         return false;
 
-      FirstDate = Dialog.FirstDate;
-      LastDate = Dialog.LastDate;
+      FirstDate = Dialog.NFirstDate;
+      LastDate = Dialog.NLastDate;
 
       return true;
     }
@@ -149,7 +151,7 @@ namespace FreeLibSet.Forms.Docs
     {
       DateTime? dt1 = FirstDate;
       DateTime? dt2 = LastDate;
-      if (!DateRangeBox.ShiftDateRange(ref dt1, ref dt2, forward))
+      if (!UITools.ShiftDateRange(ref dt1, ref dt2, forward))
         return false;
       if (!testOnly)
       {
@@ -212,16 +214,16 @@ namespace FreeLibSet.Forms.Docs
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
 
-      Dialog.FirstDate = FirstDate;
-      Dialog.LastDate = LastDate;
+      Dialog.NFirstDate = FirstDate;
+      Dialog.NLastDate = LastDate;
 
       Dialog.DialogPosition = dialogPosition;
 
       if (Dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
         return false;
 
-      FirstDate = Dialog.FirstDate;
-      LastDate = Dialog.LastDate;
+      FirstDate = Dialog.NFirstDate;
+      LastDate = Dialog.NLastDate;
 
       return true;
     }
@@ -266,7 +268,7 @@ namespace FreeLibSet.Forms.Docs
     {
       DateTime? dt1 = FirstDate;
       DateTime? dt2 = LastDate;
-      if (!DateRangeBox.ShiftDateRange(ref dt1, ref dt2, forward))
+      if (!UITools.ShiftDateRange(ref dt1, ref dt2, forward))
         return false;
       if (!testOnly)
       {
@@ -360,19 +362,19 @@ namespace FreeLibSet.Forms.Docs
       Dialog.ImageKey = "Filter";
       Dialog.ShowNoButton = true;
 
-      Dialog.NullableFirstValue = FirstValue;
-      Dialog.NullableLastValue = LastValue;
+      Dialog.NFirstValue = FirstValue;
+      Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.MinValue = MinValue;
-      Dialog.MaxValue = MaxValue;
+      Dialog.Minimum = MinValue;
+      Dialog.Maximum = MaxValue;
 
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NullableFirstValue;
-          LastValue = Dialog.NullableLastValue;
+          FirstValue = Dialog.NFirstValue;
+          LastValue = Dialog.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;
@@ -442,8 +444,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public string Format
     {
-      get { return DataTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
-      set { DecimalPlaces = DataTools.DecimalPlacesFromNumberFormat(value); }
+      get { return FormatStringTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
+      set { DecimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(value); }
     }
 
     #endregion
@@ -487,19 +489,19 @@ namespace FreeLibSet.Forms.Docs
       Dialog.ImageKey = "Filter";
       Dialog.DecimalPlaces = DecimalPlaces;
 
-      Dialog.NullableFirstValue = FirstValue;
-      Dialog.NullableLastValue = LastValue;
+      Dialog.NFirstValue = FirstValue;
+      Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.MinValue = MinValue;
-      Dialog.MaxValue = MaxValue;
+      Dialog.Minimum = MinValue;
+      Dialog.Maximum = MaxValue;
       Dialog.ShowNoButton = true;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NullableFirstValue;
-          LastValue = Dialog.NullableLastValue;
+          FirstValue = Dialog.NFirstValue;
+          LastValue = Dialog.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;
@@ -569,8 +571,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public string Format
     {
-      get { return DataTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
-      set { DecimalPlaces = DataTools.DecimalPlacesFromNumberFormat(value); }
+      get { return FormatStringTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
+      set { DecimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(value); }
     }
 
     #endregion
@@ -614,19 +616,19 @@ namespace FreeLibSet.Forms.Docs
       Dialog.ImageKey = "Filter";
       Dialog.DecimalPlaces = DecimalPlaces;
 
-      Dialog.NullableFirstValue = FirstValue;
-      Dialog.NullableLastValue = LastValue;
+      Dialog.NFirstValue = FirstValue;
+      Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.MinValue = MinValue;
-      Dialog.MaxValue = MaxValue;
+      Dialog.Minimum = MinValue;
+      Dialog.Maximum = MaxValue;
       Dialog.ShowNoButton = true;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NullableFirstValue;
-          LastValue = Dialog.NullableLastValue;
+          FirstValue = Dialog.NFirstValue;
+          LastValue = Dialog.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;
@@ -696,8 +698,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public string Format
     {
-      get { return DataTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
-      set { DecimalPlaces = DataTools.DecimalPlacesFromNumberFormat(value); }
+      get { return FormatStringTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
+      set { DecimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(value); }
     }
 
     #endregion
@@ -741,19 +743,19 @@ namespace FreeLibSet.Forms.Docs
       Dialog.ImageKey = "Filter";
       Dialog.DecimalPlaces = DecimalPlaces;
 
-      Dialog.NullableFirstValue = FirstValue;
-      Dialog.NullableLastValue = LastValue;
+      Dialog.NFirstValue = FirstValue;
+      Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.MinValue = MinValue;
-      Dialog.MaxValue = MaxValue;
+      Dialog.Minimum = MinValue;
+      Dialog.Maximum = MaxValue;
       Dialog.ShowNoButton = true;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NullableFirstValue;
-          LastValue = Dialog.NullableLastValue;
+          FirstValue = Dialog.NFirstValue;
+          LastValue = Dialog.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;

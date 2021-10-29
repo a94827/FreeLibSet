@@ -1862,7 +1862,7 @@ namespace FreeLibSet.Data.Docs
       DBxTableStruct ts = new DBxTableStruct("DocTables");
       ts.Columns.AddId();
       ts.Columns.AddString("DocTableName", 64, false);
-      ts.Indices.Add("DocTableName");
+      ts.Indexes.Add("DocTableName");
       dbs.Tables.Add(ts);
 
       foreach (DBxDocType dt in this)
@@ -1894,8 +1894,8 @@ namespace FreeLibSet.Data.Docs
           ts.Columns.Add(cs.Clone());
 
         // Копируем индексы
-        foreach (DBxIndexStruct index in dt.Struct.Indices)
-          ts.Indices.Add(index.Clone()); // 20.08.2020
+        foreach (DBxIndexStruct index in dt.Struct.Indexes)
+          ts.Indexes.Add(index.Clone()); // 20.08.2020
 
         dbs.Tables.Add(ts);
 
@@ -1923,8 +1923,8 @@ namespace FreeLibSet.Data.Docs
             ts.Columns.Add(cs.Clone());
 
           // Копируем индексы
-          foreach (DBxIndexStruct index in sdt.Struct.Indices)
-            ts.Indices.Add(index.Clone()); // 20.08.2020
+          foreach (DBxIndexStruct index in sdt.Struct.Indexes)
+            ts.Indexes.Add(index.Clone()); // 20.08.2020
 
           dbs.Tables.Add(ts);
         }
@@ -1962,9 +1962,9 @@ namespace FreeLibSet.Data.Docs
         ts.Columns.AddString("ActionInfo", ActionInfoMaxLength, false);
         ts.Columns.AddInt("ApplyChangesCount", 0, short.MaxValue); // 22.12.2016 Количество вызовов ApplyChanges() (1,2,3 ...)
         ts.Columns.AddDateTime("ApplyChangesTime", true); // 22.12.2016 Время последнего вызова ApplyChanges()
-        ts.Indices.Add(new DBxColumns("ActionTime")); // 15.01.2017
+        ts.Indexes.Add(new DBxColumns("ActionTime")); // 15.01.2017
         if (UseUsers)
-          ts.Indices.Add(new DBxColumns("UserId,ActionTime")); // 15.04.2019
+          ts.Indexes.Add(new DBxColumns("UserId,ActionTime")); // 15.04.2019
         dbs.Tables.Add(ts);
 
         ts = new DBxTableStruct("DocActions");
@@ -1974,7 +1974,7 @@ namespace FreeLibSet.Data.Docs
         ts.Columns.AddInt("DocId"); // псевдоссылочное поле на прикладную таблицу в db.mdb
         ts.Columns.AddInt("Version", 0, short.MaxValue);
         ts.Columns.AddInt("Action", 0, 127);
-        ts.Indices.Add("DocTableId,DocId,UserActionId");
+        ts.Indexes.Add("DocTableId,DocId,UserActionId");
         dbs.Tables.Add(ts);
 
         foreach (DBxDocType dt in this)
@@ -1991,7 +1991,7 @@ namespace FreeLibSet.Data.Docs
           // Копируем прикладные столбцы
           foreach (DBxColumnStruct cs in dt.Struct.Columns)
             ts.Columns.Add(CloneWithoutRef(cs));
-          ts.Indices.Add("DocId,Version2");
+          ts.Indexes.Add("DocId,Version2");
           // Пользовательские индексы не нужны
 
           dbs.Tables.Add(ts);
@@ -2013,7 +2013,7 @@ namespace FreeLibSet.Data.Docs
             // Копируем прикладные столбцы
             foreach (DBxColumnStruct cs in sdt.Struct.Columns)
               ts.Columns.Add(CloneWithoutRef(cs));
-            ts.Indices.Add("SubDocId,Version2");
+            ts.Indexes.Add("SubDocId,Version2");
             // Пользовательские индексы не нужны
 
             dbs.Tables.Add(ts);

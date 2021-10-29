@@ -1181,18 +1181,18 @@ namespace FreeLibSet.Data
         return;
 
       // Построение индексов полей в таблице
-      int[] columnIndexes = new int[_Values.Length];
-      for (int i = 0; i < columnIndexes.Length; i++)
+      int[] columnIndices = new int[_Values.Length];
+      for (int i = 0; i < columnIndices.Length; i++)
       {
-        columnIndexes[i] = table.Columns.IndexOf(_WriterInfo.Columns[i]);
-        if (columnIndexes[i] < 0)
+        columnIndices[i] = table.Columns.IndexOf(_WriterInfo.Columns[i]);
+        if (columnIndices[i] < 0)
           throw new ArgumentException("Таблица \"" + table.TableName + "\" не содержит столбца \"" + _WriterInfo.Columns[i] + "\"", "table");
       }
 
       foreach (DataRow row in table.Rows)
       {
         for (int i = 0; i < _Values.Length; i++)
-          _Values[i] = row[columnIndexes[i]];
+          _Values[i] = row[columnIndices[i]];
         Write();
       }
     }
@@ -1207,18 +1207,18 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("reader");
 
       // Построение индексов полей в таблице
-      int[] columnIndexes = new int[_Values.Length];
-      for (int i = 0; i < columnIndexes.Length; i++)
+      int[] columnIndices = new int[_Values.Length];
+      for (int i = 0; i < columnIndices.Length; i++)
       {
-        columnIndexes[i] = reader.GetOrdinal(_WriterInfo.Columns[i]);
-        if (columnIndexes[i] < 0)
+        columnIndices[i] = reader.GetOrdinal(_WriterInfo.Columns[i]);
+        if (columnIndices[i] < 0)
           throw new ArgumentException("Источник данных не содержит столбца \"" + _WriterInfo.Columns[i] + "\"", "reader");
       }
 
       while (reader.Read())
       {
         for (int i = 0; i < _Values.Length; i++)
-          _Values[i] = reader[columnIndexes[i]];
+          _Values[i] = reader[columnIndices[i]];
         Write();
       }
     }

@@ -5,7 +5,15 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-10-25T20:30:32.682000000"/>
+	<meta name="changed" content="2021-10-29T15:32:46.677000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -393,12 +401,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun" }
 		h1.ctl { font-family: "Mangal" }
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		a:link { color: #0000ff }
 		a:visited { color: #800080 }
 	</style>
@@ -434,7 +442,7 @@
 			<p lang="en-US" align="center">245</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.10.2021</p>
+			<p lang="en-US" align="center">21.10.2021-29.10.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Изменения пространств имен</span></p>
@@ -445,13 +453,18 @@
 			</a></span><a href="ExtTools_11.htm#v244p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">4. </span><span lang="ru-RU">Свойства
 			</span><span lang="en-US">EditableDateTimeFormatter.ContainsDate </span><span lang="ru-RU">и
-			ContainsTime</span><span lang="ru-RU">, методы </span><span lang="en-US">ToNValue</span>
+			ContainsTime, методы </span><span lang="en-US">ToNValue</span>
 			<span lang="en-US">(<a href="ExtTools_11.htm#v233p1">v.233 </a></span><a href="ExtTools_11.htm#v233p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
 			<p>5. Пространство имен <span lang="en-US">FreeLibSet.UICore:</span></p>
 			<p><span lang="en-US">- </span>Перечисление <span lang="en-US">UI</span>Valida<span lang="en-US">teState</span></p>
 			<p><span lang="en-US">- </span>Классы <span lang="en-US">UIValidator
 			</span>и <span lang="en-US">UIValidatorList (</span>перенесено из
 			<span lang="en-US">RI)</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Класс </span><span lang="en-US">UITools.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">TextToLines()
+			</span><span lang="ru-RU">и </span><span lang="en-US">LinesToText(),
+			ShiftDateRange() </span><span lang="ru-RU">и </span><span lang="en-US">ShiftDateRangeYear()</span><span lang="en-US">.
+			</span><span lang="ru-RU">Методы GetIncrementedValue() (</span><font color="#ce181e"><span lang="ru-RU">заглушки</span></font><span lang="ru-RU">)</span></p>
 			<p><span lang="ru-RU">6</span><span lang="en-US">. </span><span lang="ru-RU">Удаленный
 			интерфейс:</span></p>
 			<p lang="en-US">- <span lang="ru-RU">Свойства </span>HasXxxExProperty
@@ -459,11 +472,51 @@
 			<p><span lang="en-US">- </span>Вместо перечисления <span lang="en-US">CanBeEmptyMode</span>
 			(<a href="ExtTools_11.htm#v229p3"><span lang="en-US">v.229 </span><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span>
 			используется <span lang="en-US">UIValidateState</span></p>
-			<p><span lang="ru-RU">- </span><span lang="en-US">Свойство
-			DateBox.Value типа Nullable&lt;DateTime&gt; переименова</span><span lang="ru-RU">но</span>
-			<span lang="en-US">в DateBox.NValue. Новое свойство DateBox.Value
-			использует тип данных DateTime. </span>
+			<p><span lang="ru-RU">- </span><span lang="en-US">Свойств</span><span lang="ru-RU">а</span>
+			<span lang="en-US">Value типа Nullable&lt;DateTime&gt;
+			переименова</span><span lang="ru-RU">ны</span> <span lang="en-US">в
+			NValue</span> <span lang="ru-RU">(</span><span lang="en-US">FirstValue,
+			LastValue </span><span lang="ru-RU">для диапазонов)</span><span lang="en-US">.
+			Нов</span><span lang="ru-RU">ые</span> <span lang="en-US">свойств</span><span lang="ru-RU">а</span>
+			<span lang="en-US">Value использу</span><span lang="ru-RU">ю</span><span lang="en-US">т</span>
+			тип данных DateTime. 
 			</p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Классы </span><span lang="en-US">DateBox
+			</span><span lang="ru-RU">и </span><span lang="en-US">InputDateDialog
+			</span><span lang="ru-RU">заменены на </span><span lang="en-US">DateTimeBox
+			</span><span lang="ru-RU">и </span><span lang="en-US">InputDateTimeDialog().
+			</span><span lang="ru-RU">Новое свойство </span><span lang="en-US">Kind.</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Свойства
+			</span>DateOrRangeBox.FirstDate/Ex, LastDate/Ex</p>
+			<p lang="en-US">- <span lang="ru-RU">Переименование
+			</span>DateInputDialog.Value/NValue.</p>
+			<p lang="en-US">- <span lang="ru-RU">В диалогах ввода значений
+			переименование </span>MinValue/MaxValue <span lang="ru-RU">в
+			</span>Minimum/Maximum. <span lang="ru-RU">Для числовых типов
+			используются </span>nullable-<span lang="ru-RU">значения</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Убрано свойство
+			</span>TextInputDialog.IsPassword. <span lang="ru-RU">Предполагается
+			создание классов </span>PasswordTextBox <span lang="ru-RU">и
+			</span>PasswordInputDialog</p>
+			<p><br/>
+<br/>
+
+			</p>
+			<p lang="en-US">- <span lang="ru-RU">Переименование
+			ComboTextInputDialog в </span>TextComboInputDialog. <span lang="ru-RU">Свойство
+			</span>Items <span lang="ru-RU">задается в конструкторе.</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Свойства </span>TextInputDialog,
+			TextComboInputDialog, MultiLineTextInputDialog.Value <span lang="ru-RU">переименованы
+			в </span>Text</p>
+			<p lang="en-US">-
+			MultiLineTextInputDialog.WriteChanges()/ReadChanges() <span lang="ru-RU">передают
+			свойство </span>Lines, <span lang="ru-RU">а не </span>Text</p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство </span>InfoLabel.Lines.
+			<span lang="ru-RU">Свойство </span>Text <span lang="ru-RU">является
+			вспомогательным</span></p>
+			<p lang="en-US">7. <span lang="ru-RU">Методы
+			</span>DataTools.DecimalPlacesToNumberFormat() <span lang="ru-RU">и
+			DecimalPlacesToNumberFormat() перенесены в </span>FormatStringTools</p>
 		</td>
 	</tr>
 </table>

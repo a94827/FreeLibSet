@@ -125,7 +125,7 @@ namespace FreeLibSet.Data.Docs
         else
           ts.Columns.AddBinary("Contents"); // Содержимое блока
 
-        ts.Indices.Add("MD5");
+        ts.Indexes.Add("MD5");
         dbStruct.Tables.Add(ts);
       }
 
@@ -148,7 +148,7 @@ namespace FreeLibSet.Data.Docs
         ts.Columns.AddDateTime("CreationTime", true); // Время создания файла
         ts.Columns.AddDateTime("LastWriteTime", true); // Время изменения файла
 
-        ts.Indices.Add("Data,Name,CreationTime,LastWriteTime"); // Думаю, что лучше "разнообразное" числовое поле сделать первым
+        ts.Indexes.Add("Data,Name,CreationTime,LastWriteTime"); // Думаю, что лучше "разнообразное" числовое поле сделать первым
         dbStruct.Tables.Add(ts);
       }
 

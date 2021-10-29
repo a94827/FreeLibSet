@@ -1072,7 +1072,7 @@ namespace FreeLibSet.Data.OleDb
       dvForeignKeys.Sort = "CONSTRAINT_NAME";
 
       // Данные по индексам 
-      DataTable TableIndices = Connection.GetSchema("Indexes");
+      DataTable TableIndexes = Connection.GetSchema("Indexes");
       DataView dvIndices = new DataView(TableIndices);
 
       DataTable TableIndexColumns = Connection.GetSchema("IndexColumns");
@@ -1598,8 +1598,8 @@ namespace FreeLibSet.Data.OleDb
 
     private void RemoveExtraIndices(DBxTableStruct Table, List<string> GoodIndices, ErrorMessageList Errors, ISplash Splash)
     {
-      DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { null, null, Table.TableName });
-      foreach (DataRow IndexRow in TableIndices.Rows)
+      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, Table.TableName });
+      foreach (DataRow IndexRow in TableIndexes.Rows)
       {
         string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")
@@ -1738,8 +1738,8 @@ namespace FreeLibSet.Data.OleDb
       // Создаем список индексов для удаления
       List<string> IndexNames = null;
 
-      DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { null, null, TableName });
-      foreach (DataRow IndexRow in TableIndices.Rows)
+      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, TableName });
+      foreach (DataRow IndexRow in TableIndexes.Rows)
       {
         string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")

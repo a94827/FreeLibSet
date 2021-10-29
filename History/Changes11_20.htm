@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2021-10-20T17:35:30.201000000"/>
-	<meta name="changed" content="2021-10-26T09:31:25.167000000"/>
+	<meta name="changed" content="2021-10-29T11:28:10.278000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
 		p { margin-bottom: 0.25cm; line-height: 120% }
@@ -17,6 +17,9 @@
 		h2.western { font-family: "Albany", sans-serif; font-size: 16pt }
 		h2.cjk { font-family: "SimSun"; font-size: 16pt }
 		h2.ctl { font-family: "Mangal"; font-size: 16pt }
+		h3.western { font-family: "Albany", sans-serif }
+		h3.cjk { font-family: "SimSun" }
+		h3.ctl { font-family: "Mangal" }
 		a:link { so-language: zxx }
 	</style>
 </head>
@@ -180,7 +183,7 @@
 			<p lang="en-US">AgeyevAV.OLE</p>
 		</td>
 		<td width="250" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">FreeLibSet.OLE</p>
+			<p lang="en-US">FreeLibSet.<font color="#008080">Win32</font>.OLE</p>
 		</td>
 		<td width="195" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.50pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"></td>
 	</tr>
@@ -377,7 +380,7 @@
 			<p lang="en-US">AgeyevAV.OLE.Word</p>
 		</td>
 		<td width="250" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">FreeLibSet.OLE.Word</p>
+			<p lang="en-US">FreeLibSet.<font color="#008080">Win32</font>.OLE.Word</p>
 		</td>
 		<td width="195" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.50pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>&nbsp;</p>
@@ -388,7 +391,7 @@
 			<p lang="en-US">AgeyevAV.OLE.Excel</p>
 		</td>
 		<td width="250" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">FreeLibSet.OLE.Excel</p>
+			<p lang="en-US">FreeLibSet.<font color="#008080">Win32</font>.OLE.Excel</p>
 		</td>
 		<td width="195" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.50pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>&nbsp;</p>
@@ -687,12 +690,16 @@ NIntValueEx.</span> Если пустое <span lang="en-US">struct-</span>значение
 <br/>
 
 </p>
+<h3 class="western">Indexes <span lang="ru-RU">или </span>Indices?</h3>
+<p>Если свойство относится <span lang="ru-RU">к индексам элементов
+массива, то используется &quot;</span><span lang="en-US">Indices</span><span lang="ru-RU">&quot;</span><span lang="en-US">.
+</span><span lang="ru-RU">Если свойство относится к коллекции
+индексов базы данных - то &quot;</span><span lang="en-US">Indexes</span><span lang="ru-RU">&quot;</span></p>
 <p>&nbsp;</p>
 <p><font color="#ff0000">Подумать о </font><font color="#ff0000"><span lang="en-US">namespace
 </span></font><font color="#ff0000">для </font><font color="#ff0000"><span lang="en-US">TreeViewAdv</span></font></p>
 <p><font color="#ff0000"><span lang="en-US">WinFormsTools &ndash; </span></font><font color="#ff0000">в
 </font><font color="#ff0000"><span lang="en-US">FreeLibSet.Controls?</span></font></p>
-<p lang="en-US"><font color="#ff0000">DateRangeBox.ShiftDateRange()</font></p>
 <p lang="en-US"><font color="#ff0000">public SetReadOnly() <span lang="ru-RU">в
 коллекциях</span>?</font></p>
 <p><font color="#ff0000">В <span lang="en-US">typed-</span>коллекциях
@@ -723,5 +730,35 @@ NIntValueEx.</span> Если пустое <span lang="en-US">struct-</span>значение
 </span></font><font color="#ff0000">нестатические классы
 </font><font color="#ff0000"><span lang="en-US">CSVTextConvert </span></font><font color="#ff0000">и
 </font><font color="#ff0000"><span lang="en-US">TabbedTextConvert</span></font></p>
+<p><font color="#ff0000"><span lang="en-US">EFPNumEditBox.NDecimalValue
+</span></font><font color="#ff0000"><span lang="ru-RU">не полностью
+совместим с </span></font><font color="#ff0000"><span lang="en-US">EFPNumEditBase&lt;T&gt;.DecimalValue</span></font><font color="#ff0000"><span lang="ru-RU">,</span></font><font color="#ff0000">
+</font><font color="#ff0000"><span lang="ru-RU">т.к. не используется
+_</span></font><font color="#ff0000"><span lang="en-US">SavedValue </span></font><font color="#ff0000"><span lang="ru-RU">и
+</span></font><font color="#ff0000"><span lang="en-US">DisabledValue.
+</span></font><font color="#ff0000"><span lang="ru-RU">Нет свойств
+</span></font><font color="#ff0000"><span lang="en-US">EFPNumEditBox.DisabledNXxxValue.</span></font></p>
+<p lang="en-US"><font color="#ff0000">RI.Int/Single/Double/DecimalRangeDialog
+</font><font color="#ff0000"><span lang="ru-RU">есть только свойство
+</span></font><font color="#ff0000">CanBeEmpty</font><font color="#ff0000"><span lang="ru-RU">.</span></font></p>
+<p lang="en-US"><font color="#ff0000">BaseFloatRangeDialog.Format -
+</font><font color="#ff0000"><span lang="ru-RU">есть свойства, у
+других - нет</span></font></p>
+<p lang="en-US"><font color="#ff0000">FolderBrowserDialog.PathValidateMode</font></p>
+<p lang="en-US"><font color="#ff0000">FileTextBox.DefaultExt</font></p>
+<p lang="en-US"><font color="#ff0000">OrganizationNameModeComboBox,
+HieReportTotalModeComboBox.SelectedModeEx</font></p>
+<p lang="en-US"><font color="#ff0000">CodeRefBookComboBox,
+CodeRefBookSelComboBox.SelectedCodeEx</font></p>
+<p><font color="#ff0000">Выровнять свойства в <span lang="en-US">CodeRefBookSelComboBox</span>
+и <span lang="en-US">CodeRefBookSelDialog</span></font></p>
+<p><font color="#ff0000"><span lang="en-US">FormMainStatesComboBox</span>,
+FormCheckStatesComboBox<span lang="en-US">.StatesEx</span></font></p>
+<p><font color="#ff0000"><span lang="en-US">YearQuarterBox,
+YearQuarterRangeBox, YearHalfYearBox. </span>Нет <span lang="en-US">Ex-</span>свойств.
+Может быть, сделать структуры и нормальные <span lang="en-US">Minimum
+</span>и <span lang="en-US">Maximum?</span></font></p>
+<p><font color="#ff0000">Убрать дизайнеры для упр. элементов в
+отдельную сборку.</font></p>
 </body>
 </html>

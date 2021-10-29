@@ -842,8 +842,8 @@ namespace FreeLibSet.Data.OracleClient
       dvForeignKeys.Sort = "CONSTRAINT_NAME";
 
       // Данные по индексам 
-      DataTable TableIndices = Connection.GetSchema("Indexes");
-      DataView dvIndices = new DataView(TableIndices);
+      DataTable TableIndexes = Connection.GetSchema("Indexes");
+      DataView dvIndexes = new DataView(TableIndexes);
 
       DataTable TableIndexColumns = Connection.GetSchema("IndexColumns");
       DataView dvIndexColumns = new DataView(TableIndexColumns);
@@ -1354,8 +1354,8 @@ namespace FreeLibSet.Data.OracleClient
 
     private void RemoveExtraIndices(DBxTableStruct Table, List<string> GoodIndices, ErrorMessageList Errors, ISplash Splash, bool Drop)
     {
-      DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { null, null, Table.TableName });
-      foreach (DataRow IndexRow in TableIndices.Rows)
+      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, Table.TableName });
+      foreach (DataRow IndexRow in TableIndexes.Rows)
       {
         string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")
@@ -1495,8 +1495,8 @@ namespace FreeLibSet.Data.OracleClient
       // Создаем список индексов для удаления
       List<string> IndexNames = null;
 
-      DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { null, null, TableName });
-      foreach (DataRow IndexRow in TableIndices.Rows)
+      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, TableName });
+      foreach (DataRow IndexRow in TableIndexes.Rows)
       {
         string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")

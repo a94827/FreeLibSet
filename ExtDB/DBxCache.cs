@@ -2073,7 +2073,7 @@ namespace FreeLibSet.Data
       // Словарь соответствий полей, которые требуется копировать.
       // Ключ - индекс поля в исходных строках
       // Значение - индекс поля в таблице кэша
-      Dictionary<int, int> CopyColumnIndexes = null;
+      Dictionary<int, int> copyColumnIndices = null;
 
       #region Обновление страниц
 
@@ -2097,9 +2097,9 @@ namespace FreeLibSet.Data
 
           #region Создание словаря замены полей при первом обращении
 
-          if (CopyColumnIndexes == null)
+          if (copyColumnIndices == null)
           {
-            CopyColumnIndexes = new Dictionary<int, int>();
+            copyColumnIndices = new Dictionary<int, int>();
             for (int iCol = 0; iCol < ColumnNames.Count; iCol++)
             {
               int pSrc = SrcRow.Table.Columns.IndexOf(ColumnNames[iCol]);
@@ -2113,16 +2113,16 @@ namespace FreeLibSet.Data
               if (pSrc == pId)
                 continue; // идентификатор нельзя перезаписывать
 
-              CopyColumnIndexes.Add(pSrc, pCache);
+              copyColumnIndices.Add(pSrc, pCache);
             }
           }
 
           #endregion
 
-          if (CopyColumnIndexes.Count > 0)
+          if (copyColumnIndices.Count > 0)
           {
             PageModified = true;
-            foreach (KeyValuePair<int, int> ColPair in CopyColumnIndexes)
+            foreach (KeyValuePair<int, int> ColPair in copyColumnIndices)
               CacheRow[ColPair.Value] = SrcRow[ColPair.Key];
           }
         } // цикл по строкам в пределах страницы

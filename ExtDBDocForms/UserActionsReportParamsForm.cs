@@ -76,10 +76,10 @@ namespace FreeLibSet.Forms.Docs
       }
 
       efpPeriod = new EFPDateRangeBox(efpForm, edPeriod);
-      efpPeriod.FirstDate.ToolTipText = "Начальная дата";
-      efpPeriod.FirstDate.CanBeEmpty = true;
-      efpPeriod.LastDate.ToolTipText = "Конечная дата";
-      efpPeriod.LastDate.CanBeEmpty = true;
+      efpPeriod.First.ToolTipText = "Начальная дата";
+      efpPeriod.First.CanBeEmpty = true;
+      efpPeriod.Last.ToolTipText = "Конечная дата";
+      efpPeriod.Last.CanBeEmpty = true;
 
       btnLastDay.Image = EFPApp.MainImages.Images["ArrowUpThenLeft"];
       btnLastDay.ImageAlign = ContentAlignment.MiddleCenter;
@@ -139,8 +139,8 @@ namespace FreeLibSet.Forms.Docs
       DateTime? dt = efpUser.UI.DocProvider.GetUserActionsLastTime(efpUser.DocId);
       if (dt.HasValue)
       {
-        efpPeriod.FirstDate.NValue = dt.Value.Date;
-        efpPeriod.LastDate.NValue = dt.Value.Date;
+        efpPeriod.First.NValue = dt.Value.Date;
+        efpPeriod.Last.NValue = dt.Value.Date;
       }
       else
         efpUser.SetFocus("Для пользователя нет действий");
@@ -331,8 +331,8 @@ namespace FreeLibSet.Forms.Docs
     protected override bool QueryParams()
     {
       UserActionsReportParamsForm ParamForm = new UserActionsReportParamsForm(UI);
-      ParamForm.efpPeriod.FirstDate.NValue = Params.FirstDate;
-      ParamForm.efpPeriod.LastDate.NValue = Params.LastDate;
+      ParamForm.efpPeriod.First.NValue = Params.FirstDate;
+      ParamForm.efpPeriod.Last.NValue = Params.LastDate;
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
         ParamForm.efpUser.DocId = Params.UserId;
       ParamForm.efpOneType.Checked = !String.IsNullOrEmpty(Params.SingleDocTypeName);
@@ -345,8 +345,8 @@ namespace FreeLibSet.Forms.Docs
       if (EFPApp.ShowDialog(ParamForm, true) != DialogResult.OK)
         return false;
 
-      Params.FirstDate = ParamForm.efpPeriod.FirstDate.NValue;
-      Params.LastDate = ParamForm.efpPeriod.LastDate.NValue;
+      Params.FirstDate = ParamForm.efpPeriod.First.NValue;
+      Params.LastDate = ParamForm.efpPeriod.Last.NValue;
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
         Params.UserId = ParamForm.efpUser.DocId;
       if (ParamForm.efpOneType.Checked)

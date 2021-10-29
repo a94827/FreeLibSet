@@ -1381,8 +1381,8 @@ namespace FreeLibSet.Data.SqlClient
       dvForeignKeys.Sort = "CONSTRAINT_NAME";
 
       // Данные по индексам 
-      DataTable TableIndices = Connection.GetSchema("Indexes");
-      DataView dvIndices = new DataView(TableIndices);
+      DataTable TableIndexes = Connection.GetSchema("Indexes");
+      DataView dvIndexes = new DataView(TableIndexes);
 
       DataTable TableIndexColumns = Connection.GetSchema("IndexColumns");
       DataView dvIndexColumns = new DataView(TableIndexColumns);
@@ -1961,8 +1961,8 @@ namespace FreeLibSet.Data.SqlClient
 
     private void RemoveExtraIndices(DBxTableStruct Table, List<string> GoodIndices, ErrorMessageList Errors, ISplash Splash, bool Drop)
     {
-      DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { null, null, Table.TableName });
-      foreach (DataRow IndexRow in TableIndices.Rows)
+      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, Table.TableName });
+      foreach (DataRow IndexRow in TableIndexes.Rows)
       {
         string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")
@@ -1970,7 +1970,7 @@ namespace FreeLibSet.Data.SqlClient
         if (IndexName.StartsWith("FK_") || IndexName.StartsWith("PK_"))
           continue;
 
-        if (!Table.Indices.Contains(IndexName))
+        if (!Table.Indexes.Contains(IndexName))
         {
           // Лишний индекс
           if (Drop)
@@ -1982,7 +1982,7 @@ namespace FreeLibSet.Data.SqlClient
           continue;
         }
 
-        DBxIndexStruct IndexDef = Table.Indices[IndexName];
+        DBxIndexStruct IndexDef = Table.Indexes[IndexName];
 
         DataTable TableIndexColumns = Connection.GetSchema("IndexColumns", new string[] { null, null, Table.TableName, IndexName });
         if (!CheckIndexColumns(IndexDef, TableIndexColumns))
@@ -2030,9 +2030,9 @@ namespace FreeLibSet.Data.SqlClient
 
     private void CreateIndices(DBxTableStruct Table, List<string> GoodIndices, ErrorMessageList Errors, ISplash Splash)
     {
-      for (int i = 0; i < Table.Indices.Count; i++)
+      for (int i = 0; i < Table.Indexes.Count; i++)
       {
-        DBxIndexStruct IndexDef = Table.Indices[i];
+        DBxIndexStruct IndexDef = Table.Indexes[i];
 
         if (GoodIndices.Contains(IndexDef.IndexName))
           continue;
@@ -2105,8 +2105,8 @@ namespace FreeLibSet.Data.SqlClient
       // Создаем список индексов для удаления
       List<string> IndexNames = null;
 
-      DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { null, null, TableName });
-      foreach (DataRow IndexRow in TableIndices.Rows)
+      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, TableName });
+      foreach (DataRow IndexRow in TableIndexes.Rows)
       {
         string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")

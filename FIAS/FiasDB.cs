@@ -418,7 +418,7 @@ namespace FreeLibSet.FIAS
           ts = dbx.Tables.Add("AddrObRec");
           ts.Columns.AddId();
           ts.Columns.AddGuid("Guid", false);
-          ts.Indices.Add("Guid");
+          ts.Indexes.Add("Guid");
 
           #endregion
 
@@ -427,7 +427,7 @@ namespace FreeLibSet.FIAS
           ts = dbx.Tables.Add("AddrObGuid");
           ts.Columns.AddId();
           ts.Columns.AddGuid("Guid", false);
-          ts.Indices.Add("Guid");
+          ts.Indexes.Add("Guid");
 
           #endregion
         }
@@ -522,12 +522,12 @@ namespace FreeLibSet.FIAS
           if (!_InternalSettings.UseIdTables)
           {
             if (NoPK)
-              ts.Indices.Add("AOID"); // псевдо-первичный ключ
-            ts.Indices.Add("AOGUID"); // используется, когда в адресе задан GUID адресного объекта, то есть в большинстве случаев
-            ts.Indices.Add("PARENTGUID"); // используетсч при загрузке буферизованной страницы.
+              ts.Indexes.Add("AOID"); // псевдо-первичный ключ
+            ts.Indexes.Add("AOGUID"); // используется, когда в адресе задан GUID адресного объекта, то есть в большинстве случаев
+            ts.Indexes.Add("PARENTGUID"); // используетсч при загрузке буферизованной страницы.
           }
           if (_InternalSettings.FTSMode == FiasFTSMode.FTS3)
-            ts.Indices.Add("NameID"); // используется при полнотекстном поиске, чтобы получить найденные адресные объекты
+            ts.Indexes.Add("NameID"); // используется при полнотекстном поиске, чтобы получить найденные адресные объекты
         }
 
         #endregion
@@ -615,10 +615,10 @@ namespace FreeLibSet.FIAS
             if (!_InternalSettings.UseIdTables)
             {
               if (NoPK)
-                ts.Indices.Add("HOUSEID"); // псевдо-первичный ключ
+                ts.Indexes.Add("HOUSEID"); // псевдо-первичный ключ
 
-              ts.Indices.Add("HOUSEGUID"); // используется, если в адресе задан GUID здания
-              ts.Indices.Add("AOGUID"); // используется при загрузке буферизованной страницы
+              ts.Indexes.Add("HOUSEGUID"); // используется, если в адресе задан GUID здания
+              ts.Indexes.Add("AOGUID"); // используется при загрузке буферизованной страницы
             }
           }
 
@@ -698,10 +698,10 @@ namespace FreeLibSet.FIAS
             if (!_InternalSettings.UseIdTables)
             {
               if (NoPK)
-                ts.Indices.Add("ROOMID"); // псевдопервичный ключ
+                ts.Indexes.Add("ROOMID"); // псевдопервичный ключ
 
-              ts.Indices.Add("ROOMGUID"); // используется, если в адресе задан GUID помещения
-              ts.Indices.Add("HOUSEGUID"); // используется при загрузке буферизованной страницы
+              ts.Indexes.Add("ROOMGUID"); // используется, если в адресе задан GUID помещения
+              ts.Indexes.Add("HOUSEGUID"); // используется при загрузке буферизованной страницы
             }
           }
 

@@ -1903,9 +1903,9 @@ namespace FreeLibSet.Data.Npgsql
         #region Словарь для поиска нужных индексов
 
         // Создаем словарь "СписокСтолбцовВВерхнемРегистре - НомерИндекса"
-        Dictionary<string, int> Dict = new Dictionary<string, int>(Table.Indices.Count);
-        for (int i = 0; i < Table.Indices.Count; i++)
-          Dict.Add(Table.Indices[i].Columns.AsString.ToUpperInvariant(), i);
+        Dictionary<string, int> Dict = new Dictionary<string, int>(Table.Indexes.Count);
+        for (int i = 0; i < Table.Indexes.Count; i++)
+          Dict.Add(Table.Indexes[i].Columns.AsString.ToUpperInvariant(), i);
 
 
         #endregion
@@ -1913,7 +1913,7 @@ namespace FreeLibSet.Data.Npgsql
         #region Просмотр существующих индексов и удаление ненужных
 
         // Для каждого описания индекса устанавливается флаг, если такой индекс есть
-        bool[] IndexFlags = new bool[Table.Indices.Count];
+        bool[] IndexFlags = new bool[Table.Indexes.Count];
 
         // Существующие индексы для текущей таблицы
         TableIdx.DefaultView.RowFilter = new ValueFilter("tablename", Table.TableName).ToString();
@@ -1981,13 +1981,13 @@ namespace FreeLibSet.Data.Npgsql
 
         #region Создание новых индексов
 
-        for (int i = 0; i < Table.Indices.Count; i++)
+        for (int i = 0; i < Table.Indexes.Count; i++)
         {
           if (!IndexFlags[i])
           {
-            CreateIndex(Table.TableName, Table.Indices[i].Columns);
+            CreateIndex(Table.TableName, Table.Indexes[i].Columns);
             Modified = true;
-            errors.AddInfo("Добавлен индекс для таблицы \"" + Table.TableName + "\", по полям " + Table.Indices[i].Columns.AsString);
+            errors.AddInfo("Добавлен индекс для таблицы \"" + Table.TableName + "\", по полям " + Table.Indexes[i].Columns.AsString);
           }
         }
 
@@ -2071,8 +2071,8 @@ namespace FreeLibSet.Data.Npgsql
       // Создаем список индексов для удаления
       List<string> IndexNames = null;
 
-      DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { null, null, tableName });
-      foreach (DataRow IndexRow in TableIndices.Rows)
+      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, tableName });
+      foreach (DataRow IndexRow in TableIndexes.Rows)
       {
         string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
         if (IndexName.EndsWith("_PKEY", StringComparison.OrdinalIgnoreCase))

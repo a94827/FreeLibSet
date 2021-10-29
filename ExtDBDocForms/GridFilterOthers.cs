@@ -909,13 +909,13 @@ namespace FreeLibSet.Forms.Docs
     {
       IntInputDialog dlg = new IntInputDialog();
       dlg.CanBeEmpty = true;
-      dlg.NullableValue = Value;
+      dlg.NValue = Value;
       dlg.Title = DisplayName;
       dlg.Prompt = "Фильтр (пусто-нет фильтра)";
       dlg.DialogPosition = dialogPosition;
       if (dlg.ShowDialog() == DialogResult.OK)
       {
-        Value = dlg.NullableValue;
+        Value = dlg.NValue;
         return true;
       }
       else

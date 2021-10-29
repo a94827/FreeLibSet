@@ -52,7 +52,7 @@ namespace FreeLibSet.Data
       : base(tableName)
     {
       _Columns = new DBxColumnStructList();
-      _Indices = new DBxIndexStructList();
+      _Indexes = new DBxIndexStructList();
       _AutoPrimaryKey = true;
       _AutoCreate = true;
     }
@@ -66,9 +66,9 @@ namespace FreeLibSet.Data
       _Columns = new DBxColumnStructList(source.Columns.Count);
       for (int i = 0; i < source.Columns.Count; i++)
         _Columns.Add(source.Columns[i].Clone());
-      _Indices = new DBxIndexStructList(source.Indices.Count);
-      for (int i = 0; i < source.Indices.Count; i++)
-        _Indices.Add(source.Indices[i].Clone());
+      _Indexes = new DBxIndexStructList(source.Indexes.Count);
+      for (int i = 0; i < source.Indexes.Count; i++)
+        _Indexes.Add(source.Indexes[i].Clone());
       _PrimaryKey = source._PrimaryKey; // копируется, если задано в явном виде
       _AutoPrimaryKey = source._AutoPrimaryKey;
       _Comment = source._Comment;
@@ -209,8 +209,8 @@ namespace FreeLibSet.Data
     /// Список описаний индексов
     /// Первичный ключ не входит в индексы
     /// </summary>
-    public DBxIndexStructList Indices { get { return _Indices; } }
-    private readonly DBxIndexStructList _Indices;
+    public DBxIndexStructList Indexes { get { return _Indexes; } }
+    private readonly DBxIndexStructList _Indexes;
 
     /// <summary>
     /// Комментарий к таблице (если поддерживается базой данных)
@@ -240,9 +240,9 @@ namespace FreeLibSet.Data
           if (!String.IsNullOrEmpty(Columns[i].Comment))
             return true;
         }
-        for (int i = 0; i < Indices.Count; i++)
+        for (int i = 0; i < Indexes.Count; i++)
         {
-          if (!String.IsNullOrEmpty(Indices[i].Comment))
+          if (!String.IsNullOrEmpty(Indexes[i].Comment))
             return true;
         }
         return false;
@@ -340,7 +340,7 @@ namespace FreeLibSet.Data
     public void SetReadOnly()
     {
       _Columns.SetReadOnly();
-      _Indices.SetReadOnly();
+      _Indexes.SetReadOnly();
 
       if (_PrimaryKey == null)
         _PrimaryKey = GetDefaultPrimaryKey(); // Я думаю, можно обойтись без lock

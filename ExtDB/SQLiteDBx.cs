@@ -1204,8 +1204,8 @@ namespace FreeLibSet.Data.SQLite
       //dvColumns.Sort = "TABLE_NAME,COLUMN_NAME"; // нужен такой порядок
 
       //// Данные по индексам 
-      //DataTable TableIndices = Connection.GetSchema("Indexes", new string[] { String.Empty }); // каталог "main"
-      //DataView dvIndices = new DataView(TableIndices);
+      //DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { String.Empty }); // каталог "main"
+      //DataView dvIndexes = new DataView(TableIndices);
 
       //DataTable TableIndexColumns = Connection.GetSchema("IndexColumns");
       //DataView dvIndexColumns = new DataView(TableIndexColumns);
@@ -1779,9 +1779,9 @@ namespace FreeLibSet.Data.SQLite
 
       #region Добавляем недостающие индексы
 
-      for (int i = 0; i < table.Indices.Count; i++)
+      for (int i = 0; i < table.Indexes.Count; i++)
       {
-        string WantedCols = table.Indices[i].Columns.AsString;
+        string WantedCols = table.Indexes[i].Columns.AsString;
         int pIndex = dvIdxCols.Find(WantedCols);
         if (pIndex >= 0)
           // Индекс найден
@@ -1800,7 +1800,7 @@ namespace FreeLibSet.Data.SQLite
           Buffer.SB.Append("\" ON ");
           Buffer.FormatTableName(table.TableName);
           Buffer.SB.Append(" (");
-          Buffer.FormatCSColumnNames(table.Indices[i].Columns);
+          Buffer.FormatCSColumnNames(table.Indexes[i].Columns);
           Buffer.SB.Append(")");
           SQLExecuteNonQuery(Buffer.SB.ToString());
 

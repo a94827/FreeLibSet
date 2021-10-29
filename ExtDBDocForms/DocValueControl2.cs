@@ -287,10 +287,10 @@ namespace FreeLibSet.Forms.Docs
     public DocValueDateRangeBox(DBxDocValue docValueFirst, DBxDocValue docValueLast, EFPDateRangeBox controlProvider, bool canMultiEdit)
       : base(docValueFirst, docValueLast, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.FirstDate.NValueEx, controlProvider.LastDate.NValueEx);
+      SetCurrentValueEx(controlProvider.First.NValueEx, controlProvider.Last.NValueEx);
       //EFPAnd.AttachInput(ControlProvider.EnabledEx, EnabledEx);
-      DepOr.AttachInput(controlProvider.FirstDate.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
-      DepOr.AttachInput(controlProvider.LastDate.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
+      DepOr.AttachInput(controlProvider.First.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
+      DepOr.AttachInput(controlProvider.Last.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
 
       // 04.02.2012
       // Если редактор периода в-целом скрыт из-за !CanMultiEdit, то надо скрыть и
@@ -298,8 +298,8 @@ namespace FreeLibSet.Forms.Docs
       // "Поле "Начальная дата" должно быть заполнено"
       if (!controlProvider.Visible)
       {
-        controlProvider.FirstDate.Visible = false;
-        controlProvider.LastDate.Visible = false;
+        controlProvider.First.Visible = false;
+        controlProvider.Last.Visible = false;
       }
     }
 
@@ -360,9 +360,9 @@ namespace FreeLibSet.Forms.Docs
     protected override void ValueToControl()
     {
       if (DocValue1.IsNull || DocValue2.IsNull)
-        ControlProvider.Value = DateRange.Empty;
+        ControlProvider.DateRange = DateRange.Empty;
       else
-        ControlProvider.Value = new DateRange(DocValue1.AsDateTime, DocValue2.AsDateTime);
+        ControlProvider.DateRange = new DateRange(DocValue1.AsDateTime, DocValue2.AsDateTime);
     }
 
     /// <summary>
@@ -370,15 +370,15 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueFromControl()
     {
-      if (ControlProvider.Value.IsEmpty)
+      if (ControlProvider.DateRange.IsEmpty)
       {
         DocValue1.SetNull();
         DocValue2.SetNull();
       }
       else
       {
-        DocValue1.SetNullableDateTime(ControlProvider.Value.FirstDate);
-        DocValue2.SetNullableDateTime(ControlProvider.Value.LastDate);
+        DocValue1.SetNullableDateTime(ControlProvider.DateRange.FirstDate);
+        DocValue2.SetNullableDateTime(ControlProvider.DateRange.LastDate);
       }
     }
 
