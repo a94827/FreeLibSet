@@ -317,8 +317,8 @@ namespace FreeLibSet.UICore
       }
       if (Res)
       {
-        firstDate = dt1.Value;
-        lastDate = dt2.Value;
+        firstDate = dt1;
+        lastDate = dt2;
       }
       return Res;
     }

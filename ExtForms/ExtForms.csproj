@@ -50,8 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\NumEditBox2.cs">
-      <SubType>Component</SubType>
+    <Compile Include="Controls\NumEditBox.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="EFPApp\ApplicationExceptionHandler.cs" />
     <Compile Include="EFPApp\BackgroundPrinting.cs" />
@@ -102,7 +102,7 @@
     <Compile Include="EFPControls\EFPConfigurableDataGridView.cs" />
     <Compile Include="EFPControls\EFPDataTreeView.cs" />
     <Compile Include="EFPControls\EFPDateRangeBox.cs" />
-    <Compile Include="EFPControls\EFPNumEditBox2.cs" />
+    <Compile Include="EFPControls\EFPNumEditBox.cs" />
     <Compile Include="EFPForm\EFPDialogPosition.cs" />
     <Compile Include="EFPForm\EFPExternalDialogOwnerWindowHandler.cs" />
     <Compile Include="EFPControls\EFPErrorDataGridView.cs" />
@@ -189,7 +189,6 @@
     <Compile Include="EFPForm\EFPFormProvider.cs" />
     <Compile Include="EFPControls\EFPListControl.cs" />
     <Compile Include="EFPControls\EFPMonthDayBox.cs" />
-    <Compile Include="EFPControls\EFPNumEditBox.cs" />
     <Compile Include="EFPControls\EFPRadioButtons.cs" />
     <Compile Include="EFPControls\EFPTextBox.cs" />
     <Compile Include="EFPControls\EFPTextViewControl.cs" />
@@ -203,9 +202,6 @@
     <Compile Include="EFPControls\EFPXmlViewBox.cs" />
     <Compile Include="EFPControls\EFPYearMonthBox.cs" />
     <Compile Include="Controls\ExtDataGridViewCheckBoxColumn.cs" />
-    <Compile Include="Controls\ExtNumericUpDown.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\ExtPrintPreviewControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -294,9 +290,6 @@
     </Compile>
     <Compile Include="Controls\MonthDayBox.Designer.cs">
       <DependentUpon>MonthDayBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\NumEditBox.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Diagnosics\ObjectDebugControl.cs" />
     <Compile Include="Dialogs\OKCancelForm.cs">
@@ -638,7 +631,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\ColorComboBox.bmp" />
     <EmbeddedResource Include="Controls\DateRangeBox.bmp" />
-    <EmbeddedResource Include="Controls\ExtNumericUpDown.bmp" />
     <EmbeddedResource Include="Controls\ExtPrintPreviewControl.bmp" />
     <EmbeddedResource Include="Controls\MonthDayBox.bmp" />
     <EmbeddedResource Include="Controls\NumEditBox.bmp" />

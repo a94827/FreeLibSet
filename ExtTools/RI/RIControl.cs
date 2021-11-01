@@ -722,7 +722,7 @@ namespace FreeLibSet.RI
         _ValueEx.Source = value;
       }
     }
-    private DepInput<T> _ValueEx;
+    private DepInputWithCheck<T> _ValueEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
@@ -743,11 +743,18 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<T>();
+        _ValueEx = new DepInputWithCheck<T>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.Value = Value;
+        _ValueEx.CheckValue += ValueEx_CheckValue;
         _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
+    }
+
+    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<T> args)
+    {
+      if ((!NValue.HasValue) && args.CurrValue.Equals(default(T)))
+        args.Forced = true;
     }
 
     private void ValueEx_ValueChanged(object sender, EventArgs args)
@@ -1970,7 +1977,7 @@ namespace FreeLibSet.RI
         _ValueEx.Source = value;
       }
     }
-    private DepInput<DateTime> _ValueEx;
+    private DepInputWithCheck<DateTime> _ValueEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
@@ -1991,11 +1998,18 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<DateTime>();
+        _ValueEx = new DepInputWithCheck<DateTime>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.Value = Value;
+        _ValueEx.CheckValue += ValueEx_CheckValue;
         _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
+    }
+
+    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime> args)
+    {
+      if ((!NValue.HasValue) && args.CurrValue.Equals(default(DateTime)))
+        args.Forced = true;
     }
 
     private void ValueEx_ValueChanged(object sender, EventArgs args)

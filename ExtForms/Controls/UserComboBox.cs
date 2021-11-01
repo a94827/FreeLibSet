@@ -1420,9 +1420,9 @@ public new Color BackColor { get { return base.BackColor; } set { base.BackColor
       set { MainControl.SelectionLength = value; }
     }
 
-    public void Select(int Start, int Length)
+    public void Select(int start, int length)
     {
-      MainControl.Select(Start, Length);
+      MainControl.Select(start, length);
     }
 
     public void SelectAll()

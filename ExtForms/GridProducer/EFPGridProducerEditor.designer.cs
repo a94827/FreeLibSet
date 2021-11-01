@@ -37,7 +37,7 @@
       this.panel2 = new System.Windows.Forms.Panel();
       this.cbStartColumn = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.edFrozenColumns = new FreeLibSet.Controls.ExtNumericUpDown();
+      this.edFrozenColumns = new FreeLibSet.Controls.IntEditBox();
       this.label1 = new System.Windows.Forms.Label();
       this.TheTabControl = new System.Windows.Forms.TabControl();
       this.panGrColumns = new System.Windows.Forms.Panel();
@@ -141,6 +141,8 @@
       // edFrozenColumns
       // 
       this.edFrozenColumns.Location = new System.Drawing.Point(208, 8);
+      this.edFrozenColumns.Increment = 1;
+      this.edFrozenColumns.Minimum = 0;
       this.edFrozenColumns.Name = "edFrozenColumns";
       this.edFrozenColumns.Size = new System.Drawing.Size(61, 20);
       this.edFrozenColumns.TabIndex = 1;
@@ -316,7 +318,7 @@
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.ComboBox cbStartColumn;
     private System.Windows.Forms.Label label2;
-    private FreeLibSet.Controls.ExtNumericUpDown edFrozenColumns;
+    private FreeLibSet.Controls.IntEditBox edFrozenColumns;
     private System.Windows.Forms.Label label1;
     public System.Windows.Forms.TabControl TheTabControl;
     private System.Windows.Forms.Panel panGrToolTips;

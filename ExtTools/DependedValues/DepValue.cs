@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 /*
  * The BSD License
@@ -192,17 +193,26 @@ namespace FreeLibSet.DependedValues
     /// Если <paramref name="value"/> совпадает с текущим значением, никаих действий не выполняется.
     /// </summary>
     /// <param name="value">Устанавливаемое значение</param>
-    protected void BaseSetValue(T value)
+    /// <param name="forced">Если true, то не выполняется проверка на равенство с текущим значением</param>
+    protected void BaseSetValue(T value, bool forced)
     {
       // Можно было бы переименовать в SetValue() и сделать virtual, но так понятнее, когда выполняется отладка.
 
-      // Предотвращаем зациклинивание, когда установка значения приводит через
-      // цепочку значений к повторной установке этого же значения
-      if (_InsideSetValue)
-        return;
+      if (forced)
+      {
+        if (_InsideSetValue)
+          throw new ReenteranceException();
+      }
+      else
+      {
+        // Предотвращаем зациклинивание, когда установка значения приводит через
+        // цепочку значений к повторной установке этого же значения
+        if (_InsideSetValue)
+          return;
 
-      if (Object.Equals(value, _Value))
-        return;
+        if (Object.Equals(value, _Value))
+          return;
+      }
 
       _InsideSetValue = true;
       try
@@ -442,7 +452,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="value"></param>
     public void OwnerSetValue(T value)
     {
-      BaseSetValue(value);
+      BaseSetValue(value, false);
     }
 
     #endregion
@@ -463,7 +473,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="value">Значение</param>
     public DepConst(T value)
     {
-      BaseSetValue(value);
+      BaseSetValue(value, false);
     }
 
     #endregion
@@ -533,7 +543,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="value"></param>
     protected virtual void SetValue(T value)
     {
-      BaseSetValue(value);
+      BaseSetValue(value, false);
     }
 
     internal void SetValueChanged()
@@ -641,7 +651,7 @@ namespace FreeLibSet.DependedValues
     {
       if (_Delayed)
       {
-        BaseSetValue(GetDelayedValue());
+        BaseSetValue(GetDelayedValue(), false);
         _Delayed = false;
       }
       return base.GetValue();
@@ -672,6 +682,12 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     public void SetDelayed()
     {
+#if DEBUG
+      if (ValueNeeded == null)
+        throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
+#endif
+
+
       if (InsideSetValue)
         return;
 
@@ -697,10 +713,12 @@ namespace FreeLibSet.DependedValues
     /// Вызывает событие ValueNeeded
     /// </summary>
     /// <returns></returns>
-    protected T GetDelayedValue()
+    private T GetDelayedValue()
     {
+#if DEBUG
       if (ValueNeeded == null)
         throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
+#endif
 
       if (_ValueNeededArgs == null)
         _ValueNeededArgs = new DepValueNeededEventArgs<T>();
@@ -748,6 +766,13 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     public T CurrValue { get { return _Owner.Value; } }
 
+    /// <summary>
+    /// Если установить в true, то будет выполнена принудительная установка значения без предварительной проверки
+    /// на равенство. Используется в реализации свойства ValueEx, когда есть связанное свойство NValue, новое значение равно 0 при существующем NValue=null.
+    /// </summary>
+    public bool Forced { get { return _Forced; } set { _Forced = value; } }
+    private bool _Forced;
+
     private readonly DepValue<T> _Owner;
 
     #endregion
@@ -767,7 +792,7 @@ namespace FreeLibSet.DependedValues
   /// <summary>
   /// Расширение класса DepInput добавлением проверки устанавливаемого значения с помощью события CheckValue.
   /// Этот класс не является сериализуемым.
-  /// Используется, например, в EFPDateBox, для обрезки компонента времени в DateTime.
+  /// Используется, например, в EFPDateTimeBox, для обрезки компонента времени в DateTime.
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   public class DepInputWithCheck<T> : DepInput<T>
@@ -797,6 +822,7 @@ namespace FreeLibSet.DependedValues
       if (InsideSetValue) // чтобы не выполнять лишней проверки
         return;
 
+      bool forced=false;
       if (CheckValue != null)
       {
         if (_CheckValueArgs == null)
@@ -804,13 +830,15 @@ namespace FreeLibSet.DependedValues
 
         _CheckValueArgs.NewValue = value;
         _CheckValueArgs.Cancel = false;
+        _CheckValueArgs.Forced = false;
         CheckValue(this, _CheckValueArgs);
         if (_CheckValueArgs.Cancel)
           return;
         value = _CheckValueArgs.NewValue;
+        forced = _CheckValueArgs.Forced;
       }
 
-      base.SetValue(value);
+      base.BaseSetValue(value, forced);
     }
 
     #endregion
@@ -823,7 +851,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="value"></param>
     public void OwnerSetValue(T value)
     {
-      base.BaseSetValue(value);
+      base.BaseSetValue(value, false);
     }
 
     #endregion

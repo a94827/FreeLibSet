@@ -446,9 +446,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
     /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
-    public DocValueDecimalNumEditBox AddDecimal(IEFPNumEditBox controlProvider, string columnName, bool canMultiEdit)
+    public DocValueDecimalEditBox AddDecimal(EFPDecimalEditBox controlProvider, string columnName, bool canMultiEdit)
     {
-      DocValueDecimalNumEditBox dvc = new DocValueDecimalNumEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
+      DocValueDecimalEditBox dvc = new DocValueDecimalEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
       AddDocEditItem(dvc);
       return dvc;
     }
@@ -473,9 +473,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
     /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
-    public DocValueIntNumEditBox AddInt(IEFPNumEditBox controlProvider, string columnName, bool canMultiEdit)
+    public DocValueIntEditBox AddInt(EFPIntEditBox controlProvider, string columnName, bool canMultiEdit)
     {
-      DocValueIntNumEditBox dvc = new DocValueIntNumEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
+      DocValueIntEditBox dvc = new DocValueIntEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
       AddDocEditItem(dvc);
       return dvc;
     }
@@ -500,9 +500,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
     /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
-    public DocValueSingleNumEditBox AddSingle(IEFPNumEditBox controlProvider, string columnName, bool canMultiEdit)
+    public DocValueSingleEditBox AddSingle(EFPSingleEditBox controlProvider, string columnName, bool canMultiEdit)
     {
-      DocValueSingleNumEditBox dvc = new DocValueSingleNumEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
+      DocValueSingleEditBox dvc = new DocValueSingleEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
       AddDocEditItem(dvc);
       return dvc;
     }
@@ -527,9 +527,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
     /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
-    public DocValueDoubleNumEditBox AddDouble(IEFPNumEditBox controlProvider, string columnName, bool canMultiEdit)
+    public DocValueDoubleEditBox AddDouble(EFPDoubleEditBox controlProvider, string columnName, bool canMultiEdit)
     {
-      DocValueDoubleNumEditBox dvc = new DocValueDoubleNumEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
+      DocValueDoubleEditBox dvc = new DocValueDoubleEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
       AddDocEditItem(dvc);
       return dvc;
     }

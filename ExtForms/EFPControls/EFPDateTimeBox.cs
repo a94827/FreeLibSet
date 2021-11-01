@@ -68,7 +68,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Значение в управляющем элементе
     /// </summary>
-    public abstract DateTime? ControlNValue { get;set;}
+    public abstract DateTime? ControlNValue { get; set; }
 
     /// <summary>
     /// Установка свойства для управляющегт элемента
@@ -78,12 +78,12 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если формат содержит компонент даты
     /// </summary>
-    public abstract bool FormatContainsDate { get;}
+    public abstract bool FormatContainsDate { get; }
 
     /// <summary>
     /// Возвращает true, если формат содержит компонент времени
     /// </summary>
-    public abstract bool FormatContainsTime { get;}
+    public abstract bool FormatContainsTime { get; }
 
     #endregion
 
@@ -242,6 +242,9 @@ namespace FreeLibSet.Forms
     {
       if (!FormatContainsTime)
         args.NewValue = args.NewValue.Date;
+
+      if ((!NValue.HasValue) && args.NewValue.Equals(default(DateTime)))
+        args.Forced = true;
     }
 
     void ValueEx_ValueChanged(object sender, EventArgs args)
@@ -300,14 +303,14 @@ namespace FreeLibSet.Forms
     {
       if (_NTimeEx == null)
       {
-        _NTimeEx = new DepInputWithCheck<TimeSpan?>();
+        _NTimeEx = new DepInput<TimeSpan?>();
         _NTimeEx.OwnerInfo = new DepOwnerInfo(this, "NTimeEx");
         _NTimeEx.Value = NTime;
         _NTimeEx.ValueChanged += new EventHandler(NTimeEx_ValueChanged);
       }
     }
 
-    void NTimeEx_ValueChanged(object sender, EventArgs e)
+    void NTimeEx_ValueChanged(object sender, EventArgs args)
     {
       if (!_InsideValueChanged)
         NTime = NTimeEx.Value;
@@ -344,20 +347,27 @@ namespace FreeLibSet.Forms
         _TimeEx.Source = value;
       }
     }
-    private DepInput<TimeSpan> _TimeEx;
+    private DepInputWithCheck<TimeSpan> _TimeEx;
 
     private void InitTimeEx()
     {
       if (_TimeEx == null)
       {
-        _TimeEx = new DepInput<TimeSpan>();
+        _TimeEx = new DepInputWithCheck<TimeSpan>();
         _TimeEx.OwnerInfo = new DepOwnerInfo(this, "TimeEx");
         _TimeEx.Value = Time;
+        _TimeEx.CheckValue += TimeEx_CheckValue;
         _TimeEx.ValueChanged += new EventHandler(TimeEx_ValueChanged);
       }
     }
 
-    void TimeEx_ValueChanged(object sender, EventArgs e)
+    void TimeEx_CheckValue(object sender, DepInputCheckEventArgs<TimeSpan> args)
+    {
+      if ((!NTime.HasValue) && args.CurrValue == TimeSpan.Zero)
+        args.Forced = true;
+    }
+
+    void TimeEx_ValueChanged(object sender, EventArgs args)
     {
       if (!_InsideValueChanged)
         Time = TimeEx.Value;

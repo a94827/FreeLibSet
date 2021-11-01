@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class DocValueDecimalNumEditBox : DocValueControlBase2<decimal>
+  public class DocValueDecimalEditBox : DocValueControlBase2<decimal>
   {
     #region Конструктор
 
@@ -60,10 +60,10 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public DocValueDecimalNumEditBox(DBxDocValue docValue, IEFPNumEditBox controlProvider, bool canMultiEdit)
+    public DocValueDecimalEditBox(DBxDocValue docValue, EFPDecimalEditBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.DecimalValueEx);
+      SetCurrentValueEx(controlProvider.ValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -74,7 +74,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new IEFPNumEditBox ControlProvider { get { return (IEFPNumEditBox)(base.ControlProvider); } }
+    public new EFPDecimalEditBox ControlProvider { get { return (EFPDecimalEditBox)(base.ControlProvider); } }
 
     #endregion
 
@@ -163,7 +163,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class DocValueIntNumEditBox : DocValueControlBase2<int>
+  public class DocValueIntEditBox : DocValueControlBase2<int>
   {
     #region Конструктор
 
@@ -174,10 +174,10 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public DocValueIntNumEditBox(DBxDocValue docValue, IEFPNumEditBox controlProvider, bool canMultiEdit)
+    public DocValueIntEditBox(DBxDocValue docValue, EFPIntEditBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.IntValueEx);
+      SetCurrentValueEx(controlProvider.ValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -188,7 +188,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new IEFPNumEditBox ControlProvider { get { return (IEFPNumEditBox)(base.ControlProvider); } }
+    public new EFPIntEditBox ControlProvider { get { return (EFPIntEditBox)(base.ControlProvider); } }
 
     #endregion
 
@@ -277,7 +277,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class DocValueSingleNumEditBox : DocValueControlBase2<float>
+  public class DocValueSingleEditBox : DocValueControlBase2<float>
   {
     #region Конструктор
 
@@ -288,10 +288,10 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public DocValueSingleNumEditBox(DBxDocValue docValue, IEFPNumEditBox controlProvider, bool canMultiEdit)
+    public DocValueSingleEditBox(DBxDocValue docValue, EFPSingleEditBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.SingleValueEx);
+      SetCurrentValueEx(controlProvider.ValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -302,7 +302,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new IEFPNumEditBox ControlProvider { get { return (IEFPNumEditBox)(base.ControlProvider); } }
+    public new EFPSingleEditBox ControlProvider { get { return (EFPSingleEditBox)(base.ControlProvider); } }
 
     #endregion
 
@@ -391,7 +391,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class DocValueDoubleNumEditBox : DocValueControlBase2<double>
+  public class DocValueDoubleEditBox : DocValueControlBase2<double>
   {
     #region Конструктор
 
@@ -401,10 +401,10 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docValue">Объект для доступа к значению поля</param>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">True, если допускается групповое редактирование</param>
-    public DocValueDoubleNumEditBox(DBxDocValue docValue, IEFPNumEditBox controlProvider, bool canMultiEdit)
+    public DocValueDoubleEditBox(DBxDocValue docValue, EFPDoubleEditBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.DoubleValueEx);
+      SetCurrentValueEx(controlProvider.ValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -415,7 +415,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new IEFPNumEditBox ControlProvider { get { return (IEFPNumEditBox)(base.ControlProvider); } }
+    public new EFPDoubleEditBox ControlProvider { get { return (EFPDoubleEditBox)(base.ControlProvider); } }
 
     #endregion
 

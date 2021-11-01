@@ -28,7 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.edDay = new FreeLibSet.Controls.ExtNumericUpDown();
+      this.edDay = new FreeLibSet.Controls.IntEditBox();
       this.cbMonth = new System.Windows.Forms.ComboBox();
       this.SuspendLayout();
       // 
@@ -64,7 +64,7 @@
 
     #endregion
 
-    private FreeLibSet.Controls.ExtNumericUpDown edDay;
+    private FreeLibSet.Controls.IntEditBox edDay;
     private System.Windows.Forms.ComboBox cbMonth;
   }
 }

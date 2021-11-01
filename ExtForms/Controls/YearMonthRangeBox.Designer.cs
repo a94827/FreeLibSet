@@ -30,7 +30,7 @@
     {
       this.label1 = new System.Windows.Forms.Label();
       this.cbMonth1 = new System.Windows.Forms.ComboBox();
-      this.edYear = new FreeLibSet.Controls.ExtNumericUpDown();
+      this.edYear = new FreeLibSet.Controls.IntEditBox();
       this.cbMonth2 = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
@@ -57,24 +57,12 @@
       // edYear
       // 
       this.edYear.Location = new System.Drawing.Point(306, 0);
-      this.edYear.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-      this.edYear.Minimum = new decimal(new int[] {
-            1001,
-            0,
-            0,
-            0});
+      this.edYear.Increment = 1;
+      this.edYear.Maximum = 9999;
+      this.edYear.Minimum = 1001;
       this.edYear.Name = "edYear";
       this.edYear.Size = new System.Drawing.Size(65, 20);
       this.edYear.TabIndex = 5;
-      this.edYear.Value = new decimal(new int[] {
-            1001,
-            0,
-            0,
-            0});
       // 
       // cbMonth2
       // 
@@ -123,7 +111,7 @@
 
     private System.Windows.Forms.Label label1;
     internal System.Windows.Forms.ComboBox cbMonth1;
-    internal FreeLibSet.Controls.ExtNumericUpDown edYear;
+    internal FreeLibSet.Controls.IntEditBox edYear;
     internal System.Windows.Forms.ComboBox cbMonth2;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;

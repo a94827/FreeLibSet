@@ -132,7 +132,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     protected override Control CreateEditor(TreeNodeAdv node)
     {
-      FreeLibSet.Controls.ExtNumericUpDown num = new FreeLibSet.Controls.ExtNumericUpDown();
+      FreeLibSet.Controls.DecimalEditBox num = new FreeLibSet.Controls.DecimalEditBox();
       num.Increment = Increment;
       num.DecimalPlaces = DecimalPlaces;
       num.Minimum = Minimum;
@@ -148,7 +148,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     protected override void DoApplyChanges(TreeNodeAdv node, Control editor)
     {
-      SetValue(node, (editor as FreeLibSet.Controls.ExtNumericUpDown).Value);
+      SetValue(node, (editor as FreeLibSet.Controls.DecimalEditBox).Value);
     }
   }
 }

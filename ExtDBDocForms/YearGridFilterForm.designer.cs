@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.edYear = new FreeLibSet.Controls.ExtNumericUpDown();
+      this.edYear = new FreeLibSet.Controls.IntEditBox();
       this.panel1 = new System.Windows.Forms.Panel();
       this.rbFilter = new System.Windows.Forms.RadioButton();
       this.rbNoFilter = new System.Windows.Forms.RadioButton();
@@ -56,25 +56,10 @@
       // edYear
       // 
       this.edYear.Location = new System.Drawing.Point(115, 53);
-      this.edYear.Maximum = new decimal(new int[] {
-            2099,
-            0,
-            0,
-            0});
-      this.edYear.Minimum = new decimal(new int[] {
-            1900,
-            0,
-            0,
-            0});
       this.edYear.Name = "edYear";
       this.edYear.Size = new System.Drawing.Size(73, 20);
       this.edYear.TabIndex = 1;
       this.edYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-      this.edYear.Value = new decimal(new int[] {
-            1900,
-            0,
-            0,
-            0});
       // 
       // panel1
       // 
@@ -154,7 +139,7 @@
     #endregion
 
     private System.Windows.Forms.GroupBox groupBox1;
-    private FreeLibSet.Controls.ExtNumericUpDown edYear;
+    private FreeLibSet.Controls.IntEditBox edYear;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.RadioButton rbFilter;
     private System.Windows.Forms.RadioButton rbNoFilter;

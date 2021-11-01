@@ -153,7 +153,7 @@ namespace FreeLibSet.Controls
 
         // При смене месяца, если текущий день был последним, делаем его последним
         if (_CurrentDayIsLast)
-          edDay.Value = edDay.Maximum;
+          edDay.Value = edDay.Maximum ?? 0;
       }
       finally
       {

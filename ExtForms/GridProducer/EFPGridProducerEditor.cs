@@ -90,6 +90,8 @@ namespace FreeLibSet.Forms
       // например, картинка
       //edFrozenColumns.ValueEx = TheHandler.FrozenColumns;
 
+      EFPIntEditBox efpFrozenColumns = new EFPIntEditBox(baseProvider, edFrozenColumns);
+
 
       // Список выбора активного столбца
       //StartColumnName = ControlProvider.CurrentConfig.StartColumnName;

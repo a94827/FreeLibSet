@@ -53,7 +53,10 @@ namespace FreeLibSet.Forms.Docs
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpMode = new EFPRadioButtons(efpForm, rbNoFilter);
-      efpYear = new EFPExtNumericUpDown(efpForm, edYear);
+      efpYear = new EFPIntEditBox(efpForm, edYear);
+      efpYear.Control.Increment = 1;
+      efpYear.Minimum = 1900;
+      efpYear.Maximum = 2099;
       efpYear.EnabledEx = efpMode[1].CheckedEx;
     }
 
@@ -63,7 +66,7 @@ namespace FreeLibSet.Forms.Docs
 
     public EFPRadioButtons efpMode;
 
-    public EFPExtNumericUpDown efpYear;
+    public EFPIntEditBox efpYear;
 
     #endregion
   }
@@ -128,12 +131,12 @@ namespace FreeLibSet.Forms.Docs
       YearGridFilterForm Form = new YearGridFilterForm();
       Form.Text = DisplayName;
 
-      Form.efpYear.IntValue = _PrevYear;
+      Form.efpYear.Value = _PrevYear;
 
       if (Value.HasValue)
       {
         Form.efpMode.SelectedIndex = 1;
-        Form.efpYear.IntValue = Value.Value;
+        Form.efpYear.Value = Value.Value;
       }
       else
         Form.efpMode.SelectedIndex = 0;
@@ -144,9 +147,9 @@ namespace FreeLibSet.Forms.Docs
       if (Form.efpMode.SelectedIndex == 0)
         Value = null;
       else
-        Value = Form.efpYear.IntValue;
+        Value = Form.efpYear.Value;
 
-      _PrevYear = Form.efpYear.IntValue;
+      _PrevYear = Form.efpYear.Value;
 
       return true;
     }
@@ -242,14 +245,14 @@ namespace FreeLibSet.Forms.Docs
     {
       YearGridFilterForm Form = new YearGridFilterForm();
       Form.Text = DisplayName;
-      Form.efpYear.IntValue = _PrevYear;
+      Form.efpYear.Value = _PrevYear;
 
       if (Value == 0)
         Form.efpMode.SelectedIndex = 0;
       else
       {
         Form.efpMode.SelectedIndex = 1;
-        Form.efpYear.IntValue = Value;
+        Form.efpYear.Value = Value;
       }
 
       if (EFPApp.ShowDialog(Form, true, dialogPosition) != DialogResult.OK)
@@ -258,8 +261,8 @@ namespace FreeLibSet.Forms.Docs
       if (Form.efpMode.SelectedIndex == 0)
         Value = 0;
       else
-        Value = Form.efpYear.IntValue;
-      _PrevYear = Form.efpYear.IntValue;
+        Value = Form.efpYear.Value;
+      _PrevYear = Form.efpYear.Value;
       return true;
     }
 
