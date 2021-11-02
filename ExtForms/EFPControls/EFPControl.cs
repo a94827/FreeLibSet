@@ -1863,26 +1863,9 @@ namespace FreeLibSet.Forms
         {
           OnValidate();
 
-          if (_Valifators != null && _ValidateState != UIValidateState.Error)
+          if (_Valifators != null)
           {
-            for (int i = 0; i < _Valifators.Count; i++)
-            {
-              if (_Valifators[i].ActiveEx != null)
-              {
-                if (!_Valifators[i].ActiveEx.Value)
-                  continue;
-                if (!_Valifators[i].Expression.Value)
-                {
-                  if (_Valifators[i].IsError)
-                  {
-                    SetError(_Valifators[i].Message);
-                    break;
-                  }
-                  else
-                    SetWarning(_Valifators[i].Message);
-                }
-              }
-            }
+            Validate(_Valifators, this);
           }
 
           if ((_ValidateState != UIValidateState.Error) && (Validating != null))
@@ -1911,10 +1894,35 @@ namespace FreeLibSet.Forms
       }
     }
 
+    internal static void Validate(UIValidatorList valifators, IEFPValidator caller)
+    {
+      if (caller.ValidateState == UIValidateState.Error)
+        return;
+
+      for (int i = 0; i < valifators.Count; i++)
+      {
+        if (valifators[i].ActiveEx != null)
+        {
+          if (!valifators[i].ActiveEx.Value)
+            continue;
+          if (!valifators[i].Expression.Value)
+          {
+            if (valifators[i].IsError)
+            {
+              caller.SetError(valifators[i].Message);
+              break;
+            }
+            else
+              caller.SetWarning(valifators[i].Message);
+          }
+        }
+      }
+    }
+
     /// <summary>
     /// Список валидаторов элемента, основанных на управляемых значениях
     /// </summary>
-    public UIValidatorList Validators 
+    public UIValidatorList Validators
     {
       get
       {
@@ -2443,7 +2451,7 @@ namespace FreeLibSet.Forms
         OnAfterLoadConfig();
       }
 
-      if (EFPApp.InsideLoadComposition && ConfigHandler != null && ConfigManager!=null)
+      if (EFPApp.InsideLoadComposition && ConfigHandler != null && ConfigManager != null)
         ConfigHandler.ReadConfig(ConfigManager); // 25.10.2021 Иначе не прочитается
     }
 

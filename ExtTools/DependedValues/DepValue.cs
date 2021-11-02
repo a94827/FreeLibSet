@@ -36,6 +36,7 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.DependedValues
 {
+  #region DepValue и другие базовые классы
 
   /// <summary>
   /// Информация об объекте-владельце и реализуемом свойстве.
@@ -109,12 +110,12 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Текущее значение
     /// </summary>
-    object Value { get;}
+    object Value { get; }
 
     /// <summary>
     /// Возвращает true, если текущий объект является константой
     /// </summary>
-    bool IsConst { get;}
+    bool IsConst { get; }
 
     /// <summary>
     /// true, если в настоящее время выполняется установка значения
@@ -435,6 +436,9 @@ namespace FreeLibSet.DependedValues
     #endregion
   }
 
+  #endregion
+
+  #region DepValueObject
 
   /// <summary>
   /// Неабстрактная реализация DepValue.
@@ -457,6 +461,135 @@ namespace FreeLibSet.DependedValues
 
     #endregion
   }
+
+  #endregion
+
+  #region DepValueDelayed
+
+  #region Делегат для события DepValueDelayed.ValueNeeded
+
+  /// <summary>
+  /// Аргумент события DepValueDelayed.ValueNeeded
+  /// </summary>
+  /// <typeparam name="T">Тип значения</typeparam>
+  public class DepValueNeededEventArgs<T> : EventArgs
+  {
+    /// <summary>
+    /// Сюда надо поместить значение
+    /// </summary>
+    public T Value { get { return _Value; } set { _Value = value; } }
+    private T _Value;
+  }
+
+  /// <summary>
+  /// Делегат события DepValueDelayed.ValueNeeded
+  /// </summary>
+  /// <typeparam name="T">Тип значения</typeparam>
+  /// <param name="sender">Источник события</param>
+  /// <param name="args">Аргументы события</param>
+  public delegate void DepValueNeededEventHandler<T>(object sender, DepValueNeededEventArgs<T> args);
+
+  #endregion
+
+  /// <summary>
+  /// Реализация DepInput, обеспечивающая отложенное получение значения, когда внешний источник Source не установлен.
+  /// Этот класс не является сериализуемым
+  /// </summary>
+  /// <typeparam name="T">Тип хранимого значения</typeparam>
+  public class DepValueDelayed<T> : DepValue<T>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект.
+    /// Должен быть присоединен обработчик события ValueNeeded
+    /// </summary>
+    public DepValueDelayed()
+    {
+      _Delayed = true;
+    }
+
+    #endregion
+
+    #region Установка и получение отложенного значения
+
+    /// <summary>
+    /// Получение текущего значения.
+    /// Вызывает GetDelayedValue(), если был вызов SetDelayed().
+    /// </summary>
+    /// <returns></returns>
+    protected override T GetValue()
+    {
+      if (_Delayed)
+      {
+        BaseSetValue(GetDelayedValue(), false);
+        _Delayed = false;
+      }
+      return base.GetValue();
+    }
+
+    /// <summary>
+    /// Признак того, что значение будет получено позже, если понадобится
+    /// </summary>
+    private bool _Delayed;
+
+    /// <summary>
+    /// Уставливает признак отложенной установки в true.
+    /// Посылает событие ValueChanged текущему объекту и зависимым объектам.
+    /// Если зависимым объектам потребуется текущее значение, они запросят свойство Value,
+    /// при этом будет вызван метод ValueNeeded.
+    /// Если нет подключенных зависимых объектов, получение текущего значения откладывается.
+    /// </summary>
+    public void SetDelayed()
+    {
+#if DEBUG
+      if (ValueNeeded == null)
+        throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
+#endif
+
+
+      if (InsideSetValue)
+        return;
+
+      _Delayed = true;
+      OnValueChanged();
+    }
+
+    /// <summary>
+    /// Вызывается, когда требуется получить отложенное значение.
+    /// Обработчик должен быть обязательно присоединен.
+    /// </summary>
+    public event DepValueNeededEventHandler<T> ValueNeeded;
+
+    /// <summary>
+    /// Чтобы не создавать каждый раз объект аргументов
+    /// </summary>
+    private DepValueNeededEventArgs<T> _ValueNeededArgs;
+
+    /// <summary>
+    /// Вызывает событие ValueNeeded
+    /// </summary>
+    /// <returns></returns>
+    private T GetDelayedValue()
+    {
+#if DEBUG
+      if (ValueNeeded == null)
+        throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
+#endif
+
+      if (_ValueNeededArgs == null)
+        _ValueNeededArgs = new DepValueNeededEventArgs<T>();
+      _ValueNeededArgs.Value = default(T);
+      ValueNeeded(this, _ValueNeededArgs);
+      return _ValueNeededArgs.Value;
+    }
+
+    #endregion
+  }
+
+  #endregion
+
+  #region DepConst
 
   /// <summary>
   /// Константа
@@ -516,6 +649,9 @@ namespace FreeLibSet.DependedValues
     #endregion
   }
 
+  #endregion
+
+  #region DepInput
 
   /// <summary>
   /// Реализация DepValue, позволяющая устанавливать значения "снаружи" вручную,
@@ -536,14 +672,33 @@ namespace FreeLibSet.DependedValues
       set { SetValue(value); }
     }
 
-    /// <summary>
-    /// Вызов BaseSetValue().
-    /// Переопределяется в DepInputDelayed и DepInputWithCheck
+    /// Установка текущего значения.
+    /// Вызывает обработчик события CheckValue, если он установлен.
+    /// Обработчик события может изменить устанавливаемое значение или совсем отменить установку.
     /// </summary>
     /// <param name="value"></param>
-    protected virtual void SetValue(T value)
+    private void SetValue(T value)
     {
-      BaseSetValue(value, false);
+      if (InsideSetValue) // чтобы не выполнять лишней проверки
+        return;
+
+      bool forced = false;
+      if (CheckValue != null)
+      {
+        if (_CheckValueArgs == null)
+          _CheckValueArgs = new DepInputCheckEventArgs<T>(this);
+
+        _CheckValueArgs.NewValue = value;
+        _CheckValueArgs.Cancel = false;
+        _CheckValueArgs.Forced = false;
+        CheckValue(this, _CheckValueArgs);
+        if (_CheckValueArgs.Cancel)
+          return;
+        value = _CheckValueArgs.NewValue;
+        forced = _CheckValueArgs.Forced;
+      }
+
+      base.BaseSetValue(value, forced);
     }
 
     internal void SetValueChanged()
@@ -557,7 +712,7 @@ namespace FreeLibSet.DependedValues
       // 09.11.2009
       // Проверки не нужны, т.к.:
       // - при установке Value проверка будет выполнена повторно;
-      // - в DepInputWithCheck может потребоваться обработка для значения, которое
+      // - в DepInput может потребоваться обработка для значения, которое
       // - совпадает с базовым
       //if (NewVal == null && base.Value == null)
       //  return;
@@ -566,7 +721,7 @@ namespace FreeLibSet.DependedValues
 
       // Значение на входе изменилось
       //BaseSetValue(NewVal);
-      SetValue(NewVal); // 21.10.2021. Иначе не будет работать DepInputWithCheck()
+      SetValue(NewVal); // 21.10.2021. Иначе не будет работать DepInput()
     }
 
     #endregion
@@ -606,125 +761,28 @@ namespace FreeLibSet.DependedValues
     public override bool HasSource { get { return _Source != null; } }
 
     #endregion
-  }
 
-  #region Делегат для события DepInputDelayed.ValueNeeded
+    #region Событие CheckValue
 
-  /// <summary>
-  /// Аргумент события DepInputDelayed.ValueNeeded
-  /// </summary>
-  /// <typeparam name="T">Тип значения</typeparam>
-  public class DepValueNeededEventArgs<T> : EventArgs
-  {
     /// <summary>
-    /// Сюда надо поместить значение
+    /// Событие вызывается при установке значения.
+    /// Пользовательский обработчик может изменить значение NewValue
     /// </summary>
-    public T Value { get { return _Value; } set { _Value = value; } }
-    private T _Value;
-  }
+    public event DepInputCheckEventHandler<T> CheckValue;
 
-  /// <summary>
-  /// Делегат события DepInputDelayed.ValueNeeded
-  /// </summary>
-  /// <typeparam name="T">Тип значения</typeparam>
-  /// <param name="sender">Источник события</param>
-  /// <param name="args">Аргументы события</param>
-  public delegate void DepValueNeededEventHandler<T>(object sender, DepValueNeededEventArgs<T> args);
+    private DepInputCheckEventArgs<T> _CheckValueArgs; // чтобы каждый раз не создавать
 
-  #endregion
+    #endregion
 
-  /// <summary>
-  /// Реализация DepInput, обеспечивающая отложенное получение значения, когда внешний источник Source не установлен.
-  /// Этот класс не является сериализуемым
-  /// </summary>
-  /// <typeparam name="T">Тип хранимого значения</typeparam>
-  public class DepInputDelayed<T> : DepInput<T>
-  {
-    #region Установка и получение отложенного значения
+    #region Вспомогательные методы
 
     /// <summary>
-    /// Получение текущего значения.
-    /// Вызывает GetDelayedValue(), если был вызов SetDelayed().
-    /// </summary>
-    /// <returns></returns>
-    protected override T GetValue()
-    {
-      if (_Delayed)
-      {
-        BaseSetValue(GetDelayedValue(), false);
-        _Delayed = false;
-      }
-      return base.GetValue();
-    }
-
-    /// <summary>
-    /// Установка текущего значения.
-    /// Отменяет предыдущий вызов SetDelayed().
+    /// Установка значения в обход основного входа
     /// </summary>
     /// <param name="value"></param>
-    protected override void SetValue(T value)
+    public void OwnerSetValue(T value)
     {
-      _Delayed = false;
-      base.SetValue(value);
-    }
-
-    /// <summary>
-    /// Признак того, что значение будет получено позже, если понадобится
-    /// </summary>
-    private bool _Delayed;
-
-    /// <summary>
-    /// Уставливает признак отложенной установки в true.
-    /// Посылает событие ValueChanged текущему объекту и зависимым объектам.
-    /// Если зависимым объектам потребуется текущее значение, они запросят свойство Value,
-    /// при этом будет вызван метод ValueNeeded.
-    /// Если нет подключенных зависимых объектов, получение текущего значения откладывается.
-    /// </summary>
-    public void SetDelayed()
-    {
-#if DEBUG
-      if (ValueNeeded == null)
-        throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
-#endif
-
-
-      if (InsideSetValue)
-        return;
-
-      if (Source == null)
-      {
-        _Delayed = true;
-
-        OnValueChanged();
-      }
-    }
-
-    /// <summary>
-    /// Вызывается, когда требуется получить отложенное значение
-    /// </summary>
-    public event DepValueNeededEventHandler<T> ValueNeeded;
-
-    /// <summary>
-    /// Чтобы не создавать каждый раз объект аргументов
-    /// </summary>
-    private DepValueNeededEventArgs<T> _ValueNeededArgs;
-
-    /// <summary>
-    /// Вызывает событие ValueNeeded
-    /// </summary>
-    /// <returns></returns>
-    private T GetDelayedValue()
-    {
-#if DEBUG
-      if (ValueNeeded == null)
-        throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
-#endif
-
-      if (_ValueNeededArgs == null)
-        _ValueNeededArgs = new DepValueNeededEventArgs<T>();
-      _ValueNeededArgs.Value = default(T);
-      ValueNeeded(this, _ValueNeededArgs);
-      return _ValueNeededArgs.Value;
+      base.BaseSetValue(value, false);
     }
 
     #endregion
@@ -733,7 +791,7 @@ namespace FreeLibSet.DependedValues
   #region DepInputCheckEventHandler
 
   /// <summary>
-  /// Аргументы события DepInputWithCheck.CheckValue
+  /// Аргументы события DepInput.CheckValue
   /// </summary>
   /// <typeparam name="T"></typeparam>
   public class DepInputCheckEventArgs<T> : CancelEventArgs
@@ -742,7 +800,7 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Создает новый аргумент.
-    /// Вызывается из DepInputWithCheck
+    /// Вызывается из DepInput
     /// </summary>
     /// <param name="owner">Владелец</param>
     public DepInputCheckEventArgs(DepValue<T> owner)
@@ -779,7 +837,7 @@ namespace FreeLibSet.DependedValues
   }
 
   /// <summary>
-  /// Делегат события DepInputWithCheck.CheckValue
+  /// Делегат события DepInput.CheckValue
   /// </summary>
   /// <typeparam name="T">Тип значения</typeparam>
   /// <param name="sender">Источник события</param>
@@ -789,71 +847,5 @@ namespace FreeLibSet.DependedValues
 
   #endregion
 
-  /// <summary>
-  /// Расширение класса DepInput добавлением проверки устанавливаемого значения с помощью события CheckValue.
-  /// Этот класс не является сериализуемым.
-  /// Используется, например, в EFPDateTimeBox, для обрезки компонента времени в DateTime.
-  /// </summary>
-  /// <typeparam name="T">Тип хранимого значения</typeparam>
-  public class DepInputWithCheck<T> : DepInput<T>
-  {
-    #region Событие CheckValue
-
-    /// <summary>
-    /// Событие вызывается при установке значения.
-    /// Пользовательский обработчик может изменить значение NewValue
-    /// </summary>
-    public event DepInputCheckEventHandler<T> CheckValue;
-
-    private DepInputCheckEventArgs<T> _CheckValueArgs; // чтобы каждый раз не создавать
-
-    #endregion
-
-    #region Переопределенный метод
-
-    /// <summary>
-    /// Установка текущего значения.
-    /// Вызывает обработчик события CheckValue, если он установлен.
-    /// Обработчик события может изменить устанавливаемое значение или совсем отменить установку.
-    /// </summary>
-    /// <param name="value"></param>
-    protected override void SetValue(T value)
-    {
-      if (InsideSetValue) // чтобы не выполнять лишней проверки
-        return;
-
-      bool forced=false;
-      if (CheckValue != null)
-      {
-        if (_CheckValueArgs == null)
-          _CheckValueArgs = new DepInputCheckEventArgs<T>(this);
-
-        _CheckValueArgs.NewValue = value;
-        _CheckValueArgs.Cancel = false;
-        _CheckValueArgs.Forced = false;
-        CheckValue(this, _CheckValueArgs);
-        if (_CheckValueArgs.Cancel)
-          return;
-        value = _CheckValueArgs.NewValue;
-        forced = _CheckValueArgs.Forced;
-      }
-
-      base.BaseSetValue(value, forced);
-    }
-
-    #endregion
-
-    #region Вспомогательные методы
-
-    /// <summary>
-    /// Установка значения в обход основного входа
-    /// </summary>
-    /// <param name="value"></param>
-    public void OwnerSetValue(T value)
-    {
-      base.BaseSetValue(value, false);
-    }
-
-    #endregion
-  }
+  #endregion
 }

@@ -89,6 +89,7 @@
     <Compile Include="Collections\HistoryList.cs" />
     <Compile Include="Data\IdList.cs" />
     <Compile Include="Core\INamedValuesAccess.cs" />
+    <Compile Include="RI\DepInput.cs" />
     <Compile Include="Win32\IniFileWindows.cs" />
     <Compile Include="IO\IniFile.cs" />
     <Compile Include="Core\ISplash.cs" />

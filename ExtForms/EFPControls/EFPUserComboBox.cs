@@ -1101,14 +1101,14 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodesEx == null)
       {
-        _SelectedCodesEx = new DepInputWithCheck<string[]>();
+        _SelectedCodesEx = new DepInput<string[]>();
         _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
         _SelectedCodesEx.OwnerSetValue(SelectedCodes);
         _SelectedCodesEx.CheckValue += new DepInputCheckEventHandler<string[]>(SelectedCodesEx_CheckValue);
       }
     }
 
-    private DepInputWithCheck<string[]> _SelectedCodesEx;
+    private DepInput<string[]> _SelectedCodesEx;
 
     /// <summary>
     /// Вызывается, когда снаружи устанавливается значение SelectedCodeEx.ValueEx
@@ -1159,14 +1159,14 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodesCSVEx == null)
       {
-        _SelectedCodesCSVEx = new DepInputWithCheck<string>();
+        _SelectedCodesCSVEx = new DepInput<string>();
         _SelectedCodesCSVEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesCSVEx");
         _SelectedCodesCSVEx.OwnerSetValue(SelectedCodesCSV);
         _SelectedCodesCSVEx.CheckValue += new DepInputCheckEventHandler<string>(FSelectedCodesCSVEx_CheckValue);
       }
     }
 
-    private DepInputWithCheck<string> _SelectedCodesCSVEx;
+    private DepInput<string> _SelectedCodesCSVEx;
 
     void FSelectedCodesCSVEx_CheckValue(object sender, DepInputCheckEventArgs<string> args)
     {

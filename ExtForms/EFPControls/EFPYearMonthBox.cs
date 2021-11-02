@@ -124,13 +124,13 @@ namespace FreeLibSet.Forms
         _YearEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _YearEx;
+    private DepInput<int> _YearEx;
 
     private void InitYearEx()
     {
       if (_YearEx == null)
       {
-        _YearEx = new DepInputWithCheck<int>();
+        _YearEx = new DepInput<int>();
         _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
         _YearEx.OwnerSetValue(Year);
         _YearEx.CheckValue += new DepInputCheckEventHandler<int>(YearEx_CheckValue);
@@ -168,13 +168,13 @@ namespace FreeLibSet.Forms
         _MonthEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _MonthEx;
+    private DepInput<int> _MonthEx;
 
     private void InitMonthEx()
     {
       if (_MonthEx == null)
       {
-        _MonthEx = new DepInputWithCheck<int>();
+        _MonthEx = new DepInput<int>();
         _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
         _MonthEx.OwnerSetValue(Month);
         _MonthEx.CheckValue += new DepInputCheckEventHandler<int>(MonthEx_CheckValue);
@@ -252,13 +252,13 @@ namespace FreeLibSet.Forms
         _YMEx.Source = value;
       }
     }
-    private DepInputWithCheck<YearMonth> _YMEx;
+    private DepInput<YearMonth> _YMEx;
 
     private void InitYMEx()
     {
       if (_YMEx == null)
       {
-        _YMEx = new DepInputWithCheck<YearMonth>();
+        _YMEx = new DepInput<YearMonth>();
         _YMEx.OwnerInfo = new DepOwnerInfo(this, "YMEx");
         _YMEx.OwnerSetValue(YM);
         _YMEx.CheckValue += new DepInputCheckEventHandler<YearMonth>(YMEx_CheckValue);
@@ -424,13 +424,13 @@ namespace FreeLibSet.Forms
         _YearEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _YearEx;
+    private DepInput<int> _YearEx;
 
     private void InitYearEx()
     {
       if (_YearEx == null)
       {
-        _YearEx = new DepInputWithCheck<int>();
+        _YearEx = new DepInput<int>();
         _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
         _YearEx.OwnerSetValue(Year);
         _YearEx.CheckValue += new DepInputCheckEventHandler<int>(YearEx_CheckValue);
@@ -468,7 +468,7 @@ namespace FreeLibSet.Forms
         _FirstMonthEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _FirstMonthEx;
+    private DepInput<int> _FirstMonthEx;
 
     /// <summary>
     /// Последний месяц диапазона (1 - 12)
@@ -495,18 +495,18 @@ namespace FreeLibSet.Forms
         _LastMonthEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _LastMonthEx;
+    private DepInput<int> _LastMonthEx;
 
     private void InitMonthEx()
     {
       if (_FirstMonthEx == null)
       {
-        _FirstMonthEx = new DepInputWithCheck<int>();
+        _FirstMonthEx = new DepInput<int>();
         _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
         _FirstMonthEx.OwnerSetValue(FirstMonth);
         _FirstMonthEx.CheckValue += new DepInputCheckEventHandler<int>(FirstMonthEx_CheckValue);
 
-        _LastMonthEx = new DepInputWithCheck<int>();
+        _LastMonthEx = new DepInput<int>();
         _LastMonthEx.OwnerInfo = new DepOwnerInfo(this, "LastMonthEx");
         _LastMonthEx.OwnerSetValue(LastMonth);
         _LastMonthEx.CheckValue += new DepInputCheckEventHandler<int>(FLastMonthEx_CheckValue);
@@ -642,13 +642,13 @@ namespace FreeLibSet.Forms
         _FirstYMEx.Source = value;
       }
     }
-    private DepInputWithCheck<YearMonth> _FirstYMEx;
+    private DepInput<YearMonth> _FirstYMEx;
 
     private void InitFirstYMEx()
     {
       if (_FirstYMEx == null)
       {
-        _FirstYMEx = new DepInputWithCheck<YearMonth>();
+        _FirstYMEx = new DepInput<YearMonth>();
         _FirstYMEx.OwnerInfo = new DepOwnerInfo(this, "FirstYMEx");
         _FirstYMEx.OwnerSetValue(FirstYM);
         _FirstYMEx.CheckValue += new DepInputCheckEventHandler<YearMonth>(FirstYMEx_CheckValue);
@@ -687,13 +687,13 @@ namespace FreeLibSet.Forms
         _LastYMEx.Source = value;
       }
     }
-    private DepInputWithCheck<YearMonth> _LastYMEx;
+    private DepInput<YearMonth> _LastYMEx;
 
     private void InitLastYMEx()
     {
       if (_LastYMEx == null)
       {
-        _LastYMEx = new DepInputWithCheck<YearMonth>();
+        _LastYMEx = new DepInput<YearMonth>();
         _LastYMEx.OwnerInfo = new DepOwnerInfo(this, "LastYMEx");
         _LastYMEx.OwnerSetValue(LastYM);
         _LastYMEx.CheckValue += new DepInputCheckEventHandler<YearMonth>(LastYMEx_CheckValue);
@@ -738,13 +738,13 @@ namespace FreeLibSet.Forms
         _YMRangeEx.Source = value;
       }
     }
-    private DepInputWithCheck<YearMonthRange> _YMRangeEx;
+    private DepInput<YearMonthRange> _YMRangeEx;
 
     private void InitYMRangeEx()
     {
       if (_YMRangeEx == null)
       {
-        _YMRangeEx = new DepInputWithCheck<YearMonthRange>();
+        _YMRangeEx = new DepInput<YearMonthRange>();
         _YMRangeEx.OwnerInfo = new DepOwnerInfo(this, "YMRangeEx");
         _YMRangeEx.OwnerSetValue(YMRange);
         _YMRangeEx.CheckValue += new DepInputCheckEventHandler<YearMonthRange>(YMRangeEx_CheckValue);

@@ -10,6 +10,7 @@ using FreeLibSet.Formatting;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.DependedValues;
 
 namespace FreeLibSet.Forms
 {
@@ -175,6 +176,32 @@ namespace FreeLibSet.Forms
     }
     private string _HelpContext;
 
+
+    /// <summary>
+    /// Список валидаторов элемента, основанных на управляемых значениях
+    /// </summary>
+    public UIValidatorList Validators
+    {
+      get
+      {
+        if (_Valifators == null)
+          _Valifators = new UIValidatorList();
+        return _Valifators;
+      }
+    }
+    private UIValidatorList _Valifators;
+
+    public bool HasValidators
+    {
+      get
+      {
+        if (_Valifators == null)
+          return false;
+        else
+          return _Valifators.Count > 0;
+      }
+    }
+
     #endregion
 
     #region Абстрактные методы
@@ -266,7 +293,7 @@ namespace FreeLibSet.Forms
     {
       Title = "Ввод текста";
       Prompt = "Значение";
-      Value = String.Empty;
+      Text = String.Empty;
       MaxLength = 0;
       CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
     }
@@ -278,8 +305,56 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вход и выход: редактируемое значение
     /// </summary>
-    public string Value { get { return _Value; } set { _Value = value; } }
-    private string _Value;
+    public string Text 
+    { 
+      get { return _Text; } 
+      set 
+      {
+        if (value == null)
+          value = String.Empty;
+        _Text = value;
+        if (_TextEx != null)
+          _TextEx.OwnerSetValue(value);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
+      } 
+    }
+    private string _Text;
+
+    /// <summary>
+    /// Управляемое свойство для Text
+    /// </summary>
+    public DepValue<string> TextEx
+    {
+      get
+      {
+        if (_TextEx == null)
+        {
+          _TextEx = new DepValueObject<string>();
+          _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+          _TextEx.OwnerSetValue(Text);
+        }
+        return _TextEx;
+      }
+    }
+    private DepValueObject<string> _TextEx;
+
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepValueObject<bool>();
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(Text));
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValueObject<bool> _IsNotEmptyEx;
+
+
 
     /// <summary>
     /// Максимальная длина текста.
@@ -400,17 +475,17 @@ namespace FreeLibSet.Forms
       {
         string s2 = ConfigPart.GetString(ConfigName);
         if (!String.IsNullOrEmpty(s2))
-          Value = s2;
+          Text = s2;
       }
-      efpText.Text = Value;
+      efpText.Text = Text;
 
 
       if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      Value = efpText.Text;
+      Text = efpText.Text;
       if (HasConfig)
-        ConfigPart.SetString(ConfigName, Value);
+        ConfigPart.SetString(ConfigName, Text);
 
       return DialogResult.OK;
     }
@@ -421,6 +496,9 @@ namespace FreeLibSet.Forms
         return;
 
       EFPTextBox efpText = (EFPTextBox)sender;
+
+      if (HasValidators)
+        EFPControlBase.Validate(Validators, args);
 
       if (String.IsNullOrEmpty(efpText.Text))
         return;

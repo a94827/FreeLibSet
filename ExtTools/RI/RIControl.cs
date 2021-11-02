@@ -640,6 +640,9 @@ namespace FreeLibSet.RI
     }
     private T? _NValue;
 
+    /// <summary>
+    /// Используется в классах-наследниках
+    /// </summary>
     protected T? OldNValue;
 
     /// <summary>
@@ -722,7 +725,7 @@ namespace FreeLibSet.RI
         _ValueEx.Source = value;
       }
     }
-    private DepInputWithCheck<T> _ValueEx;
+    private DepInput<T> _ValueEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
@@ -743,7 +746,7 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<T>();
+        _ValueEx = new DepInput<T>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.Value = Value;
         _ValueEx.CheckValue += ValueEx_CheckValue;
@@ -1977,7 +1980,7 @@ namespace FreeLibSet.RI
         _ValueEx.Source = value;
       }
     }
-    private DepInputWithCheck<DateTime> _ValueEx;
+    private DepInput<DateTime> _ValueEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
@@ -1998,7 +2001,7 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<DateTime>();
+        _ValueEx = new DepInput<DateTime>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.Value = Value;
         _ValueEx.CheckValue += ValueEx_CheckValue;

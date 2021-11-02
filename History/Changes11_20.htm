@@ -5,29 +5,28 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="2021-10-20T17:35:30.201000000"/>
-	<meta name="changed" content="2021-11-01T22:11:28.648000000"/>
+	<meta name="changed" content="2021-11-02T15:53:21.228000000"/>
 	<style type="text/css">
-		@page { size: 21cm 29.7cm; margin: 2cm }
-		p { line-height: 120%; margin-bottom: 0.25cm; background: transparent; background: transparent }
-		h1 { margin-bottom: 0.21cm; background: transparent; background: transparent; page-break-after: avoid }
-		h1.western { font-family: "Liberation Sans", sans-serif; font-size: 18pt; font-weight: bold }
-		h1.cjk { font-family: "Microsoft YaHei"; font-size: 18pt; font-weight: bold }
-		h1.ctl { font-family: "Mangal"; font-size: 18pt; font-weight: bold }
-		h2 { margin-top: 0.35cm; margin-bottom: 0.21cm; background: transparent; background: transparent; page-break-after: avoid }
-		h2.western { font-family: "Albany", sans-serif; font-size: 16pt; font-weight: bold }
-		h2.cjk { font-family: "SimSun"; font-size: 16pt; font-weight: bold }
-		h2.ctl { font-family: "Mangal"; font-size: 16pt; font-weight: bold }
-		h3 { margin-top: 0.25cm; margin-bottom: 0.21cm; background: transparent; background: transparent; page-break-after: avoid }
-		h3.western { font-family: "Albany", sans-serif; font-size: 14pt; font-weight: bold }
-		h3.cjk { font-family: "SimSun"; font-size: 14pt; font-weight: bold }
-		h3.ctl { font-family: "Mangal"; font-size: 14pt; font-weight: bold }
-		td p { line-height: 120%; orphans: 0; widows: 0; margin-bottom: 0.25cm; background: transparent; background: transparent }
-		a:link { color: #000080; so-language: zxx; text-decoration: underline }
-		a:visited { color: #800000; so-language: zxx; text-decoration: underline }
+		@page { margin: 2cm }
+		td p { line-height: 120%; orphans: 0; widows: 0; margin-bottom: 0.25cm; background: transparent }
+		h1 { margin-bottom: 0.21cm; background: transparent }
+		h1.western { font-family: "Liberation Sans", sans-serif; font-size: 18pt }
+		h1.cjk { font-family: "Microsoft YaHei"; font-size: 18pt }
+		h1.ctl { font-family: "Mangal"; font-size: 18pt }
+		p { line-height: 120%; margin-bottom: 0.25cm; background: transparent }
+		h2 { margin-top: 0.35cm; margin-bottom: 0.21cm; background: transparent }
+		h2.western { font-family: "Albany", sans-serif; font-size: 16pt }
+		h2.cjk { font-family: "SimSun"; font-size: 16pt }
+		h2.ctl { font-family: "Mangal"; font-size: 16pt }
+		h3 { margin-top: 0.25cm; margin-bottom: 0.21cm; background: transparent }
+		h3.western { font-family: "Albany", sans-serif }
+		h3.cjk { font-family: "SimSun" }
+		h3.ctl { font-family: "Mangal" }
+		a:link { so-language: zxx }
 	</style>
 </head>
-<body lang="ru-RU" link="#000080" vlink="#800000" dir="ltr"><h1 class="western">
-Изменения при переходе с версии 1.1 на версию 2.0</h1>
+<body lang="ru-RU" dir="ltr"><h1 class="western">Изменения при
+переходе с версии 1.1 на версию 2.0</h1>
 <p><span lang="ru-RU">Список </span><span lang="en-US">dll- </span><span lang="ru-RU">сборок
 библиотеки сохраняется.</span></p>
 <h2 class="western">Пространства имен</h2>
@@ -483,6 +482,7 @@
 </table>
 <p>&nbsp;</p>
 <h2 class="western">Имена свойств</h2>
+<h3 class="western">Value</h3>
 <p>Изменения касаются некоторых классов провайдеров управляющих
 элементов <span lang="en-US">EFPxxx </span>и диалогов в пространстве
 имен <span lang="en-US">FreeLibSet.Forms</span> и классов удаленного
@@ -506,20 +506,18 @@ NIntValueEx.</span> Если пустое <span lang="en-US">struct-</span>значение
 простые имена свойств без префикса &quot;<span lang="en-US">N</span>&quot;<span lang="en-US">,
 </span>например, <span lang="en-US">YM, YMEx.</span></p>
 <p>Для задания диапазона допустимых значений используются свойства
-<span lang="en-US">Minimum, Maximum </span>и, соответствующие им
-управляемые свойства <span lang="en-US">MinimumEx, MaximumEx</span>
-<span lang="en-US">(</span><span lang="ru-RU">только в классах
-</span><span lang="en-US">EFPControl, </span><span lang="ru-RU">а не
-</span><span lang="en-US">RI). </span>Эти свойства могут иметь
-<span lang="en-US">Nullable-</span>тип, где <span lang="en-US">null
-</span>задает отсутствие ограничения. Префикс &quot;<span lang="en-US">N</span>&quot;
-не используется. Обычно, ограничения обрабатываются на уровне
-<span lang="en-US">EFPControl. </span><span lang="ru-RU">Для
-некоторых элементов, например, в </span><span lang="en-US">ExtNumericUpDowm,
-</span><span lang="ru-RU">свойства обрабатываются на уровне
-управляющего элемента.</span></p>
+<span lang="en-US">Minimum, Maximum.</span> <span lang="ru-RU">Управляемых
+свойств </span><span lang="en-US">MinimumEx, MaximumEx</span> <span lang="ru-RU">нет</span><span lang="en-US">.
+</span>Эти свойства могут иметь <span lang="en-US">Nullable-</span>тип,
+где <span lang="en-US">null </span>задает отсутствие ограничения.
+Префикс &quot;<span lang="en-US">N</span>&quot; не используется.
+Обычно, ограничения обрабатываются на уровне <span lang="en-US">EFPControl.
+</span><span lang="ru-RU">Для некоторых элементов, например, в
+</span><span lang="en-US">IntEditBox, </span><span lang="ru-RU">свойства
+обрабатываются также на уровне управляющего элемента</span>
+<span lang="ru-RU">(используются для прокрутки стрелочками).</span></p>
 <p>Для &quot;серых&quot; значений, отображаемых, когда свойство
-<span lang="en-US">Enabled=false</span>, или <span lang="en-US">RedOnly=true,
+<span lang="en-US">Enabled=false</span>, или <span lang="en-US">ReadOnly=true,
 </span>используются существующие правила именования свойств.
 Разрешающее свойство типа <span lang="en-US">boolean </span>имеет имя
 с префиксом &quot;<span lang="en-US">AllowDisabled</span>&quot;<span lang="en-US">,
@@ -696,11 +694,64 @@ NIntValueEx.</span> Если пустое <span lang="en-US">struct-</span>значение
 		</td>
 	</tr>
 </table>
-<p><br/>
-<br/>
-
-</p>
-<h3 class="western">Indexes <span lang="ru-RU">или </span>Indices?</h3>
+<h3 class="western">CanBeEmpty</h3>
+<p>Если элемент может принимать пустое значение (<span lang="en-US">TextBox,
+DateTimeBox, DateRangeBox, IntEditBox, ...), </span><span lang="ru-RU">то
+используются следующие свойства</span></p>
+<p lang="en-US">- UIValidateState CanBeEmptyMode {get;set;}. <span lang="ru-RU">По
+умолчанию - </span>Error. <span lang="ru-RU">Можно установить </span>Warning
+<span lang="ru-RU">или </span>Ok.</p>
+<p lang="en-US">- bool CanBeEmpty {get;set;}<span lang="ru-RU">. Если
+</span>false (<span lang="ru-RU">по умолчанию), то будет выдаваться
+сообщение об ошибке</span>. <span lang="ru-RU">Дублирует
+</span>CanBeEmptyState</p>
+<p lang="en-US">- <span lang="ru-RU">Управляемое свойство
+</span>DepValue&lt;bool&gt; IsNotEmptyEx {get;}. <span lang="ru-RU">Только
+выход, возвращающий </span>true, <span lang="ru-RU">если в поле есть
+непустое значение. Свойство можно использовать в качестве предусловия
+для валидатора </span>UIValidator<span lang="ru-RU">. Есть только для
+управляющих элементов, но не диалогов.</span></p>
+<p>В <span lang="en-US">ExtForms </span>использовалось свойство
+<span lang="en-US">WarningIfEmpty. </span>Оно заменяется на
+<span lang="en-US">CanBeEmptyMode.</span></p>
+<p>Управляемые свойства<span lang="en-US"> CanBeEmptyEx </span>и
+<span lang="en-US">WarningIfEmptyEx </span>упраздняются. Они могут
+быть легко реализованы с помощью <span lang="en-US">UIValidator, </span>если
+в качестве условия использовать свойство <span lang="en-US">IsNotEmptyEx.</span></p>
+<h3 class="western">Другие свойства для проверки</h3>
+<p>Остаются только свойства <span lang="en-US">Minimum </span><span lang="ru-RU">и
+</span><span lang="en-US">Maximum. </span><span lang="ru-RU">В
+основном, потому что они нужны еще и для прокрутки числовых значений.
+Свойство </span><span lang="en-US">WarningIfOutOfRange </span><span lang="ru-RU">убирается</span><span lang="en-US">,
+</span><span lang="ru-RU">можно задавать только ошибку, а не
+предупреждение. Чтобы задать предупреждение для попадания в диапазон,
+можно использовать валидатор с методом </span><span lang="en-US">DepTools.InRangeEx()
+</span><span lang="ru-RU">в качестве входа.</span></p>
+<p><span lang="ru-RU">Свойства Error/</span><span lang="en-US">WarningRegExpattern/Message
+</span><span lang="ru-RU">убираются. Проверку можно реализовать
+валидатором с методом </span><span lang="en-US">DepTools.RegexIsMatchEx().</span></p>
+<h3 class="western">Проверка в блоках диалога</h3>
+<p>Реализуется проверка с помощью <span lang="en-US">UIValidator.
+</span>Класс <span lang="en-US">BaseInputDialog (</span>или
+<span lang="en-US">StandardDialog ?) </span>содержит свойство
+<span lang="en-US">Validators. </span>Конкретные реализации диалогов
+содержат управляемые свойства. Например, DateTimeInputDialog содержит
+свойства <span lang="en-US">NValueEx, ValueEx, NTimeEx </span>и
+<span lang="en-US">TimeEx. </span>В отличие от управляющих элементов,
+эти свойства предназначены только для чтения. Также есть свойство
+<span lang="en-US">IsNotEmptyEx.</span></p>
+<p>В <span lang="en-US">ExtForms </span>вносятся такие же изменения.
+Например, класс <span lang="en-US">DateTimeInputDialog </span>содержит
+список <span lang="en-US">Validators </span>и управляемые свойства и<span lang="en-US">
+IsNotEmptyEx </span>только для чтения.</p>
+<p>Существующие события <span lang="en-US">Validating </span>убираются,
+т.к. их можно заменить на объекты <span lang="en-US">UIValidator.
+</span>Отличие: Обработчик <span lang="en-US">UIValidator</span>
+вызывается и при пустом текущем значении,<span lang="en-US"> </span>если
+проверка не остановилась на <span lang="en-US">CanBeEmpty=false</span>.
+ Можно подсоединить <span lang="en-US">IsNotEmptyEx </span>к
+предусловию.</p>
+<h2 class="western">Indexes <span lang="ru-RU">или </span>Indices?</h2>
 <p>Если свойство относится <span lang="ru-RU">к индексам элементов
 массива, то используется &quot;</span><span lang="en-US">Indices</span><span lang="ru-RU">&quot;</span><span lang="en-US">.
 </span><span lang="ru-RU">Если свойство относится к коллекции

@@ -191,13 +191,13 @@ namespace FreeLibSet.Forms
     {
       if (_XmlBytesEx == null)
       {
-        _XmlBytesEx = new DepInputWithCheck<byte[]>();
+        _XmlBytesEx = new DepInput<byte[]>();
         _XmlBytesEx.OwnerInfo = new DepOwnerInfo(this, "XmlBytesEx");
         _XmlBytesEx.Value = XmlBytes;
         _XmlBytesEx.ValueChanged += new EventHandler(XmlBytesEx_ValueChanged);
       }
     }
-    private DepInputWithCheck<byte[]> _XmlBytesEx;
+    private DepInput<byte[]> _XmlBytesEx;
 
     private void XmlBytesEx_ValueChanged(object sender, EventArgs args)
     {
@@ -278,13 +278,13 @@ namespace FreeLibSet.Forms
     {
       if (_XmlDocumentEx == null)
       {
-        _XmlDocumentEx = new DepInputWithCheck<XmlDocument>();
+        _XmlDocumentEx = new DepInput<XmlDocument>();
         _XmlDocumentEx.OwnerInfo = new DepOwnerInfo(this, "XmlDocumentEx");
         _XmlDocumentEx.Value = XmlDocument;
         _XmlDocumentEx.ValueChanged += new EventHandler(XmlDocumentEx_ValueChanged);
       }
     }
-    private DepInputWithCheck<XmlDocument> _XmlDocumentEx;
+    private DepInput<XmlDocument> _XmlDocumentEx;
 
     private void XmlDocumentEx_ValueChanged(object sender, EventArgs args)
     {
@@ -325,13 +325,13 @@ namespace FreeLibSet.Forms
     {
       if (_XmlTextEx == null)
       {
-        _XmlTextEx = new DepInputWithCheck<string>();
+        _XmlTextEx = new DepInput<string>();
         _XmlTextEx.OwnerInfo = new DepOwnerInfo(this, "XmlTextEx");
         _XmlTextEx.Value = XmlText;
         _XmlTextEx.ValueChanged += new EventHandler(XmlTextEx_ValueChanged);
       }
     }
-    private DepInputWithCheck<string> _XmlTextEx;
+    private DepInput<string> _XmlTextEx;
 
     private void XmlTextEx_ValueChanged(object sender, EventArgs args)
     {

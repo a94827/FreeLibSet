@@ -787,14 +787,14 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodeEx == null)
       {
-        _SelectedCodeEx = new DepInputWithCheck<string>();
+        _SelectedCodeEx = new DepInput<string>();
         _SelectedCodeEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodeEx");
         _SelectedCodeEx.OwnerSetValue(SelectedCode);
         _SelectedCodeEx.CheckValue += new DepInputCheckEventHandler<string>(SelectedCodeEx_CheckValue);
       }
     }
 
-    private DepInputWithCheck<string> _SelectedCodeEx;
+    private DepInput<string> _SelectedCodeEx;
 
     /// <summary>
     /// Вызывается, когда снаружи устанавливается значение SelectedCodeEx.ValueEx
@@ -1245,7 +1245,7 @@ namespace FreeLibSet.Forms
     {
       if (_EnabledEx == null)
       {
-        _EnabledEx = new DepInputWithCheck<bool>();
+        _EnabledEx = new DepInput<bool>();
         _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
         _EnabledEx.OwnerSetValue(Enabled);
         _EnabledEx.CheckValue += new DepInputCheckEventHandler<bool>(EnabledEx_CheckValue);
@@ -1258,7 +1258,7 @@ namespace FreeLibSet.Forms
       args.Cancel = true;
     }
 
-    DepInputWithCheck<Boolean> _EnabledEx;
+    DepInput<Boolean> _EnabledEx;
 
     void Control_EnabledChanged(object sender, EventArgs args)
     {

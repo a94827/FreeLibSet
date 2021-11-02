@@ -176,11 +176,11 @@ namespace FreeLibSet.Forms.Docs
       dlg2.ImageKey = "Filter";
       dlg2.Prompt = "Значение фильтра (пусто-нет фильтра)";
       dlg2.CanBeEmpty = true;
-      dlg2.Value = Value;
+      dlg2.Text = Value;
 
       if (dlg2.ShowDialog() != DialogResult.OK)
         return false;
-      Value = dlg2.Value;
+      Value = dlg2.Text;
 
       return true;
     }

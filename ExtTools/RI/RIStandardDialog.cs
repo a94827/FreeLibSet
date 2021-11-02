@@ -9,6 +9,7 @@ using FreeLibSet.Collections;
 using FreeLibSet.UICore;
 using FreeLibSet.Calendar;
 using FreeLibSet.Formatting;
+using FreeLibSet.DependedValues;
 
 /*
  * The BSD License
@@ -383,6 +384,58 @@ namespace FreeLibSet.RI
     private string _Prompt;
 
     #endregion
+
+    #region Проверка элемента
+
+    /// <summary>
+    /// Список объектов для проверки корректности значения элемента (валидаторов).
+    /// Поддерживаются ошибки и предупреждения с подсветкой и выдачей всплывающей подсказки.
+    /// При нажатии кнопки "ОК" в диалоге устанавливается фокус на первый управляющий элемент, для которого валидатор вернул ошибку, и закрытие диалога предотвращается.
+    /// Валидатор считается "сработавшим", если вычисляемое выражение (Validator.Expression) возвращает false. 
+    /// Как правило, в качестве аргументов выражения выступают управляемые свойства текущего элемента управления, но могут использоваться и свойства других элементов.
+    /// Если у управляющего элемента есть проверки, задаваемые свойствами (например, CanBeEmpty=false для TextBox), то такие проверки выполняются до опроса объектов из списка Validators.
+    /// 
+    /// Если проверку корректности введенного значения нельзя реализовать с помощью объектов Validator, используйте обработчик события Dialog.Validating,
+    /// которое вызывается на стороне сервера.
+    /// </summary>
+    public UIValidatorList Validators
+    {
+      get
+      {
+        if (_Validators == null)
+          _Validators = new UIValidatorList();
+        return _Validators;
+      }
+    }
+    private UIValidatorList _Validators;
+
+    /// <summary>
+    /// Возвращает true, если список Validators не пустой.
+    /// Используется для оптимизации, вместо обращения к Validators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+    /// </summary>
+    public bool HasValidators
+    {
+      get
+      {
+        if (_Validators == null)
+          return false;
+        else
+          return _Validators.Count > 0;
+      }
+    }
+
+    /// <summary>
+    /// Блокирует список Validators от изменений
+    /// </summary>
+    protected override void OnSetFixed()
+    {
+      base.OnSetFixed();
+
+      if (_Validators != null)
+        _Validators.SetReadOnly();
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -401,8 +454,8 @@ namespace FreeLibSet.RI
     {
       Title = "Ввод текста";
       Prompt = "Значение";
-      Text = String.Empty;
-      MaxLength = 0;
+      _Text = String.Empty;
+      _MaxLength = 0;
       _CanBeEmptyMode = UIValidateState.Error;
     }
 
@@ -410,28 +463,93 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Text
+
     /// <summary>
     /// Вход и выход: редактируемое значение.
     /// По умолчанию - пустая строка.
     /// </summary>
-    public string Text { get { return _Text; } set { _Text = value; } }
+    public string Text 
+    { 
+      get { return _Text; } 
+      set 
+      {
+        if (value == null)
+          value = String.Empty;
+        _Text = value;
+        if (_TextEx != null)
+          _TextEx.OwnerSetValue(value);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
+      } 
+    }
     private string _Text;
     private string _OldText;
 
     /// <summary>
-    /// Максимальная длина текста.
-    /// По умолчанию: 0 - длина текста ограничена 32767 символами (Int16.MaxValue)
+    /// Управляемое свойство для Text
     /// </summary>
-    public int MaxLength
+    public DepValue<string> TextEx
     {
-      get { return _MaxLength; }
-      set
+      get
       {
-        CheckNotFixed();
-        _MaxLength = value;
+        if (_TextEx == null)
+        {
+          _TextEx = new DepValueObject<string>();
+          _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+          _TextEx.OwnerSetValue(Text);
+        }
+        return _TextEx;
       }
     }
-    private int _MaxLength;
+    private DepValueObject<string> _TextEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool TextExConnected
+    {
+      get
+      {
+        if (_TextEx == null)
+          return false;
+        else
+          return _TextEx.IsConnected;
+      }
+    }
+
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepValueObject<bool>();
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(Text));
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValueObject<bool> _IsNotEmptyEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства IsNotEmptyEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool IsNotEmptyExConnected
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+          return false;
+        else
+          return _IsNotEmptyEx.IsConnected;
+      }
+    }
+
+    #endregion
 
     #endregion
 
@@ -464,6 +582,21 @@ namespace FreeLibSet.RI
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
+
+    /// <summary>
+    /// Максимальная длина текста.
+    /// По умолчанию: 0 - длина текста ограничена 32767 символами (Int16.MaxValue)
+    /// </summary>
+    public int MaxLength
+    {
+      get { return _MaxLength; }
+      set
+      {
+        CheckNotFixed();
+        _MaxLength = value;
+      }
+    }
+    private int _MaxLength;
 
     /// <summary>
     /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).

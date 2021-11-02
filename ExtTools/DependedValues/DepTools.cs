@@ -1441,6 +1441,65 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
+    #region InRange()
+
+    /// <summary>
+    /// Возвращает true, если значение находится в указанном диапазоне.
+    /// Поддерживаются открытые и полуоткрытые интервалы.
+    /// </summary>
+    /// <typeparam name="T">Значимый тип (обычно, числовой) данных. Должен поддерживать интерфейс для сравнения значений</typeparam>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="minimum">Минимальное значение или null, если ограничение не задано</param>
+    /// <param name="maximum">Максимальное значение или null, если ограничение не задано</param>
+    /// <returns>true, если значение находится внутри диапазона</returns>
+    public static bool InRange<T>(T value, T? minimum, T? maximum)
+      where T : struct, IComparable<T>
+    {
+      if (minimum.HasValue)
+      {
+        if (value.CompareTo(minimum.Value) < 0)
+          return false;
+      }
+      if (maximum.HasValue)
+      {
+        if (value.CompareTo(maximum.Value) > 0)
+          return false;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение находится в указанном диапазоне.
+    /// Поддерживаются открытые и полуоткрытые интервалы.
+    /// </summary>
+    /// <typeparam name="T">Значимый тип (обычно, числовой) данных. Должен поддерживать интерфейс для сравнения значений</typeparam>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="minimum">Минимальное значение или null, если ограничение не задано</param>
+    /// <param name="maximum">Максимальное значение или null, если ограничение не задано</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<bool> InRangeEx<T>(DepValue<T> value, T? minimum, T? maximum)
+      where T : struct, IComparable<T>
+    {
+      return new DepExpr3<bool, T, T?, T?>(value, minimum, maximum, InRange);
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение находится в указанном диапазоне.
+    /// Поддерживаются открытые и полуоткрытые интервалы.
+    /// </summary>
+    /// <typeparam name="T">Значимый тип (обычно, числовой) данных. Должен поддерживать интерфейс для сравнения значений</typeparam>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="minimum">Минимальное значение или null, если ограничение не задано</param>
+    /// <param name="maximum">Максимальное значение или null, если ограничение не задано</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<bool> InRangeEx<T>(DepValue<T> value, DepValue<T?> minimum, DepValue<T?> maximum)
+      where T : struct, IComparable<T>
+    {
+      return new DepExpr3<bool, T, T?, T?>(value, minimum, maximum, InRange);
+    }
+
+    #endregion
+
     #endregion
   }
 }

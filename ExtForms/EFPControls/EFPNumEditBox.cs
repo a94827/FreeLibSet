@@ -157,13 +157,13 @@ namespace FreeLibSet.Forms
         _ValueEx.Source = value;
       }
     }
-    private DepInputWithCheck<T> _ValueEx;
+    private DepInput<T> _ValueEx;
 
     private void InitValueEx()
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<T>();
+        _ValueEx = new DepInput<T>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.Value = Value;
         _ValueEx.CheckValue += ValueEx_CheckValue;

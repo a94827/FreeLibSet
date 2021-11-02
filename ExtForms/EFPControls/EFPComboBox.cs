@@ -827,14 +827,14 @@ namespace FreeLibSet.Forms
     {
       if (_ColorEx == null)
       {
-        _ColorEx = new DepInputWithCheck<Color>();
+        _ColorEx = new DepInput<Color>();
         _ColorEx.OwnerInfo = new DepOwnerInfo(this, "ColorEx");
         _ColorEx.OwnerSetValue(Color);
         _ColorEx.CheckValue += new DepInputCheckEventHandler<Color>(ColorEx_CheckValue);
       }
     }
 
-    private DepInputWithCheck<Color> _ColorEx;
+    private DepInput<Color> _ColorEx;
 
     void ColorEx_CheckValue(object sender, DepInputCheckEventArgs<Color> args)
     {
@@ -1170,7 +1170,7 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<int>();
+        _ValueEx = new DepInput<int>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         int x;
         if (TryTextToValue(Control.Text, out x))
@@ -1180,7 +1180,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private DepInputWithCheck<int> _ValueEx;
+    private DepInput<int> _ValueEx;
 
     private bool _InsideValueChanged = false;
 

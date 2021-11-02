@@ -96,13 +96,13 @@ namespace FreeLibSet.Forms
         _ValueEx.Source = value;
       }
     }
-    private DepInputWithCheck<MonthDay> _ValueEx;
+    private DepInput<MonthDay> _ValueEx;
 
     private void InitValueEx()
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<MonthDay>();
+        _ValueEx = new DepInput<MonthDay>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<MonthDay>(ValueEx_CheckValue);
@@ -174,13 +174,13 @@ namespace FreeLibSet.Forms
         _MonthEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _MonthEx;
+    private DepInput<int> _MonthEx;
 
     private void InitMonthEx()
     {
       if (_MonthEx == null)
       {
-        _MonthEx = new DepInputWithCheck<int>();
+        _MonthEx = new DepInput<int>();
         _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
         _MonthEx.OwnerSetValue(Month);
         _MonthEx.CheckValue += new DepInputCheckEventHandler<int>(MonthEx_CheckValue);
@@ -222,13 +222,13 @@ namespace FreeLibSet.Forms
         _DayEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _DayEx;
+    private DepInput<int> _DayEx;
 
     private void InitDayEx()
     {
       if (_DayEx == null)
       {
-        _DayEx = new DepInputWithCheck<int>();
+        _DayEx = new DepInput<int>();
         _DayEx.OwnerInfo = new DepOwnerInfo(this, "DayEx");
         _DayEx.OwnerSetValue(Day);
         _DayEx.CheckValue += new DepInputCheckEventHandler<int>(DayEx_CheckValue);
@@ -275,13 +275,13 @@ namespace FreeLibSet.Forms
         _DayOfYearEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _DayOfYearEx;
+    private DepInput<int> _DayOfYearEx;
 
     private void InitDayOfYearEx()
     {
       if (_DayOfYearEx == null)
       {
-        _DayOfYearEx = new DepInputWithCheck<int>();
+        _DayOfYearEx = new DepInput<int>();
         _DayOfYearEx.OwnerInfo = new DepOwnerInfo(this, "DayOfYearEx");
         _DayOfYearEx.OwnerSetValue(DayOfYear);
         _DayOfYearEx.CheckValue += new DepInputCheckEventHandler<int>(DayOfYearEx_CheckValue);
@@ -460,13 +460,13 @@ namespace FreeLibSet.Forms
         _ValueEx.Source = value;
       }
     }
-    private DepInputWithCheck<MonthDay> _ValueEx;
+    private DepInput<MonthDay> _ValueEx;
 
     private void InitValueEx()
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<MonthDay>();
+        _ValueEx = new DepInput<MonthDay>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<MonthDay>(ValueEx_CheckValue);
@@ -509,13 +509,13 @@ namespace FreeLibSet.Forms
         _DayOfYearEx.Source = value;
       }
     }
-    private DepInputWithCheck<int> _DayOfYearEx;
+    private DepInput<int> _DayOfYearEx;
 
     private void InitDayOfYearEx()
     {
       if (_DayOfYearEx == null)
       {
-        _DayOfYearEx = new DepInputWithCheck<int>();
+        _DayOfYearEx = new DepInput<int>();
         _DayOfYearEx.OwnerInfo = new DepOwnerInfo(this, "DayOfYearEx");
         _DayOfYearEx.OwnerSetValue(DayOfYear);
         _DayOfYearEx.CheckValue += new DepInputCheckEventHandler<int>(DayOfYearEx_CheckValue);

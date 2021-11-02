@@ -2223,6 +2223,20 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.ErrorRegExMessage = riDialog.ErrorRegExMessage;
         _WinDlg.WarningRegExPattern = riDialog.WarningRegExPattern;
         _WinDlg.WarningRegExMessage = riDialog.WarningRegExMessage;
+
+        _WinDlg.Text = riDialog.Text; // обязательное присвоение, иначе свойство обнулится
+        if (riDialog.TextExConnected)
+        {
+          //if (riDialog.TextEx.HasSource)
+          //  // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+          //  base.TextEx = riItem.TextEx;
+          //else
+          riDialog.TextEx = _WinDlg.TextEx;
+        }
+
+
+        if (riDialog.HasValidators)
+          _WinDlg.Validators.AddRange(riDialog.Validators);
       }
 
       #endregion
@@ -2238,12 +2252,12 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        _WinDlg.Value = _RIDialog.Text;
+        _WinDlg.Text = _RIDialog.Text;
       }
 
       public void ReadValues()
       {
-        _RIDialog.Text = _WinDlg.Value;
+        _RIDialog.Text = _WinDlg.Text;
       }
 
       public DialogResult ShowDialog()

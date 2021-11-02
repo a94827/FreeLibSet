@@ -497,15 +497,14 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_DeletedEx == null)
         {
-          _DeletedEx = new DepInputDelayed<bool>();
+          _DeletedEx = new DepValueDelayed<bool>();
           _DeletedEx.OwnerInfo = new DepOwnerInfo(this, "DeletedEx");
-          _DeletedEx.Value = false;
           _DeletedEx.ValueNeeded += new DepValueNeededEventHandler<bool>(Deleted_ValueNeeded);
         }
         return _DeletedEx;
       }
     }
-    private DepInputDelayed<bool> _DeletedEx;
+    private DepValueDelayed<bool> _DeletedEx;
 
     void Deleted_ValueNeeded(object sender, DepValueNeededEventArgs<bool> args)
     {
@@ -1696,7 +1695,7 @@ namespace FreeLibSet.Forms.Docs
           _DocIdWasSet = true;
 
           if (_OutDocIdEx != null)
-            _OutDocIdEx.Value = value;
+            _OutDocIdEx.OwnerSetValue(value);
           InitSubDocIdsOnDocId();
         }
         else
@@ -1739,7 +1738,7 @@ namespace FreeLibSet.Forms.Docs
       _DocIdWasSet = false;
 
       if (_OutDocIdEx != null)
-        _OutDocIdEx.Value = value;
+        _OutDocIdEx.OwnerSetValue(value);
     }
 
     private void InitSubDocIdsOnDocId()
@@ -1781,13 +1780,13 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_InDocIdEx == null)
       {
-        _InDocIdEx = new DepInputWithCheck<int>();
+        _InDocIdEx = new DepInput<int>();
         _InDocIdEx.OwnerInfo = new DepOwnerInfo(this, "InDocIdEx");
         _InDocIdEx.CheckValue += new DepInputCheckEventHandler<int>(InDocIdEx_CheckValue);
       }
     }
 
-    private DepInputWithCheck<Int32> _InDocIdEx;
+    private DepInput<Int32> _InDocIdEx;
 
     void InDocIdEx_CheckValue(object sender, DepInputCheckEventArgs<Int32> args)
     {
@@ -1799,18 +1798,12 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_OutDocIdEx == null)
       {
-        _OutDocIdEx = new DepInputDelayed<int>();
+        _OutDocIdEx = new DepValueObject<Int32>();
         _OutDocIdEx.OwnerInfo = new DepOwnerInfo(this, "OutDocIdEx");
-        _OutDocIdEx.ValueNeeded += new DepValueNeededEventHandler<int>(DocIdValueNeeded);
-        _OutDocIdEx.SetDelayed();
+        _OutDocIdEx.OwnerSetValue(DocId);
       }
     }
-    private DepInputDelayed<Int32> _OutDocIdEx;
-
-    private void DocIdValueNeeded(object Sender, DepValueNeededEventArgs<Int32> args)
-    {
-      args.Value = DocId;
-    }
+    private DepValueObject<Int32> _OutDocIdEx;
 
     /// <summary>
     /// Свойство возвращает источник, управляющий текущим основным документом 

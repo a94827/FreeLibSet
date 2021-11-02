@@ -145,13 +145,13 @@ namespace FreeLibSet.Forms
         _NValueEx.Source = value;
       }
     }
-    private DepInputWithCheck<DateTime?> _NValueEx;
+    private DepInput<DateTime?> _NValueEx;
 
     private void InitNValueEx()
     {
       if (_NValueEx == null)
       {
-        _NValueEx = new DepInputWithCheck<DateTime?>();
+        _NValueEx = new DepInput<DateTime?>();
         _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
         _NValueEx.OwnerSetValue(NValue);
         _NValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(NValueEx_CheckValue);
@@ -180,7 +180,7 @@ namespace FreeLibSet.Forms
       // - Вызов метода Control_ValueChanged()
       // - Установка поля _InsideValueChanged=true
       // - Вызов метода OnValueChanged() 
-      // - Вызов DepInputWithCheck.OwnerSetValue() для _NValueEx
+      // - Вызов DepInput.OwnerSetValue() для _NValueEx
       // - Вызов NValueEx_ValueChanged()
       // Поле _InsideValueChanged=false, если внешний код устанавливает значение NValueEx.Value.
       // Только в этом случае нужно инициализировать основное свойство EFPDateBox.NValue.
@@ -221,13 +221,13 @@ namespace FreeLibSet.Forms
         _ValueEx.Source = value;
       }
     }
-    private DepInputWithCheck<DateTime> _ValueEx;
+    private DepInput<DateTime> _ValueEx;
 
     private void InitValueEx()
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<DateTime>();
+        _ValueEx = new DepInput<DateTime>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime>(ValueEx_CheckValue);
@@ -347,13 +347,13 @@ namespace FreeLibSet.Forms
         _TimeEx.Source = value;
       }
     }
-    private DepInputWithCheck<TimeSpan> _TimeEx;
+    private DepInput<TimeSpan> _TimeEx;
 
     private void InitTimeEx()
     {
       if (_TimeEx == null)
       {
-        _TimeEx = new DepInputWithCheck<TimeSpan>();
+        _TimeEx = new DepInput<TimeSpan>();
         _TimeEx.OwnerInfo = new DepOwnerInfo(this, "TimeEx");
         _TimeEx.Value = Time;
         _TimeEx.CheckValue += TimeEx_CheckValue;
@@ -1435,7 +1435,7 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInputWithCheck<DateTime>();
+        _ValueEx = new DepInput<DateTime>();
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime>(ValueEx_CheckValue);
@@ -1453,7 +1453,7 @@ namespace FreeLibSet.Forms
       this.Value = _ValueEx.Value;
     }
 
-    private DepInputWithCheck<DateTime> _ValueEx;
+    private DepInput<DateTime> _ValueEx;
 
     /// <summary>
     /// Вызывается, когда изменятся текст в управляющем элементе
