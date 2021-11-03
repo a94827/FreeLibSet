@@ -610,10 +610,8 @@ namespace FreeLibSet.Forms
     {
       if (_EmptyTextEx == null)
       {
-        _EmptyTextEx = new DepInput<string>();
+        _EmptyTextEx = new DepInput<string>(EmptyText,EmptyTextEx_ValueChanged);
         _EmptyTextEx.OwnerInfo = new DepOwnerInfo(this, "EmptyTextEx");
-        _EmptyTextEx.Value = EmptyText;
-        _EmptyTextEx.ValueChanged += new EventHandler(EmptyTextEx_ValueChanged);
       }
     }
 
@@ -669,10 +667,8 @@ namespace FreeLibSet.Forms
     {
       if (_EmptyImageKeyEx == null)
       {
-        _EmptyImageKeyEx = new DepInput<string>();
+        _EmptyImageKeyEx = new DepInput<string>(EmptyImageKey,EmptyImageKeyEx_ValueChanged);
         _EmptyImageKeyEx.OwnerInfo = new DepOwnerInfo(this, "EmptyImageKeyEx");
-        _EmptyImageKeyEx.Value = EmptyImageKey;
-        _EmptyImageKeyEx.ValueChanged += new EventHandler(EmptyImageKeyEx_ValueChanged);
       }
     }
 
@@ -728,10 +724,8 @@ namespace FreeLibSet.Forms
     {
       if (_AllSelectedTextEx == null)
       {
-        _AllSelectedTextEx = new DepInput<string>();
+        _AllSelectedTextEx = new DepInput<string>(EmptyText,AllSelectedTextEx_ValueChanged);
         _AllSelectedTextEx.OwnerInfo = new DepOwnerInfo(this, "AllSelectedTextEx");
-        _AllSelectedTextEx.Value = EmptyText;
-        _AllSelectedTextEx.ValueChanged += new EventHandler(AllSelectedTextEx_ValueChanged);
       }
     }
 
@@ -786,10 +780,8 @@ namespace FreeLibSet.Forms
     {
       if (_AllSelectedImageKeyEx == null)
       {
-        _AllSelectedImageKeyEx = new DepInput<string>();
+        _AllSelectedImageKeyEx = new DepInput<string>(AllSelectedImageKey,AllSelectedImageKeyEx_ValueChanged);
         _AllSelectedImageKeyEx.OwnerInfo = new DepOwnerInfo(this, "AllSelectedImageKeyEx");
-        _AllSelectedImageKeyEx.Value = AllSelectedImageKey;
-        _AllSelectedImageKeyEx.ValueChanged += new EventHandler(AllSelectedImageKeyEx_ValueChanged);
       }
     }
 
@@ -1096,27 +1088,23 @@ namespace FreeLibSet.Forms
         _SelectedCodesEx.Source = value;
       }
     }
+    private DepInput<string[]> _SelectedCodesEx;
 
     private void InitSelectedCodesEx()
     {
       if (_SelectedCodesEx == null)
       {
-        _SelectedCodesEx = new DepInput<string[]>();
+        _SelectedCodesEx = new DepInput<string[]>(SelectedCodes, SelectedCodesEx_ValueChanged);
         _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
-        _SelectedCodesEx.OwnerSetValue(SelectedCodes);
-        _SelectedCodesEx.CheckValue += new DepInputCheckEventHandler<string[]>(SelectedCodesEx_CheckValue);
       }
     }
-
-    private DepInput<string[]> _SelectedCodesEx;
 
     /// <summary>
     /// Вызывается, когда снаружи устанавливается значение SelectedCodeEx.ValueEx
     /// </summary>
-    void SelectedCodesEx_CheckValue(object sender, DepInputCheckEventArgs<string[]> args)
+    void SelectedCodesEx_ValueChanged(object sender, EventArgs args)
     {
-      SelectedCodes = args.NewValue;
-      args.Cancel = true;
+      SelectedCodes = _SelectedCodesEx.Value;
     }
 
 
@@ -1159,19 +1147,16 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodesCSVEx == null)
       {
-        _SelectedCodesCSVEx = new DepInput<string>();
+        _SelectedCodesCSVEx = new DepInput<string>(SelectedCodesCSV, SelectedCodesCSVEx_ValueChanged);
         _SelectedCodesCSVEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesCSVEx");
-        _SelectedCodesCSVEx.OwnerSetValue(SelectedCodesCSV);
-        _SelectedCodesCSVEx.CheckValue += new DepInputCheckEventHandler<string>(FSelectedCodesCSVEx_CheckValue);
       }
     }
 
     private DepInput<string> _SelectedCodesCSVEx;
 
-    void FSelectedCodesCSVEx_CheckValue(object sender, DepInputCheckEventArgs<string> args)
+    void SelectedCodesCSVEx_ValueChanged(object sender, EventArgs args)
     {
-      SelectedCodesCSV = args.NewValue;
-      args.Cancel = true;
+      SelectedCodesCSV = _SelectedCodesCSVEx.Value;
     }
 
     #endregion
@@ -1389,10 +1374,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodesEx == null)
       {
-        _SelectedCodesEx = new DepInput<string[]>();
+        _SelectedCodesEx = new DepInput<string[]>(SelectedCodes,SelectedCodesEx_ValueChanged);
         _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
-        _SelectedCodesEx.Value = SelectedCodes;
-        _SelectedCodesEx.ValueChanged += new EventHandler(SelectedCodesEx_ValueChanged);
       }
     }
 

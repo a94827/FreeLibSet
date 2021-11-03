@@ -709,14 +709,14 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_FilterPassedEx == null)
         {
-          _FilterPassedEx = new DepValueObject<bool>();
+          _FilterPassedEx = new DepOutput<bool>();
           _FilterPassedEx.OwnerSetValue(_FilterPassed);
           _FilterPassedEx.OwnerInfo = new DepOwnerInfo(this, "FilterPassedEx");
         }
         return _FilterPassedEx;
       }
     }
-    private DepValueObject<bool> _FilterPassedEx;
+    private DepOutput<bool> _FilterPassedEx;
 
     #endregion
   }
@@ -1907,12 +1907,12 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_OutDocIdEx == null)
       {
-        _OutDocIdEx = new DepValueObject<Int32>();
+        _OutDocIdEx = new DepOutput<Int32>();
         _OutDocIdEx.OwnerInfo = new DepOwnerInfo(this, "OutDocIdEx");
         _OutDocIdEx.OwnerSetValue(DocId);
       }
     }
-    private DepValueObject<Int32> _OutDocIdEx;
+    private DepOutput<Int32> _OutDocIdEx;
 
 
     /// <summary>

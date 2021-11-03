@@ -89,7 +89,7 @@ namespace FreeLibSet.Forms.Docs
       _UserEnabled = true;
       _UserDisabledMode = DocValueUserDisabledMode.KeepOriginal;
 
-      _EnabledEx = new DepValueObject<Boolean>();
+      _EnabledEx = new DepOutput<Boolean>();
       _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
       _EnabledEx.OwnerSetValue(true);
 
@@ -124,7 +124,7 @@ namespace FreeLibSet.Forms.Docs
     /// Значение EnabledEx, зависящее от DocValue и от UserEnabledEx
     /// </summary>
     public DepValue<Boolean> EnabledEx { get { return _EnabledEx; } }
-    private DepValueObject<Boolean> _EnabledEx;
+    private DepOutput<Boolean> _EnabledEx;
 
     /// <summary>
     /// Блокировка редактирования поля прикладным модулем.

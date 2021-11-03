@@ -151,11 +151,9 @@ namespace FreeLibSet.Forms
     {
       if (_NValueEx == null)
       {
-        _NValueEx = new DepInput<DateTime?>();
+        _NValueEx = new DepInput<DateTime?>(NValue, NValueEx_ValueChanged);
         _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
-        _NValueEx.OwnerSetValue(NValue);
         _NValueEx.CheckValue += new DepInputCheckEventHandler<DateTime?>(NValueEx_CheckValue);
-        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
       }
     }
 
@@ -227,11 +225,9 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<DateTime>();
+        _ValueEx = new DepInput<DateTime>(Value, ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime>(ValueEx_CheckValue);
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
@@ -303,10 +299,8 @@ namespace FreeLibSet.Forms
     {
       if (_NTimeEx == null)
       {
-        _NTimeEx = new DepInput<TimeSpan?>();
+        _NTimeEx = new DepInput<TimeSpan?>(NTime,NTimeEx_ValueChanged);
         _NTimeEx.OwnerInfo = new DepOwnerInfo(this, "NTimeEx");
-        _NTimeEx.Value = NTime;
-        _NTimeEx.ValueChanged += new EventHandler(NTimeEx_ValueChanged);
       }
     }
 
@@ -353,11 +347,9 @@ namespace FreeLibSet.Forms
     {
       if (_TimeEx == null)
       {
-        _TimeEx = new DepInput<TimeSpan>();
+        _TimeEx = new DepInput<TimeSpan>(Time,TimeEx_ValueChanged);
         _TimeEx.OwnerInfo = new DepOwnerInfo(this, "TimeEx");
-        _TimeEx.Value = Time;
         _TimeEx.CheckValue += TimeEx_CheckValue;
-        _TimeEx.ValueChanged += new EventHandler(TimeEx_ValueChanged);
       }
     }
 
@@ -571,10 +563,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledNValueEx == null)
       {
-        _DisabledNValueEx = new DepInput<DateTime?>();
+        _DisabledNValueEx = new DepInput<DateTime?>(DisabledNValue,DisabledNValueEx_ValueChanged);
         _DisabledNValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledNValueEx");
-        _DisabledNValueEx.Value = DisabledNValue;
-        _DisabledNValueEx.ValueChanged += new EventHandler(DisabledNValueEx_ValueChanged);
       }
     }
 
@@ -620,10 +610,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledValueEx == null)
       {
-        _DisabledValueEx = new DepInput<DateTime>();
+        _DisabledValueEx = new DepInput<DateTime>(DisabledValue,DisabledValueEx_ValueChanged);
         _DisabledValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledValueEx");
-        _DisabledValueEx.Value = DisabledValue;
-        _DisabledValueEx.ValueChanged += new EventHandler(DisabledValueEx_ValueChanged);
       }
     }
 
@@ -681,10 +669,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledNTimeEx == null)
       {
-        _DisabledNTimeEx = new DepInput<TimeSpan?>();
+        _DisabledNTimeEx = new DepInput<TimeSpan?>(DisabledNTime,DisabledNTimeEx_ValueChanged);
         _DisabledNTimeEx.OwnerInfo = new DepOwnerInfo(this, "DisabledNTimeEx");
-        _DisabledNTimeEx.Value = DisabledNTime;
-        _DisabledNTimeEx.ValueChanged += new EventHandler(DisabledNTimeEx_ValueChanged);
       }
     }
 
@@ -730,10 +716,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledTimeEx == null)
       {
-        _DisabledTimeEx = new DepInput<TimeSpan>();
+        _DisabledTimeEx = new DepInput<TimeSpan>(DisabledTime,DisabledTimeEx_ValueChanged);
         _DisabledTimeEx.OwnerInfo = new DepOwnerInfo(this, "DisabledTimeEx");
-        _DisabledTimeEx.Value = DisabledTime;
-        _DisabledTimeEx.ValueChanged += new EventHandler(DisabledTimeEx_ValueChanged);
       }
     }
 
@@ -1101,10 +1085,8 @@ namespace FreeLibSet.Forms
     {
       if (_DefaultYearEx == null)
       {
-        _DefaultYearEx = new DepInput<int>();
+        _DefaultYearEx = new DepInput<int>(DefaultYear,DefaultYearEx_ValueChanged);
         _DefaultYearEx.OwnerInfo = new DepOwnerInfo(this, "DefaultYearEx");
-        _DefaultYearEx.Value = DefaultYear;
-        _DefaultYearEx.ValueChanged += new EventHandler(DefaultYearEx_ValueChanged);
         Control.DefaultYearChanged += new EventHandler(Control_DefaultYearChanged);
       }
     }
@@ -1435,11 +1417,9 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<DateTime>();
+        _ValueEx = new DepInput<DateTime>(Value, ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.OwnerSetValue(Value);
         _ValueEx.CheckValue += new DepInputCheckEventHandler<DateTime>(ValueEx_CheckValue);
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 

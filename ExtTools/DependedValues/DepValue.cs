@@ -133,7 +133,7 @@ namespace FreeLibSet.DependedValues
   /// <summary>
   /// Абстрактный базовый класс для типизированного доступа к значению.
   /// Свойства объектов объявляются с этим типом.
-  /// Неабстрактные реализации - классы DepInput (или производных), DepValueObject и DepConst.
+  /// Неабстрактные реализации - классы DepInput, DepOutput, DepExprX и DepConst.
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
@@ -243,10 +243,15 @@ namespace FreeLibSet.DependedValues
     public event EventHandler ValueChanged;
 
     /// <summary>
+    /// Возвращает true, если есть присоединенный обработчик события ValueChanged
+    /// </summary>
+    public bool HasValueChanged { get { return ValueChanged != null; } }
+
+    /// <summary>
     /// Вызов события ValueChanged.
     /// Затем извещаются объекты DepInput, подключенные к текущему объекту
     /// </summary>
-    public void OnValueChanged()
+    protected virtual void OnValueChanged()
     {
       if (ValueChanged != null)
         ValueChanged(this, EventArgs.Empty);
@@ -273,7 +278,7 @@ namespace FreeLibSet.DependedValues
     /// Возвращает true, если текущий объект соединен с другими,
     /// то есть имеет имеет источник (HasSource=true) или есть объекты, подключенные к текущему (HasOutputs=true)
     /// </summary>
-    public bool IsConnected { get { return HasOutputs || HasSource; } }
+    public bool IsConnected { get { return HasOutputs || HasSource || HasValueChanged; } }
 
     /// <summary>
     /// Является ли текущее значение константой.
@@ -438,7 +443,7 @@ namespace FreeLibSet.DependedValues
 
   #endregion
 
-  #region DepValueObject
+  #region DepOutput
 
   /// <summary>
   /// Неабстрактная реализация DepValue.
@@ -446,8 +451,21 @@ namespace FreeLibSet.DependedValues
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
-  public class DepValueObject<T> : DepValue<T>
+  public class DepOutput<T> : DepValue<T>
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект
+    /// </summary>
+    /// <param name="value">Начальное значение</param>
+    public DepOutput(T value)
+    {
+      BaseSetValue(value, false);
+    }
+
+    #endregion
+
     #region Установка значения
 
     /// <summary>
@@ -661,6 +679,28 @@ namespace FreeLibSet.DependedValues
   [Serializable]
   public class DepInput<T> : DepValue<T>
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект
+    /// </summary>
+    /// <param name="value">Начальное значение</param>
+    /// <param name="valueChangedMainHandler">Обработчик, который будет вызываться при изменении значения.
+    /// Этот обработчик не входит в цепочку обработчиков события ValueChanged и не учитывается в HasValueChanged</param>
+    public DepInput(T value, EventHandler valueChangedMainHandler)
+    {
+      // Может быть null для IsNotEmptyEx
+//#if DEBUG
+//      if (valueChangedMainHandler == null)
+//        throw new ArgumentNullException("valueChangedMainHandler");
+//#endif
+
+      BaseSetValue(value, false);
+      _ValueChangedMainHandler = valueChangedMainHandler; // после установки значения
+    }
+
+    #endregion
+
     #region Установка значения
 
     /// <summary>
@@ -672,6 +712,7 @@ namespace FreeLibSet.DependedValues
       set { SetValue(value); }
     }
 
+    /// <summary>
     /// Установка текущего значения.
     /// Вызывает обработчик события CheckValue, если он установлен.
     /// Обработчик события может изменить устанавливаемое значение или совсем отменить установку.
@@ -699,6 +740,18 @@ namespace FreeLibSet.DependedValues
       }
 
       base.BaseSetValue(value, forced);
+    }
+
+    private EventHandler _ValueChangedMainHandler;
+
+    /// <summary>
+    /// Вызывается при изменении текущего значения
+    /// </summary>
+    protected override void OnValueChanged()
+    {
+      if (_ValueChangedMainHandler!=null)
+      _ValueChangedMainHandler(this, EventArgs.Empty);
+      base.OnValueChanged();
     }
 
     internal void SetValueChanged()

@@ -97,10 +97,8 @@ namespace FreeLibSet.Forms
     {
       if (_TextEx == null)
       {
-        _TextEx = new DepInput<string>();
+        _TextEx = new DepInput<string>(Text,TextEx_ValueChanged);
         _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
-        _TextEx.Value = Text;
-        _TextEx.ValueChanged += new EventHandler(TextEx_ValueChanged);
       }
     }
 

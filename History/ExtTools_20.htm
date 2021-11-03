@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-11-02T15:21:12.095000000"/>
+	<meta name="changed" content="2021-11-02T21:38:22.121000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -464,15 +465,26 @@
 			<p><span lang="en-US">5. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepInputWithCheck&lt;T&gt; </span><span lang="ru-RU">упразднен.
 			Событие </span><span lang="en-US">CheckValue </span><span lang="ru-RU">перенесено
-			в </span><span lang="en-US">DepInput&lt;T&gt;</span></p>
-			<p><span lang="en-US">6. </span><span lang="ru-RU">Методы
-			</span><span lang="en-US">DepTools.InRange/Ex&lt;T&gt;()</span></p>
-			<p><font color="#000000"><span lang="en-US">7</span></font><span lang="en-US">.
+			в </span><span lang="en-US">DepInput&lt;T&gt;</span><span lang="en-US">.
+			</span><span lang="ru-RU">Конструктор </span><span lang="en-US">DepInput
+			</span><span lang="ru-RU">требует аргументов </span><span lang="en-US">value
+			</span><span lang="ru-RU">и </span><span lang="en-US">valueChanged</span></p>
+			<p><span lang="en-US">6. </span><span lang="ru-RU">Класс
+			</span><span lang="en-US">DepValueObject&lt;T&gt; </span><span lang="ru-RU">переименован
+			в </span><span lang="en-US">DepOutput&lt;T&gt;. </span><span lang="ru-RU">Конструктор
+			требует аргумент </span><span lang="en-US">value. </span>
+			</p>
+			<p><span lang="ru-RU">7.Классы </span><span lang="en-US">DepExprX&lt;...&gt;
+			</span><span lang="ru-RU">наследуют </span><span lang="en-US">DepValue&lt;T&gt;,
+			</span><span lang="ru-RU">а не </span><span lang="en-US">DepOutput&lt;T&gt;</span></p>
+			<p><font color="#000000"><span lang="en-US">8</span></font><span lang="en-US">.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">DepTools.InRange/Ex&lt;T&gt;()</span></p>
+			<p><font color="#000000"><span lang="en-US">9</span></font><span lang="en-US">.
 			</span><span lang="ru-RU">Свойства
 			</span><span lang="en-US">EditableDateTimeFormatter.ContainsDate </span><span lang="ru-RU">и
 			ContainsTime, методы </span><span lang="en-US">ToNValue</span>
 			<span lang="en-US">(<a href="ExtTools_11.htm#v233p1">v.233 </a></span><a href="ExtTools_11.htm#v233p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
-			<p><font color="#000000"><span lang="en-US">8</span></font>.
+			<p><font color="#000000"><span lang="en-US">10</span></font>.
 			Пространство имен <span lang="en-US">FreeLibSet.UICore:</span></p>
 			<p><span lang="en-US">- </span>Перечисление <span lang="en-US">UI</span>Valida<span lang="en-US">teState</span></p>
 			<p><span lang="en-US">- </span>Классы <span lang="en-US">UIValidator
@@ -483,7 +495,7 @@
 			</span><span lang="ru-RU">и </span><span lang="en-US">LinesToText(),
 			ShiftDateRange() </span><span lang="ru-RU">и </span><span lang="en-US">ShiftDateRangeYear().
 			</span><span lang="ru-RU">Методы GetIncrementedValue() (</span><font color="#ce181e"><span lang="ru-RU">заглушки</span></font><span lang="ru-RU">)</span></p>
-			<p><font color="#000000"><span lang="en-US">9</span></font><span lang="en-US">.
+			<p><font color="#000000"><span lang="en-US">11</span></font><span lang="en-US">.
 			</span><span lang="ru-RU">Удаленный интерфейс:</span></p>
 			<p lang="en-US">- <span lang="ru-RU">Свойства </span>HasXxxExProperty
 			<span lang="ru-RU">заменены на </span>XxxPropertyConnected</p>
@@ -534,9 +546,10 @@
 			<p lang="en-US">- <span lang="ru-RU">Свойство </span>InfoLabel.Lines.
 			<span lang="ru-RU">Свойство </span>Text <span lang="ru-RU">является
 			вспомогательным</span></p>
-			<p lang="en-US"><font color="#000000">10</font>. <span lang="ru-RU">Методы
-			</span>DataTools.DecimalPlacesToNumberFormat() <span lang="ru-RU">и
-			DecimalPlacesToNumberFormat() перенесены в </span>FormatStringTools</p>
+			<p lang="en-US"><font color="#000000">1</font><font color="#000000">2</font>.
+			<span lang="ru-RU">Методы </span>DataTools.DecimalPlacesToNumberFormat()
+			<span lang="ru-RU">и DecimalPlacesToNumberFormat() перенесены в
+			</span>FormatStringTools</p>
 		</td>
 	</tr>
 </table>

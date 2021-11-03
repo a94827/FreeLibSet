@@ -571,10 +571,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInput<int>();
+        _SelectedIndexEx = new DepInput<int>(SelectedIndex,SelectedIndexEx_ValueChanged);
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
-        _SelectedIndexEx.Value = SelectedIndex;
-        _SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndexEx_ValueChanged);
       }
     }
 

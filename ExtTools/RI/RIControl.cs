@@ -129,10 +129,8 @@ namespace FreeLibSet.RI
     {
       if (_EnabledEx == null)
       {
-        _EnabledEx = new DepInput<bool>();
+        _EnabledEx = new DepInput<bool>(true, EnabledEx_ValueChanged);
         _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
-        _EnabledEx.Value = true;
-        _EnabledEx.ValueChanged += new EventHandler(EnabledEx_ValueChanged);
       }
     }
 
@@ -315,10 +313,8 @@ namespace FreeLibSet.RI
     {
       if (_TextEx == null)
       {
-        _TextEx = new DepInput<string>();
+        _TextEx = new DepInput<string>(Text, TextEx_ValueChanged);
         _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
-        _TextEx.Value = Text;
-        _TextEx.ValueChanged += new EventHandler(TextEx_ValueChanged);
       }
     }
 
@@ -408,9 +404,8 @@ namespace FreeLibSet.RI
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<bool>();
+        _ReadOnlyEx = new DepInput<bool>(false, null);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
-        _ReadOnlyEx.Value = false;
       }
     }
 
@@ -603,7 +598,7 @@ namespace FreeLibSet.RI
   [Serializable]
   public class BaseNumEditBox<T> : Control
       where T : struct, IFormattable, IComparable<T>
-{
+  {
     #region Конструктор
 
     /// <summary>
@@ -682,10 +677,8 @@ namespace FreeLibSet.RI
     {
       if (_NValueEx == null)
       {
-        _NValueEx = new DepInput<T?>();
+        _NValueEx = new DepInput<T?>(NValue, NValueEx_ValueChanged);
         _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
-        _NValueEx.Value = NValue;
-        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
       }
     }
 
@@ -746,11 +739,9 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<T>();
+        _ValueEx = new DepInput<T>(Value, ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.Value = Value;
         _ValueEx.CheckValue += ValueEx_CheckValue;
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
@@ -904,7 +895,7 @@ namespace FreeLibSet.RI
     }
 
     #endregion
-}
+  }
 
   /// <summary>
   /// Поле ввода целого числа
@@ -1359,10 +1350,8 @@ namespace FreeLibSet.RI
     {
       if (_CheckStateEx == null)
       {
-        _CheckStateEx = new DepInput<CheckState>();
+        _CheckStateEx = new DepInput<CheckState>(CheckState, CheckStateEx_ValueChanged);
         _CheckStateEx.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx");
-        _CheckStateEx.Value = CheckState;
-        _CheckStateEx.ValueChanged += new EventHandler(CheckStateEx_ValueChanged);
       }
     }
 
@@ -1431,10 +1420,8 @@ namespace FreeLibSet.RI
     {
       if (_CheckedEx == null)
       {
-        _CheckedEx = new DepInput<bool>();
+        _CheckedEx = new DepInput<bool>(Checked, CheckedEx_ValueChanged);
         _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
-        _CheckedEx.Value = Checked;
-        _CheckedEx.ValueChanged += new EventHandler(CheckedEx_ValueChanged);
       }
     }
 
@@ -1624,10 +1611,8 @@ namespace FreeLibSet.RI
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInput<int>();
+        _SelectedIndexEx = new DepInput<int>(SelectedIndex, SelectedIndexEx_ValueChanged);
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
-        _SelectedIndexEx.Value = SelectedIndex;
-        _SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndexEx_ValueChanged);
       }
     }
 
@@ -1730,14 +1715,12 @@ namespace FreeLibSet.RI
     {
       if (_SelectedCodeEx == null)
       {
-        _SelectedCodeEx = new DepInput<string>();
+        _SelectedCodeEx = new DepInput<string>(SelectedCode, SelectedCodeEx_ValueChanged);
         _SelectedCodeEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodeEx");
-        _SelectedCodeEx.Value = SelectedCode;
-        _SelectedCodeEx.ValueChanged += new EventHandler(FSelectedCodeEx_ValueChanged);
       }
     }
 
-    private void FSelectedCodeEx_ValueChanged(object sender, EventArgs args)
+    private void SelectedCodeEx_ValueChanged(object sender, EventArgs args)
     {
       SelectedCode = _SelectedCodeEx.Value;
     }
@@ -1863,7 +1846,7 @@ namespace FreeLibSet.RI
     /// Формат вводимого значения.
     /// По умолчанию - Date
     /// </summary>
-    public EditableDateTimeFormatterKind Kind 
+    public EditableDateTimeFormatterKind Kind
     {
       get { return _Kind; }
       set
@@ -1937,10 +1920,8 @@ namespace FreeLibSet.RI
     {
       if (_NValueEx == null)
       {
-        _NValueEx = new DepInput<DateTime?>();
+        _NValueEx = new DepInput<DateTime?>(NValue, NValueEx_ValueChanged);
         _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
-        _NValueEx.Value = NValue;
-        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
       }
     }
 
@@ -2001,11 +1982,9 @@ namespace FreeLibSet.RI
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<DateTime>();
+        _ValueEx = new DepInput<DateTime>(Value, ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.Value = Value;
         _ValueEx.CheckValue += ValueEx_CheckValue;
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
@@ -2263,10 +2242,8 @@ namespace FreeLibSet.RI
     {
       if (_NFirstDateEx == null)
       {
-        _NFirstDateEx = new DepInput<DateTime?>();
+        _NFirstDateEx = new DepInput<DateTime?>(NFirstDate, NFirstDateEx_ValueChanged);
         _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
-        _NFirstDateEx.Value = NFirstDate;
-        _NFirstDateEx.ValueChanged += new EventHandler(NFirstDateEx_ValueChanged);
       }
     }
 
@@ -2325,10 +2302,8 @@ namespace FreeLibSet.RI
     {
       if (_FirstDateEx == null)
       {
-        _FirstDateEx = new DepInput<DateTime>();
+        _FirstDateEx = new DepInput<DateTime>(FirstDate, FirstDateEx_ValueChanged);
         _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
-        _FirstDateEx.Value = FirstDate;
-        _FirstDateEx.ValueChanged += new EventHandler(FirstDateEx_ValueChanged);
       }
     }
 
@@ -2397,10 +2372,8 @@ namespace FreeLibSet.RI
     {
       if (_NLastDateEx == null)
       {
-        _NLastDateEx = new DepInput<DateTime?>();
+        _NLastDateEx = new DepInput<DateTime?>(NLastDate, NLastDateEx_ValueChanged);
         _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
-        _NLastDateEx.Value = NLastDate;
-        _NLastDateEx.ValueChanged += new EventHandler(NLastDateEx_ValueChanged);
       }
     }
 
@@ -2459,10 +2432,8 @@ namespace FreeLibSet.RI
     {
       if (_LastDateEx == null)
       {
-        _LastDateEx = new DepInput<DateTime>();
+        _LastDateEx = new DepInput<DateTime>(LastDate, LastDateEx_ValueChanged);
         _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
-        _LastDateEx.Value = LastDate;
-        _LastDateEx.ValueChanged += new EventHandler(LastDateEx_ValueChanged);
       }
     }
 
@@ -2876,10 +2847,8 @@ namespace FreeLibSet.RI
     {
       if (_FirstDateEx == null)
       {
-        _FirstDateEx = new DepInput<DateTime>();
+        _FirstDateEx = new DepInput<DateTime>(FirstDate, FirstDateEx_ValueChanged);
         _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
-        _FirstDateEx.Value = FirstDate;
-        _FirstDateEx.ValueChanged += new EventHandler(FirstDateEx_ValueChanged);
       }
     }
 
@@ -2952,10 +2921,8 @@ namespace FreeLibSet.RI
     {
       if (_LastDateEx == null)
       {
-        _LastDateEx = new DepInput<DateTime>();
+        _LastDateEx = new DepInput<DateTime>(LastDate, LastDateEx_ValueChanged);
         _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
-        _LastDateEx.Value = LastDate;
-        _LastDateEx.ValueChanged += new EventHandler(LastDateEx_ValueChanged);
       }
     }
 
@@ -3232,10 +3199,8 @@ namespace FreeLibSet.RI
     {
       if (_YearEx == null)
       {
-        _YearEx = new DepInput<int>();
+        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
         _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
-        _YearEx.Value = Year;
-        _YearEx.ValueChanged += new EventHandler(YearEx_ValueChanged);
       }
     }
 
@@ -3304,10 +3269,8 @@ namespace FreeLibSet.RI
     {
       if (_MonthEx == null)
       {
-        _MonthEx = new DepInput<int>();
+        _MonthEx = new DepInput<int>(Month, MonthEx_ValueChanged);
         _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
-        _MonthEx.Value = Month;
-        _MonthEx.ValueChanged += new EventHandler(MonthEx_ValueChanged);
       }
     }
 
@@ -3374,10 +3337,8 @@ namespace FreeLibSet.RI
     {
       if (_YMEx == null)
       {
-        _YMEx = new DepInput<YearMonth>();
+        _YMEx = new DepInput<YearMonth>(YM, YMEx_ValueChanged);
         _YMEx.OwnerInfo = new DepOwnerInfo(this, "YMEx");
-        _YMEx.Value = YM;
-        _YMEx.ValueChanged += new EventHandler(YMEx_ValueChanged);
       }
     }
 
@@ -3627,10 +3588,8 @@ namespace FreeLibSet.RI
     {
       if (_YearEx == null)
       {
-        _YearEx = new DepInput<int>();
+        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
         _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
-        _YearEx.Value = Year;
-        _YearEx.ValueChanged += new EventHandler(YearEx_ValueChanged);
       }
     }
 
@@ -3699,10 +3658,8 @@ namespace FreeLibSet.RI
     {
       if (_FirstMonthEx == null)
       {
-        _FirstMonthEx = new DepInput<int>();
+        _FirstMonthEx = new DepInput<int>(FirstMonth, FirstMonthEx_ValueChanged);
         _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
-        _FirstMonthEx.Value = FirstMonth;
-        _FirstMonthEx.ValueChanged += new EventHandler(FirstMonthEx_ValueChanged);
       }
     }
 
@@ -3771,10 +3728,8 @@ namespace FreeLibSet.RI
     {
       if (_LastMonthEx == null)
       {
-        _LastMonthEx = new DepInput<int>();
+        _LastMonthEx = new DepInput<int>(LastMonth, LastMonthEx_ValueChanged);
         _LastMonthEx.OwnerInfo = new DepOwnerInfo(this, "LastMonthEx");
-        _LastMonthEx.Value = LastMonth;
-        _LastMonthEx.ValueChanged += new EventHandler(LastMonthEx_ValueChanged);
       }
     }
 
@@ -3841,10 +3796,8 @@ namespace FreeLibSet.RI
     {
       if (_FirstYMEx == null)
       {
-        _FirstYMEx = new DepInput<YearMonth>();
+        _FirstYMEx = new DepInput<YearMonth>(FirstYM, FirstYMEx_ValueChanged);
         _FirstYMEx.OwnerInfo = new DepOwnerInfo(this, "FirstYMEx");
-        _FirstYMEx.Value = FirstYM;
-        _FirstYMEx.ValueChanged += new EventHandler(FirstYMEx_ValueChanged);
       }
     }
 
@@ -3910,10 +3863,8 @@ namespace FreeLibSet.RI
     {
       if (_LastYMEx == null)
       {
-        _LastYMEx = new DepInput<YearMonth>();
+        _LastYMEx = new DepInput<YearMonth>(LastYM, LastYMEx_ValueChanged);
         _LastYMEx.OwnerInfo = new DepOwnerInfo(this, "LastYMEx");
-        _LastYMEx.Value = LastYM;
-        _LastYMEx.ValueChanged += new EventHandler(LastYMEx_ValueChanged);
       }
     }
 
@@ -4207,10 +4158,8 @@ namespace FreeLibSet.RI
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInput<int>();
+        _SelectedIndexEx = new DepInput<int>(SelectedIndex, SelectedIndexEx_ValueChanged);
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
-        _SelectedIndexEx.Value = SelectedIndex;
-        _SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndexEx_ValueChanged);
       }
     }
 
@@ -4308,10 +4257,8 @@ namespace FreeLibSet.RI
     {
       if (_SelectedCodeEx == null)
       {
-        _SelectedCodeEx = new DepInput<string>();
+        _SelectedCodeEx = new DepInput<string>(SelectedCode, SelectedCodeEx_ValueChanged);
         _SelectedCodeEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodeEx");
-        _SelectedCodeEx.Value = SelectedCode;
-        _SelectedCodeEx.ValueChanged += new EventHandler(SelectedCodeEx_ValueChanged);
       }
     }
 
@@ -4511,10 +4458,8 @@ namespace FreeLibSet.RI
     {
       if (_TextEx == null)
       {
-        _TextEx = new DepInput<string>();
+        _TextEx = new DepInput<string>(Text, TextEx_ValueChanged);
         _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
-        _TextEx.Value = Text;
-        _TextEx.ValueChanged += new EventHandler(TextEx_ValueChanged);
       }
     }
 
@@ -4869,10 +4814,8 @@ namespace FreeLibSet.RI
     {
       if (_SelectedCodesEx == null)
       {
-        _SelectedCodesEx = new DepInput<string[]>();
+        _SelectedCodesEx = new DepInput<string[]>(SelectedCodes, SelectedCodesEx_ValueChanged);
         _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
-        _SelectedCodesEx.Value = SelectedCodes;
-        _SelectedCodesEx.ValueChanged += new EventHandler(SelectedCodesEx_ValueChanged);
       }
     }
 
@@ -5010,7 +4953,7 @@ namespace FreeLibSet.RI
     /// </summary>
     /// <param name="text">Текст сообщения. Не может быть пустой строкой</param>
     public InfoLabel(string text)
-      :this(UITools.TextToLines(text))
+      : this(UITools.TextToLines(text))
     {
     }
 
@@ -5022,7 +4965,7 @@ namespace FreeLibSet.RI
     {
       if (lines == null)
         throw new ArgumentNullException("lines");
-      if(lines.Length<1)
+      if (lines.Length < 1)
         throw new ArgumentException("Текст должен быть задан", "lines");
       _Lines = lines;
     }

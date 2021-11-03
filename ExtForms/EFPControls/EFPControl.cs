@@ -1168,14 +1168,13 @@ namespace FreeLibSet.Forms
       {
         if (_EditableEx == null)
         {
-          _EditableEx = new DepValueObject<bool>();
+          _EditableEx = new DepOutput<bool>(Editable);
           _EditableEx.OwnerInfo = new DepOwnerInfo(this, "EditableEx");
-          _EditableEx.OwnerSetValue(Editable);
         }
         return _EditableEx;
       }
     }
-    private DepValueObject<bool> _EditableEx;
+    private DepOutput<bool> _EditableEx;
 
     #endregion
 

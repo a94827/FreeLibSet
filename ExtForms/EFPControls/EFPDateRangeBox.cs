@@ -53,13 +53,11 @@ namespace FreeLibSet.Forms
 
     private void DoInit()
     {
-      _FirstDateInput = new DepInput<DateTime?>();
+      _FirstDateInput = new DepInput<DateTime?>(null, FirstDateInput_ValueChanged);
       _FirstDateInput.OwnerInfo = new DepOwnerInfo(this, "FirstDateInput");
-      _FirstDateInput.ValueChanged += new EventHandler(FirstDateInput_ValueChanged);
 
-      _LastDateInput = new DepInput<DateTime?>();
+      _LastDateInput = new DepInput<DateTime?>(null, LastDateInput_ValueChanged);
       _LastDateInput.OwnerInfo = new DepOwnerInfo(this, "LastDateInput");
-      _LastDateInput.ValueChanged += new EventHandler(LastDateInput_ValueChanged);
 
       _EHValidatingFirstDate = new EFPValidatingEventHandler(DoValidate);
       _EHValidatingLastDate = new EFPValidatingEventHandler(DoValidate);
@@ -1137,10 +1135,8 @@ namespace FreeLibSet.Forms
     {
       if (_FirstDateEx == null)
       {
-        _FirstDateEx = new DepInput<DateTime>();
+        _FirstDateEx = new DepInput<DateTime>(FirstDate,FirstDateEx_ValueChanged);
         _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
-        _FirstDateEx.Value = FirstDate;
-        _FirstDateEx.ValueChanged += new EventHandler(FirstDateEx_ValueChanged);
       }
     }
 
@@ -1200,10 +1196,8 @@ namespace FreeLibSet.Forms
     {
       if (_LastDateEx == null)
       {
-        _LastDateEx = new DepInput<DateTime>();
+        _LastDateEx = new DepInput<DateTime>(LastDate,LastDateEx_ValueChanged);
         _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
-        _LastDateEx.Value = LastDate;
-        _LastDateEx.ValueChanged += new EventHandler(LastDateEx_ValueChanged);
       }
     }
 
@@ -1244,6 +1238,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected virtual void OnValueChanged()
     {
+#if XXX
       if (_FirstValueEx != null)
       {
         if (DateRange.IsEmpty)
@@ -1258,7 +1253,7 @@ namespace FreeLibSet.Forms
         else
           _LastValueEx.OwnerSetValue(DateRange.LastDate);
       }
-
+#endif
       EFPDateOrRangeBoxCommandItems CommandItems2 = CommandItemsIfAssigned as EFPDateOrRangeBoxCommandItems;
       if (CommandItems2 != null)
         CommandItems2.InitCommandItemsState(); // 03.06.2019
@@ -1272,7 +1267,7 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region —войства FirstValueEx и LastValueEx
-
+#if XXX
     /// <summary>
     /// ”правл€емое значение дл€ начальной даты диапазона Value.FirstDate.
     /// ”правл€емое свойство возвращает значение null, если интервал не задан.
@@ -1284,7 +1279,7 @@ namespace FreeLibSet.Forms
       {
         if (_FirstValueEx == null)
         {
-          _FirstValueEx = new DepValueObject<DateTime?>();
+          _FirstValueEx = new DepOutput<DateTime?>();
           _FirstValueEx.OwnerInfo = new DepOwnerInfo(this, "FirstValueEx");
           if (DateRange.IsEmpty)
             _FirstValueEx.OwnerSetValue(null);
@@ -1294,7 +1289,7 @@ namespace FreeLibSet.Forms
         return _FirstValueEx;
       }
     }
-    private DepValueObject<DateTime?> _FirstValueEx;
+    private DepOutput<DateTime?> _FirstValueEx;
 
     /// <summary>
     /// ”правл€емое значение дл€ конечной даты диапазона Value.LastDate.
@@ -1307,7 +1302,7 @@ namespace FreeLibSet.Forms
       {
         if (_LastValueEx == null)
         {
-          _LastValueEx = new DepValueObject<DateTime?>();
+          _LastValueEx = new DepOutput<DateTime?>();
           _LastValueEx.OwnerInfo = new DepOwnerInfo(this, "LastValueEx");
           if (DateRange.IsEmpty)
             _LastValueEx.OwnerSetValue(null);
@@ -1317,8 +1312,8 @@ namespace FreeLibSet.Forms
         return _LastValueEx;
       }
     }
-    private DepValueObject<DateTime?> _LastValueEx;
-
+    private DepOutput<DateTime?> _LastValueEx;
+#endif
     #endregion
 
     #region —войство CanBeEmpty

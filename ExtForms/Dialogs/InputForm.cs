@@ -330,14 +330,13 @@ namespace FreeLibSet.Forms
       {
         if (_TextEx == null)
         {
-          _TextEx = new DepValueObject<string>();
+          _TextEx = new DepOutput<string>(Text);
           _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
-          _TextEx.OwnerSetValue(Text);
         }
         return _TextEx;
       }
     }
-    private DepValueObject<string> _TextEx;
+    private DepOutput<string> _TextEx;
 
     public DepValue<bool> IsNotEmptyEx
     {
@@ -345,14 +344,13 @@ namespace FreeLibSet.Forms
       {
         if (_IsNotEmptyEx == null)
         {
-          _IsNotEmptyEx = new DepValueObject<bool>();
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
           _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
-          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(Text));
         }
         return _IsNotEmptyEx;
       }
     }
-    private DepValueObject<bool> _IsNotEmptyEx;
+    private DepOutput<bool> _IsNotEmptyEx;
 
 
 

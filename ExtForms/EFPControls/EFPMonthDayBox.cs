@@ -228,17 +228,14 @@ namespace FreeLibSet.Forms
     {
       if (_DayEx == null)
       {
-        _DayEx = new DepInput<int>();
+        _DayEx = new DepInput<int>(Day,DayEx_ValueChanged);
         _DayEx.OwnerInfo = new DepOwnerInfo(this, "DayEx");
-        _DayEx.OwnerSetValue(Day);
-        _DayEx.CheckValue += new DepInputCheckEventHandler<int>(DayEx_CheckValue);
       }
     }
 
-    void DayEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void DayEx_ValueChanged(object sender, EventArgs args)
     {
-      Day = args.NewValue;
-      args.Cancel = true;
+      Day = _DayEx.Value;
     }
 
     #endregion

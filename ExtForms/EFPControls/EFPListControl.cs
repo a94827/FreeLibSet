@@ -295,10 +295,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInput<int>();
+        _SelectedIndexEx = new DepInput<int>(SelectedIndex,SelectedIndexEx_ValueChanged);
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
-        _SelectedIndexEx.Value = SelectedIndex;
-        _SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndexEx_ValueChanged);
       }
     }
 
@@ -569,10 +567,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodeEx == null)
       {
-        _SelectedCodeEx = new DepInput<string>();
+        _SelectedCodeEx = new DepInput<string>(SelectedCode,SelectedCodeEx_ValueChanged);
         _SelectedCodeEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodeEx");
-        _SelectedCodeEx.Value = SelectedCode;
-        _SelectedCodeEx.ValueChanged += new EventHandler(SelectedCodeEx_ValueChanged);
       }
     }
 
@@ -830,10 +826,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedItemStringEx == null)
       {
-        _SelectedItemStringEx = new DepInput<string>();
+        _SelectedItemStringEx = new DepInput<string>(SelectedItemString,SelectedItemStringEx_ValueChanged);
         _SelectedItemStringEx.OwnerInfo = new DepOwnerInfo(this, "SelectedItemStringEx");
-        _SelectedItemStringEx.Value = SelectedItemString;
-        _SelectedItemStringEx.ValueChanged += SelectedItemStringEx_ValueChanged;
       }
     }
 
@@ -992,10 +986,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedItemStringEx == null)
       {
-        _SelectedItemStringEx = new DepInput<string>();
+        _SelectedItemStringEx = new DepInput<string>(SelectedItemString,SelectedItemStringEx_ValueChanged);
         _SelectedItemStringEx.OwnerInfo = new DepOwnerInfo(this, "SelectedItemStringEx");
-        _SelectedItemStringEx.Value = SelectedItemString;
-        _SelectedItemStringEx.ValueChanged += SelectedItemStringEx_ValueChanged;
       }
     }
 

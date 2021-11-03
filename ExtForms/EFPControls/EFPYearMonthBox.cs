@@ -130,17 +130,14 @@ namespace FreeLibSet.Forms
     {
       if (_YearEx == null)
       {
-        _YearEx = new DepInput<int>();
+        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
         _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
-        _YearEx.OwnerSetValue(Year);
-        _YearEx.CheckValue += new DepInputCheckEventHandler<int>(YearEx_CheckValue);
       }
     }
 
-    void YearEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void YearEx_ValueChanged(object sender, EventArgs args)
     {
-      Year = args.NewValue;
-      args.Cancel = true;
+      Year = _YearEx.Value;
     }
 
     /// <summary>
@@ -174,17 +171,14 @@ namespace FreeLibSet.Forms
     {
       if (_MonthEx == null)
       {
-        _MonthEx = new DepInput<int>();
+        _MonthEx = new DepInput<int>(Month, MonthEx_ValueChanged);
         _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
-        _MonthEx.OwnerSetValue(Month);
-        _MonthEx.CheckValue += new DepInputCheckEventHandler<int>(MonthEx_CheckValue);
       }
     }
 
-    void MonthEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void MonthEx_ValueChanged(object sender, EventArgs args)
     {
-      Month = args.NewValue;
-      args.Cancel = true;
+      Month = _MonthEx.Value;
     }
 
 
@@ -501,28 +495,22 @@ namespace FreeLibSet.Forms
     {
       if (_FirstMonthEx == null)
       {
-        _FirstMonthEx = new DepInput<int>();
+        _FirstMonthEx = new DepInput<int>(FirstMonth, FirstMonthEx_ValueChanged);
         _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
-        _FirstMonthEx.OwnerSetValue(FirstMonth);
-        _FirstMonthEx.CheckValue += new DepInputCheckEventHandler<int>(FirstMonthEx_CheckValue);
 
-        _LastMonthEx = new DepInput<int>();
+        _LastMonthEx = new DepInput<int>(LastMonth, LastMonthEx_ValueChanged);
         _LastMonthEx.OwnerInfo = new DepOwnerInfo(this, "LastMonthEx");
-        _LastMonthEx.OwnerSetValue(LastMonth);
-        _LastMonthEx.CheckValue += new DepInputCheckEventHandler<int>(FLastMonthEx_CheckValue);
       }
     }
 
-    void FirstMonthEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void FirstMonthEx_ValueChanged(object sender, EventArgs args)
     {
-      FirstMonth = args.NewValue;
-      args.Cancel = true;
+      FirstMonth = _FirstMonthEx.Value;
     }
 
-    void FLastMonthEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void LastMonthEx_ValueChanged(object sender, EventArgs args)
     {
-      LastMonth = args.NewValue;
-      args.Cancel = true;
+      LastMonth = _LastMonthEx.Value;
     }
 
     void Control_ValueChanged(object sender, EventArgs args)

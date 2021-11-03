@@ -507,10 +507,8 @@ namespace FreeLibSet.Forms
     {
       if (_TextEx == null)
       {
-        _TextEx = new DepInput<string>();
+        _TextEx = new DepInput<string>(Text,TextEx_ValueChanged);
         _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
-        _TextEx.Value = Text;
-        _TextEx.ValueChanged += new EventHandler(TextEx_ValueChanged);
       }
     }
 
@@ -643,10 +641,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledTextEx == null)
       {
-        _DisabledTextEx = new DepInput<string>();
+        _DisabledTextEx = new DepInput<string>(DisabledText,DisabledTextEx_ValueChanged);
         _DisabledTextEx.OwnerInfo = new DepOwnerInfo(this, "DisabledTextEx");
-        _DisabledTextEx.Value = DisabledText;
-        _DisabledTextEx.ValueChanged += new EventHandler(DisabledTextEx_ValueChanged);
       }
     }
     private DepInput<string> _DisabledTextEx;

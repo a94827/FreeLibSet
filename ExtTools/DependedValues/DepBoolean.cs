@@ -50,7 +50,7 @@ namespace FreeLibSet.DependedValues
     public DepAnd(DepValue<Boolean> a, DepValue<Boolean> b)
       : base(new DepValue<bool>[2] { a, b }, null)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ namespace FreeLibSet.DependedValues
     public DepAnd(params DepValue<Boolean>[] args)
       : base(args, null)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     #endregion
@@ -150,7 +150,7 @@ namespace FreeLibSet.DependedValues
     public DepOr(DepValue<Boolean> a, DepValue<Boolean> b)
       : base(new DepValue<bool>[2] { a, b }, null)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ namespace FreeLibSet.DependedValues
     public DepOr(params DepValue<Boolean>[] args)
       : base(args, null)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     #endregion
@@ -249,7 +249,7 @@ namespace FreeLibSet.DependedValues
     public DepNot(DepValue<Boolean> arg)
       : base(arg, null)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     #endregion
@@ -334,7 +334,7 @@ namespace FreeLibSet.DependedValues
     public DepEqual(DepValue<T> arg1, DepValue<T> arg2)
       : base(arg1, arg2, null)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -451,7 +451,7 @@ namespace FreeLibSet.DependedValues
       else
         _Comparer = comparer;
 
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -566,7 +566,7 @@ namespace FreeLibSet.DependedValues
       else
         _Comparer = comparer;
 
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -660,7 +660,7 @@ namespace FreeLibSet.DependedValues
       _Items = items;
 
       // Теперь можно вычислить значение
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     #endregion
@@ -727,7 +727,7 @@ namespace FreeLibSet.DependedValues
     public DepIf(DepValue<bool> conditionArg, DepValue<T> trueArg, DepValue<T> falseArg)
       : base(conditionArg, trueArg, falseArg, null)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -825,7 +825,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="args">Источники данных, из которых выполняется выбор.
     /// Не может быть null или содержать элементы null.</param>
     /// <param name="defaultValue">Значение, возвращаемое, когда в источнике данных <paramref name="indexArg"/> содержится значение вне диапазона.</param>
-    public DepByIndex(DepValue<int> indexArg, DepValue<T> [] args, T defaultValue)
+    public DepByIndex(DepValue<int> indexArg, DepValue<T>[] args, T defaultValue)
       : this(indexArg, args, new DepConst<T>(defaultValue))
     {
     }
@@ -909,7 +909,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>

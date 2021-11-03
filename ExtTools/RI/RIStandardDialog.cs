@@ -469,19 +469,19 @@ namespace FreeLibSet.RI
     /// Вход и выход: редактируемое значение.
     /// По умолчанию - пустая строка.
     /// </summary>
-    public string Text 
-    { 
-      get { return _Text; } 
-      set 
+    public string Text
+    {
+      get { return _Text; }
+      set
       {
         if (value == null)
           value = String.Empty;
         _Text = value;
         if (_TextEx != null)
-          _TextEx.OwnerSetValue(value);
+          _TextEx.Value = value;
         if (_IsNotEmptyEx != null)
-          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
-      } 
+          _IsNotEmptyEx.Value = !String.IsNullOrEmpty(value);
+      }
     }
     private string _Text;
     private string _OldText;
@@ -493,16 +493,16 @@ namespace FreeLibSet.RI
     {
       get
       {
-        if (_TextEx == null)
-        {
-          _TextEx = new DepValueObject<string>();
-          _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
-          _TextEx.OwnerSetValue(Text);
-        }
+        InitTextEx();
         return _TextEx;
       }
+      set
+      {
+        InitTextEx();
+        _TextEx.Source = value;
+      }
     }
-    private DepValueObject<string> _TextEx;
+    private DepInput<string> _TextEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа.
@@ -519,20 +519,38 @@ namespace FreeLibSet.RI
       }
     }
 
+    private void InitTextEx()
+    {
+      if (_TextEx == null)
+      {
+        _TextEx = new DepInput<string>(Text,TextEx_ValueChanged);
+        _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+      }
+    }
+
+    private void TextEx_ValueChanged(object sender, EventArgs args)
+    {
+      Text = _TextEx.Value;
+    }
+
+    /// <summary>
+    /// Управляемое свойство, которое возвращает true, если введено непустое значение.
+    /// Используется для валидаторов.
+    /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
       get
       {
-        if (_IsNotEmptyEx == null)
-        {
-          _IsNotEmptyEx = new DepValueObject<bool>();
-          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
-          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(Text));
-        }
+        InitIsNotEmptyEx();
         return _IsNotEmptyEx;
       }
+      set
+      {
+        InitIsNotEmptyEx();
+        _IsNotEmptyEx.Source = value;
+      }
     }
-    private DepValueObject<bool> _IsNotEmptyEx;
+    private DepInput<bool> _IsNotEmptyEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства IsNotEmptyEx присоединен к другим объектам в качестве входа или выхода.
@@ -546,6 +564,15 @@ namespace FreeLibSet.RI
           return false;
         else
           return _IsNotEmptyEx.IsConnected;
+      }
+    }
+
+    private void InitIsNotEmptyEx()
+    {
+      if (_IsNotEmptyEx == null)
+      {
+        _IsNotEmptyEx = new DepInput<bool>(!String.IsNullOrEmpty(Text), null);
+        _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
       }
     }
 

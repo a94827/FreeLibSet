@@ -278,10 +278,8 @@ namespace FreeLibSet.Forms
     {
       if (_XmlDocumentEx == null)
       {
-        _XmlDocumentEx = new DepInput<XmlDocument>();
+        _XmlDocumentEx = new DepInput<XmlDocument>(XmlDocument,XmlDocumentEx_ValueChanged);
         _XmlDocumentEx.OwnerInfo = new DepOwnerInfo(this, "XmlDocumentEx");
-        _XmlDocumentEx.Value = XmlDocument;
-        _XmlDocumentEx.ValueChanged += new EventHandler(XmlDocumentEx_ValueChanged);
       }
     }
     private DepInput<XmlDocument> _XmlDocumentEx;
@@ -325,10 +323,8 @@ namespace FreeLibSet.Forms
     {
       if (_XmlTextEx == null)
       {
-        _XmlTextEx = new DepInput<string>();
+        _XmlTextEx = new DepInput<string>(XmlText,XmlTextEx_ValueChanged);
         _XmlTextEx.OwnerInfo = new DepOwnerInfo(this, "XmlTextEx");
-        _XmlTextEx.Value = XmlText;
-        _XmlTextEx.ValueChanged += new EventHandler(XmlTextEx_ValueChanged);
       }
     }
     private DepInput<string> _XmlTextEx;

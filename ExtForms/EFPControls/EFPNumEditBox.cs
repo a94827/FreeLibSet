@@ -112,10 +112,8 @@ namespace FreeLibSet.Forms
     {
       if (_NValueEx == null)
       {
-        _NValueEx = new DepInput<T?>();
+        _NValueEx = new DepInput<T?>(NValue,NValueEx_ValueChanged);
         _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
-        _NValueEx.Value = NValue;
-        _NValueEx.ValueChanged += new EventHandler(NValueEx_ValueChanged);
       }
     }
 
@@ -163,11 +161,9 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<T>();
+        _ValueEx = new DepInput<T>(Value,ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.Value = Value;
         _ValueEx.CheckValue += ValueEx_CheckValue;
-        _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
       }
     }
 
@@ -372,10 +368,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledNValueEx == null)
       {
-        _DisabledNValueEx = new DepInput<T?>();
+        _DisabledNValueEx = new DepInput<T?>(DisabledNValue,DisabledNValueEx_ValueChanged);
         _DisabledNValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledNValueEx");
-        _DisabledNValueEx.Value = DisabledNValue;
-        _DisabledNValueEx.ValueChanged += new EventHandler(DisabledNValueEx_ValueChanged);
       }
     }
 
@@ -421,10 +415,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledValueEx == null)
       {
-        _DisabledValueEx = new DepInput<T>();
+        _DisabledValueEx = new DepInput<T>(DisabledValue,DisabledValueEx_ValueChanged);
         _DisabledValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledValueEx");
-        _DisabledValueEx.Value = DisabledValue;
-        _DisabledValueEx.ValueChanged += new EventHandler(DisabledValueEx_ValueChanged);
       }
     }
 

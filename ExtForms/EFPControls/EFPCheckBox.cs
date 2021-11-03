@@ -184,10 +184,8 @@ namespace FreeLibSet.Forms
     {
       if (_CheckStateEx == null)
       {
-        _CheckStateEx = new DepInput<CheckState>();
+        _CheckStateEx = new DepInput<CheckState>(CheckState,CheckStateEx_ValueChanged);
         _CheckStateEx.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx");
-        _CheckStateEx.Value = CheckState;
-        _CheckStateEx.ValueChanged += new EventHandler(CheckStateEx_ValueChanged);
       }
     }
 
@@ -338,10 +336,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledCheckStateEx == null)
       {
-        _DisabledCheckStateEx = new DepInput<CheckState>();
+        _DisabledCheckStateEx = new DepInput<CheckState>(DisabledCheckState,DisabledCheckStateEx_ValueChanged);
         _DisabledCheckStateEx.OwnerInfo = new DepOwnerInfo(this, "DisabledCheckStateEx");
-        _DisabledCheckStateEx.Value = DisabledCheckState;
-        _DisabledCheckStateEx.ValueChanged += new EventHandler(DisabledCheckStateEx_ValueChanged);
       }
     }
     private DepInput<CheckState> _DisabledCheckStateEx;

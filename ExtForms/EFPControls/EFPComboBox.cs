@@ -581,10 +581,8 @@ namespace FreeLibSet.Forms
     {
       if (_MaskEx == null)
       {
-        _MaskEx = new DepInput<string>();
+        _MaskEx = new DepInput<string>(Mask,MaskEx_ValueChanged);
         _MaskEx.OwnerInfo = new DepOwnerInfo(this, "MaskEx");
-        _MaskEx.Value = Mask;
-        _MaskEx.ValueChanged += new EventHandler(MaskEx_ValueChanged);
       }
     }
     private DepInput<string> _MaskEx;
@@ -827,19 +825,16 @@ namespace FreeLibSet.Forms
     {
       if (_ColorEx == null)
       {
-        _ColorEx = new DepInput<Color>();
+        _ColorEx = new DepInput<Color>(Color, ColorEx_ValueChanged);
         _ColorEx.OwnerInfo = new DepOwnerInfo(this, "ColorEx");
-        _ColorEx.OwnerSetValue(Color);
-        _ColorEx.CheckValue += new DepInputCheckEventHandler<Color>(ColorEx_CheckValue);
       }
     }
 
     private DepInput<Color> _ColorEx;
 
-    void ColorEx_CheckValue(object sender, DepInputCheckEventArgs<Color> args)
+    void ColorEx_ValueChanged(object sender, EventArgs args)
     {
-      Color = args.NewValue;
-      args.Cancel = true;
+      Color = _ColorEx.Value;
     }
 
     #endregion

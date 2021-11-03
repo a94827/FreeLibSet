@@ -636,9 +636,8 @@ namespace FreeLibSet.DependedValues
     public DepSyncValue()
     {
       _SyncMaster = false;
-      _ValueEx = new DepInput<T>();
+      _ValueEx = new DepInput<T>(Value, ValueEx_ValueChanged);
       _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-      _ValueEx.ValueChanged += new EventHandler(ValueEx_ValueChanged);
     }
 
     void ValueEx_ValueChanged(object sender, EventArgs args)

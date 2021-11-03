@@ -2226,13 +2226,9 @@ namespace FreeLibSet.Forms.RI
 
         _WinDlg.Text = riDialog.Text; // обязательное присвоение, иначе свойство обнулится
         if (riDialog.TextExConnected)
-        {
-          //if (riDialog.TextEx.HasSource)
-          //  // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-          //  base.TextEx = riItem.TextEx;
-          //else
           riDialog.TextEx = _WinDlg.TextEx;
-        }
+        if (riDialog.IsNotEmptyExConnected)
+          riDialog.IsNotEmptyEx = _WinDlg.IsNotEmptyEx;
 
 
         if (riDialog.HasValidators)

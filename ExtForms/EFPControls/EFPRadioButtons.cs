@@ -457,10 +457,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInput<int>();
+        _SelectedIndexEx = new DepInput<int>(SelectedIndex,SelectedIndexEx_ValueChanged);
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
-        _SelectedIndexEx.Value = SelectedIndex;
-        _SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndexEx_ValueChanged);
       }
     }
 
@@ -787,10 +785,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodeEx == null)
       {
-        _SelectedCodeEx = new DepInput<string>();
+        _SelectedCodeEx = new DepInput<string>(SelectedCode, SelectedCodeEx_ValueChanged);
         _SelectedCodeEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodeEx");
-        _SelectedCodeEx.OwnerSetValue(SelectedCode);
-        _SelectedCodeEx.CheckValue += new DepInputCheckEventHandler<string>(SelectedCodeEx_CheckValue);
       }
     }
 
@@ -799,10 +795,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызывается, когда снаружи устанавливается значение SelectedCodeEx.ValueEx
     /// </summary>
-    void SelectedCodeEx_CheckValue(object sender, DepInputCheckEventArgs<string> args)
+    void SelectedCodeEx_ValueChanged(object sender, EventArgs args)
     {
-      SelectedCode = args.NewValue;
-      args.Cancel = true;
+      SelectedCode = _SelectedCodeEx.Value;
     }
 
     #endregion
@@ -1311,15 +1306,14 @@ namespace FreeLibSet.Forms
       {
         if (_CheckedEx == null)
         {
-          _CheckedEx = new DepValueObject<bool>();
+          _CheckedEx = new DepOutput<bool>(Checked);
           _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
-          _CheckedEx.OwnerSetValue(Checked);
         }
         return _CheckedEx;
       }
     }
 
-    private DepValueObject<Boolean> _CheckedEx;
+    private DepOutput<Boolean> _CheckedEx;
 
     private void Control_CheckedChanged(object sender, EventArgs args)
     {

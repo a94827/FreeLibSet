@@ -54,7 +54,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="T1">Тип исходных данных</typeparam>
   [Serializable]
-  public class DepExpr1<TResult, T1> : DepValueObject<TResult>
+  public class DepExpr1<TResult, T1> : DepValue<TResult>
   {
     #region Конструкторы
 
@@ -114,7 +114,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -159,7 +159,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="T1">Тип исходных данных аргумента 1</typeparam>
   /// <typeparam name="T2">Тип исходных данных аргумента 2</typeparam>
   [Serializable]
-  public class DepExpr2<TResult, T1, T2> : DepValueObject<TResult>
+  public class DepExpr2<TResult, T1, T2> : DepValue<TResult>
   {
     #region Конструкторы
 
@@ -247,7 +247,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(),false);
     }
 
     /// <summary>
@@ -295,7 +295,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="T2">Тип исходных данных аргумента 2</typeparam>
   /// <typeparam name="T3">Тип исходных данных аргумента 3</typeparam>
   [Serializable]
-  public class DepExpr3<TResult, T1, T2, T3> : DepValueObject<TResult>
+  public class DepExpr3<TResult, T1, T2, T3> : DepValue<TResult>
   {
     #region Конструкторы
 
@@ -413,7 +413,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(),false);
     }
 
     /// <summary>
@@ -454,7 +454,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="TArg">Тип исходных данных</typeparam>
   [Serializable]
-  public class DepExprTA<TResult, TArg> : DepValueObject<TResult>
+  public class DepExprTA<TResult, TArg> : DepValue<TResult>
   {
     #region Конструкторы
 
@@ -524,7 +524,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(),false);
     }
 
     private DepFunctionTA<TResult, TArg> _Function;
@@ -568,7 +568,7 @@ namespace FreeLibSet.DependedValues
   /// </summary>
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   [Serializable]
-  public class DepExprOA<TResult> : DepValueObject<TResult>
+  public class DepExprOA<TResult> : DepValue<TResult>
   {
     #region Конструкторы
 
@@ -636,7 +636,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      OwnerSetValue(Calculate());
+      BaseSetValue(Calculate(),false);
     }
 
     private DepFunctionOA<TResult> _Function;
