@@ -866,10 +866,8 @@ namespace FreeLibSet.Forms
     {
       if (_VisibleEx == null)
       {
-        _VisibleEx = new DepInput<Boolean>();
+        _VisibleEx = new DepInput<Boolean>(Visible,VisibleEx_ValueChanged);
         _VisibleEx.OwnerInfo = new DepOwnerInfo(this, "VisibleEx");
-        _VisibleEx.Value = Visible;
-        _VisibleEx.ValueChanged += new EventHandler(VisibleEx_ValueChanged);
       }
     }
 
@@ -1048,19 +1046,14 @@ namespace FreeLibSet.Forms
     {
       if (_EnabledEx == null)
       {
-        _EnabledEx = new DepInput<Boolean>();
+        _EnabledEx = new DepInput<Boolean>(Enabled, EnabledEx_ValueChanged);
         _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
-        _EnabledEx.Value = Enabled;
-        _EnabledEx.ValueChanged += new EventHandler(EnabledEx_ValueChanged);
 
-        _EnabledMain = new DepInput<bool>();
+        _EnabledMain = new DepInput<bool>(Enabled, null);
         _EnabledMain.OwnerInfo = new DepOwnerInfo(this, "EnabledMain");
-        //FEnabledMain.Value = true;
-        _EnabledMain.Value = Enabled; // 21.12.2018
 
-        _EnabledSync = new DepInput<bool>();
+        _EnabledSync = new DepInput<bool>(true, null);
         _EnabledSync.OwnerInfo = new DepOwnerInfo(this, "EnabledSync");
-        _EnabledSync.Value = true;
 
         DepAnd EnabledAnd = new DepAnd(_EnabledMain, _EnabledSync);
         _EnabledEx.Source = EnabledAnd;
@@ -1904,16 +1897,16 @@ namespace FreeLibSet.Forms
         {
           if (!valifators[i].ActiveEx.Value)
             continue;
-          if (!valifators[i].Expression.Value)
+        }
+        if (!valifators[i].Expression.Value)
+        {
+          if (valifators[i].IsError)
           {
-            if (valifators[i].IsError)
-            {
-              caller.SetError(valifators[i].Message);
-              break;
-            }
-            else
-              caller.SetWarning(valifators[i].Message);
+            caller.SetError(valifators[i].Message);
+            break;
           }
+          else
+            caller.SetWarning(valifators[i].Message);
         }
       }
     }

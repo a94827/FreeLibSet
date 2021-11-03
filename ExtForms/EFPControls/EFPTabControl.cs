@@ -481,10 +481,8 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedTabEx == null)
       {
-        _SelectedTabEx = new DepInput<EFPTabPage>();
+        _SelectedTabEx = new DepInput<EFPTabPage>(SelectedTab, SelectedTabEx_ValueChanged);
         _SelectedTabEx.OwnerInfo = new DepOwnerInfo(this, "SelectedTabEx");
-        _SelectedTabEx.Value = SelectedTab;
-        _SelectedTabEx.ValueChanged += new EventHandler(SelectedTabEx_ValueChanged);
       }
     }
 
@@ -571,7 +569,7 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInput<int>(SelectedIndex,SelectedIndexEx_ValueChanged);
+        _SelectedIndexEx = new DepInput<int>(SelectedIndex, SelectedIndexEx_ValueChanged);
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
       }
     }
@@ -833,19 +831,18 @@ namespace FreeLibSet.Forms
       {
         if (_SelectedEx == null)
         {
-          _SelectedEx = new DepInput<bool>();
+          _SelectedEx = new DepOutput<bool>(Selected);
           _SelectedEx.OwnerInfo = new DepOwnerInfo(this, "SelectedEx");
-          _SelectedEx.Value = Selected;
         }
         return _SelectedEx;
       }
     }
-    private DepInput<bool> _SelectedEx;
+    private DepOutput<bool> _SelectedEx;
 
     internal void UpdateSelected()
     {
       if (_SelectedEx != null)
-        _SelectedEx.Value = Selected;
+        _SelectedEx.OwnerSetValue(Selected);
     }
 
     #endregion

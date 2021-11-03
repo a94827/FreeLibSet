@@ -102,18 +102,14 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<MonthDay>();
+        _ValueEx = new DepInput<MonthDay>(Value, ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.OwnerSetValue(Value);
-        _ValueEx.CheckValue += new DepInputCheckEventHandler<MonthDay>(ValueEx_CheckValue);
       }
     }
 
-    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<MonthDay> args)
+    void ValueEx_ValueChanged(object sender, EventArgs args)
     {
-      Value = args.NewValue;
-      args.Cancel = true;
-
+      Value = _ValueEx.Value;
     }
 
     void Control_ValueChanged(object sender, EventArgs args)
@@ -180,17 +176,14 @@ namespace FreeLibSet.Forms
     {
       if (_MonthEx == null)
       {
-        _MonthEx = new DepInput<int>();
+        _MonthEx = new DepInput<int>(Month, MonthEx_ValueChanged);
         _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
-        _MonthEx.OwnerSetValue(Month);
-        _MonthEx.CheckValue += new DepInputCheckEventHandler<int>(MonthEx_CheckValue);
       }
     }
 
-    void MonthEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void MonthEx_ValueChanged(object sender, EventArgs args)
     {
-      Month = args.NewValue;
-      args.Cancel = true;
+      Month = _MonthEx.Value;
     }
 
     #endregion
@@ -278,17 +271,14 @@ namespace FreeLibSet.Forms
     {
       if (_DayOfYearEx == null)
       {
-        _DayOfYearEx = new DepInput<int>();
+        _DayOfYearEx = new DepInput<int>(DayOfYear, DayOfYearEx_ValueChanged);
         _DayOfYearEx.OwnerInfo = new DepOwnerInfo(this, "DayOfYearEx");
-        _DayOfYearEx.OwnerSetValue(DayOfYear);
-        _DayOfYearEx.CheckValue += new DepInputCheckEventHandler<int>(DayOfYearEx_CheckValue);
       }
     }
 
-    void DayOfYearEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void DayOfYearEx_ValueChanged(object sender, EventArgs args)
     {
-      DayOfYear = args.NewValue;
-      args.Cancel = true;
+      DayOfYear = _DayOfYearEx.Value;
     }
 
     #endregion
@@ -463,18 +453,14 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<MonthDay>();
+        _ValueEx = new DepInput<MonthDay>(Value, ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
-        _ValueEx.OwnerSetValue(Value);
-        _ValueEx.CheckValue += new DepInputCheckEventHandler<MonthDay>(ValueEx_CheckValue);
       }
     }
 
-    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<MonthDay> args)
+    void ValueEx_ValueChanged(object sender, EventArgs args)
     {
-      Value = args.NewValue;
-      args.Cancel = true;
-
+      Value = _ValueEx.Value;
     }
 
     #endregion
@@ -512,17 +498,14 @@ namespace FreeLibSet.Forms
     {
       if (_DayOfYearEx == null)
       {
-        _DayOfYearEx = new DepInput<int>();
+        _DayOfYearEx = new DepInput<int>(DayOfYear, DayOfYearEx_ValueChanged);
         _DayOfYearEx.OwnerInfo = new DepOwnerInfo(this, "DayOfYearEx");
-        _DayOfYearEx.OwnerSetValue(DayOfYear);
-        _DayOfYearEx.CheckValue += new DepInputCheckEventHandler<int>(DayOfYearEx_CheckValue);
       }
     }
 
-    void DayOfYearEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void DayOfYearEx_ValueChanged(object sender, EventArgs args)
     {
-      DayOfYear = args.NewValue;
-      args.Cancel = true;
+      DayOfYear = _DayOfYearEx.Value;
     }
 
     #endregion
@@ -594,10 +577,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
 

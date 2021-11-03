@@ -203,10 +203,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_EmptyTextEx == null)
       {
-        _EmptyTextEx = new DepInput<string>();
+        _EmptyTextEx = new DepInput<string>(EmptyText,EmptyTextEx_ValueChanged);
         _EmptyTextEx.OwnerInfo = new DepOwnerInfo(this, "EmptyTextEx");
-        _EmptyTextEx.Value = EmptyText;
-        _EmptyTextEx.ValueChanged += new EventHandler(EmptyTextEx_ValueChanged);
       }
     }
 
@@ -263,10 +261,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_EmptyImageKeyEx == null)
       {
-        _EmptyImageKeyEx = new DepInput<string>();
+        _EmptyImageKeyEx = new DepInput<string>(EmptyImageKey,EmptyImageKeyEx_ValueChanged);
         _EmptyImageKeyEx.OwnerInfo = new DepOwnerInfo(this, "EmptyImageKeyEx");
-        _EmptyImageKeyEx.Value = EmptyImageKey;
-        _EmptyImageKeyEx.ValueChanged += new EventHandler(EmptyImageKeyEx_ValueChanged);
       }
     }
 
@@ -319,19 +315,16 @@ namespace FreeLibSet.Forms.Docs
         _CanBeEmptyEx.Source = value;
       }
     }
+    private DepInput<Boolean> _CanBeEmptyEx;
 
     private void InitCanBeEmptyEx()
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
-
-    private DepInput<Boolean> _CanBeEmptyEx;
 
     void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
     {
@@ -385,10 +378,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_WarningIfEmptyEx == null)
       {
-        _WarningIfEmptyEx = new DepInput<bool>();
+        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
         _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-        _WarningIfEmptyEx.Value = WarningIfEmpty;
-        _WarningIfEmptyEx.ValueChanged += new EventHandler(WarningIfEmptyEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _WarningIfEmptyEx;
@@ -448,10 +439,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_CanBeDeletedEx == null)
       {
-        _CanBeDeletedEx = new DepInput<bool>();
+        _CanBeDeletedEx = new DepInput<bool>(CanBeDeleted, CanDeletedEx_ValueChanged);
         _CanBeDeletedEx.OwnerInfo = new DepOwnerInfo(this, "CanBeDeletedEx");
-        _CanBeDeletedEx.Value = CanBeDeleted;
-        _CanBeDeletedEx.ValueChanged += new EventHandler(CanDeletedEx_ValueChanged);
       }
     }
 
@@ -511,10 +500,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_WarningIfDeletedEx == null)
       {
-        _WarningIfDeletedEx = new DepInput<bool>();
+        _WarningIfDeletedEx = new DepInput<bool>(WarningIfDeleted,WarningIfDeletedEx_ValueChanged);
         _WarningIfDeletedEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfDeletedEx");
-        _WarningIfDeletedEx.Value = WarningIfDeleted;
-        _WarningIfDeletedEx.ValueChanged += new EventHandler(WarningIfDeletedEx_ValueChanged);
       }
     }
 

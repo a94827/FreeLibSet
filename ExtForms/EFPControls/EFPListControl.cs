@@ -372,10 +372,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledSelectedIndexEx == null)
       {
-        _DisabledSelectedIndexEx = new DepInput<int>();
+        _DisabledSelectedIndexEx = new DepInput<int>(DisabledSelectedIndex,DisabledSelectedIndexEx_ValueChanged);
         _DisabledSelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "DisabledSelectedIndexEx");
-        _DisabledSelectedIndexEx.Value = DisabledSelectedIndex;
-        _DisabledSelectedIndexEx.ValueChanged += new EventHandler(FDisabledSelectedIndexEx_ValueChanged);
       }
     }
     private DepInput<int> _DisabledSelectedIndexEx;
@@ -383,7 +381,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызывается, когда снаружи было изменено свойство DisabledText
     /// </summary>
-    private void FDisabledSelectedIndexEx_ValueChanged(object sender, EventArgs args)
+    private void DisabledSelectedIndexEx_ValueChanged(object sender, EventArgs args)
     {
       DisabledSelectedIndex = _DisabledSelectedIndexEx.Value;
     }
@@ -450,10 +448,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _CanBeEmptyEx;

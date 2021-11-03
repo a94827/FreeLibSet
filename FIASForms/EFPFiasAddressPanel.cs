@@ -1890,10 +1890,8 @@ namespace FreeLibSet.Forms.FIAS
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>();
+        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
-        _ReadOnlyEx.Value = false;
-        _ReadOnlyEx.ValueChanged += new EventHandler(ReadOnlyEx_ValueChanged);
       }
     }
     /// <summary>

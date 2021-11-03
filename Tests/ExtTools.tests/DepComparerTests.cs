@@ -119,10 +119,8 @@ namespace ExtTools.tests
     [Test]
     public void DynamicTest()
     {
-      DepInput<int> v1 = new DepInput<int>();
-      v1.Value = 1;
-      DepInput<int> v2 = new DepInput<int>();
-      v2.Value = 2;
+      DepInput<int> v1 = new DepInput<int>(1, null);
+      DepInput<int> v2 = new DepInput<int>(2, null);
 
       DepComparer<int> sut = new DepComparer<int>(v1, v2, DepCompareKind.LessThan);
       DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);

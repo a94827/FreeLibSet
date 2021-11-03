@@ -112,10 +112,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocIdEx == null)
       {
-        _DocIdEx = new DepInput<Int32>();
+        _DocIdEx = new DepInput<Int32>(DocId,DocIdEx_ValueChanged);
         _DocIdEx.OwnerInfo = new DepOwnerInfo(this, "DocIdEx");
-        _DocIdEx.Value = DocId;
-        _DocIdEx.ValueChanged += new EventHandler(DocIdEx_ValueChanged);
       }
     }
 
@@ -172,10 +170,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_IncludeNestedEx == null)
       {
-        _IncludeNestedEx = new DepInput<bool>();
+        _IncludeNestedEx = new DepInput<bool>(IncludeNested,IncludeNestedEx_ValueChanged);
         _IncludeNestedEx.OwnerInfo = new DepOwnerInfo(this, "IncludeNestedEx");
-        _IncludeNestedEx.Value = IncludeNested;
-        _IncludeNestedEx.ValueChanged += new EventHandler(IncludeNestedEx_ValueChanged);
       }
     }
 

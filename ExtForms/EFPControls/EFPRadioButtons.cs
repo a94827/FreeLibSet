@@ -532,10 +532,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledSelectedIndexEx == null)
       {
-        _DisabledSelectedIndexEx = new DepInput<int>();
+        _DisabledSelectedIndexEx = new DepInput<int>(DisabledSelectedIndex, DisabledSelectedIndexEx_ValueChanged);
         _DisabledSelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "DisabledSelectedIndexEx");
-        _DisabledSelectedIndexEx.Value = DisabledSelectedIndex;
-        _DisabledSelectedIndexEx.ValueChanged += new EventHandler(DisabledSelectedIndexEx_ValueChanged);
       }
     }
     private DepInput<int> _DisabledSelectedIndexEx;
@@ -610,10 +608,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _CanBeEmptyEx;
@@ -672,10 +668,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledItemCanBeSelectedEx == null)
       {
-        _DisabledItemCanBeSelectedEx = new DepInput<bool>();
+        _DisabledItemCanBeSelectedEx = new DepInput<bool>(DisabledItemCanBeSelected,DisabledItemCanBeSelectedEx_ValueChanged);
         _DisabledItemCanBeSelectedEx.OwnerInfo = new DepOwnerInfo(this, "DisabledItemCanBeSelectedEx");
-        _DisabledItemCanBeSelectedEx.Value = DisabledItemCanBeSelected;
-        _DisabledItemCanBeSelectedEx.ValueChanged += new EventHandler(DisabledItemCanBeSelectedEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _DisabledItemCanBeSelectedEx;
@@ -1240,17 +1234,14 @@ namespace FreeLibSet.Forms
     {
       if (_EnabledEx == null)
       {
-        _EnabledEx = new DepInput<bool>();
+        _EnabledEx = new DepInput<bool>(Enabled, EnabledEx_ValueChanged);
         _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
-        _EnabledEx.OwnerSetValue(Enabled);
-        _EnabledEx.CheckValue += new DepInputCheckEventHandler<bool>(EnabledEx_CheckValue);
       }
     }
 
-    private void EnabledEx_CheckValue(object sender, DepInputCheckEventArgs<bool> args)
+    private void EnabledEx_ValueChanged(object sender, EventArgs args)
     {
-      Enabled = args.NewValue;
-      args.Cancel = true;
+      Enabled = _EnabledEx.Value;
     }
 
     DepInput<Boolean> _EnabledEx;

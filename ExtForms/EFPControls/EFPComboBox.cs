@@ -668,10 +668,8 @@ namespace FreeLibSet.Forms
     {
       if (_MaskCanBePartialEx == null)
       {
-        _MaskCanBePartialEx = new DepInput<bool>();
+        _MaskCanBePartialEx = new DepInput<bool>(MaskCanBePartial,MaskCanBePartialEx_ValueChanged);
         _MaskCanBePartialEx.OwnerInfo = new DepOwnerInfo(this, "MaskCanBePartialEx");
-        _MaskCanBePartialEx.Value = MaskCanBePartial;
-        _MaskCanBePartialEx.ValueChanged += new EventHandler(MaskCanBePartialEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _MaskCanBePartialEx;
@@ -1106,6 +1104,8 @@ namespace FreeLibSet.Forms
       }
     }
 
+    private bool _InsideValueChanged = false;
+
     void Control_TextChanged(object sender, EventArgs args)
     {
       try
@@ -1160,29 +1160,22 @@ namespace FreeLibSet.Forms
         _ValueEx.Source = value;
       }
     }
+    private DepInput<int> _ValueEx;
 
     private void InitValueEx()
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<int>();
-        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         int x;
-        if (TryTextToValue(Control.Text, out x))
-          _ValueEx.OwnerSetValue(x);
-        _ValueEx.OwnerSetValue(x);
-        _ValueEx.CheckValue += new DepInputCheckEventHandler<int>(ValueEx_CheckValue);
+        TryTextToValue(Control.Text, out x);
+        _ValueEx = new DepInput<int>(x, ValueEx_ValueChanged);
+        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
       }
     }
 
-    private DepInput<int> _ValueEx;
-
-    private bool _InsideValueChanged = false;
-
-    void ValueEx_CheckValue(object Sender, DepInputCheckEventArgs<int> args)
+    void ValueEx_ValueChanged(object Sender, EventArgs args)
     {
-      Value = args.NewValue;
-      args.Cancel = true;
+      Value = _ValueEx.Value;
     }
 
     #endregion

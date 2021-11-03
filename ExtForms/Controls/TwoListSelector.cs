@@ -625,10 +625,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty, CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
 
@@ -684,10 +682,8 @@ namespace FreeLibSet.Forms
     {
       if (_WarningIfEmptyEx == null)
       {
-        _WarningIfEmptyEx = new DepInput<bool>();
+        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
         _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-        _WarningIfEmptyEx.Value = WarningIfEmpty;
-        _WarningIfEmptyEx.ValueChanged += new EventHandler(WarningIfEmptyEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _WarningIfEmptyEx;

@@ -109,10 +109,8 @@ namespace FreeLibSet.Forms
     {
       if (_ThreeStateEx == null)
       {
-        _ThreeStateEx = new DepInput<Boolean>();
+        _ThreeStateEx = new DepInput<Boolean>(ThreeState,ThreeStateEx_ValueChanged);
         _ThreeStateEx.OwnerInfo = new DepOwnerInfo(this, "ThreeStateEx");
-        _ThreeStateEx.Value = ThreeState;
-        _ThreeStateEx.ValueChanged += new EventHandler(ThreeStateEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _ThreeStateEx;
@@ -276,10 +274,8 @@ namespace FreeLibSet.Forms
     {
       if (_CheckedEx == null)
       {
-        _CheckedEx = new DepInput<bool>();
+        _CheckedEx = new DepInput<bool>(Checked,CheckedEx_ValueChanged);
         _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
-        _CheckedEx.Value = Checked;
-        _CheckedEx.ValueChanged += new EventHandler(CheckedEx_ValueChanged);
       }
     }
 
@@ -402,10 +398,8 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledCheckedEx == null)
       {
-        _DisabledCheckedEx = new DepInput<Boolean>();
+        _DisabledCheckedEx = new DepInput<Boolean>(DisabledChecked,DisabledCheckedEx_ValueChanged);
         _DisabledCheckedEx.OwnerInfo = new DepOwnerInfo(this, "DisabledCheckedEx");
-        _DisabledCheckedEx.Value = DisabledChecked;
-        _DisabledCheckedEx.ValueChanged += new EventHandler(DisabledCheckedEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _DisabledCheckedEx;

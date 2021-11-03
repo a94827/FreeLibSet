@@ -23,12 +23,9 @@ namespace ExtTools.tests
     [Test]
     public void DynamicTest()
     {
-      DepInput<int> vVal = new DepInput<int>();
-      vVal.Value = 5;
-      DepInput<int> vMin = new DepInput<int>();
-      vMin.Value = 4;
-      DepInput<int> vMax = new DepInput<int>();
-      vMax.Value = 6;
+      DepInput<int> vVal = new DepInput<int>(5, null);
+      DepInput<int> vMin = new DepInput<int>(4, null);
+      DepInput<int> vMax = new DepInput<int>(6, null);
 
       DepInRange<int> sut = new DepInRange<int>(vVal, vMin,vMax);
       DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);

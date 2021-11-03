@@ -230,10 +230,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_IncludeNestedEx == null)
       {
-        _IncludeNestedEx = new DepInput<bool>();
+        _IncludeNestedEx = new DepInput<bool>(IncludeNested,IncludeNestedEx_ValueChanged);
         _IncludeNestedEx.OwnerInfo = new DepOwnerInfo(this, "IncludeNestedEx");
-        _IncludeNestedEx.Value = IncludeNested;
-        _IncludeNestedEx.ValueChanged += new EventHandler(IncludeNestedEx_ValueChanged);
       }
     }
 

@@ -469,18 +469,14 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>();
+        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
-        _ReadOnlyEx.Value = false;
-        _ReadOnlyEx.ValueChanged += new EventHandler(ReadOnlyEx_ValueChanged);
 
-        _ReadOnlyMain = new DepInput<bool>();
+        _ReadOnlyMain = new DepInput<bool>(false, null);
         _ReadOnlyMain.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyMain");
-        _ReadOnlyMain.Value = false;
 
-        _NotReadOnlySync = new DepInput<bool>();
+        _NotReadOnlySync = new DepInput<bool>(true, null);
         _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
-        _NotReadOnlySync.Value = true;
 
         DepOr ReadOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
         _ReadOnlyEx.Source = ReadOnlyOr;
@@ -550,10 +546,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
 
@@ -609,10 +603,8 @@ namespace FreeLibSet.Forms
     {
       if (_WarningIfEmptyEx == null)
       {
-        _WarningIfEmptyEx = new DepInput<bool>();
+        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
         _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-        _WarningIfEmptyEx.Value = WarningIfEmpty;
-        _WarningIfEmptyEx.ValueChanged += new EventHandler(WarningIfEmptyEx_ValueChanged);
       }
     }
 

@@ -346,7 +346,7 @@ namespace FreeLibSet.Forms.Docs
     public DocValueDateOrRangeBox(DBxDocValue docValueFirst, DBxDocValue docValueLast, EFPDateOrRangeBox controlProvider, bool canMultiEdit)
       : base(docValueFirst, docValueLast, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.FirstValueEx, controlProvider.LastValueEx);
+      SetCurrentValueEx(controlProvider.NFirstDateEx, controlProvider.NLastDateEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -712,13 +712,11 @@ namespace FreeLibSet.Forms.Docs
 
     public IntEnumCodeProxy()
     {
-      _IntValueEx = new DepInput<int>();
+      _IntValueEx = new DepInput<int>(0, IntValueEx_ValueChanged);
       _IntValueEx.OwnerInfo = new DepOwnerInfo(this, "IntValueEx");
-      _IntValueEx.ValueChanged += new EventHandler(IntValueEx_ValueChanged);
 
-      _CodeValueEx = new DepInput<string>();
+      _CodeValueEx = new DepInput<string>(String.Empty, CodeValueEx_ValueChanged);
       _CodeValueEx.OwnerInfo = new DepOwnerInfo(this, "CodeValueEx");
-      _CodeValueEx.ValueChanged += new EventHandler(CodeValueEx_ValueChanged);
     }
 
     #endregion
@@ -1170,11 +1168,11 @@ namespace FreeLibSet.Forms.Docs
       if (controlProvider.Controls.Length != 2)
         throw new ArgumentException("Группа должна состоять из двух радиокнопок", "controlProvider");
 
-      DepInput<bool> CurrentValueInput = new DepInput<bool>();
+      DepInput<bool> CurrentValueInput = new DepInput<bool>(false, null);
       CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
       SetCurrentValueEx(CurrentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>();
+      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
       GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
       base.GrayedEx = GrayedInput;
 
@@ -1261,11 +1259,11 @@ namespace FreeLibSet.Forms.Docs
       : base(docValue, controlProvider, false, canMultiEdit)
     {
 
-      DepInput<bool> CurrentValueInput = new DepInput<bool>();
+      DepInput<bool> CurrentValueInput = new DepInput<bool>(false, null);
       CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
       SetCurrentValueEx(CurrentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>();
+      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
       GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
       base.GrayedEx = GrayedInput;
 

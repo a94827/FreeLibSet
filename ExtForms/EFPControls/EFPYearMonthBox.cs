@@ -252,17 +252,14 @@ namespace FreeLibSet.Forms
     {
       if (_YMEx == null)
       {
-        _YMEx = new DepInput<YearMonth>();
+        _YMEx = new DepInput<YearMonth>(YM, YMEx_ValueChanged);
         _YMEx.OwnerInfo = new DepOwnerInfo(this, "YMEx");
-        _YMEx.OwnerSetValue(YM);
-        _YMEx.CheckValue += new DepInputCheckEventHandler<YearMonth>(YMEx_CheckValue);
       }
     }
 
-    void YMEx_CheckValue(object sender, DepInputCheckEventArgs<YearMonth> args)
+    void YMEx_ValueChanged(object sender, EventArgs args)
     {
-      YM = args.NewValue;
-      args.Cancel = true;
+      YM = _YMEx.Value;
     }
 
     #endregion
@@ -424,17 +421,14 @@ namespace FreeLibSet.Forms
     {
       if (_YearEx == null)
       {
-        _YearEx = new DepInput<int>();
+        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
         _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
-        _YearEx.OwnerSetValue(Year);
-        _YearEx.CheckValue += new DepInputCheckEventHandler<int>(YearEx_CheckValue);
       }
     }
 
-    void YearEx_CheckValue(object sender, DepInputCheckEventArgs<int> args)
+    void YearEx_ValueChanged(object sender, EventArgs args)
     {
-      Year = args.NewValue;
-      args.Cancel = true;
+      Year = _YearEx.Value;
     }
 
     /// <summary>
@@ -636,17 +630,14 @@ namespace FreeLibSet.Forms
     {
       if (_FirstYMEx == null)
       {
-        _FirstYMEx = new DepInput<YearMonth>();
+        _FirstYMEx = new DepInput<YearMonth>(FirstYM, FirstYMEx_ValueChanged);
         _FirstYMEx.OwnerInfo = new DepOwnerInfo(this, "FirstYMEx");
-        _FirstYMEx.OwnerSetValue(FirstYM);
-        _FirstYMEx.CheckValue += new DepInputCheckEventHandler<YearMonth>(FirstYMEx_CheckValue);
       }
     }
 
-    void FirstYMEx_CheckValue(object sender, DepInputCheckEventArgs<YearMonth> args)
+    void FirstYMEx_ValueChanged(object sender, EventArgs args)
     {
-      FirstYM = args.NewValue;
-      args.Cancel = true;
+      FirstYM = _FirstYMEx.Value;
     }
 
     /// <summary>
@@ -681,17 +672,14 @@ namespace FreeLibSet.Forms
     {
       if (_LastYMEx == null)
       {
-        _LastYMEx = new DepInput<YearMonth>();
+        _LastYMEx = new DepInput<YearMonth>(LastYM, LastYMEx_ValueChanged);
         _LastYMEx.OwnerInfo = new DepOwnerInfo(this, "LastYMEx");
-        _LastYMEx.OwnerSetValue(LastYM);
-        _LastYMEx.CheckValue += new DepInputCheckEventHandler<YearMonth>(LastYMEx_CheckValue);
       }
     }
 
-    void LastYMEx_CheckValue(object sender, DepInputCheckEventArgs<YearMonth> args)
+    void LastYMEx_ValueChanged(object sender, EventArgs args)
     {
-      LastYM = args.NewValue;
-      args.Cancel = true;
+      LastYM = _LastYMEx.Value;
     }
 
     /// <summary>
@@ -732,17 +720,14 @@ namespace FreeLibSet.Forms
     {
       if (_YMRangeEx == null)
       {
-        _YMRangeEx = new DepInput<YearMonthRange>();
+        _YMRangeEx = new DepInput<YearMonthRange>(YMRange, YMRangeEx_ValueChanged);
         _YMRangeEx.OwnerInfo = new DepOwnerInfo(this, "YMRangeEx");
-        _YMRangeEx.OwnerSetValue(YMRange);
-        _YMRangeEx.CheckValue += new DepInputCheckEventHandler<YearMonthRange>(YMRangeEx_CheckValue);
       }
     }
 
-    void YMRangeEx_CheckValue(object sender, DepInputCheckEventArgs<YearMonthRange> args)
+    void YMRangeEx_ValueChanged(object sender, EventArgs args)
     {
-      YMRange = args.NewValue;
-      args.Cancel = true;
+      YMRange = _YMRangeEx.Value;
     }
 
     #endregion

@@ -159,10 +159,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_IdEx == null)
       {
-        _IdEx = new DepInput<Int32>();
+        _IdEx = new DepInput<Int32>(Id,IdEx_ValueChanged);
         _IdEx.OwnerInfo = new DepOwnerInfo(this, "IdEx");
-        _IdEx.Value = Id;
-        _IdEx.ValueChanged += new EventHandler(IdEx_ValueChanged);
       }
     }
     private DepInput<Int32> _IdEx;
@@ -666,10 +664,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_ClearByFilterEx == null)
       {
-        _ClearByFilterEx = new DepInput<bool>();
+        _ClearByFilterEx = new DepInput<bool>(ClearByFilter, ClearByFilterEx_ValueChanged);
         _ClearByFilterEx.OwnerInfo = new DepOwnerInfo(this, "ClearByFilterEx");
-        _ClearByFilterEx.Value = ClearByFilter;
-        _ClearByFilterEx.ValueChanged += new EventHandler(ClearByFilterEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _ClearByFilterEx;
@@ -709,8 +705,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_FilterPassedEx == null)
         {
-          _FilterPassedEx = new DepOutput<bool>();
-          _FilterPassedEx.OwnerSetValue(_FilterPassed);
+          _FilterPassedEx = new DepOutput<bool>(_FilterPassed);
           _FilterPassedEx.OwnerInfo = new DepOwnerInfo(this, "FilterPassedEx");
         }
         return _FilterPassedEx;
@@ -850,10 +845,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocTypeNameEx == null)
       {
-        _DocTypeNameEx = new DepInput<string>();
+        _DocTypeNameEx = new DepInput<string>(DocTypeName,DocTypeNameEx_ValueChanged);
         _DocTypeNameEx.OwnerInfo = new DepOwnerInfo(this, "DocTypeNameEx");
-        _DocTypeNameEx.Value = DocTypeName;
-        _DocTypeNameEx.ValueChanged += new EventHandler(DocTypeNameEx_ValueChanged);
       }
     }
 
@@ -911,10 +904,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocTableIdEx == null)
       {
-        _DocTableIdEx = new DepInput<Int32>();
+        _DocTableIdEx = new DepInput<Int32>(DocTableId,DocTableIdEx_ValueChanged);
         _DocTableIdEx.OwnerInfo = new DepOwnerInfo(this, "DocTableIdEx");
-        _DocTableIdEx.Value = DocTableId;
-        _DocTableIdEx.ValueChanged += new EventHandler(DocTableIdEx_ValueChanged);
       }
     }
 
@@ -1597,20 +1588,17 @@ namespace FreeLibSet.Forms.Docs
         _DocTableIdEx.Source = value;
       }
     }
+    private DepInput<Int32> _DocTableIdEx;
 
     private void InitDocTableIdEx()
     {
       if (_DocTableIdEx == null)
       {
-        _DocTableIdEx = new DepInput<Int32>();
+        _DocTableIdEx = new DepInput<Int32>(DocTableId,SourceTableIdChanged);
         _DocTableIdEx.OwnerInfo = new DepOwnerInfo(this, "DocTableIdEx");
-        _DocTableIdEx.Value = DocTableId;
         SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndex_ValueChanged);
-        _DocTableIdEx.ValueChanged += new EventHandler(SourceTableIdChanged);
       }
     }
-
-    private DepInput<Int32> _DocTableIdEx;
 
     void SelectedIndex_ValueChanged(object sender, EventArgs args)
     {
@@ -1884,32 +1872,29 @@ namespace FreeLibSet.Forms.Docs
         _InDocIdEx.Source = value;
       }
     }
+    private DepInput<Int32> _InDocIdEx;
 
     private void InitInDocIdEx()
     {
       if (_InDocIdEx == null)
       {
-        _InDocIdEx = new DepInput<int>();
+        _InDocIdEx = new DepInput<int>(0, InDocIdEx_ValueChanged);
         _InDocIdEx.OwnerInfo = new DepOwnerInfo(this, "InDocIdEx");
-        _InDocIdEx.CheckValue += new DepInputCheckEventHandler<int>(InDocIdEx_CheckValue);
       }
     }
 
-    private DepInput<Int32> _InDocIdEx;
 
-    void InDocIdEx_CheckValue(object sender, DepInputCheckEventArgs<Int32> args)
+    void InDocIdEx_ValueChanged(object sender, EventArgs args)
     {
-      DocId = args.NewValue; // жесткая установка
-      args.Cancel = true;
+      DocId = _InDocIdEx.Value; // жесткая установка
     }
 
     private void InitOutDocIdEx()
     {
       if (_OutDocIdEx == null)
       {
-        _OutDocIdEx = new DepOutput<Int32>();
+        _OutDocIdEx = new DepOutput<Int32>(DocId);
         _OutDocIdEx.OwnerInfo = new DepOwnerInfo(this, "OutDocIdEx");
-        _OutDocIdEx.OwnerSetValue(DocId);
       }
     }
     private DepOutput<Int32> _OutDocIdEx;
@@ -2060,10 +2045,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_AutoSetIfSingleEx == null)
       {
-        _AutoSetIfSingleEx = new DepInput<bool>();
+        _AutoSetIfSingleEx = new DepInput<bool>(AutoSetIfSingle,AutoSetIfSingleEx_ValueChanged);
         _AutoSetIfSingleEx.OwnerInfo = new DepOwnerInfo(this, "AutoSetIfSingleEx");
-        _AutoSetIfSingleEx.Value = AutoSetIfSingle;
-        _AutoSetIfSingleEx.ValueChanged += new EventHandler(AutoSetIfSingleEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _AutoSetIfSingleEx;

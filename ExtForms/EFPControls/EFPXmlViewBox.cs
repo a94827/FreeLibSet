@@ -191,10 +191,8 @@ namespace FreeLibSet.Forms
     {
       if (_XmlBytesEx == null)
       {
-        _XmlBytesEx = new DepInput<byte[]>();
+        _XmlBytesEx = new DepInput<byte[]>(XmlBytes,XmlBytesEx_ValueChanged);
         _XmlBytesEx.OwnerInfo = new DepOwnerInfo(this, "XmlBytesEx");
-        _XmlBytesEx.Value = XmlBytes;
-        _XmlBytesEx.ValueChanged += new EventHandler(XmlBytesEx_ValueChanged);
       }
     }
     private DepInput<byte[]> _XmlBytesEx;

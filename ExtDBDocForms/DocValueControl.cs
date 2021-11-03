@@ -89,9 +89,8 @@ namespace FreeLibSet.Forms.Docs
       _UserEnabled = true;
       _UserDisabledMode = DocValueUserDisabledMode.KeepOriginal;
 
-      _EnabledEx = new DepOutput<Boolean>();
+      _EnabledEx = new DepOutput<Boolean>(true);
       _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
-      _EnabledEx.OwnerSetValue(true);
 
       if (grayedValue)
       {
@@ -172,10 +171,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_UserEnabledEx == null)
       {
-        _UserEnabledEx = new DepInput<bool>();
+        _UserEnabledEx = new DepInput<bool>(UserEnabled, UserEnabledEx_ValueChanged);
         _UserEnabledEx.OwnerInfo = new DepOwnerInfo(this, "UserEnabledEx");
-        _UserEnabledEx.Value = UserEnabled;
-        _UserEnabledEx.ValueChanged += new EventHandler(UserEnabledEx_ValueChanged);
       }
     }
 
@@ -231,7 +228,7 @@ namespace FreeLibSet.Forms.Docs
         DepInput<bool> grayedEx2 = _GrayedEx as DepInput<bool>;
         if (grayedEx2 == null)
         {
-          grayedEx2 = new DepInput<bool>();
+          grayedEx2 = new DepInput<bool>(false, null);
           grayedEx2.OwnerInfo=new DepOwnerInfo(this, "Internal GrayedEx input");
           grayedEx2.Source = _GrayedEx;
           _GrayedEx = grayedEx2;
@@ -288,7 +285,7 @@ namespace FreeLibSet.Forms.Docs
       // Создаем зацикленную цепочку из CheckBox.CheckedEx, двух DepNot и DepInput посередине.
       DepNot not1 = new DepNot(efpGrayCheckBox.CheckedEx);
       not1.OwnerInfo = new DepOwnerInfo(this, "GrayCheckBox Chain - NOT #1");
-      DepInput<bool> inp2 = new DepInput<bool>(); // 15.10.2021 DepNot.Arg больше не является DepInput'ом
+      DepInput<bool> inp2 = new DepInput<bool>(false, null); // 15.10.2021 DepNot.Arg больше не является DepInput'ом
       inp2.OwnerInfo = new DepOwnerInfo(this, "GrayCheckBox Chain - INPUT #2");
       inp2.Source = not1;
       DepNot not3 = new DepNot(inp2);
@@ -422,7 +419,7 @@ namespace FreeLibSet.Forms.Docs
       _CurrentValueEx = (value as DepInput<TValue>);
       if (_CurrentValueEx == null)
       {
-        _CurrentValueEx = new DepInput<TValue>();
+        _CurrentValueEx = new DepInput<TValue>(default(TValue), null); //???
         _CurrentValueEx.OwnerInfo = new DepOwnerInfo(this, "CurrentValueEx");
         _CurrentValueEx.Source = value;
       }
@@ -767,13 +764,13 @@ namespace FreeLibSet.Forms.Docs
       _CurrentValue2Ex = value2 as DepInput<TValue2>;
       if (_CurrentValue1Ex == null)
       {
-        _CurrentValue1Ex = new DepInput<TValue1>();
+        _CurrentValue1Ex = new DepInput<TValue1>(default(TValue1), null); // ????
         _CurrentValue1Ex.OwnerInfo = new DepOwnerInfo(this, "CurrentValue1Ex");
         _CurrentValue1Ex.Source = value1;
       }
       if (_CurrentValue2Ex == null)
       {
-        _CurrentValue2Ex = new DepInput<TValue2>();
+        _CurrentValue2Ex = new DepInput<TValue2>(default(TValue2), null); // ????
         _CurrentValue2Ex.OwnerInfo = new DepOwnerInfo(this, "CurrentValue2Ex");
         _CurrentValue2Ex.Source = value2;
       }

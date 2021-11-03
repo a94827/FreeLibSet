@@ -1124,10 +1124,8 @@ namespace FreeLibSet.Forms.RI
       {
         if (_CheckStateEx2 == null)
         {
-          _CheckStateEx2 = new DepInput<FreeLibSet.RI.CheckState>();
+          _CheckStateEx2 = new DepInput<FreeLibSet.RI.CheckState>((FreeLibSet.RI.CheckState)(int)CheckState,CheckStateEx2_ValueChanged);
           _CheckStateEx2.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx2");
-          _CheckStateEx2.Value = (FreeLibSet.RI.CheckState)(int)CheckState;
-          _CheckStateEx2.ValueChanged += new EventHandler(CheckStateEx2_ValueChanged);
 
           base.CheckStateEx.ValueChanged += new EventHandler(CheckStateEx_ValueChanged);
         }

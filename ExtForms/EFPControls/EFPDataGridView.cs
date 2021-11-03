@@ -1972,9 +1972,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected virtual void OnCurrentCellChanged()
     {
-      if (Control.Visible && 
-        (!_Inside_Control_DataBindingComplete) && 
-        Control.CurrentCellAddress.X >= 0 && 
+      if (Control.Visible &&
+        (!_Inside_Control_DataBindingComplete) &&
+        Control.CurrentCellAddress.X >= 0 &&
         //_VisibleHasChanged && 
         _MouseOrKeyboardFlag)
 
@@ -2077,7 +2077,7 @@ namespace FreeLibSet.Forms
           PerformAutoSort();
       }
 
-      InitColumnSortMode(); 
+      InitColumnSortMode();
     }
 
     #endregion
@@ -2429,10 +2429,8 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<bool>();
+        _ReadOnlyEx = new DepInput<bool>(ReadOnly, ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
-        _ReadOnlyEx.Value = ReadOnly;
-        _ReadOnlyEx.ValueChanged += new EventHandler(ReadOnlyEx_ValueChanged);
       }
     }
 
@@ -2488,10 +2486,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanInsertEx == null)
       {
-        _CanInsertEx = new DepInput<bool>();
+        _CanInsertEx = new DepInput<bool>(CanInsert, CanInsertEx_ValueChanged);
         _CanInsertEx.OwnerInfo = new DepOwnerInfo(this, "CanInsertEx");
-        _CanInsertEx.Value = CanInsert;
-        _CanInsertEx.ValueChanged += new EventHandler(CanInsertEx_ValueChanged);
       }
     }
 
@@ -2548,10 +2544,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanInsertCopyEx == null)
       {
-        _CanInsertCopyEx = new DepInput<bool>();
+        _CanInsertCopyEx = new DepInput<bool>(CanInsertCopy, CanInsertCopyEx_ValueChanged);
         _CanInsertCopyEx.OwnerInfo = new DepOwnerInfo(this, "CanInsertCopyEx");
-        _CanInsertCopyEx.Value = CanInsertCopy;
-        _CanInsertCopyEx.ValueChanged += new EventHandler(CanInsertCopyEx_ValueChanged);
       }
     }
 
@@ -2607,10 +2601,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanDeleteEx == null)
       {
-        _CanDeleteEx = new DepInput<bool>();
+        _CanDeleteEx = new DepInput<bool>(CanDelete, CanDeleteEx_ValueChanged);
         _CanDeleteEx.OwnerInfo = new DepOwnerInfo(this, "CanDeleteEx");
-        _CanDeleteEx.Value = CanDelete;
-        _CanDeleteEx.ValueChanged += new EventHandler(CanDeleteEx_ValueChanged);
       }
     }
 
@@ -2666,10 +2658,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanViewEx == null)
       {
-        _CanViewEx = new DepInput<bool>();
+        _CanViewEx = new DepInput<bool>(CanView, CanViewEx_ValueChanged);
         _CanViewEx.OwnerInfo = new DepOwnerInfo(this, "CanViewEx");
-        _CanViewEx.Value = CanView;
-        _CanViewEx.ValueChanged += new EventHandler(CanViewEx_ValueChanged);
       }
     }
 
@@ -5465,7 +5455,7 @@ namespace FreeLibSet.Forms
           if (CurrentOrder.AreAllColumnsPresented(tableColumnNames))
             return;
         }
-        else if (OrderCount>0)
+        else if (OrderCount > 0)
         {
           string[] tableColumnNames = DataTools.GetColumnNames(SourceAsDataTable);
           if (Orders[0].AreAllColumnsPresented(tableColumnNames))
@@ -7903,7 +7893,7 @@ namespace FreeLibSet.Forms
         if (value)
           Control.ShowRowErrors = false;
 
-        if (Control.Visible && ProviderState==EFPControlProviderState.Attached)
+        if (Control.Visible && ProviderState == EFPControlProviderState.Attached)
           Control.InvalidateColumn(-1);
       }
     }

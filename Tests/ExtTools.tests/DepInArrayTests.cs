@@ -12,8 +12,7 @@ namespace ExtTools.tests
     [Test]
     public void DynamicTest()
     {
-      DepInput<int> v = new DepInput<int>();
-      v.Value = 1;
+      DepInput<int> v = new DepInput<int>(1, null);
       DepInArray<int> sut = new DepInArray<int>(v, new int[] { 1,2,3});
       DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);
       Assert.AreEqual("True", resprod.ToString(), "Original");

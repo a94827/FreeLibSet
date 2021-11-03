@@ -20,8 +20,7 @@ namespace ExtTools.tests
     [Test]
     public void DynamicTest()
     {
-      DepInput<bool> v = new DepInput<bool>();
-      v.Value = false;
+      DepInput<bool> v = new DepInput<bool>(false, null);
 
       DepNot sut = new DepNot(v);
       DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);

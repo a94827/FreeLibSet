@@ -191,6 +191,9 @@ namespace FreeLibSet.Forms
     }
     private UIValidatorList _Valifators;
 
+    /// <summary>
+    /// Возвращает true, если список Validators не пустой.
+    /// </summary>
     public bool HasValidators
     {
       get
@@ -338,6 +341,10 @@ namespace FreeLibSet.Forms
     }
     private DepOutput<string> _TextEx;
 
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если введен непустой текст.
+    /// Может использоваться в валидаторах.
+    /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
       get
@@ -490,10 +497,11 @@ namespace FreeLibSet.Forms
 
     void efpText_Validating(object sender, EFPValidatingEventArgs args)
     {
+      EFPTextBox efpText = (EFPTextBox)sender;
+      this.Text = efpText.Text;
+
       if (args.ValidateState == UIValidateState.Error)
         return;
-
-      EFPTextBox efpText = (EFPTextBox)sender;
 
       if (HasValidators)
         EFPControlBase.Validate(Validators, args);

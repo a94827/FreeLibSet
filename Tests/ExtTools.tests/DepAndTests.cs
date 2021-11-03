@@ -22,10 +22,8 @@ namespace ExtTools.tests
     [Test]
     public void DynamicTest()
     {
-      DepInput<bool> v1 = new DepInput<bool>();
-      v1.Value = false;
-      DepInput<bool> v2 = new DepInput<bool>();
-      v2.Value = false;
+      DepInput<bool> v1 = new DepInput<bool>(false, null);
+      DepInput<bool> v2 = new DepInput<bool>(false, null);
 
       DepAnd sut = new DepAnd(v1, v2);
       DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);
@@ -41,12 +39,11 @@ namespace ExtTools.tests
     [Test]
     public void AttachInput_with_bare()
     {
-      DepInput<bool> sut = new DepInput<bool>();
+      DepInput<bool> sut = new DepInput<bool>(false, null);
       DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);
       Assert.AreEqual("False", resprod.ToString(), "Original");
 
-      DepInput<bool> att = new DepInput<bool>();
-      att.Value = false;
+      DepInput<bool> att = new DepInput<bool>(false, null);
 
       DepAnd.AttachInput(sut, att);
       Assert.AreEqual("False", resprod.ToString(), "Attached");
@@ -58,15 +55,13 @@ namespace ExtTools.tests
     [Test]
     public void AttachInput_with_input()
     {
-      DepInput<bool> sut = new DepInput<bool>();
-      DepInput<bool> main = new DepInput<bool>();
-      main.Value = true;
+      DepInput<bool> sut = new DepInput<bool>(false, null);
+      DepInput<bool> main = new DepInput<bool>(true, null);
       sut.Source = main;
       DepResultProducer<bool> resprod = new DepResultProducer<bool>(sut);
       Assert.AreEqual("True", resprod.ToString(), "Original");
 
-      DepInput<bool> att = new DepInput<bool>();
-      att.Value = false;
+      DepInput<bool> att = new DepInput<bool>(false, null);
 
       DepAnd.AttachInput(sut, att);
       Assert.AreEqual("True|False", resprod.ToString(), "Attached");

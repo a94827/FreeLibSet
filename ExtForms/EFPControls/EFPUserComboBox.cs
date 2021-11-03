@@ -145,18 +145,14 @@ namespace FreeLibSet.Forms
     {
       if (_SelectableEx == null)
       {
-        _SelectableEx = new DepInput<bool>();
+        _SelectableEx = new DepInput<bool>(Selectable,SelectableEx_ValueChanged);
         _SelectableEx.OwnerInfo = new DepOwnerInfo(this, "SelectableEx");
-        _SelectableEx.Value = Selectable;
-        _SelectableEx.ValueChanged += new EventHandler(SelectableEx_ValueChanged);
 
-        _SelectableMain = new DepInput<bool>();
+        _SelectableMain = new DepInput<bool>(true,null);
         _SelectableMain.OwnerInfo = new DepOwnerInfo(this, "SelectableMain");
-        _SelectableMain.Value = true;
 
-        _SelectableSync = new DepInput<bool>();
+        _SelectableSync = new DepInput<bool>(true, null);
         _SelectableSync.OwnerInfo = new DepOwnerInfo(this, "SelectableSync");
-        _SelectableSync.Value = true;
 
         DepAnd SelectableAnd = new DepAnd(_SelectableMain, _SelectableSync);
         SelectableAnd.OwnerInfo = new DepOwnerInfo(this, "SelectableMain & SelectableSync");
@@ -551,10 +547,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
 

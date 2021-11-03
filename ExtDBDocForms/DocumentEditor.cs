@@ -1035,14 +1035,12 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocumentTextValueEx == null)
       {
-        _DocumentTextValueEx = new DepInput<string>();
+        _DocumentTextValueEx = new DepInput<string>(DocumentTextValue, DocumentTextValueEx_ValueChanged);
         _DocumentTextValueEx.OwnerInfo = new DepOwnerInfo(this, "DocumentTextValueEx");
-        _DocumentTextValueEx.Value = DocumentTextValue;
-        _DocumentTextValueEx.ValueChanged += new EventHandler(_DocumentTextValueEx_ValueChanged);
       }
     }
 
-    void _DocumentTextValueEx_ValueChanged(object sender, EventArgs args)
+    void DocumentTextValueEx_ValueChanged(object sender, EventArgs args)
     {
       this.DocumentTextValue = _DocumentTextValueEx.Value;
     }
@@ -2082,7 +2080,7 @@ namespace FreeLibSet.Forms.Docs
     private void ciDebugCheckItems_Click(object sender, EventArgs args)
     {
       DebugTools.DebugBaseProvider(Form.FormProvider, "Form provider");
-    } 
+    }
 
     #endregion
 

@@ -56,11 +56,11 @@ namespace FreeLibSet.Forms.Docs
     {
       Inverted = false;
 
-      DepInput<bool> CurrentValueInput = new DepInput<bool>();
+      DepInput<bool> CurrentValueInput = new DepInput<bool>(false, null);
       CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
       SetCurrentValueEx(CurrentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>();
+      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
       GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
       base.GrayedEx = GrayedInput;
 
@@ -186,12 +186,11 @@ namespace FreeLibSet.Forms.Docs
     {
       _ControlProvider2 = controlProvider2;
 
-      DepInput<TValue> CurrentValueInput = new DepInput<TValue>();
+      DepInput<TValue> CurrentValueInput = new DepInput<TValue>(default(TValue),CurrentValueInput_ValueChanged); // ???
       CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
-      CurrentValueInput.ValueChanged += new EventHandler(CurrentValueInput_ValueChanged);
       base.SetCurrentValueEx(CurrentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>();
+      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
       GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
       base.GrayedEx = GrayedInput;
 

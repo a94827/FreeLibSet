@@ -1209,6 +1209,127 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region NFirstDate
+
+    /// <summary>
+    /// Ќачальна€ дата диапазона.
+    /// ѕустой диапазон не поддерживаетс€. ≈сли DateRange.IsEmpty=true, возвращаетс€ минимально возможна€ дата.
+    /// ”становка значени€ свойства может привести к изменению конечной даты, если задаваемое значение больше, чем текуща€ конечна€ дата.
+    /// </summary>
+    public DateTime? NFirstDate
+    {
+      get
+      {
+        if (DateRange.IsEmpty)
+          return null;
+        else
+          return DateRange.FirstDate;
+      }
+      set
+      {
+        if (value.HasValue)
+          FirstDate = value.Value;
+        else
+          DateRange = DateRange.Empty;
+      }
+    }
+
+    /// <summary>
+    /// ”правл€емое значение дл€ NFirstDate.
+    /// </summary>
+    public DepValue<DateTime?> NFirstDateEx
+    {
+      get
+      {
+        InitNFirstDateEx();
+        return _NFirstDateEx;
+      }
+      set
+      {
+        InitNFirstDateEx();
+        _NFirstDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NFirstDateEx;
+
+    private void InitNFirstDateEx()
+    {
+      if (_NFirstDateEx == null)
+      {
+        _NFirstDateEx = new DepInput<DateTime?>(NFirstDate, NFirstDateEx_ValueChanged);
+        _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+      }
+    }
+
+    private void NFirstDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideValueChanged)
+        NFirstDate = _NFirstDateEx.Value;
+    }
+
+    #endregion
+
+    #region NLastDate
+
+    /// <summary>
+    ///  онечна€ дата диапазона.
+    /// ѕустой диапазон не поддерживаетс€. ≈сли DateRange.IsEmpty=true, возвращаетс€ максимально возможна€ дата.
+    /// ”становка значени€ свойства может привести к изменению начальной даты, если задаваемое значение меньше, чем текуща€ начальна€ дата.
+    /// </summary>
+    public DateTime? NLastDate
+    {
+      get
+      {
+        if (DateRange.IsEmpty)
+          return null;
+        else
+          return DateRange.LastDate;
+      }
+      set
+      {
+        if (value.HasValue)
+          LastDate = value.Value;
+        else
+          DateRange = DateRange.Empty;
+      }
+    }
+
+    /// <summary>
+    /// ”правл€емое значение дл€ LastDate.
+    /// </summary>
+    public DepValue<DateTime?> NLastDateEx
+    {
+      get
+      {
+        InitNLastDateEx();
+        return _NLastDateEx;
+      }
+      set
+      {
+        InitNLastDateEx();
+        _NLastDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NLastDateEx;
+
+
+    private void InitNLastDateEx()
+    {
+      if (_NLastDateEx == null)
+      {
+        _NLastDateEx = new DepInput<DateTime?>(NLastDate, NLastDateEx_ValueChanged);
+        _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+      }
+    }
+
+    private void NLastDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideValueChanged)
+        NLastDate = _NLastDateEx.Value;
+    }
+
+    #endregion
+
     #region OnValueChanged
 
     void Control_TextChanged(object sender, EventArgs args)
@@ -1357,10 +1478,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
 
@@ -1416,10 +1535,8 @@ namespace FreeLibSet.Forms
     {
       if (_WarningIfEmptyEx == null)
       {
-        _WarningIfEmptyEx = new DepInput<bool>();
+        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
         _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-        _WarningIfEmptyEx.Value = WarningIfEmpty;
-        _WarningIfEmptyEx.ValueChanged += new EventHandler(WarningIfEmptyEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _WarningIfEmptyEx;
@@ -1474,17 +1591,10 @@ namespace FreeLibSet.Forms
     {
       if (_DefaultYearEx == null)
       {
-        _DefaultYearEx = new DepInput<int>();
+        _DefaultYearEx = new DepInput<int>(DefaultYear,DefaultYearEx_ValueChanged);
         _DefaultYearEx.OwnerInfo = new DepOwnerInfo(this, "DefaultYearEx");
-        _DefaultYearEx.Value = DefaultYear;
-        _DefaultYearEx.ValueChanged += new EventHandler(DefaultYearEx_ValueChanged);
       }
     }
-
-    //void Control_DefaultYearChanged(object sender, EventArgs args)
-    //{
-    //  _DefaultYearEx.Value = DefaultYear;
-    //}
 
     void DefaultYearEx_ValueChanged(object sender, EventArgs args)
     {
@@ -1538,18 +1648,14 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>();
+        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
-        _ReadOnlyEx.Value = false;
-        _ReadOnlyEx.ValueChanged += new EventHandler(ReadOnlyEx_ValueChanged);
 
-        _ReadOnlyMain = new DepInput<bool>();
+        _ReadOnlyMain = new DepInput<bool>(false, null);
         _ReadOnlyMain.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyMain");
-        _ReadOnlyMain.Value = false;
 
-        _NotReadOnlySync = new DepInput<bool>();
+        _NotReadOnlySync = new DepInput<bool>(true, null);
         _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
-        _NotReadOnlySync.Value = true;
 
         DepOr ReadOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
         _ReadOnlyEx.Source = ReadOnlyOr;

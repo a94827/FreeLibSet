@@ -251,7 +251,7 @@ namespace FreeLibSet.DependedValues
     /// Вызов события ValueChanged.
     /// Затем извещаются объекты DepInput, подключенные к текущему объекту
     /// </summary>
-    protected virtual void OnValueChanged()
+    public virtual void OnValueChanged()
     {
       if (ValueChanged != null)
         ValueChanged(this, EventArgs.Empty);
@@ -747,7 +747,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Вызывается при изменении текущего значения
     /// </summary>
-    protected override void OnValueChanged()
+    public override void OnValueChanged()
     {
       if (_ValueChangedMainHandler!=null)
       _ValueChangedMainHandler(this, EventArgs.Empty);

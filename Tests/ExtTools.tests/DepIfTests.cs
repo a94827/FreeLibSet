@@ -20,12 +20,9 @@ namespace ExtTools.tests
     [Test]
     public void DynamicTest()
     {
-      DepInput<bool> vCond = new DepInput<bool>();
-      vCond.Value = true;
-      DepInput<int> vTrue = new DepInput<int>();
-      vTrue.Value = 1;
-      DepInput<int> vFalse = new DepInput<int>();
-      vFalse.Value = 2;
+      DepInput<bool> vCond = new DepInput<bool>(true, null);
+      DepInput<int> vTrue = new DepInput<int>(1, null);
+      DepInput<int> vFalse = new DepInput<int>(2, null);
 
       DepIf<int> sut = new DepIf<int>(vCond, vTrue, vFalse);
       DepResultProducer<int> resprod = new DepResultProducer<int>(sut);

@@ -428,10 +428,8 @@ namespace FreeLibSet.Forms
     {
       if (_MaxLengthEx == null)
       {
-        _MaxLengthEx = new DepInput<int>();
+        _MaxLengthEx = new DepInput<int>(MaxLength,MaxLengthEx_ValueChanged);
         _MaxLengthEx.OwnerInfo = new DepOwnerInfo(this, "MaxLengthEx");
-        _MaxLengthEx.Value = MaxLength;
-        _MaxLengthEx.ValueChanged += new EventHandler(MaxLengthEx_ValueChanged);
       }
     }
 
@@ -718,10 +716,8 @@ namespace FreeLibSet.Forms
     {
       if (_CanBeEmptyEx == null)
       {
-        _CanBeEmptyEx = new DepInput<bool>();
+        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
         _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-        _CanBeEmptyEx.Value = CanBeEmpty;
-        _CanBeEmptyEx.ValueChanged += new EventHandler(CanBeEmptyEx_ValueChanged);
       }
     }
 
@@ -777,10 +773,8 @@ namespace FreeLibSet.Forms
     {
       if (_WarningIfEmptyEx == null)
       {
-        _WarningIfEmptyEx = new DepInput<bool>();
+        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
         _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-        _WarningIfEmptyEx.Value = WarningIfEmpty;
-        _WarningIfEmptyEx.ValueChanged += new EventHandler(WarningIfEmptyEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _WarningIfEmptyEx;
@@ -1173,18 +1167,14 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>();
+        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
-        _ReadOnlyEx.Value = false;
-        _ReadOnlyEx.ValueChanged += new EventHandler(ReadOnlyEx_ValueChanged);
 
-        _ReadOnlyMain = new DepInput<bool>();
+        _ReadOnlyMain = new DepInput<bool>(false, null);
         _ReadOnlyMain.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyMain");
-        _ReadOnlyMain.Value = false;
 
-        _NotReadOnlySync = new DepInput<bool>();
+        _NotReadOnlySync = new DepInput<bool>(true, null);
         _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
-        _NotReadOnlySync.Value = true;
 
         DepOr ReadOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
         _ReadOnlyEx.Source = ReadOnlyOr;
@@ -1578,10 +1568,8 @@ namespace FreeLibSet.Forms
     {
       if (_MaskEx == null)
       {
-        _MaskEx = new DepInput<string>();
+        _MaskEx = new DepInput<string>(Mask,MaskEx_ValueChanged);
         _MaskEx.OwnerInfo = new DepOwnerInfo(this, "MaskEx");
-        _MaskEx.Value = Mask;
-        _MaskEx.ValueChanged += new EventHandler(MaskEx_ValueChanged);
       }
     }
     private DepInput<string> _MaskEx;
@@ -1667,15 +1655,13 @@ namespace FreeLibSet.Forms
     {
       if (_MaskCanBePartialEx == null)
       {
-        _MaskCanBePartialEx = new DepInput<bool>();
+        _MaskCanBePartialEx = new DepInput<bool>(MaskCanBePartial,MaskCanBePartialEx_ValueChanged);
         _MaskCanBePartialEx.OwnerInfo = new DepOwnerInfo(this, "MaskCanBePartialEx");
-        _MaskCanBePartialEx.Value = MaskCanBePartial;
-        _MaskCanBePartialEx.ValueChanged += new EventHandler(FMaskCanBePartialEx_ValueChanged);
       }
     }
     private DepInput<Boolean> _MaskCanBePartialEx;
 
-    private void FMaskCanBePartialEx_ValueChanged(object sender, EventArgs args)
+    private void MaskCanBePartialEx_ValueChanged(object sender, EventArgs args)
     {
       MaskCanBePartial = _MaskCanBePartialEx.Value;
     }

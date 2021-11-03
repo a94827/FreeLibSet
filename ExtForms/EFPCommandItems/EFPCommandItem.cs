@@ -1044,10 +1044,8 @@ namespace FreeLibSet.Forms
     {
       if (_VisibleEx == null)
       {
-        _VisibleEx = new DepInput<bool>();
+        _VisibleEx = new DepInput<bool>(Visible,VisibleEx_ValueChanged);
         _VisibleEx.OwnerInfo = new DepOwnerInfo(this, "VisibleEx");
-        _VisibleEx.Value = Visible;
-        _VisibleEx.ValueChanged += new EventHandler(VisibleEx_ValueChanged);
       }
     }
 
@@ -1111,10 +1109,8 @@ namespace FreeLibSet.Forms
     {
       if (_EnabledEx == null)
       {
-        _EnabledEx = new DepInput<bool>();
+        _EnabledEx = new DepInput<bool>(Enabled,EnabledEx_ValueChanged);
         _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
-        _EnabledEx.Value = Enabled;
-        _EnabledEx.ValueChanged += new EventHandler(EnabledEx_ValueChanged);
       }
     }
 
@@ -1174,10 +1170,8 @@ namespace FreeLibSet.Forms
     {
       if (_CheckedEx == null)
       {
-        _CheckedEx = new DepInput<bool>();
+        _CheckedEx = new DepInput<bool>(Checked,CheckedEx_ValueChanged);
         _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
-        _CheckedEx.Value = Checked;
-        _CheckedEx.ValueChanged += new EventHandler(CheckedEx_ValueChanged);
       }
     }
 
