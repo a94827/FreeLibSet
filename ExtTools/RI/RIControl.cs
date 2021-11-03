@@ -250,6 +250,8 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Text
+
     /// <summary>
     /// Введенный текст
     /// </summary>
@@ -268,8 +270,11 @@ namespace FreeLibSet.RI
           _Text = null;
         else
           _Text = value;
+
         if (_TextEx != null)
           _TextEx.Value = _Text;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(Text));
       }
     }
     private string _Text; // храним null вместо пустой строки
@@ -298,7 +303,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool TextExConnected
+    public bool InternalTextExConnected
     {
       get
       {
@@ -323,6 +328,10 @@ namespace FreeLibSet.RI
       Text = _TextEx.Value;
     }
 
+    #endregion
+
+    #region MaxLength
+
     /// <summary>
     /// Максимальная длина текста. По умолчанию: 32767 (Int16.MaxValue) символов
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
@@ -338,6 +347,9 @@ namespace FreeLibSet.RI
     }
     private int _MaxLength;
 
+    #endregion
+
+    #region ReadOnly
 
     /// <summary>
     /// Режим работы текстового поля для просмотра без возможности редактирования.
@@ -389,7 +401,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool ReadOnlyExConnected
+    public bool InternalReadOnlyExConnected
     {
       get
       {
@@ -411,7 +423,7 @@ namespace FreeLibSet.RI
 
     #endregion
 
-    #region Свойства для проверки значения
+    #region CanBeEmpty
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -443,69 +455,25 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
-
     /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
+    /// Управляемое свойство, возвращающее true, если в поле ввода есть текст.
+    /// Может использоваться в валидаторах.
     /// </summary>
-    public string ErrorRegExPattern
+    public DepValue<bool> IsNotEmptyEx
     {
-      get { return _ErrorRegExPattern; }
-      set
+      get 
       {
-        CheckNotFixed();
-        _ErrorRegExPattern = value;
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
       }
     }
-    private string _ErrorRegExPattern;
+    private DepOutput<bool> _IsNotEmptyEx;
 
-    /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string ErrorRegExMessage
-    {
-      get { return _ErrorRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _ErrorRegExMessage = value;
-      }
-    }
-    private string _ErrorRegExMessage;
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern
-    {
-      get { return _WarningRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExPattern = value;
-      }
-    }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage
-    {
-      get { return _WarningRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExMessage = value;
-      }
-    }
-    private string _WarningRegExMessage;
+    #endregion
 
     #endregion
 
@@ -4517,69 +4485,6 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
-    /// </summary>
-    public string ErrorRegExPattern
-    {
-      get { return _ErrorRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _ErrorRegExPattern = value;
-      }
-    }
-    private string _ErrorRegExPattern;
-
-    /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string ErrorRegExMessage
-    {
-      get { return _ErrorRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _ErrorRegExMessage = value;
-      }
-    }
-    private string _ErrorRegExMessage;
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern
-    {
-      get { return _WarningRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExPattern = value;
-      }
-    }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage
-    {
-      get { return _WarningRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExMessage = value;
-      }
-    }
-    private string _WarningRegExMessage;
 
     #endregion
 

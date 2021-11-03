@@ -625,68 +625,6 @@ namespace FreeLibSet.RI
     }
     private int _MaxLength;
 
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
-    /// </summary>
-    public string ErrorRegExPattern
-    {
-      get { return _ErrorRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _ErrorRegExPattern = value;
-      }
-    }
-    private string _ErrorRegExPattern;
-
-    /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string ErrorRegExMessage
-    {
-      get { return _ErrorRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _ErrorRegExMessage = value;
-      }
-    }
-    private string _ErrorRegExMessage;
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern
-    {
-      get { return _WarningRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExPattern = value;
-      }
-    }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage
-    {
-      get { return _WarningRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExMessage = value;
-      }
-    }
-    private string _WarningRegExMessage;
 
     #endregion
 
@@ -863,68 +801,6 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
-    /// </summary>
-    public string ErrorRegExPattern
-    {
-      get { return _ErrorRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _ErrorRegExPattern = value;
-      }
-    }
-    private string _ErrorRegExPattern;
-
-    /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string ErrorRegExMessage
-    {
-      get { return _ErrorRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _ErrorRegExMessage = value;
-      }
-    }
-    private string _ErrorRegExMessage;
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern
-    {
-      get { return _WarningRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExPattern = value;
-      }
-    }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage
-    {
-      get { return _WarningRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExMessage = value;
-      }
-    }
-    private string _WarningRegExMessage;
 
     #endregion
 

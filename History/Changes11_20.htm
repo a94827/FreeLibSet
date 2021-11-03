@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="2021-10-20T17:35:30.201000000"/>
-	<meta name="changed" content="2021-11-02T15:53:21.228000000"/>
+	<meta name="changed" content="2021-11-03T16:58:18.934000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
 		td p { line-height: 120%; orphans: 0; widows: 0; margin-bottom: 0.25cm; background: transparent }
@@ -709,12 +709,12 @@ DateTimeBox, DateRangeBox, IntEditBox, ...), </span><span lang="ru-RU">то
 </span>DepValue&lt;bool&gt; IsNotEmptyEx {get;}. <span lang="ru-RU">Только
 выход, возвращающий </span>true, <span lang="ru-RU">если в поле есть
 непустое значение. Свойство можно использовать в качестве предусловия
-для валидатора </span>UIValidator<span lang="ru-RU">. Есть только для
-управляющих элементов, но не диалогов.</span></p>
+для валидатора </span>UIValidator<span lang="ru-RU">. </span>
+</p>
 <p>В <span lang="en-US">ExtForms </span>использовалось свойство
 <span lang="en-US">WarningIfEmpty. </span>Оно заменяется на
 <span lang="en-US">CanBeEmptyMode.</span></p>
-<p>Управляемые свойства<span lang="en-US"> CanBeEmptyEx </span>и
+<p>Управляемые свойства <span lang="en-US">CanBeEmptyEx </span>и
 <span lang="en-US">WarningIfEmptyEx </span>упраздняются. Они могут
 быть легко реализованы с помощью <span lang="en-US">UIValidator, </span>если
 в качестве условия использовать свойство <span lang="en-US">IsNotEmptyEx.</span></p>
@@ -742,15 +742,14 @@ DateTimeBox, DateRangeBox, IntEditBox, ...), </span><span lang="ru-RU">то
 <span lang="en-US">IsNotEmptyEx.</span></p>
 <p>В <span lang="en-US">ExtForms </span>вносятся такие же изменения.
 Например, класс <span lang="en-US">DateTimeInputDialog </span>содержит
-список <span lang="en-US">Validators </span>и управляемые свойства и<span lang="en-US">
-IsNotEmptyEx </span>только для чтения.</p>
+список <span lang="en-US">Validators </span>и управляемые свойства и
+<span lang="en-US">IsNotEmptyEx </span>только для чтения.</p>
 <p>Существующие события <span lang="en-US">Validating </span>убираются,
 т.к. их можно заменить на объекты <span lang="en-US">UIValidator.
 </span>Отличие: Обработчик <span lang="en-US">UIValidator</span>
-вызывается и при пустом текущем значении,<span lang="en-US"> </span>если
-проверка не остановилась на <span lang="en-US">CanBeEmpty=false</span>.
- Можно подсоединить <span lang="en-US">IsNotEmptyEx </span>к
-предусловию.</p>
+вызывается и при пустом текущем значении, если проверка не
+остановилась на <span lang="en-US">CanBeEmpty=false</span>. Можно
+подсоединить <span lang="en-US">IsNotEmptyEx </span>к предусловию.</p>
 <h2 class="western">Indexes <span lang="ru-RU">или </span>Indices?</h2>
 <p>Если свойство относится <span lang="ru-RU">к индексам элементов
 массива, то используется &quot;</span><span lang="en-US">Indices</span><span lang="ru-RU">&quot;</span><span lang="en-US">.

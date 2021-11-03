@@ -259,6 +259,15 @@ namespace FreeLibSet.Forms
     /// </summary>
     bool ValidateWhenFocusChanged { get; set; }
 
+    /// <summary>
+    /// Список валидаторов, присоединенных к управляющему элементу
+    /// </summary>
+    UIValidatorList Validators { get; }
+
+    /// <summary>
+    /// Возвращает true, если список Validators содержит элементы
+    /// </summary>
+    bool HasValidators { get; }
 
     /// <summary>
     /// Передать фокус ввода управляющему элементу.
@@ -740,6 +749,22 @@ namespace FreeLibSet.Forms
         CommandItems.Active = true; // 05.07.2021
 
       UpdateVisibleState();
+
+      AttachValidators();
+    }
+
+    private void AttachValidators()
+    {
+      if (this.HasValidators)
+      {
+        this.Validators.SetReadOnly();
+        foreach (FreeLibSet.UICore.UIValidator v in this.Validators)
+        {
+          v.ExpressionEx.ValueChanged += new EventHandler(this.Validate);
+          if (v.PreconditionEx != null)
+            v.PreconditionEx.ValueChanged += new EventHandler(this.Validate);
+        }
+      }
     }
 
     #endregion
@@ -779,6 +804,21 @@ namespace FreeLibSet.Forms
 
       SaveConfig();
       UpdateVisibleState();
+
+      DetachValidators();
+    }
+
+    private void DetachValidators()
+    {
+      if (this.HasValidators)
+      {
+        foreach (FreeLibSet.UICore.UIValidator v in this.Validators)
+        {
+          v.ExpressionEx.ValueChanged -= new EventHandler(this.Validate);
+          if (v.PreconditionEx != null)
+            v.PreconditionEx.ValueChanged -= new EventHandler(this.Validate);
+        }
+      }
     }
 
     #endregion
@@ -866,7 +906,7 @@ namespace FreeLibSet.Forms
     {
       if (_VisibleEx == null)
       {
-        _VisibleEx = new DepInput<Boolean>(Visible,VisibleEx_ValueChanged);
+        _VisibleEx = new DepInput<Boolean>(Visible, VisibleEx_ValueChanged);
         _VisibleEx.OwnerInfo = new DepOwnerInfo(this, "VisibleEx");
       }
     }
@@ -1855,10 +1895,8 @@ namespace FreeLibSet.Forms
         {
           OnValidate();
 
-          if (_Valifators != null)
-          {
-            Validate(_Valifators, this);
-          }
+          if (_Validators != null)
+            Validate(_Validators, this);
 
           if ((_ValidateState != UIValidateState.Error) && (Validating != null))
           {
@@ -1893,12 +1931,12 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < valifators.Count; i++)
       {
-        if (valifators[i].ActiveEx != null)
+        if (valifators[i].PreconditionEx != null)
         {
-          if (!valifators[i].ActiveEx.Value)
+          if (!valifators[i].PreconditionEx.Value)
             continue;
         }
-        if (!valifators[i].Expression.Value)
+        if (!valifators[i].ExpressionEx.Value)
         {
           if (valifators[i].IsError)
           {
@@ -1918,12 +1956,31 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        if (_Valifators == null)
-          _Valifators = new UIValidatorList();
-        return _Valifators;
+        if (_Validators == null)
+        {
+          if (ProviderState == EFPControlProviderState.Initialization || ProviderState == EFPControlProviderState.Created)
+            _Validators = new UIValidatorList();
+          else
+            _Validators = UIValidatorList.Empty;
+        }
+        return _Validators;
       }
     }
-    private UIValidatorList _Valifators;
+    private UIValidatorList _Validators;
+
+    /// <summary>
+    /// Возвращает true, если список содержит валидаторы
+    /// </summary>
+    public bool HasValidators
+    {
+      get
+      {
+        if (_Validators == null)
+          return false;
+        else
+          return _Validators.Count > 0;
+      }
+    }
 
     /// <summary>
     /// Специальная версия выполнения проверки для управляющего элемента, которую

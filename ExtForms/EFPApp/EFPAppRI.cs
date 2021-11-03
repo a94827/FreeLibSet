@@ -226,17 +226,9 @@ namespace FreeLibSet.Forms.RI
   /// <summary>
   /// Расширяет IEFPAppRIItem возможностью проверки значений
   /// </summary>
-  public interface IEFPAppRIControlItem : IEFPAppRIItem
+  public interface IEFPAppRIControlItem : IEFPAppRIItem, IEFPControl
   {
-    /// <summary>
-    /// Обработчик для проверки ошибок.
-    /// </summary>
-    event EFPValidatingEventHandler Validating;
 
-    /// <summary>
-    /// Выполнить проверку значений.
-    /// </summary>
-    void Validate();
   }
 
   /// <summary>
@@ -324,70 +316,7 @@ namespace FreeLibSet.Forms.RI
       if (efpControl == null)
         throw new InvalidOperationException("Класс " + efpItem.GetType().ToString() + " не реализует интерфейс IEFPAppRIItemWithValidating для проверки корректности введенных значений. Нельзя использовать списки валидаторов " + riItem.GetType().ToString() + ".Validators");
 
-      ItemValidator iv = new ItemValidator(riControl, efpControl);
-      efpControl.Validating += new EFPValidatingEventHandler(iv.Validating);
-      foreach (FreeLibSet.UICore.UIValidator v in riControl.Validators)
-      {
-        v.Expression.ValueChanged += new EventHandler(iv.Validate);
-        if (v.ActiveEx != null)
-          v.ActiveEx.ValueChanged += new EventHandler(iv.Validate);
-      }
-    }
-
-    private class ItemValidator
-    {
-      #region Конструктор
-
-      public ItemValidator(FreeLibSet.RI.Control riControl, IEFPAppRIControlItem efpControl)
-      {
-        _RIControl = riControl;
-        _EFPControl = efpControl;
-      }
-
-      #endregion
-
-      #region Свойства
-
-      private FreeLibSet.RI.Control _RIControl;
-
-      private IEFPAppRIControlItem _EFPControl;
-
-      #endregion
-
-      #region Обработчик
-
-      public void Validating(object sender, EFPValidatingEventArgs args)
-      {
-        if (args.ValidateState == UIValidateState.Error)
-          return;
-
-        foreach (UIValidator v in _RIControl.Validators)
-        {
-          if (v.ActiveEx != null)
-          {
-            if (!v.ActiveEx.Value)
-              continue;
-          }
-
-          if (!v.Expression.Value)
-          {
-            if (v.IsError)
-            {
-              args.SetError(v.Message);
-              return;
-            }
-            else if (args.ValidateState == UIValidateState.Ok)
-              args.SetWarning(v.Message);
-          }
-        }
-      }
-
-      public void Validate(object sender, EventArgs args)
-      {
-        _EFPControl.Validate();
-      }
-
-      #endregion
+      efpControl.Validators.AddRange(riControl.Validators);
     }
 
     #endregion
@@ -743,6 +672,9 @@ namespace FreeLibSet.Forms.RI
       if (riItem == null)
         throw new ArgumentNullException("riItem");
 
+      if (riItem.HasValidators)
+        controlProvider.Validators.AddRange(riItem.Validators);
+
       new ControlAdapter(controlProvider, riItem);
     }
 
@@ -844,21 +776,13 @@ namespace FreeLibSet.Forms.RI
         : base(baseProvider, new System.Windows.Forms.TextBox())
       {
         _RIItem = riItem;
-        switch (riItem.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: base.CanBeEmpty = false; break;
-          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: base.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
-
+        base.CanBeEmptyMode = riItem.CanBeEmptyMode;
         base.MaxLength = riItem.MaxLength;
 
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.TextExConnected)
+        if (riItem.InternalTextExConnected)
         {
           if (riItem.TextEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -867,7 +791,7 @@ namespace FreeLibSet.Forms.RI
             riItem.TextEx = base.TextEx;
         }
 
-        if (riItem.ReadOnlyExConnected)
+        if (riItem.InternalReadOnlyExConnected)
         {
           if (riItem.ReadOnlyEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
@@ -879,10 +803,6 @@ namespace FreeLibSet.Forms.RI
           }
         }
 
-        base.ErrorRegExPattern = riItem.ErrorRegExPattern;
-        base.ErrorRegExMessage = riItem.ErrorRegExMessage;
-        base.WarningRegExPattern = riItem.WarningRegExPattern;
-        base.WarningRegExMessage = riItem.WarningRegExMessage;
       }
 
       FreeLibSet.RI.TextBox _RIItem;
@@ -1706,15 +1626,7 @@ namespace FreeLibSet.Forms.RI
         base.Control.Items.AddRange(riItem.Items);
         WinFormsTools.SetComboBoxWidth(base.Control);
 
-        switch (riItem.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: base.CanBeEmpty = false; break;
-          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: base.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
-
+        base.CanBeEmptyMode = riItem.CanBeEmptyMode;
         base.MaxLength = riItem.MaxLength;
 
         _RIItem = riItem;
@@ -1729,11 +1641,6 @@ namespace FreeLibSet.Forms.RI
           else
             riItem.TextEx = base.TextEx;
         }
-
-        base.ErrorRegExPattern = riItem.ErrorRegExPattern;
-        base.ErrorRegExMessage = riItem.ErrorRegExMessage;
-        base.WarningRegExPattern = riItem.WarningRegExPattern;
-        base.WarningRegExMessage = riItem.WarningRegExMessage;
       }
 
       FreeLibSet.RI.TextComboBox _RIItem;
@@ -1763,15 +1670,7 @@ namespace FreeLibSet.Forms.RI
       public CsvCodesComboBoxItem(FreeLibSet.RI.CsvCodesComboBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new FreeLibSet.Controls.UserTextComboBox(), riItem.Codes)
       {
-        switch (riItem.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: base.CanBeEmpty = false; break;
-          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: base.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
-
+        base.CanBeEmptyMode=riItem.CanBeEmptyMode;
         base.Names = riItem.Names;
 
         _RIItem = riItem;
@@ -1931,14 +1830,7 @@ namespace FreeLibSet.Forms.RI
       public FolderBrowserTextBoxItem(FreeLibSet.RI.FolderBrowserTextBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider)
       {
-        switch (riItem.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: base.TheTextBox.CanBeEmpty = false; break;
-          case UIValidateState.Warning: base.TheTextBox.CanBeEmpty = true; base.TheTextBox.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: base.TheTextBox.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
+        base.TheTextBox.CanBeEmptyMode=riItem.CanBeEmptyMode;
 
         TheButton = new EFPFolderBrowserButton(TheTextBox, Control.TheButton);
         TheButton.Description = riItem.Description;
@@ -1978,14 +1870,7 @@ namespace FreeLibSet.Forms.RI
       public FileTextBoxItem(FreeLibSet.RI.FileTextBox riItem, EFPBaseProvider baseProvider, FreeLibSet.Forms.FileDialogMode mode)
         : base(baseProvider)
       {
-        switch (riItem.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: base.TheTextBox.CanBeEmpty = false; break;
-          case UIValidateState.Warning: base.TheTextBox.CanBeEmpty = true; base.TheTextBox.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: base.TheTextBox.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
+        base.TheTextBox.CanBeEmptyMode=riItem.CanBeEmptyMode;
 
         TheButton = new EFPFileDialogButton(TheTextBox, Control.TheButton);
         TheButton.Mode = mode;
@@ -2205,22 +2090,9 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
 
-        switch (riDialog.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
-          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
-        }
-
+        _WinDlg.CanBeEmptyMode = riDialog.CanBeEmptyMode;
         _WinDlg.MaxLength = riDialog.MaxLength;
         //_WinDlg.IsPassword = riDialog.IsPassword;
-
-        _WinDlg.ErrorRegExPattern = riDialog.ErrorRegExPattern;
-        _WinDlg.ErrorRegExMessage = riDialog.ErrorRegExMessage;
-        _WinDlg.WarningRegExPattern = riDialog.WarningRegExPattern;
-        _WinDlg.WarningRegExMessage = riDialog.WarningRegExMessage;
 
         _WinDlg.Text = riDialog.Text; // обязательное присвоение, иначе свойство обнулится
         if (riDialog.TextExConnected)
@@ -2272,23 +2144,9 @@ namespace FreeLibSet.Forms.RI
         _WinDlg = new FreeLibSet.Forms.TextComboInputDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
-
-        switch (riDialog.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
-          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
-        }
-
         _WinDlg.Items = riDialog.Items;
+        _WinDlg.CanBeEmptyMode = riDialog.CanBeEmptyMode;
         _WinDlg.MaxLength = riDialog.MaxLength;
-
-        _WinDlg.ErrorRegExPattern = riDialog.ErrorRegExPattern;
-        _WinDlg.ErrorRegExMessage = riDialog.ErrorRegExMessage;
-        _WinDlg.WarningRegExPattern = riDialog.WarningRegExPattern;
-        _WinDlg.WarningRegExMessage = riDialog.WarningRegExMessage;
       }
 
       #endregion
@@ -2570,16 +2428,7 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.ReadOnly = riDialog.ReadOnly;
-
-        switch (riDialog.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
-          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
-        }
-
+        _WinDlg.CanBeEmptyMode = riDialog.CanBeEmptyMode;
         _WinDlg.Maximized = riDialog.Maximized;
       }
 

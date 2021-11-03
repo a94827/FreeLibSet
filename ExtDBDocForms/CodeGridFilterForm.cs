@@ -71,11 +71,12 @@ namespace FreeLibSet.Forms.Docs
       efpCodes.EnabledEx = new DepExpr1<bool, int>(efpMode.SelectedIndexEx, new DepFunction1<bool, int>(CalcCodesEnabled));
       efpEmpty.EnabledEx = efpCodes.EnabledEx;
 
-      efpCodes.CanBeEmptyEx = efpEmpty.CheckedEx;
+      efpCodes.CanBeEmpty = true;
       efpCodes.Validating += new EFPValidatingEventHandler(efpCodes_Validating);
       edCodes.PopupClick += new EventHandler(edCodes_PopupClick);
       edCodes.ClearButton = true;
       edCodes.ClearClick += new EventHandler(edCodes_ClearClick);
+      efpEmpty.CheckedEx.ValueChanged += efpCodes.Validate;
     }
 
     private static bool CalcCodesEnabled(int arg)
@@ -104,7 +105,11 @@ namespace FreeLibSet.Forms.Docs
       if (args.ValidateState == UIValidateState.Error)
         return; // пустое поле
       if (String.IsNullOrEmpty(efpCodes.Text))
+      {
+        if (!efpEmpty.Checked)
+          args.SetError("Список должен быть заполнен");
         return;
+      }
       string[] a = efpCodes.Text.Split(',');
       for (int i = 0; i < a.Length; i++)
       {

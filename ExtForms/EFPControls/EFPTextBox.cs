@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает длину текста в элементе
     /// </summary>
-    int TextLength { get;}
+    int TextLength { get; }
 
     /// <summary>
     /// Начальная позиция выделенного текста или положение курсора при SelectionLength=0
@@ -104,25 +104,20 @@ namespace FreeLibSet.Forms
     DepValue<string> TextEx { get; set; }
 
     /// <summary>
+    /// Основное свойство для проверки пустых значений. По умолчанию равно Error - пустые значения не допускаются
+    /// </summary>
+    UIValidateState CanBeEmptyMode { get; set; }
+
+    /// <summary>
     /// true, если элемент может содержать пустой текст.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
     bool CanBeEmpty { get; set; }
 
     /// <summary>
-    /// Управляемое свойство CanBeEmpty
+    /// Управляемое свойство, возвращающее true, если есть введенный текст
     /// </summary>
-    DepValue<bool> CanBeEmptyEx { get; set; }
-
-    /// <summary>
-    /// true, если нужно выдавать предупреждение, когда в элементе введен пустой текст.
-    /// Свойство действует только при CanBeEmpty=true
-    /// </summary>
-    bool WarningIfEmpty { get; set; }
-
-    /// <summary>
-    /// Управляемое свойство WarningIfEmpty
-    /// </summary>
-    DepValue<bool> WarningIfEmptyEx { get; set; }
+    DepValue<bool> IsNotEmptyEx { get; }
 
     /// <summary>
     /// Ограничение на максимальную длину текста
@@ -130,24 +125,19 @@ namespace FreeLibSet.Forms
     int MaxLength { get; set; }
 
     /// <summary>
-    /// Управляемое свойство MaxLength
-    /// </summary>
-    DepValue<int> MaxLengthEx { get; set; }
-
-    /// <summary>
     /// Разрешает использование "серого" значения
     /// </summary>
-    bool AllowDisabledText { get; set;}
+    bool AllowDisabledText { get; set; }
 
     /// <summary>
     /// "Серое" значение, используемое, когда текст в поле нельзя редактировать.
     /// </summary>
-    string DisabledText { get;set;}
+    string DisabledText { get; set; }
 
     /// <summary>
     /// Управляемое свойство DisabledText
     /// </summary>
-    DepValue<string> DisabledTextEx { get; set;}
+    DepValue<string> DisabledTextEx { get; set; }
 
     /// <summary>
     /// Контекст для поиска текста
@@ -174,7 +164,7 @@ namespace FreeLibSet.Forms
     /// Для EFPTextBox вовзращает признак ввода звездочек.
     /// Для остальных элементов возвращает false
     /// </summary>
-    bool IsPasswordInput { get;}
+    bool IsPasswordInput { get; }
 
     /// <summary>
     /// Возвращает true, если управляющий элемент в приципе поддерживает операцию Undo
@@ -284,7 +274,7 @@ namespace FreeLibSet.Forms
       _AllowDisabledText = false;
       _DisabledText = String.Empty;
       _SavedText = Control.Text;
-      _CanBeEmpty = true;
+      _CanBeEmptyMode = UIValidateState.Error;
       if (!DesignMode)
         Control.TextChanged += new EventHandler(Control_TextChanged);
     }
@@ -305,36 +295,14 @@ namespace FreeLibSet.Forms
 
       if (String.IsNullOrEmpty(Text))
       {
-        if (CanBeEmpty)
+        switch (CanBeEmptyMode)
         {
-          if (WarningIfEmpty)
+          case UIValidateState.Error:
+            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
+            break;
+          case UIValidateState.Warning:
             SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
-        }
-        else
-          SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
-      }
-      else
-      {
-        if (!String.IsNullOrEmpty(ErrorRegExPattern))
-        {
-          if (!Regex.IsMatch(Text, ErrorRegExPattern))
-          {
-            if (String.IsNullOrEmpty(ErrorRegExMessage))
-              SetError("Значение не соответствует формату");
-            else
-              SetError(ErrorRegExMessage);
-          }
-        }
-
-        if (base.ValidateState == UIValidateState.Ok && (!String.IsNullOrEmpty(WarningRegExPattern)))
-        {
-          if (!Regex.IsMatch(Text, WarningRegExPattern))
-          {
-            if (String.IsNullOrEmpty(WarningRegExMessage))
-              SetWarning("Значение не соответствует формату");
-            else
-              SetWarning(WarningRegExMessage);
-          }
+            break;
         }
       }
     }
@@ -401,43 +369,8 @@ namespace FreeLibSet.Forms
         if (value == ControlMaxLength)
           return;
         ControlMaxLength = value;
-        if (_MaxLengthEx != null)
-          _MaxLengthEx.Value = value;
-        // ?? Validate();
+        Validate();
       }
-    }
-
-    /// <summary>
-    /// Управляемое свойство MaxLength
-    /// </summary>
-    public DepValue<int> MaxLengthEx
-    {
-      get
-      {
-        InitMaxLengthEx();
-        return _MaxLengthEx;
-      }
-      set
-      {
-        InitMaxLengthEx();
-        _MaxLengthEx.Source = value;
-      }
-    }
-
-    private void InitMaxLengthEx()
-    {
-      if (_MaxLengthEx == null)
-      {
-        _MaxLengthEx = new DepInput<int>(MaxLength,MaxLengthEx_ValueChanged);
-        _MaxLengthEx.OwnerInfo = new DepOwnerInfo(this, "MaxLengthEx");
-      }
-    }
-
-    private DepInput<int> _MaxLengthEx;
-
-    private void MaxLengthEx_ValueChanged(object sender, EventArgs args)
-    {
-      MaxLength = _MaxLengthEx.Value;
     }
 
     /// <summary>
@@ -505,7 +438,7 @@ namespace FreeLibSet.Forms
     {
       if (_TextEx == null)
       {
-        _TextEx = new DepInput<string>(Text,TextEx_ValueChanged);
+        _TextEx = new DepInput<string>(Text, TextEx_ValueChanged);
         _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
       }
     }
@@ -639,7 +572,7 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledTextEx == null)
       {
-        _DisabledTextEx = new DepInput<string>(DisabledText,DisabledTextEx_ValueChanged);
+        _DisabledTextEx = new DepInput<string>(DisabledText, DisabledTextEx_ValueChanged);
         _DisabledTextEx.OwnerInfo = new DepOwnerInfo(this, "DisabledTextEx");
       }
     }
@@ -674,190 +607,33 @@ namespace FreeLibSet.Forms
     #region Свойство CanBeEmpty
 
     /// <summary>
-    /// True, если ли элемент содержать пустой текст.
-    /// Значение по умолчанию - true.
-    /// 
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error.
     /// Это свойство переопределяется для нестандартных элементов, содержащих
     /// кнопку очистки справа от элемента
     /// </summary>
-    public virtual bool CanBeEmpty
+    public virtual UIValidateState CanBeEmptyMode
     {
-      get { return _CanBeEmpty; }
+      get { return _CanBeEmptyMode; }
       set
       {
-        if (value == _CanBeEmpty)
+        if (value == _CanBeEmptyMode)
           return;
-        _CanBeEmpty = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
+        _CanBeEmptyMode = value;
         Validate();
       }
     }
-    private bool _CanBeEmpty;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// True, если ли элемент содержать пустой текст.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
-    public DepValue<Boolean> CanBeEmptyEx
+    public virtual bool CanBeEmpty
     {
-      get
-      {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
-      }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
-
-    private void InitCanBeEmptyEx()
-    {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
-    }
-
-    #endregion
-
-    #region Свойство WarningIfEmpty
-
-    /// <summary>
-    /// Выдавать предупреждение, если текст не введен (при условии, что CanBeEmpty=true)
-    /// </summary>
-    public bool WarningIfEmpty
-    {
-      get { return _WarningIfEmpty; }
-      set
-      {
-        if (value == _WarningIfEmpty)
-          return;
-        _WarningIfEmpty = value;
-        if (_WarningIfEmptyEx != null)
-          _WarningIfEmptyEx.Value = value;
-        Validate();
-      }
-    }
-    private bool _WarningIfEmpty;
-
-    /// <summary>
-    /// Если True и свойство CanBeEmpty=True, то при проверке состояния выдается
-    /// предупреждение, если свойство Text содержит пустую строку
-    /// По умолчанию - False
-    /// </summary>
-    public DepValue<Boolean> WarningIfEmptyEx
-    {
-      get
-      {
-        InitWarningIfEmptyEx();
-        return _WarningIfEmptyEx;
-      }
-      set
-      {
-        InitWarningIfEmptyEx();
-        _WarningIfEmptyEx.Source = value;
-      }
-    }
-
-    private void InitWarningIfEmptyEx()
-    {
-      if (_WarningIfEmptyEx == null)
-      {
-        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
-        _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-      }
-    }
-    private DepInput<Boolean> _WarningIfEmptyEx;
-
-    void WarningIfEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      WarningIfEmpty = _WarningIfEmptyEx.Value;
-    }
-
-    #endregion
-
-    #region Свойства ErrorRegEx и WarningRegEx
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
-    /// </summary>
-    public string ErrorRegExPattern
-    {
-      get { return _ErrorRegExPattern; }
-      set
-      {
-        if (value == _ErrorRegExPattern)
-          return;
-        _ErrorRegExPattern = value;
-        Validate();
-      }
-    }
-    private string _ErrorRegExPattern;
-
-    /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string ErrorRegExMessage
-    {
-      get { return _ErrorRegExMessage; }
-      set
-      {
-        if (value == _ErrorRegExMessage)
-          return;
-        _ErrorRegExMessage = value;
-        Validate();
-      }
-    }
-    private string _ErrorRegExMessage;
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern
-    {
-      get { return _WarningRegExPattern; }
-      set
-      {
-        if (value == _WarningRegExPattern)
-          return;
-        _WarningRegExPattern = value;
-        Validate();
-      }
-    }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage
-    {
-      get { return _WarningRegExMessage; }
-      set
-      {
-        if (value == _WarningRegExMessage)
-          return;
-        _WarningRegExMessage = value;
-        Validate();
-      }
-    }
-    private string _WarningRegExMessage;
 
     #endregion
 
@@ -1167,7 +943,7 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
+        _ReadOnlyEx = new DepInput<Boolean>(false, ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
 
         _ReadOnlyMain = new DepInput<bool>(false, null);
@@ -1388,7 +1164,7 @@ namespace FreeLibSet.Forms
     /// Проверяем все сепараторы новой строки, а не только Environment.NewLine.
     /// Сначала длинные, затем, короткие
     /// </summary>
-    private static readonly string[] NewLineSeps = new string[] { "\r\n", "\r\n", "\n" , "\r" };
+    private static readonly string[] NewLineSeps = new string[] { "\r\n", "\r\n", "\n", "\r" };
 
     internal static void GetCurrentRC(string text, int pos, out int row, out int column)
     {
@@ -1568,7 +1344,7 @@ namespace FreeLibSet.Forms
     {
       if (_MaskEx == null)
       {
-        _MaskEx = new DepInput<string>(Mask,MaskEx_ValueChanged);
+        _MaskEx = new DepInput<string>(Mask, MaskEx_ValueChanged);
         _MaskEx.OwnerInfo = new DepOwnerInfo(this, "MaskEx");
       }
     }
@@ -1655,7 +1431,7 @@ namespace FreeLibSet.Forms
     {
       if (_MaskCanBePartialEx == null)
       {
-        _MaskCanBePartialEx = new DepInput<bool>(MaskCanBePartial,MaskCanBePartialEx_ValueChanged);
+        _MaskCanBePartialEx = new DepInput<bool>(MaskCanBePartial, MaskCanBePartialEx_ValueChanged);
         _MaskCanBePartialEx.OwnerInfo = new DepOwnerInfo(this, "MaskCanBePartialEx");
       }
     }

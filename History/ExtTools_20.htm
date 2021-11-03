@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-11-02T21:38:22.121000000"/>
+	<meta name="changed" content="2021-11-03T14:23:01.541000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -465,10 +466,10 @@
 			<p><span lang="en-US">5. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepInputWithCheck&lt;T&gt; </span><span lang="ru-RU">упразднен.
 			Событие </span><span lang="en-US">CheckValue </span><span lang="ru-RU">перенесено
-			в </span><span lang="en-US">DepInput&lt;T&gt;</span><span lang="en-US">.
-			</span><span lang="ru-RU">Конструктор </span><span lang="en-US">DepInput
-			</span><span lang="ru-RU">требует аргументов </span><span lang="en-US">value
-			</span><span lang="ru-RU">и </span><span lang="en-US">valueChanged</span></p>
+			в </span><span lang="en-US">DepInput&lt;T&gt;. </span><span lang="ru-RU">Конструктор
+			</span><span lang="en-US">DepInput </span><span lang="ru-RU">требует
+			аргументов </span><span lang="en-US">value </span><span lang="ru-RU">и
+			</span><span lang="en-US">valueChanged</span></p>
 			<p><span lang="en-US">6. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepValueObject&lt;T&gt; </span><span lang="ru-RU">переименован
 			в </span><span lang="en-US">DepOutput&lt;T&gt;. </span><span lang="ru-RU">Конструктор
@@ -498,7 +499,7 @@
 			<p><font color="#000000"><span lang="en-US">11</span></font><span lang="en-US">.
 			</span><span lang="ru-RU">Удаленный интерфейс:</span></p>
 			<p lang="en-US">- <span lang="ru-RU">Свойства </span>HasXxxExProperty
-			<span lang="ru-RU">заменены на </span>XxxPropertyConnected</p>
+			<span lang="ru-RU">заменены на </span>InternalXxxPropertyConnected</p>
 			<p><span lang="en-US">- </span>Вместо перечисления <span lang="en-US">CanBeEmptyMode</span>
 			(<a href="ExtTools_11.htm#v229p3"><span lang="en-US">v.229 </span><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span>
 			используется <span lang="en-US">UIValidateState</span></p>
@@ -520,6 +521,7 @@
 			</span>DateOrRangeBox.FirstDate/Ex, LastDate/Ex</p>
 			<p lang="en-US">- <span lang="ru-RU">Переименование
 			</span>DateInputDialog.Value/NValue.</p>
+			<p lang="en-US">- <span lang="ru-RU">Свойства </span>IsNotEmptyEx.</p>
 			<p lang="en-US">- <span lang="ru-RU">В диалогах ввода значений и
 			диапазонов переименование </span>MinValue/MaxValue <span lang="ru-RU">в
 			</span>Minimum/Maximum. <span lang="ru-RU">Для числовых типов
@@ -530,10 +532,8 @@
 			</span>TextInputDialog.IsPassword. <span lang="ru-RU">Предполагается
 			создание классов </span>PasswordTextBox <span lang="ru-RU">и
 			</span>PasswordInputDialog</p>
-			<p><br/>
-<br/>
-
-			</p>
+			<p lang="en-US">- <span lang="ru-RU">Убраны свойства
+			Error/</span>Warning<span lang="ru-RU">RegExPattern</span>/Message</p>
 			<p lang="en-US">- <span lang="ru-RU">Переименование
 			ComboTextInputDialog в </span>TextComboInputDialog. <span lang="ru-RU">Свойство
 			</span>Items <span lang="ru-RU">задается в конструкторе.</span></p>
@@ -546,10 +546,9 @@
 			<p lang="en-US">- <span lang="ru-RU">Свойство </span>InfoLabel.Lines.
 			<span lang="ru-RU">Свойство </span>Text <span lang="ru-RU">является
 			вспомогательным</span></p>
-			<p lang="en-US"><font color="#000000">1</font><font color="#000000">2</font>.
-			<span lang="ru-RU">Методы </span>DataTools.DecimalPlacesToNumberFormat()
-			<span lang="ru-RU">и DecimalPlacesToNumberFormat() перенесены в
-			</span>FormatStringTools</p>
+			<p lang="en-US"><font color="#000000">12</font>. <span lang="ru-RU">Методы
+			</span>DataTools.DecimalPlacesToNumberFormat() <span lang="ru-RU">и
+			DecimalPlacesToNumberFormat() перенесены в </span>FormatStringTools</p>
 		</td>
 	</tr>
 </table>

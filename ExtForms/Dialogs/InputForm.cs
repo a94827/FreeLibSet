@@ -296,9 +296,10 @@ namespace FreeLibSet.Forms
     {
       Title = "Ввод текста";
       Prompt = "Значение";
-      Text = String.Empty;
-      MaxLength = 0;
-      CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+      _Text = String.Empty;
+      _MaxLength = 0;
+      _CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -308,10 +309,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вход и выход: редактируемое значение
     /// </summary>
-    public string Text 
-    { 
-      get { return _Text; } 
-      set 
+    public string Text
+    {
+      get { return _Text; }
+      set
       {
         if (value == null)
           value = String.Empty;
@@ -320,7 +321,7 @@ namespace FreeLibSet.Forms
           _TextEx.OwnerSetValue(value);
         if (_IsNotEmptyEx != null)
           _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
-      } 
+      }
     }
     private string _Text;
 
@@ -359,7 +360,22 @@ namespace FreeLibSet.Forms
     }
     private DepOutput<bool> _IsNotEmptyEx;
 
+    /// <summary>
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
+    /// </summary>
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
 
+    /// <summary>
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
 
     /// <summary>
     /// Максимальная длина текста.
@@ -367,21 +383,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public int MaxLength { get { return _MaxLength; } set { _MaxLength = value; } }
     private int _MaxLength;
-
-    /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false
-    /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
-
-    /// <summary>
-    /// Надо ли выводить предупреждение, если значение не введено.
-    /// По умолчанию - false.
-    /// Свойство действует, только если свойство CanBeEmpty=true.
-    /// </summary>
-    public bool WarningIfEmpty { get { return _WarningIfEmpty; } set { _WarningIfEmpty = value; } }
-    private bool _WarningIfEmpty;
 
 
     /// <summary>
@@ -402,41 +403,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public bool IsPassword { get { return _IsPassword; } set { _IsPassword = value; } }
     private bool _IsPassword;
-
-    #endregion
-
-    #region Свойства ErrorRegEx и WarningRegEx
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
-    /// </summary>
-    public string ErrorRegExPattern { get { return _ErrorRegExPattern; } set { _ErrorRegExPattern = value; } }
-    private string _ErrorRegExPattern;
-
-    /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string ErrorRegExMessage { get { return _ErrorRegExMessage; } set { _ErrorRegExMessage = value; } }
-    private string _ErrorRegExMessage;
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern { get { return _WarningRegExPattern; } set { _WarningRegExPattern = value; } }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage { get { return _WarningRegExMessage; } set { _WarningRegExMessage = value; } }
-    private string _WarningRegExMessage;
 
     #endregion
 
@@ -465,16 +431,10 @@ namespace FreeLibSet.Forms
       if (MaxLength > 0)
         efpText.MaxLength = MaxLength;
 
-      efpText.CanBeEmpty = CanBeEmpty;
-      efpText.WarningIfEmpty = WarningIfEmpty;
+      efpText.CanBeEmptyMode = CanBeEmptyMode;
       Control.CharacterCasing = CharacterCasing;
       if (IsPassword)
         Control.UseSystemPasswordChar = true;
-
-      efpText.ErrorRegExPattern = this.ErrorRegExPattern;
-      efpText.ErrorRegExMessage = this.ErrorRegExMessage;
-      efpText.WarningRegExPattern = this.WarningRegExPattern;
-      efpText.WarningRegExMessage = this.WarningRegExMessage;
 
       if (HasConfig)
       {
@@ -535,8 +495,9 @@ namespace FreeLibSet.Forms
     {
       Title = "Ввод текста";
       Prompt = "Значение";
-      Value = String.Empty;
-      MaxLength = 0;
+      _Value = String.Empty;
+      _MaxLength = 0;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -557,19 +518,22 @@ namespace FreeLibSet.Forms
     private int _MaxLength;
 
     /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
     /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Надо ли выводить предупреждение, если значение не введено.
-    /// По умолчанию - false.
-    /// Свойство действует, только если свойство CanBeEmpty=true.
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
     /// </summary>
-    public bool WarningIfEmpty { get { return _WarningIfEmpty; } set { _WarningIfEmpty = value; } }
-    private bool _WarningIfEmpty;
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
 
     /// <summary>
     /// Список строк, из которых можно выбрать значение.
@@ -582,41 +546,6 @@ namespace FreeLibSet.Forms
     /// Обработчик не вызывается, пока в поле ввода находится пустая строка    
     /// </summary>
     public event EFPValidatingValueEventHandler<string> Validating;
-
-    #endregion
-
-    #region Свойства ErrorRegEx и WarningRegEx
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
-    /// </summary>
-    public string ErrorRegExPattern { get { return _ErrorRegExPattern; } set { _ErrorRegExPattern = value; } }
-    private string _ErrorRegExPattern;
-
-    /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string ErrorRegExMessage { get { return _ErrorRegExMessage; } set { _ErrorRegExMessage = value; } }
-    private string _ErrorRegExMessage;
-
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern { get { return _WarningRegExPattern; } set { _WarningRegExPattern = value; } }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage { get { return _WarningRegExMessage; } set { _WarningRegExMessage = value; } }
-    private string _WarningRegExMessage;
 
     #endregion
 
@@ -648,13 +577,7 @@ namespace FreeLibSet.Forms
       if (MaxLength > 0)
         efpText.MaxLength = MaxLength;
 
-      efpText.CanBeEmpty = CanBeEmpty;
-      efpText.WarningIfEmpty = WarningIfEmpty;
-
-      efpText.ErrorRegExPattern = this.ErrorRegExPattern;
-      efpText.ErrorRegExMessage = this.ErrorRegExMessage;
-      efpText.WarningRegExPattern = this.WarningRegExPattern;
-      efpText.WarningRegExMessage = this.WarningRegExMessage;
+      efpText.CanBeEmptyMode = CanBeEmptyMode;
 
       if (HasConfig)
       {
@@ -1465,7 +1388,8 @@ namespace FreeLibSet.Forms
     public MultiLineTextInputDialog()
     {
       Title = "Ввод текста";
-      Text = String.Empty;
+      _Text = String.Empty;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -1488,20 +1412,21 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
     /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Надо ли выводить предупреждение, если значение не введено.
-    /// По умолчанию - false.
-    /// Свойство действует, только если свойство CanBeEmpty=true.
-    /// Свойство правктически бесполезно, если не установлено свойство Prompt, так как не будет рамки и не будет видно подсветки
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
     /// </summary>
-    public bool WarningIfEmpty { get { return _WarningIfEmpty; } set { _WarningIfEmpty = value; } }
-    private bool _WarningIfEmpty;
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
 
     /// <summary>
     /// Обработчик для проверки корректности значения при вводе.
@@ -1569,8 +1494,7 @@ namespace FreeLibSet.Forms
         efpText.DisplayName = Prompt; // ?
       efpText.Validating += new EFPValidatingEventHandler(efpText_Validating);
 
-      efpText.CanBeEmpty = CanBeEmpty;
-      efpText.WarningIfEmpty = WarningIfEmpty;
+      efpText.CanBeEmptyMode = CanBeEmptyMode;
 
       if (HasConfig)
       {

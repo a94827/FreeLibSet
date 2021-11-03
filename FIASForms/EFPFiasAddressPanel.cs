@@ -136,8 +136,7 @@ namespace FreeLibSet.Forms.FIAS
       efpManualPostalCode.ToolTipText = "Позволяет переопределить почтовый индекс, если он не определяется или задан неправильно в классификаторе ФИАС";
 
       efpPostalCode = new EFPMaskedTextBox(BaseProvider, Control.edPostalCode);
-      efpPostalCode.CanBeEmpty = true;
-      efpPostalCode.WarningIfEmpty = true;
+      efpPostalCode.CanBeEmptyMode = UIValidateState.Warning;
       efpPostalCode.EnabledEx = new DepAnd(efpManualPostalCode.EnabledEx, efpManualPostalCode.CheckedEx);
 
       efpManualPostalCode.CheckedEx.ValueChanged += new EventHandler(ManualPostalCodeChanged);

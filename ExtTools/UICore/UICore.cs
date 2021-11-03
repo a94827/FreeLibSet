@@ -65,21 +65,28 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает объект
     /// </summary>
-    /// <param name="expression">Выражение валидации</param>
+    /// <param name="expressionEx">Выражение валидации</param>
     /// <param name="message">Сообщение</param>
     /// <param name="isError">true-ошибка, false-предупреждение</param>
-    /// <param name="activeEx">Выражение, определяющее необходимость выполнения проверки. Может быть null, если проверка выполняется всегда</param>
-    public UIValidator(DepValue<bool> expression, string message, bool isError, DepValue<bool> activeEx)
+    /// <param name="preconditionEx">Выражение, определяющее необходимость выполнения проверки. Может быть null, если проверка выполняется всегда</param>
+    public UIValidator(DepValue<bool> expressionEx, string message, bool isError, DepValue<bool> preconditionEx)
     {
-      if (expression == null)
+      if (expressionEx == null)
         throw new ArgumentNullException("expression");
       if (String.IsNullOrEmpty(message))
         throw new ArgumentNullException("message");
 
-      _Expression = expression;
+      _ExpressionEx = expressionEx;
+      expressionEx.ValueChanged += DummyValueChanged; // Чтобы IsConnected возвращало true
       _Message = message;
       _IsError = isError;
-      _ActiveEx = activeEx;
+      _PreconditionEx = preconditionEx;
+      if (preconditionEx != null)
+        preconditionEx.ValueChanged += DummyValueChanged; // Чтобы IsConnected возвращало true
+    }
+
+    static void DummyValueChanged(object sender, EventArgs args)
+    {
     }
 
     #endregion
@@ -92,8 +99,8 @@ namespace FreeLibSet.UICore
     /// Если вычисленное значение равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
     /// в зависимости от свойства IsError.
     /// </summary>
-    public DepValue<bool> Expression { get { return _Expression; } }
-    private readonly DepValue<bool> _Expression;
+    public DepValue<bool> ExpressionEx { get { return _ExpressionEx; } }
+    private readonly DepValue<bool> _ExpressionEx;
 
     /// <summary>
     /// Сообщение, которое будет выдано, если результатом вычисления Expression является false.
@@ -114,8 +121,8 @@ namespace FreeLibSet.UICore
     /// если false - то отключается.
     /// Если свойство не установлено (обычно), то проверка выполняется.
     /// </summary>
-    public DepValue<bool> ActiveEx { get { return _ActiveEx; } }
-    private readonly DepValue<bool> _ActiveEx;
+    public DepValue<bool> PreconditionEx { get { return _PreconditionEx; } }
+    private readonly DepValue<bool> _PreconditionEx;
 
     /// <summary>
     /// Возвращает свойство Message (для отладки)
@@ -151,11 +158,24 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает объект Validator с IsError=true и добавляет его в список
     /// </summary>
-    /// <param name="expression">Выражение валидации</param>
+    /// <param name="expressionEx">Выражение валидации</param>
     /// <param name="message">Сообщение</param>
-    public UIValidator AddError(DepValue<bool> expression, string message)
+    public UIValidator AddError(DepValue<bool> expressionEx, string message)
     {
-      UIValidator item = new UIValidator(expression, message, true);
+      UIValidator item = new UIValidator(expressionEx, message, true);
+      Add(item);
+      return item;
+    }
+
+    /// <summary>
+    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// </summary>
+    /// <param name="expressionEx">Выражение валидации</param>
+    /// <param name="message">Сообщение</param>
+    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    public UIValidator AddError(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
+    {
+      UIValidator item = new UIValidator(expressionEx, message, true, preconditionEx);
       Add(item);
       return item;
     }
@@ -163,18 +183,52 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает объект Validator с IsError=false и добавляет его в список
     /// </summary>
-    /// <param name="expression">Выражение валидации</param>
+    /// <param name="expressionEx">Выражение валидации</param>
     /// <param name="message">Сообщение</param>
-    public UIValidator AddWarning(DepValue<bool> expression, string message)
+    public UIValidator AddWarning(DepValue<bool> expressionEx, string message)
     {
-      UIValidator item = new UIValidator(expression, message, false);
+      UIValidator item = new UIValidator(expressionEx, message, false);
       Add(item);
       return item;
     }
 
-    internal new void SetReadOnly()
+    /// <summary>
+    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// </summary>
+    /// <param name="expressionEx">Выражение валидации</param>
+    /// <param name="message">Сообщение</param>
+    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    public UIValidator AddWarning(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
+    {
+      UIValidator item = new UIValidator(expressionEx, message, false, preconditionEx);
+      Add(item);
+      return item;
+    }
+
+    /// <summary>
+    /// Переводит список в режим "Только чтение".
+    /// Метод не должен использоваться в прикладном коде
+    /// </summary>
+    public new void SetReadOnly()
     {
       base.SetReadOnly();
+    }
+
+    #endregion
+
+    #region Статический список
+
+    /// <summary>
+    /// Пустой список валидаторов.
+    /// Свойство списка IsReadOnly=true.
+    /// </summary>
+    public static readonly UIValidatorList Empty = CreateEmpty();
+
+    private static UIValidatorList CreateEmpty()
+    {
+      UIValidatorList obj = new UIValidatorList();
+      obj.SetReadOnly();
+      return obj;
     }
 
     #endregion
