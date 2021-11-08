@@ -132,7 +132,9 @@ namespace FreeLibSet.Forms
           LogoutTools.LogoutException(e, "Ошибка получения элементов сортировки");
         }
 
-        efpCustom.CanBeEmptyEx = new DepNot(efpTabControl.TabPages[tpCustom].SelectedEx);
+        efpCustom.Validators.AddError(efpCustom.IsNotEmptyEx,
+          "Должно быть выбрано хотя бы одно поле для сортировки",
+          efpTabControl.TabPages[tpCustom].SelectedEx);
       }
       else
         ThetabControl.TabPages.Remove(tpCustom);

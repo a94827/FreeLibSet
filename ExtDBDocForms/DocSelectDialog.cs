@@ -9,6 +9,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -387,7 +388,7 @@ namespace FreeLibSet.Forms.Docs
 
         EFPDocGridView gh = new EFPDocGridView(Form.ControlWithToolBar, DocTypeUI);
         gh.FixedDocIds = FixedDocIds;
-        gh.Validating += new EFPValidatingEventHandler(SelectSingleDoc_ValidateNotEmpty);
+        gh.Validating += new UIValidatingEventHandler(SelectSingleDoc_ValidateNotEmpty);
         gh.Control.MultiSelect = MultiSelect;
         gh.CommandItems.EnterAsOk = true;
 
@@ -421,7 +422,7 @@ namespace FreeLibSet.Forms.Docs
       return Res;
     }
 
-    private void SelectSingleDoc_ValidateNotEmpty(object sender, EFPValidatingEventArgs args)
+    private void SelectSingleDoc_ValidateNotEmpty(object sender, UIValidatingEventArgs args)
     {
       EFPDocGridView gh = (EFPDocGridView)sender;
       if (MultiSelect)

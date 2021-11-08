@@ -1012,281 +1012,10 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
-  #region Интерфейс объекта, поддерживающего проверку ошибок
-
-  /// <summary>
-  /// Интерфейс объекта, поддерживающего проверку ошибок.
-  /// Реализуется EFPControlBase, EFPValidatingEventArgs и некоторыми другими классами.
-  /// </summary>
-  public interface IEFPValidator
-  {
-    /// <summary>
-    /// Установить ошибку
-    /// </summary>
-    /// <param name="message">Сообщение</param>
-    void SetError(string message);
-
-    /// <summary>
-    /// Установить предупреждение.
-    /// </summary>
-    /// <param name="message">Сообщение</param>
-    void SetWarning(string message);
-
-    /// <summary>
-    /// Получить текущее состояние проверки
-    /// </summary>
-    UIValidateState ValidateState { get; }
-  }
-
-  /// <summary>
-  /// Простой класс для реализации одноразовой проверки
-  /// </summary>
-  public class EFPSimpleValidator : IEFPValidator
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает объект
-    /// </summary>
-    public EFPSimpleValidator()
-    {
-      Clear();
-    }
-
-    #endregion
-
-    #region Методы
-
-    /// <summary>
-    /// Устанавливает состояние Ok
-    /// </summary>
-    public void Clear()
-    {
-      _ValidateState = UIValidateState.Ok;
-      _Message = null;
-    }
-
-    /// <summary>
-    /// Устанавливает состояние ошибки.
-    /// Если уже установлена ошибка, вызов игнорируется.
-    /// </summary>
-    /// <param name="message">Текст сообщения</param>
-    public void SetError(string message)
-    {
-      if (ValidateState != UIValidateState.Error)
-      {
-        _ValidateState = UIValidateState.Error;
-        _Message = message;
-      }
-    }
-
-    /// <summary>
-    /// Устанавливает предупреждение
-    /// Если уже установлена ошибка или предупреждение, вызов игнорируется.
-    /// </summary>
-    /// <param name="message">Текст сообщения</param>
-    public void SetWarning(string message)
-    {
-      if (ValidateState == UIValidateState.Ok)
-      {
-        _ValidateState = UIValidateState.Warning;
-        _Message = message;
-      }
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Текущее состояние
-    /// </summary>
-    public UIValidateState ValidateState { get { return _ValidateState; } }
-    private UIValidateState _ValidateState;
-
-    /// <summary>
-    /// Текст сообщения об ошибке или предупреждения
-    /// </summary>
-    public string Message { get { return _Message; } }
-    private string _Message;
-
-    #endregion
-  }
-
-  #endregion
-
-  #region Делегат для проверки ошибок
-
-  /// <summary>
-  /// Аргумент для события проверки
-  /// </summary>
-  public class EFPValidatingEventArgs : IEFPValidator
-  {
-    /// <summary>
-    /// Создание объекта
-    /// </summary>
-    /// <param name="validator">Объект, запросивший проверку. Ему передаются сообщения об ошибке или предупреждении</param>
-    public EFPValidatingEventArgs(IEFPValidator validator)
-    {
-      _Validator = validator;
-    }
-
-    /// <summary>
-    /// Объект, запросивший проверку. Ему передаются сообщения об ошибке или предупреждении
-    /// </summary>
-    public IEFPValidator Validator { get { return _Validator; } }
-    private IEFPValidator _Validator;
-
-    /// <summary>
-    /// Установить сообщение об ошибке
-    /// </summary>
-    /// <param name="message">Сообщение</param>
-    public void SetError(string message)
-    {
-      _Validator.SetError(message);
-    }
-
-    /// <summary>
-    /// Установить предупреждение
-    /// </summary>
-    /// <param name="message">Сообщение</param>
-    public void SetWarning(string message)
-    {
-      _Validator.SetWarning(message);
-    }
-
-    /// <summary>
-    /// Определить текущее состояние проверки: наличие ошибок или предупреждений
-    /// </summary>
-    public UIValidateState ValidateState { get { return _Validator.ValidateState; } }
-
-    /// <summary>
-    /// Вспомогательный метод, вызывающий SetError() или SetWarning()
-    /// </summary>
-    /// <param name="state">Состояние</param>
-    /// <param name="message">Сообщение</param>
-    public void SetState(UIValidateState state, string message)
-    {
-      if (ValidateState == UIValidateState.Error)
-        return;
-
-      switch (state)
-      {
-        case UIValidateState.Error:
-          SetError(message);
-          break;
-        case UIValidateState.Warning:
-          if (ValidateState == UIValidateState.Ok)
-            SetWarning(message);
-          break;
-      }
-    }
-  }
-
-  /// <summary>
-  /// Делегат события проверки
-  /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
-  public delegate void EFPValidatingEventHandler(object sender, EFPValidatingEventArgs args);
-
-  /// <summary>
-  /// Расширение обработчика проверки полем значения произвольного типа
-  /// </summary>
-  /// <typeparam name="T">Тип значения, подлежащего проверке</typeparam>
-  public class EFPValidatingValueEventArgs<T> : EFPValidatingEventArgs
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создание объекта
-    /// </summary>
-    /// <param name="validator">Объект, запросивший проверку. Ему передаются сообщения об ошибке или предупреждении</param>
-    /// <param name="value">Проверяемое значение</param>
-    public EFPValidatingValueEventArgs(IEFPValidator validator, T value)
-      : base(validator)
-    {
-      _Value = value;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Проверяемое значение
-    /// </summary>
-    public T Value { get { return _Value; } }
-    private T _Value;
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Делегат события проверки введенного значения произвольного типа
-  /// </summary>
-  /// <typeparam name="T">Тип вводимого значения</typeparam>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
-  public delegate void EFPValidatingValueEventHandler<T>(object sender, EFPValidatingValueEventArgs<T> args);
-
-  /// <summary>
-  /// Расширение обработчика проверки полем двух значений произвольных типа
-  /// </summary>
-  /// <typeparam name="T1">Тип первого значения, подлежащего проверке</typeparam>
-  /// <typeparam name="T2">Тип второго значения, подлежащего проверке</typeparam>
-  public class EFPValidatingTwoValuesEventArgs<T1, T2> : EFPValidatingEventArgs
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создание объекта
-    /// </summary>
-    /// <param name="validator">Объект, запросивший проверку. Ему передаются сообщения об ошибке или предупреждении</param>
-    /// <param name="value1">Первое проверяемое значение</param>
-    /// <param name="value2">Второе проверяемое значение</param>
-    public EFPValidatingTwoValuesEventArgs(IEFPValidator validator, T1 value1, T2 value2)
-      : base(validator)
-    {
-      _Value1 = value1;
-      _Value2 = value2;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Первое проверяемое значение
-    /// </summary>
-    public T1 Value1 { get { return _Value1; } }
-    private T1 _Value1;
-
-    /// <summary>
-    /// Второе проверяемое значение
-    /// </summary>
-    public T2 Value2 { get { return _Value2; } }
-    private T2 _Value2;
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Делегат события проверки пары значений
-  /// </summary>
-  /// <typeparam name="T1">Тип первого значения, подлежащего проверке</typeparam>
-  /// <typeparam name="T2">Тип второго значения, подлежащего проверке</typeparam>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
-  public delegate void EFPValidatingTwoValuesEventHandler<T1, T2>(object sender, EFPValidatingTwoValuesEventArgs<T1, T2> args);
-
-  #endregion
-
-
   /// <summary>
   /// Класс для проверки ошибок формы, не связанных с управляющими элементами
   /// </summary>
-  public class EFPFormCheck : IEFPValidator
+  public class EFPFormCheck : IUIValidableObject
   {
     #region Конструктор
 
@@ -1326,7 +1055,7 @@ namespace FreeLibSet.Forms
       if (Validating != null)
       {
         if (_ValidatingArgs == null)
-          _ValidatingArgs = new EFPValidatingEventArgs(this);
+          _ValidatingArgs = new UIValidatingEventArgs(this);
         Validating(this, _ValidatingArgs);
       }
       if (_ValidateState != PrevState)
@@ -1409,7 +1138,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Используем один объект аргументов, чтобы не создавать каждый раз
     /// </summary>
-    private EFPValidatingEventArgs _ValidatingArgs;
+    private UIValidatingEventArgs _ValidatingArgs;
 
     /// <summary>
     /// Текущее сообщение об ошибке или предупреждении
@@ -1420,7 +1149,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Пользовательский обработчик для проверки ошибок
     /// </summary>
-    public event EFPValidatingEventHandler Validating;
+    public event UIValidatingEventHandler Validating;
 
     /// <summary>
     /// Необязательный управляющий элемент, куда будет передаваться фокус ввода

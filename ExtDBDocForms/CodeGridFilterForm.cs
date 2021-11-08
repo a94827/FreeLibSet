@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms.Docs
       efpEmpty.EnabledEx = efpCodes.EnabledEx;
 
       efpCodes.CanBeEmpty = true;
-      efpCodes.Validating += new EFPValidatingEventHandler(efpCodes_Validating);
+      efpCodes.Validating += new UIValidatingEventHandler(efpCodes_Validating);
       edCodes.PopupClick += new EventHandler(edCodes_PopupClick);
       edCodes.ClearButton = true;
       edCodes.ClearClick += new EventHandler(edCodes_ClearClick);
@@ -100,7 +100,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Поле ввода кодов
 
-    void efpCodes_Validating(object sender, EFPValidatingEventArgs args)
+    void efpCodes_Validating(object sender, UIValidatingEventArgs args)
     {
       if (args.ValidateState == UIValidateState.Error)
         return; // пустое поле

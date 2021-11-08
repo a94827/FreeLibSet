@@ -6,6 +6,7 @@ using FreeLibSet.DependedValues;
 using System.Windows.Forms;
 using FreeLibSet.Data;
 using FreeLibSet.Controls;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -40,13 +41,14 @@ namespace FreeLibSet.Forms.Docs
       _UI = ui;
 
       _EmptyText = DefaultEmptyText;
-      control.ClearButton = true;
+      _CanBeEmptyMode = UIValidateState.Error;
+      control.ClearButton = false; // 08.11.2021
       control.PopupClick += new EventHandler(Control_PopupClick);
       control.ClearClick += new EventHandler(Control_ClearClick);
 
       ClearButtonEnabled = false;
 
-      _CanBeDeleted = false;
+      _CanBeDeletedMode = UIValidateState.Error;
 
       SelectableEx.ValueChanged += SelectableEx_ValueChanged;
     }
@@ -278,238 +280,70 @@ namespace FreeLibSet.Forms.Docs
     #region Свойство CanBeEmpty
 
     /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// True, если можно выбирать пустое значение. По умолчанию - true.
-    /// Определяет видимость кнопки "Нет" при выборе из справочника, наличие кнопочки
-    /// "X" рядом с комбоблоком. При значении false выполняется проверка ошибки.
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error.
+    /// Это свойство переопределяется для нестандартных элементов, содержащих
+    /// кнопку очистки справа от элемента
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        if (value == _CanBeEmptyMode)
+          return;
+        _CanBeEmptyMode = value;
+        Control.ClearButton = (value != UIValidateState.Error);
+        Validate();
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// True, если ли элемент содержать пустой текст.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return Control.ClearButton; }
-      set
-      {
-        if (value == Control.ClearButton)
-          return;
-        Control.ClearButton = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
-        Validate();
-      }
-    }
-
-    /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// True, если можно выбирать пустое значение. 
-    /// Управляемое свойство для CanBeEmpty.
-    /// </summary>
-    public DepValue<Boolean> CanBeEmptyEx
-    {
-      get
-      {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
-      }
-    }
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    private void InitCanBeEmptyEx()
-    {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
 
-    #region Свойство WarningIfEmpty
+    #region Свойство CanBeDeleted
 
     /// <summary>
     /// Используется при проверке корректности введенного значения.
-    /// Выдавать предупреждение, если значение не выбрано, при условии, что CanBeEmpty=true.
-    /// Иначе свойство WarningIfEmpty игнорируется.
+    /// Если установлено в Ok, то разрешается выбирать удаленные документы или
+    /// поддокументы. По умолчанию (Error), если выбранный документ/поддокумент
+    /// удален, то выдается ошибка.
+    /// Также может выдаваться предупреждение.
     /// </summary>
-    public bool WarningIfEmpty
+    public UIValidateState CanBeDeletedMode
     {
-      get { return _WarningIfEmpty; }
+      get { return _CanBeDeletedMode; }
       set
       {
-        if (value == _WarningIfEmpty)
+        if (value == _CanBeDeletedMode)
           return;
-        _WarningIfEmpty = value;
-        if (_WarningIfEmptyEx != null)
-          _WarningIfEmptyEx.Value = value;
+        _CanBeDeletedMode = value;
         Validate();
       }
     }
-    private bool _WarningIfEmpty;
-
-    /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// Выдавать предупреждение, если значение не выбрано, при условии, что CanBeEmpty=true.
-    /// Управляемое свойство для WarningIfEmpty
-    /// </summary>
-    public DepValue<Boolean> WarningIfEmptyEx
-    {
-      get
-      {
-        InitWarningIfEmptyEx();
-        return _WarningIfEmptyEx;
-      }
-      set
-      {
-        InitWarningIfEmptyEx();
-        _WarningIfEmptyEx.Source = value;
-      }
-    }
-
-    private void InitWarningIfEmptyEx()
-    {
-      if (_WarningIfEmptyEx == null)
-      {
-        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
-        _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-      }
-    }
-    private DepInput<Boolean> _WarningIfEmptyEx;
-
-    void WarningIfEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      WarningIfEmpty = _WarningIfEmptyEx.Value;
-    }
-
-    #endregion
-
-    #region Свойства CanBeDeleted и WarningIfDeleted
+    private UIValidateState _CanBeDeletedMode;
 
     /// <summary>
     /// Используется при проверке корректности введенного значения.
     /// Если установлено в true, то разрешается выбирать удаленные документы или
     /// поддокументы. По умолчанию (false), если выбранный документ/поддокумент
-    /// удален, то выдается ошибка или предупреждение в зависимости от свойства
-    /// WarningIfDeleted
+    /// удален, то выдается ошибка.
+    /// Дубирует свойство CanBeDeletedMode.
     /// </summary>
     public bool CanBeDeleted
     {
-      get { return _CanBeDeleted; }
-      set
-      {
-        if (value == _CanBeDeleted)
-          return;
-        _CanBeDeleted = value;
-        if (_CanBeDeletedEx != null)
-          _CanBeDeletedEx.Value = value;
-        Validate();
-      }
-    }
-    private bool _CanBeDeleted;
-
-    /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// Если установлено в true, то разрешается выбирать удаленные документы или
-    /// поддокументы. 
-    /// Управляемое свойство для CanBeDeleted
-    /// </summary>
-    public DepValue<Boolean> CanBeDeletedEx
-    {
-      get
-      {
-        InitCanBeDeletedEx();
-        return _CanBeDeletedEx;
-      }
-      set
-      {
-        InitCanBeDeletedEx();
-        _CanBeDeletedEx.Source = value;
-      }
-    }
-
-    private void InitCanBeDeletedEx()
-    {
-      if (_CanBeDeletedEx == null)
-      {
-        _CanBeDeletedEx = new DepInput<bool>(CanBeDeleted, CanDeletedEx_ValueChanged);
-        _CanBeDeletedEx.OwnerInfo = new DepOwnerInfo(this, "CanBeDeletedEx");
-      }
-    }
-
-    private DepInput<Boolean> _CanBeDeletedEx;
-
-    void CanDeletedEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeDeleted = _CanBeDeletedEx.Value;
-    }
-
-
-    /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// Если свойство CanBeDeleted не установлено, а выбранный документ/поддокумент 
-    /// удален, то выдается ошибка (при значении false) или предупреждение (при
-    /// значение true). Значение по умолчанию - false (ошибка).
-    /// При CanBeDeleted=true, свойство WarningIfDeleted игнорируется.
-    /// </summary>
-    public bool WarningIfDeleted
-    {
-      get { return _WarningIfDeleted; }
-      set
-      {
-        if (value == _WarningIfDeleted)
-          return;
-        _WarningIfDeleted = value;
-        if (_WarningIfDeletedEx != null)
-          _WarningIfDeletedEx.Value = value;
-        Validate();
-      }
-    }
-    private bool _WarningIfDeleted;
-
-
-    /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// Если свойство CanBeDeleted не установлено, а выбранный документ/поддокумент 
-    /// удален, то выдается ошибка (при значении false) или предупреждение (при
-    /// значение true). 
-    /// Управляемое свойство для WarningIfDeleted.
-    /// </summary>
-    public DepValue<Boolean> WarningIfDeletedEx
-    {
-      get
-      {
-        InitWarningIfDeletedEx();
-        return _WarningIfDeletedEx;
-      }
-      set
-      {
-        InitWarningIfDeletedEx();
-        _WarningIfDeletedEx.Source = value;
-      }
-    }
-
-    private void InitWarningIfDeletedEx()
-    {
-      if (_WarningIfDeletedEx == null)
-      {
-        _WarningIfDeletedEx = new DepInput<bool>(WarningIfDeleted,WarningIfDeletedEx_ValueChanged);
-        _WarningIfDeletedEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfDeletedEx");
-      }
-    }
-
-    private DepInput<Boolean> _WarningIfDeletedEx;
-
-    void WarningIfDeletedEx_ValueChanged(object sender, EventArgs args)
-    {
-      WarningIfDeleted = _WarningIfDeletedEx.Value;
+      get { return CanBeDeletedMode != UIValidateState.Error; }
+      set { CanBeDeletedMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -594,7 +428,7 @@ namespace FreeLibSet.Forms.Docs
       if (!GetDocSelSupported)
         return base.GetCommandItems();
 
-      EFPAnyDocComboBoxBaseControlItems Items = new EFPAnyDocComboBoxBaseControlItems(this);
+      EFPAnyDocComboBoxBaseCommandItems Items = new EFPAnyDocComboBoxBaseCommandItems(this);
       Items.InitEnabled();
       return Items;
     }
@@ -606,8 +440,8 @@ namespace FreeLibSet.Forms.Docs
 
       if (CommandItemsAssigned)
       {
-        if (CommandItems is EFPAnyDocComboBoxBaseControlItems)
-          ((EFPAnyDocComboBoxBaseControlItems)CommandItems).InitEnabled();
+        if (CommandItems is EFPAnyDocComboBoxBaseCommandItems)
+          ((EFPAnyDocComboBoxBaseCommandItems)CommandItems).InitEnabled();
       }
     }
 
@@ -618,7 +452,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Команды локального меню
   /// </summary>
-  public class EFPAnyDocComboBoxBaseControlItems : EFPControlCommandItems
+  public class EFPAnyDocComboBoxBaseCommandItems : EFPControlCommandItems
   {
     #region Конструктор
 
@@ -626,7 +460,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает набор команд
     /// </summary>
     /// <param name="controlProvider">Провайдер комбоблока</param>
-    public EFPAnyDocComboBoxBaseControlItems(EFPAnyDocComboBoxBase controlProvider)
+    public EFPAnyDocComboBoxBaseCommandItems(EFPAnyDocComboBoxBase controlProvider)
     {
       _ControlProvider = controlProvider;
 

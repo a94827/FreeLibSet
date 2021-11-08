@@ -10,6 +10,7 @@ using FreeLibSet.Config;
 using FreeLibSet.Logging;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -610,7 +611,7 @@ namespace FreeLibSet.Forms
         SafeWriteConfigParts(SrchSect, EFPReportExtParamsPart.User | EFPReportExtParamsPart.Files);
         _Form.SetComboBox.SelectedMD5Sum = SrchSect.MD5Sum();
 
-        _Form.FormProvider.AddFormCheck(new EFPValidatingEventHandler(CheckForm));
+        _Form.FormProvider.AddFormCheck(new UIValidatingEventHandler(CheckForm));
 
         Res = EFPApp.ShowDialog(_Form, false) == DialogResult.OK;
 
@@ -674,7 +675,7 @@ namespace FreeLibSet.Forms
       return Res;
     }
 
-    private void CheckForm(object sender, EFPValidatingEventArgs args)
+    private void CheckForm(object sender, UIValidatingEventArgs args)
     {
       if (_Form.FormProvider.ValidateReason == EFPFormValidateReason.Shown)
         return;

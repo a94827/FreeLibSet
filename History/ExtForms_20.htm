@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2021-11-03T14:23:23.974000000"/>
+	<meta name="changed" content="2021-11-07T12:48:34.469000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -258,7 +258,7 @@
 			301</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			21.10.2021-29.10.2021</p>
+			21.10.2021-<span lang="ru-RU">07.11.2021</span></p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
 			1. <span lang="ru-RU">Изменения пространств имен</span></p>
@@ -308,11 +308,11 @@
 			<p>10. Свойства <span lang="en-US">CanBeEmptyMode </span>вместо
 			<span lang="en-US">WarningIfEmpty. </span>Убрано <span lang="en-US">CanBeEmptyModeEx,
 			MinimumEx, MaximumEx, MaxLengthEx</span><span lang="ru-RU">,
-			</span><span lang="ru-RU">Error/</span><span lang="en-US">Warning</span><span lang="ru-RU">RegExPattern</span><span lang="en-US">/Message</span></p>
+			Error/</span><span lang="en-US">Warning</span><span lang="ru-RU">RegExPattern</span><span lang="en-US">/Message</span></p>
 			<p><span lang="en-US">10. </span><span lang="ru-RU">Новые
-			управл</span><span lang="en-US">яющие</span><span lang="ru-RU">
-			элементы </span><span lang="en-US">IntEditBox, SingleEditBox,
-			DoubleEditBox </span><span lang="ru-RU">и </span><span lang="en-US">DecimalEditBox
+			управл</span><span lang="en-US">яющие</span> <span lang="ru-RU">элементы
+			</span><span lang="en-US">IntEditBox, SingleEditBox, DoubleEditBox
+			</span><span lang="ru-RU">и </span><span lang="en-US">DecimalEditBox
 			</span><span lang="ru-RU">с поддержкой произвольного
 			форматирования и инкремента. Провайдеры </span><span lang="en-US">EFPxxxEditBox.
 			</span><span lang="ru-RU">Убраны элементы </span><span lang="en-US">NumEditBox
@@ -324,17 +324,38 @@
 			</span>RangeBox <span lang="ru-RU">используют новые элементы и
 			свойства </span>Format, FormatProvider <span lang="ru-RU">и
 			</span>Increment.</p>
-			<p lang="en-US">12. <span lang="ru-RU">Убраны методы
+			<p>12. <font color="#000000">В диалогах ввода значения и диапазона
+			значений - валидаторы, как в управляющих элементах (свойства
+			</font><font color="#000000"><span lang="en-US">Validators) </span></font><font color="#000000">и
+			управляемые свойства для построения валидаторов. Убраны события
+			</font><font color="#000000"><span lang="en-US">Validating.</span></font></p>
+			<p><font color="#000000"><span lang="en-US">13.</span></font><font color="#000000"><span lang="en-US">
+			</span></font><font color="#000000"><span lang="en-US">EFP</span></font><font color="#000000"><span lang="en-US">CheckBox
+			</span></font><font color="#000000"><span lang="ru-RU">поддерживает
+			свойства </span></font><font color="#000000"><span lang="en-US">CanBeEmpty,
+			CanBeEmptyMode, IsNotEmptyEx </span></font><font color="#000000"><span lang="ru-RU">и
+			</span></font><font color="#000000"><span lang="en-US">NChecked/Ex
+			</span></font><font color="#000000"><span lang="ru-RU">вместо
+			</span></font><font color="#000000"><span lang="en-US">ThreeState
+			</span></font><font color="#000000"><span lang="ru-RU">и
+			</span></font><font color="#000000"><span lang="en-US">CheckState.</span></font></p>
+			<p lang="en-US">14. <span lang="ru-RU">Убраны методы
 			</span>EFPApp.InputBox() <span lang="ru-RU">и </span>IntInputBox().</p>
-			<p>13. Переименование ComboTextInputDialog в <span lang="en-US">TextComboInputDialog.
+			<p>1<span lang="en-US">5</span>. Переименование
+			ComboTextInputDialog в <span lang="en-US">TextComboInputDialog.
 			</span><span lang="ru-RU">Добавлено свойство </span><span lang="en-US">Lines.</span></p>
-			<p><span lang="en-US">14. </span><span lang="ru-RU">Методы
-			</span><span lang="en-US">DateRangeBox.ShiftDateRange() </span><span lang="ru-RU">и
+			<p><span lang="en-US">1</span><span lang="en-US">6</span><span lang="en-US">.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">DateRangeBox.ShiftDateRange()
+			</span><span lang="ru-RU">и
 			</span><span lang="en-US">EFPDateRangeBoxCommandItems.ShiftDateRangeYear()
 			перенесены</span> <span lang="ru-RU">в </span><span lang="en-US">UITools.</span></p>
-			<p><span lang="en-US">15. </span><span lang="ru-RU">Переименование
-			свойств </span><span lang="en-US">RadioGroupBox.ImageIndexes </span><span lang="ru-RU">в
+			<p><span lang="en-US">1</span><span lang="en-US">7</span><span lang="en-US">.
+			</span><span lang="ru-RU">Переименование свойств
+			</span><span lang="en-US">RadioGroupBox.ImageIndexes </span><span lang="ru-RU">в
 			</span><span lang="en-US">ImageIndices.</span></p>
+			<p>1<span lang="en-US">8</span>. Свойства EFPFolderBrowserButton,
+			EFPFileDialogButton, EFPWindowsExplorerButton<span lang="en-US">.Path,
+			PathEx </span>и <span lang="en-US">IsNotEmptyEx.</span></p>
 		</td>
 	</tr>
 </table>

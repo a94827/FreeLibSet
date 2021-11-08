@@ -451,22 +451,8 @@ namespace FreeLibSet.Forms.FIAS
       {
         base.PostalCodeEditable = riItem.PostalCodeEditable;
         base.MinRefBookLevel = riItem.MinRefBookLevel;
-        switch (riItem.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: base.CanBeEmpty = false; break;
-          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: base.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
-        switch (riItem.CanBePartialMode)
-        {
-          case UIValidateState.Error: base.CanBePartial = false; break;
-          case UIValidateState.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
-          case UIValidateState.Ok: base.CanBePartial = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
+        base.CanBeEmptyMode = riItem.CanBeEmptyMode;
+        base.CanBePartialMode = riItem.CanBePartialMode;
 
         riItem.InternalSetSource(ui.Source);
         _RIItem = riItem;
@@ -502,22 +488,8 @@ namespace FreeLibSet.Forms.FIAS
         base.EditorLevel = riItem.EditorLevel;
         base.PostalCodeEditable = riItem.PostalCodeEditable;
         base.MinRefBookLevel = riItem.MinRefBookLevel;
-        switch (riItem.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: base.CanBeEmpty = false; break;
-          case UIValidateState.Warning: base.CanBeEmpty = true; base.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: base.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
-        switch (riItem.CanBePartialMode)
-        {
-          case UIValidateState.Error: base.CanBePartial = false; break;
-          case UIValidateState.Warning: base.CanBePartial = true; base.WarningIfPartial = true; break;
-          case UIValidateState.Ok: base.CanBePartial = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riItem.CanBeEmptyMode.ToString());
-        }
+        base.CanBeEmptyMode = riItem.CanBeEmptyMode;
+        base.CanBePartialMode = riItem.CanBePartialMode;
 
         base.TextFormat = riItem.TextFormat;
         base.Control.Width = 300; // ??
@@ -561,22 +533,8 @@ namespace FreeLibSet.Forms.FIAS
         _WinDlg.EditorLevel = riDialog.EditorLevel;
         _WinDlg.PostalCodeEditable = riDialog.PostalCodeEditable;
         _WinDlg.MinRefBookLevel = riDialog.MinRefBookLevel;
-        switch (riDialog.CanBeEmptyMode)
-        {
-          case UIValidateState.Error: _WinDlg.CanBeEmpty = false; break;
-          case UIValidateState.Warning: _WinDlg.CanBeEmpty = true; _WinDlg.WarningIfEmpty = true; break;
-          case UIValidateState.Ok: _WinDlg.CanBeEmpty = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
-        }
-        switch (riDialog.CanBePartialMode)
-        {
-          case UIValidateState.Error: _WinDlg.CanBePartial = false; break;
-          case UIValidateState.Warning: _WinDlg.CanBePartial = true; _WinDlg.WarningIfPartial = true; break;
-          case UIValidateState.Ok: _WinDlg.CanBePartial = true; break;
-          default:
-            throw new BugException("CanBeEmptyMode=" + riDialog.CanBeEmptyMode.ToString());
-        }
+        _WinDlg.CanBeEmptyMode = riDialog.CanBeEmptyMode;
+        _WinDlg.CanBePartialMode = riDialog.CanBePartialMode;
         _WinDlg.ReadOnly = riDialog.ReadOnly;
       }
 

@@ -64,7 +64,7 @@ namespace FreeLibSet.Forms
       _CanBeEmpty = canBeEmpty;
 
       efpForm = new EFPFormProvider(this);
-      efpForm.AddFormCheck(new EFPValidatingEventHandler(ValidateForm));
+      efpForm.AddFormCheck(new UIValidatingEventHandler(ValidateForm));
 
       btnCheckAll.Image = EFPApp.MainImages.Images["CheckListAll"];
       btnCheckAll.ImageAlign = ContentAlignment.MiddleLeft;
@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms
 
     #region Проверка формы
 
-    private void ValidateForm(object sender, EFPValidatingEventArgs args)
+    private void ValidateForm(object sender, UIValidatingEventArgs args)
     {
       if (args.ValidateState == UIValidateState.Error)
         return;

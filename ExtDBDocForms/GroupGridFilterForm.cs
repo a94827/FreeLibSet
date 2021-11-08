@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms.Docs
         if (!canBeRoot)
         {
           Form.NoButtonProvider.Visible = false; // 18.06.2021
-          Form.FormProvider.AddFormCheck(new EFPValidatingEventHandler(Form.efpForm_ValidatingNoRoot));
+          Form.FormProvider.AddFormCheck(new UIValidatingEventHandler(Form.efpForm_ValidatingNoRoot));
         }
 
         switch (EFPApp.ShowDialog(Form, false, dialogPosition))
@@ -79,7 +79,7 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-    void efpForm_ValidatingNoRoot(object sender, EFPValidatingEventArgs args)
+    void efpForm_ValidatingNoRoot(object sender, UIValidatingEventArgs args)
     {
       if (args.ValidateState == UIValidateState.Error)
         return;

@@ -131,8 +131,8 @@ namespace FreeLibSet.Forms.Docs
         Validate();
         DoSyncValueChanged();
 
-        if (CommandItems is EFPAnyDocComboBoxBaseControlItems)
-          ((EFPAnyDocComboBoxBaseControlItems)CommandItems).InitEnabled(); // 21.01.2016
+        if (CommandItems is EFPAnyDocComboBoxBaseCommandItems)
+          ((EFPAnyDocComboBoxBaseCommandItems)CommandItems).InitEnabled(); // 21.01.2016
       }
     }
     private Int32 _Id;
@@ -159,7 +159,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_IdEx == null)
       {
-        _IdEx = new DepInput<Int32>(Id,IdEx_ValueChanged);
+        _IdEx = new DepInput<Int32>(Id, IdEx_ValueChanged);
         _IdEx.OwnerInfo = new DepOwnerInfo(this, "IdEx");
       }
     }
@@ -412,15 +412,14 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Id == 0)
       {
-        if (CanBeEmpty)
+        switch (CanBeEmptyMode)
         {
-          if (WarningIfEmpty)
+          case UIValidateState.Error:
+            SetError("Значение \"" + DisplayName + "\" должно быть выбрано из списка");
+            break;
+          case UIValidateState.Warning:
             SetWarning("Значение \"" + DisplayName + "\", вероятно, должно быть выбрано из списка");
-        }
-        else
-        {
-          SetError("Значение \"" + DisplayName + "\" должно быть выбрано из списка");
-          return;
+            break;
         }
       }
 
@@ -429,7 +428,7 @@ namespace FreeLibSet.Forms.Docs
         string Message;
         if (GetDeletedValue(out Message))
         {
-          if (WarningIfDeleted)
+          if (CanBeDeletedMode==UIValidateState.Warning)
             SetWarning(Message);
           else
             SetError(Message);
@@ -845,7 +844,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocTypeNameEx == null)
       {
-        _DocTypeNameEx = new DepInput<string>(DocTypeName,DocTypeNameEx_ValueChanged);
+        _DocTypeNameEx = new DepInput<string>(DocTypeName, DocTypeNameEx_ValueChanged);
         _DocTypeNameEx.OwnerInfo = new DepOwnerInfo(this, "DocTypeNameEx");
       }
     }
@@ -904,7 +903,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocTableIdEx == null)
       {
-        _DocTableIdEx = new DepInput<Int32>(DocTableId,DocTableIdEx_ValueChanged);
+        _DocTableIdEx = new DepInput<Int32>(DocTableId, DocTableIdEx_ValueChanged);
         _DocTableIdEx.OwnerInfo = new DepOwnerInfo(this, "DocTableIdEx");
       }
     }
@@ -925,7 +924,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификатор документа DocId.ValueEx без создания дополнительного объекта
     /// </summary>
-    public Int32 DocId
+    public virtual Int32 DocId
     {
       get { return base.Id; }
       set { base.Id = value; }
@@ -1326,8 +1325,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверяет возможность присвоения заданного идентификатора документа без реальной установки фильтра
-    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false и WarningIfDeleted=false
-    /// (значения по умолчанию). Также возвращает false, если документ не проходит условие фильтра.
+    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false 
+    /// (значение по умолчанию). Также возвращает false, если документ не проходит условие фильтра.
     /// Если <paramref name="docId"/>=0, то проверяется свойство CanBeEmpty.
     /// </summary>
     /// <param name="docId">Идентификатор проверяемого документа</param>
@@ -1340,8 +1339,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверяет возможность присвоения заданного идентификатора документа без реальной установки фильтра
-    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false и WarningIfDeleted=false
-    /// (значения по умолчанию). Также возвращает false, если документ не проходит условие фильтра.
+    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false.
+    /// (значение по умолчанию). Также возвращает false, если документ не проходит условие фильтра.
     /// Если <paramref name="docId"/>=0, то проверяется свойство CanBeEmpty.
     /// </summary>
     /// <param name="docId">Идентификатор проверяемого документа</param>
@@ -1594,7 +1593,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocTableIdEx == null)
       {
-        _DocTableIdEx = new DepInput<Int32>(DocTableId,SourceTableIdChanged);
+        _DocTableIdEx = new DepInput<Int32>(DocTableId, SourceTableIdChanged);
         _DocTableIdEx.OwnerInfo = new DepOwnerInfo(this, "DocTableIdEx");
         SelectedIndexEx.ValueChanged += new EventHandler(SelectedIndex_ValueChanged);
       }
@@ -1769,7 +1768,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если свойство не установлено в явном виде, то разрешается установка произвольного значения
     /// свойства SubDocId, при этом возвращаемое значение будет меняться
     /// </summary>
-    public Int32 DocId
+    public virtual Int32 DocId
     {
       get { return _DocId; }
       set
@@ -1935,7 +1934,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Текущий выбранный поддокумент
     /// </summary>
-    public Int32 SubDocId
+    public virtual Int32 SubDocId
     {
       // Нужно обязательно использовать базовое свойство Id, т.к. к нему приделана обработка свойства IdEx
       get { return Id; }
@@ -2045,7 +2044,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_AutoSetIfSingleEx == null)
       {
-        _AutoSetIfSingleEx = new DepInput<bool>(AutoSetIfSingle,AutoSetIfSingleEx_ValueChanged);
+        _AutoSetIfSingleEx = new DepInput<bool>(AutoSetIfSingle, AutoSetIfSingleEx_ValueChanged);
         _AutoSetIfSingleEx.OwnerInfo = new DepOwnerInfo(this, "AutoSetIfSingleEx");
       }
     }

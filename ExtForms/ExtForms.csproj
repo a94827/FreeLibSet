@@ -90,10 +90,10 @@
     <Compile Include="EFPControls\EFPDataGridViewRowsResizer.cs" />
     <Compile Include="EFPControls\EFPDataTreeViewColumn.cs" />
     <Compile Include="EFPControls\EFPDataTreeViewCommandItems.cs" />
-    <Compile Include="Controls\DateRangeForm.cs">
+    <Compile Include="Dialogs\DateRangeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\DateRangeForm.Designer.cs">
+    <Compile Include="Dialogs\DateRangeForm.Designer.cs">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPControls\EFPConfigManager.cs" />
@@ -530,7 +530,7 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\DateRangeForm.resx">
+    <EmbeddedResource Include="Dialogs\DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

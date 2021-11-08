@@ -159,7 +159,12 @@ namespace FreeLibSet.RI
       get
       {
         if (_Validators == null)
-          _Validators = new UIValidatorList();
+        {
+          if (IsFixed)
+            _Validators = UIValidatorList.Empty;
+          else
+            _Validators = new UIValidatorList();
+        }
         return _Validators;
       }
     }
@@ -461,7 +466,7 @@ namespace FreeLibSet.RI
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
-      get 
+      get
       {
         if (_IsNotEmptyEx == null)
         {
@@ -575,6 +580,7 @@ namespace FreeLibSet.RI
     public BaseNumEditBox()
     {
       _Format = String.Empty;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -599,6 +605,8 @@ namespace FreeLibSet.RI
           _NValueEx.Value = value;
         if (_ValueEx != null)
           _ValueEx.Value = this.Value;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(value.HasValue);
       }
     }
     private T? _NValue;
@@ -630,7 +638,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool NValueExConnected
+    public bool InternalNValueExConnected
     {
       get
       {
@@ -692,7 +700,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool ValueExConnected
+    public bool InternalValueExConnected
     {
       get
       {
@@ -759,6 +767,25 @@ namespace FreeLibSet.RI
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
+
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если число введено (NValue.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(NValue.HasValue);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
 
@@ -1201,8 +1228,7 @@ namespace FreeLibSet.RI
       if (String.IsNullOrEmpty(text))
         throw new ArgumentNullException("text");
       _Text = text;
-      _CheckState = CheckState.Unchecked;
-      _OldCheckState = CheckState.Unchecked;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -1221,111 +1247,76 @@ namespace FreeLibSet.RI
 
     #endregion
 
-    #region ThreeState
-
-    /// <summary>
-    /// Разрешено ли использовать третье состояние
-    /// По умолчанию - false - (два состояния).
-    /// Свойство можно устанавливать только до вывода диалога на экран.
-    /// </summary>
-    public bool ThreeState
-    {
-      get { return _ThreeState; }
-      set
-      {
-        CheckNotFixed();
-        _ThreeState = value;
-      }
-    }
-    private bool _ThreeState;
-
-    #endregion
-
-    #region CheckState
-
-    /// <summary>
-    /// Если есть расширенное свойство CheckedEx и устанавливается значение CheckState=Indeterminate,
-    /// то оно исчезнет и заменится на Checked. Чтобы этого не произошло, предотвращаем вложенный вызов
-    /// </summary>
-    [NonSerialized]
-    private bool _InsideSetCheckState;
+    #region NChecked
 
     /// <summary>
     /// Текущее состояние кнопки.
     /// Обычно свойство используется для кнопок, у которых установлено ThreeState=true.
     /// Для обычных кнопок на два положения удобнее использовать свойство Checked.
     /// </summary>
-    public CheckState CheckState
+    public bool? NChecked
     {
-      get { return _CheckState; }
+      get { return _NChecked; }
       set
       {
-        if (_InsideSetCheckState)
-          return;
-        _InsideSetCheckState = true;
-        try
-        {
-          _CheckState = value;
-          if (_CheckStateEx != null)
-            _CheckStateEx.Value = CheckState;
-          if (_CheckedEx != null)
-            _CheckedEx.Value = Checked;
-        }
-        finally
-        {
-          _InsideSetCheckState = false;
-        }
+        _NChecked = value;
+        if (_NCheckedEx != null)
+          _NCheckedEx.Value = value;
+        if (_CheckedEx != null)
+          _CheckedEx.Value = Checked;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(value.HasValue);
       }
     }
-    private CheckState _CheckState;
+    private bool? _NChecked;
 
-    private CheckState _OldCheckState;
+    private bool? _OldNChecked;
 
     /// <summary>
-    /// Управляемое значение для CheckState.
+    /// Управляемое значение для NChecked.
     /// </summary>
-    public DepValue<CheckState> CheckStateEx
+    public DepValue<bool?> NCheckedEx
     {
       get
       {
-        InitCheckStateEx();
-        return _CheckStateEx;
+        InitNCheckedEx();
+        return _NCheckedEx;
       }
       set
       {
-        InitCheckStateEx();
-        _CheckStateEx.Source = value;
+        InitNCheckedEx();
+        _NCheckedEx.Source = value;
       }
     }
-    private DepInput<CheckState> _CheckStateEx;
+    private DepInput<bool?> _NCheckedEx;
 
     /// <summary>
     /// Возвращает true, если обработчик свойства CheckStateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool CheckStateExConnected
+    public bool InternalNCheckedExConnected
     {
       get
       {
-        if (_CheckStateEx == null)
+        if (_NCheckedEx == null)
           return false;
         else
-          return _CheckStateEx.IsConnected;
+          return _NCheckedEx.IsConnected;
       }
     }
 
-    private void InitCheckStateEx()
+    private void InitNCheckedEx()
     {
-      if (_CheckStateEx == null)
+      if (_NCheckedEx == null)
       {
-        _CheckStateEx = new DepInput<CheckState>(CheckState, CheckStateEx_ValueChanged);
-        _CheckStateEx.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx");
+        _NCheckedEx = new DepInput<bool?>(NChecked, NCheckedEx_ValueChanged);
+        _NCheckedEx.OwnerInfo = new DepOwnerInfo(this, "NCheckedEx");
       }
     }
 
-    private void CheckStateEx_ValueChanged(object sender, EventArgs args)
+    private void NCheckedEx_ValueChanged(object sender, EventArgs args)
     {
-      CheckState = _CheckStateEx.Value;
+      NChecked = _NCheckedEx.Value;
     }
 
     #endregion
@@ -1335,20 +1326,13 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Состояние кнопки.
     /// Используется для обычных кнопок на два положения.
-    /// Если ThreeState=true, используйте свойство CheckState.
-    /// Если ThreeState=true, то свойство возвращает true для CheckState=Checked и Indeterminate и false для Unchecked.
-    /// Установка свойства в true задает CheckState=Checked, а false - CheckState=Unchecked.
+    /// Если CanBeEmpty=true, используйте свойство NChecked.
+    /// Если NChecked.HasValue=false, то свойство возвращает false.
     /// </summary>
     public bool Checked
     {
-      get
-      {
-        return CheckState != CheckState.Unchecked;
-      }
-      set
-      {
-        CheckState = value ? CheckState.Checked : CheckState.Unchecked;
-      }
+      get { return NChecked ?? false; }
+      set { NChecked = value; }
     }
 
     /// <summary>
@@ -1373,7 +1357,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства CheckedEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool CheckedExConnected
+    public bool InternalCheckedExConnected
     {
       get
       {
@@ -1400,6 +1384,61 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Допускается ли промежуточное (Intermidiate) значение.
+    /// Значение по умолчанию: Error (флажок на два положения).
+    /// В режиме Ok флажок может находиться в трех состояниях.
+    /// В режиме Warning также разрешается промежуточное состояние, но при этом подсвечивается предупреждение.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Допускается ли промежуточное (Intermidiate) значение.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (флажок на два положения).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если флажок находится в одном из основных состояний, а не промежуточном.
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(NChecked.HasValue);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
     #endregion
 
     #region Чтение и запись
@@ -1416,7 +1455,7 @@ namespace FreeLibSet.RI
       {
         if (base.HasChanges)
           return true;
-        return CheckState != _OldCheckState;
+        return NChecked != _OldNChecked;
       }
     }
 
@@ -1430,8 +1469,8 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetInt("CheckState", (int)CheckState);
-      _OldCheckState = CheckState;
+      part.SetNullableBool("Checked", NChecked);
+      _OldNChecked = NChecked;
     }
 
     /// <summary>
@@ -1443,8 +1482,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      CheckState = (CheckState)part.GetInt("CheckState");
-      _OldCheckState = CheckState;
+      NChecked = part.GetNullableBool("Checked");
+      _OldNChecked = NChecked;
     }
 
     /// <summary>
@@ -1466,7 +1505,12 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetInt(Name, (int)CheckState); // 0,1 или 2
+      // Для совместимости с предыдущими версиями, NChecked.HasValue=false записывается как "2"
+
+      if (NChecked.HasValue)
+        part.SetInt(Name, Checked ? 1 : 0);
+      else
+        part.SetInt(Name, 2);
     }
 
     /// <summary>
@@ -1477,10 +1521,11 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      if (ThreeState)
-        CheckState = (CheckState)part.GetIntDef(Name, (int)CheckState);
+      int n = part.GetInt(Name);
+      if (CanBeEmpty && n == 2)
+        NChecked = null;
       else
-        Checked = part.GetBoolDef(Name, Checked);
+        Checked = (n != 0);
     }
 
     #endregion
@@ -1564,7 +1609,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedIndexEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool SelectedIndexExConnected
+    public bool InternalSelectedIndexExConnected
     {
       get
       {
@@ -1668,7 +1713,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedCodeEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool SelectedCodeExConnected
+    public bool InternalSelectedCodeExConnected
     {
       get
       {
@@ -1827,7 +1872,7 @@ namespace FreeLibSet.RI
 
     #endregion
 
-    #region Value/NValue
+    #region Value/NValue/NTime/Time
 
     #region NValue
 
@@ -1845,6 +1890,12 @@ namespace FreeLibSet.RI
           _NValueEx.Value = value;
         if (_ValueEx != null)
           _ValueEx.Value = this.Value;
+        if (_NTimeEx != null)
+          _NTimeEx.Value = this.NTime;
+        if (_TimeEx != null)
+          _TimeEx.Value = this.Time;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(NValue.HasValue);
       }
     }
     private DateTime? _NValue;
@@ -1873,7 +1924,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool NValueExConnected
+    public bool InternalNValueExConnected
     {
       get
       {
@@ -1935,7 +1986,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool ValueExConnected
+    public bool InternalValueExConnected
     {
       get
       {
@@ -1965,6 +2016,147 @@ namespace FreeLibSet.RI
     private void ValueEx_ValueChanged(object sender, EventArgs args)
     {
       Value = _ValueEx.Value;
+    }
+
+    #endregion
+
+    #region Свойство NTime
+
+    /// <summary>
+    /// Доступ к компоненту времени.
+    /// Если нет введенного значения, свойство возвращает null
+    /// </summary>
+    public TimeSpan? NTime
+    {
+      get
+      {
+        if (NValue.HasValue)
+          return NValue.Value.TimeOfDay;
+        else
+          return null;
+      }
+      set
+      {
+        if (value.HasValue)
+          NValue = Value.Date /* а не NValue */ + value;
+        else
+          NValue = null;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство для NTime
+    /// </summary>
+    public DepValue<TimeSpan?> NTimeEx
+    {
+      get
+      {
+        InitNTimeEx();
+        return _NTimeEx;
+      }
+      set
+      {
+        InitNTimeEx();
+        _NTimeEx.Source = value;
+      }
+    }
+    private DepInput<TimeSpan?> _NTimeEx;
+
+    private void InitNTimeEx()
+    {
+      if (_NTimeEx == null)
+      {
+        _NTimeEx = new DepInput<TimeSpan?>(NTime, NTimeEx_ValueChanged);
+        _NTimeEx.OwnerInfo = new DepOwnerInfo(this, "NTimeEx");
+      }
+    }
+
+    void NTimeEx_ValueChanged(object sender, EventArgs args)
+    {
+      NTime = NTimeEx.Value;
+    }
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNTimeExConnected
+    {
+      get
+      {
+        if (_NTimeEx == null)
+          return false;
+        else
+          return _NTimeEx.IsConnected;
+      }
+    }
+
+    #endregion
+
+    #region Свойство Time
+
+    /// <summary>
+    /// Доступ к компоненту времени.
+    /// В отличие от NTime, это свойство не nullable
+    /// </summary>
+    public TimeSpan Time
+    {
+      get { return NTime ?? TimeSpan.Zero; }
+      set { NTime = value; }
+    }
+
+    /// <summary>
+    /// Свойство ValueEx
+    /// </summary>
+    public DepValue<TimeSpan> TimeEx
+    {
+      get
+      {
+        InitTimeEx();
+        return _TimeEx;
+      }
+      set
+      {
+        InitTimeEx();
+        _TimeEx.Source = value;
+      }
+    }
+    private DepInput<TimeSpan> _TimeEx;
+
+    private void InitTimeEx()
+    {
+      if (_TimeEx == null)
+      {
+        _TimeEx = new DepInput<TimeSpan>(Time, TimeEx_ValueChanged);
+        _TimeEx.OwnerInfo = new DepOwnerInfo(this, "TimeEx");
+        _TimeEx.CheckValue += TimeEx_CheckValue;
+      }
+    }
+
+    void TimeEx_CheckValue(object sender, DepInputCheckEventArgs<TimeSpan> args)
+    {
+      if ((!NTime.HasValue) && args.CurrValue == TimeSpan.Zero)
+        args.Forced = true;
+    }
+
+    void TimeEx_ValueChanged(object sender, EventArgs args)
+    {
+      Time = TimeEx.Value;
+    }
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalTimeExConnected
+    {
+      get
+      {
+        if (_TimeEx == null)
+          return false;
+        else
+          return _TimeEx.IsConnected;
+      }
     }
 
     #endregion
@@ -2002,6 +2194,24 @@ namespace FreeLibSet.RI
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если в поле введено значение (NValue.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(NValue.HasValue);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
 
@@ -2162,7 +2372,11 @@ namespace FreeLibSet.RI
       get { return _NFirstDate; }
       set
       {
-        _NFirstDate = value;
+        if (value.HasValue)
+          _NFirstDate = value.Value.Date;
+        else
+          _NFirstDate = null;
+
         if (_NFirstDateEx != null)
           _NFirstDateEx.Value = value;
         if (_FirstDateEx != null)
@@ -2195,7 +2409,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NFirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool NFirstDateExConnected
+    public bool InternalNFirstDateExConnected
     {
       get
       {
@@ -2255,7 +2469,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool FirstDateExConnected
+    public bool InternalFirstDateExConnected
     {
       get
       {
@@ -2292,7 +2506,11 @@ namespace FreeLibSet.RI
       get { return _NLastDate; }
       set
       {
-        _NLastDate = value;
+        if (value.HasValue)
+          _NLastDate = value.Value.Date;
+        else
+          _NLastDate = null;
+
         if (_NLastDateEx != null)
           _NLastDateEx.Value = value;
         if (_LastDateEx != null)
@@ -2325,7 +2543,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NLastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool NLastDateExConnected
+    public bool InternalNLastDateExConnected
     {
       get
       {
@@ -2385,7 +2603,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool LastDateExConnected
+    public bool InternalLastDateExConnected
     {
       get
       {
@@ -2445,6 +2663,33 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmptyEx(DateTime? firstDate, DateTime? lastDate)
+    {
+      return firstDate.HasValue && lastDate.HasValue;
+    }
+
+    #endregion
+
     #endregion
 
     #region CanBeEmpty
@@ -2480,7 +2725,6 @@ namespace FreeLibSet.RI
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
-
 
     #endregion
 
@@ -2727,7 +2971,7 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
-    #region Вводимое значение FirstDate/LastDate/DateRange
+    #region Вводимое значение N/FirstDate/LastDate/DateRange
 
     #region DateRange
 
@@ -2744,7 +2988,11 @@ namespace FreeLibSet.RI
         if (_FirstDateEx != null)
           _FirstDateEx.Value = FirstDate;
         if (_LastDateEx != null)
-          _LastDateEx.Value = FirstDate;
+          _LastDateEx.Value = LastDate;
+        if (_NFirstDateEx != null)
+          _NFirstDateEx.Value = NFirstDate;
+        if (_NLastDateEx != null)
+          _NLastDateEx.Value = NLastDate;
       }
     }
     private DateRange _DateRange;
@@ -2800,7 +3048,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool FirstDateExConnected
+    public bool InternalFirstDateExConnected
     {
       get
       {
@@ -2874,7 +3122,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool LastDateExConnected
+    public bool InternalLastDateExConnected
     {
       get
       {
@@ -2897,6 +3145,181 @@ namespace FreeLibSet.RI
     private void LastDateEx_ValueChanged(object sender, EventArgs args)
     {
       LastDate = _LastDateEx.Value;
+    }
+
+    #endregion
+
+    #region NFirstDate
+
+    /// <summary>
+    /// Начальная дата диапазона.
+    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается минимально возможная дата.
+    /// Установка значения свойства может привести к изменению конечной даты, если задаваемое значение больше, чем текущая конечная дата.
+    /// </summary>
+    public DateTime? NFirstDate
+    {
+      get
+      {
+        if (DateRange.IsEmpty)
+          return null;
+        else
+          return DateRange.FirstDate;
+      }
+      set
+      {
+        if (value.HasValue)
+          FirstDate = value.Value;
+        else
+          DateRange = DateRange.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для NFirstDate.
+    /// </summary>
+    public DepValue<DateTime?> NFirstDateEx
+    {
+      get
+      {
+        InitNFirstDateEx();
+        return _NFirstDateEx;
+      }
+      set
+      {
+        InitNFirstDateEx();
+        _NFirstDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NFirstDateEx;
+
+    private void InitNFirstDateEx()
+    {
+      if (_NFirstDateEx == null)
+      {
+        _NFirstDateEx = new DepInput<DateTime?>(NFirstDate, NFirstDateEx_ValueChanged);
+        _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+      }
+    }
+
+    private void NFirstDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      NFirstDate = _NFirstDateEx.Value;
+    }
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NFirstDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNFirstDateExConnected
+    {
+      get
+      {
+        if (_NFirstDateEx == null)
+          return false;
+        else
+          return _NFirstDateEx.IsConnected;
+      }
+    }
+
+    #endregion
+
+    #region NLastDate
+
+    /// <summary>
+    /// Конечная дата диапазона.
+    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается максимально возможная дата.
+    /// Установка значения свойства может привести к изменению начальной даты, если задаваемое значение меньше, чем текущая начальная дата.
+    /// </summary>
+    public DateTime? NLastDate
+    {
+      get
+      {
+        if (DateRange.IsEmpty)
+          return null;
+        else
+          return DateRange.LastDate;
+      }
+      set
+      {
+        if (value.HasValue)
+          LastDate = value.Value;
+        else
+          DateRange = DateRange.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для LastDate.
+    /// </summary>
+    public DepValue<DateTime?> NLastDateEx
+    {
+      get
+      {
+        InitNLastDateEx();
+        return _NLastDateEx;
+      }
+      set
+      {
+        InitNLastDateEx();
+        _NLastDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NLastDateEx;
+
+    private void InitNLastDateEx()
+    {
+      if (_NLastDateEx == null)
+      {
+        _NLastDateEx = new DepInput<DateTime?>(NLastDate, NLastDateEx_ValueChanged);
+        _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+      }
+    }
+
+    private void NLastDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      NLastDate = _NLastDateEx.Value;
+    }
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NLastDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNLastDateExConnected
+    {
+      get
+      {
+        if (_NLastDateEx == null)
+          return false;
+        else
+          return _NLastDateEx.IsConnected;
+      }
+    }
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmptyEx(DateTime? firstDate, DateTime? lastDate)
+    {
+      return firstDate.HasValue && lastDate.HasValue;
     }
 
     #endregion
@@ -3088,7 +3511,8 @@ namespace FreeLibSet.RI
   }
 
   /// <summary>
-  /// Поле выбора месяца и года
+  /// Поле выбора месяца и года.
+  /// Выбор пустого значения (YearMonth.Empty) не поддерживается
   /// </summary>
   [Serializable]
   public class YearMonthBox : Control
@@ -3152,7 +3576,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool YearExConnected
+    public bool InternalYearExConnected
     {
       get
       {
@@ -3222,7 +3646,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства MonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool MonthExConnected
+    public bool InternalMonthExConnected
     {
       get
       {
@@ -3290,7 +3714,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства YMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool YMExConnected
+    public bool InternalYMExConnected
     {
       get
       {
@@ -3475,7 +3899,8 @@ namespace FreeLibSet.RI
   /// <summary>
   /// Поле выбора диапазона месяцев и года.
   /// Может задаваться только один год.
-  /// При размещении на полосе элементов рекомендуется занимать целую полосу, задавая метку на предыдущей полосе
+  /// Выбор пустого значения (YearMonthRange.IsEmpty) не поддерживается.
+  /// При размещении на полосе элементов рекомендуется занимать целую полосу, задавая метку на предыдущей полосе.
   /// </summary>
   [Serializable]
   public class YearMonthRangeBox : Control
@@ -3541,7 +3966,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool YearExConnected
+    public bool InternalYearExConnected
     {
       get
       {
@@ -3611,7 +4036,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstMonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool FirstMonthExConnected
+    public bool InternalFirstMonthExConnected
     {
       get
       {
@@ -3681,7 +4106,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastMonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool LastMonthExConnected
+    public bool InternalLastMonthExConnected
     {
       get
       {
@@ -3749,7 +4174,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstYMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool FirstYMExConnected
+    public bool InternalFirstYMExConnected
     {
       get
       {
@@ -3816,7 +4241,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastYMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool LastYMExConnected
+    public bool InternalLastYMExConnected
     {
       get
       {
@@ -4111,7 +4536,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedIndexEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool SelectedIndexExConnected
+    public bool InternalSelectedIndexExConnected
     {
       get
       {
@@ -4210,7 +4635,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedCodeEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool SelectedCodeExConnected
+    public bool InternalSelectedCodeExConnected
     {
       get
       {
@@ -4357,12 +4782,18 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Items
+
     /// <summary>
     /// Массив строк для выпадающего списка.
     /// Задается в конструкторе.
     /// </summary>
     public string[] Items { get { return _Items; } }
     private string[] _Items;
+
+    #endregion
+
+    #region Text
 
     /// <summary>
     /// Текущее введенное значение.
@@ -4383,6 +4814,11 @@ namespace FreeLibSet.RI
           _Text = null;
         else
           _Text = value;
+
+        if (_TextEx != null)
+          _TextEx.Value = value;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
       }
     }
     private string _Text; // храним null вместо пустой строки
@@ -4411,7 +4847,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool TextExConnected
+    public bool InternalTextExConnected
     {
       get
       {
@@ -4436,24 +4872,31 @@ namespace FreeLibSet.RI
       Text = _TextEx.Value;
     }
 
+    #endregion
+
+    #region IsNotEmptyEx
+
     /// <summary>
-    /// Максимальная длина текста. По умолчанию: 32767 символов (Int16.MaxValue).
-    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Управляемое свойство, возвращающее true, если в поле ввода есть текст.
+    /// Может использоваться в валидаторах.
     /// </summary>
-    public int MaxLength
+    public DepValue<bool> IsNotEmptyEx
     {
-      get { return _MaxLength; }
-      set
+      get
       {
-        CheckNotFixed();
-        _MaxLength = value;
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
       }
     }
-    private int _MaxLength;
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
 
-    #region Свойства для проверки значения
+    #region CanBeEmpty
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -4485,6 +4928,23 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
+
+    #endregion
+
+    /// <summary>
+    /// Максимальная длина текста. По умолчанию: 32767 символов (Int16.MaxValue).
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// </summary>
+    public int MaxLength
+    {
+      get { return _MaxLength; }
+      set
+      {
+        CheckNotFixed();
+        _MaxLength = value;
+      }
+    }
+    private int _MaxLength;
 
     #endregion
 
@@ -4677,6 +5137,8 @@ namespace FreeLibSet.RI
         _SelectedCodes = value;
         if (_SelectedCodesEx != null)
           _SelectedCodesEx.Value = value;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(value.Length > 0);
       }
     }
     private string[] _SelectedCodes;
@@ -4704,7 +5166,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedCodesEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool SelectedCodesExConnected
+    public bool InternalSelectedCodesExConnected
     {
       get
       {
@@ -4728,6 +5190,28 @@ namespace FreeLibSet.RI
     {
       SelectedCodes = _SelectedCodesEx.Value;
     }
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если выбран хотя бы один код (SelectedCodes.Length!=0).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(SelectedCodes.Length > 0);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
 
@@ -4948,15 +5432,100 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Path
+
     /// <summary>
     /// Выбранный каталог (вход и выход).
-    /// В текущей реализации нет управляемого свойства PathEx.
     /// </summary>
-    public AbsPath Path { get { return _Path; } set { _Path = value; } }
+    public AbsPath Path
+    {
+      get { return _Path; }
+      set
+      {
+        _Path = value;
+
+        if (_PathEx != null)
+          _PathEx.Value = value;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!Path.IsEmpty);
+      }
+    }
     private AbsPath _Path;
 
     private AbsPath _OldPath;
 
+    /// <summary>
+    /// Управляемое значение для Path.
+    /// </summary>
+    public DepValue<AbsPath> PathEx
+    {
+      get
+      {
+        InitPathEx();
+        return _PathEx;
+      }
+      set
+      {
+        InitPathEx();
+        _PathEx.Source = value;
+      }
+    }
+    private DepInput<AbsPath> _PathEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства PathEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalPathExConnected
+    {
+      get
+      {
+        if (_PathEx == null)
+          return false;
+        else
+          return _PathEx.IsConnected;
+      }
+    }
+
+    private void InitPathEx()
+    {
+      if (_PathEx == null)
+      {
+        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
+        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
+      }
+    }
+
+    private void PathEx_ValueChanged(object sender, EventArgs args)
+    {
+      Path = _PathEx.Value;
+    }
+
+    #endregion
+
+    #region Свойство IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если в поле ввода есть текст и его можно преобразовать в путь
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!Path.IsEmpty);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -4988,6 +5557,10 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
+    #endregion
+
+    #region Для блока диалога
+
     /// <summary>
     /// Пояснительный текст, который выводится в диалоге выбора каталога при нажатии кнопки "Обзор".
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
@@ -5011,6 +5584,10 @@ namespace FreeLibSet.RI
       }
     }
     private bool _ShowNewFolderButton;
+
+    #endregion
+
+    #region PathValidateMode
 
     /// <summary>
     /// Режим проверки введенного пути.
@@ -5044,6 +5621,8 @@ namespace FreeLibSet.RI
       CheckNotFixed();
       _PathValidateMode = null;
     }
+
+    #endregion
 
     #endregion
 
@@ -5150,6 +5729,8 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Path
+
     /// <summary>
     /// Выбранный файл.
     /// Выбрать можно только один файл, множественный выбор не поддерживается.
@@ -5160,6 +5741,78 @@ namespace FreeLibSet.RI
 
     private AbsPath _OldPath;
 
+    /// <summary>
+    /// Управляемое значение для Path.
+    /// </summary>
+    public DepValue<AbsPath> PathEx
+    {
+      get
+      {
+        InitPathEx();
+        return _PathEx;
+      }
+      set
+      {
+        InitPathEx();
+        _PathEx.Source = value;
+      }
+    }
+    private DepInput<AbsPath> _PathEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства PathEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalPathExConnected
+    {
+      get
+      {
+        if (_PathEx == null)
+          return false;
+        else
+          return _PathEx.IsConnected;
+      }
+    }
+
+    private void InitPathEx()
+    {
+      if (_PathEx == null)
+      {
+        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
+        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
+      }
+    }
+
+    private void PathEx_ValueChanged(object sender, EventArgs args)
+    {
+      Path = _PathEx.Value;
+    }
+
+    #endregion
+
+    #region Свойство IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если в поле ввода есть текст и его можно преобразовать в путь
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!Path.IsEmpty);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Может ли поле быть пустым.
@@ -5190,6 +5843,10 @@ namespace FreeLibSet.RI
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
+
+    #endregion
+
+    #region Прочие свойства
 
     /// <summary>
     /// Фильтры (разделитель "|"). Например: "Текстовые файлы|*.txt|Все файлы|*.*".
@@ -5222,6 +5879,8 @@ namespace FreeLibSet.RI
       }
     }
     private TestPathMode _PathValidateMode;
+
+    #endregion
 
     #endregion
 

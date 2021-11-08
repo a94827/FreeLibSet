@@ -42,6 +42,8 @@ using FreeLibSet.DependedValues;
 
 namespace FreeLibSet.RI
 {
+  #region Базовый класс
+
   /// <summary>
   /// Базовый класс для стандартных блоков диалогв
   /// </summary>
@@ -86,274 +88,6 @@ namespace FreeLibSet.RI
     }
 
     #endregion
-  }
-
-  #region Файлы и папки
-
-  /// <summary>
-  /// Диалог выбора каталога
-  /// </summary>
-  [Serializable]
-  public class FolderBrowserDialog : StandardDialog
-  {
-    #region Свойства
-
-    /// <summary>
-    /// Выбранный каталог (вход и выход)
-    /// </summary>
-    public AbsPath Path { get { return _Path; } set { _Path = value; } }
-    private AbsPath _Path;
-
-    private AbsPath _OldPath;
-
-    /// <summary>
-    /// Текст описания внизу блока диалога.
-    /// Дублирует свойство Title, т.к. заголовок не может быть задан для этого блока диалога
-    /// </summary>
-    public string Description { get { return base.Title; } set { base.Title = value; } }
-
-    /// <summary>
-    /// Должна ли отображаться кнопка "Создать папку"
-    /// </summary>
-    public bool ShowNewFolderButton
-    {
-      get { return _ShowNewFolderButton; }
-      set
-      {
-        CheckNotFixed();
-        _ShowNewFolderButton = value;
-      }
-    }
-    private bool _ShowNewFolderButton;
-
-    #endregion
-
-    #region Чтение и запись значений
-
-    /// <summary>
-    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
-    /// которые могут меняться при показе блока диалога.
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Свойство не используется в пользовательском коде.
-    /// </summary>
-    public override bool HasChanges
-    {
-      get
-      {
-        if (base.HasChanges)
-          return true;
-        return _OldPath != Path;
-      }
-    }
-
-    /// <summary>
-    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
-    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для записи значений</param>
-    public override void WriteChanges(CfgPart part)
-    {
-      base.WriteChanges(part);
-
-      part.SetString("Path", Path.Path);
-      _OldPath = Path;
-    }
-
-    /// <summary>
-    /// Прочитать изменения, переданные "с другой стороны".
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для чтения значений</param>
-    public override void ReadChanges(CfgPart part)
-    {
-      base.ReadChanges(part);
-      Path = new AbsPath(part.GetString("Path"));
-      _OldPath = Path;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.MachineSpecific;
-    }
-
-    /// <summary>
-    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для записи</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      part.SetString(Name, Path.SlashedPath);
-    }
-
-    /// <summary>
-    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для чтения значений</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      if (part.HasValue(Name))
-        Path = new AbsPath(part.GetString(Name));
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Базовый класс для OpenFileDialog и SaveFileDialog
-  /// </summary>
-  [Serializable]
-  public abstract class FileDialog : StandardDialog
-  {
-    #region Свойства
-
-    /// <summary>
-    /// Выбранный файл
-    /// </summary>
-    public AbsPath Path { get { return _Path; } set { _Path = value; } }
-    private AbsPath _Path;
-
-    private AbsPath _OldPath;
-
-    /// <summary>
-    /// Расширение по умолчанию
-    /// </summary>
-    public string DefaultExt
-    {
-      get { return _DefaultExt; }
-      set
-      {
-        CheckNotFixed();
-        _DefaultExt = value;
-      }
-    }
-    private string _DefaultExt;
-
-    /// <summary>
-    /// Фильтры (разделитель "|"). Например: "Текстовые файлы|*.txt|Все файлы|*.*".
-    /// </summary>
-    public string Filter
-    {
-      get { return _Filter; }
-      set
-      {
-        CheckNotFixed();
-        _Filter = value;
-      }
-    }
-    private string _Filter;
-
-    #endregion
-
-    #region Чтение и запись значений
-
-    /// <summary>
-    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
-    /// которые могут меняться при показе блока диалога.
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Свойство не используется в пользовательском коде.
-    /// </summary>
-    public override bool HasChanges
-    {
-      get
-      {
-        if (base.HasChanges)
-          return true;
-        return _OldPath != Path;
-      }
-    }
-
-    /// <summary>
-    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
-    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для записи значений</param>
-    public override void WriteChanges(CfgPart part)
-    {
-      base.WriteChanges(part);
-
-      part.SetString("Path", Path.Path);
-      _OldPath = Path;
-    }
-
-    /// <summary>
-    /// Прочитать изменения, переданные "с другой стороны".
-    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
-    /// Метод не используется в пользовательском коде.
-    /// </summary>
-    /// <param name="part">Секция для чтения значений</param>
-    public override void ReadChanges(CfgPart part)
-    {
-      base.ReadChanges(part);
-      Path = new AbsPath(part.GetString("Path"));
-      _OldPath = Path;
-    }
-
-    /// <summary>
-    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
-    /// в секции конфигурации заданного типа.
-    /// </summary>
-    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
-    /// <returns>true, если элемент может хранить данные</returns>
-    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
-    {
-      return cfgType == RIValueCfgType.MachineSpecific;
-    }
-
-    /// <summary>
-    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для записи</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      part.SetString(Name, Path.Path);
-    }
-
-    /// <summary>
-    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
-    /// </summary>
-    /// <param name="part">Секция конфигурации для чтения значений</param>
-    /// <param name="cfgType">Тип секции конфигурации</param>
-    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
-    {
-      if (part.HasValue(Name))
-        Path = new AbsPath(part.GetString(Name));
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Диалог выбора файла для открытия
-  /// </summary>
-  [Serializable]
-  public class OpenFileDialog : FileDialog
-  {
-  }
-
-  /// <summary>
-  /// Диалог выбора файла для записи
-  /// </summary>
-  [Serializable]
-  public class SaveFileDialog : FileDialog
-  {
   }
 
   #endregion
@@ -403,7 +137,12 @@ namespace FreeLibSet.RI
       get
       {
         if (_Validators == null)
-          _Validators = new UIValidatorList();
+        {
+          if (IsFixed)
+            _Validators = UIValidatorList.Empty;
+          else
+            _Validators = new UIValidatorList();
+        }
         return _Validators;
       }
     }
@@ -480,7 +219,7 @@ namespace FreeLibSet.RI
         if (_TextEx != null)
           _TextEx.Value = value;
         if (_IsNotEmptyEx != null)
-          _IsNotEmptyEx.Value = !String.IsNullOrEmpty(value);
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
       }
     }
     private string _Text;
@@ -508,7 +247,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public bool TextExConnected
+    public bool InternalTextExConnected
     {
       get
       {
@@ -523,7 +262,7 @@ namespace FreeLibSet.RI
     {
       if (_TextEx == null)
       {
-        _TextEx = new DepInput<string>(Text,TextEx_ValueChanged);
+        _TextEx = new DepInput<string>(Text, TextEx_ValueChanged);
         _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
       }
     }
@@ -533,6 +272,10 @@ namespace FreeLibSet.RI
       Text = _TextEx.Value;
     }
 
+    #endregion
+
+    #region IsNotEmptyEx
+
     /// <summary>
     /// Управляемое свойство, которое возвращает true, если введено непустое значение.
     /// Используется для валидаторов.
@@ -541,40 +284,15 @@ namespace FreeLibSet.RI
     {
       get
       {
-        InitIsNotEmptyEx();
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
         return _IsNotEmptyEx;
       }
-      set
-      {
-        InitIsNotEmptyEx();
-        _IsNotEmptyEx.Source = value;
-      }
     }
-    private DepInput<bool> _IsNotEmptyEx;
-
-    /// <summary>
-    /// Возвращает true, если обработчик свойства IsNotEmptyEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
-    /// </summary>
-    public bool IsNotEmptyExConnected
-    {
-      get
-      {
-        if (_IsNotEmptyEx == null)
-          return false;
-        else
-          return _IsNotEmptyEx.IsConnected;
-      }
-    }
-
-    private void InitIsNotEmptyEx()
-    {
-      if (_IsNotEmptyEx == null)
-      {
-        _IsNotEmptyEx = new DepInput<bool>(!String.IsNullOrEmpty(Text), null);
-        _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
-      }
-    }
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
 
@@ -624,7 +342,6 @@ namespace FreeLibSet.RI
       }
     }
     private int _MaxLength;
-
 
     #endregion
 
@@ -730,8 +447,8 @@ namespace FreeLibSet.RI
 
       Title = "Ввод текста";
       Prompt = "Значение";
-      Text = String.Empty;
-      MaxLength = 0;
+      _Text = String.Empty;
+      _MaxLength = 0;
       _CanBeEmptyMode = UIValidateState.Error;
     }
 
@@ -739,28 +456,99 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Text
+
     /// <summary>
     /// Вход и выход: редактируемое значение.
     /// По умолчанию - пустая строка.
     /// </summary>
-    public string Text { get { return _Text; } set { _Text = value; } }
+    public string Text
+    {
+      get { return _Text; }
+      set
+      {
+        if (value == null)
+          value = String.Empty;
+        _Text = value;
+        if (_TextEx != null)
+          _TextEx.Value = value;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
+      }
+    }
     private string _Text;
     private string _OldText;
 
     /// <summary>
-    /// Максимальная длина текста.
-    /// По умолчанию: 0 - длина текста ограничена 32767 символами (Int16.MaxValue)
+    /// Управляемое свойство для Text
     /// </summary>
-    public int MaxLength
+    public DepValue<string> TextEx
     {
-      get { return _MaxLength; }
+      get
+      {
+        InitTextEx();
+        return _TextEx;
+      }
       set
       {
-        CheckNotFixed();
-        _MaxLength = value;
+        InitTextEx();
+        _TextEx.Source = value;
       }
     }
-    private int _MaxLength;
+    private DepInput<string> _TextEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalTextExConnected
+    {
+      get
+      {
+        if (_TextEx == null)
+          return false;
+        else
+          return _TextEx.IsConnected;
+      }
+    }
+
+    private void InitTextEx()
+    {
+      if (_TextEx == null)
+      {
+        _TextEx = new DepInput<string>(Text, TextEx_ValueChanged);
+        _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+      }
+    }
+
+    private void TextEx_ValueChanged(object sender, EventArgs args)
+    {
+      Text = _TextEx.Value;
+    }
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, которое возвращает true, если введено непустое значение.
+    /// Используется для валидаторов.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
 
     /// <summary>
     /// Список строк, из которых можно выбрать значение.
@@ -801,6 +589,20 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
+    /// <summary>
+    /// Максимальная длина текста.
+    /// По умолчанию: 0 - длина текста ограничена 32767 символами (Int16.MaxValue)
+    /// </summary>
+    public int MaxLength
+    {
+      get { return _MaxLength; }
+      set
+      {
+        CheckNotFixed();
+        _MaxLength = value;
+      }
+    }
+    private int _MaxLength;
 
     #endregion
 
@@ -886,7 +688,6 @@ namespace FreeLibSet.RI
     #endregion
   }
 
-
   /// <summary>
   /// Базовый класс для IntInputBox, SingleInputBox, DoubleInputBox и DecimalInputBox
   /// </summary>
@@ -904,7 +705,8 @@ namespace FreeLibSet.RI
     {
       Title = "Ввод числа";
       Prompt = "Значение";
-      Format = String.Empty;
+      _Format = String.Empty;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -914,23 +716,108 @@ namespace FreeLibSet.RI
     #region CanBeEmpty
 
     /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false
+    /// Может ли поле быть пустым.
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
     /// </summary>
-    public bool CanBeEmpty
+    public UIValidateState CanBeEmptyMode
     {
-      get { return _CanBeEmpty; }
+      get { return _CanBeEmptyMode; }
       set
       {
         CheckNotFixed();
-        _CanBeEmpty = value;
+        _CanBeEmptyMode = value;
       }
     }
-    private bool _CanBeEmpty;
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
 
     #endregion
 
     #region Value/NValue
+
+    /// <summary>
+    /// Вход и выход: редактируемое значение.
+    /// </summary>
+    public T? NValue
+    {
+      get { return _NValue; }
+      set
+      {
+        _NValue = value;
+        if (_NValueEx != null)
+          _NValueEx.Value = value;
+        if (_ValueEx != null)
+          _ValueEx.Value = this.Value;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(value.HasValue);
+      }
+    }
+    private T? _NValue;
+
+    /// <summary>
+    /// Используется при чтении/записи изменений
+    /// </summary>
+    protected T? OldNValue;
+
+    /// <summary>
+    /// Управляемое значение для NValue.
+    /// </summary>
+    public DepValue<T?> NValueEx
+    {
+      get
+      {
+        InitNValueEx();
+        return _NValueEx;
+      }
+      set
+      {
+        InitNValueEx();
+        _NValueEx.Source = value;
+      }
+    }
+    private DepInput<T?> _NValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNValueExConnected
+    {
+      get
+      {
+        if (_NValueEx == null)
+          return false;
+        else
+          return _NValueEx.IsConnected;
+      }
+    }
+
+    private void InitNValueEx()
+    {
+      if (_NValueEx == null)
+      {
+        _NValueEx = new DepInput<T?>(NValue, NValueEx_ValueChanged);
+        _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+      }
+    }
+
+    private void NValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      NValue = _NValueEx.Value;
+    }
+
 
     /// <summary>
     /// Вход и выход: редактируемое значение.
@@ -943,17 +830,81 @@ namespace FreeLibSet.RI
       set { NValue = value; }
     }
 
+    /// <summary>
+    /// Управляемое значение для Value.
+    /// </summary>
+    public DepValue<T> ValueEx
+    {
+      get
+      {
+        InitValueEx();
+        return _ValueEx;
+      }
+      set
+      {
+        InitValueEx();
+        _ValueEx.Source = value;
+      }
+    }
+    private DepInput<T> _ValueEx;
 
     /// <summary>
-    /// Вход и выход: редактируемое значение.
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    public T? NValue { get { return _NValue; } set { _NValue = value; } }
-    private T? _NValue;
+    public bool InternalValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
+
+    private void InitValueEx()
+    {
+      if (_ValueEx == null)
+      {
+        _ValueEx = new DepInput<T>(Value, ValueEx_ValueChanged);
+        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
+        _ValueEx.CheckValue += ValueEx_CheckValue;
+      }
+    }
+
+    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<T> args)
+    {
+      if ((!NValue.HasValue) && args.CurrValue.Equals(default(T)))
+        args.Forced = true;
+    }
+
+    private void ValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      Value = _ValueEx.Value;
+    }
+
+    #endregion
+
+    #region IsNotEmptyEx
 
     /// <summary>
-    /// Используется при чтении/записи изменений
+    /// Управляемое свойство, возвращающее true, если число введено (NValue.HasValue=true).
+    /// Может использоваться в валидаторах.
     /// </summary>
-    protected T? OldNValue;
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(NValue.HasValue);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
 
@@ -1402,6 +1353,8 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Kind
+
     /// <summary>
     /// Формат вводимого значения.
     /// По умолчанию - Date
@@ -1417,15 +1370,93 @@ namespace FreeLibSet.RI
     }
     private EditableDateTimeFormatterKind _Kind;
 
+    #endregion
+
+    #region Value/NValue/NTime/Time
+
+    #region NValue
+
     /// <summary>
-    /// Вход и выход: редактируемое значение с поддержкой значения null
+    /// Введенное значение.
+    /// Может быть null, если нет введенного значения.
     /// </summary>
-    public DateTime? NValue { get { return _NValue; } set { _NValue = value; } }
+    public DateTime? NValue
+    {
+      get { return _NValue; }
+      set
+      {
+        _NValue = value;
+        if (_NValueEx != null)
+          _NValueEx.Value = value;
+        if (_ValueEx != null)
+          _ValueEx.Value = this.Value;
+        if (_NTimeEx != null)
+          _NTimeEx.Value = this.NTime;
+        if (_TimeEx != null)
+          _TimeEx.Value = this.Time;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(NValue.HasValue);
+      }
+    }
     private DateTime? _NValue;
+
     private DateTime? _OldNValue;
 
     /// <summary>
-    /// Вход и выход: редактируемое значение. Для пустого значения возвращается DateTime.MinValue.
+    /// Управляемое значение для NValue.
+    /// </summary>
+    public DepValue<DateTime?> NValueEx
+    {
+      get
+      {
+        InitNValueEx();
+        return _NValueEx;
+      }
+      set
+      {
+        InitNValueEx();
+        _NValueEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNValueExConnected
+    {
+      get
+      {
+        if (_NValueEx == null)
+          return false;
+        else
+          return _NValueEx.IsConnected;
+      }
+    }
+
+    private void InitNValueEx()
+    {
+      if (_NValueEx == null)
+      {
+        _NValueEx = new DepInput<DateTime?>(NValue, NValueEx_ValueChanged);
+        _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+      }
+    }
+
+    private void NValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      NValue = _NValueEx.Value;
+    }
+
+    #endregion
+
+    #region Value
+
+    /// <summary>
+    /// Введенное значение.
+    /// Если нет введенного значения, свойство возвращает DateTime.MinValue.
+    /// Это свойство следует использовать при CanBeEmpty=false.
     /// </summary>
     public DateTime Value
     {
@@ -1433,6 +1464,258 @@ namespace FreeLibSet.RI
       set { NValue = value; }
     }
 
+    /// <summary>
+    /// Управляемое значение для Value.
+    /// </summary>
+    public DepValue<DateTime> ValueEx
+    {
+      get
+      {
+        InitValueEx();
+        return _ValueEx;
+      }
+      set
+      {
+        InitValueEx();
+        _ValueEx.Source = value;
+      }
+    }
+    private DepInput<DateTime> _ValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
+
+    private void InitValueEx()
+    {
+      if (_ValueEx == null)
+      {
+        _ValueEx = new DepInput<DateTime>(Value, ValueEx_ValueChanged);
+        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
+        _ValueEx.CheckValue += ValueEx_CheckValue;
+      }
+    }
+
+    void ValueEx_CheckValue(object sender, DepInputCheckEventArgs<DateTime> args)
+    {
+      if ((!NValue.HasValue) && args.CurrValue.Equals(default(DateTime)))
+        args.Forced = true;
+    }
+
+    private void ValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      Value = _ValueEx.Value;
+    }
+
+    #endregion
+
+    #region Свойство NTime
+
+    /// <summary>
+    /// Доступ к компоненту времени.
+    /// Если нет введенного значения, свойство возвращает null
+    /// </summary>
+    public TimeSpan? NTime
+    {
+      get
+      {
+        if (NValue.HasValue)
+          return NValue.Value.TimeOfDay;
+        else
+          return null;
+      }
+      set
+      {
+        if (value.HasValue)
+          NValue = Value.Date /* а не NValue */ + value;
+        else
+          NValue = null;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство для NTime
+    /// </summary>
+    public DepValue<TimeSpan?> NTimeEx
+    {
+      get
+      {
+        InitNTimeEx();
+        return _NTimeEx;
+      }
+      set
+      {
+        InitNTimeEx();
+        _NTimeEx.Source = value;
+      }
+    }
+    private DepInput<TimeSpan?> _NTimeEx;
+
+    private void InitNTimeEx()
+    {
+      if (_NTimeEx == null)
+      {
+        _NTimeEx = new DepInput<TimeSpan?>(NTime, NTimeEx_ValueChanged);
+        _NTimeEx.OwnerInfo = new DepOwnerInfo(this, "NTimeEx");
+      }
+    }
+
+    void NTimeEx_ValueChanged(object sender, EventArgs args)
+    {
+      NTime = NTimeEx.Value;
+    }
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNTimeExConnected
+    {
+      get
+      {
+        if (_NTimeEx == null)
+          return false;
+        else
+          return _NTimeEx.IsConnected;
+      }
+    }
+
+    #endregion
+
+    #region Свойство Time
+
+    /// <summary>
+    /// Доступ к компоненту времени.
+    /// В отличие от NTime, это свойство не nullable
+    /// </summary>
+    public TimeSpan Time
+    {
+      get { return NTime ?? TimeSpan.Zero; }
+      set { NTime = value; }
+    }
+
+    /// <summary>
+    /// Свойство ValueEx
+    /// </summary>
+    public DepValue<TimeSpan> TimeEx
+    {
+      get
+      {
+        InitTimeEx();
+        return _TimeEx;
+      }
+      set
+      {
+        InitTimeEx();
+        _TimeEx.Source = value;
+      }
+    }
+    private DepInput<TimeSpan> _TimeEx;
+
+    private void InitTimeEx()
+    {
+      if (_TimeEx == null)
+      {
+        _TimeEx = new DepInput<TimeSpan>(Time, TimeEx_ValueChanged);
+        _TimeEx.OwnerInfo = new DepOwnerInfo(this, "TimeEx");
+        _TimeEx.CheckValue += TimeEx_CheckValue;
+      }
+    }
+
+    void TimeEx_CheckValue(object sender, DepInputCheckEventArgs<TimeSpan> args)
+    {
+      if ((!NTime.HasValue) && args.CurrValue == TimeSpan.Zero)
+        args.Forced = true;
+    }
+
+    void TimeEx_ValueChanged(object sender, EventArgs args)
+    {
+      Time = TimeEx.Value;
+    }
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalTimeExConnected
+    {
+      get
+      {
+        if (_TimeEx == null)
+          return false;
+        else
+          return _TimeEx.IsConnected;
+      }
+    }
+
+    #endregion
+
+    #endregion
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если в поле введено значение (NValue.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(NValue.HasValue);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region Диапазон допустимых значений
 
     /// <summary>
     /// Минимальное значение. По умолчанию ограничение не задано
@@ -1462,6 +1745,10 @@ namespace FreeLibSet.RI
     }
     private DateTime? _Maximum;
 
+    #endregion
+
+    #region Прочие свойства
+
     /// <summary>
     /// Если свойство установлено в true, то в диалоге будет не поле ввода даты, а календарик.
     /// Установка свойства несовместима с CanBeEmpty=true
@@ -1477,33 +1764,7 @@ namespace FreeLibSet.RI
     }
     private bool _UseCalendar;
 
-    /// <summary>
-    /// Может ли поле быть пустым.
-    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
-    /// </summary>
-    public UIValidateState CanBeEmptyMode
-    {
-      get { return _CanBeEmptyMode; }
-      set
-      {
-        CheckNotFixed();
-        _CanBeEmptyMode = value;
-      }
-    }
-    private UIValidateState _CanBeEmptyMode;
-
-    /// <summary>
-    /// Может ли поле быть пустым.
-    /// Значение по умолчанию: false (поле является обязательным).
-    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
-    /// При CanBeEmptyMode=Warning это свойство возвращает true.
-    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
-    /// </summary>
-    public bool CanBeEmpty
-    {
-      get { return CanBeEmptyMode != UIValidateState.Error; }
-      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
-    }
+    #endregion
 
     #endregion
 
@@ -1615,6 +1876,82 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
+    #region Text/Lines
+
+    /// <summary>
+    /// Многострочный текст.
+    /// Дублирует свойство Text как массив строк.
+    /// </summary>
+    public string[] Lines
+    {
+      get { return _Lines; }
+      set
+      {
+        if (value == null)
+          _Lines = DataTools.EmptyStrings;
+        else if (value.Length == 0)
+          _Lines = DataTools.EmptyStrings;
+        else
+          _Lines = value;
+
+        if (_LinesEx != null)
+          _LinesEx.Value = value;
+        if (_TextEx != null)
+          _TextEx.Value = Text;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(value.Length>0);
+      }
+    }
+    private string[] _Lines;
+    private string[] _OldLines;
+
+    /// <summary>
+    /// Управляемое свойство для Lines
+    /// </summary>
+    public DepValue<string[]> LinesEx
+    {
+      get
+      {
+        InitLinesEx();
+        return _LinesEx;
+      }
+      set
+      {
+        InitLinesEx();
+        _LinesEx.Source = value;
+      }
+    }
+    private DepInput<string[]> _LinesEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства LinesEx присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalLinesExConnected
+    {
+      get
+      {
+        if (_LinesEx == null)
+          return false;
+        else
+          return _LinesEx.IsConnected;
+      }
+    }
+
+    private void InitLinesEx()
+    {
+      if (_LinesEx == null)
+      {
+        _LinesEx = new DepInput<string[]>(Lines, LinesEx_ValueChanged);
+        _LinesEx.OwnerInfo = new DepOwnerInfo(this, "LinesEx");
+      }
+    }
+
+    private void LinesEx_ValueChanged(object sender, EventArgs args)
+    {
+      Lines = _LinesEx.Value;
+    }
+
     /// <summary>
     /// Вход и выход: редактируемое значение.
     /// Разделителем строк является Environment.NewLine.
@@ -1628,55 +1965,73 @@ namespace FreeLibSet.RI
     }
 
     /// <summary>
-    /// Многострочный текст.
-    /// Дублирует свойство Value как массив строк.
+    /// Управляемое свойство для Text
     /// </summary>
-    public string[] Lines
+    public DepValue<string> TextEx
     {
-      get { return _Lines; }
+      get
+      {
+        InitTextEx();
+        return _TextEx;
+      }
       set
       {
-        if (value == null)
-          _Lines = DataTools.EmptyStrings;
-        else if (value.Length == 0)
-          _Lines = DataTools.EmptyStrings;
+        InitTextEx();
+        _TextEx.Source = value;
+      }
+    }
+    private DepInput<string> _TextEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalTextExConnected
+    {
+      get
+      {
+        if (_TextEx == null)
+          return false;
         else
-          _Lines = value;
+          return _TextEx.IsConnected;
       }
     }
-    private string[] _Lines;
-    private string[] _OldLines;
 
+    private void InitTextEx()
+    {
+      if (_TextEx == null)
+      {
+        _TextEx = new DepInput<string>(Text, TextEx_ValueChanged);
+        _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+      }
+    }
+
+    private void TextEx_ValueChanged(object sender, EventArgs args)
+    {
+      Text = _TextEx.Value;
+    }
+
+    #endregion
+
+    #region IsNotEmptyEx
 
     /// <summary>
-    /// Если true, то форма будет предназначена только для просмотра текста, а не для редактирования.
-    /// По умолчанию - false - текст можно редактировать
+    /// Управляемое свойство, которое возвращает true, если введено непустое значение.
+    /// Используется для валидаторов.
     /// </summary>
-    public bool ReadOnly
+    public DepValue<bool> IsNotEmptyEx
     {
-      get { return _ReadOnly; }
-      set
+      get
       {
-        CheckNotFixed();
-        _ReadOnly = value;
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
       }
     }
-    private bool _ReadOnly;
-
-    /// <summary>
-    /// Если true, то форма будет выведена на весь экран
-    /// По умолчанию - false - форма имеет размер по умолчанию
-    /// </summary>
-    public bool Maximized
-    {
-      get { return _Maximized; }
-      set
-      {
-        CheckNotFixed();
-        _Maximized = value;
-      }
-    }
-    private bool _Maximized;
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
 
@@ -1712,69 +2067,41 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
+    #endregion
+
+    #region Прочие свойства
 
     /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается сообщение об ошибке, определяемое свойством ErrorRegExMessage.
+    /// Если true, то форма будет предназначена только для просмотра текста, а не для редактирования.
+    /// По умолчанию - false - текст можно редактировать
     /// </summary>
-    public string ErrorRegExPattern
+    public bool ReadOnly
     {
-      get { return _ErrorRegExPattern; }
+      get { return _ReadOnly; }
       set
       {
         CheckNotFixed();
-        _ErrorRegExPattern = value;
+        _ReadOnly = value;
       }
     }
-    private string _ErrorRegExPattern;
+    private bool _ReadOnly;
 
     /// <summary>
-    /// Текст сообщения об ошибке, которое выводится, если введенное значение не соответствует регулярному выражению ErrorRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
+    /// Если true, то форма будет выведена на весь экран
+    /// По умолчанию - false - форма имеет размер по умолчанию
     /// </summary>
-    public string ErrorRegExMessage
+    public bool Maximized
     {
-      get { return _ErrorRegExMessage; }
+      get { return _Maximized; }
       set
       {
         CheckNotFixed();
-        _ErrorRegExMessage = value;
+        _Maximized = value;
       }
     }
-    private string _ErrorRegExMessage;
+    private bool _Maximized;
 
-    /// <summary>
-    /// Проверка введенного значения с помощью регулярного выражения (RegularExpression).
-    /// Проверка выполняется, если свойство содержит выражение, а поле ввода содержит непустое значение.
-    /// Если в поле введен текст, не соответствующий выражению, выдается предупреждение, определяемое свойством WarningRegExMessage.
-    /// Проверка не выполняется, если обнаружена ошибка при проверке значения с помощью свойства ErrorRegEx.
-    /// </summary>
-    public string WarningRegExPattern
-    {
-      get { return _WarningRegExPattern; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExPattern = value;
-      }
-    }
-    private string _WarningRegExPattern;
-
-    /// <summary>
-    /// Текст предупреждения, которое выводится, если введенное значение не соответствует регулярному выражению WarningRegEx.
-    /// Если свойство не установлено, используется сообщение по умолчанию.
-    /// </summary>
-    public string WarningRegExMessage
-    {
-      get { return _WarningRegExMessage; }
-      set
-      {
-        CheckNotFixed();
-        _WarningRegExMessage = value;
-      }
-    }
-    private string _WarningRegExMessage;
+    #endregion
 
     #endregion
 
@@ -1882,37 +2209,32 @@ namespace FreeLibSet.RI
       Title = "Ввод диапазона чисел";
       Prompt = "Диапазон";
       _Format = String.Empty;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
 
-    #region CanBempty
-
-    /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false
-    /// </summary>
-    public bool CanBeEmpty
-    {
-      get { return _CanBeEmpty; }
-      set
-      {
-        CheckNotFixed();
-        _CanBeEmpty = value;
-      }
-    }
-    private bool _CanBeEmpty;
-
-    #endregion
-
     #region First/LastValue/NValue
+
+    #region NFirstValue
 
     /// <summary>
     /// Вход и выход: первое редактируемое значение с поддержкой null
     /// </summary>
-    public T? NFirstValue { get { return _NFirstValue; } set { _NFirstValue = value; } }
+    public T? NFirstValue 
+    { 
+      get { return _NFirstValue; } 
+      set 
+      { 
+        _NFirstValue = value;
+        if (_NFirstValueEx != null)
+          _NFirstValueEx.Value = value;
+        if (_FirstValueEx != null)
+          _FirstValueEx.Value = this.FirstValue;
+      }
+    }
     private T? _NFirstValue;
 
     /// <summary>
@@ -1921,15 +2243,55 @@ namespace FreeLibSet.RI
     protected T? OldNFirstValue;
 
     /// <summary>
-    /// Вход и выход: второе редактируемое значение с поддержкой null
+    /// Управляемое значение для NFirstValue.
     /// </summary>
-    public T? NLastValue { get { return _NLastValue; } set { _NLastValue = value; } }
-    private T? _NLastValue;
+    public DepValue<T?> NFirstValueEx
+    {
+      get
+      {
+        InitNFirstValueEx();
+        return _NFirstValueEx;
+      }
+      set
+      {
+        InitNFirstValueEx();
+        _NFirstValueEx.Source = value;
+      }
+    }
+    private DepInput<T?> _NFirstValueEx;
 
     /// <summary>
-    /// Используется при чтении и записи значений
+    /// Возвращает true, если обработчик свойства NFirstValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
-    protected T? OldNLastValue;
+    public bool InternalNFirstValueExConnected
+    {
+      get
+      {
+        if (_NFirstValueEx == null)
+          return false;
+        else
+          return _NFirstValueEx.IsConnected;
+      }
+    }
+
+    private void InitNFirstValueEx()
+    {
+      if (_NFirstValueEx == null)
+      {
+        _NFirstValueEx = new DepInput<T?>(NFirstValue, NFirstValueEx_ValueChanged);
+        _NFirstValueEx.OwnerInfo = new DepOwnerInfo(this, "NFirstValueEx");
+      }
+    }
+
+    private void NFirstValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      NFirstValue = _NFirstValueEx.Value;
+    }
+
+    #endregion
+
+    #region FirstValue
 
     /// <summary>
     /// Вход и выход: первое редактируемое значение без поддержки null
@@ -1941,12 +2303,244 @@ namespace FreeLibSet.RI
     }
 
     /// <summary>
+    /// Управляемое значение для FirstValue.
+    /// </summary>
+    public DepValue<T> FirstValueEx
+    {
+      get
+      {
+        InitFirstValueEx();
+        return _FirstValueEx;
+      }
+      set
+      {
+        InitFirstValueEx();
+        _FirstValueEx.Source = value;
+      }
+    }
+    private DepInput<T> _FirstValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства FirstValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalFirstValueExConnected
+    {
+      get
+      {
+        if (_FirstValueEx == null)
+          return false;
+        else
+          return _FirstValueEx.IsConnected;
+      }
+    }
+
+    private void InitFirstValueEx()
+    {
+      if (_FirstValueEx == null)
+      {
+        _FirstValueEx = new DepInput<T>(FirstValue, FirstValueEx_ValueChanged);
+        _FirstValueEx.OwnerInfo = new DepOwnerInfo(this, "FirstValueEx");
+      }
+    }
+
+    private void FirstValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstValue = _FirstValueEx.Value;
+    }
+
+    #endregion
+
+    #region NLastValue
+
+    /// <summary>
+    /// Вход и выход: второе редактируемое значение с поддержкой null
+    /// </summary>
+    public T? NLastValue 
+    { 
+      get { return _NLastValue; } 
+      set 
+      {
+        _NLastValue = value;
+        if (_NLastValueEx != null)
+          _NLastValueEx.Value = value;
+        if (_LastValueEx != null)
+          _LastValueEx.Value = this.LastValue;
+      }
+    }
+    private T? _NLastValue;
+
+    /// <summary>
+    /// Используется при чтении и записи значений
+    /// </summary>
+    protected T? OldNLastValue;
+
+    /// <summary>
+    /// Управляемое значение для NLastValue.
+    /// </summary>
+    public DepValue<T?> NLastValueEx
+    {
+      get
+      {
+        InitNLastValueEx();
+        return _NLastValueEx;
+      }
+      set
+      {
+        InitNLastValueEx();
+        _NLastValueEx.Source = value;
+      }
+    }
+    private DepInput<T?> _NLastValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NLastValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNLastValueExConnected
+    {
+      get
+      {
+        if (_NLastValueEx == null)
+          return false;
+        else
+          return _NLastValueEx.IsConnected;
+      }
+    }
+
+    private void InitNLastValueEx()
+    {
+      if (_NLastValueEx == null)
+      {
+        _NLastValueEx = new DepInput<T?>(NLastValue, NLastValueEx_ValueChanged);
+        _NLastValueEx.OwnerInfo = new DepOwnerInfo(this, "NLastValueEx");
+      }
+    }
+
+    private void NLastValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      NLastValue = _NLastValueEx.Value;
+    }
+
+    #endregion
+
+    #region LastValue
+
+    /// <summary>
     /// Вход и выход: второе редактируемое значение без поддержки null
     /// </summary>
     public T LastValue
     {
       get { return NLastValue ?? default(T); }
       set { NLastValue = value; }
+    }
+
+    /// <summary>
+    /// Управляемое значение для LastValue.
+    /// </summary>
+    public DepValue<T> LastValueEx
+    {
+      get
+      {
+        InitLastValueEx();
+        return _LastValueEx;
+      }
+      set
+      {
+        InitLastValueEx();
+        _LastValueEx.Source = value;
+      }
+    }
+    private DepInput<T> _LastValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalLastValueExConnected
+    {
+      get
+      {
+        if (_LastValueEx == null)
+          return false;
+        else
+          return _LastValueEx.IsConnected;
+      }
+    }
+
+    private void InitLastValueEx()
+    {
+      if (_LastValueEx == null)
+      {
+        _LastValueEx = new DepInput<T>(LastValue, LastValueEx_ValueChanged);
+        _LastValueEx.OwnerInfo = new DepOwnerInfo(this, "LastValueEx");
+      }
+    }
+
+    private void LastValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      LastValue = _LastValueEx.Value;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr2<bool, T?, T?>(NFirstValueEx, NLastValueEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmptyEx(T? firstValue, T? lastValue)
+    {
+      return firstValue.HasValue && lastValue.HasValue;
+    }
+
+    #endregion
+
+    #region CanBempty
+
+    /// <summary>
+    /// Могут ли поля быть пустыми.
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Могут ли поля быть пустыми.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -2411,14 +3005,313 @@ namespace FreeLibSet.RI
     {
       Title = "Ввод диапазона дат";
       Prompt = "Диапазон";
-      NFirstDate = null;
-      NLastDate = null;
       _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
+
+    #region N/First/LastDate
+
+    #region NFirstDate
+
+    /// <summary>
+    /// Начальная дата диапазона с поддержкой значения null
+    /// </summary>
+    public DateTime? NFirstDate
+    {
+      get { return _NFirstDate; }
+      set
+      {
+        if (value.HasValue)
+          _NFirstDate = value.Value.Date;
+        else
+          _NFirstDate = null;
+
+        if (_NFirstDateEx != null)
+          _NFirstDateEx.Value = value;
+        if (_FirstDateEx != null)
+          _FirstDateEx.Value = FirstDate;
+      }
+    }
+    private DateTime? _NFirstDate;
+
+    private DateTime? _OldNFirstDate;
+
+    /// <summary>
+    /// Управляемое значение для NFirstDate.
+    /// </summary>
+    public DepValue<DateTime?> NFirstDateEx
+    {
+      get
+      {
+        InitNFirstDateEx();
+        return _NFirstDateEx;
+      }
+      set
+      {
+        InitNFirstDateEx();
+        _NFirstDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NFirstDateEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NFirstDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNFirstDateExConnected
+    {
+      get
+      {
+        if (_NFirstDateEx == null)
+          return false;
+        else
+          return _NFirstDateEx.IsConnected;
+      }
+    }
+
+    private void InitNFirstDateEx()
+    {
+      if (_NFirstDateEx == null)
+      {
+        _NFirstDateEx = new DepInput<DateTime?>(NFirstDate, NFirstDateEx_ValueChanged);
+        _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+      }
+    }
+
+    private void NFirstDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      NFirstDate = _NFirstDateEx.Value;
+    }
+
+    #endregion
+
+    #region FirstDate
+
+    /// <summary>
+    /// Начальная дата диапазона без значения null
+    /// </summary>
+    public DateTime FirstDate
+    {
+      get { return NFirstDate ?? DateRange.Whole.FirstDate; }
+      set { NFirstDate = value; }
+    }
+
+    /// <summary>
+    /// Управляемое значение для FirstDate.
+    /// </summary>
+    public DepValue<DateTime> FirstDateEx
+    {
+      get
+      {
+        InitFirstDateEx();
+        return _FirstDateEx;
+      }
+      set
+      {
+        InitFirstDateEx();
+        _FirstDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime> _FirstDateEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalFirstDateExConnected
+    {
+      get
+      {
+        if (_FirstDateEx == null)
+          return false;
+        else
+          return _FirstDateEx.IsConnected;
+      }
+    }
+
+    private void InitFirstDateEx()
+    {
+      if (_FirstDateEx == null)
+      {
+        _FirstDateEx = new DepInput<DateTime>(FirstDate, FirstDateEx_ValueChanged);
+        _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
+      }
+    }
+
+    private void FirstDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstDate = _FirstDateEx.Value;
+    }
+
+    #endregion
+
+    #region NLastDate
+
+    /// <summary>
+    /// Конечная дата диапазона с поддержкой значения null
+    /// </summary>
+    public DateTime? NLastDate
+    {
+      get { return _NLastDate; }
+      set
+      {
+        if (value.HasValue)
+          _NLastDate = value.Value.Date;
+        else
+          _NLastDate = null;
+
+        if (_NLastDateEx != null)
+          _NLastDateEx.Value = value;
+        if (_LastDateEx != null)
+          _LastDateEx.Value = LastDate;
+      }
+    }
+    private DateTime? _NLastDate;
+
+    private DateTime? _OldNLastDate;
+
+    /// <summary>
+    /// Управляемое значение для NLastDate.
+    /// </summary>
+    public DepValue<DateTime?> NLastDateEx
+    {
+      get
+      {
+        InitNLastDateEx();
+        return _NLastDateEx;
+      }
+      set
+      {
+        InitNLastDateEx();
+        _NLastDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime?> _NLastDateEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства NLastDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalNLastDateExConnected
+    {
+      get
+      {
+        if (_NLastDateEx == null)
+          return false;
+        else
+          return _NLastDateEx.IsConnected;
+      }
+    }
+
+    private void InitNLastDateEx()
+    {
+      if (_NLastDateEx == null)
+      {
+        _NLastDateEx = new DepInput<DateTime?>(NLastDate, NLastDateEx_ValueChanged);
+        _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+      }
+    }
+
+    private void NLastDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      NLastDate = _NLastDateEx.Value;
+    }
+
+    #endregion
+
+    #region LastDate
+
+    /// <summary>
+    /// Конечная дата диапазона без значения null
+    /// </summary>
+    public DateTime LastDate
+    {
+      get { return NLastDate ?? DateRange.Whole.LastDate; }
+      set { NLastDate = value; }
+    }
+
+    /// <summary>
+    /// Управляемое значение для LastDate.
+    /// </summary>
+    public DepValue<DateTime> LastDateEx
+    {
+      get
+      {
+        InitLastDateEx();
+        return _LastDateEx;
+      }
+      set
+      {
+        InitLastDateEx();
+        _LastDateEx.Source = value;
+      }
+    }
+    private DepInput<DateTime> _LastDateEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalLastDateExConnected
+    {
+      get
+      {
+        if (_LastDateEx == null)
+          return false;
+        else
+          return _LastDateEx.IsConnected;
+      }
+    }
+
+    private void InitLastDateEx()
+    {
+      if (_LastDateEx == null)
+      {
+        _LastDateEx = new DepInput<DateTime>(LastDate, LastDateEx_ValueChanged);
+        _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
+      }
+    }
+
+    private void LastDateEx_ValueChanged(object sender, EventArgs args)
+    {
+      LastDate = _LastDateEx.Value;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmptyEx(DateTime? firstDate, DateTime? lastDate)
+    {
+      return firstDate.HasValue && lastDate.HasValue;
+    }
+
+    #endregion
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Могут ли поля быть пустыми.
@@ -2448,38 +3341,9 @@ namespace FreeLibSet.RI
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
+    #endregion
 
-    /// <summary>
-    /// Вход и выход - первое редактируемое значение с поддержкой null
-    /// </summary>
-    public DateTime? NFirstDate { get { return _NFirstDate; } set { _NFirstDate = value; } }
-    private DateTime? _NFirstDate;
-    private DateTime? _OldNFirstDate;
-
-    /// <summary>
-    /// Вход и выход - второе редактируемое значение с поддержкой null
-    /// </summary>
-    public DateTime? NLastDate { get { return _NLastDate; } set { _NLastDate = value; } }
-    private DateTime? _NLastDate;
-    private DateTime? _OldNLastDate;
-
-    /// <summary>
-    /// Первое редактируемое значение. Пустое значение заменяется на минимально возможную дату
-    /// </summary>
-    public DateTime FirstDate
-    {
-      get { return NFirstDate ?? DateRange.Whole.FirstDate; }
-      set { NFirstDate = value; }
-    }
-
-    /// <summary>
-    /// Второе редактируемое значение. Пустое значение заменяется на максимально возможную дату
-    /// </summary>
-    public DateTime LastDate
-    {
-      get { return NLastDate ?? DateRange.Whole.LastDate; }
-      set { NLastDate = value; }
-    }
+    #region Minimum/Maximum
 
     /// <summary>
     /// Минимальное значение. По умолчанию: null
@@ -2508,6 +3372,8 @@ namespace FreeLibSet.RI
       }
     }
     private DateTime? _Maximum;
+
+    #endregion
 
     #endregion
 
@@ -2729,6 +3595,7 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Можно ли не выбирать ни одной позиции.
     /// По умолчанию - false - выбор является обязательным.
+    /// Свойства CanBeEmptyMode нет для этого диаолога, предупреждения не поддерживаются.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -3431,6 +4298,276 @@ namespace FreeLibSet.RI
     }
 
     #endregion
+  }
+
+  #endregion
+
+  #region Файлы и папки
+
+  /// <summary>
+  /// Диалог выбора каталога
+  /// </summary>
+  [Serializable]
+  public class FolderBrowserDialog : StandardDialog
+  {
+    #region Свойства
+
+    /// <summary>
+    /// Выбранный каталог (вход и выход)
+    /// </summary>
+    public AbsPath Path { get { return _Path; } set { _Path = value; } }
+    private AbsPath _Path;
+
+    private AbsPath _OldPath;
+
+    /// <summary>
+    /// Текст описания внизу блока диалога.
+    /// Дублирует свойство Title, т.к. заголовок не может быть задан для этого блока диалога
+    /// </summary>
+    public string Description { get { return base.Title; } set { base.Title = value; } }
+
+    /// <summary>
+    /// Должна ли отображаться кнопка "Создать папку"
+    /// </summary>
+    public bool ShowNewFolderButton
+    {
+      get { return _ShowNewFolderButton; }
+      set
+      {
+        CheckNotFixed();
+        _ShowNewFolderButton = value;
+      }
+    }
+    private bool _ShowNewFolderButton;
+
+    #endregion
+
+    #region Чтение и запись значений
+
+    /// <summary>
+    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
+    /// которые могут меняться при показе блока диалога.
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Свойство не используется в пользовательском коде.
+    /// </summary>
+    public override bool HasChanges
+    {
+      get
+      {
+        if (base.HasChanges)
+          return true;
+        return _OldPath != Path;
+      }
+    }
+
+    /// <summary>
+    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
+    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для записи значений</param>
+    public override void WriteChanges(CfgPart part)
+    {
+      base.WriteChanges(part);
+
+      part.SetString("Path", Path.Path);
+      _OldPath = Path;
+    }
+
+    /// <summary>
+    /// Прочитать изменения, переданные "с другой стороны".
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для чтения значений</param>
+    public override void ReadChanges(CfgPart part)
+    {
+      base.ReadChanges(part);
+      Path = new AbsPath(part.GetString("Path"));
+      _OldPath = Path;
+    }
+
+    /// <summary>
+    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
+    /// в секции конфигурации заданного типа.
+    /// </summary>
+    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
+    /// <returns>true, если элемент может хранить данные</returns>
+    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
+    {
+      return cfgType == RIValueCfgType.MachineSpecific;
+    }
+
+    /// <summary>
+    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для записи</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      part.SetString(Name, Path.SlashedPath);
+    }
+
+    /// <summary>
+    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для чтения значений</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      if (part.HasValue(Name))
+        Path = new AbsPath(part.GetString(Name));
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Базовый класс для OpenFileDialog и SaveFileDialog
+  /// </summary>
+  [Serializable]
+  public abstract class FileDialog : StandardDialog
+  {
+    #region Свойства
+
+    /// <summary>
+    /// Выбранный файл
+    /// </summary>
+    public AbsPath Path { get { return _Path; } set { _Path = value; } }
+    private AbsPath _Path;
+
+    private AbsPath _OldPath;
+
+    /// <summary>
+    /// Расширение по умолчанию
+    /// </summary>
+    public string DefaultExt
+    {
+      get { return _DefaultExt; }
+      set
+      {
+        CheckNotFixed();
+        _DefaultExt = value;
+      }
+    }
+    private string _DefaultExt;
+
+    /// <summary>
+    /// Фильтры (разделитель "|"). Например: "Текстовые файлы|*.txt|Все файлы|*.*".
+    /// </summary>
+    public string Filter
+    {
+      get { return _Filter; }
+      set
+      {
+        CheckNotFixed();
+        _Filter = value;
+      }
+    }
+    private string _Filter;
+
+    #endregion
+
+    #region Чтение и запись значений
+
+    /// <summary>
+    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
+    /// которые могут меняться при показе блока диалога.
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Свойство не используется в пользовательском коде.
+    /// </summary>
+    public override bool HasChanges
+    {
+      get
+      {
+        if (base.HasChanges)
+          return true;
+        return _OldPath != Path;
+      }
+    }
+
+    /// <summary>
+    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
+    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для записи значений</param>
+    public override void WriteChanges(CfgPart part)
+    {
+      base.WriteChanges(part);
+
+      part.SetString("Path", Path.Path);
+      _OldPath = Path;
+    }
+
+    /// <summary>
+    /// Прочитать изменения, переданные "с другой стороны".
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для чтения значений</param>
+    public override void ReadChanges(CfgPart part)
+    {
+      base.ReadChanges(part);
+      Path = new AbsPath(part.GetString("Path"));
+      _OldPath = Path;
+    }
+
+    /// <summary>
+    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
+    /// в секции конфигурации заданного типа.
+    /// </summary>
+    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
+    /// <returns>true, если элемент может хранить данные</returns>
+    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
+    {
+      return cfgType == RIValueCfgType.MachineSpecific;
+    }
+
+    /// <summary>
+    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для записи</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      part.SetString(Name, Path.Path);
+    }
+
+    /// <summary>
+    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для чтения значений</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      if (part.HasValue(Name))
+        Path = new AbsPath(part.GetString(Name));
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Диалог выбора файла для открытия
+  /// </summary>
+  [Serializable]
+  public class OpenFileDialog : FileDialog
+  {
+  }
+
+  /// <summary>
+  /// Диалог выбора файла для записи
+  /// </summary>
+  [Serializable]
+  public class SaveFileDialog : FileDialog
+  {
   }
 
   #endregion

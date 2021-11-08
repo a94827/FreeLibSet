@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -81,7 +82,7 @@ namespace FreeLibSet.Forms
       _OKButtonProvider = new EFPButton(FormProvider, btnOk);
       _CancelButtonProvider = new EFPButton(FormProvider, btnCancel);
       _NoButtonProvider = new EFPButton(FormProvider, btnNo);
-      FormProvider.AddFormCheck(new EFPValidatingEventHandler(DoFormValidating));
+      FormProvider.AddFormCheck(new UIValidatingEventHandler(DoFormValidating));
 
       //BottomPanel.BackColor = Color.Red;
       //this.panel1.BackColor = Color.Yellow;
@@ -129,7 +130,7 @@ namespace FreeLibSet.Forms
     /// В отличие от обработчиков, присоединяемых efpForm.AddFormCheck(), 
     /// здесь параметром Object будет объект OKCancelForm
     /// </summary>
-    public event EFPValidatingEventHandler FormValidating;
+    public event UIValidatingEventHandler FormValidating;
 
     #endregion
 
@@ -249,7 +250,7 @@ namespace FreeLibSet.Forms
       Close();
     }
 
-    private void DoFormValidating(object sender, EFPValidatingEventArgs args)
+    private void DoFormValidating(object sender, UIValidatingEventArgs args)
     {
       if (FormValidating == null)
         return;

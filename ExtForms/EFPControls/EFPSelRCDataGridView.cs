@@ -43,7 +43,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Аргументы события EFPSelRCColumn.Validating
   /// </summary>
-  public class EFPSelRCValidatingEventArgs : EventArgs, IEFPValidator
+  public class EFPSelRCValidatingEventArgs : EventArgs, IUIValidableObject
   {
     #region Инициализация
 

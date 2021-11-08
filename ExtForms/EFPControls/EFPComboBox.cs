@@ -463,17 +463,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Допускается ли пустой текст
+    /// Установка кнопки очистки
     /// </summary>
-    public override bool CanBeEmpty
+    public override UIValidateState CanBeEmptyMode
     {
-      get
-      {
-        return base.CanBeEmpty;
-      }
+      get { return base.CanBeEmptyMode; }
       set
       {
-        base.CanBeEmpty = value;
+        base.CanBeEmptyMode = value;
         Control.ClearButton = CanBeEmpty;
       }
     }
@@ -581,7 +578,7 @@ namespace FreeLibSet.Forms
     {
       if (_MaskEx == null)
       {
-        _MaskEx = new DepInput<string>(Mask,MaskEx_ValueChanged);
+        _MaskEx = new DepInput<string>(Mask, MaskEx_ValueChanged);
         _MaskEx.OwnerInfo = new DepOwnerInfo(this, "MaskEx");
       }
     }
@@ -668,7 +665,7 @@ namespace FreeLibSet.Forms
     {
       if (_MaskCanBePartialEx == null)
       {
-        _MaskCanBePartialEx = new DepInput<bool>(MaskCanBePartial,MaskCanBePartialEx_ValueChanged);
+        _MaskCanBePartialEx = new DepInput<bool>(MaskCanBePartial, MaskCanBePartialEx_ValueChanged);
         _MaskCanBePartialEx.OwnerInfo = new DepOwnerInfo(this, "MaskCanBePartialEx");
       }
     }

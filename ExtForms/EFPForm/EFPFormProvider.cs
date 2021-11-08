@@ -847,7 +847,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="validating">Обработчик, выполняющий проверку</param>
     /// <param name="focusControl">Управляющий элемент, который получит фокус ввода в случае ошибки</param>
-    public void AddFormCheck(EFPValidatingEventHandler validating, Control focusControl)
+    public void AddFormCheck(UIValidatingEventHandler validating, Control focusControl)
     {
 #if DEBUG
       if (validating == null)
@@ -862,7 +862,7 @@ namespace FreeLibSet.Forms
     /// Упрощенный способ добавления проверки ошибки в форме
     /// </summary>
     /// <param name="validating">Обработчик, выполняющий проверку</param>
-    public void AddFormCheck(EFPValidatingEventHandler validating)
+    public void AddFormCheck(UIValidatingEventHandler validating)
     {
       AddFormCheck(validating, null);
     }

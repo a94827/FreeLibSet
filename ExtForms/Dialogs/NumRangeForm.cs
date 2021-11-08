@@ -9,6 +9,7 @@ using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Formatting;
 using FreeLibSet.Controls;
+using FreeLibSet.DependedValues;
 
 namespace FreeLibSet.Forms
 {
@@ -69,23 +70,49 @@ namespace FreeLibSet.Forms
       Title = "Ввод диапазона чисел";
       Prompt = "Диапазон";
       _Format = String.Empty;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
 
+    #region N/First/LastValue
+
     /// <summary>
     /// Вход и выход: Первое значение диапазона с поддержкой полуоткрытых диапазонов
     /// </summary>
-    public T? NFirstValue { get { return _NFirstValue; } set { _NFirstValue = value; } }
+    public T? NFirstValue
+    {
+      get { return _NFirstValue; }
+      set
+      {
+        _NFirstValue = value;
+        if (_NFirstValueEx != null)
+          _NFirstValueEx.OwnerSetValue(NFirstValue);
+        if (_FirstValueEx != null)
+          _FirstValueEx.OwnerSetValue(FirstValue);
+      }
+    }
     private T? _NFirstValue;
 
     /// <summary>
-    /// Вход и выход: Последнее значение диапазона с поддержкой полуоткрытых диапазонов
+    /// Управляемое свойство для NFirstValue
+    /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public T? NLastValue { get { return _NLastValue; } set { _NLastValue = value; } }
-    private T? _NLastValue;
+    public DepValue<T?> NFirstValueEx
+    {
+      get
+      {
+        if (_NFirstValueEx == null)
+        {
+          _NFirstValueEx = new DepOutput<T?>(NFirstValue);
+          _NFirstValueEx.OwnerInfo = new DepOwnerInfo(this, "NFirstValueEx");
+        }
+        return _NFirstValueEx;
+      }
+    }
+    private DepOutput<T?> _NFirstValueEx;
 
     /// <summary>
     /// Вход и выход: Первое значение диапазона для закрытого интервала
@@ -97,6 +124,60 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Управляемое свойство для FirstValue
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<T> FirstValueEx
+    {
+      get
+      {
+        if (_FirstValueEx == null)
+        {
+          _FirstValueEx = new DepOutput<T>(FirstValue);
+          _FirstValueEx.OwnerInfo = new DepOwnerInfo(this, "FirstValueEx");
+        }
+        return _FirstValueEx;
+      }
+    }
+    private DepOutput<T> _FirstValueEx;
+
+
+    /// <summary>
+    /// Вход и выход: Последнее значение диапазона с поддержкой полуоткрытых диапазонов
+    /// </summary>
+    public T? NLastValue
+    {
+      get { return _NLastValue; }
+      set
+      {
+        _NLastValue = value;
+        if (_NLastValueEx != null)
+          _NLastValueEx.OwnerSetValue(NFirstValue);
+        if (_LastValueEx != null)
+          _LastValueEx.OwnerSetValue(FirstValue);
+      }
+    }
+    private T? _NLastValue;
+
+    /// <summary>
+    /// Управляемое свойство для NLastValue
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<T?> NLastValueEx
+    {
+      get
+      {
+        if (_NLastValueEx == null)
+        {
+          _NLastValueEx = new DepOutput<T?>(NLastValue);
+          _NLastValueEx.OwnerInfo = new DepOwnerInfo(this, "NLastValueEx");
+        }
+        return _NLastValueEx;
+      }
+    }
+    private DepOutput<T?> _NLastValueEx;
+
+    /// <summary>
     /// Вход и выход: Последнее значение диапазона для закрытого интервала
     /// </summary>
     public T LastValue
@@ -104,6 +185,76 @@ namespace FreeLibSet.Forms
       get { return NLastValue ?? default(T); }
       set { NLastValue = value; }
     }
+
+    /// <summary>
+    /// Управляемое свойство для NLastValue
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<T> LastValueEx
+    {
+      get
+      {
+        if (_LastValueEx == null)
+        {
+          _LastValueEx = new DepOutput<T>(LastValue);
+          _LastValueEx.OwnerInfo = new DepOwnerInfo(this, "LastValueEx");
+        }
+        return _LastValueEx;
+      }
+    }
+    private DepOutput<T> _LastValueEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr2<bool, T?, T?>(NFirstValueEx, NLastValueEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmptyEx(T? firstDate, T? lastDate)
+    {
+      return firstDate.HasValue && lastDate.HasValue;
+    }
+
+    #endregion
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
+    /// </summary>
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region Format
 
     /// <summary>
     /// Строка формата для числа
@@ -151,6 +302,10 @@ namespace FreeLibSet.Forms
       set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
     }
 
+    #endregion
+
+    #region Диапазон допустимых значений
+
     /// <summary>
     /// Минимальное значение. 
     /// </summary>
@@ -163,40 +318,9 @@ namespace FreeLibSet.Forms
     public T? Maximum { get { return _Maximum; } set { _Maximum = value; } }
     private T? _Maximum;
 
-    /// <summary>
-    /// Если true, то разрешено использовать Nullable-значение, если false (по умолчанию), то значение должно быть введено
-    /// </summary>
-    public bool CanBeEmpty
-    {
-      get { return _CanBeEmpty; }
-      set { _CanBeEmpty = value; }
-    }
-    private bool _CanBeEmpty;
+    #endregion
 
-    /// <summary>
-    /// Обработчик для проверки корректности значения при вводе.
-    /// Обработчик не вызывается, если число находится вне диапазона
-    /// </summary>
-    public event EFPValidatingTwoValuesEventHandler<T?, T?> Validating;
-
-    internal void OnValidating(EFPValidatingTwoValuesEventArgs<T?, T?> args)
-    {
-      Validating(this, args);
-    }
-
-    internal bool HasValidatingHandler { get { return Validating != null; } }
-
-    /// <summary>
-    /// Если свойство установлено, то в диалоге появляется кнопка "Нет".
-    /// При нажатии этой кнопки значения не меняются, а ShowDialog() возвращает DialogResult.No.
-    /// По умолчанию - false - диалог не содержит кнопки.
-    /// </summary>
-    public bool ShowNoButton
-    {
-      get { return _ShowNoButton; }
-      set { _ShowNoButton = value; }
-    }
-    private bool _ShowNoButton;
+    #region Increment
 
     /// <summary>
     /// Если задано положительное значение (обычно, 1), то значения в полях можно прокручивать с помощью
@@ -217,6 +341,8 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #endregion
+
     #region Вывод диалога
 
     /// <summary>
@@ -229,7 +355,7 @@ namespace FreeLibSet.Forms
       InitFormTitle(form);
       form.FormProvider.HelpContext = HelpContext;
       form.TheGroup.Text = Prompt;
-      form.NoButtonVisible = ShowNoButton;
+      form.NoButtonVisible = CanBeEmptyMode == UIValidateState.Ok;
 
       EFPPack p = new EFPPack();
       p.Owner = this;
@@ -250,7 +376,7 @@ namespace FreeLibSet.Forms
       p.efpFirstValue.CanBeEmpty = CanBeEmpty;
       p.efpFirstValue.Minimum = Minimum;
       p.efpFirstValue.Maximum = Maximum;
-      p.efpFirstValue.Validating += new EFPValidatingEventHandler(p.efpAnyValue_Validating);
+      p.efpFirstValue.Validating += new UIValidatingEventHandler(p.efpAnyValue_Validating);
 
       p.efpLastValue = CreateControlProvider(form.FormProvider);
       p.efpLastValue.Control.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
@@ -265,7 +391,7 @@ namespace FreeLibSet.Forms
       p.efpLastValue.CanBeEmpty = CanBeEmpty;
       p.efpLastValue.Minimum = Minimum;
       p.efpLastValue.Maximum = Maximum;
-      p.efpLastValue.Validating += new EFPValidatingEventHandler(p.efpAnyValue_Validating);
+      p.efpLastValue.Validating += new UIValidatingEventHandler(p.efpAnyValue_Validating);
 
       p.efpFirstValue.NValueEx.ValueChanged += p.efpLastValue.Validate;
       p.efpLastValue.NValueEx.ValueChanged += p.efpFirstValue.Validate;
@@ -284,7 +410,7 @@ namespace FreeLibSet.Forms
       p.efpFirstValue.NValue = NFirstValue;
       p.efpLastValue.NValue = NLastValue;
 
-      form.efp2eq1.Click+=p.efp2eq1_Click; 
+      form.efp2eq1.Click += p.efp2eq1_Click;
 
       if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
@@ -318,36 +444,34 @@ namespace FreeLibSet.Forms
 
       #region Проверка
 
-      public void efpAnyValue_Validating(object sender, EFPValidatingEventArgs args)
+      public void efpAnyValue_Validating(object sender, UIValidatingEventArgs args)
       {
+        Owner.NFirstValue = efpFirstValue.NValue;
+        Owner.NLastValue = efpLastValue.NValue;
+
         DoValidating(args);
         InitLblRange(args);
       }
 
-      private void DoValidating(EFPValidatingEventArgs args)
+      private void DoValidating(UIValidatingEventArgs args)
       {
         if (args.ValidateState == UIValidateState.Error)
           return;
 
-          if (efpFirstValue.NValue.HasValue && efpLastValue.NValue.HasValue)
+        if (efpFirstValue.NValue.HasValue && efpLastValue.NValue.HasValue)
+        {
+          if (efpFirstValue.Value.CompareTo(efpLastValue.Value) > 0)
           {
-            if (efpFirstValue.Value.CompareTo(efpLastValue.Value) > 0)
-            {
-              args.SetError("Минимальное значение больше максимального");
-              return;
-            }
+            args.SetError("Минимальное значение больше максимального");
+            return;
           }
+        }
 
-        if (!Owner.HasValidatingHandler)
-          return;
-
-        EFPValidatingTwoValuesEventArgs<T?, T?> args2 = new EFPValidatingTwoValuesEventArgs<T?, T?>(args.Validator,
-          efpFirstValue.NValue, efpLastValue.NValue);
-
-        Owner.OnValidating(args2);
+        if (Owner.HasValidators)
+          Owner.Validators.Validate(args);
       }
 
-      private void InitLblRange(EFPValidatingEventArgs args)
+      private void InitLblRange(UIValidatingEventArgs args)
       {
         if (efpFirstValue.ValidateState == UIValidateState.Error || efpLastValue.ValidateState == UIValidateState.Error)
           lblRange.Text = "Ошибка";

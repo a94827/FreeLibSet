@@ -53,7 +53,7 @@ namespace FreeLibSet.Forms
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
     public EFPYearMonthBox(EFPBaseProvider baseProvider, YearMonthBox control)
-      :base(baseProvider, control, true)
+      : base(baseProvider, control, true)
     {
       control.MinimumYear = Math.Max(control.MinimumYear, YearMonth.MinYear);
       //control.MaximumYear = Math.Max(control.MinimumYear, YearMonth.MaxYear);
@@ -72,24 +72,22 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnValidate()
     {
+      if (ValidateState == UICore.UIValidateState.Error)
+        return;
+
       YearMonth YM2;
       try
       {
         YM2 = YM;
       }
-      catch(Exception e) // 15.04.2019
+      catch (Exception e) // 15.04.2019
       {
         SetError(e.Message);
         return;
       }
 
       if (!YM2.IsInRange(Minimum, Maximum))
-      {
-        if (WarningIfOutOfRange)
-          SetWarning("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
-        else
-          SetError("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
-      }
+        SetError("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
 
       base.OnValidate();
     }
@@ -221,12 +219,12 @@ namespace FreeLibSet.Forms
     public YearMonth YM
     {
       get { return new YearMonth(Year, Month); }
-      set 
+      set
       {
         if (value.IsEmpty)
           throw new ArgumentNullException();
-        Year = value.Year; 
-        Month = value.Month; 
+        Year = value.Year;
+        Month = value.Month;
       }
     }
 
@@ -277,8 +275,8 @@ namespace FreeLibSet.Forms
     public YearMonth Minimum
     {
       get { return _Minimum; }
-      set 
-      { 
+      set
+      {
         _Minimum = value;
         if (value.IsEmpty)
           Control.MinimumYear = YearMonth.MinYear;
@@ -299,8 +297,8 @@ namespace FreeLibSet.Forms
     public YearMonth Maximum
     {
       get { return _Maximum; }
-      set 
-      { 
+      set
+      {
         _Maximum = value;
         if (value.IsEmpty)
           Control.MaximumYear = YearMonth.MaxYear;
@@ -309,18 +307,6 @@ namespace FreeLibSet.Forms
       }
     }
     private YearMonth _Maximum;
-
-    /// <summary>
-    /// Если свойство установлено в true, а введенное значение выходит за диапазон, заданный свойствами
-    /// Minimum и Maximum, то при проверке выдается предупреждение, а не ошибка.
-    /// По умолчанию - false (выдача ошибки)
-    /// </summary>
-    public virtual bool WarningIfOutOfRange
-    {
-      get { return _WarningIfOutOfRange; }
-      set { _WarningIfOutOfRange = value; }
-    }
-    private bool _WarningIfOutOfRange;
 
     #endregion
   }
@@ -338,7 +324,7 @@ namespace FreeLibSet.Forms
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
     public EFPYearMonthRangeBox(EFPBaseProvider baseProvider, YearMonthRangeBox control)
-      :base(baseProvider, control, true)
+      : base(baseProvider, control, true)
     {
       control.MinimumYear = Math.Max(control.MinimumYear, YearMonth.MinYear);
       // control.MaximumYear = Math.Max(control.MinimumYear, YearMonth.MaxYear);
@@ -357,6 +343,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnValidate()
     {
+      if (ValidateState == UICore.UIValidateState.Error)
+        return;
+
       if (LastMonth < FirstMonth)
       {
         SetError("Начальный месяц больше конечного");
@@ -376,12 +365,7 @@ namespace FreeLibSet.Forms
       }
 
       if (!(FirstYM2.IsInRange(Minimum, Maximum) && LastYM2.IsInRange(Minimum, Maximum)))
-      {
-        if (WarningIfOutOfRange)
-          SetWarning("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
-        else
-          SetError("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
-      }
+        SetError("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
 
       base.OnValidate();
     }
@@ -582,18 +566,6 @@ namespace FreeLibSet.Forms
     }
     private YearMonth _Maximum;
 
-    /// <summary>
-    /// Если свойство установлено в true, а введенное значение выходит за диапазон, заданный свойствами
-    /// Minimum и Maximum, то при проверке выдается предупреждение, а не ошибка.
-    /// По умолчанию - false (выдача ошибки)
-    /// </summary>
-    public virtual bool WarningIfOutOfRange
-    {
-      get { return _WarningIfOutOfRange; }
-      set { _WarningIfOutOfRange = value; }
-    }
-    private bool _WarningIfOutOfRange;
-
     #endregion
 
     #region Структуры YearMonth и YearMonthRange
@@ -688,7 +660,7 @@ namespace FreeLibSet.Forms
     public YearMonthRange YMRange
     {
       get { return new YearMonthRange(FirstYM, LastYM); }
-      set 
+      set
       {
         if (value.FirstYM.Year != value.LastYM.Year)
           throw new ArgumentException("Диапазон должен относится к одному году");

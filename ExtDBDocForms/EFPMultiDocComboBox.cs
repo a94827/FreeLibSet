@@ -159,8 +159,8 @@ namespace FreeLibSet.Forms.Docs
           Validate();
           DoSyncValueChanged();
 
-          if (CommandItems is EFPAnyDocComboBoxBaseControlItems)
-            ((EFPAnyDocComboBoxBaseControlItems)CommandItems).InitEnabled();
+          if (CommandItems is EFPAnyDocComboBoxBaseCommandItems)
+            ((EFPAnyDocComboBoxBaseCommandItems)CommandItems).InitEnabled();
         }
         finally
         {
@@ -286,7 +286,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_SingleIdEx == null)
       {
-        _SingleIdEx = new DepInput<Int32>(SingleId,SingleIdEx_ValueChanged);
+        _SingleIdEx = new DepInput<Int32>(SingleId, SingleIdEx_ValueChanged);
         _SingleIdEx.OwnerInfo = new DepOwnerInfo(this, "SingleIdEx");
       }
     }
@@ -536,15 +536,14 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Ids.Length == 0)
       {
-        if (CanBeEmpty)
+        switch (CanBeEmptyMode)
         {
-          if (WarningIfEmpty)
+          case UIValidateState.Error:
+            SetError("Значение \"" + DisplayName + "\" должно быть выбрано из списка");
+            break;
+          case UIValidateState.Warning:
             SetWarning("Значение \"" + DisplayName + "\", вероятно, должно быть выбрано из списка");
-        }
-        else
-        {
-          SetError("Значение \"" + DisplayName + "\" должно быть выбрано из списка");
-          return;
+            break;
         }
       }
       else if (!CanBeDeleted)
@@ -554,7 +553,7 @@ namespace FreeLibSet.Forms.Docs
           string Message;
           if (GetDeletedValue(Ids[i], out Message))
           {
-            if (WarningIfDeleted)
+            if (CanBeDeletedMode == UIValidateState.Warning)
               SetWarning(Message);
             else
               SetError(Message);
@@ -884,7 +883,7 @@ namespace FreeLibSet.Forms.Docs
       control.EditClick += new EventHandler(Control_EditClick);
       if (EFPApp.ShowToolTips) // 15.03.2018
       {
-        control.PopupButtonToolTipText = "Выбрать: "+DocType.PluralTitle;
+        control.PopupButtonToolTipText = "Выбрать: " + DocType.PluralTitle;
         control.ClearButtonToolTipText = "Очистить поле выбора";
       }
     }
@@ -983,7 +982,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocTypeNameEx == null)
       {
-        _DocTypeNameEx = new DepInput<string>(DocTypeName,DocTypeNameEx_ValueChanged);
+        _DocTypeNameEx = new DepInput<string>(DocTypeName, DocTypeNameEx_ValueChanged);
         _DocTypeNameEx.OwnerInfo = new DepOwnerInfo(this, "DocTypeNameEx");
       }
     }
@@ -1045,7 +1044,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocTableIdEx == null)
       {
-        _DocTableIdEx = new DepInput<Int32>(DocTableId,DocTableIdEx_ValueChanged);
+        _DocTableIdEx = new DepInput<Int32>(DocTableId, DocTableIdEx_ValueChanged);
         _DocTableIdEx.OwnerInfo = new DepOwnerInfo(this, "DocTableIdEx");
       }
     }
@@ -1066,7 +1065,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификаторы выбранных документов
     /// </summary>
-    public Int32[] DocIds
+    public virtual Int32[] DocIds
     {
       get { return base.Ids; }
       set { base.Ids = value; }
@@ -1499,8 +1498,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверяет возможность присвоения заданного идентификатора документа <paramref name="docId"/> без реальной установки свойства DocIds.
-    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false и WarningIfDeleted=false
-    /// (значения по умолчанию). Также возвращает false, если документ не проходит условие какого-либо фильтра в списке Filters.
+    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false 
+    /// (значение по умолчанию). Также возвращает false, если документ не проходит условие какого-либо фильтра в списке Filters.
     /// </summary>
     /// <param name="docId">Идентификатор проверяемого документа</param>
     /// <returns>Возможность присвоения идентификатора</returns>
@@ -1512,8 +1511,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверяет возможность присвоения заданного идентификатора документа <paramref name="docId"/> без реальной установки свойства DocIds.
-    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false и WarningIfDeleted=false
-    /// (значения по умолчанию). Также возвращает false, если документ не проходит условие какого-либо фильтра в списке Filters.
+    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false
+    /// (значение по умолчанию). Также возвращает false, если документ не проходит условие какого-либо фильтра в списке Filters.
     /// </summary>
     /// <param name="docId">Идентификатор проверяемого документа</param>
     /// <param name="message">Сюда записывается сообщение об ошибке, если присвоение невозможно</param>
@@ -1576,7 +1575,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
     /// <param name="subDocTypeUI">Пользовательский интерфейс для доступа к поддокументам</param>
-    public EFPMultiSubDocComboBox(EFPBaseProvider baseProvider, UserSelComboBox control , SubDocTypeUI subDocTypeUI)
+    public EFPMultiSubDocComboBox(EFPBaseProvider baseProvider, UserSelComboBox control, SubDocTypeUI subDocTypeUI)
       : base(baseProvider, control, subDocTypeUI.UI)
     {
       //if (subDocTypeUI == null)
@@ -1673,7 +1672,7 @@ namespace FreeLibSet.Forms.Docs
     /// свойства SubDocIds (при условии, что все поддокументы относятся к одному документу), 
     /// при этом возвращаемое значение будет меняться
     /// </summary>
-    public Int32 DocId
+    public virtual Int32 DocId
     {
       get { return _DocId; }
       set
@@ -1826,7 +1825,7 @@ namespace FreeLibSet.Forms.Docs
     /// Текущие выбранные поддокументы.
     /// Если нет ни одного выбранного поддокумента, возвращается пустой массив
     /// </summary>
-    public Int32[] SubDocIds
+    public virtual Int32[] SubDocIds
     {
       // Нужно обязательно использовать базовое свойство Id, т.к. к нему приделана обработка свойства IdEx
       get { return Ids; }
@@ -1939,7 +1938,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_AutoSetAllEx == null)
       {
-        _AutoSetAllEx = new DepInput<bool>(AutoSetAll,AutoSetAllEx_ValueChanged);
+        _AutoSetAllEx = new DepInput<bool>(AutoSetAll, AutoSetAllEx_ValueChanged);
         _AutoSetAllEx.OwnerInfo = new DepOwnerInfo(this, "AutoSetAllEx");
       }
     }

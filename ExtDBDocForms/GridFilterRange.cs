@@ -360,7 +360,6 @@ namespace FreeLibSet.Forms.Docs
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
       Dialog.ImageKey = "Filter";
-      Dialog.ShowNoButton = true;
 
       Dialog.NFirstValue = FirstValue;
       Dialog.NLastValue = LastValue;
@@ -494,7 +493,6 @@ namespace FreeLibSet.Forms.Docs
       Dialog.CanBeEmpty = true;
       Dialog.Minimum = MinValue;
       Dialog.Maximum = MaxValue;
-      Dialog.ShowNoButton = true;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
@@ -621,7 +619,6 @@ namespace FreeLibSet.Forms.Docs
       Dialog.CanBeEmpty = true;
       Dialog.Minimum = MinValue;
       Dialog.Maximum = MaxValue;
-      Dialog.ShowNoButton = true;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
@@ -748,7 +745,6 @@ namespace FreeLibSet.Forms.Docs
       Dialog.CanBeEmpty = true;
       Dialog.Minimum = MinValue;
       Dialog.Maximum = MaxValue;
-      Dialog.ShowNoButton = true;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())

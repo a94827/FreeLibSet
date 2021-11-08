@@ -90,6 +90,7 @@
     <Compile Include="Data\IdList.cs" />
     <Compile Include="Core\INamedValuesAccess.cs" />
     <Compile Include="RI\DepInput.cs" />
+    <Compile Include="UICore\UITools.cs" />
     <Compile Include="Win32\IniFileWindows.cs" />
     <Compile Include="IO\IniFile.cs" />
     <Compile Include="Core\ISplash.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="Core\DataTools.Csv.cs" />
     <Compile Include="DependedValues\DepTools.cs" />
     <Compile Include="Shell\FileAssociations.cs" />
-    <Compile Include="UICore\UICore.cs" />
+    <Compile Include="UICore\UIValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

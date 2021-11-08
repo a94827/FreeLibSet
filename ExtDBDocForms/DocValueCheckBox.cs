@@ -64,25 +64,25 @@ namespace FreeLibSet.Forms.Docs
       GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
       base.GrayedEx = GrayedInput;
 
-      controlProvider.ThreeState = docValue.Grayed;
+      controlProvider.CanBeEmpty = docValue.Grayed;
       if (docValue.Grayed)
-        controlProvider.CheckStateEx = new DepExpr2<CheckState, bool, bool>(GrayedEx, CurrentValueEx,
-        new DepFunction2<CheckState, bool, bool>(CalcCheckState));
+        controlProvider.NCheckedEx = new DepExpr2<bool?, bool, bool>(GrayedEx, CurrentValueEx,
+        new DepFunction2<bool?, bool, bool>(CalcNChecked));
       else
         controlProvider.CheckedEx = CurrentValueEx;
-      controlProvider.CheckStateEx.ValueChanged += new EventHandler(CheckStateValueChanged);
+      controlProvider.NCheckedEx.ValueChanged += new EventHandler(NCheckedValueChanged);
       DepAnd.AttachInput(controlProvider.EnabledEx, EnabledEx);
     }
 
-    void CheckStateValueChanged(object sender, EventArgs args)
+    void NCheckedValueChanged(object sender, EventArgs args)
     {
       if (DocValue.Grayed)
       {
-        Grayed = (ControlProvider.CheckState == CheckState.Indeterminate);
+        Grayed = !ControlProvider.NChecked.HasValue;
         if (!GrayedEx.Value)
-          CurrentValueEx.Value = ControlProvider.CheckState == CheckState.Checked;
+          CurrentValueEx.Value = ControlProvider.Checked;
         else
-          CurrentValueEx.Value = false; // иначе останетсч признак измененных данных
+          CurrentValueEx.Value = false; // иначе останется признак измененных данных
       }
       else
         CurrentValueEx.Value = ControlProvider.Checked;
@@ -93,17 +93,12 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Вычисление состояния для режима CanGrayed
     /// </summary>
-    private CheckState CalcCheckState(bool arg1, bool arg2)
+    private bool? CalcNChecked(bool arg1, bool arg2)
     {
       if (arg1)
-        return CheckState.Indeterminate;
+        return null;
       else
-      {
-        if (arg2)
-          return CheckState.Checked;
-        else
-          return CheckState.Unchecked;
-      }
+        return arg2;
     }
 
     #endregion
@@ -194,26 +189,26 @@ namespace FreeLibSet.Forms.Docs
       GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
       base.GrayedEx = GrayedInput;
 
-      controlProvider1.ThreeState = docValue.Grayed;
+      controlProvider1.CanBeEmpty = docValue.Grayed;
 
-      controlProvider1.CheckStateEx = new DepExpr2<CheckState, bool, TValue>(base.GrayedEx, base.CurrentValueEx,
-        new DepFunction2<CheckState, bool, TValue>(CalcCheckState));
+      controlProvider1.NCheckedEx = new DepExpr2<bool?, bool, TValue>(base.GrayedEx, base.CurrentValueEx,
+        new DepFunction2<bool?, bool, TValue>(CalcNChecked));
 
-      controlProvider1.CheckStateEx.ValueChanged += new EventHandler(CheckStateValueChanged);
+      controlProvider1.NCheckedEx.ValueChanged += new EventHandler(NCheckedValueChanged);
       DepAnd.AttachInput(controlProvider1.EnabledEx, EnabledEx);
 
       controlProvider2.EnabledEx = new DepAnd(controlProvider1.EnabledEx,
-        new DepEqual<CheckState>(controlProvider1.CheckStateEx, CheckState.Checked));
+        controlProvider1.CheckedEx);
 
       if (MultiEditDisabled)
         controlProvider2.Visible = false;
     }
 
-    void CheckStateValueChanged(object sender, EventArgs args)
+    void NCheckedValueChanged(object sender, EventArgs args)
     {
-      if (ControlProvider1.ThreeState)
+      if (ControlProvider1.CanBeEmpty)
       {
-        Grayed = (ControlProvider1.CheckState == CheckState.Indeterminate);
+        Grayed = !ControlProvider1.NChecked.HasValue;
         if (!GrayedEx.Value)
           CurrentValueEx.Value = GetControlValue2();
       }
@@ -231,32 +226,25 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Вычисление состояния для режима CanGrayed.
     /// </summary>
-    private CheckState CalcCheckState(bool grayed, TValue currentValue)
+    private bool? CalcNChecked(bool grayed, TValue currentValue)
     {
       // Метод не может быть static, т.к. обращается к ZeroValue
       if (grayed)
-        return CheckState.Indeterminate;
+        return null;
       else
-      {
-        if (object.Equals(currentValue, ZeroValue))
-          return CheckState.Unchecked;
-        else
-          return CheckState.Checked;
-      }
+        return !object.Equals(currentValue, ZeroValue);
     }
 
     void CurrentValueInput_ValueChanged(object sender, EventArgs args)
     {
       if (object.Equals(CurrentValueEx.Value, ZeroValue))
-        ControlProvider1.CheckState = CheckState.Unchecked;
+        ControlProvider1.Checked = false;
       else
       {
-        ControlProvider1.CheckState = CheckState.Checked;
+        ControlProvider1.Checked = true;
         SetControlValue2(CurrentValueEx.Value);
       }
     }
-
-
 
     #endregion
 
@@ -304,7 +292,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args"></param>
     protected void ControlChanged2(object sender, EventArgs args)
     {
-      CheckStateValueChanged(sender, args); // там все есть
+      NCheckedValueChanged(sender, args); // там все есть
       //ControlChanged(Sender, Args);
     }
 

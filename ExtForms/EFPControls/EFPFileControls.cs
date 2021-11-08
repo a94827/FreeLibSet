@@ -273,7 +273,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private bool _InsideControlProvider_Validating;
 
-    void ControlProvider_Validating(object sender, EFPValidatingEventArgs args)
+    void ControlProvider_Validating(object sender, UIValidatingEventArgs args)
     {
       if (_InsideControlProvider_Validating)
         args.SetError("Предыдущая проверка еще не закончена");
@@ -447,8 +447,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Кнопка "Обзор" для выбора каталога, имя которого вводится в поле ввода
-  /// или комбоблоке с историей.
+  /// Кнопка "Обзор" для выбора каталога, имя которого вводится в поле ввода или комбоблоке с историей.
+  /// Предполагается, что в текстовом поле, к которому присоединена кнопка, находится путь к каталогу, заканчивающийся обратной косой чертой (в Windows).
   /// Кнопка также может использоваться совместно с текстовым полем только для чтения, когда обработка каталога должна выполнятся 
   /// после выбора каталога, а не при закрытии формы.
   /// Событие EFPButton.Click вызывается только после того, как пользователь выбрал файл.
@@ -458,7 +458,7 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// Создает провайдер управляющего элемента кнопки
+    /// Создает провайдер управляющего элемента кнопки.
     /// </summary>
     /// <param name="mainProvider">Провайдер основного управляющего элемента,
     /// предназначенного для ввода пути. Обычно это EFPTextBox или EFPFolderHistComboBox</param>
@@ -478,7 +478,107 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region Свойство Path
+
+    /// <summary>
+    /// Текущий выбранный каталог.
+    /// Если свойство MainProvider.Text не определяет корректный путь, свойство возвращает AbsPath.Empty.
+    /// Свойство PathValidateMode не влияет на это свойство
+    /// </summary>
+    public AbsPath Path
+    {
+      get { return new AbsPath(MainProvider.Text); }
+      set 
+      { 
+        MainProvider.Text = value.SlashedPath;
+        if (_PathEx != null)
+          _PathEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство для Path
+    /// </summary>
+    public DepValue<AbsPath> PathEx
+    {
+      get
+      {
+        InitPathEx();
+        return _PathEx;
+      }
+      set
+      {
+        InitPathEx();
+        _PathEx.Source = value;
+      }
+    }
+    private DepInput<AbsPath> _PathEx;
+
+    private void InitPathEx()
+    {
+      if (_PathEx == null)
+      {
+        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
+        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
+        MainProvider.TextEx.ValueChanged+=MainProvider_TextChanged;
+      }
+    }
+
+    /// <summary>
+    /// При изменениях свойства Text, свойство Path может оставаться без изменений (Empty).
+    /// Обратная установка свойства Text приводила бы пользователя в замешательство.
+    /// </summary>
+    private bool _InsideTextChanged;
+
+    private void MainProvider_TextChanged(object sender, EventArgs args)
+    {
+      _InsideTextChanged = true;
+      try
+      {
+        _PathEx.Value = Path;
+      }
+      finally
+      {
+        _InsideTextChanged = false;
+      }
+    }
+
+    private void PathEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideTextChanged)
+        Path = _PathEx.Value; // Свойство изменено из прикладного кода.
+    }
+
+    #endregion
+
+    #region Свойство IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, которое возвращает true, если Path.IsEmpty=false.
+    /// В отличие от MainProvider.IsEmpty, свойство будет возвращать false, если введенный текст не завершается обратной косой чертой или задан неправильный путь по другим причинам.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      { 
+        if (_IsNotEmptyEx==null)
+        {
+          _IsNotEmptyEx = new DepExpr1<bool, AbsPath>(PathEx, CalcIsNotEmpty);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmpty(AbsPath path)
+    {
+      return !path.IsEmpty;
+    }
+
+    #endregion
+
+    #region Прочие свойства
 
     /// <summary>
     /// Провайдер основного поля ввода иди комбоблока (задается в конструкторе)
@@ -566,10 +666,10 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Кнопка "Обзор" для выбора файла, имя которого вводится в поле ввода
-  /// или комбоблоке с историей.
+  /// Кнопка "Обзор" для выбора файла, имя которого вводится в поле ввода или комбоблоке с историей.
   /// Кнопка также может использоваться совместно с текстовым полем только для чтения, когда обработка файла должна выполнятся 
   /// после выбора файла, а не при закрытии формы.
+  /// Предполагается, что текстовое поле содержит полный путь к файлу.
   /// Событие EFPButton.Click вызывается только после того, как пользователь выбрал файл.
   /// </summary>
   public class EFPFileDialogButton : EFPButton
@@ -597,7 +697,107 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region Свойство Path
+
+    /// <summary>
+    /// Текущий выбранный файл.
+    /// Если свойство MainProvider.Text не определяет корректный путь, свойство возвращает AbsPath.Empty.
+    /// Свойство PathValidateMode не влияет на это свойство.
+    /// </summary>
+    public AbsPath Path
+    {
+      get { return new AbsPath(MainProvider.Text); }
+      set
+      {
+        MainProvider.Text = value.SlashedPath;
+        if (_PathEx != null)
+          _PathEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство для Path
+    /// </summary>
+    public DepValue<AbsPath> PathEx
+    {
+      get
+      {
+        InitPathEx();
+        return _PathEx;
+      }
+      set
+      {
+        InitPathEx();
+        _PathEx.Source = value;
+      }
+    }
+    private DepInput<AbsPath> _PathEx;
+
+    private void InitPathEx()
+    {
+      if (_PathEx == null)
+      {
+        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
+        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
+        MainProvider.TextEx.ValueChanged += MainProvider_TextChanged;
+      }
+    }
+
+    /// <summary>
+    /// При изменениях свойства Text, свойство Path может оставаться без изменений (Empty).
+    /// Обратная установка свойства Text приводила бы пользователя в замешательство.
+    /// </summary>
+    private bool _InsideTextChanged;
+
+    private void MainProvider_TextChanged(object sender, EventArgs args)
+    {
+      _InsideTextChanged = true;
+      try
+      {
+        _PathEx.Value = Path;
+      }
+      finally
+      {
+        _InsideTextChanged = false;
+      }
+    }
+
+    private void PathEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideTextChanged)
+        Path = _PathEx.Value; // Свойство изменено из прикладного кода.
+    }
+
+    #endregion
+
+    #region Свойство IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, которое возвращает true, если Path.IsEmpty=false.
+    /// В отличие от MainProvider.IsEmpty, свойство будет возвращать false, если введенный текст задает путь в неправильном формате.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr1<bool, AbsPath>(PathEx, CalcIsNotEmpty);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmpty(AbsPath path)
+    {
+      return !path.IsEmpty;
+    }
+
+    #endregion
+
+    #region Прочие свойства
 
     /// <summary>
     /// Провайдер основного поля ввода иди комбоблока (задается в конструкторе)
@@ -762,7 +962,107 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region Свойство Path
+
+    /// <summary>
+    /// Текущий выбранный файл.
+    /// Если свойство MainProvider.Text не определяет корректный путь, свойство возвращает AbsPath.Empty.
+    /// Свойство PathValidateMode не влияет на это свойство.
+    /// </summary>
+    public AbsPath Path
+    {
+      get { return new AbsPath(MainProvider.Text); }
+      set
+      {
+        MainProvider.Text = value.SlashedPath;
+        if (_PathEx != null)
+          _PathEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство для Path
+    /// </summary>
+    public DepValue<AbsPath> PathEx
+    {
+      get
+      {
+        InitPathEx();
+        return _PathEx;
+      }
+      set
+      {
+        InitPathEx();
+        _PathEx.Source = value;
+      }
+    }
+    private DepInput<AbsPath> _PathEx;
+
+    private void InitPathEx()
+    {
+      if (_PathEx == null)
+      {
+        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
+        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
+        MainProvider.TextEx.ValueChanged += MainProvider_TextChanged;
+      }
+    }
+
+    /// <summary>
+    /// При изменениях свойства Text, свойство Path может оставаться без изменений (Empty).
+    /// Обратная установка свойства Text приводила бы пользователя в замешательство.
+    /// </summary>
+    private bool _InsideTextChanged;
+
+    private void MainProvider_TextChanged(object sender, EventArgs args)
+    {
+      _InsideTextChanged = true;
+      try
+      {
+        _PathEx.Value = Path;
+      }
+      finally
+      {
+        _InsideTextChanged = false;
+      }
+    }
+
+    private void PathEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideTextChanged)
+        Path = _PathEx.Value; // Свойство изменено из прикладного кода.
+    }
+
+    #endregion
+
+    #region Свойство IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, которое возвращает true, если Path.IsEmpty=false.
+    /// В отличие от MainProvider.IsEmpty, свойство будет возвращать false, если введенный текст задает путь в неправильном формате.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr1<bool, AbsPath>(PathEx, CalcIsNotEmpty);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmpty(AbsPath path)
+    {
+      return !path.IsEmpty;
+    }
+
+    #endregion
+
+    #region Прочие свойства
 
     /// <summary>
     /// Провайдер основного поля ввода иди комбоблока (задается в конструкторе)
@@ -772,10 +1072,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Что вводится в строке: имя файла или имя каталога.
-    /// Если свойство не установлено, то определяется автоматически, исходя из
+    /// Если свойство не установлено, то при нажатии кнопки определяется автоматически, исходя из
     /// существования файла или каталога и наличия расширении в имени.
     /// Если введенное имя заканчивается на "\", то свойство игнорируется и
-    /// предполагается каталог
+    /// предполагается каталог.
     /// </summary>
     public bool? IsFileName { get { return _IsFileName; } set { _IsFileName = value; } }
     private bool? _IsFileName;

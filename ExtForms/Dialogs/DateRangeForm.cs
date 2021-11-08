@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.UICore;
 using FreeLibSet.Calendar;
+using FreeLibSet.DependedValues;
 
 /*
  * The BSD License
@@ -71,12 +72,16 @@ namespace FreeLibSet.Forms
       Prompt = String.Empty;
       _NFirstDate = null;
       _NLastDate = null;
-      CanBeEmpty = false;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
+
+    #region Текущее значение
+
+    #region NFirstDate
 
     /// <summary>
     /// Вход и выход: Начальная дата диапазона.
@@ -91,9 +96,35 @@ namespace FreeLibSet.Forms
           _NFirstDate = value.Value.Date;
         else
           _NFirstDate = null;
+        if (_NFirstDateEx != null)
+          _NFirstDateEx.OwnerSetValue(NFirstDate);
+        if (_FirstDateEx != null)
+          _FirstDateEx.OwnerSetValue(FirstDate);
       }
     }
     private DateTime? _NFirstDate;
+
+    /// <summary>
+    /// Управляемое свойство для NFirstDate
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<DateTime?> NFirstDateEx
+    {
+      get
+      {
+        if (_NFirstDateEx == null)
+        {
+          _NFirstDateEx = new DepOutput<DateTime?>(NFirstDate);
+          _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+        }
+        return _NFirstDateEx;
+      }
+    }
+    private DepOutput<DateTime?> _NFirstDateEx;
+
+    #endregion
+
+    #region NLastDate
 
     /// <summary>
     /// Вход и выход: Конечная дата диапазона.
@@ -108,10 +139,36 @@ namespace FreeLibSet.Forms
           _NLastDate = value.Value.Date;
         else
           _NLastDate = null;
+
+        if (_NLastDateEx != null)
+          _NLastDateEx.OwnerSetValue(NLastDate);
+        if (_LastDateEx != null)
+          _LastDateEx.OwnerSetValue(LastDate);
       }
     }
     private DateTime? _NLastDate;
 
+    /// <summary>
+    /// Управляемое свойство для NLastDate
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<DateTime?> NLastDateEx
+    {
+      get
+      {
+        if (_NLastDateEx == null)
+        {
+          _NLastDateEx = new DepOutput<DateTime?>(NLastDate);
+          _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+        }
+        return _NLastDateEx;
+      }
+    }
+    private DepOutput<DateTime?> _NLastDateEx;
+
+    #endregion
+
+    #region FirstDate
 
     /// <summary>
     /// Первое редактируемое значение. Пустое значение заменяется на минимально возможную дату
@@ -123,6 +180,28 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Управляемое свойство для FirstDate
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<DateTime> FirstDateEx
+    {
+      get
+      {
+        if (_FirstDateEx == null)
+        {
+          _FirstDateEx = new DepOutput<DateTime>(FirstDate);
+          _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
+        }
+        return _FirstDateEx;
+      }
+    }
+    private DepOutput<DateTime> _FirstDateEx;
+
+    #endregion
+
+    #region LastDate
+
+    /// <summary>
     /// Второе редактируемое значение. Пустое значение заменяется на максимально возможную дату
     /// </summary>
     public DateTime LastDate
@@ -132,19 +211,76 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если свойство установлено в true, то разрешается ввод полу- или полностью открытых интервалов.
-    /// Если false (по умолчанию), то обе даты должны быть введены
+    /// Управляемое свойство для LastDate
+    /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
+    public DepValue<DateTime> LastDateEx
+    {
+      get
+      {
+        if (_LastDateEx == null)
+        {
+          _LastDateEx = new DepOutput<DateTime>(LastDate);
+          _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
+        }
+        return _LastDateEx;
+      }
+    }
+    private DepOutput<DateTime> _LastDateEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
 
     /// <summary>
-    /// Надо ли выводить предупреждение, если значения не введены.
-    /// По умолчанию - false.
-    /// Свойство действует, только если свойство CanBeEmpty=true.
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Может использоваться в валидаторах.
     /// </summary>
-    public bool WarningIfEmpty { get { return _WarningIfEmpty; } set { _WarningIfEmpty = value; } }
-    private bool _WarningIfEmpty;
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmptyEx(DateTime? firstDate, DateTime? lastDate)
+    {
+      return firstDate.HasValue && lastDate.HasValue;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
+    /// </summary>
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region Диапазон допустимых значений
 
     /// <summary>
     /// Если задано значение, отличное от null, то не разрешается вводить даты, ранее указанной.
@@ -158,15 +294,11 @@ namespace FreeLibSet.Forms
     public DateTime? Maximum { get { return _Maximum; } set { _Maximum = value; } }
     private DateTime? _Maximum;
 
-    /// <summary>
-    /// Обработчик для проверки корректности значений при вводе.
-    /// Обработчик не вызывается, если даты находятся вне диапазона
-    /// </summary>
-    public event EFPValidatingTwoValuesEventHandler<DateTime?, DateTime?> Validating;
+    #endregion
 
     #endregion
 
-    #region Методы
+    #region Показ диалога
 
     /// <summary>
     /// Показывает блок диалога.
@@ -179,10 +311,8 @@ namespace FreeLibSet.Forms
       form.FormProvider.HelpContext = HelpContext;
       form.MainLabel.Text = Prompt;
 
-      form.TheDateRangeBox.First.CanBeEmpty = CanBeEmpty;
-      form.TheDateRangeBox.Last.CanBeEmpty = CanBeEmpty;
-      form.TheDateRangeBox.First.WarningIfEmpty = WarningIfEmpty;
-      form.TheDateRangeBox.Last.WarningIfEmpty = WarningIfEmpty;
+      form.TheDateRangeBox.First.CanBeEmptyMode = CanBeEmptyMode;
+      form.TheDateRangeBox.Last.CanBeEmptyMode = CanBeEmptyMode;
       form.TheDateRangeBox.First.Minimum = Minimum;
       form.TheDateRangeBox.Last.Minimum = Minimum;
       form.TheDateRangeBox.First.Maximum = Maximum;
@@ -216,23 +346,15 @@ namespace FreeLibSet.Forms
       return DialogResult.OK;
     }
 
-    private void FormCheck(object sender, EFPValidatingEventArgs args)
+    private void FormCheck(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
+      EFPFormCheck FormCheck = (EFPFormCheck)sender;
+      DateRangeForm Form = (DateRangeForm)(FormCheck.Tag);
+      NFirstDate = Form.TheDateRangeBox.First.NValue;
+      NLastDate = Form.TheDateRangeBox.Last.NValue;
 
-      if (Validating != null)
-      { 
-        EFPFormCheck FormCheck=(EFPFormCheck)sender;
-        DateRangeForm Form = (DateRangeForm )(FormCheck.Tag);
-
-        EFPValidatingTwoValuesEventArgs<DateTime?, DateTime?> Args2 =
-          new EFPValidatingTwoValuesEventArgs<DateTime?, DateTime?>(args,
-          Form.TheDateRangeBox.First.NValue,
-          Form.TheDateRangeBox.Last.NValue);
-
-        Validating(this, Args2);
-      }
+      if (HasValidators)
+        Validators.Validate(args);
     }
 
     #endregion

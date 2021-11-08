@@ -285,7 +285,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверка корректности значения.
-    /// Используются свойства CanBeEnpty и WarningIfEmpty
+    /// Используется свойство CanBeEmptyMode
     /// </summary>
     protected override void OnValidate()
     {
@@ -629,7 +629,7 @@ namespace FreeLibSet.Forms
     /// True, если ли элемент содержать пустой текст.
     /// Дублирует CanBeEmptyMode
     /// </summary>
-    public virtual bool CanBeEmpty
+    public bool CanBeEmpty
     {
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }

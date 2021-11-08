@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using FreeLibSet.Config;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -38,7 +39,7 @@ namespace FreeLibSet.Forms
 
       FormProvider = new EFPFormProvider(this);
       FormProvider.ConfigSectionName = "GridConfigForm";
-      FormProvider.AddFormCheck(new EFPValidatingEventHandler(FormCheck));
+      FormProvider.AddFormCheck(new UIValidatingEventHandler(FormCheck));
 
       #region Готовые наборы
 
@@ -565,7 +566,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPDataGridViewConfig ResultConfig;
 
-    private void FormCheck(object sender, EFPValidatingEventArgs args)
+    private void FormCheck(object sender, UIValidatingEventArgs args)
     {
       if (FormProvider.ValidateReason == EFPFormValidateReason.Shown)
         return;

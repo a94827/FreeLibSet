@@ -175,8 +175,7 @@ namespace FreeLibSet.Forms
       _AllItems = DataTools.EmptyObjects;
       _SelectedItemsInternal = null;
       _ItemInfoNeededArgs = new EFPTwoListSelectorItemInfoNeededEventArgs();
-      _CanBeEmpty = true;
-      _WarningIfEmpty = false;
+      _CanBeEmptyMode = UIValidateState.Error;
 
       if (EFPApp.ShowListImages)
         _AvailableGridViewProvider.Columns.AddImage("Image");
@@ -233,7 +232,7 @@ namespace FreeLibSet.Forms
         if (!inTooBar)
           ci.Usage &= ~EFPCommandItemUsage.ToolBar;
       }
-      _SelectedGridViewProvider.Validating += new EFPValidatingEventHandler(SelectedGridViewProvider_Validating);
+      _SelectedGridViewProvider.Validating += new UIValidatingEventHandler(SelectedGridViewProvider_Validating);
 }
 
     protected override void OnCreated()
@@ -561,23 +560,25 @@ namespace FreeLibSet.Forms
       SelectedItems = SelectedItems; // список может быть переупорядочен
     }
 
-    void SelectedGridViewProvider_Validating(object sender, EFPValidatingEventArgs args)
+    void SelectedGridViewProvider_Validating(object sender, UIValidatingEventArgs args)
     {
+      if (_IsNotEmptyEx != null)
+        _IsNotEmptyEx.OwnerSetValue(_SelectedGridViewProvider.Control.RowCount > 0);
+
       if (args.ValidateState == UIValidateState.Error)
         return;
 
-      if (!CanBeEmpty)
+      if (_SelectedGridViewProvider.Control.RowCount == 0)
       {
-        if (_SelectedGridViewProvider.Control.RowCount == 0)
+        switch (CanBeEmptyMode)
         {
-          args.SetError("Список не может быть пустым");
-          return;
+          case UIValidateState.Error:
+            args.SetError("Список не может быть пустым");
+            break;
+          case UIValidateState.Warning:
+            args.SetWarning("Список не должен быть пустым");
+            break;
         }
-      }
-      else if (WarningIfEmpty && args.ValidateState==UIValidateState.Ok)
-      {
-        if (_SelectedGridViewProvider.Control.RowCount == 0)
-          args.SetWarning("Список не должен быть пустым");
       }
     }
 
@@ -586,112 +587,52 @@ namespace FreeLibSet.Forms
     #region Свойство CanBeEmpty
 
     /// <summary>
-    /// True, если ли список выбранных элементов может быть пустым.
-    /// Значение по умолчанию - true.
+    /// Режим проверки пустого списка выбранных значений.
+    /// По умолчанию - Error.
     /// </summary>
-    public bool CanBeEmpty
+    public UIValidateState CanBeEmptyMode
     {
-      get { return _CanBeEmpty; }
+      get { return _CanBeEmptyMode; }
       set
       {
-        if (value == _CanBeEmpty)
+        if (value == _CanBeEmptyMode)
           return;
-        _CanBeEmpty = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
+        _CanBeEmptyMode = value;
         Validate();
       }
     }
-    private bool _CanBeEmpty;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
     /// True, если ли элемент содержать пустой текст.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
-    public DepValue<Boolean> CanBeEmptyEx
+    public bool CanBeEmpty
     {
-      get
-      {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
-      }
-    }
-
-    private void InitCanBeEmptyEx()
-    {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty, CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
 
-    #region Свойство WarningIfEmpty
+    #region Свойство IsNotEmptyEx
 
     /// <summary>
-    /// Выдавать предупреждение, если текст не введен (при условии, что CanBeEmpty=true)
+    /// Управляемое свойство, возвращающее true, если есть выбранные элементы в списке
     /// </summary>
-    public bool WarningIfEmpty
-    {
-      get { return _WarningIfEmpty; }
-      set
-      {
-        if (value == _WarningIfEmpty)
-          return;
-        _WarningIfEmpty = value;
-        if (_WarningIfEmptyEx != null)
-          _WarningIfEmptyEx.Value = value;
-        Validate();
-      }
-    }
-    private bool _WarningIfEmpty;
-
-    /// <summary>
-    /// Если True и свойство CanBeEmpty=True, то при проверке состояния выдается
-    /// предупреждение, если свойство Text содержит пустую строку
-    /// По умолчанию - False
-    /// </summary>
-    public DepValue<Boolean> WarningIfEmptyEx
+    public DepValue<bool> IsNotEmptyEx
     {
       get
       {
-        InitWarningIfEmptyEx();
-        return _WarningIfEmptyEx;
-      }
-      set
-      {
-        InitWarningIfEmptyEx();
-        _WarningIfEmptyEx.Source = value;
-      }
-    }
-
-    private void InitWarningIfEmptyEx()
-    {
-      if (_WarningIfEmptyEx == null)
-      {
-        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
-        _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(_SelectedGridViewProvider.Control.RowCount > 0);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
       }
     }
-    private DepInput<Boolean> _WarningIfEmptyEx;
-
-    void WarningIfEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      WarningIfEmpty = _WarningIfEmptyEx.Value;
-    }
+    private DepOutput<bool> _IsNotEmptyEx;
 
     #endregion
   }

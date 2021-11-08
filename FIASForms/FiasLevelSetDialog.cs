@@ -104,28 +104,6 @@ namespace FreeLibSet.Forms.FIAS
     }
     private bool _CanBeEmpty;
 
-    ///// <summary>
-    ///// Выдавать предупреждение, если не выбрано ни одного уровня
-    ///// По умолчанию - false - не выдавать.
-    ///// Действует только при установке свойства CanBeEmpty=true, иначе будет выдаваться ошибка, а не предупреждение.
-    ///// </summary>
-    //public bool WarningIfEmpty
-    //{
-    //  get { return _WarningIfEmpty; }
-    //  set { _WarningIfEmpty = value; }
-    //}
-    //private bool _WarningIfEmpty;
-
-    ///// <summary>
-    ///// Если свойство установить в true, то редактор будет открыт в режиме просмотра, а не редактирования.
-    ///// По умолчанию - false
-    ///// </summary>
-    //public bool ReadOnly
-    //{
-    //  get { return _ReadOnly; }
-    //  set { _ReadOnly = value; }
-    //}
-    //private bool _ReadOnly;
 
     /// <summary>
     /// Основное свойство - редактируемый набор уровней.
@@ -231,11 +209,13 @@ namespace FreeLibSet.Forms.FIAS
       control.Text = _Value.ToString();
       control.PopupClick += new EventHandler(Control_PopupClick);
       control.ClearClick += new EventHandler(Control_ClearClick);
+
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
-    #region Свойства
+    #region Основные свойства
 
     /// <summary>
     /// Пользовательский интерфейс.
@@ -261,50 +241,42 @@ namespace FreeLibSet.Forms.FIAS
     }
     private FiasLevelSet _AvailableLevels;
 
+    #endregion
+
+    #region Свойство CanBeEmpty
+
+    /// <summary>
+    /// Может ли набор быть пустым?
+    /// По умолчанию - Error- должен быть выбран хотя бы один уровень.
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        if (value == _CanBeEmptyMode)
+          return;
+        _CanBeEmptyMode = value;
+        Control.ClearButton = _CanBeEmptyMode !=UIValidateState.Error;
+        Validate();
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
     /// <summary>
     /// Может ли набор быть пустым?
     /// По умолчанию - false - должен быть выбран хотя бы один уровень.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return Control.ClearButton; }
-      set
-      {
-        if (value == Control.ClearButton)
-          return;
-        Control.ClearButton = value;
-        Validate();
-      }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
-    /// <summary>
-    /// Выдавать предупреждение, если не выбрано ни одного уровня
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBeEmpty=true, иначе будет выдаваться ошибка, а не предупреждение.
-    /// </summary>
-    public bool WarningIfEmpty
-    {
-      get { return _WarningIfEmpty; }
-      set
-      {
-        if (value == _WarningIfEmpty)
-          return;
-        _WarningIfEmpty = value;
-        Validate();
-      }
-    }
-    private bool _WarningIfEmpty;
+    #endregion
 
-    ///// <summary>
-    ///// Если свойство установить в true, то редактор будет открыт в режиме просмотра, а не редактирования.
-    ///// По умолчанию - false
-    ///// </summary>
-    //public bool ReadOnly
-    //{
-    //  get { return _ReadOnly; }
-    //  set { _ReadOnly = value; }
-    //}
-    //private bool _ReadOnly;
+    #region Текущее значение
 
     /// <summary>
     /// Основное свойство - редактируемый набор уровней.
@@ -346,10 +318,15 @@ namespace FreeLibSet.Forms.FIAS
 
       if (_Value.IsEmpty)
       {
-        if (!CanBeEmpty)
-          SetError("Уровни не выбраны");
-        else if (WarningIfEmpty)
-          SetWarning("Уровни не выбраны");
+        switch (CanBeEmptyMode)
+        {
+          case UIValidateState.Error:
+            SetError("Уровни не выбраны");
+            break;
+          case UIValidateState.Warning:
+            SetWarning("Уровни не выбраны");
+            break;
+        }
       }
     }
 

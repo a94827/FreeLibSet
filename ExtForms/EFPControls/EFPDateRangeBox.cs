@@ -59,8 +59,8 @@ namespace FreeLibSet.Forms
       _LastDateInput = new DepInput<DateTime?>(null, LastDateInput_ValueChanged);
       _LastDateInput.OwnerInfo = new DepOwnerInfo(this, "LastDateInput");
 
-      _EHValidatingFirstDate = new EFPValidatingEventHandler(DoValidate);
-      _EHValidatingLastDate = new EFPValidatingEventHandler(DoValidate);
+      _EHValidatingFirstDate = new UIValidatingEventHandler(DoValidate);
+      _EHValidatingLastDate = new UIValidatingEventHandler(DoValidate);
     }
 
     #endregion
@@ -139,10 +139,10 @@ namespace FreeLibSet.Forms
     }
 
 
-    private EFPValidatingEventHandler _EHValidatingFirstDate;
-    private EFPValidatingEventHandler _EHValidatingLastDate;
+    private UIValidatingEventHandler _EHValidatingFirstDate;
+    private UIValidatingEventHandler _EHValidatingLastDate;
 
-    private void DoValidate(object sender, EFPValidatingEventArgs args)
+    private void DoValidate(object sender, UIValidatingEventArgs args)
     {
       if (_Owner != null)
         _Owner.Validate();
@@ -683,22 +683,19 @@ namespace FreeLibSet.Forms
       {
         if ((!DataTools.DateInRange(DateRange.FirstDate, Minimum, Maximum)) ||
           (!DataTools.DateInRange(DateRange.LastDate, Minimum, Maximum)))
-        {
-          if (WarningIfOutOfRange)
-            SetWarning("Дата должна быть в диапазоне " + Formatter.ToString(Minimum, Maximum, true));
-          else
-            SetError("Дата должна быть в диапазоне " + Formatter.ToString(Minimum, Maximum, true));
-        }
+          SetError("Дата должна быть в диапазоне " + Formatter.ToString(Minimum, Maximum, true));
       }
       else
       {
-        if (CanBeEmpty)
+        switch (CanBeEmptyMode)
         {
-          if (WarningIfEmpty)
+          case UIValidateState.Error:
+            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
+            break;
+          case UIValidateState.Warning:
             SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
+            break;
         }
-        else
-          SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
       }
 
       base.OnValidate();
@@ -1002,7 +999,9 @@ namespace FreeLibSet.Forms
       }
       dlg.Minimum = Minimum;
       dlg.Maximum = Maximum;
-      dlg.Validating += new EFPValidatingTwoValuesEventHandler<DateTime?, DateTime?>(RangeDialog_Validating);
+      dlg.Validators.AddError(new DepEqual<bool>(DepTools.IsNotEmptyEx<DateTime>(dlg.NFirstDateEx),
+        DepTools.IsNotEmptyEx(dlg.NLastDateEx)),
+        "Полуоткрытые интервалы не допускаются");
 
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
@@ -1010,12 +1009,6 @@ namespace FreeLibSet.Forms
         DateRange = new DateRange(dlg.NFirstDate.Value, dlg.NLastDate.Value);
       else
         DateRange = DateRange.Empty;
-    }
-
-    void RangeDialog_Validating(object sender, EFPValidatingTwoValuesEventArgs<DateTime?, DateTime?> args)
-    {
-      if (args.Value1.HasValue != args.Value2.HasValue)
-        args.SetError("Полуоткрытые интервалы не допускаются");
     }
 
     #endregion
@@ -1044,6 +1037,10 @@ namespace FreeLibSet.Forms
           _FirstDateEx.Value = FirstDate;
         if (_LastDateEx != null)
           _LastDateEx.Value = LastDate;
+        if (_NFirstDateEx != null)
+          _NFirstDateEx.Value = NFirstDate;
+        if (_NLastDateEx != null)
+          _NLastDateEx.Value = NLastDate;
         if (!_InsideValueChanged)
         {
           _InsideValueChanged = true;
@@ -1135,7 +1132,7 @@ namespace FreeLibSet.Forms
     {
       if (_FirstDateEx == null)
       {
-        _FirstDateEx = new DepInput<DateTime>(FirstDate,FirstDateEx_ValueChanged);
+        _FirstDateEx = new DepInput<DateTime>(FirstDate, FirstDateEx_ValueChanged);
         _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
       }
     }
@@ -1196,7 +1193,7 @@ namespace FreeLibSet.Forms
     {
       if (_LastDateEx == null)
       {
-        _LastDateEx = new DepInput<DateTime>(LastDate,LastDateEx_ValueChanged);
+        _LastDateEx = new DepInput<DateTime>(LastDate, LastDateEx_ValueChanged);
         _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
       }
     }
@@ -1437,113 +1434,46 @@ namespace FreeLibSet.Forms
 #endif
     #endregion
 
-    #region Свойство CanBeEmpty
+    #region IsNotEmptyEx
 
     /// <summary>
-    /// True, если можно выбирать значение DateRange.Empty.
-    /// Значение совпадает со свойством UserMaskedComboBox.ClearButton, которое по умолчанию имеет значение false.
+    /// Управляемое свойство, которое возвращает true, если диапазон задан (NFirstDate.HasValue=true и NLastDate.HasValue=true).
     /// </summary>
-    public bool CanBeEmpty
-    {
-      get { return Control.ClearButton; }
-      set
-      {
-        if (value == Control.ClearButton)
-          return;
-        Control.ClearButton = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
-        Validate();
-      }
-    }
-
-    /// <summary>
-    /// Управляемое свойство для CanBeEmpty
-    /// </summary>
-    public DepValue<Boolean> CanBeEmptyEx
+    public DepValue<bool> IsNotEmptyEx
     {
       get
       {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
+        if (_IsNotEmptyEx == null)
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmpty);
+        return _IsNotEmptyEx;
       }
     }
+    private DepValue<bool> _IsNotEmptyEx;
 
-    private void InitCanBeEmptyEx()
+    private static bool CalcIsNotEmpty(DateTime? firstDate, DateTime? lastDate)
     {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
+      return firstDate.HasValue && lastDate.HasValue;
     }
 
     #endregion
 
-    #region Свойство WarningIfEmpty
+    #region CanBeEmpty
 
     /// <summary>
-    /// Выдавать предупреждение, если текст не введен (при условии, что CanBeEmpty=true)
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
     /// </summary>
-    public bool WarningIfEmpty
-    {
-      get { return _WarningIfEmpty; }
-      set
-      {
-        if (value == _WarningIfEmpty)
-          return;
-        _WarningIfEmpty = value;
-        if (_WarningIfEmptyEx != null)
-          _WarningIfEmptyEx.Value = value;
-        Validate();
-      }
-    }
-    private bool _WarningIfEmpty;
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Если True и свойство CanBeEmpty=True, то при проверке состояния выдается
-    /// предупреждение, если свойство Value=null.
-    /// По умолчанию - False
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
     /// </summary>
-    public DepValue<Boolean> WarningIfEmptyEx
+    public bool CanBeEmpty
     {
-      get
-      {
-        InitWarningIfEmptyEx();
-        return _WarningIfEmptyEx;
-      }
-      set
-      {
-        InitWarningIfEmptyEx();
-        _WarningIfEmptyEx.Source = value;
-      }
-    }
-
-    private void InitWarningIfEmptyEx()
-    {
-      if (_WarningIfEmptyEx == null)
-      {
-        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
-        _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-      }
-    }
-    private DepInput<Boolean> _WarningIfEmptyEx;
-
-    void WarningIfEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      WarningIfEmpty = _WarningIfEmptyEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -1591,7 +1521,7 @@ namespace FreeLibSet.Forms
     {
       if (_DefaultYearEx == null)
       {
-        _DefaultYearEx = new DepInput<int>(DefaultYear,DefaultYearEx_ValueChanged);
+        _DefaultYearEx = new DepInput<int>(DefaultYear, DefaultYearEx_ValueChanged);
         _DefaultYearEx.OwnerInfo = new DepOwnerInfo(this, "DefaultYearEx");
       }
     }
@@ -1648,7 +1578,7 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
+        _ReadOnlyEx = new DepInput<Boolean>(false, ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
 
         _ReadOnlyMain = new DepInput<bool>(false, null);
@@ -1708,18 +1638,6 @@ namespace FreeLibSet.Forms
       set { _Maximum = value; }
     }
     private DateTime? _Maximum;
-
-    /// <summary>
-    /// Если свойство установлено в true, а введенное значение выходит за диапазон, заданный свойствами
-    /// Minimum и Maximum, то при проверке выдается предупреждение, а не ошибка.
-    /// По умолчанию - false (выдача ошибки)
-    /// </summary>
-    public virtual bool WarningIfOutOfRange
-    {
-      get { return _WarningIfOutOfRange; }
-      set { _WarningIfOutOfRange = value; }
-    }
-    private bool _WarningIfOutOfRange;
 
     #endregion
 

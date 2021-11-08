@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.FIAS;
 using System.Windows.Forms;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -58,11 +59,15 @@ namespace FreeLibSet.Forms.FIAS
       _MinRefBookLevel = FiasTools.DefaultMinRefBookLevel;
       _Address = new FiasAddress();
       _DialogPosition = new EFPDialogPosition();
+      _CanBeEmptyMode = UIValidateState.Error;
+      _CanBePartialMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
+
+    #region Основные свойства
 
     /// <summary>
     /// Пользовательский интерфейс.
@@ -92,52 +97,61 @@ namespace FreeLibSet.Forms.FIAS
     }
     private FiasEditorLevel _EditorLevel;
 
+    #endregion
+
+
+    #region CanBeEmpty
+
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// По умолчанию - false - адрес должен быть заполнен.
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
+    /// </summary>
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return _CanBeEmpty; }
-      set { _CanBeEmpty = value; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
-    private bool _CanBeEmpty;
+
+    #endregion
+
+    #region CanBePartial
+
 
     /// <summary>
-    /// Выдавать предупреждение, если адрес не заполнен
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBeEmpty=true, иначе будет выдаваться ошибка, а не предупреждение.
+    /// Может ли адрес быть заполненным частично (например, введен только регион)?
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию - Error адрес должен быть заполнен согласно свойству EditorLevel.
     /// </summary>
-    public bool WarningIfEmpty
+    public UIValidateState CanBePartialMode
     {
-      get { return _WarningIfEmpty; }
-      set { _WarningIfEmpty = value; }
+      get { return _CanBePartialMode; }
+      set { _CanBePartialMode = value; }
     }
-    private bool _WarningIfEmpty;
+    private UIValidateState _CanBePartialMode;
+
 
     /// <summary>
     /// Может ли адрес быть заполненным частично (например, введен только регион)?
     /// По умолчанию - false - адрес должен быть заполнен согласно свойству EditorLevel.
     /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// Это свойство дублирует CanBePartialMode, но не позволяет установить режим предупреждения.
+    /// При CanBePartialMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBePartialMode=Ok, а false - CanBePartialMode=Error.
     /// </summary>
     public bool CanBePartial
     {
-      get { return _CanBePartial; }
-      set { _CanBePartial = value; }
+      get { return CanBePartialMode != UIValidateState.Error; }
+      set { CanBePartialMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
-    private bool _CanBePartial;
 
-    /// <summary>
-    /// Выдавать предупреждение, если адрес заполнен частично (например, введен только регион).
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBePartial=true, иначе будет выдаваться ошибка, а не предупреждение.
-    /// </summary>
-    public bool WarningIfPartial
-    {
-      get { return _WarningIfPartial; }
-      set { _WarningIfPartial = value; }
-    }
-    private bool _WarningIfPartial;
+    #endregion
 
     /// <summary>
     /// Можно ли редактировать почтовый индекс?
@@ -200,7 +214,7 @@ namespace FreeLibSet.Forms.FIAS
     /// Позиция блока диалога на экране.
     /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
     /// </summary>
-    public EFPDialogPosition DialogPosition 
+    public EFPDialogPosition DialogPosition
     {
       get { return _DialogPosition; }
       set
@@ -240,10 +254,8 @@ namespace FreeLibSet.Forms.FIAS
       EFPFiasAddressPanel efp = new EFPFiasAddressPanel(form.FormProvider, panel, _UI, _EditorLevel);
       efp.Address = Address.Clone();
       efp.ReadOnly = _ReadOnly;
-      efp.CanBeEmpty = _CanBeEmpty;
-      efp.WarningIfEmpty = _WarningIfEmpty;
-      efp.CanBePartial = _CanBePartial;
-      efp.WarningIfPartial = _WarningIfPartial;
+      efp.CanBeEmptyMode = CanBeEmptyMode;
+      efp.CanBePartialMode = CanBePartialMode;
       efp.MinRefBookLevel = this.MinRefBookLevel;
       efp.PostalCodeEditable = this.PostalCodeEditable;
       if (InsideSearch)

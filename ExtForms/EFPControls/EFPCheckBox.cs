@@ -1,4 +1,5 @@
 ﻿using FreeLibSet.DependedValues;
+using FreeLibSet.UICore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -36,7 +37,8 @@ using System.Windows.Forms;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Обработчик для CheckBox
+  /// Обработчик для CheckBox.
+  /// Поддерживаются переключатели на два положения и на три положения (при CanBeEmpty=true)
   /// </summary>
   public class EFPCheckBox : EFPControl<CheckBox>
   {
@@ -50,9 +52,13 @@ namespace FreeLibSet.Forms
     public EFPCheckBox(EFPBaseProvider baseProvider, CheckBox control)
       : base(baseProvider, control, false)
     {
-      _SavedCheckState = control.CheckState;
-      _AllowDisabledCheckState = false;
-      _DisabledCheckState = CheckState.Unchecked;
+      if (control.CheckState == CheckState.Indeterminate)
+        _SavedNChecked = null;
+      else
+        _SavedNChecked = control.Checked;
+      _AllowDisabledChecked = false;
+      _DisabledNChecked = false;
+      _CanBeEmptyMode = UIValidateState.Error;
 
       if (!DesignMode)
         control.CheckStateChanged += new EventHandler(Control_CheckStateChanged);
@@ -68,64 +74,50 @@ namespace FreeLibSet.Forms
     protected override void OnEnabledStateChanged()
     {
       base.OnEnabledStateChanged();
-      if (AllowDisabledCheckState && EnabledState)
-        _HasSavedCheckState = true;
+      if (AllowDisabledChecked && EnabledState)
+        _HasSavedNChecked = true;
       InitControlCheckState();
     }
 
 
     #endregion
 
-    #region Свойство ThreeState
+    #region Свойство CanBeEmpty
 
     /// <summary>
-    /// Доступ к CheckBox.ThreeState
+    /// Определяет, может ли элемент находиться в промежуточном состоянии.
+    /// По умолчанию - Error - обычный переключатель на два положения.
+    /// При CanBeEmptyMode=Ok или Warning - разрешено промежуточное состояние.
+    /// В режиме Warning для него выдается предупреждение.
     /// </summary>
-    public bool ThreeState
+    public virtual UIValidateState CanBeEmptyMode
     {
-      get { return Control.ThreeState; }
-      set { Control.ThreeState = value; }
-    }
-
-    /// <summary>
-    /// Управляемое свойство ThreeState, разрешающее применение состояния CheckState.Grayed
-    /// По умолчанию - false (кнопка на два положения)
-    /// </summary>
-    public DepValue<Boolean> ThreeStateEx
-    {
-      get
-      {
-        InitThreeStateEx();
-        return _ThreeStateEx;
-      }
+      get { return _CanBeEmptyMode; }
       set
       {
-        InitThreeStateEx();
-        _ThreeStateEx.Source = value;
+        if (value == _CanBeEmptyMode)
+          return;
+        _CanBeEmptyMode = value;
+        this.Control.ThreeState = value != UIValidateState.Error;
+        Validate();
       }
     }
-
-    private void InitThreeStateEx()
-    {
-      if (_ThreeStateEx == null)
-      {
-        _ThreeStateEx = new DepInput<Boolean>(ThreeState,ThreeStateEx_ValueChanged);
-        _ThreeStateEx.OwnerInfo = new DepOwnerInfo(this, "ThreeStateEx");
-      }
-    }
-    private DepInput<Boolean> _ThreeStateEx;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Вызывается, когда изменяется значение "снаружи" элемента
+    /// True, если ли элемент может находиться в промежуточном состоянии.
+    /// По умолчанию - false.
+    /// Дублирует CanBeEmptyMode.
     /// </summary>
-    private void ThreeStateEx_ValueChanged(object sender, EventArgs args)
+    public virtual bool CanBeEmpty
     {
-      ThreeState = _ThreeStateEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
 
-    #region Свойство CheckState
+    #region Свойство NChecked
 
     /// <summary>
     /// Возвращает актуальное состояние элемента CheckBox.CheckState.
@@ -133,61 +125,75 @@ namespace FreeLibSet.Forms
     /// и AllowDisabledState=true. В этом случае значение запоминается и будет 
     /// использовано при переходе в разрешенное состояние.
     /// </summary>
-    public CheckState CheckState
+    public bool? NChecked
     {
-      get { return Control.CheckState; }
+      get
+      {
+        if (Control.CheckState == CheckState.Indeterminate)
+          return null;
+        else
+          return Control.Checked;
+      }
       set
       {
-        _HasSavedCheckState = true;
-        _SavedCheckState = value;
+        _HasSavedNChecked = true;
+        _SavedNChecked = value;
         InitControlCheckState();
       }
     }
 
-    private CheckState _SavedCheckState;
-    private bool _HasSavedCheckState;
+    private bool? _SavedNChecked;
+    private bool _HasSavedNChecked;
 
     private void InitControlCheckState()
     {
       // Не нужно, иначе может не обновляться
       // if (InsideCheckStateChanged)
       //   return;
-      if (AllowDisabledCheckState && (!EnabledState))
-        Control.CheckState = DisabledCheckState;
-      else if (_HasSavedCheckState)
+      if (AllowDisabledChecked && (!EnabledState))
       {
-        _HasSavedCheckState = false;
-        Control.CheckState = _SavedCheckState;
+        if (DisabledNChecked.HasValue)
+          Control.Checked = DisabledNChecked.Value;
+        else
+          Control.CheckState = CheckState.Indeterminate;
+      }
+      else if (_HasSavedNChecked)
+      {
+        _HasSavedNChecked = false;
+        if (_SavedNChecked.HasValue)
+          Control.Checked = _SavedNChecked.Value;
+        else
+          Control.CheckState = CheckState.Indeterminate;
       }
     }
 
     /// <summary>
-    /// Управляемое свойство CheckState
+    /// Управляемое свойство NChecked
     /// </summary>
-    public DepValue<CheckState> CheckStateEx
+    public DepValue<bool?> NCheckedEx
     {
       get
       {
-        InitCheckStateEx();
-        return _CheckStateEx;
+        InitNCheckedEx();
+        return _NCheckedEx;
       }
       set
       {
-        InitCheckStateEx();
-        _CheckStateEx.Source = value;
+        InitNCheckedEx();
+        _NCheckedEx.Source = value;
       }
     }
 
-    private void InitCheckStateEx()
+    private void InitNCheckedEx()
     {
-      if (_CheckStateEx == null)
+      if (_NCheckedEx == null)
       {
-        _CheckStateEx = new DepInput<CheckState>(CheckState,CheckStateEx_ValueChanged);
-        _CheckStateEx.OwnerInfo = new DepOwnerInfo(this, "CheckStateEx");
+        _NCheckedEx = new DepInput<bool?>(NChecked, NCheckedEx_ValueChanged);
+        _NCheckedEx.OwnerInfo = new DepOwnerInfo(this, "NCheckedEx");
       }
     }
 
-    private DepInput<CheckState> _CheckStateEx;
+    private DepInput<bool?> _NCheckedEx;
 
     private void Control_CheckStateChanged(object sender, EventArgs args)
     {
@@ -220,21 +226,26 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected virtual void OnCheckStateChanged()
     {
-      if (_CheckStateEx != null)
-        _CheckStateEx.Value = CheckState;
+      if (_NCheckedEx != null)
+        _NCheckedEx.Value = NChecked;
       if (_CheckedEx != null)
         _CheckedEx.Value = Checked;
 
-      if (AllowDisabledCheckState && EnabledState)
-        _SavedCheckState = Control.CheckState;
+      if (AllowDisabledChecked && EnabledState)
+      {
+        if (Control.CheckState == CheckState.Indeterminate)
+          _SavedNChecked = null;
+        else
+          _SavedNChecked = Control.Checked;
+      }
 
       Validate();
       //DoSyncValueChanged();
     }
 
-    void CheckStateEx_ValueChanged(object sender, EventArgs args)
+    void NCheckedEx_ValueChanged(object sender, EventArgs args)
     {
-      CheckState = _CheckStateEx.Value;
+      NChecked = _NCheckedEx.Value;
     }
 
     #endregion
@@ -242,19 +253,20 @@ namespace FreeLibSet.Forms
     #region Свойство Checked
 
     /// <summary>
-    /// Доступ к CheckedEx.ValueEx без принудительного создания объекта
+    /// Наличие флажка
+    /// Для промежуточного состояния возвращает false.
     /// </summary>
     public bool Checked
     {
-      get { return Control.Checked; }
+      get { return NChecked ?? false; }
       set
       {
-        CheckState = value ? CheckState.Checked : CheckState.Unchecked;
+        NChecked = value;
       }
     }
 
     /// <summary>
-    /// Свойство CheckedEx
+    /// Управляемое свойство Checked
     /// </summary>
     public DepValue<Boolean> CheckedEx
     {
@@ -274,7 +286,7 @@ namespace FreeLibSet.Forms
     {
       if (_CheckedEx == null)
       {
-        _CheckedEx = new DepInput<bool>(Checked,CheckedEx_ValueChanged);
+        _CheckedEx = new DepInput<bool>(Checked, CheckedEx_ValueChanged);
         _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
       }
     }
@@ -288,92 +300,92 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство DisabledCheckState
+    #region Свойство DisabledNChecked
 
     /// <summary>
-    /// Доступ к DisabledCheckStateEx.ValueEx без принудительного создания объекта
+    /// Значение, используемое при Enabled=false
     /// </summary>
-    public CheckState DisabledCheckState
+    public bool? DisabledNChecked
     {
-      get { return _DisabledCheckState; }
+      get { return _DisabledNChecked; }
       set
       {
-        if (value == _DisabledCheckState)
+        if (value == _DisabledNChecked)
           return;
-        _DisabledCheckState = value;
-        if (_DisabledCheckStateEx != null)
-          _DisabledCheckStateEx.Value = value;
+        _DisabledNChecked = value;
+        if (_DisabledNCheckedEx != null)
+          _DisabledNCheckedEx.Value = value;
         if (_DisabledCheckedEx != null)
           _DisabledCheckedEx.Value = DisabledChecked;
         InitControlCheckState();
       }
     }
-    private CheckState _DisabledCheckState;
+    private bool? _DisabledNChecked;
 
     /// <summary>
-    /// Этот текст замещает свойство CheckState, когда Enabled=false 
+    /// Управляемое свойство для DisabledNChecked
     /// Свойство действует при установленном свойстве AllowDisabledCheckState
     /// </summary>
-    public DepValue<CheckState> DisabledCheckStateEx
+    public DepValue<bool?> DisabledNCheckedEx
     {
       get
       {
-        InitDisabledCheckStateEx();
-        return _DisabledCheckStateEx;
+        InitDisabledNCheckedEx();
+        return _DisabledNCheckedEx;
       }
       set
       {
-        InitDisabledCheckStateEx();
-        _DisabledCheckStateEx.Source = value;
+        InitDisabledNCheckedEx();
+        _DisabledNCheckedEx.Source = value;
       }
     }
 
-    private void InitDisabledCheckStateEx()
+    private void InitDisabledNCheckedEx()
     {
-      if (_DisabledCheckStateEx == null)
+      if (_DisabledNCheckedEx == null)
       {
-        _DisabledCheckStateEx = new DepInput<CheckState>(DisabledCheckState,DisabledCheckStateEx_ValueChanged);
-        _DisabledCheckStateEx.OwnerInfo = new DepOwnerInfo(this, "DisabledCheckStateEx");
+        _DisabledNCheckedEx = new DepInput<bool?>(DisabledNChecked, DisabledNCheckedEx_ValueChanged);
+        _DisabledNCheckedEx.OwnerInfo = new DepOwnerInfo(this, "DisabledNCheckedEx");
       }
     }
-    private DepInput<CheckState> _DisabledCheckStateEx;
+    private DepInput<bool?> _DisabledNCheckedEx;
 
     /// <summary>
     /// Вызывается, когда снаружи было изменено свойство DisabledCheckStateEx
     /// </summary>
-    private void DisabledCheckStateEx_ValueChanged(object sender, EventArgs args)
+    private void DisabledNCheckedEx_ValueChanged(object sender, EventArgs args)
     {
-      DisabledCheckState = _DisabledCheckStateEx.Value;
+      DisabledNChecked = _DisabledNCheckedEx.Value;
     }
 
     /// <summary>
-    /// Разрешает использование свойства DisabledCheckStateEx
+    /// Разрешает использование свойства DisabledChecked и DisabledNChecked
     /// </summary>
-    public bool AllowDisabledCheckState
+    public bool AllowDisabledChecked
     {
-      get { return _AllowDisabledCheckState; }
+      get { return _AllowDisabledChecked; }
       set
       {
-        if (value == _AllowDisabledCheckState)
+        if (value == _AllowDisabledChecked)
           return;
-        _AllowDisabledCheckState = value;
+        _AllowDisabledChecked = value;
         InitControlCheckState();
       }
     }
-    private bool _AllowDisabledCheckState;
+    private bool _AllowDisabledChecked;
 
     #endregion
 
     #region Свойство DisabledChecked
 
     /// <summary>
-    /// Обращение к DisabledCheckedEx.ValueEx без принудительного создания объекта
+    /// Дублирует свойство DisabledNChecked
     /// По умолчанию - false
     /// </summary>
     public bool DisabledChecked
     {
-      get { return DisabledCheckState != CheckState.Unchecked; }
-      set { DisabledCheckState = value ? CheckState.Checked : CheckState.Unchecked; }
+      get { return DisabledNChecked ?? false; }
+      set { DisabledNChecked = value; }
     }
 
     /// <summary>
@@ -398,7 +410,7 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledCheckedEx == null)
       {
-        _DisabledCheckedEx = new DepInput<Boolean>(DisabledChecked,DisabledCheckedEx_ValueChanged);
+        _DisabledCheckedEx = new DepInput<Boolean>(DisabledChecked, DisabledCheckedEx_ValueChanged);
         _DisabledCheckedEx.OwnerInfo = new DepOwnerInfo(this, "DisabledCheckedEx");
       }
     }
@@ -412,14 +424,21 @@ namespace FreeLibSet.Forms
       DisabledChecked = _DisabledCheckedEx.Value;
     }
 
+    #endregion
+
+    #region Проверка
+
     /// <summary>
-    /// Разрешает использование свойства DisabledChecked.
-    /// Это свойство совпадает с AllowDisabledCheckState.
+    /// Проверка промежуточного состояния при CanBeEmptyMode=Warning
     /// </summary>
-    public bool AllowDisabledChecked
+    protected override void OnValidate()
     {
-      get { return AllowDisabledCheckState; }
-      set { AllowDisabledCheckState = value; }
+      base.OnValidate();
+      if (ValidateState == UIValidateState.Ok)
+      {
+        if (CanBeEmptyMode == UIValidateState.Warning && Control.CheckState == CheckState.Indeterminate)
+          SetWarning("Флажок должен быть установлен, либо снят");
+      }
     }
 
     #endregion
@@ -436,7 +455,7 @@ namespace FreeLibSet.Forms
 
       #region Методы
 
-      public void ContrtolProvider_Validating(object sender, EFPValidatingEventArgs args)
+      public void ContrtolProvider_Validating(object sender, UIValidatingEventArgs args)
       {
         bool HasChecked = false;
         for (int i = 0; i < ControlProviders.Length; i++)
@@ -477,9 +496,9 @@ namespace FreeLibSet.Forms
       {
         if (controlProviders[i] == null)
           throw new ArgumentNullException("controlProviders[" + i.ToString() + "]");
-        if (controlProviders[i].ThreeState)
+        if (controlProviders[i].CanBeEmpty)
           throw new ArgumentException("ThreeState=true", "controlProviders[" + i.ToString() + "]");
-        controlProviders[i].Validating += new EFPValidatingEventHandler(gv.ContrtolProvider_Validating);
+        controlProviders[i].Validating += new UIValidatingEventHandler(gv.ContrtolProvider_Validating);
         controlProviders[i].CheckedEx.ValueChanged += new EventHandler(gv.CheckedChanged);
       }
     }

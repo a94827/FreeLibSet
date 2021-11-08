@@ -796,30 +796,6 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
-    #region IsNotEmpty()
-
-    /// <summary>
-    /// Возвращает true, если есть Nullable-значение (свойство HasValue)
-    /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Признак непустой строки</returns>
-    public static bool IsNotEmpty(DateTime? value)
-    {
-      return value.HasValue;
-    }
-
-    /// <summary>
-    /// Возвращает true, если строка непустая (!String.IsNullOrEmpty())
-    /// </summary>
-    /// <param name="value">Проверяемая строка</param>
-    /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, DateTime?> IsNotEmptyEx(DepValue<DateTime?> value)
-    {
-      return new DepExpr1<bool, DateTime?>(value, IsNotEmpty);
-    }
-
-    #endregion
-
     #endregion
 
     #region YearMonth
@@ -983,6 +959,8 @@ namespace FreeLibSet.DependedValues
 
     #region Nullable
 
+    #region ReplaveNull
+
     /// <summary>
     /// Замена для Nullable-значения (оператор ?? в C#).
     /// Не имеет смысла использовать в прикладном коде
@@ -1018,6 +996,35 @@ namespace FreeLibSet.DependedValues
     {
       return new DepExpr2<T, T?, T>(value, default(T), ReplaceNull);
     }
+
+    #endregion
+
+    #region IsNotEmpty()
+
+    /// <summary>
+    /// Возвращает true, если есть Nullable-значение (свойство HasValue)
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <returns>Признак непустой строки</returns>
+    public static bool IsNotEmpty<T>(T? value)
+      where T:struct
+    {
+      return value.HasValue;
+    }
+
+    /// <summary>
+    /// Возвращает true, если есть Nullable-значение (свойство HasValue)
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExpr1<bool, T?> IsNotEmptyEx<T>(DepValue<T?> value)
+      where T:struct
+    {
+      return new DepExpr1<bool, T?>(value, IsNotEmpty);
+    }
+
+    #endregion
+
 
     #endregion
 

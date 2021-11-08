@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="2021-10-20T17:35:30.201000000"/>
-	<meta name="changed" content="2021-11-03T16:58:18.934000000"/>
+	<meta name="changed" content="2021-11-08T10:53:44.894000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
 		td p { line-height: 120%; orphans: 0; widows: 0; margin-bottom: 0.25cm; background: transparent }
@@ -722,11 +722,14 @@ DateTimeBox, DateRangeBox, IntEditBox, ...), </span><span lang="ru-RU">то
 <p>Остаются только свойства <span lang="en-US">Minimum </span><span lang="ru-RU">и
 </span><span lang="en-US">Maximum. </span><span lang="ru-RU">В
 основном, потому что они нужны еще и для прокрутки числовых значений.
+Управляемые свойства </span><span lang="en-US">(MinumumEx </span><span lang="ru-RU">и
+</span><span lang="en-US">MaximumEx)</span> <span lang="ru-RU">убираются.
 Свойство </span><span lang="en-US">WarningIfOutOfRange </span><span lang="ru-RU">убирается</span><span lang="en-US">,
 </span><span lang="ru-RU">можно задавать только ошибку, а не
 предупреждение. Чтобы задать предупреждение для попадания в диапазон,
 можно использовать валидатор с методом </span><span lang="en-US">DepTools.InRangeEx()
-</span><span lang="ru-RU">в качестве входа.</span></p>
+</span><span lang="ru-RU">в качестве входа.</span> 
+</p>
 <p><span lang="ru-RU">Свойства Error/</span><span lang="en-US">WarningRegExpattern/Message
 </span><span lang="ru-RU">убираются. Проверку можно реализовать
 валидатором с методом </span><span lang="en-US">DepTools.RegexIsMatchEx().</span></p>
@@ -773,26 +776,10 @@ DateTimeBox, DateRangeBox, IntEditBox, ...), </span><span lang="ru-RU">то
 </span></font><font color="#ff0000">в </font><font color="#ff0000"><span lang="en-US">RI.
 </span></font><font color="#ff0000">Не должно быть пробелов и не
 должно начинаться с цифры</font></p>
-<p><font color="#ff0000"><span lang="ru-RU">Подумать</span></font><font color="#ff0000">
-о свойствах </font><font color="#ff0000"><span lang="en-US">EFPTextBox.WarningIfEmpty</span></font><font color="#ff0000">
-</font><font color="#ff0000"><span lang="ru-RU">(и в других
-компонентах)</span></font><font color="#ff0000"><span lang="en-US">.
-</span></font><font color="#ff0000"><span lang="ru-RU">Может быть,
-стоит сделать </span></font><font color="#ff0000"><span lang="en-US">CanBeEmptyMode,
-</span></font><font color="#ff0000"><span lang="ru-RU">как в </span></font><font color="#ff0000"><span lang="en-US">RI.</span></font></p>
-<p><font color="#ff0000">Странное свойство
-</font><font color="#ff0000"><span lang="en-US">EFPDateBox.WarningIfOutOfRange.
-</span></font><font color="#ff0000">Может быть, сделать валидаторы
-как в </font><font color="#ff0000"><span lang="en-US">RI. </span></font><font color="#ff0000"><strike>Или,
-вообще убрать свойства </strike></font><font color="#ff0000"><strike><span lang="en-US">Minimum
-</span></strike></font><font color="#ff0000"><strike>и </strike></font><font color="#ff0000"><strike><span lang="en-US">Maximum</span></strike></font><font color="#ff0000"><span lang="en-US">?</span></font></p>
 <p><font color="#ff0000">Выделить из </font><font color="#ff0000"><span lang="en-US">DataTools
 </span></font><font color="#ff0000">нестатические классы
 </font><font color="#ff0000"><span lang="en-US">CSVTextConvert </span></font><font color="#ff0000">и
 </font><font color="#ff0000"><span lang="en-US">TabbedTextConvert</span></font></p>
-<p><font color="#ff0000"><span lang="en-US">RI.Int/Single/Double/DecimalRangeDialog
-</span></font><font color="#ff0000"><span lang="ru-RU">есть только
-свойство </span></font><font color="#ff0000"><span lang="en-US">CanBeEmpty</span></font><font color="#ff0000"><span lang="ru-RU">.</span></font></p>
 <p lang="en-US"><font color="#ff0000">FolderBrowserDialog.PathValidateMode</font></p>
 <p lang="en-US"><font color="#ff0000">FileTextBox.DefaultExt</font></p>
 <p lang="en-US"><font color="#ff0000">OrganizationNameModeComboBox,
@@ -825,5 +812,9 @@ next, out T? prev);</font></p>
 <p><font color="#ff0000">Открыть на редактирование цепочку сдачи
 отчетности. Открыть на просмотр элемент цепоки. Нажать ОК. В
 заголовке редактора цепочки появляется &quot;(*)&quot;</font></p>
+<p><br/>
+<br/>
+
+</p>
 </body>
 </html>

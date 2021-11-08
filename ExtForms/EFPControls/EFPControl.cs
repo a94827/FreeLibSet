@@ -89,7 +89,7 @@ namespace FreeLibSet.Forms
   /// Интерфейс провайдера управляющего элемента.
   /// Реализуется EFPControlBase.
   /// </summary>
-  public interface IEFPControl : IEFPValidator, IEFPAppIdleHandler
+  public interface IEFPControl : IUIValidableObject, IEFPAppIdleHandler
   {
     /// <summary>
     /// Базовый провайдер. Не может быть null.
@@ -247,7 +247,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Пользовательский обработчик для проверки ошибок
     /// </summary>
-    event EFPValidatingEventHandler Validating;
+    event UIValidatingEventHandler Validating;
 
     /// <summary>
     /// Если свойство установлено в true, то метод Validate() будет дополнительно вызываться после получения и
@@ -302,7 +302,7 @@ namespace FreeLibSet.Forms
   /// Абстрактный базовый класс для шаблонного класса EFPControl.
   /// Реализует свойство Control
   /// </summary>
-  public abstract class EFPControlBase : IEFPControl, IEFPValidator, IEFPStatusBarControl, IEFPAppIdleHandler, IEFPConfigurable
+  public abstract class EFPControlBase : IEFPControl, IUIValidableObject, IEFPStatusBarControl, IEFPAppIdleHandler, IEFPConfigurable
   {
     #region Конструктор
 
@@ -1896,12 +1896,12 @@ namespace FreeLibSet.Forms
           OnValidate();
 
           if (_Validators != null)
-            Validate(_Validators, this);
+            _Validators.Validate(this);
 
           if ((_ValidateState != UIValidateState.Error) && (Validating != null))
           {
             if (_ValidatingArgs == null)
-              _ValidatingArgs = new EFPValidatingEventArgs(this);
+              _ValidatingArgs = new UIValidatingEventArgs(this);
             Validating(this, _ValidatingArgs);
           }
         }
@@ -1921,31 +1921,6 @@ namespace FreeLibSet.Forms
 
         InitControlColors();
         InitLabelColors();
-      }
-    }
-
-    internal static void Validate(UIValidatorList valifators, IEFPValidator caller)
-    {
-      if (caller.ValidateState == UIValidateState.Error)
-        return;
-
-      for (int i = 0; i < valifators.Count; i++)
-      {
-        if (valifators[i].PreconditionEx != null)
-        {
-          if (!valifators[i].PreconditionEx.Value)
-            continue;
-        }
-        if (!valifators[i].ExpressionEx.Value)
-        {
-          if (valifators[i].IsError)
-          {
-            caller.SetError(valifators[i].Message);
-            break;
-          }
-          else
-            caller.SetWarning(valifators[i].Message);
-        }
       }
     }
 
@@ -2054,7 +2029,7 @@ namespace FreeLibSet.Forms
     /// Этот метод может вызываться из OnValidate для указания наличия ошибки
     /// </summary>
     /// <param name="message"></param>
-    void IEFPValidator.SetError(string message)
+    void IUIValidableObject.SetError(string message)
     {
       SetError(message);
     }
@@ -2063,7 +2038,7 @@ namespace FreeLibSet.Forms
     /// Этот метод может вызываться из OnValidate для указания наличия прежупреждения
     /// </summary>
     /// <param name="message"></param>
-    void IEFPValidator.SetWarning(string message)
+    void IUIValidableObject.SetWarning(string message)
     {
       SetWarning(message);
     }
@@ -2217,7 +2192,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Используем один объект аргументов, чтобы не создавать каждый раз
     /// </summary>
-    private EFPValidatingEventArgs _ValidatingArgs;
+    private UIValidatingEventArgs _ValidatingArgs;
 
     /// <summary>
     /// Текущее сообщение об ошибке или предупреждении
@@ -2240,7 +2215,7 @@ namespace FreeLibSet.Forms
     /// Обработчик не может "понизить" состояние проверки, например, убрать предупреждение.
     /// Событие не вызывается, если OnValidate() установил состояние ошибки.
     /// </summary>
-    public event EFPValidatingEventHandler Validating;
+    public event UIValidatingEventHandler Validating;
 
     #endregion
 

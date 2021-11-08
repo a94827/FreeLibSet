@@ -306,6 +306,8 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
+    #region Text
+
     /// <summary>
     /// Вход и выход: редактируемое значение
     /// </summary>
@@ -327,6 +329,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Управляемое свойство для Text
+    /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<string> TextEx
     {
@@ -341,6 +344,10 @@ namespace FreeLibSet.Forms
       }
     }
     private DepOutput<string> _TextEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
 
     /// <summary>
     /// Управляемое свойство, возвращающее true, если введен непустой текст.
@@ -360,6 +367,10 @@ namespace FreeLibSet.Forms
     }
     private DepOutput<bool> _IsNotEmptyEx;
 
+    #endregion
+
+    #region CanBeEmpty
+
     /// <summary>
     /// Режим проверки пустого значения.
     /// По умолчанию - Error
@@ -377,6 +388,10 @@ namespace FreeLibSet.Forms
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
+    #endregion
+
+    #region MaxLength
+
     /// <summary>
     /// Максимальная длина текста.
     /// По умолчанию: 0 - длина текста ограничена 32767 символами сим
@@ -384,12 +399,9 @@ namespace FreeLibSet.Forms
     public int MaxLength { get { return _MaxLength; } set { _MaxLength = value; } }
     private int _MaxLength;
 
+    #endregion
 
-    /// <summary>
-    /// Обработчик для проверки корректности значения при вводе.
-    /// Обработчик не вызывается, пока в поле ввода находится пустая строка    
-    /// </summary>
-    public event EFPValidatingValueEventHandler<string> Validating;
+    #region Прочие свойства
 
     /// <summary>
     /// Режим преобразования регистра.
@@ -403,6 +415,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public bool IsPassword { get { return _IsPassword; } set { _IsPassword = value; } }
     private bool _IsPassword;
+
+    #endregion
 
     #endregion
 
@@ -426,7 +440,7 @@ namespace FreeLibSet.Forms
 
       EFPTextBox efpText = new EFPTextBox(form.FormProvider, Control);
       efpText.Label = form.MainLabel;
-      efpText.Validating += new EFPValidatingEventHandler(efpText_Validating);
+      efpText.Validating += new UIValidatingEventHandler(efpText_Validating);
 
       if (MaxLength > 0)
         efpText.MaxLength = MaxLength;
@@ -455,27 +469,13 @@ namespace FreeLibSet.Forms
       return DialogResult.OK;
     }
 
-    void efpText_Validating(object sender, EFPValidatingEventArgs args)
+    void efpText_Validating(object sender, UIValidatingEventArgs args)
     {
       EFPTextBox efpText = (EFPTextBox)sender;
       this.Text = efpText.Text;
 
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
       if (HasValidators)
-        EFPControlBase.Validate(Validators, args);
-
-      if (String.IsNullOrEmpty(efpText.Text))
-        return;
-
-      if (Validating == null)
-        return;
-
-      EFPValidatingValueEventArgs<string> Args2 = new EFPValidatingValueEventArgs<string>(args.Validator,
-        efpText.Text);
-
-      Validating(this, Args2);
+        Validators.Validate(args);
     }
 
     #endregion
@@ -495,27 +495,80 @@ namespace FreeLibSet.Forms
     {
       Title = "Ввод текста";
       Prompt = "Значение";
-      _Value = String.Empty;
+      _Text = String.Empty;
       _MaxLength = 0;
       _CanBeEmptyMode = UIValidateState.Error;
+      _Items = DataTools.EmptyStrings;
     }
 
     #endregion
 
     #region Свойства
 
+    #region Text
+
     /// <summary>
     /// Вход и выход: редактируемое значение
     /// </summary>
-    public string Value { get { return _Value; } set { _Value = value; } }
-    private string _Value;
+    public string Text 
+    { 
+      get { return _Text; } 
+      set 
+      {
+        if (value == null)
+          value = String.Empty;
+        _Text = value;
+        if (_TextEx != null)
+          _TextEx.OwnerSetValue(value);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
+      } 
+    }
+           private string _Text;
 
     /// <summary>
-    /// Максимальная длина текста.
-    /// По умолчанию: 0 - длина текста ограничена 32767 символами сим
+    /// Управляемое свойство для Text
+    /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public int MaxLength { get { return _MaxLength; } set { _MaxLength = value; } }
-    private int _MaxLength;
+    public DepValue<string> TextEx
+    {
+      get
+      {
+        if (_TextEx == null)
+        {
+          _TextEx = new DepOutput<string>(Text);
+          _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+        }
+        return _TextEx;
+      }
+    }
+    private DepOutput<string> _TextEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если введен непустой текст.
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Режим проверки пустого значения.
@@ -534,18 +587,32 @@ namespace FreeLibSet.Forms
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
+    #endregion
+
+    /// <summary>
+    /// Максимальная длина текста.
+    /// По умолчанию: 0 - длина текста ограничена 32767 символами сим
+    /// </summary>
+    public int MaxLength { get { return _MaxLength; } set { _MaxLength = value; } }
+    private int _MaxLength;
+
 
     /// <summary>
     /// Список строк, из которых можно выбрать значение.
+    /// Пользователь может вводить строки не из списка, это не считается ошибкой.
     /// </summary>
-    public string[] Items { get { return _Items; } set { _Items = value; } }
+    public string[] Items 
+    { 
+      get { return _Items; } 
+      set 
+      {
+        if (value == null)
+          _Items = DataTools.EmptyStrings;
+        else
+          _Items = value; 
+      }
+    }
     private string[] _Items;
-
-    /// <summary>
-    /// Обработчик для проверки корректности значения при вводе.
-    /// Обработчик не вызывается, пока в поле ввода находится пустая строка    
-    /// </summary>
-    public event EFPValidatingValueEventHandler<string> Validating;
 
     #endregion
 
@@ -567,12 +634,11 @@ namespace FreeLibSet.Forms
       Control.Dock = DockStyle.Top;
       Control.DropDownStyle = ComboBoxStyle.DropDown;
       form.MainPanel.Controls.Add(Control);
-      if (Items != null)
-        Control.Items.AddRange(Items);
+      Control.Items.AddRange(Items);
 
       EFPTextComboBox efpText = new EFPTextComboBox(form.FormProvider, Control);
       efpText.Label = form.MainLabel;
-      efpText.Validating += new EFPValidatingEventHandler(efpText_Validating);
+      efpText.Validating += new UIValidatingEventHandler(efpText_Validating);
 
       if (MaxLength > 0)
         efpText.MaxLength = MaxLength;
@@ -583,45 +649,34 @@ namespace FreeLibSet.Forms
       {
         string s2 = ConfigPart.GetString(ConfigName);
         if (!String.IsNullOrEmpty(s2))
-          Value = s2;
+          Text = s2;
       }
-      efpText.Text = Value;
-
+      efpText.Text = Text;
 
       if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      Value = efpText.Text;
+      Text = efpText.Text;
       if (HasConfig)
-        ConfigPart.SetString(ConfigName, Value);
+        ConfigPart.SetString(ConfigName, Text);
 
       return DialogResult.OK;
     }
 
-    void efpText_Validating(object sender, EFPValidatingEventArgs args)
+    void efpText_Validating(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
       EFPTextComboBox efpText = (EFPTextComboBox)sender;
+      this.Text = efpText.Text;
 
-      if (String.IsNullOrEmpty(efpText.Text))
-        return;
-
-      if (Validating == null)
-        return;
-
-      EFPValidatingValueEventArgs<string> Args2 = new EFPValidatingValueEventArgs<string>(args.Validator,
-        efpText.Text);
-
-      Validating(this, Args2);
+      if (HasValidators)
+        Validators.Validate(args);
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Диалог ввода текста с возможностью выбора из списка возможных значений
+  /// Диалог ввода текста с проверкой ввода по маске
   /// </summary>
   public class MaskedTextInputDialog : BaseInputDialog
   {
@@ -634,25 +689,100 @@ namespace FreeLibSet.Forms
     {
       Title = "Ввод текста";
       Prompt = "Значение";
-      Value = String.Empty;
+      _Text = String.Empty;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
 
+
+    #region Text
+
     /// <summary>
     /// Вход и выход: редактируемое значение
     /// </summary>
-    public string Value { get { return _Value; } set { _Value = value; } }
-    private string _Value;
+    public string Text
+    {
+      get { return _Text; }
+      set
+      {
+        if (value == null)
+          value = String.Empty;
+        _Text = value;
+        if (_TextEx != null)
+          _TextEx.OwnerSetValue(value);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
+      }
+    }
+    private string _Text;
 
     /// <summary>
-    /// Можно ли вводить пустое значение.
+    /// Управляемое свойство для Text
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<string> TextEx
+    {
+      get
+      {
+        if (_TextEx == null)
+        {
+          _TextEx = new DepOutput<string>(Text);
+          _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+        }
+        return _TextEx;
+      }
+    }
+    private DepOutput<string> _TextEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если введен непустой текст.
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
+    /// </summary>
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
     /// По умолчанию - false
     /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region Mask и MaskProvider
 
     /// <summary>
     /// Провайдер для обработки маски
@@ -666,11 +796,7 @@ namespace FreeLibSet.Forms
     public string Mask { get { return _Mask; } set { _Mask = value; } }
     private string _Mask;
 
-    /// <summary>
-    /// Обработчик для проверки корректности значения при вводе.
-    /// Обработчик не вызывается, пока в поле ввода находится пустая строка или она не соответствует маске
-    /// </summary>
-    public event EFPValidatingValueEventHandler<string> Validating;
+    #endregion
 
     #endregion
 
@@ -703,46 +829,35 @@ namespace FreeLibSet.Forms
       if (!String.IsNullOrEmpty(efpText.Mask))
         form.MaxTextLength = efpText.Mask.Length;
 
-      efpText.Validating += new EFPValidatingEventHandler(efpText_Validating);
+      efpText.CanBeEmptyMode = CanBeEmptyMode;
+      efpText.Validating += new UIValidatingEventHandler(efpText_Validating);
 
-      efpText.CanBeEmpty = CanBeEmpty;
 
       if (HasConfig)
       {
         string s2 = ConfigPart.GetString(ConfigName);
         if (!String.IsNullOrEmpty(s2))
-          Value = s2;
+          Text = s2;
       }
-      efpText.Text = Value;
-
+      efpText.Text = Text;
 
       if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      Value = efpText.Text;
+      Text = efpText.Text;
       if (HasConfig)
-        ConfigPart.SetString(ConfigName, Value);
+        ConfigPart.SetString(ConfigName, Text);
 
       return DialogResult.OK;
     }
 
-    void efpText_Validating(object sender, EFPValidatingEventArgs args)
+    void efpText_Validating(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
       EFPMaskedTextBox efpText = (EFPMaskedTextBox)sender;
+      this.Text = efpText.Text;
 
-      if (String.IsNullOrEmpty(efpText.Text))
-        return;
-
-      if (Validating == null)
-        return;
-
-      EFPValidatingValueEventArgs<string> Args2 = new EFPValidatingValueEventArgs<string>(args.Validator,
-        efpText.Text);
-
-      Validating(this, Args2);
+      if (HasValidators)
+        Validators.Validate(args);
     }
 
     #endregion
@@ -765,17 +880,50 @@ namespace FreeLibSet.Forms
       Title = "Ввод числа";
       Prompt = "Значение";
       _Format = String.Empty;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
 
+    #region Value/NValue
+
     /// <summary>
     /// Вход и выход: редактируемое значение с поддержкой null
     /// </summary>
-    public T? NValue { get { return _NValue; } set { _NValue = value; } }
+    public T? NValue 
+    { get { return _NValue; } 
+      set 
+      { 
+        _NValue = value;
+        if (_NValueEx != null)
+          _NValueEx.OwnerSetValue(value);
+        if (_ValueEx != null)
+          _ValueEx.OwnerSetValue(Value);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(value.HasValue);
+      }
+    }
     private T? _NValue;
+
+    /// <summary>
+    /// Управляемое свойство для NValue
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<T?> NValueEx
+    {
+      get
+      {
+        if (_NValueEx == null)
+        {
+          _NValueEx = new DepOutput<T?>(NValue);
+          _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+        }
+        return _NValueEx;
+      }
+    }
+    private DepOutput<T?> _NValueEx;
 
     /// <summary>
     /// Вход и выход: редактируемое значение без null.
@@ -786,12 +934,70 @@ namespace FreeLibSet.Forms
       set { NValue = value; }
     }
 
+    /// <summary>
+    /// Управляемое свойство для Value
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<T> ValueEx
+    {
+      get
+      {
+        if (_ValueEx == null)
+        {
+          _ValueEx = new DepOutput<T>(Value);
+          _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
+        }
+        return _ValueEx;
+      }
+    }
+    private DepOutput<T> _ValueEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
 
     /// <summary>
-    /// Если true, то разрешено использовать Nullable-значение, если false (по умолчанию), то значение должно быть введено
+    /// Управляемое свойство, возвращающее true, если введено значение (NValue.HasValue=true).
+    /// Может использоваться в валидаторах.
     /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(NValue.HasValue);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
+    /// </summary>
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region Format
 
     /// <summary>
     /// Строка формата для числа
@@ -839,6 +1045,10 @@ namespace FreeLibSet.Forms
       set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
     }
 
+    #endregion
+
+    #region Minimum и Maximum
+
     /// <summary>
     /// Минимальное значение. 
     /// </summary>
@@ -851,26 +1061,9 @@ namespace FreeLibSet.Forms
     public T? Maximum { get { return _Maximum; } set { _Maximum = value; } }
     private T? _Maximum;
 
-    /// <summary>
-    /// Обработчик для проверки корректности значения при вводе.
-    /// Обработчик не вызывается, если число находится вне диапазона
-    /// </summary>
-    public event EFPValidatingValueEventHandler<T> Validating;
+    #endregion
 
-    /// <summary>
-    /// Вызывает событие Validating
-    /// </summary>
-    /// <param name="args"></param>
-    protected void OnValidating(EFPValidatingValueEventArgs<T> args)
-    {
-      if (Validating != null)
-        Validating(this, args);
-    }
-
-    /// <summary>
-    /// Возвращает true, если обработчик события Validating установлен.
-    /// </summary>
-    protected bool HasValidatingHandler { get { return Validating != null; } }
+    #region Increment
 
     /// <summary>
     /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
@@ -888,6 +1081,8 @@ namespace FreeLibSet.Forms
       }
     }
     private T _Increment;
+
+    #endregion
 
     #endregion
 
@@ -916,7 +1111,7 @@ namespace FreeLibSet.Forms
       efpValue.CanBeEmpty = CanBeEmpty;
       efpValue.Minimum = Minimum;
       efpValue.Maximum = Maximum;
-      efpValue.Validating += new EFPValidatingEventHandler(efpValue_Validating);
+      efpValue.Validating += new UIValidatingEventHandler(efpValue_Validating);
 
       #endregion
 
@@ -927,7 +1122,6 @@ namespace FreeLibSet.Forms
           NValue = cfgValue;
       }
       efpValue.NValue = NValue;
-
 
       if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
@@ -940,20 +1134,13 @@ namespace FreeLibSet.Forms
     }
 
 
-    void efpValue_Validating(object sender, EFPValidatingEventArgs args)
+    void efpValue_Validating(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
       EFPNumEditBoxBase<T> efpValue = (EFPNumEditBoxBase<T>)sender;
+      NValue = efpValue.NValue;
 
-      if (HasValidatingHandler && efpValue.NValue.HasValue)
-      {
-        EFPValidatingValueEventArgs<T> args2 = new EFPValidatingValueEventArgs<T>(args.Validator,
-        efpValue.Value);
-
-        OnValidating(args2);
-      }
+      if (HasValidators)
+        Validators.Validate(args);
     }
 
     #endregion
@@ -1161,11 +1348,14 @@ namespace FreeLibSet.Forms
       Prompt = "Значение";
       _NValue = null;
       _Formatter = EditableDateTimeFormatters.Date;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
+
+    #region Kind, Formatter, UseCalendar
 
     /// <summary>
     /// Форматизатор для даты/времени.
@@ -1193,10 +1383,64 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Если свойство установлено в true, то в диалоге будет не поле ввода даты (DateBox), а календарик (MonthCalendar).
+    /// По умолчанию - false.
+    /// Свойство нельзя устанавливать, если Kind отличается от Date.
+    /// </summary>
+    public bool UseCalendar { get { return _UseCalendar; } set { _UseCalendar = value; } }
+    private bool _UseCalendar;
+
+    #endregion
+
+    #region Текущее значение
+
+    #region NValue
+
+    /// <summary>
     /// Вход и выход: редактируемое значение с поддержкой null
     /// </summary>
-    public DateTime? NValue { get { return _NValue; } set { _NValue = value; } }
+    public DateTime? NValue 
+    { 
+      get { return _NValue; } 
+      set 
+      { 
+        _NValue = value;
+
+        if (_NValueEx != null)
+          _NValueEx.OwnerSetValue(NValue);
+        if (_NValueEx != null)
+          _ValueEx.OwnerSetValue(Value);
+        if (_NTimeEx != null)
+          _NTimeEx.OwnerSetValue(NTime);
+        if (_TimeEx != null)
+          _TimeEx.OwnerSetValue(Time);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(NValue.HasValue);
+      }
+    }
     private DateTime? _NValue;
+
+    /// <summary>
+    /// Управляемое свойство для NValue.
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<DateTime?> NValueEx
+    {
+      get
+      {
+        if (_NValueEx == null)
+        {
+          _NValueEx = new DepOutput<DateTime?>(NValue);
+          _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
+        }
+        return _NValueEx;
+      }
+    }
+    private DepOutput<DateTime?> _NValueEx;
+
+    #endregion
+
+    #region Value
 
     /// <summary>
     /// Вход и выход: редактируемое значение без null
@@ -1208,21 +1452,148 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Можно ли вводить пустое значение.
-    /// По умолчанию - false.
-    /// Свойство несовместимо с UseCalendar=true.
+    /// Управляемое свойство для Value.
+    /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
+    public DepValue<DateTime> ValueEx
+    {
+      get
+      {
+        if (_ValueEx == null)
+        {
+          _ValueEx = new DepOutput<DateTime>(Value);
+          _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
+        }
+        return _ValueEx;
+      }
+    }
+    private DepOutput<DateTime> _ValueEx;
+
+    #endregion
+
+    #region NTime
 
     /// <summary>
-    /// Надо ли выводить предупреждение, если значение не введено.
-    /// По умолчанию - false.
-    /// Свойство действует, только если свойство CanBeEmpty=true.
-    /// Свойство несовместимо с UseCalendar=true.
+    /// Доступ к компоненту времени.
+    /// Если нет введенного значения, свойство возвращает null
     /// </summary>
-    public bool WarningIfEmpty { get { return _WarningIfEmpty; } set { _WarningIfEmpty = value; } }
-    private bool _WarningIfEmpty;
+    public TimeSpan? NTime
+    {
+      get
+      {
+        if (NValue.HasValue)
+          return NValue.Value.TimeOfDay;
+        else
+          return null;
+      }
+      set
+      {
+        if (value.HasValue)
+          NValue = Value.Date /* а не NValue */ + value;
+        else
+          NValue = null;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство для NTime.
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<TimeSpan?> NTimeEx
+    {
+      get
+      {
+        if (_NTimeEx == null)
+        {
+          _NTimeEx = new DepOutput<TimeSpan?>(NTime);
+          _NTimeEx.OwnerInfo = new DepOwnerInfo(this, "NTimeEx");
+        }
+        return _NTimeEx;
+      }
+    }
+    private DepOutput<TimeSpan?> _NTimeEx;
+
+    #endregion
+
+    #region Time
+
+    /// <summary>
+    /// Доступ к компоненту времени.
+    /// В отличие от NTime, это свойство не nullable
+    /// </summary>
+    public TimeSpan Time
+    {
+      get { return NTime ?? TimeSpan.Zero; }
+      set { NTime = value; }
+    }
+
+
+    /// <summary>
+    /// Управляемое свойство для Time.
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<TimeSpan> TimeEx
+    {
+      get
+      {
+        if (_TimeEx == null)
+        {
+          _TimeEx = new DepOutput<TimeSpan>(Time);
+          _TimeEx.OwnerInfo = new DepOwnerInfo(this, "TimeEx");
+        }
+        return _TimeEx;
+      }
+    }
+    private DepOutput<TimeSpan> _TimeEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если введен непустой текст.
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(NValue.HasValue);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #endregion
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error
+    /// </summary>
+    public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
+    /// По умолчанию - false
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region Диапазон значений
 
     /// <summary>
     /// Минимальное значение. По умолчанию ограничение не задано
@@ -1236,19 +1607,7 @@ namespace FreeLibSet.Forms
     public DateTime? Maximum { get { return _Maximum; } set { _Maximum = value; } }
     private DateTime? _Maximum;
 
-    /// <summary>
-    /// Если свойство установлено в true, то в диалоге будет не поле ввода даты (DateBox), а календарик (MonthCalendar).
-    /// По умолчанию - false.
-    /// Свойство нельзя устанавливать, если Kind отличается от Date.
-    /// </summary>
-    public bool UseCalendar { get { return _UseCalendar; } set { _UseCalendar = value; } }
-    private bool _UseCalendar;
-
-    /// <summary>
-    /// Обработчик для проверки корректности значения при вводе.
-    /// Обработчик не вызывается, пока в поле ввода находится пустая строка
-    /// </summary>
-    public event EFPValidatingValueEventHandler<DateTime> Validating;
+    #endregion
 
     #endregion
 
@@ -1287,7 +1646,7 @@ namespace FreeLibSet.Forms
         efpValue.Minimum = Minimum;
         efpValue.Maximum = Maximum;
 
-        efpValue.Validating += new EFPValidatingEventHandler(efpValueCal_Validating);
+        efpValue.Validating += new UIValidatingEventHandler(efpValueCal_Validating);
         // невозможно efpValue.CanBeEmpty = CanBeEmpty;
 
         if (NValue.HasValue)
@@ -1316,15 +1675,13 @@ namespace FreeLibSet.Forms
         EFPDateTimeBox efpValue = new EFPDateTimeBox(form.FormProvider, Control);
         efpValue.Label = form.MainLabel;
         efpValue.Control.Formatter = Formatter;
+        efpValue.CanBeEmptyMode = CanBeEmptyMode;
         efpValue.Minimum = Minimum;
         efpValue.Maximum = Maximum;
 
-        efpValue.Validating += new EFPValidatingEventHandler(efpValueDate_Validating);
-        efpValue.CanBeEmpty = CanBeEmpty;
-        efpValue.WarningIfEmpty = WarningIfEmpty;
+        efpValue.Validating += new UIValidatingEventHandler(efpValueDateTime_Validating);
 
         efpValue.NValue = NValue;
-
 
         if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
           return DialogResult.Cancel;
@@ -1337,39 +1694,22 @@ namespace FreeLibSet.Forms
       return DialogResult.OK;
     }
 
-    void efpValueDate_Validating(object sender, EFPValidatingEventArgs args)
+    void efpValueDateTime_Validating(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
       EFPDateTimeBox efpValue = (EFPDateTimeBox)sender;
+      this.NValue = efpValue.Value;
 
-      if (!efpValue.NValue.HasValue)
-        return;
-
-      if (Validating == null)
-        return;
-
-      EFPValidatingValueEventArgs<DateTime> Args2 = new EFPValidatingValueEventArgs<DateTime>(args.Validator,
-        efpValue.NValue.Value);
-
-      Validating(this, Args2);
+      if (HasValidators)
+        Validators.Validate(args);
     }
 
-    void efpValueCal_Validating(object sender, EFPValidatingEventArgs args)
+    void efpValueCal_Validating(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
       EFPMonthCalendarSingleDay efpValue = (EFPMonthCalendarSingleDay)sender;
+      NValue = efpValue.Value;
 
-      if (Validating == null)
-        return;
-
-      EFPValidatingValueEventArgs<DateTime> Args2 = new EFPValidatingValueEventArgs<DateTime>(args.Validator,
-        efpValue.Value);
-
-      Validating(this, Args2);
+      if (HasValidators)
+        Validators.Validate(args);
     }
 
     #endregion
@@ -1396,11 +1736,46 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
+    #region Text
+
     /// <summary>
     /// Вход и выход: редактируемый текст. Разделитель - Environment.NewLine
     /// </summary>
-    public string Text { get { return _Text; } set { _Text = value; } }
+    public string Text 
+    { 
+      get { return _Text; }
+      set
+      {
+        if (value == null)
+          value = String.Empty;
+        _Text = value;
+        if (_TextEx != null)
+          _TextEx.OwnerSetValue(value);
+        if (_LinesEx != null)
+          _LinesEx.OwnerSetValue(Lines);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
+      }
+    }
     private string _Text;
+
+    /// <summary>
+    /// Управляемое свойство для Text
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<string> TextEx
+    {
+      get
+      {
+        if (_TextEx == null)
+        {
+          _TextEx = new DepOutput<string>(Text);
+          _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+        }
+        return _TextEx;
+      }
+    }
+    private DepOutput<string> _TextEx;
 
     /// <summary>
     /// Альтернативная установка текста
@@ -1410,6 +1785,50 @@ namespace FreeLibSet.Forms
       get { return UITools.TextToLines(_Text); }
       set { _Text = UITools.LinesToText(value); }
     }
+
+    /// <summary>
+    /// Управляемое свойство для Lines
+    /// Только для чтения. Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<string[]> LinesEx
+    {
+      get
+      {
+        if (_LinesEx == null)
+        {
+          _LinesEx = new DepOutput<string[]>(Lines);
+          _LinesEx.OwnerInfo = new DepOwnerInfo(this, "LinesEx");
+        }
+        return _LinesEx;
+      }
+    }
+    private DepOutput<string[]> _LinesEx;
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если введен непустой текст.
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region CanBeEmpty
 
     /// <summary>
     /// Режим проверки пустого значения.
@@ -1428,11 +1847,9 @@ namespace FreeLibSet.Forms
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
-    /// <summary>
-    /// Обработчик для проверки корректности значения при вводе.
-    /// Обработчик не вызывается, пока в поле ввода находится пустая строка    
-    /// </summary>
-    public event EFPValidatingValueEventHandler<string> Validating;
+    #endregion
+
+    #region Прочие свойства
 
     /// <summary>
     /// Если true, то форма будет предназначена только для просмотра текста, а не для редактирования.
@@ -1455,6 +1872,8 @@ namespace FreeLibSet.Forms
       set { _Maximized = value; }
     }
     private bool _Maximized;
+
+    #endregion
 
     #endregion
 
@@ -1492,9 +1911,9 @@ namespace FreeLibSet.Forms
         efpText.DisplayName = "Текст";
       else
         efpText.DisplayName = Prompt; // ?
-      efpText.Validating += new EFPValidatingEventHandler(efpText_Validating);
-
       efpText.CanBeEmptyMode = CanBeEmptyMode;
+      efpText.Validating += new UIValidatingEventHandler(efpText_Validating);
+
 
       if (HasConfig)
       {
@@ -1514,23 +1933,13 @@ namespace FreeLibSet.Forms
       return DialogResult.OK;
     }
 
-    void efpText_Validating(object sender, EFPValidatingEventArgs args)
+    void efpText_Validating(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
       EFPTextBox efpText = (EFPTextBox)sender;
+      this.Text = efpText.Text;
 
-      if (String.IsNullOrEmpty(efpText.Text))
-        return;
-
-      if (Validating == null)
-        return;
-
-      EFPValidatingValueEventArgs<string> Args2 = new EFPValidatingValueEventArgs<string>(args.Validator,
-        efpText.Text);
-
-      Validating(this, Args2);
+      if (HasValidators)
+        Validators.Validate(args);
     }
 
     #endregion

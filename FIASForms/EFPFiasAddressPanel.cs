@@ -81,6 +81,9 @@ namespace FreeLibSet.Forms.FIAS
       _EditorLevel = editorLevel;
       _MinRefBookLevel = FiasTools.DefaultMinRefBookLevel;
 
+      _CanBeEmptyMode = UIValidateState.Error;
+      _CanBePartialMode = UIValidateState.Error;
+
       _Handler = new FiasHandler(ui.Source);
 
       _AddrObParts = new List<AddrObItem>(6);
@@ -616,7 +619,7 @@ namespace FreeLibSet.Forms.FIAS
         _Name.DisplayName = "Наименование для уровня " + FiasEnumNames.ToString(level, true);
         _Name.CommandItems.UseStatusBarRC = false;
         _Name.ReadOnlyEx = _Owner.ReadOnlyEx;
-        _Name.Validating += new EFPValidatingEventHandler(Name_Validating); // 03.03.2021
+        _Name.Validating += new UIValidatingEventHandler(Name_Validating); // 03.03.2021
 
         _AOType = new EFPComboBox2(owner.BaseProvider, cbAOType);
         _AOType.Control.AutoCompleteMode = AutoCompleteMode.Append;
@@ -662,7 +665,7 @@ namespace FreeLibSet.Forms.FIAS
         }
       }
 
-      void Name_Validating(object sender, EFPValidatingEventArgs args)
+      void Name_Validating(object sender, UIValidatingEventArgs args)
       {
         InitAOTypeEnabled();
 
@@ -1651,19 +1654,19 @@ namespace FreeLibSet.Forms.FIAS
     private void InitErrorMessages()
     {
       ErrorMessageList errors = Address.Messages.Clone();
-      AddEditorMessages(Address, EditorLevel, errors, CanBeEmpty, WarningIfEmpty, CanBePartial, WarningIfPartial, MinRefBookLevel);
+      AddEditorMessages(Address, EditorLevel, errors, CanBeEmptyMode, CanBePartialMode, MinRefBookLevel);
 
       _ErrorButton.ErrorMessages = errors;
     }
 
     internal static void AddEditorMessages(FiasAddress address, FiasEditorLevel editorLevel, ErrorMessageList errors,
-      bool canBeEmpty, bool warningIfEmpty, bool canBePartial, bool warningIfPartial, FiasLevel minRefBookLevel)
+      UIValidateState canBeEmptyMode, UIValidateState canBePartialMode, FiasLevel minRefBookLevel)
     {
       // Используется также к EFPAddressComboBox
 
       if (address.IsEmpty)
       {
-        ErrorMessageKind kind = GetErrorOrWarningKind(canBeEmpty, warningIfEmpty);
+        ErrorMessageKind kind = GetErrorOrWarningKind(canBeEmptyMode);
         if (kind != ErrorMessageKind.Info)
           errors.Add(new ErrorMessageItem(kind, "Адрес должен быть заполнен"));
       }
@@ -1678,7 +1681,7 @@ namespace FreeLibSet.Forms.FIAS
             break;
 
           case FiasLevelCompareResult.Less:
-            ErrorMessageKind kind = GetErrorOrWarningKind(canBePartial, warningIfPartial);
+            ErrorMessageKind kind = GetErrorOrWarningKind(canBePartialMode);
             if (kind != ErrorMessageKind.Info)
               errors.Add(new ErrorMessageItem(kind, "Адрес должен быть заполнен полностью. " + errorText));
             break;
@@ -1690,17 +1693,14 @@ namespace FreeLibSet.Forms.FIAS
       }
     }
 
-    private static ErrorMessageKind GetErrorOrWarningKind(bool canBe, bool warningIf)
+    private static ErrorMessageKind GetErrorOrWarningKind(UIValidateState mode)
     {
-      if (canBe)
+      switch (mode)
       {
-        if (warningIf)
-          return ErrorMessageKind.Warning;
-        else
-          return ErrorMessageKind.Info;
+        case UIValidateState.Error: return ErrorMessageKind.Error;
+        case UIValidateState.Warning: return ErrorMessageKind.Warning;
+        default: return ErrorMessageKind.Info;
       }
-      else
-        return ErrorMessageKind.Error;
     }
 
     /// <summary>
@@ -1742,76 +1742,60 @@ namespace FreeLibSet.Forms.FIAS
 
     /// <summary>
     /// Может ли адрес быть пустым?
-    /// По умолчанию - false - адрес должен быть заполнен.
+    /// По умолчанию - Error - адрес должен быть заполнен.
     /// </summary>
-    public bool CanBeEmpty
+    public UIValidateState CanBeEmptyMode
     {
-      get { return _CanBeEmpty; }
+      get { return _CanBeEmptyMode; }
       set
       {
-        if (value == _CanBeEmpty)
+        if (value == _CanBeEmptyMode)
           return;
-        _CanBeEmpty = value;
+        _CanBeEmptyMode = value;
         UpdateAddress(FiasLevel.Unknown, Guid.Empty);
       }
     }
-    private bool _CanBeEmpty;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Выдавать предупреждение, если адрес не заполнен
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBeEmpty=true, иначе будет выдаваться ошибка, а не предупреждение.
+    /// Может ли адрес быть пустым?
+    /// Дублирует CanBeEmptyMode
     /// </summary>
-    public bool WarningIfEmpty
+    public bool CanBeEmpty
     {
-      get { return _WarningIfEmpty; }
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    /// <summary>
+    /// Может ли адрес быть заполненным частично (например, введен только регион)?
+    /// По умолчанию - Error - адрес должен быть заполнен согласно свойству EditorLevel.
+    /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// </summary>
+    public UIValidateState CanBePartialMode
+    {
+      get { return _CanBePartialMode; }
       set
       {
-        if (value == _WarningIfEmpty)
+        if (value == _CanBePartialMode)
           return;
-        _WarningIfEmpty = value;
-        if (_CanBeEmpty)
-          UpdateAddress(FiasLevel.Unknown, Guid.Empty);
+        _CanBePartialMode = value;
+        UpdateAddress(FiasLevel.Unknown, Guid.Empty);
       }
     }
-    private bool _WarningIfEmpty;
+    private UIValidateState _CanBePartialMode;
 
     /// <summary>
     /// Может ли адрес быть заполненным частично (например, введен только регион)?
     /// По умолчанию - false - адрес должен быть заполнен согласно свойству EditorLevel.
     /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// Дублирует свойство CanBePartialMode
     /// </summary>
     public bool CanBePartial
     {
-      get { return _CanBePartial; }
-      set
-      {
-        if (value == _CanBePartial)
-          return;
-        _CanBePartial = value;
-        UpdateAddress(FiasLevel.Unknown, Guid.Empty);
-      }
+      get { return CanBePartialMode != UIValidateState.Error; }
+      set { CanBePartialMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
-    private bool _CanBePartial;
-
-    /// <summary>
-    /// Выдавать предупреждение, если адрес заполнен частично (например, введен только регион).
-    /// По умолчанию - false - не выдавать.
-    /// Действует только при установке свойства CanBePartial=true, иначе будет выдаваться ошибка, а не предупреждение.
-    /// </summary>
-    public bool WarningIfPartial
-    {
-      get { return _WarningIfPartial; }
-      set
-      {
-        if (value == _WarningIfPartial)
-          return;
-        _WarningIfPartial = value;
-        if (CanBePartial)
-          UpdateAddress(FiasLevel.Unknown, Guid.Empty);
-      }
-    }
-    private bool _WarningIfPartial;
 
     #endregion
 

@@ -1,5 +1,6 @@
 ﻿using FreeLibSet.Controls;
 using FreeLibSet.DependedValues;
+using FreeLibSet.UICore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,6 +26,7 @@ namespace FreeLibSet.Forms
       : base(baseProvider, control, true)
     {
       _SavedNValue = control.NValue;
+      _CanBeEmptyMode = UIValidateState.Error;
 
       if (!DesignMode)
         control.ValueChanged += new EventHandler(Control_ValueChanged);
@@ -112,7 +114,7 @@ namespace FreeLibSet.Forms
     {
       if (_NValueEx == null)
       {
-        _NValueEx = new DepInput<T?>(NValue,NValueEx_ValueChanged);
+        _NValueEx = new DepInput<T?>(NValue, NValueEx_ValueChanged);
         _NValueEx.OwnerInfo = new DepOwnerInfo(this, "NValueEx");
       }
     }
@@ -161,7 +163,7 @@ namespace FreeLibSet.Forms
     {
       if (_ValueEx == null)
       {
-        _ValueEx = new DepInput<T>(Value,ValueEx_ValueChanged);
+        _ValueEx = new DepInput<T>(Value, ValueEx_ValueChanged);
         _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
         _ValueEx.CheckValue += ValueEx_CheckValue;
       }
@@ -368,7 +370,7 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledNValueEx == null)
       {
-        _DisabledNValueEx = new DepInput<T?>(DisabledNValue,DisabledNValueEx_ValueChanged);
+        _DisabledNValueEx = new DepInput<T?>(DisabledNValue, DisabledNValueEx_ValueChanged);
         _DisabledNValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledNValueEx");
       }
     }
@@ -415,7 +417,7 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledValueEx == null)
       {
-        _DisabledValueEx = new DepInput<T>(DisabledValue,DisabledValueEx_ValueChanged);
+        _DisabledValueEx = new DepInput<T>(DisabledValue, DisabledValueEx_ValueChanged);
         _DisabledValueEx.OwnerInfo = new DepOwnerInfo(this, "DisabledValueEx");
       }
     }
@@ -469,7 +471,7 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
+        _ReadOnlyEx = new DepInput<Boolean>(false, ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
 
         _ReadOnlyMain = new DepInput<bool>(false, null);
@@ -505,112 +507,32 @@ namespace FreeLibSet.Forms
     #region Свойство CanBeEmpty
 
     /// <summary>
-    /// Допускается ли значение null.
-    /// Значение совпадает со свойством DateBox.ClearButton, которое по умолчанию имеет значение false.
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error.
+    /// Это свойство переопределяется для нестандартных элементов, содержащих
+    /// кнопку очистки справа от элемента
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        if (value == _CanBeEmptyMode)
+          return;
+        _CanBeEmptyMode = value;
+        Validate();
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// True, если ли элемент содержать пустой текст.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
-      get { return _CanBeEmpty; }
-      set
-      {
-        if (value == _CanBeEmpty)
-          return;
-        _CanBeEmpty = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
-        Validate();
-      }
-    }
-    private bool _CanBeEmpty;
-
-    /// <summary>.
-    /// Управляемое свойство для CanBeEmpty.
-    /// True, если можно выбирать значение null. По умолчанию - false.
-    /// </summary>
-    public DepValue<Boolean> CanBeEmptyEx
-    {
-      get
-      {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
-      }
-    }
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    private void InitCanBeEmptyEx()
-    {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
-    }
-
-    #endregion
-
-    #region Свойство WarningIfEmpty
-
-    /// <summary>
-    /// Выдавать предупреждение, если текст не введен (при условии, что CanBeEmpty=true).
-    /// </summary>
-    public bool WarningIfEmpty
-    {
-      get { return _WarningIfEmpty; }
-      set
-      {
-        if (value == _WarningIfEmpty)
-          return;
-        _WarningIfEmpty = value;
-        if (_WarningIfEmptyEx != null)
-          _WarningIfEmptyEx.Value = value;
-        Validate();
-      }
-    }
-    private bool _WarningIfEmpty;
-
-    /// <summary>
-    /// Управляемое свойство для WarningIfEmpty.
-    /// Если True и свойство CanBeEmpty=True, то при проверке состояния выдается
-    /// предупреждение, если свойство Value=null.
-    /// По умолчанию - False.
-    /// </summary>
-    public DepValue<Boolean> WarningIfEmptyEx
-    {
-      get
-      {
-        InitWarningIfEmptyEx();
-        return _WarningIfEmptyEx;
-      }
-      set
-      {
-        InitWarningIfEmptyEx();
-        _WarningIfEmptyEx.Source = value;
-      }
-    }
-    private DepInput<Boolean> _WarningIfEmptyEx;
-
-    private void InitWarningIfEmptyEx()
-    {
-      if (_WarningIfEmptyEx == null)
-      {
-        _WarningIfEmptyEx = new DepInput<bool>(WarningIfEmpty,WarningIfEmptyEx_ValueChanged);
-        _WarningIfEmptyEx.OwnerInfo = new DepOwnerInfo(this, "WarningIfEmptyEx");
-      }
-    }
-
-    void WarningIfEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      WarningIfEmpty = _WarningIfEmptyEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -648,18 +570,6 @@ namespace FreeLibSet.Forms
         Validate();
       }
     }
-
-    /// <summary>
-    /// Если свойство установлено в true, а введенное значение выходит за диапазон, заданный свойствами
-    /// Minimum и Maximum, то при проверке выдается предупреждение, а не ошибка.
-    /// По умолчанию - false (выдача ошибки)
-    /// </summary>
-    public virtual bool WarningIfOutOfRange
-    {
-      get { return _WarningIfOutOfRange; }
-      set { _WarningIfOutOfRange = value; }
-    }
-    private bool _WarningIfOutOfRange;
 
     #endregion
 
@@ -707,22 +617,19 @@ namespace FreeLibSet.Forms
         }
 
         if (ErrorMessage != null)
-        {
-          if (WarningIfOutOfRange)
-            SetWarning(ErrorMessage);
-          else
-            SetError(ErrorMessage);
-        }
+          SetError(ErrorMessage);
       }
       else
       {
-        if (CanBeEmpty)
+        switch (CanBeEmptyMode)
         {
-          if (WarningIfEmpty)
+          case UIValidateState.Error:
+            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
+            break;
+          case UIValidateState.Warning:
             SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
+            break;
         }
-        else
-          SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
       }
     }
 
