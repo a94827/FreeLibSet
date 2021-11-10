@@ -867,7 +867,7 @@ namespace FreeLibSet.Forms
   /// Блок диалога для ввода одного числа.
   /// Базовый класс для IntInputDialog, SingleInputDialog, DoubleInputDialog и DecimalInputDialog
   /// </summary>
-  public abstract class BaseNumInputDialog<T> : BaseInputDialog
+  public abstract class BaseNumInputDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
@@ -1066,21 +1066,47 @@ namespace FreeLibSet.Forms
     #region Increment
 
     /// <summary>
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// </summary>
+    public IUpDownHandler<T?> UpDownHandler
+    {
+      get { return _UpDownHandler; }
+      set { _UpDownHandler = value; }
+    }
+    private IUpDownHandler<T?> _UpDownHandler;
+
+    /// <summary>
     /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
     /// стрелочек вверх/вниз или колесиком мыши.
-    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
     /// </summary>
     public T Increment
     {
-      get { return _Increment; }
+      get
+      {
+        IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
+        if (incObj == null)
+          return default(T);
+        else
+          return incObj.Increment;
+      }
       set
       {
+        if (value.Equals(this.Increment))
+          return;
+
         if (value.CompareTo(default(T)) < 0)
           throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
-        _Increment = value;
+
+        if (value.CompareTo(default(T)) == 0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
       }
     }
-    private T _Increment;
 
     #endregion
 

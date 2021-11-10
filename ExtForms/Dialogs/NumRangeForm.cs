@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms
   /// Диалог для ввода диапазона целых чисел.
   /// Базовый класс для IntRangeDialog, SingleRangeDialog, DoubleRangeDialog и DecimalRangeDialog.
   /// </summary>
-  public abstract class BaseNumRangeDialog<T> : BaseInputDialog
+  public abstract class BaseNumRangeDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
@@ -323,21 +323,47 @@ namespace FreeLibSet.Forms
     #region Increment
 
     /// <summary>
-    /// Если задано положительное значение (обычно, 1), то значения в полях можно прокручивать с помощью
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// </summary>
+    public IUpDownHandler<T?> UpDownHandler
+    {
+      get { return _UpDownHandler; }
+      set { _UpDownHandler = value; }
+    }
+    private IUpDownHandler<T?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
     /// стрелочек вверх/вниз или колесиком мыши.
-    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
     /// </summary>
     public T Increment
     {
-      get { return _Increment; }
+      get
+      {
+        IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
+        if (incObj == null)
+          return default(T);
+        else
+          return incObj.Increment;
+      }
       set
       {
+        if (value.Equals(this.Increment))
+          return;
+
         if (value.CompareTo(default(T)) < 0)
           throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
-        _Increment = value;
+
+        if (value.CompareTo(default(T)) == 0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
       }
     }
-    private T _Increment;
 
     #endregion
 
@@ -368,7 +394,7 @@ namespace FreeLibSet.Forms
       p.efpFirstValue.Control.Location = new Point(form.lblMinimum.Left, form.lblMinimum.Bottom);
       p.efpFirstValue.Control.Size = new Size(form.lblMinimum.Width, form.lblMinimum.Height);
       p.efpFirstValue.Control.Format = Format;
-      p.efpFirstValue.Control.Increment = Increment;
+      p.efpFirstValue.Control.UpDownHandler = UpDownHandler;
       p.efpFirstValue.Control.TabIndex = 1;
       form.lblMinimum.Parent.Controls.Add(p.efpFirstValue.Control);
 
@@ -383,7 +409,7 @@ namespace FreeLibSet.Forms
       p.efpLastValue.Control.Location = new Point(form.lblMaximum.Left, form.lblMaximum.Bottom);
       p.efpLastValue.Control.Size = new Size(form.lblMaximum.Width, form.lblMaximum.Height);
       p.efpLastValue.Control.Format = Format;
-      p.efpLastValue.Control.Increment = Increment;
+      p.efpLastValue.Control.UpDownHandler = UpDownHandler;
       p.efpLastValue.Control.TabIndex = 3;
       form.lblMaximum.Parent.Controls.Add(p.efpLastValue.Control);
 
@@ -412,11 +438,22 @@ namespace FreeLibSet.Forms
 
       form.efp2eq1.Click += p.efp2eq1_Click;
 
-      if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
-        return DialogResult.Cancel;
+      switch (EFPApp.ShowDialog(form, true, DialogPosition))
+      {
+        case DialogResult.OK:
+          NFirstValue = p.efpFirstValue.NValue;
+          NLastValue = p.efpLastValue.NValue;
+          break;
 
-      NFirstValue = p.efpFirstValue.NValue;
-      NLastValue = p.efpLastValue.NValue;
+        case DialogResult.No:
+          NFirstValue = null;
+          NLastValue = null;
+          break;
+
+        default:
+          return DialogResult.Cancel;
+      }
+
       if (HasConfig)
       {
         WriteConfigValue(ConfigName + "-First", NFirstValue);

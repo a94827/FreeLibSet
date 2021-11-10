@@ -374,6 +374,8 @@ namespace FreeLibSet.Forms
 
     #region Текущие значения
 
+    #region Year
+
     /// <summary>
     /// Год
     /// </summary>
@@ -415,6 +417,10 @@ namespace FreeLibSet.Forms
       Year = _YearEx.Value;
     }
 
+    #endregion
+
+    #region FirstMonth
+
     /// <summary>
     /// Первый месяц диапазона (1 - 12)
     /// </summary>
@@ -431,16 +437,34 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitMonthEx();
+        InitFirstMonthEx();
         return _FirstMonthEx;
       }
       set
       {
-        InitMonthEx();
+        InitFirstMonthEx();
         _FirstMonthEx.Source = value;
       }
     }
     private DepInput<int> _FirstMonthEx;
+
+    private void InitFirstMonthEx()
+    {
+      if (_FirstMonthEx == null)
+      {
+        _FirstMonthEx = new DepInput<int>(FirstMonth, FirstMonthEx_ValueChanged);
+        _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
+      }
+    }
+
+    void FirstMonthEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstMonth = _FirstMonthEx.Value;
+    }
+
+    #endregion
+
+    #region LastMonth
 
     /// <summary>
     /// Последний месяц диапазона (1 - 12)
@@ -458,38 +482,173 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitMonthEx();
+        InitLastMonthEx();
         return _LastMonthEx;
       }
       set
       {
-        InitMonthEx();
+        InitLastMonthEx();
         _LastMonthEx.Source = value;
       }
     }
     private DepInput<int> _LastMonthEx;
 
-    private void InitMonthEx()
+    private void InitLastMonthEx()
     {
       if (_FirstMonthEx == null)
       {
-        _FirstMonthEx = new DepInput<int>(FirstMonth, FirstMonthEx_ValueChanged);
-        _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
-
         _LastMonthEx = new DepInput<int>(LastMonth, LastMonthEx_ValueChanged);
         _LastMonthEx.OwnerInfo = new DepOwnerInfo(this, "LastMonthEx");
       }
-    }
-
-    void FirstMonthEx_ValueChanged(object sender, EventArgs args)
-    {
-      FirstMonth = _FirstMonthEx.Value;
     }
 
     void LastMonthEx_ValueChanged(object sender, EventArgs args)
     {
       LastMonth = _LastMonthEx.Value;
     }
+
+    #endregion
+
+    #region FirstYM
+
+    /// <summary>
+    /// Синхронный доступ к свойствам Year и FirstMonth
+    /// </summary>
+    public YearMonth FirstYM
+    {
+      get { return new YearMonth(Year, FirstMonth); }
+      set { Year = value.Year; FirstMonth = value.Month; }
+    }
+
+    /// <summary>
+    /// Синхронный доступ к свойствам Year и FirstMonth.
+    /// Управляемое свойство
+    /// </summary>
+    public DepValue<YearMonth> FirstYMEx
+    {
+      get
+      {
+        InitFirstYMEx();
+        return _FirstYMEx;
+      }
+      set
+      {
+        InitFirstYMEx();
+        _FirstYMEx.Source = value;
+      }
+    }
+    private DepInput<YearMonth> _FirstYMEx;
+
+    private void InitFirstYMEx()
+    {
+      if (_FirstYMEx == null)
+      {
+        _FirstYMEx = new DepInput<YearMonth>(FirstYM, FirstYMEx_ValueChanged);
+        _FirstYMEx.OwnerInfo = new DepOwnerInfo(this, "FirstYMEx");
+      }
+    }
+
+    void FirstYMEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstYM = _FirstYMEx.Value;
+    }
+
+    #endregion
+
+    #region LastYM
+
+    /// <summary>
+    /// Синхронный доступ к свойствам Year и LastMonth
+    /// </summary>
+    public YearMonth LastYM
+    {
+      get { return new YearMonth(Year, LastMonth); }
+      set { Year = value.Year; LastMonth = value.Month; }
+    }
+
+    /// <summary>
+    /// Синхронный доступ к свойствам Year и FirstMonth.
+    /// Управляемое свойство
+    /// </summary>
+    public DepValue<YearMonth> LastYMEx
+    {
+      get
+      {
+        InitLastYMEx();
+        return _LastYMEx;
+      }
+      set
+      {
+        InitLastYMEx();
+        _LastYMEx.Source = value;
+      }
+    }
+    private DepInput<YearMonth> _LastYMEx;
+
+    private void InitLastYMEx()
+    {
+      if (_LastYMEx == null)
+      {
+        _LastYMEx = new DepInput<YearMonth>(LastYM, LastYMEx_ValueChanged);
+        _LastYMEx.OwnerInfo = new DepOwnerInfo(this, "LastYMEx");
+      }
+    }
+
+    void LastYMEx_ValueChanged(object sender, EventArgs args)
+    {
+      LastYM = _LastYMEx.Value;
+    }
+
+    #endregion
+
+    #region DateRange
+
+    /// <summary>
+    /// Вспомогательное свойство для чтения/записи значений как интервала дат.
+    /// При установке свойства интервал дат должен относиться к одному году
+    /// </summary>
+    public DateRange DateRange
+    {
+      get
+      {
+        return new DateRange(FirstYM.DateRange.FirstDate, LastYM.DateRange.LastDate);
+      }
+      set
+      {
+        if (value.IsEmpty)
+          throw new ArgumentNullException("value", "Задан пустой интервал дат");
+        if (value.FirstDate.Year != value.LastDate.Year)
+          throw new ArgumentException("Интервал дат должен относиться к одному году");
+
+        Year = value.FirstDate.Year;
+        FirstMonth = value.FirstDate.Month;
+        LastMonth = value.LastDate.Month;
+      }
+    }
+
+    #endregion
+
+    #region YMRange
+
+    /// <summary>
+    /// Период в виде диапазона месяцев
+    /// </summary>
+    public YearMonthRange YMRange
+    {
+      get { return new YearMonthRange(FirstYM, LastYM); }
+      set
+      {
+        if (value.FirstYM.Year != value.LastYM.Year)
+          throw new ArgumentException("Диапазон должен относится к одному году");
+        Year = value.FirstYM.Year;
+        FirstMonth = value.FirstYM.Month;
+        LastMonth = value.LastYM.Month;
+      }
+    }
+
+    #endregion
+
+    #region OnValueChanged
 
     void Control_ValueChanged(object sender, EventArgs args)
     {
@@ -512,11 +671,11 @@ namespace FreeLibSet.Forms
         _FirstYMEx.Value = FirstYM;
       if (_LastYMEx != null)
         _LastYMEx.Value = LastYM;
-      if (_YMRangeEx != null)
-        _YMRangeEx.Value = YMRange;
 
       Validate();
     }
+
+    #endregion
 
     #endregion
 
@@ -565,142 +724,6 @@ namespace FreeLibSet.Forms
       }
     }
     private YearMonth _Maximum;
-
-    #endregion
-
-    #region Структуры YearMonth и YearMonthRange
-
-    /// <summary>
-    /// Синхронный доступ к свойствам Year и FirstMonth
-    /// </summary>
-    public YearMonth FirstYM
-    {
-      get { return new YearMonth(Year, FirstMonth); }
-      set { Year = value.Year; FirstMonth = value.Month; }
-    }
-
-    /// <summary>
-    /// Синхронный доступ к свойствам Year и FirstMonth.
-    /// Управляемое свойство
-    /// </summary>
-    public DepValue<YearMonth> FirstYMEx
-    {
-      get
-      {
-        InitFirstYMEx();
-        return _FirstYMEx;
-      }
-      set
-      {
-        InitFirstYMEx();
-        _FirstYMEx.Source = value;
-      }
-    }
-    private DepInput<YearMonth> _FirstYMEx;
-
-    private void InitFirstYMEx()
-    {
-      if (_FirstYMEx == null)
-      {
-        _FirstYMEx = new DepInput<YearMonth>(FirstYM, FirstYMEx_ValueChanged);
-        _FirstYMEx.OwnerInfo = new DepOwnerInfo(this, "FirstYMEx");
-      }
-    }
-
-    void FirstYMEx_ValueChanged(object sender, EventArgs args)
-    {
-      FirstYM = _FirstYMEx.Value;
-    }
-
-    /// <summary>
-    /// Синхронный доступ к свойствам Year и LastMonth
-    /// </summary>
-    public YearMonth LastYM
-    {
-      get { return new YearMonth(Year, LastMonth); }
-      set { Year = value.Year; LastMonth = value.Month; }
-    }
-
-    /// <summary>
-    /// Синхронный доступ к свойствам Year и FirstMonth.
-    /// Управляемое свойство
-    /// </summary>
-    public DepValue<YearMonth> LastYMEx
-    {
-      get
-      {
-        InitLastYMEx();
-        return _LastYMEx;
-      }
-      set
-      {
-        InitLastYMEx();
-        _LastYMEx.Source = value;
-      }
-    }
-    private DepInput<YearMonth> _LastYMEx;
-
-    private void InitLastYMEx()
-    {
-      if (_LastYMEx == null)
-      {
-        _LastYMEx = new DepInput<YearMonth>(LastYM, LastYMEx_ValueChanged);
-        _LastYMEx.OwnerInfo = new DepOwnerInfo(this, "LastYMEx");
-      }
-    }
-
-    void LastYMEx_ValueChanged(object sender, EventArgs args)
-    {
-      LastYM = _LastYMEx.Value;
-    }
-
-    /// <summary>
-    /// Период в виде диапазона месяцев
-    /// </summary>
-    public YearMonthRange YMRange
-    {
-      get { return new YearMonthRange(FirstYM, LastYM); }
-      set
-      {
-        if (value.FirstYM.Year != value.LastYM.Year)
-          throw new ArgumentException("Диапазон должен относится к одному году");
-        Year = value.FirstYM.Year;
-        FirstMonth = value.FirstYM.Month;
-        LastMonth = value.LastYM.Month;
-      }
-    }
-
-    /// <summary>
-    /// Период в виде диапазона месяцев
-    /// </summary>
-    public DepValue<YearMonthRange> YMRangeEx
-    {
-      get
-      {
-        InitYMRangeEx();
-        return _YMRangeEx;
-      }
-      set
-      {
-        InitYMRangeEx();
-        _YMRangeEx.Source = value;
-      }
-    }
-    private DepInput<YearMonthRange> _YMRangeEx;
-
-    private void InitYMRangeEx()
-    {
-      if (_YMRangeEx == null)
-      {
-        _YMRangeEx = new DepInput<YearMonthRange>(YMRange, YMRangeEx_ValueChanged);
-        _YMRangeEx.OwnerInfo = new DepOwnerInfo(this, "YMRangeEx");
-      }
-    }
-
-    void YMRangeEx_ValueChanged(object sender, EventArgs args)
-    {
-      YMRange = _YMRangeEx.Value;
-    }
 
     #endregion
   }

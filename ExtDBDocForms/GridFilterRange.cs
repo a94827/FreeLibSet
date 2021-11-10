@@ -60,6 +60,24 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
+    #region Диапазон значений
+
+    /// <summary>
+    /// Минимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
+    /// </summary>
+    public DateTime? Minimum { get { return _Minimum; } set { _Minimum = value; } }
+    private DateTime? _Minimum;
+
+    /// <summary>
+    /// Мaксимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
+    /// </summary>
+    public DateTime? Maximum { get { return _Maximum; } set { _Maximum = value; } }
+    private DateTime? _Maximum;
+
+    #endregion
+
     #region Переопределяемые свойства
 
     /// <summary>
@@ -86,6 +104,8 @@ namespace FreeLibSet.Forms.Docs
       DateRangeDialog Dialog = new DateRangeDialog();
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
+      Dialog.Minimum = Minimum;
+      Dialog.Maximum = Maximum;
 
       Dialog.NFirstDate = FirstDate;
       Dialog.NLastDate = LastDate;
@@ -187,6 +207,24 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
+    #region Диапазон значений
+
+    /// <summary>
+    /// Минимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
+    /// </summary>
+    public DateTime? Minimum { get { return _Minimum; } set { _Minimum = value; } }
+    private DateTime? _Minimum;
+
+    /// <summary>
+    /// Мaксимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
+    /// </summary>
+    public DateTime? Maximum { get { return _Maximum; } set { _Maximum = value; } }
+    private DateTime? _Maximum;
+
+    #endregion
+
     #region Переопределенные методы и свойства
 
     /// <summary>
@@ -213,6 +251,8 @@ namespace FreeLibSet.Forms.Docs
       DateRangeDialog Dialog = new DateRangeDialog();
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
+      Dialog.Minimum = Minimum;
+      Dialog.Maximum=Maximum;
 
       Dialog.NFirstDate = FirstDate;
       Dialog.NLastDate = LastDate;
@@ -288,7 +328,7 @@ namespace FreeLibSet.Forms.Docs
   /// Допускаются полуоткрытые интервалы.
   /// Для установки фильтра используется IntRangeDialog
   /// </summary>
-  public class IntRangeGridFilter : IntRangeCommonFilter, IEFPGridFilter
+  public class IntRangeGridFilter : IntRangeCommonFilter, IEFPGridFilter, IMinMaxSource<int?>
   {
     #region Конструктор
 
@@ -299,27 +339,111 @@ namespace FreeLibSet.Forms.Docs
     public IntRangeGridFilter(string columnName)
       : base(columnName)
     {
-      _MinValue = Int32.MinValue;
-      _MaxValue = Int32.MaxValue;
     }
 
     #endregion
 
-    #region Диапазон значений для блока диалога
+    #region Диапазон значений
 
     /// <summary>
-    /// Минимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - минимально возможное значение для типа даннах
+    /// Минимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public int MinValue { get { return _MinValue; } set { _MinValue = value; } }
-    private int _MinValue;
+    public int? Minimum { get { return _Minimum; } set { _Minimum = value; } }
+    private int? _Minimum;
 
     /// <summary>
-    /// Максимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - максимально возможное значение для типа даннах
+    /// Мaксимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public int MaxValue { get { return _MaxValue; } set { _MaxValue = value; } }
-    private int _MaxValue;
+    public int? Maximum { get { return _Maximum; } set { _Maximum = value; } }
+    private int? _Maximum;
+
+    #endregion
+
+    #region Format
+
+    /// <summary>
+    /// Строка формата для числа
+    /// </summary>
+    public string Format
+    {
+      get { return _Format; }
+      set
+      {
+        if (value == null)
+          _Format = String.Empty;
+        else
+          _Format = value;
+      }
+    }
+    private string _Format;
+
+    /// <summary>
+    /// Форматировщик для числового значения
+    /// </summary>
+    public IFormatProvider FormatProvider
+    {
+      get
+      {
+        if (_FormatProvider == null)
+          return System.Globalization.CultureInfo.CurrentCulture;
+        else
+          return _FormatProvider;
+      }
+      set
+      {
+        _FormatProvider = value;
+      }
+    }
+    private IFormatProvider _FormatProvider;
+
+    #endregion
+
+    #region Increment
+
+    /// <summary>
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// </summary>
+    public IUpDownHandler<int?> UpDownHandler
+    {
+      get { return _UpDownHandler; }
+      set { _UpDownHandler = value; }
+    }
+    private IUpDownHandler<int?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
+    /// </summary>
+    public int Increment
+    {
+      get
+      {
+        IncrementUpDownHandler<int> incObj = UpDownHandler as IncrementUpDownHandler<int>;
+        if (incObj == null)
+          return 0;
+        else
+          return incObj.Increment;
+      }
+      set
+      {
+        if (value.Equals(this.Increment))
+          return;
+
+        if (value < 0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+        if (value == 0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = new IntUpDownHandler(value, this);
+      }
+    }
 
     #endregion
 
@@ -360,13 +484,14 @@ namespace FreeLibSet.Forms.Docs
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
       Dialog.ImageKey = "Filter";
-
       Dialog.NFirstValue = FirstValue;
       Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.Minimum = MinValue;
-      Dialog.Maximum = MaxValue;
-
+      Dialog.Minimum = Minimum;
+      Dialog.Maximum = Maximum;
+      Dialog.Format = Format;
+      Dialog.FormatProvider = FormatProvider;
+      Dialog.UpDownHandler = UpDownHandler;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
@@ -393,7 +518,7 @@ namespace FreeLibSet.Forms.Docs
   /// Допускаются полуоткрытые интервалы.
   /// Для установки фильтра используется SingleRangeDialog
   /// </summary>
-  public class SingleRangeGridFilter : SingleRangeCommonFilter, IEFPGridFilter
+  public class SingleRangeGridFilter : SingleRangeCommonFilter, IEFPGridFilter, IMinMaxSource<float?>
   {
     #region Конструктор
 
@@ -404,47 +529,120 @@ namespace FreeLibSet.Forms.Docs
     public SingleRangeGridFilter(string columnName)
       : base(columnName)
     {
-      _MinValue = Single.MinValue;
-      _MaxValue = Single.MaxValue;
-
-      _DecimalPlaces = -1;
     }
 
     #endregion
 
-    #region Диапазон значений для блока диалога
+    #region Диапазон значений
 
     /// <summary>
-    /// Минимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - минимально возможное значение для типа данных
+    /// Минимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public float MinValue { get { return _MinValue; } set { _MinValue = value; } }
-    private float _MinValue;
+    public float? Minimum { get { return _Minimum; } set { _Minimum = value; } }
+    private float? _Minimum;
 
     /// <summary>
-    /// Максимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - максимально возможное значение для типа данных
+    /// Мaксимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public float MaxValue { get { return _MaxValue; } set { _MaxValue = value; } }
-    private float _MaxValue;
+    public float? Maximum { get { return _Maximum; } set { _Maximum = value; } }
+    private float? _Maximum;
 
     #endregion
 
-    #region Форматирование
+    #region Format
 
     /// <summary>
-    /// Число десятичных знаков после запятой. По умолчанию: (-1) - число десятичных знаков не установлено
-    /// </summary>
-    public int DecimalPlaces { get { return _DecimalPlaces; } set { _DecimalPlaces = value; } }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Альтернативная установка свойства DecimalPlaces
+    /// Строка формата для числа
     /// </summary>
     public string Format
     {
-      get { return FormatStringTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
-      set { DecimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(value); }
+      get { return _Format; }
+      set
+      {
+        if (value == null)
+          _Format = String.Empty;
+        else
+          _Format = value;
+      }
+    }
+    private string _Format;
+
+    /// <summary>
+    /// Форматировщик для числового значения
+    /// </summary>
+    public IFormatProvider FormatProvider
+    {
+      get
+      {
+        if (_FormatProvider == null)
+          return System.Globalization.CultureInfo.CurrentCulture;
+        else
+          return _FormatProvider;
+      }
+      set
+      {
+        _FormatProvider = value;
+      }
+    }
+    private IFormatProvider _FormatProvider;
+
+    /// <summary>
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
+    /// Установка значения свойства создает формат.
+    /// </summary>
+    public int DecimalPlaces
+    {
+      get { return FormatStringTools.DecimalPlacesFromNumberFormat(Format); }
+      set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
+    }
+
+    #endregion
+
+    #region Increment
+
+    /// <summary>
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// </summary>
+    public IUpDownHandler<float?> UpDownHandler
+    {
+      get { return _UpDownHandler; }
+      set { _UpDownHandler = value; }
+    }
+    private IUpDownHandler<float?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
+    /// </summary>
+    public float Increment
+    {
+      get
+      {
+        IncrementUpDownHandler<float> incObj = UpDownHandler as IncrementUpDownHandler<float>;
+        if (incObj == null)
+          return 0;
+        else
+          return incObj.Increment;
+      }
+      set
+      {
+        if (value.Equals(this.Increment))
+          return;
+
+        if (value < 0f)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+        if (value == 0f)
+          UpDownHandler = null;
+        else
+          UpDownHandler = new SingleUpDownHandler(value, this);
+      }
     }
 
     #endregion
@@ -486,13 +684,14 @@ namespace FreeLibSet.Forms.Docs
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
       Dialog.ImageKey = "Filter";
-      Dialog.DecimalPlaces = DecimalPlaces;
-
       Dialog.NFirstValue = FirstValue;
       Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.Minimum = MinValue;
-      Dialog.Maximum = MaxValue;
+      Dialog.Minimum = Minimum;
+      Dialog.Maximum = Maximum;
+      Dialog.Format = Format;
+      Dialog.FormatProvider = FormatProvider;
+      Dialog.UpDownHandler = UpDownHandler;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
@@ -519,7 +718,7 @@ namespace FreeLibSet.Forms.Docs
   /// Допускаются полуоткрытые интервалы.
   /// Для установки фильтра используется DoubleRangeDialog
   /// </summary>
-  public class DoubleRangeGridFilter : DoubleRangeCommonFilter, IEFPGridFilter
+  public class DoubleRangeGridFilter : DoubleRangeCommonFilter, IEFPGridFilter, IMinMaxSource<double?>
   {
     #region Конструктор
 
@@ -530,47 +729,120 @@ namespace FreeLibSet.Forms.Docs
     public DoubleRangeGridFilter(string columnName)
       : base(columnName)
     {
-      _MinValue = Double.MinValue;
-      _MaxValue = Double.MaxValue;
-
-      _DecimalPlaces = -1;
     }
 
     #endregion
 
-    #region Диапазон значений для блока диалога
+    #region Диапазон значений
 
     /// <summary>
-    /// Минимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - минимально возможное значение для типа данных
+    /// Минимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public double MinValue { get { return _MinValue; } set { _MinValue = value; } }
-    private double _MinValue;
+    public double? Minimum { get { return _Minimum; } set { _Minimum = value; } }
+    private double? _Minimum;
 
     /// <summary>
-    /// Максимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - максимально возможное значение для типа данных
+    /// Мaксимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public double MaxValue { get { return _MaxValue; } set { _MaxValue = value; } }
-    private double _MaxValue;
+    public double? Maximum { get { return _Maximum; } set { _Maximum = value; } }
+    private double? _Maximum;
 
     #endregion
 
-    #region Форматирование
+    #region Format
 
     /// <summary>
-    /// Число десятичных знаков после запятой. По умолчанию: (-1) - число десятичных знаков не установлено
-    /// </summary>
-    public int DecimalPlaces { get { return _DecimalPlaces; } set { _DecimalPlaces = value; } }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Альтернативная установка свойства DecimalPlaces
+    /// Строка формата для числа
     /// </summary>
     public string Format
     {
-      get { return FormatStringTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
-      set { DecimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(value); }
+      get { return _Format; }
+      set
+      {
+        if (value == null)
+          _Format = String.Empty;
+        else
+          _Format = value;
+      }
+    }
+    private string _Format;
+
+    /// <summary>
+    /// Форматировщик для числового значения
+    /// </summary>
+    public IFormatProvider FormatProvider
+    {
+      get
+      {
+        if (_FormatProvider == null)
+          return System.Globalization.CultureInfo.CurrentCulture;
+        else
+          return _FormatProvider;
+      }
+      set
+      {
+        _FormatProvider = value;
+      }
+    }
+    private IFormatProvider _FormatProvider;
+
+    /// <summary>
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
+    /// Установка значения свойства создает формат.
+    /// </summary>
+    public int DecimalPlaces
+    {
+      get { return FormatStringTools.DecimalPlacesFromNumberFormat(Format); }
+      set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
+    }
+
+    #endregion
+
+    #region Increment
+
+    /// <summary>
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// </summary>
+    public IUpDownHandler<double?> UpDownHandler
+    {
+      get { return _UpDownHandler; }
+      set { _UpDownHandler = value; }
+    }
+    private IUpDownHandler<double?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
+    /// </summary>
+    public double Increment
+    {
+      get
+      {
+        IncrementUpDownHandler<double> incObj = UpDownHandler as IncrementUpDownHandler<double>;
+        if (incObj == null)
+          return 0.0;
+        else
+          return incObj.Increment;
+      }
+      set
+      {
+        if (value.Equals(this.Increment))
+          return;
+
+        if (value < 0.0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+        if (value == 0.0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = new DoubleUpDownHandler(value, this);
+      }
     }
 
     #endregion
@@ -612,13 +884,14 @@ namespace FreeLibSet.Forms.Docs
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
       Dialog.ImageKey = "Filter";
-      Dialog.DecimalPlaces = DecimalPlaces;
-
       Dialog.NFirstValue = FirstValue;
       Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.Minimum = MinValue;
-      Dialog.Maximum = MaxValue;
+      Dialog.Minimum = Minimum;
+      Dialog.Maximum = Maximum;
+      Dialog.Format = Format;
+      Dialog.FormatProvider = FormatProvider;
+      Dialog.UpDownHandler = UpDownHandler;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())
@@ -645,7 +918,7 @@ namespace FreeLibSet.Forms.Docs
   /// Допускаются полуоткрытые интервалы.
   /// Для установки фильтра используется SingleRangeDialog
   /// </summary>
-  public class DecimalRangeGridFilter : DecimalRangeCommonFilter, IEFPGridFilter
+  public class DecimalRangeGridFilter : DecimalRangeCommonFilter, IEFPGridFilter, IMinMaxSource<decimal?>
   {
     #region Конструктор
 
@@ -656,47 +929,120 @@ namespace FreeLibSet.Forms.Docs
     public DecimalRangeGridFilter(string columnName)
       : base(columnName)
     {
-      _MinValue = Decimal.MinValue;
-      _MaxValue = Decimal.MaxValue;
-
-      _DecimalPlaces = -1;
     }
 
     #endregion
 
-    #region Диапазон значений для блока диалога
+    #region Диапазон значений
 
     /// <summary>
-    /// Минимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - минимально возможное значение для типа данных
+    /// Минимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public decimal MinValue { get { return _MinValue; } set { _MinValue = value; } }
-    private decimal _MinValue;
+    public decimal? Minimum { get { return _Minimum; } set { _Minimum = value; } }
+    private decimal? _Minimum;
 
     /// <summary>
-    /// Максимальное значение, которое можно задать в диалоге.
-    /// По умолчанию - максимально возможное значение для типа данных
+    /// Мaксимальное значение, которое можно задавать в блоке диалога.
+    /// По умолчанию - null - нет ограничения
     /// </summary>
-    public decimal MaxValue { get { return _MaxValue; } set { _MaxValue = value; } }
-    private decimal _MaxValue;
+    public decimal? Maximum { get { return _Maximum; } set { _Maximum = value; } }
+    private decimal? _Maximum;
 
     #endregion
 
-    #region Форматирование
+    #region Format
 
     /// <summary>
-    /// Число десятичных знаков после запятой. По умолчанию: (-1) - число десятичных знаков не установлено
-    /// </summary>
-    public int DecimalPlaces { get { return _DecimalPlaces; } set { _DecimalPlaces = value; } }
-    private int _DecimalPlaces;
-
-    /// <summary>
-    /// Альтернативная установка свойства DecimalPlaces
+    /// Строка формата для числа
     /// </summary>
     public string Format
     {
-      get { return FormatStringTools.DecimalPlacesToNumberFormat(DecimalPlaces); }
-      set { DecimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(value); }
+      get { return _Format; }
+      set
+      {
+        if (value == null)
+          _Format = String.Empty;
+        else
+          _Format = value;
+      }
+    }
+    private string _Format;
+
+    /// <summary>
+    /// Форматировщик для числового значения
+    /// </summary>
+    public IFormatProvider FormatProvider
+    {
+      get
+      {
+        if (_FormatProvider == null)
+          return System.Globalization.CultureInfo.CurrentCulture;
+        else
+          return _FormatProvider;
+      }
+      set
+      {
+        _FormatProvider = value;
+      }
+    }
+    private IFormatProvider _FormatProvider;
+
+    /// <summary>
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
+    /// Установка значения свойства создает формат.
+    /// </summary>
+    public int DecimalPlaces
+    {
+      get { return FormatStringTools.DecimalPlacesFromNumberFormat(Format); }
+      set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
+    }
+
+    #endregion
+
+    #region Increment
+
+    /// <summary>
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// </summary>
+    public IUpDownHandler<decimal?> UpDownHandler
+    {
+      get { return _UpDownHandler; }
+      set { _UpDownHandler = value; }
+    }
+    private IUpDownHandler<decimal?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
+    /// </summary>
+    public decimal Increment
+    {
+      get
+      {
+        IncrementUpDownHandler<decimal> incObj = UpDownHandler as IncrementUpDownHandler<decimal>;
+        if (incObj == null)
+          return 0m;
+        else
+          return incObj.Increment;
+      }
+      set
+      {
+        if (value.Equals(this.Increment))
+          return;
+
+        if (value < 0m)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+        if (value == 0m)
+          UpDownHandler = null;
+        else
+          UpDownHandler = new DecimalUpDownHandler(value, this);
+      }
     }
 
     #endregion
@@ -738,13 +1084,14 @@ namespace FreeLibSet.Forms.Docs
       Dialog.Title = DisplayName;
       Dialog.CanBeEmpty = true;
       Dialog.ImageKey = "Filter";
-      Dialog.DecimalPlaces = DecimalPlaces;
-
       Dialog.NFirstValue = FirstValue;
       Dialog.NLastValue = LastValue;
       Dialog.CanBeEmpty = true;
-      Dialog.Minimum = MinValue;
-      Dialog.Maximum = MaxValue;
+      Dialog.Minimum = Minimum;
+      Dialog.Maximum = Maximum;
+      Dialog.Format = Format;
+      Dialog.FormatProvider = FormatProvider;
+      Dialog.Increment = Increment;
       Dialog.DialogPosition = dialogPosition;
 
       switch (Dialog.ShowDialog())

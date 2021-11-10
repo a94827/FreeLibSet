@@ -40,7 +40,7 @@ using System.Runtime.InteropServices;
 
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal static class NativeMethods
   {

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Core;
+using FreeLibSet.Drawing;
 
 /*
  * The BSD License
@@ -207,7 +208,7 @@ namespace FreeLibSet.Forms
 
 
       Size NewSize;
-      if (WinFormsTools.IsImageShrinkNeeded(value, MaxMainImageSize, out NewSize))
+      if (ImagingTools.IsImageShrinkNeeded(value, MaxMainImageSize, out NewSize))
         MainImage = new Bitmap(value, NewSize);
       else
         MainImage = new Bitmap(value); // копия

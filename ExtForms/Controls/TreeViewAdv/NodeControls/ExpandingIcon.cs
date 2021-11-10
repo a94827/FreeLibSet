@@ -4,6 +4,8 @@ using System.Text;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using FreeLibSet.Drawing;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License

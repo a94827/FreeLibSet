@@ -693,7 +693,7 @@ namespace FreeLibSet.RI
   /// </summary>
   /// <typeparam name="T">Тип значения</typeparam>
   [Serializable]
-  public abstract class BaseNumInputDialog<T> : BaseInputDialog
+  public abstract class BaseNumInputDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
@@ -958,7 +958,7 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Максимальное значение. По умолчанию - не задано
     /// </summary>
-    public T Maximum
+    public T? Maximum
     {
       get { return _Maximum; }
       set
@@ -967,29 +967,60 @@ namespace FreeLibSet.RI
         _Maximum = value;
       }
     }
-    private T _Maximum;
+    private T? _Maximum;
 
     #endregion
 
     #region Increment
 
     /// <summary>
-    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
-    /// стрелочек вверх/вниз или колесиком мыши.
-    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
     /// </summary>
-    public T Increment
+    public IUpDownHandler<T?> UpDownHandler
     {
-      get { return _Increment; }
+      get { return _UpDownHandler; }
       set
       {
         CheckNotFixed();
-        if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
-        _Increment = value;
+        if (Object.ReferenceEquals(value, _UpDownHandler))
+          return;
+        _UpDownHandler = value;
       }
     }
-    private T _Increment;
+    private IUpDownHandler<T?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
+    /// </summary>
+    public T Increment
+    {
+      get
+      {
+        IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
+        if (incObj == null)
+          return default(T);
+        else
+          return incObj.Increment;
+      }
+      set
+      {
+        if (value.Equals(this.Increment))
+          return;
+
+        if (value.CompareTo(default(T)) < 0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+        if (value.CompareTo(default(T)) == 0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
+      }
+    }
 
     #endregion
 
@@ -1899,7 +1930,7 @@ namespace FreeLibSet.RI
         if (_TextEx != null)
           _TextEx.Value = Text;
         if (_IsNotEmptyEx != null)
-          _IsNotEmptyEx.OwnerSetValue(value.Length>0);
+          _IsNotEmptyEx.OwnerSetValue(value.Length > 0);
       }
     }
     private string[] _Lines;
@@ -2196,7 +2227,7 @@ namespace FreeLibSet.RI
   /// </summary>
   /// <typeparam name="T">Тип значения</typeparam>
   [Serializable]
-  public abstract class BaseNumRangeDialog<T> : BaseInputDialog
+  public abstract class BaseNumRangeDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
@@ -2223,11 +2254,11 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Вход и выход: первое редактируемое значение с поддержкой null
     /// </summary>
-    public T? NFirstValue 
-    { 
-      get { return _NFirstValue; } 
-      set 
-      { 
+    public T? NFirstValue
+    {
+      get { return _NFirstValue; }
+      set
+      {
         _NFirstValue = value;
         if (_NFirstValueEx != null)
           _NFirstValueEx.Value = value;
@@ -2356,10 +2387,10 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Вход и выход: второе редактируемое значение с поддержкой null
     /// </summary>
-    public T? NLastValue 
-    { 
-      get { return _NLastValue; } 
-      set 
+    public T? NLastValue
+    {
+      get { return _NLastValue; }
+      set
       {
         _NLastValue = value;
         if (_NLastValueEx != null)
@@ -2611,22 +2642,53 @@ namespace FreeLibSet.RI
     #region Increment
 
     /// <summary>
-    /// Если задано положительное значение (обычно, 1), то значения в полях можно прокручивать с помощью
-    /// стрелочек вверх/вниз или колесиком мыши.
-    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
     /// </summary>
-    public T Increment
+    public IUpDownHandler<T?> UpDownHandler
     {
-      get { return _Increment; }
+      get { return _UpDownHandler; }
       set
       {
         CheckNotFixed();
-        if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
-        _Increment = value;
+        if (Object.ReferenceEquals(value, _UpDownHandler))
+          return;
+        _UpDownHandler = value;
       }
     }
-    private T _Increment;
+    private IUpDownHandler<T?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
+    /// </summary>
+    public T Increment
+    {
+      get
+      {
+        IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
+        if (incObj == null)
+          return default(T);
+        else
+          return incObj.Increment;
+      }
+      set
+      {
+        if (value.Equals(this.Increment))
+          return;
+
+        if (value.CompareTo(default(T)) < 0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+        if (value.CompareTo(default(T)) == 0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
+      }
+    }
 
     #endregion
 

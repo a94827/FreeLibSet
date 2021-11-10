@@ -42,7 +42,7 @@ using FreeLibSet.Controls.TreeViewAdvNodeControls;
 
 #pragma warning disable 1591
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal interface ITreeViewAdvRowLayout
   {
@@ -128,7 +128,7 @@ namespace FreeLibSet.Controls
     }
   }
 
-  public class TreeViewAdvAutoRowHeightLayout : ITreeViewAdvRowLayout
+  internal class TreeViewAdvAutoRowHeightLayout : ITreeViewAdvRowLayout
   {
     private TreeViewAdvDrawContext _measureContext;
     private TreeViewAdv _treeView;

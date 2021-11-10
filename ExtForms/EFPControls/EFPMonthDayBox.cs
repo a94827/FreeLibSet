@@ -7,6 +7,7 @@ using System.Globalization;
 using FreeLibSet.Controls;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -310,7 +311,7 @@ namespace FreeLibSet.Forms
       if (!DesignMode)
         control.TextChanged += new EventHandler(Control_TextChanged);
       _Value = MonthDay.Empty;
-      _CanBeEmpty = false;
+      _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
@@ -538,55 +539,32 @@ namespace FreeLibSet.Forms
     #region Свойство CanBeEmpty
 
     /// <summary>
-    /// True, если ли элемент содержать пустое значение.
-    /// Значение по умолчанию - false.
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error.
+    /// Это свойство переопределяется для нестандартных элементов, содержащих
+    /// кнопку очистки справа от элемента
     /// </summary>
-    public virtual bool CanBeEmpty
+    public UIValidateState CanBeEmptyMode
     {
-      get { return _CanBeEmpty; }
+      get { return _CanBeEmptyMode; }
       set
       {
-        if (value == _CanBeEmpty)
+        if (value == _CanBeEmptyMode)
           return;
-        _CanBeEmpty = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
+        _CanBeEmptyMode = value;
         Validate();
       }
     }
-    private bool _CanBeEmpty;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// True, если ли элемент содержать пустой текст.
+    /// True, если ли элемент может содержать пустое значение.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
-    public DepValue<Boolean> CanBeEmptyEx
+    public bool CanBeEmpty
     {
-      get
-      {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
-      }
-    }
-
-    private void InitCanBeEmptyEx()
-    {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -604,10 +582,17 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      if ((!CanBeEmpty) && Value.IsEmpty)
+      if (Value.IsEmpty)
       {
-        SetError("Значение должно быть задано");
-        return;
+        switch (CanBeEmptyMode)
+        {
+          case UIValidateState.Error:
+            SetError("Значение должно быть задано");
+            break;
+          case UIValidateState.Warning:
+            SetWarning("Значение, вероятно, должно быть задано");
+            break;
+        }
       }
     }
 

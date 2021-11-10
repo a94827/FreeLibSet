@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License

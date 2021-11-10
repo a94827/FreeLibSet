@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Models.Tree;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License
@@ -640,10 +641,10 @@ namespace FreeLibSet.Controls
 
     #region RunTime
 
-    private IToolTipProvider _defaultToolTipProvider = null;
+    private ITreeViewAdvToolTipProvider _defaultToolTipProvider = null;
     [Browsable(false)]
     [DefaultValue(null)]
-    public IToolTipProvider DefaultToolTipProvider
+    public ITreeViewAdvToolTipProvider DefaultToolTipProvider
     {
       get { return _defaultToolTipProvider; }
       set { _defaultToolTipProvider = value; }

@@ -43,7 +43,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal enum WorkItemStatus
   {

@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Drawing;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Drawing;
 
 /*
  * The BSD License
@@ -42,7 +43,7 @@ using System.Text;
  */
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal static class ResourceHelper
   {

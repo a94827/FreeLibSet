@@ -315,7 +315,7 @@ namespace FreeLibSet.Config
     /// <returns>Текстовое представление, используемое для записи значения</returns>
     public virtual string ToString(TimeSpan value)
     {
-        return value.ToString();
+      return value.ToString();
     }
 
     /// <summary>
@@ -455,7 +455,18 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <returns>Значение</returns>
-    public abstract string GetString(string name);
+    public string GetString(string name)
+    {
+      ValidateName(name);
+      return DoGetString(name);
+    }
+
+    /// <summary>
+    /// Получить строку с заданным именем
+    /// </summary>
+    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
+    /// <returns>Значение</returns>
+    protected abstract string DoGetString(string name);
 
     /// <summary>
     /// Записать строку с заданным именем.
@@ -474,7 +485,19 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Значение</param>
     /// <param name="removeEmpty">Если true и <paramref name="value"/> задает пустую строку, то запись будет удалена из хранилища</param>
-    public abstract void SetString(string name, string value, bool removeEmpty);
+    public void SetString(string name, string value, bool removeEmpty)
+    {
+      ValidateName(name);
+      DoSetString(name, value, removeEmpty);
+    }
+
+    /// <summary>
+    /// Записать строку с заданным именем.
+    /// </summary>
+    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
+    /// <param name="value">Значение</param>
+    /// <param name="removeEmpty">Если true и <paramref name="value"/> задает пустую строку, то запись будет удалена из хранилища</param>
+    protected abstract void DoSetString(string name, string value, bool removeEmpty);
 
     #endregion
 
@@ -1342,7 +1365,22 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя дочерней секции. Не может быть пустой строкой</param>
     /// <param name="create">Необходимость создания секции</param>
     /// <returns>Дочерняя секция или null</returns>
-    public abstract CfgPart GetChild(string name, bool create);
+    public CfgPart GetChild(string name, bool create)
+    {
+      ValidateName(name);
+      return DoGetChild(name, create);
+    }
+
+    /// <summary>
+    /// Возвращает дочернюю группу параметров
+    /// Если <paramref name="create"/> равно true, то, при необходимости, создается новая группа
+    /// Если <paramref name="create"/> равно false, то, при отсутствии секции с указанным именем,
+    /// возвращается null
+    /// </summary>
+    /// <param name="name">Имя дочерней секции. Не может быть пустой строкой</param>
+    /// <param name="create">Необходимость создания секции</param>
+    /// <returns>Дочерняя секция или null</returns>
+    protected abstract CfgPart DoGetChild(string name, bool create);
 
     /// <summary>
     /// Получить список дочерних секций
@@ -1376,7 +1414,17 @@ namespace FreeLibSet.Config
     /// Удаление вложенной секции и/или параметра с заданным именем
     /// </summary>
     /// <param name="name">Имя секции или параметра. Не может быть пустой строкой</param>
-    public abstract void Remove(string name);
+    public void Remove(string name)
+    {
+      ValidateName(name);
+      DoRemove(name);
+    }
+
+    /// <summary>
+    /// Удаление вложенной секции и/или параметра с заданным именем
+    /// </summary>
+    /// <param name="name">Имя секции или параметра. Не может быть пустой строкой</param>
+    protected abstract void DoRemove(string name);
 
     /// <summary>
     /// Очистка всех значений и вложенных секций
@@ -1388,14 +1436,42 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя дочерней секции. Если задана пустая строка, метод возвращает false</param>
     /// <returns>Наличие дочерней секции</returns>
-    public abstract bool HasChild(string name);
+    public bool HasChild(string name)
+    {
+      if (String.IsNullOrEmpty(name))
+        return false; // 25.07.2019
+
+      ValidateName(name);
+      return DoHasChild(name);
+    }
+
+    /// <summary>
+    /// Возвращает true, если есть дочерняя секция с таким именем.
+    /// </summary>
+    /// <param name="name">Имя дочерней секции. Не может быть пустой строкой</param>
+    /// <returns>Наличие дочерней секции</returns>
+    protected abstract bool DoHasChild(string name);
 
     /// <summary>
     /// Возвращает true, если есть параметр с указанным именем
     /// </summary>
     /// <param name="name">Имя параметра. Если задана пустая строка, метод возвращает false</param>
     /// <returns>Наличие записанного значения</returns>
-    public abstract bool HasValue(string name);
+    public bool HasValue(string name)
+    {
+      if (String.IsNullOrEmpty(name))
+        return false; // 25.07.2019
+
+      ValidateName(name);
+      return DoHasValue(name);
+    }
+
+    /// <summary>
+    /// Возвращает true, если есть параметр с указанным именем
+    /// </summary>
+    /// <param name="name">Имя параметра. Не моет быть пустой строкой</param>
+    /// <returns>Наличие записанного значения</returns>
+    protected abstract bool DoHasValue(string name);
 
     /// <summary>
     /// Возвращает true, если ли есть дочерняя секция или параметр с заданным именем.
@@ -1438,12 +1514,12 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Конвертер, используемый для преобразования числовых значений и дат в хранимый строковый формат и обратно.
     /// </summary>
-    public abstract CfgConverter Converter { get;}
+    public abstract CfgConverter Converter { get; }
 
     /// <summary>
     /// Возвращает true, если секция не содержит ни значений, ни вложенных секций
     /// </summary>
-    public abstract bool IsEmpty { get;}
+    public abstract bool IsEmpty { get; }
 
     #endregion
 
@@ -2310,17 +2386,17 @@ namespace FreeLibSet.Config
     {
       #region Свойства и методы-заглушки
 
-      public override string GetString(string name)
+      protected override string DoGetString(string name)
       {
         return String.Empty;
       }
 
-      public override void SetString(string name, string value, bool removeEmpty)
+      protected override void DoSetString(string name, string value, bool removeEmpty)
       {
         throw new ObjectReadOnlyException();
       }
 
-      public override CfgPart GetChild(string name, bool create)
+      protected override CfgPart DoGetChild(string name, bool create)
       {
         if (create)
           throw new ObjectReadOnlyException();
@@ -2338,7 +2414,7 @@ namespace FreeLibSet.Config
         return DataTools.EmptyStrings;
       }
 
-      public override void Remove(string name)
+      protected override void DoRemove(string name)
       {
         throw new ObjectReadOnlyException();
       }
@@ -2348,12 +2424,12 @@ namespace FreeLibSet.Config
         throw new ObjectReadOnlyException();
       }
 
-      public override bool HasChild(string name)
+      protected override bool DoHasChild(string name)
       {
         return false;
       }
 
-      public override bool HasValue(string name)
+      protected override bool DoHasValue(string name)
       {
         return false;
       }
@@ -2373,6 +2449,79 @@ namespace FreeLibSet.Config
     /// Все записывающие методы вызывают ObjectReadOnlyException
     /// </summary>
     public static readonly CfgPart Empty = new EmptyCfgPart();
+
+    #endregion
+
+    #region Проверка имени
+
+    /// <summary>
+    /// Символы, которые можно использовать в именах, кроме букв и цифр
+    /// </summary>
+    private static CharArrayIndexer _ValidNameCharIndexer = new CharArrayIndexer("_.-");
+
+    /// <summary>
+    /// Проверка корректности имени.
+    /// Возвращает true, если имя корректное.
+    /// </summary>
+    /// <param name="name">Проверяемое имя</param>
+    /// <param name="errorText">Сюда помещается сообщение об ошибке</param>
+    /// <returns>Корректность имени</returns>
+    public static bool IsValidName(string name, out string errorText)
+    {
+      if (String.IsNullOrEmpty(name))
+      {
+        errorText = "Имя не задано";
+        return false;
+      }
+
+      if (!(Char.IsLetter(name[0]) || name[0] == '_'))
+      {
+        errorText = "Имя должно начинаться с буквы или знака подчеркивания";
+        return false;
+      }
+
+      for (int i = 1; i < name.Length; i++)
+      {
+        if (Char.IsLetterOrDigit(name[i]))
+          continue;
+        if (_ValidNameCharIndexer.Contains(name[i]))
+          continue;
+
+        errorText = "Недопустимый символ \"" + name[i] + "\" в позиции " + (i + 1).ToString() + ". Допускаются только буквы, цифры и символы \"-\", \"_\" и \".\"";
+        return false;
+      }
+
+      errorText = null;
+      return true;
+    }
+
+    /// <summary>
+    /// Проверка корректности имени.
+    /// Возвращает true, если имя корректное.
+    /// </summary>
+    /// <param name="name">Проверяемое имя</param>
+    /// <returns>Корректность имени</returns>
+    public static bool IsValidName(string name)
+    {
+      string errorText;
+      return IsValidName(name, out errorText);
+    }
+
+    /// <summary>
+    /// Проверяет аргумент <paramref name="name"/>. Если имя некорректное, выбрасывается исключение ArgumentException.
+    /// </summary>
+    /// <param name="name">Проверяемый аргумент</param>
+    public static void ValidateName(string name)
+    {
+      string errorText;
+      if (!IsValidName(name, out errorText))
+      {
+        if (String.IsNullOrEmpty(name))
+          throw new ArgumentNullException("name");
+        else
+          throw new ArgumentException(errorText, "name");
+      }
+    }
 
     #endregion
   }
@@ -2470,11 +2619,8 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя тега. Не может быть пустой строкой</param>
     /// <returns>Значение</returns>
-    public override string GetString(string name)
+    protected override string DoGetString(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       XmlNode node = RootNode.SelectSingleNode(name);
       if (node == null)
         return String.Empty;
@@ -2487,11 +2633,8 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Значение</param>
     /// <param name="removeEmpty">Удалить тег, если задано пустое значение</param>
-    public override void SetString(string name, string value, bool removeEmpty)
+    protected override void DoSetString(string name, string value, bool removeEmpty)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       if (removeEmpty && String.IsNullOrEmpty(value))
       {
         Remove(name);
@@ -2531,11 +2674,8 @@ namespace FreeLibSet.Config
     /// <param name="create">True, если требуется создать секцию, если она не существует.
     /// Если false и дочерней секции не существует, возвращается null</param>
     /// <returns>Дочерняя секция или null</returns>
-    public override CfgPart GetChild(string name, bool create)
+    protected override CfgPart DoGetChild(string name, bool create)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       XmlNode node = RootNode.SelectSingleNode(name);
       if (node != null)
       {
@@ -2606,11 +2746,8 @@ namespace FreeLibSet.Config
     /// Удаление значения или дочернего узла
     /// </summary>
     /// <param name="name">Имя поля или дочерней секции. Не может быть пустой строкой</param>
-    public override void Remove(string name)
+    protected override void DoRemove(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       XmlNode node = RootNode.SelectSingleNode(name);
       if (node != null)
       {
@@ -2624,12 +2761,8 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя дочерней секции. Если задана пустая строка, метод возвращает false</param>
     /// <returns>Наличие дочерней секции</returns>
-    public override bool HasChild(string name)
+    protected override bool DoHasChild(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false; // 25.07.2019
-
-      //XmlNode node = RootNode.SelectSingleNode(name);
       XmlElement el = RootNode.SelectSingleNode(name) as XmlElement;
       if (el != null)
       {
@@ -2644,11 +2777,8 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Если задана пустая строка, метод возвращает false</param>
     /// <returns>Наличие записанного значения</returns>
-    public override bool HasValue(string name)
+    protected override bool DoHasValue(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false; // 25.07.2019
-
       XmlElement el = RootNode.SelectSingleNode(name) as XmlElement;
       if (el != null)
       {
@@ -3047,11 +3177,8 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <returns>Значение</returns>
-    public override string GetString(string name)
+    protected override string DoGetString(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       if (Tree[KeyName] == null)
         return String.Empty;
       return DataTools.GetString(Tree[KeyName].GetValue(name, String.Empty));
@@ -3064,11 +3191,8 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Значение</param>
     /// <param name="removeEmpty">Если задано true и <paramref name="value"/> - пустая строка, то значение удаляется из реестра</param>
-    public override void SetString(string name, string value, bool removeEmpty)
+    protected override void DoSetString(string name, string value, bool removeEmpty)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       if (removeEmpty && String.IsNullOrEmpty(value))
       {
         Remove(name);
@@ -3104,12 +3228,9 @@ namespace FreeLibSet.Config
     /// Если свойство RegistryTree.IsReadOnly=true, генерируется исключение.
     /// </summary>
     /// <param name="name">Имя значения или вложенной ветви. Не может быть пустой строкой</param>
-    public override void Remove(string name)
+    protected override void DoRemove(string name)
     {
       Tree.CheckNotReadOnly();
-
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name"); // 25.07.2019
 
       Tree[KeyName].DeleteValue(name, false);
       if (Tree.Exists(name))
@@ -3125,12 +3246,10 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя дочерней ветви реестра. Не может быть пустой строкой</param>
     /// <param name="create">Надо ли создать ветвь, если ее нет</param>
     /// <returns>Дочерняя секция или null, если секция не существует и не создана</returns>
-    public override CfgPart GetChild(string name, bool create)
+    protected override CfgPart DoGetChild(string name, bool create)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-      if (name.IndexOf('\\') >= 0)
-        throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
+      //if (name.IndexOf('\\') >= 0)
+      //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
       string ChildKeyName = KeyName + "\\" + name;
 
       if (!create)
@@ -3205,15 +3324,12 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Возвращает true, если есть дочерняя ветвь реестра с указанным именем.
     /// </summary>
-    /// <param name="name">Имя дочерней секции. Если задана пустая строка, метод возвращает false</param>
+    /// <param name="name">Имя дочерней секции. </param>
     /// <returns>Наличие дочерней секции</returns>
-    public override bool HasChild(string name)
+    protected override bool DoHasChild(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false;
-
-      if (name.IndexOf('\\') >= 0)
-        throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
+      //if (name.IndexOf('\\') >= 0)
+      //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
       string ChildKeyName = KeyName + "\\" + name;
 
       return Tree.Exists(ChildKeyName);
@@ -3222,13 +3338,10 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Возвращает true, если в ветви реестра есть значение с указанным именем.
     /// </summary>
-    /// <param name="name">Имя параметра. Если задана пустая строка, метод возвращает false</param>
+    /// <param name="name">Имя параметра</param>
     /// <returns>Наличие записанного значения</returns>
-    public override bool HasValue(string name)
+    protected override bool DoHasValue(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false;
-
       if (!Tree.Exists(KeyName))
         return false;
 
@@ -3405,11 +3518,8 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <returns>Значение</returns>
-    public override string GetString(string name)
+    protected override string DoGetString(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       if (Tree[KeyName] == null)
         return String.Empty;
       return DataTools.GetString(Tree[KeyName].GetValue(name, String.Empty));
@@ -3422,7 +3532,7 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Значение</param>
     /// <param name="removeEmpty">Если задано true и <paramref name="value"/> - пустая строка, то значение удаляется из реестра</param>
-    public override void SetString(string name, string value, bool removeEmpty)
+    protected override void DoSetString(string name, string value, bool removeEmpty)
     {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentNullException("name");
@@ -3462,12 +3572,9 @@ namespace FreeLibSet.Config
     /// Если свойство RegistryTree.IsReadOnly=true, генерируется исключение.
     /// </summary>
     /// <param name="name">Имя значения или вложенной ветви. Не может быть пустой строкой</param>
-    public override void Remove(string name)
+    protected override void DoRemove(string name)
     {
       Tree.CheckNotReadOnly();
-
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name"); // 25.07.2019
 
       Tree[KeyName].DeleteValue(name, false);
       if (Tree.Exists(name))
@@ -3483,12 +3590,10 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя дочерней ветви реестра. Не может быть пустой строкой</param>
     /// <param name="create">Надо ли создать ветвь, если ее нет</param>
     /// <returns>Дочерняя секция или null, если секция не существует и не создана</returns>
-    public override CfgPart GetChild(string name, bool create)
+    protected override CfgPart DoGetChild(string name, bool create)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-      if (name.IndexOf('\\') >= 0)
-        throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
+      //if (name.IndexOf('\\') >= 0)
+      //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
       string ChildKeyName = KeyName + "\\" + name;
 
       if (!create)
@@ -3563,15 +3668,12 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Возвращает true, если есть дочерняя ветвь реестра с указанным именем.
     /// </summary>
-    /// <param name="name">Имя дочерней секции. Если задана пустая строка, метод возвращает false</param>
+    /// <param name="name">Имя дочерней секции. </param>
     /// <returns>Наличие дочерней секции</returns>
-    public override bool HasChild(string name)
+    protected override bool DoHasChild(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false;
-
-      if (name.IndexOf('\\') >= 0)
-        throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
+      //if (name.IndexOf('\\') >= 0)
+      //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
       string ChildKeyName = KeyName + "\\" + name;
 
       return Tree.Exists(ChildKeyName);
@@ -3582,11 +3684,8 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Если задана пустая строка, метод возвращает false</param>
     /// <returns>Наличие записанного значения</returns>
-    public override bool HasValue(string name)
+    protected override bool DoHasValue(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false;
-
       if (!Tree.Exists(KeyName))
         return false;
 
@@ -3860,11 +3959,8 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <returns>Значение</returns>
-    public override string GetString(string name)
+    protected override string DoGetString(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       return File.GetString(SectionName, name, String.Empty);
     }
 
@@ -3874,11 +3970,8 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Значение</param>
     /// <param name="removeEmpty">Если true и <paramref name="value"/> задает пустую строку, строка удаляется из ini-файла, если она там была</param>
-    public override void SetString(string name, string value, bool removeEmpty)
+    protected override void DoSetString(string name, string value, bool removeEmpty)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       if (removeEmpty && String.IsNullOrEmpty(value))
       {
         //Remove(Name);
@@ -3893,11 +3986,8 @@ namespace FreeLibSet.Config
     /// Удаляет из текущей секции строку с именем <paramref name="name"/>, а из файла - секцию "SectionName\Name"
     /// </summary>
     /// <param name="name">Имя строки или дочерней секции. Не может быть пустой строкой</param>
-    public override void Remove(string name)
+    protected override void DoRemove(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       File.DeleteKey(SectionName, name);
       File.DeleteSection(SectionName + '\\' + name); // 09.10.2018
     }
@@ -3913,11 +4003,8 @@ namespace FreeLibSet.Config
     /// <param name="create">Надо ли создавать секцию, если ее нет. Если false, а секции нет,
     /// возвращается false</param>
     /// <returns>Объект для доступа к дочерней секции</returns>
-    public override CfgPart GetChild(string name, bool create)
+    protected override CfgPart DoGetChild(string name, bool create)
     {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
-
       string SubName = SectionName + "\\" + name;
 
       if (!create)
@@ -3996,13 +4083,10 @@ namespace FreeLibSet.Config
     /// Дочернии секции эмулируются.
     /// Проверяется наличие в ini-файле секции с именем "SectionName\Name".
     /// </summary>
-    /// <param name="name">Имя дочерней секции. Если задана пустая строка, метод возвращает false</param>
+    /// <param name="name">Имя дочерней секции</param>
     /// <returns>Наличие дочерней секции</returns>
-    public override bool HasChild(string name)
+    protected override bool DoHasChild(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false;
-
       //string SubName = SectionName + "\\" + name;
 
       // Проверяем наличие секции
@@ -4013,13 +4097,10 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Возвращает true, если в текущей секции есть строка с заданным именем.
     /// </summary>
-    /// <param name="name">Имя параметра. Если задана пустая строка, метод возвращает false</param>
+    /// <param name="name">Имя параметра.</param>
     /// <returns>Наличие записанного значения</returns>
-    public override bool HasValue(string name)
+    protected override bool DoHasValue(string name)
     {
-      if (String.IsNullOrEmpty(name))
-        return false;
-
       string[] AllNames = File.GetKeyNames(SectionName);
       return Array.IndexOf<string>(AllNames, name) >= 0;
     }

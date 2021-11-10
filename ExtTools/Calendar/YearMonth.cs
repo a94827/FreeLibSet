@@ -164,18 +164,6 @@ namespace FreeLibSet.Calendar
     /// </summary>
     /// <param name="date">Проверяемая дата</param>
     /// <returns>true, если дата попадает в диапазон</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("Используйте метод Contains()", false)]
-    public bool DateInRange(DateTime date)
-    {
-      return Contains(date);
-    }
-
-    /// <summary>
-    /// Попадает ли заданная дата в интервал
-    /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true, если дата попадает в диапазон</returns>
     public bool Contains(DateTime date)
     {
       return date.Year == Year && date.Month == Month;
@@ -248,21 +236,21 @@ namespace FreeLibSet.Calendar
     /// Возвращает true, если текущее значение находится в указанном диапазоне.
     /// Учитываются полуоткрытые диапазоны, когда граница задана как YearMonth.Empty
     /// </summary>
-    /// <param name="firstYM">Начальный месяц/год диапазлна</param>
-    /// <param name="lastYM">Последний месяц/год диапазлна</param>
+    /// <param name="minimum">Начальный месяц/год диапазлна</param>
+    /// <param name="maximum">Последний месяц/год диапазлна</param>
     /// <returns>true, если текущий месяц входит в диапазон</returns>
-    public bool IsInRange(YearMonth firstYM, YearMonth lastYM)
+    public bool IsInRange(YearMonth minimum, YearMonth maximum)
     {
       if (IsEmpty)
         return false;
-      if (!firstYM.IsEmpty)
+      if (!minimum.IsEmpty)
       {
-        if (this < firstYM)
+        if (this < minimum)
           return false;
       }
-      if (!lastYM.IsEmpty)
+      if (!maximum.IsEmpty)
       {
-        if (this > lastYM)
+        if (this > maximum)
           return false;
       }
       return true;
@@ -275,136 +263,136 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Прибавляет к объекту YearMonth заданное число месяцев.
     /// </summary>
-    /// <param name="ym">Объект YearMonth</param>
+    /// <param name="value1">Объект YearMonth</param>
     /// <param name="months">Количество добавляемых месяцев. Допускаются отрицательные значения</param>
     /// <returns>Новый объект YearMonth</returns>
-    public static YearMonth operator +(YearMonth ym, int months)
+    public static YearMonth operator +(YearMonth value1, int months)
     {
 #if DEBUG
-      ym.CheckNoEmpty();
+      value1.CheckNoEmpty();
 #endif
-      return new YearMonth(ym._Value + months);
+      return new YearMonth(value1._Value + months);
     }
 
     /// <summary>
     /// Вычитает из объекта YearMonth заданное число месяцев.
     /// </summary>
-    /// <param name="ym">Объект YearMonth</param>
+    /// <param name="value2">Объект YearMonth</param>
     /// <param name="months">Количество вычитаемых месяцев. Допускаются отрицательные значения</param>
     /// <returns>Новый объект YearMonth</returns>
-    public static YearMonth operator -(YearMonth ym, int months)
+    public static YearMonth operator -(YearMonth value2, int months)
     {
 #if DEBUG
-      ym.CheckNoEmpty();
+      value2.CheckNoEmpty();
 #endif
-      return new YearMonth(ym._Value - months);
+      return new YearMonth(value2._Value - months);
     }
 
     /// <summary>
     /// Вычитает из одного YearMonth другой и возвращает разность между ними как число месяцев
     /// </summary>
-    /// <param name="ym1">Первый объект YearMonth</param>
-    /// <param name="ym2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект YearMonth</param>
+    /// <param name="value2">Второй объект YearMonth</param>
     /// <returns>Количество месяцев</returns>
-    public static int operator -(YearMonth ym1, YearMonth ym2)
+    public static int operator -(YearMonth value1, YearMonth value2)
     {
 #if DEBUG
-      ym1.CheckNoEmpty();
-      ym2.CheckNoEmpty();
+      value1.CheckNoEmpty();
+      value2.CheckNoEmpty();
 #endif
-      return ym1._Value - ym2._Value;
+      return value1._Value - value2._Value;
     }
 
     /// <summary>
-    /// Прибавляет к объекту YeraMonth один месяц
+    /// Прибавляет к объекту YearMonth один месяц
     /// </summary>
-    /// <param name="ym">Объект YearMonth</param>
+    /// <param name="value">Объект YearMonth</param>
     /// <returns>Новый объект YearMonth</returns>
-    public static YearMonth operator ++(YearMonth ym)
+    public static YearMonth operator ++(YearMonth value)
     {
 #if DEBUG
-      ym.CheckNoEmpty();
+      value.CheckNoEmpty();
 #endif
-      return new YearMonth(ym._Value + 1);
+      return new YearMonth(value._Value + 1);
     }
 
     /// <summary>
-    /// Вычитает из объекта YeraMonth один месяц
+    /// Вычитает из объекта YearMonth один месяц
     /// </summary>
-    /// <param name="ym">Объект YearMonth</param>
+    /// <param name="value">Объект YearMonth</param>
     /// <returns>Новый объект YearMonth</returns>
-    public static YearMonth operator --(YearMonth ym)
+    public static YearMonth operator --(YearMonth value)
     {
 #if DEBUG
-      ym.CheckNoEmpty();
+      value.CheckNoEmpty();
 #endif
-      return new YearMonth(ym._Value - 1);
+      return new YearMonth(value._Value - 1);
     }
 
     /// <summary>
     /// Проверяет два объекта YearMonth на равенство
     /// </summary>
-    /// <param name="ym1">Первый объект YearMonth</param>
-    /// <param name="ym2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект YearMonth</param>
+    /// <param name="value2">Второй объект YearMonth</param>
     /// <returns>true, если значения одинаковы</returns>
-    public static bool operator ==(YearMonth ym1, YearMonth ym2)
+    public static bool operator ==(YearMonth value1, YearMonth value2)
     {
-      return ym1._Value == ym2._Value;
+      return value1._Value == value2._Value;
     }
 
     /// <summary>
     /// Проверяет два объекта YearMonth на неравенство
     /// </summary>
-    /// <param name="ym1">Первый объект YearMonth</param>
-    /// <param name="ym2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект YearMonth</param>
+    /// <param name="value2">Второй объект YearMonth</param>
     /// <returns>false, если значения одинаковы</returns>
-    public static bool operator !=(YearMonth ym1, YearMonth ym2)
+    public static bool operator !=(YearMonth value1, YearMonth value2)
     {
-      return ym1._Value != ym2._Value;
+      return value1._Value != value2._Value;
     }
 
     /// <summary>
     /// Сравнивает два объекта YearMonth 
     /// </summary>
-    /// <param name="ym1">Первый объект YearMonth</param>
-    /// <param name="ym2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект YearMonth</param>
+    /// <param name="value2">Второй объект YearMonth</param>
     /// <returns>true, первый объект меньше второго</returns>
-    public static bool operator <(YearMonth ym1, YearMonth ym2)
+    public static bool operator <(YearMonth value1, YearMonth value2)
     {
-      return ym1._Value < ym2._Value;
+      return value1._Value < value2._Value;
     }
 
     /// <summary>
     /// Сравнивает два объекта YearMonth 
     /// </summary>
-    /// <param name="ym1">Первый объект YearMonth</param>
-    /// <param name="ym2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект YearMonth</param>
+    /// <param name="value2">Второй объект YearMonth</param>
     /// <returns>true, первый объект больше второго</returns>
-    public static bool operator >(YearMonth ym1, YearMonth ym2)
+    public static bool operator >(YearMonth value1, YearMonth value2)
     {
-      return ym1._Value > ym2._Value;
+      return value1._Value > value2._Value;
     }
 
     /// <summary>
     /// Сравнивает два объекта YearMonth 
     /// </summary>
-    /// <param name="ym1">Первый объект YearMonth</param>
-    /// <param name="ym2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект YearMonth</param>
+    /// <param name="value2">Второй объект YearMonth</param>
     /// <returns>true, первый объект меньше или равен второму</returns>
-    public static bool operator <=(YearMonth ym1, YearMonth ym2)
+    public static bool operator <=(YearMonth value1, YearMonth value2)
     {
-      return ym1._Value <= ym2._Value;
+      return value1._Value <= value2._Value;
     }
 
     /// <summary>
     /// Сравнивает два объекта YearMonth 
     /// </summary>
-    /// <param name="ym1">Первый объект YearMonth</param>
-    /// <param name="ym2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект YearMonth</param>
+    /// <param name="value2">Второй объект YearMonth</param>
     /// <returns>true, первый объект больше или равен второму</returns>
-    public static bool operator >=(YearMonth ym1, YearMonth ym2)
+    public static bool operator >=(YearMonth value1, YearMonth value2)
     {
-      return ym1._Value >= ym2._Value;
+      return value1._Value >= value2._Value;
     }
 
     #endregion
@@ -428,10 +416,10 @@ namespace FreeLibSet.Calendar
 
     #region IComparable Members
 
-    int IComparable.CompareTo(object obj)
+    int IComparable.CompareTo(object other)
     {
-      if (obj is YearMonth)
-        return _Value.CompareTo(((YearMonth)obj)._Value);
+      if (other is YearMonth)
+        return _Value.CompareTo(((YearMonth)other)._Value);
       else
         return -1;
     }

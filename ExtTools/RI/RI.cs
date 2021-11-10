@@ -8,6 +8,7 @@ using FreeLibSet.Formatting;
 using System.Runtime.Serialization;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 /*
  * The BSD License
@@ -326,7 +327,9 @@ namespace FreeLibSet.RI
 
     /// <summary>
     /// Имя управляющего элемента для поиска.
-    /// Использование свойства не является обязательным
+    /// Использование свойства не является обязательным.
+    /// Корректность имени проверяется с помощью CfgPart.IsValidName().
+    /// Имя должно начинаться с буквы. Допускаются только буквы, цифры и символы "-", "_" и ".".
     /// </summary>
     public string Name
     {
@@ -334,7 +337,13 @@ namespace FreeLibSet.RI
       set
       {
         CheckNotFixed();
-        _Name = value;
+        if (String.IsNullOrEmpty(value))
+          _Name = null;
+        else
+        {
+          CfgPart.ValidateName(value);
+          _Name = value;
+        }
       }
     }
     private string _Name;
@@ -980,23 +989,19 @@ namespace FreeLibSet.RI
     /// <returns>Результат выполнения диалога</returns>
     public DialogResult MessageBox(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
     {
-      NamedValues Args = new NamedValues();
-      Args["Action"] = "MessageBox";
+      NamedValues dispArgs = new NamedValues();
+      dispArgs["Action"] = "MessageBox";
 
       //Args["Text"] = text;
       // 27.08.2019
-      if (String.IsNullOrEmpty(text))
-        Args["Lines"] = DataTools.EmptyStrings;
-      else
-        Args["Lines"] = text.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+      dispArgs["Lines"] = UITools.TextToLines(text);
+      dispArgs["Caption"] = caption;
+      dispArgs["Buttons"] = buttons;
+      dispArgs["Icon"] = icon;
+      dispArgs["DefaultButton"] = defaultButton;
 
-      Args["Caption"] = caption;
-      Args["Buttons"] = buttons;
-      Args["Icon"] = icon;
-      Args["DefaultButton"] = defaultButton;
-
-      NamedValues Res = _ExecProc.Execute(Args);
-      return (DialogResult)(Res["DialogResult"]);
+      NamedValues dispRes = _ExecProc.Execute(dispArgs);
+      return (DialogResult)(dispRes["DialogResult"]);
     }
 
     /// <summary>
@@ -1316,13 +1321,8 @@ namespace FreeLibSet.RI
         case "MessageBox":
           Res = new NamedValues();
 
-          string[] a = (string[])args["Lines"]; // 27.08.2019
-          string text;
-          if (a.Length == 0)
-            text = String.Empty;
-          else
-            text = String.Join(Environment.NewLine, a);
-          Res["DialogResult"] = ui.MessageBox(/*args.GetString("Text")*/ text,
+          string text = UITools.LinesToText((string[])args["Lines"]); // 27.08.2019
+          Res["DialogResult"] = ui.MessageBox(text,
             args.GetString("Caption"),
             (MessageBoxButtons)(args["Buttons"]),
             (MessageBoxIcon)(args["Icon"]),

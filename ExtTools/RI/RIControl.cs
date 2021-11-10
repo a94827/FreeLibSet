@@ -569,7 +569,7 @@ namespace FreeLibSet.RI
   /// Поле ввода числа. Базовый класс для IntEditBox, SingleEditBox, DoubleEditBox и DecimalEditBox
   /// </summary>
   [Serializable]
-  public class BaseNumEditBox<T> : Control
+  public class BaseNumEditBox<T> : Control, IMinMaxSource<T?>
       where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
@@ -839,7 +839,7 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Максимальное значение. По умолчанию - не задано
     /// </summary>
-    public T Maximum
+    public T? Maximum
     {
       get { return _Maximum; }
       set
@@ -848,29 +848,60 @@ namespace FreeLibSet.RI
         _Maximum = value;
       }
     }
-    private T _Maximum;
+    private T? _Maximum;
 
     #endregion
 
     #region Increment
 
     /// <summary>
-    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
-    /// стрелочек вверх/вниз или колесиком мыши.
-    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную
+    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
+    /// Если null, то прокрутки нет.
+    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
     /// </summary>
-    public T Increment
+    public IUpDownHandler<T?> UpDownHandler
     {
-      get { return _Increment; }
+      get { return _UpDownHandler; }
       set
       {
         CheckNotFixed();
-        if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
-        _Increment = value;
+        if (Object.ReferenceEquals(value, _UpDownHandler))
+          return;
+        _UpDownHandler = value;
       }
     }
-    private T _Increment;
+    private IUpDownHandler<T?> _UpDownHandler;
+
+    /// <summary>
+    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
+    /// стрелочек вверх/вниз или колесиком мыши.
+    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
+    /// Это свойство дублирует UpDownHandler
+    /// </summary>
+    public T Increment
+    {
+      get
+      {
+        IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
+        if (incObj == null)
+          return default(T);
+        else
+          return incObj.Increment;
+      }
+      set
+      {
+        if (value.Equals(this.Increment))
+          return;
+
+        if (value.CompareTo(default(T)) < 0)
+          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+        if (value.CompareTo(default(T)) == 0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
+      }
+    }
 
     #endregion
 
@@ -3553,7 +3584,6 @@ namespace FreeLibSet.RI
 
     private int _OldYear;
 
-
     /// <summary>
     /// Управляемое значение для Year.
     /// </summary>
@@ -3572,6 +3602,20 @@ namespace FreeLibSet.RI
     }
     private DepInput<int> _YearEx;
 
+    private void InitYearEx()
+    {
+      if (_YearEx == null)
+      {
+        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
+        _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
+      }
+    }
+
+    private void YearEx_ValueChanged(object sender, EventArgs args)
+    {
+      Year = _YearEx.Value;
+    }
+
     /// <summary>
     /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
@@ -3585,20 +3629,6 @@ namespace FreeLibSet.RI
         else
           return _YearEx.IsConnected;
       }
-    }
-
-    private void InitYearEx()
-    {
-      if (_YearEx == null)
-      {
-        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
-        _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
-      }
-    }
-
-    private void YearEx_ValueChanged(object sender, EventArgs args)
-    {
-      Year = _YearEx.Value;
     }
 
     #endregion
@@ -3642,6 +3672,20 @@ namespace FreeLibSet.RI
     }
     private DepInput<int> _MonthEx;
 
+    private void InitMonthEx()
+    {
+      if (_MonthEx == null)
+      {
+        _MonthEx = new DepInput<int>(Month, MonthEx_ValueChanged);
+        _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
+      }
+    }
+
+    private void MonthEx_ValueChanged(object sender, EventArgs args)
+    {
+      Month = _MonthEx.Value;
+    }
+
     /// <summary>
     /// Возвращает true, если обработчик свойства MonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
@@ -3655,20 +3699,6 @@ namespace FreeLibSet.RI
         else
           return _MonthEx.IsConnected;
       }
-    }
-
-    private void InitMonthEx()
-    {
-      if (_MonthEx == null)
-      {
-        _MonthEx = new DepInput<int>(Month, MonthEx_ValueChanged);
-        _MonthEx.OwnerInfo = new DepOwnerInfo(this, "MonthEx");
-      }
-    }
-
-    private void MonthEx_ValueChanged(object sender, EventArgs args)
-    {
-      Month = _MonthEx.Value;
     }
 
     #endregion
@@ -3693,7 +3723,7 @@ namespace FreeLibSet.RI
     }
 
     /// <summary>
-    /// Управляемое значение для Value.
+    /// Управляемое значение для YM.
     /// </summary>
     public DepValue<YearMonth> YMEx
     {
@@ -3710,6 +3740,20 @@ namespace FreeLibSet.RI
     }
     private DepInput<YearMonth> _YMEx;
 
+    private void InitYMEx()
+    {
+      if (_YMEx == null)
+      {
+        _YMEx = new DepInput<YearMonth>(YM, YMEx_ValueChanged);
+        _YMEx.OwnerInfo = new DepOwnerInfo(this, "YMEx");
+      }
+    }
+
+    private void YMEx_ValueChanged(object sender, EventArgs args)
+    {
+      YM = _YMEx.Value;
+    }
+
     /// <summary>
     /// Возвращает true, если обработчик свойства YMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
@@ -3723,20 +3767,6 @@ namespace FreeLibSet.RI
         else
           return _YMEx.IsConnected;
       }
-    }
-
-    private void InitYMEx()
-    {
-      if (_YMEx == null)
-      {
-        _YMEx = new DepInput<YearMonth>(YM, YMEx_ValueChanged);
-        _YMEx.OwnerInfo = new DepOwnerInfo(this, "YMEx");
-      }
-    }
-
-    private void YMEx_ValueChanged(object sender, EventArgs args)
-    {
-      YM = _YMEx.Value;
     }
 
     #endregion
@@ -3962,6 +3992,20 @@ namespace FreeLibSet.RI
     }
     private DepInput<int> _YearEx;
 
+    private void InitYearEx()
+    {
+      if (_YearEx == null)
+      {
+        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
+        _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
+      }
+    }
+
+    private void YearEx_ValueChanged(object sender, EventArgs args)
+    {
+      Year = _YearEx.Value;
+    }
+
     /// <summary>
     /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
@@ -3975,20 +4019,6 @@ namespace FreeLibSet.RI
         else
           return _YearEx.IsConnected;
       }
-    }
-
-    private void InitYearEx()
-    {
-      if (_YearEx == null)
-      {
-        _YearEx = new DepInput<int>(Year, YearEx_ValueChanged);
-        _YearEx.OwnerInfo = new DepOwnerInfo(this, "YearEx");
-      }
-    }
-
-    private void YearEx_ValueChanged(object sender, EventArgs args)
-    {
-      Year = _YearEx.Value;
     }
 
     #endregion
@@ -4032,6 +4062,20 @@ namespace FreeLibSet.RI
     }
     private DepInput<int> _FirstMonthEx;
 
+    private void InitFirstMonthEx()
+    {
+      if (_FirstMonthEx == null)
+      {
+        _FirstMonthEx = new DepInput<int>(FirstMonth, FirstMonthEx_ValueChanged);
+        _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
+      }
+    }
+
+    private void FirstMonthEx_ValueChanged(object sender, EventArgs args)
+    {
+      FirstMonth = _FirstMonthEx.Value;
+    }
+
     /// <summary>
     /// Возвращает true, если обработчик свойства FirstMonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
@@ -4045,20 +4089,6 @@ namespace FreeLibSet.RI
         else
           return _FirstMonthEx != null;
       }
-    }
-
-    private void InitFirstMonthEx()
-    {
-      if (_FirstMonthEx == null)
-      {
-        _FirstMonthEx = new DepInput<int>(FirstMonth, FirstMonthEx_ValueChanged);
-        _FirstMonthEx.OwnerInfo = new DepOwnerInfo(this, "FirstMonthEx");
-      }
-    }
-
-    private void FirstMonthEx_ValueChanged(object sender, EventArgs args)
-    {
-      FirstMonth = _FirstMonthEx.Value;
     }
 
     #endregion

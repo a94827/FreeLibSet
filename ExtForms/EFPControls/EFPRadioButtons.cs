@@ -56,7 +56,7 @@ namespace FreeLibSet.Forms
       : base(baseProvider, controls[0], true)
     {
       _Controls = controls;
-      DoInit();
+      Init();
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ namespace FreeLibSet.Forms
       }
       _Controls = Items.ToArray();
 
-      DoInit();
+      Init();
     }
 
     /// <summary>
@@ -95,14 +95,15 @@ namespace FreeLibSet.Forms
       : base(baseProvider, control, true)
     {
       _Controls = control.Buttons;
-      DoInit();
+      Init();
       if (control.ImageList == null)
         control.ImageList = EFPApp.MainImages;
     }
 
 
-    private void DoInit()
+    private void Init()
     {
+      _CanBeEmptyMode = UIValidateState.Error;
       _AllowDisabledSelectedIndex = false;
 
       //_Enabled = true;
@@ -261,8 +262,15 @@ namespace FreeLibSet.Forms
 
       if (SelectedIndex < 0)
       {
-        if (!CanBeEmpty)
-          SetError("Позиция должна быть выбрана");
+        switch (CanBeEmptyMode)
+        {
+          case UIValidateState.Error:
+            SetError("Позиция должна быть выбрана");
+            break;
+          case UIValidateState.Warning:
+            SetWarning("Позиция должна быть выбрана");
+            break;
+        }
       }
       else
       {
@@ -567,56 +575,32 @@ namespace FreeLibSet.Forms
     #region Свойство CanBeEmpty
 
     /// <summary>
-    /// Доступ к CanBeEmptyEx.ValueEx без принудительного создания объекта
-    /// По умолчанию - false
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error.
+    /// Это свойство переопределяется для нестандартных элементов, содержащих
+    /// кнопку очистки справа от элемента
     /// </summary>
-    public bool CanBeEmpty
+    public UIValidateState CanBeEmptyMode
     {
-      get { return _CanBeEmpty; }
+      get { return _CanBeEmptyMode; }
       set
       {
-        if (value == _CanBeEmpty)
+        if (value == _CanBeEmptyMode)
           return;
-        _CanBeEmpty = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
+        _CanBeEmptyMode = value;
         Validate();
       }
     }
-    private bool _CanBeEmpty;
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Если False, то при проверке состояния считается ошибкой, если свойство
-    /// SelectedIndex имеет значение (-1)
-    /// По умолчанию - False
+    /// True, если ли элемент может содержать пустое значение.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
-    public DepValue<bool> CanBeEmptyEx
+    public bool CanBeEmpty
     {
-      get
-      {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
-      }
-    }
-
-    private void InitCanBeEmptyEx()
-    {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion

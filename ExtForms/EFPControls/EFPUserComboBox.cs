@@ -450,6 +450,7 @@ namespace FreeLibSet.Forms
       control.ClearButton = false;
       _EmptyText = DefaultEmptyText;
       _AllSelectedText = DefaultAllSelectedText;
+      _CanBeEmptyMode = UIValidateState.Error;
       _EmptyImageKey = "CheckListNone";
       _AllSelectedImageKey = "CheckListAll";
       _ImageKey = String.Empty;
@@ -504,59 +505,35 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region CanBeEmpty
+    #region Свойство CanBeEmpty
 
     /// <summary>
-    /// Можно ли оставить все флажки снятыми.
-    /// По умолчанию - false - хотя бы один флажок должен быть выбран.
+    /// Режим проверки пустого значения.
+    /// По умолчанию - Error.
+    /// Это свойство переопределяется для нестандартных элементов, содержащих
+    /// кнопку очистки справа от элемента
     /// </summary>
-    public bool CanBeEmpty
+    public UIValidateState CanBeEmptyMode
     {
-      get { return Control.ClearButton; }
+      get { return _CanBeEmptyMode; }
       set
       {
-        if (value == Control.ClearButton)
+        if (value == _CanBeEmptyMode)
           return;
-        Control.ClearButton = value;
-        if (_CanBeEmptyEx != null)
-          _CanBeEmptyEx.Value = value;
+        _CanBeEmptyMode = value;
         Validate();
       }
     }
+    private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// True, если можно оставить все флажки снятыми. По умолчанию - false.
-    /// Определяет видимость кнопки "Нет" при выборе из справочника, наличие кнопочки
-    /// "X" рядом с комбоблоком. При значении false выполняется проверка ошибки
+    /// True, если ли элемент может содержать пустое значение.
+    /// Дублирует CanBeEmptyMode
     /// </summary>
-    public DepValue<Boolean> CanBeEmptyEx
+    public bool CanBeEmpty
     {
-      get
-      {
-        InitCanBeEmptyEx();
-        return _CanBeEmptyEx;
-      }
-      set
-      {
-        InitCanBeEmptyEx();
-        _CanBeEmptyEx.Source = value;
-      }
-    }
-
-    private void InitCanBeEmptyEx()
-    {
-      if (_CanBeEmptyEx == null)
-      {
-        _CanBeEmptyEx = new DepInput<bool>(CanBeEmpty,CanBeEmptyEx_ValueChanged);
-        _CanBeEmptyEx.OwnerInfo = new DepOwnerInfo(this, "CanBeEmptyEx");
-      }
-    }
-
-    private DepInput<Boolean> _CanBeEmptyEx;
-
-    void CanBeEmptyEx_ValueChanged(object sender, EventArgs args)
-    {
-      CanBeEmpty = _CanBeEmptyEx.Value;
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
 
     #endregion
@@ -885,8 +862,15 @@ namespace FreeLibSet.Forms
     {
       if (Selections.AreAllUnselected)
       {
-        if (!CanBeEmpty)
-          base.SetError("Хотя бы одно значение должно быть выбрано");
+        switch (CanBeEmptyMode)
+        {
+          case UIValidateState.Error:
+            SetError("Хотя бы одно значение должно быть выбрано");
+            break;
+          case UIValidateState.Warning:
+            SetWarning("Хотя бы одно значение должно быть выбрано");
+            break;
+        }
         Control.ClearButtonEnabled = false;
       }
       else

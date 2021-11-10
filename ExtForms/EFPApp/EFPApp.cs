@@ -24,6 +24,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Shell;
 using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.Controls;
+using FreeLibSet.Drawing;
 
 /*
  * The BSD License
@@ -6032,7 +6033,7 @@ namespace FreeLibSet.Forms
       #region Уменьшаем изображение
 
       Size NewSize;
-      if (WinFormsTools.IsImageShrinkNeeded(bmp, SnapshotSize, out NewSize))
+      if (ImagingTools.IsImageShrinkNeeded(bmp, SnapshotSize, out NewSize))
       {
         Bitmap bmp2 = new Bitmap(bmp, NewSize);
         bmp.Dispose();

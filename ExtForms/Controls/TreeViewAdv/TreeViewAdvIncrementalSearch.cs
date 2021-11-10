@@ -43,7 +43,7 @@ using System.Windows.Forms;
  */
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   // TODO: Убрать это безобразие
 

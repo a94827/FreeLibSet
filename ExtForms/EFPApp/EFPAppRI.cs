@@ -867,7 +867,7 @@ namespace FreeLibSet.Forms.RI
       controlProvider.Minimum = riItem.Minimum;
       controlProvider.Maximum = riItem.Maximum;
       controlProvider.Control.Format = riItem.Format;
-      controlProvider.Control.Increment = riItem.Increment;
+      controlProvider.Control.UpDownHandler = riItem.UpDownHandler;
       EFPAppRITools.InitControlItem(controlProvider, riItem);
 
       controlProvider.NValue = riItem.NValue; // обязательное присвоение, иначе свойство обнулится
@@ -2213,7 +2213,7 @@ namespace FreeLibSet.Forms.RI
       winDlg.Minimum = riDialog.Minimum;
       winDlg.Maximum = riDialog.Maximum;
       winDlg.Format = riDialog.Format;
-      winDlg.Increment = riDialog.Increment;
+      winDlg.UpDownHandler = riDialog.UpDownHandler;
       winDlg.NValue = riDialog.NValue; // обязательное присвоение, иначе свойство обнулится
       if (riDialog.InternalNValueExConnected)
         riDialog.NValueEx = winDlg.NValueEx;
@@ -2470,7 +2470,7 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
         _WinDlg.Format = riDialog.Format;
-        _WinDlg.Increment = riDialog.Increment;
+        _WinDlg.UpDownHandler = riDialog.UpDownHandler;
       }
 
       #endregion
@@ -2513,7 +2513,7 @@ namespace FreeLibSet.Forms.RI
       winDlg.Minimum = riDialog.Minimum;
       winDlg.Maximum = riDialog.Maximum;
       winDlg.Format = riDialog.Format;
-      winDlg.Increment = riDialog.Increment;
+      winDlg.UpDownHandler = riDialog.UpDownHandler;
       winDlg.NFirstValue = riDialog.NFirstValue; // обязательное присвоение, иначе свойство обнулится
       if (riDialog.InternalNFirstValueExConnected)
         riDialog.NFirstValueEx = winDlg.NFirstValueEx;
@@ -2546,7 +2546,7 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
         _WinDlg.Format = riDialog.Format;
-        _WinDlg.Increment = riDialog.Increment;
+        _WinDlg.UpDownHandler = riDialog.UpDownHandler;
       }
 
       #endregion
@@ -2595,7 +2595,7 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
         _WinDlg.Format = riDialog.Format;
-        _WinDlg.Increment = riDialog.Increment;
+        _WinDlg.UpDownHandler = riDialog.UpDownHandler;
       }
 
       #endregion
@@ -2644,7 +2644,7 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
         _WinDlg.Format = riDialog.Format;
-        _WinDlg.Increment = riDialog.Increment;
+        _WinDlg.UpDownHandler = riDialog.UpDownHandler;
       }
 
       #endregion

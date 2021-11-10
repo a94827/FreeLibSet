@@ -39,7 +39,7 @@ using System.Text;
  */
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal class InputWithControl : NormalInputState
   {

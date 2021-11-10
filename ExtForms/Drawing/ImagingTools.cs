@@ -366,5 +366,67 @@ namespace FreeLibSet.Drawing
 #endif
 
     #endregion
+
+    #region Маленькие изображения
+
+    /// <summary>
+    /// Определяет необходимость уменьшения изображения.
+    /// </summary>
+    /// <param name="image">Исходное изображение</param>
+    /// <param name="maxSize">Ограничение на размер изображения</param>
+    /// <param name="newSize">Сюда помещается новый размер изображения, меньший или равный исходному.
+    /// Пропорции сохраняются</param>
+    /// <returns>true, если изображение должно быть уменьшено</returns>
+    public static bool IsImageShrinkNeeded(Image image, Size maxSize, out Size newSize)
+    {
+      return IsImageShrinkNeeded(image.Size, maxSize, out newSize);
+    }
+
+    /// <summary>
+    /// Определяет необходимость уменьшить размер изображения, чтобы вписать его в заданную область.
+    /// При уменьшении сохраняются существующие пропорции.
+    /// Если изображение меньше, чем <paramref name="maxSize"/>, то уменьшение не выполняется.
+    /// </summary>
+    /// <param name="srcImageSize">Существующий размер изображение</param>
+    /// <param name="maxSize">Размер, в который нужно вписать</param>
+    /// <param name="newSize">Сюда записываются уменьшенные размеры.
+    /// Если уменьшение не требуется, возвращается <paramref name="srcImageSize"/></param>
+    /// <returns>true, если требуется уменьшение размеров</returns>
+    public static bool IsImageShrinkNeeded(Size srcImageSize, Size maxSize, out Size newSize)
+    {
+#if DEBUG
+      if (srcImageSize.Width < 0 || srcImageSize.Height < 0)
+        throw new ArgumentException("Неправильный исходный размер: " + srcImageSize.ToString(), "maxSize");
+      if (maxSize.Width < 1 || maxSize.Height < 1)
+        throw new ArgumentException("Неправильный максимальный размер: " + maxSize.ToString(), "maxSize");
+#endif
+
+      if (srcImageSize.Width > maxSize.Width || srcImageSize.Height > maxSize.Height)
+      {
+        double s1 = 1.0;
+        double s2 = 1.0;
+        if (srcImageSize.Width > 0) // 27.12.2020
+          s1 = (double)(maxSize.Width) / (double)(srcImageSize.Width);
+        if (srcImageSize.Height > 0) // 27.12.2020
+          s2 = (double)(maxSize.Height) / (double)(srcImageSize.Height);
+        double s = Math.Min(s1, s2);
+
+#if DEBUG
+        if (s <= 0.0 || s > 1.0)
+          throw new BugException("Неправильный коэффициент масштабирования: " + s.ToString());
+#endif
+
+        newSize = new Size((int)(Math.Round(srcImageSize.Width * s)),
+        (int)(Math.Round(srcImageSize.Height * s)));
+        return true;
+      }
+      else
+      {
+        newSize = srcImageSize;
+        return false;
+      }
+    }
+
+    #endregion
   }
 }

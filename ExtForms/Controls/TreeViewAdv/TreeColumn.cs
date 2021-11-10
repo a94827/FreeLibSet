@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Forms.VisualStyles;
 using System.Drawing.Imaging;
 using FreeLibSet.Drawing;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License

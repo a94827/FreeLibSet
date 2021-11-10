@@ -67,7 +67,7 @@ using System.IO;
 #pragma warning disable 1591
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Drawing
 {
   public class GifFrame
   {

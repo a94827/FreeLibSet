@@ -70,9 +70,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       }
     }
 
-    private IToolTipProvider _toolTipProvider;
+    private ITreeViewAdvToolTipProvider _toolTipProvider;
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IToolTipProvider ToolTipProvider
+    public ITreeViewAdvToolTipProvider ToolTipProvider
     {
       get { return _toolTipProvider; }
       set { _toolTipProvider = value; }

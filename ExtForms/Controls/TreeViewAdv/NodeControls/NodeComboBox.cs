@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.ComponentModel;
 using System.Drawing.Design;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License

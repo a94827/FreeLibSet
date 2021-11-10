@@ -7,6 +7,7 @@ using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Drawing.Imaging;
 using System.Threading;
 using FreeLibSet.Drawing;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License

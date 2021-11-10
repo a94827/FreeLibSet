@@ -604,7 +604,7 @@ namespace FreeLibSet.Forms
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// True, если ли элемент содержать пустой текст.
+    /// True, если ли список выбранных элементов может быть пустым
     /// Дублирует CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty

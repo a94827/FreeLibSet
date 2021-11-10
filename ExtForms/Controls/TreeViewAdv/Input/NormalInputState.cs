@@ -40,7 +40,7 @@ using System.Windows.Forms;
  */
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal class NormalInputState : InputState
   {

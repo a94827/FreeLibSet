@@ -68,6 +68,19 @@ namespace FreeLibSet.Forms
         return new EFPTextBoxCommandItems(this, false);
     }
 
+    /// <summary>
+    /// Установка 0 при показе формы
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      // Если поле не заполнено, но пустые значения запрещены, устанавливается значение 0.
+
+      if ((!CanBeEmpty) && (!NValue.HasValue) && EnabledState)
+        NValue = default(T);
+    }
+
     #endregion
 
     #region Свойства Value/NValue
@@ -526,7 +539,7 @@ namespace FreeLibSet.Forms
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// True, если ли элемент содержать пустой текст.
+    /// True, если ли элемент может содержать пустое значение.
     /// Дублирует CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty

@@ -42,7 +42,7 @@ using System.ComponentModel.Design;
 
 #pragma warning disable 1591
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   public class StringCollectionEditor : CollectionEditor
   {

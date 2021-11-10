@@ -77,14 +77,14 @@ namespace FreeLibSet.Controls
 
   }
 
-  public class TreeViewRowDrawEventArgs : PaintEventArgs
+  public class TreeViewAdvRowDrawEventArgs : PaintEventArgs
   {
     TreeNodeAdv _node;
     TreeViewAdvDrawContext _context;
     int _row;
     Rectangle _rowRect;
 
-    public TreeViewRowDrawEventArgs(Graphics graphics, Rectangle clipRectangle, TreeNodeAdv node, TreeViewAdvDrawContext context, int row, Rectangle rowRect)
+    public TreeViewAdvRowDrawEventArgs(Graphics graphics, Rectangle clipRectangle, TreeNodeAdv node, TreeViewAdvDrawContext context, int row, Rectangle rowRect)
       : base(graphics, clipRectangle)
     {
       _node = node;
@@ -177,12 +177,12 @@ namespace FreeLibSet.Controls
     }
   }
 
-  public class DropNodeValidatingEventArgs : EventArgs
+  public class TreeViewAdvDropNodeValidatingEventArgs : EventArgs
   {
     Point _point;
     TreeNodeAdv _node;
 
-    public DropNodeValidatingEventArgs(Point point, TreeNodeAdv node)
+    public TreeViewAdvDropNodeValidatingEventArgs(Point point, TreeNodeAdv node)
     {
       _point = point;
       _node = node;
@@ -200,7 +200,7 @@ namespace FreeLibSet.Controls
     }
   }
 
-  public interface IToolTipProvider
+  public interface ITreeViewAdvToolTipProvider
   {
     string GetToolTip(TreeNodeAdv node, NodeControl nodeControl);
   }

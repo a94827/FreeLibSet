@@ -90,6 +90,7 @@
     <Compile Include="Data\IdList.cs" />
     <Compile Include="Core\INamedValuesAccess.cs" />
     <Compile Include="RI\DepInput.cs" />
+    <Compile Include="UICore\IUpDownHandler.cs" />
     <Compile Include="UICore\UITools.cs" />
     <Compile Include="Win32\IniFileWindows.cs" />
     <Compile Include="IO\IniFile.cs" />

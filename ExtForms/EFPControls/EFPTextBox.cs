@@ -93,7 +93,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Интерфейс, объявляющий свойства Text, CanBeEmptyEx и MaxLength.
+  /// Интерфейс, объявляющий свойства Text, CanBeEmpty и MaxLength.
   /// Применяется вместо EFPTextBoxAnyControl там, где шаблоны неудобны
   /// </summary>
   public interface IEFPTextBox : IEFPSimpleTextBox
@@ -626,7 +626,7 @@ namespace FreeLibSet.Forms
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// True, если ли элемент содержать пустой текст.
+    /// True, если ли элемент может содержать пустой текст.
     /// Дублирует CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty

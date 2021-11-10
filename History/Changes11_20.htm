@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="2021-10-20T17:35:30.201000000"/>
-	<meta name="changed" content="2021-11-08T10:53:44.894000000"/>
+	<meta name="changed" content="2021-11-10T17:34:07.394000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
 		td p { line-height: 120%; orphans: 0; widows: 0; margin-bottom: 0.25cm; background: transparent }
@@ -759,59 +759,28 @@ DateTimeBox, DateRangeBox, IntEditBox, ...), </span><span lang="ru-RU">то
 </span><span lang="ru-RU">Если свойство относится к коллекции
 индексов базы данных - то &quot;</span><span lang="en-US">Indexes</span><span lang="ru-RU">&quot;</span></p>
 <p>&nbsp;</p>
-<p><font color="#ff0000">Подумать о </font><font color="#ff0000"><span lang="en-US">namespace
-</span></font><font color="#ff0000">для </font><font color="#ff0000"><span lang="en-US">TreeViewAdv</span></font></p>
-<p><font color="#ff0000"><span lang="en-US">WinFormsTools &ndash; </span></font><font color="#ff0000">в
-</font><font color="#ff0000"><span lang="en-US">FreeLibSet.Controls?</span></font></p>
-<p lang="en-US"><font color="#ff0000">public SetReadOnly() <span lang="ru-RU">в
-коллекциях</span>?</font></p>
+<p><font color="#ff0000"><span lang="en-US">public SetReadOnly() </span></font><font color="#ff0000"><span lang="ru-RU">в
+коллекциях</span></font><font color="#ff0000"><span lang="en-US">?</span></font></p>
 <p><font color="#ff0000">В <span lang="en-US">typed-</span>коллекциях
 - объект <span lang="en-US">Comparer</span></font></p>
 <p><font color="#ff0000"><span lang="ru-RU">В </span></font><font color="#ff0000"><span lang="en-US">string-</span></font><font color="#ff0000"><span lang="ru-RU">коллекциях
 - использовать </span></font><font color="#ff0000"><span lang="en-US">StringComparizonType</span></font><font color="#ff0000"><span lang="ru-RU">.</span></font></p>
-<p lang="en-US"><font color="#ff0000">UI.MessageBox() </font><font color="#ff0000"><span lang="ru-RU">должна
-передавать текст как </span></font><font color="#ff0000">Lines </font><font color="#ff0000"><span lang="ru-RU">с
-заменой </span></font><font color="#ff0000">Environment.NewLine</font></p>
-<p><font color="#ff0000">Проверять свойство </font><font color="#ff0000"><span lang="en-US">Control.Name
-</span></font><font color="#ff0000">в </font><font color="#ff0000"><span lang="en-US">RI.
-</span></font><font color="#ff0000">Не должно быть пробелов и не
-должно начинаться с цифры</font></p>
 <p><font color="#ff0000">Выделить из </font><font color="#ff0000"><span lang="en-US">DataTools
 </span></font><font color="#ff0000">нестатические классы
 </font><font color="#ff0000"><span lang="en-US">CSVTextConvert </span></font><font color="#ff0000">и
 </font><font color="#ff0000"><span lang="en-US">TabbedTextConvert</span></font></p>
-<p lang="en-US"><font color="#ff0000">FolderBrowserDialog.PathValidateMode</font></p>
-<p lang="en-US"><font color="#ff0000">FileTextBox.DefaultExt</font></p>
 <p lang="en-US"><font color="#ff0000">OrganizationNameModeComboBox,
 HieReportTotalModeComboBox.SelectedModeEx</font></p>
-<p lang="en-US"><font color="#ff0000">CodeRefBookComboBox,
-CodeRefBookSelComboBox.SelectedCodeEx</font></p>
-<p><font color="#ff0000">Выровнять свойства в <span lang="en-US">CodeRefBookSelComboBox</span>
-и <span lang="en-US">CodeRefBookSelDialog</span></font></p>
 <p><font color="#ff0000"><span lang="en-US">FormMainStatesComboBox</span>,
 FormCheckStatesComboBox<span lang="en-US">.StatesEx</span></font></p>
-<p><font color="#ff0000"><span lang="en-US">YearQuarterBox,
-YearQuarterRangeBox, YearHalfYearBox. </span>Нет <span lang="en-US">Ex-</span>свойств.
-Может быть, сделать структуры и нормальные <span lang="en-US">Minimum
-</span>и <span lang="en-US">Maximum?</span></font></p>
 <p><font color="#ff0000">Убрать дизайнеры для упр. элементов в
 отдельную сборку.</font></p>
-<p><font color="#ff0000">В фильтрах по диапазону устанавливать
-свойство <span lang="en-US">Increment</span></font></p>
-<p><font color="#ff0000">Свойство <span lang="en-US">RI.NumEditBoxBase.CanBeEmptyMode
-</span>не реализовано в части предупреждений в <span lang="en-US">EFPNumEditBoxBase.</span></font></p>
 <p><font color="#ff0000">Элемент
 TreeViewAdvNodeControls.NodeNumericUpDown заменить на <span lang="en-US">DecimalNode,
 </span>с инкрементом и прочими свойствами. Сделать остальные классы</font></p>
-<p><font color="#ff0000">Может быть, сделать интерфейс<span lang="en-US">:</span></font></p>
-<p lang="en-US"><font color="#ff0000">IUpDownHandler&lt;T&gt; where
-T:struct {</font></p>
-<p lang="en-US"><font color="#ff0000">T? GetUpDown(T? current, out T?
-next, out T? prev);</font></p>
-<p lang="en-US"><font color="#ff0000">}</font></p>
 <p><font color="#ff0000">Открыть на редактирование цепочку сдачи
-отчетности. Открыть на просмотр элемент цепоки. Нажать ОК. В
-заголовке редактора цепочки появляется &quot;(*)&quot;</font></p>
+отчетности. Открыть на просмотр элемент <span lang="ru-RU">цепо</span><span lang="en-US">чки</span>.
+Нажать ОК. В заголовке редактора цепочки появляется &quot;(*)&quot;</font></p>
 <p><br/>
 <br/>
 

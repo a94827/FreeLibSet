@@ -43,7 +43,7 @@ using System.Drawing;
 #pragma warning disable 1591
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   public struct NodeControlInfo
   {

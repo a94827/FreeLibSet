@@ -405,7 +405,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeViewAdv\Helpers\AbortableThreadPool.cs" />
-    <Compile Include="Controls\TreeViewAdv\Helpers\GifDecoder.cs" />
+    <Compile Include="Drawing\GifDecoder.cs" />
     <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
     <Compile Include="Controls\TreeViewAdv\NodeControlInfo.cs" />
     <Compile Include="Controls\TreeViewAdv\NodeControls\BaseTextControl.cs">

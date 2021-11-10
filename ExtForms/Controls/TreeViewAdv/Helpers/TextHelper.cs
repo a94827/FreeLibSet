@@ -41,7 +41,7 @@ using System.Drawing;
  */
 
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal static class TextHelper
   {

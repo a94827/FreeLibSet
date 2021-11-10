@@ -17,7 +17,7 @@ using FreeLibSet.Formatting;
 namespace FreeLibSet.Controls
 {
   [Designer(typeof(NumEditBoxBaseDesigner))]
-  public abstract class NumEditBoxBase<T> : UserControl
+  public abstract class NumEditBoxBase<T> : UserControl, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
@@ -294,6 +294,23 @@ namespace FreeLibSet.Controls
 
     #region Свойство Increment
 
+    [Browsable(false)]
+    public IUpDownHandler<T?> UpDownHandler
+    {
+      get { return _UpDownHandler; }
+      set
+      {
+        if (Object.ReferenceEquals(value, _UpDownHandler))
+          return;
+        _UpDownHandler = value;
+
+        bool newUpDown = (value != null);
+        if (newUpDown != IsUpDown)
+          InitMainControl(newUpDown);
+      }
+    }
+    private IUpDownHandler<T?> _UpDownHandler;
+
     [Bindable(true)]
     //[RefreshProperties(RefreshProperties.All)]
     [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
@@ -301,23 +318,28 @@ namespace FreeLibSet.Controls
     [DefaultValue(0.0)]
     public T Increment
     {
-      get { return _Increment; }
+      get
+      {
+        IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
+        if (incObj == null)
+          return default(T);
+        else
+          return incObj.Increment;
+      }
       set
       {
-        if (value.Equals(_Increment))
+        if (value.Equals(this.Increment))
           return;
 
         if (value.CompareTo(default(T)) < 0)
           throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
 
-        _Increment = value;
-
-        bool newUpDown = !value.Equals(default(T));
-        if (newUpDown != IsUpDown)
-          InitMainControl(newUpDown);
+        if (value.CompareTo(default(T)) == 0)
+          UpDownHandler = null;
+        else
+          UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
       }
     }
-    private T _Increment;
 
     internal void PerformIncrement(int sign)
     {
@@ -325,36 +347,21 @@ namespace FreeLibSet.Controls
         return;
       if (!TextIsValid)
         return;
-      if (!NValue.HasValue)
-        return;
-
       try
       {
-        // Нельзя вычислить инкремент в шаблонном классе
-        T newValue = GetIncrementedValue(sign);
-        if (sign > 0)
-        {
-          if (Maximum.HasValue)
-          {
-            if (newValue.CompareTo(Maximum.Value) > 0)
-              newValue = Maximum.Value;
-          }
-        }
-        else
-        {
-          if (Minimum.HasValue)
-          {
-            if (newValue.CompareTo(Minimum.Value) < 0)
-              newValue = Minimum.Value;
-          }
-        }
-        this.Value = newValue;
+        bool hasNext, hasPrev;
+        T? nextValue, prevValue;
+        UpDownHandler.GetUpDown(NValue, out hasNext, out nextValue, out hasPrev, out prevValue);
+
+        bool has = sign > 0 ? hasNext : hasPrev;
+        T? value = sign > 0 ? nextValue : prevValue;
+
+        if (has)
+          NValue = value;
       }
       catch { } // Перехват OvertflowException
 
     }
-
-    protected abstract T GetIncrementedValue(int sign);
 
     #endregion
 
@@ -957,16 +964,6 @@ namespace FreeLibSet.Controls
     }
 
     /// <summary>
-    /// Вызывает UITools.GetIncrementedValue()
-    /// </summary>
-    /// <param name="sign">Знак инкремента</param>
-    /// <returns>Новое значение</returns>
-    protected override int GetIncrementedValue(int sign)
-    {
-      return UITools.GetIncrementedValue(Value, sign > 0 ? Increment : -Increment);
-    }
-
-    /// <summary>
     /// Ничего не делает
     /// </summary>
     /// <param name="value">Значение до округления</param>
@@ -1005,16 +1002,6 @@ namespace FreeLibSet.Controls
     protected override bool TryParseText(string s, out float result)
     {
       return Single.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
-    }
-
-    /// <summary>
-    /// Вызывает UITools.GetIncrementedValue()
-    /// </summary>
-    /// <param name="sign">Знак инкремента</param>
-    /// <returns>Новое значение</returns>
-    protected override float GetIncrementedValue(int sign)
-    {
-      return UITools.GetIncrementedValue(Value, sign > 0 ? Increment : -Increment);
     }
 
     /// <summary>
@@ -1057,16 +1044,6 @@ namespace FreeLibSet.Controls
     }
 
     /// <summary>
-    /// Вызывает UITools.GetIncrementedValue()
-    /// </summary>
-    /// <param name="sign">Знак инкремента</param>
-    /// <returns>Новое значение</returns>
-    protected override double GetIncrementedValue(int sign)
-    {
-      return UITools.GetIncrementedValue(Value, sign > 0 ? Increment : -Increment);
-    }
-
-    /// <summary>
     /// Выполняет округление до числа разрядов, определяемых свойством DecimalPlaces
     /// </summary>
     /// <param name="value">Значение до округления</param>
@@ -1102,16 +1079,6 @@ namespace FreeLibSet.Controls
     protected override bool TryParseText(string s, out decimal result)
     {
       return Decimal.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
-    }
-
-    /// <summary>
-    /// Вызывает UITools.GetIncrementedValue()
-    /// </summary>
-    /// <param name="sign">Знак инкремента</param>
-    /// <returns>Новое значение</returns>
-    protected override decimal GetIncrementedValue(int sign)
-    {
-      return UITools.GetIncrementedValue(Value, sign > 0 ? Increment : -Increment);
     }
 
     /// <summary>

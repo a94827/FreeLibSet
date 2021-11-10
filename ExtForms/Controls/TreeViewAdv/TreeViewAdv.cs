@@ -10,6 +10,7 @@ using System.Collections;
 
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Models.Tree;
+using FreeLibSet.Controls.TreeViewAdvInternal;
 
 /*
  * The BSD License
@@ -200,12 +201,12 @@ namespace FreeLibSet.Controls
     }
 
     [Category("Behavior")]
-    public event EventHandler<TreeViewRowDrawEventArgs> RowDraw;
+    public event EventHandler<TreeViewAdvRowDrawEventArgs> RowDraw;
     protected virtual void OnRowDraw(PaintEventArgs e, TreeNodeAdv node, TreeViewAdvDrawContext context, int row, Rectangle rowRect)
     {
       if (RowDraw != null)
       {
-        TreeViewRowDrawEventArgs args = new TreeViewRowDrawEventArgs(e.Graphics, e.ClipRectangle, node, context, row, rowRect);
+        TreeViewAdvRowDrawEventArgs args = new TreeViewAdvRowDrawEventArgs(e.Graphics, e.ClipRectangle, node, context, row, rowRect);
         RowDraw(this, args);
       }
     }
@@ -234,12 +235,12 @@ namespace FreeLibSet.Controls
 
 
     [Category("Drag Drop")]
-    public event EventHandler<DropNodeValidatingEventArgs> DropNodeValidating;
+    public event EventHandler<TreeViewAdvDropNodeValidatingEventArgs> DropNodeValidating;
     protected virtual void OnDropNodeValidating(Point point, ref TreeNodeAdv node)
     {
       if (DropNodeValidating != null)
       {
-        DropNodeValidatingEventArgs args = new DropNodeValidatingEventArgs(point, node);
+        TreeViewAdvDropNodeValidatingEventArgs args = new TreeViewAdvDropNodeValidatingEventArgs(point, node);
         DropNodeValidating(this, args);
         node = args.Node;
       }
