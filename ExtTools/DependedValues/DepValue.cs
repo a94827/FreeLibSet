@@ -139,18 +139,6 @@ namespace FreeLibSet.DependedValues
   [Serializable]
   public abstract class DepValue<T> : IDepValue
   {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает новый объект
-    /// </summary>
-    public DepValue()
-    {
-      _InsideSetValue = false;
-    }
-
-    #endregion
-
     #region Объект-владелец
 
     /// <summary>
@@ -197,25 +185,16 @@ namespace FreeLibSet.DependedValues
     /// <param name="forced">Если true, то не выполняется проверка на равенство с текущим значением</param>
     protected void BaseSetValue(T value, bool forced)
     {
-      // Можно было бы переименовать в SetValue() и сделать virtual, но так понятнее, когда выполняется отладка.
+      if (_InsideSetValueCount > 10)
+        throw new ReenteranceException("Установка значения зациклилось. Предотвращено StackOverflowException");
 
-      if (forced)
+      if (!forced)
       {
-        if (_InsideSetValue)
-          throw new ReenteranceException();
-      }
-      else
-      {
-        // Предотвращаем зациклинивание, когда установка значения приводит через
-        // цепочку значений к повторной установке этого же значения
-        if (_InsideSetValue)
-          return;
-
         if (Object.Equals(value, _Value))
           return;
       }
 
-      _InsideSetValue = true;
+      _InsideSetValueCount++;
       try
       {
         _Value = value;
@@ -223,15 +202,15 @@ namespace FreeLibSet.DependedValues
       }
       finally
       {
-        _InsideSetValue = false;
+        _InsideSetValueCount--;
       }
     }
 
     /// <summary>
     /// true, если в настоящее время выполняется установка значения
     /// </summary>
-    public bool InsideSetValue { get { return _InsideSetValue; } }
-    private bool _InsideSetValue;
+    public bool InsideSetValue { get { return _InsideSetValueCount > 0; } }
+    private int _InsideSetValueCount;
 
     #endregion
 
@@ -515,16 +494,18 @@ namespace FreeLibSet.DependedValues
   /// Этот класс не является сериализуемым
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
-  public class DepValueDelayed<T> : DepValue<T>
+  public class DepDelayedValue<T> : DepValue<T>
   {
     #region Конструктор
 
     /// <summary>
     /// Создает объект.
-    /// Должен быть присоединен обработчик события ValueNeeded
     /// </summary>
-    public DepValueDelayed()
+    public DepDelayedValue(DepValueNeededEventHandler<T> valueNeeded)
     {
+      if (valueNeeded == null)
+        throw new ArgumentNullException("valueNeeded");
+      _ValueNeeded = valueNeeded;
       _Delayed = true;
     }
 
@@ -561,12 +542,6 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     public void SetDelayed()
     {
-#if DEBUG
-      if (ValueNeeded == null)
-        throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
-#endif
-
-
       if (InsideSetValue)
         return;
 
@@ -576,9 +551,9 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Вызывается, когда требуется получить отложенное значение.
-    /// Обработчик должен быть обязательно присоединен.
+    /// Не может быть null.
     /// </summary>
-    public event DepValueNeededEventHandler<T> ValueNeeded;
+    private DepValueNeededEventHandler<T> _ValueNeeded;
 
     /// <summary>
     /// Чтобы не создавать каждый раз объект аргументов
@@ -591,15 +566,10 @@ namespace FreeLibSet.DependedValues
     /// <returns></returns>
     private T GetDelayedValue()
     {
-#if DEBUG
-      if (ValueNeeded == null)
-        throw new InvalidOperationException("Обработчик ValueNeeded не установлен");
-#endif
-
       if (_ValueNeededArgs == null)
         _ValueNeededArgs = new DepValueNeededEventArgs<T>();
       _ValueNeededArgs.Value = default(T);
-      ValueNeeded(this, _ValueNeededArgs);
+      _ValueNeeded(this, _ValueNeededArgs);
       return _ValueNeededArgs.Value;
     }
 
@@ -721,8 +691,10 @@ namespace FreeLibSet.DependedValues
     /// <param name="value"></param>
     private void SetValue(T value)
     {
-      if (InsideSetValue) // чтобы не выполнять лишней проверки
-        return;
+      // 11.11.2021
+      // Событие CheckValue вызываем и для реентрантного вызова
+      //if (InsideSetValue) // чтобы не выполнять лишней проверки
+      //  return;
 
       bool forced = false;
       if (CheckValue != null)
@@ -759,7 +731,13 @@ namespace FreeLibSet.DependedValues
     {
       T NewVal;
       if (Source == null)
-        NewVal = default(T);
+      {
+        //NewVal = default(T);
+
+        // 11.11.2021
+        // Если источник отсоединяется, то текущее значение сохраняется без изменений
+        return;
+      }
       else
         NewVal = Source.Value;
 

@@ -343,8 +343,8 @@ namespace FreeLibSet.Forms.Docs
         }
         if (EFPApp.ShowDialog(_Form, true) != DialogResult.OK)
           return false;
-        //if (State == EFPDataGridViewState.View)
-        //  return false;
+        if (State == EFPDataGridViewState.View)
+          return false; // 11.11.2021
         //DoWrite();
       }
       else

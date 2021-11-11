@@ -493,14 +493,13 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_DeletedEx == null)
         {
-          _DeletedEx = new DepValueDelayed<bool>();
+          _DeletedEx = new DepDelayedValue<bool>(Deleted_ValueNeeded);
           _DeletedEx.OwnerInfo = new DepOwnerInfo(this, "DeletedEx");
-          _DeletedEx.ValueNeeded += new DepValueNeededEventHandler<bool>(Deleted_ValueNeeded);
         }
         return _DeletedEx;
       }
     }
-    private DepValueDelayed<bool> _DeletedEx;
+    private DepDelayedValue<bool> _DeletedEx;
 
     void Deleted_ValueNeeded(object sender, DepValueNeededEventArgs<bool> args)
     {

@@ -5,7 +5,10 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-11-10T17:33:37.343000000"/>
+	<meta name="changed" content="2021-11-11T15:55:00.134000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -455,7 +458,7 @@
 			245</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			21.10.2021-<font color="#000000">09</font>.1<font color="#000000">1</font>.2021</p>
+			21.10.2021-<font color="#000000">0</font><font color="#000000">1</font>.1<font color="#000000">1</font>.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
 			1. <span lang="ru-RU">Изменения пространств имен</span></p>
@@ -466,15 +469,20 @@
 			</a></span><a href="ExtTools_11.htm#v244p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">4. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepInputDelayed&lt;T&gt; </span><span lang="ru-RU">заменен
-			на </span><span lang="en-US">DepValueDelayed&lt;T&gt;, </span><span lang="ru-RU">больше
-			не наследуется от </span><span lang="en-US">DepInput&lt;T&gt;.</span></p>
+			на </span><span lang="en-US">DepDelayedValue&lt;T&gt;, </span><span lang="ru-RU">больше
+			не наследуется от </span><span lang="en-US">DepInput&lt;T&gt;.</span><span lang="en-US">
+			</span><span lang="ru-RU">Обработчик </span><span lang="en-US">ValueNeeded
+			</span><span lang="ru-RU">передается в конструкторе.</span></p>
 			<p><span lang="en-US">5. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepInputWithCheck&lt;T&gt; </span><span lang="ru-RU">упразднен.
 			Событие </span><span lang="en-US">CheckValue </span><span lang="ru-RU">перенесено
 			в </span><span lang="en-US">DepInput&lt;T&gt;. </span><span lang="ru-RU">Конструктор
 			</span><span lang="en-US">DepInput </span><span lang="ru-RU">требует
 			аргументов </span><span lang="en-US">value </span><span lang="ru-RU">и
-			</span><span lang="en-US">valueChanged</span></p>
+			</span><span lang="en-US">valueChanged. </span><span lang="ru-RU">Изменена
+			реализация метода SetValueChanged(): после установки </span><span lang="en-US">Source=null
+			</span><span lang="ru-RU">текущее значение не меняется. Раньше
+			устанавливалось значение </span><span lang="en-US">default&lt;T&gt;.</span></p>
 			<p><span lang="en-US">6. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepValueObject&lt;T&gt; </span><span lang="ru-RU">переименован
 			в </span><span lang="en-US">DepOutput&lt;T&gt;. </span><span lang="ru-RU">Конструктор
@@ -507,7 +515,7 @@
 			ShiftDateRange() </span><span lang="ru-RU">и </span><span lang="en-US">ShiftDateRangeYear().
 			</span>
 			</p>
-			<p><span lang="en-US">-</span><span lang="ru-RU"> </span><font color="#000000"><span lang="ru-RU">Поддержка
+			<p><span lang="en-US">-</span> <font color="#000000"><span lang="ru-RU">Поддержка
 			</span></font><span lang="ru-RU">прокрутки значений стрелочками
 			вверх/вниз. Интефрейсы IUpDownHandler&lt;T&gt; и IMinMaxSource&lt;T&gt;.
 			Абстрактный класс IncrementUpDownHandler</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">,

@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2021-11-10T17:28:19.181000000"/>
+	<meta name="changed" content="2021-11-11T17:57:26.515000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -132,7 +132,7 @@ Forms</span>)</h1>
 			150</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			21.10.2021-<span lang="ru-RU">10</span>.11.2021</p>
+			21.10.2021-<span lang="ru-RU">1</span><span lang="ru-RU">1</span>.11.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
 			1. <span lang="ru-RU">Изменения пространств имен</span></p>
@@ -157,8 +157,13 @@ Forms</span>)</h1>
 			</span>и <span lang="en-US">Maximum. </span>Изменена реализация
 			свойств <span lang="en-US">Format </span>и <span lang="en-US">DecimalPlaces.
 			</span>Свойство <span lang="en-US">FormatProivider. </span>Свойства
-			<span lang="en-US">Increment</span><span lang="ru-RU"> и
+			<span lang="en-US">Increment</span> <span lang="ru-RU">и
 			</span><span lang="en-US">UpDownHandler</span></p>
+			<p>7. <span lang="en-US">SubDocumentEditor.Run() </span>возвращал
+			<span lang="en-US">DialogResult.Ok </span>а не <span lang="en-US">Cancel
+			</span>в режиме просмотра поддокумента. В результате, в заголовке
+			редактора документа рисовалась звездочка, сигнализирующая, что
+			документ изменен.</p>
 		</td>
 	</tr>
 </table>

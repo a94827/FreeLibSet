@@ -548,6 +548,10 @@ namespace FreeLibSet.UICore
       }
     }
 
+    /// <summary>
+    /// Для отладки
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return "{" + DataTools.ToStringJoin<T>(", ", Items) + "}";

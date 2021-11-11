@@ -229,7 +229,7 @@ namespace FreeLibSet.Forms.Docs
         if (grayedEx2 == null)
         {
           grayedEx2 = new DepInput<bool>(false, null);
-          grayedEx2.OwnerInfo=new DepOwnerInfo(this, "Internal GrayedEx input");
+          grayedEx2.OwnerInfo = new DepOwnerInfo(this, "Internal GrayedEx input");
           grayedEx2.Source = _GrayedEx;
           _GrayedEx = grayedEx2;
         }
