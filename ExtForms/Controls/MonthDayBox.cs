@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
 using FreeLibSet.Formatting;
 
 /*
@@ -44,7 +43,7 @@ namespace FreeLibSet.Controls
   /// <summary>
   /// Управляющий элемент для ввода месяца и дня
   /// </summary>
-  [Designer(typeof(MonthDayBoxDesigner))]
+  [Designer(typeof(FreeLibSet.Controls.Design.MonthDayBoxDesigner))]
   [Description("Выбор дня и месяца")]
   [ToolboxBitmap(typeof(MonthDayBox), "MonthDayBox.bmp")]
   [ToolboxItem(true)]
@@ -199,21 +198,5 @@ namespace FreeLibSet.Controls
     }
 
     #endregion
-  }
-
-  public class MonthDayBoxDesigner : ControlDesigner
-  {
-    /// <summary>
-    /// Разрешено менять только горизонтальные размеры
-    /// </summary>
-    public override SelectionRules SelectionRules
-    {
-      get
-      {
-        SelectionRules Rules = base.SelectionRules;
-        Rules = Rules & (~(System.Windows.Forms.Design.SelectionRules.BottomSizeable | System.Windows.Forms.Design.SelectionRules.TopSizeable));
-        return Rules;
-      }
-    }
   }
 }

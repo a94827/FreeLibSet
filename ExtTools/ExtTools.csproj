@@ -90,6 +90,7 @@
     <Compile Include="Data\IdList.cs" />
     <Compile Include="Core\INamedValuesAccess.cs" />
     <Compile Include="RI\DepInput.cs" />
+    <Compile Include="Text\TabTextConvert.cs" />
     <Compile Include="UICore\IUpDownHandler.cs" />
     <Compile Include="UICore\UITools.cs" />
     <Compile Include="Win32\IniFileWindows.cs" />
@@ -136,7 +137,7 @@
   <ItemGroup>
     <Compile Include="Core\DataTools.DateTime.cs" />
     <Compile Include="Core\DataTools.String.cs" />
-    <Compile Include="Text\DelimitedTextConvert.cs" />
+    <Compile Include="Text\CsvTextConvert.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\DataTools.Csv.cs" />

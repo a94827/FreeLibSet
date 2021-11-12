@@ -5,10 +5,6 @@ using System.Drawing;
 using System.Resources;
 using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
-using System.Collections;
-using System.ComponentModel.Design;
-using System.Windows.Forms.Design.Behavior;
 
 #pragma warning disable 1591
 
@@ -115,7 +111,7 @@ namespace FreeLibSet.Controls
   /// значок слева от основного поля и две дополнительные кнопки справа - "Очистить"
   /// и "Редактировать"
   /// </summary>
-  [Designer(typeof(UserComboBoxDesigner))]
+  [Designer(typeof(FreeLibSet.Controls.Design.UserComboBoxDesigner))]
   [ToolboxItem(false)]
   public class UserComboBoxBase : UserControl
   {
@@ -1025,87 +1021,6 @@ public new Color BackColor { get { return base.BackColor; } set { base.BackColor
 
     #endregion
 
-  }
-
-
-  public class UserComboBoxDesigner : ControlDesigner
-  {
-    #region Изменение размеров
-
-    /// <summary>
-    /// Разрешено менять только горизонтальные размеры
-    /// </summary>
-    public override SelectionRules SelectionRules
-    {
-      get
-      {
-        SelectionRules Rules = base.SelectionRules;
-        Rules = Rules & (~(System.Windows.Forms.Design.SelectionRules.BottomSizeable | System.Windows.Forms.Design.SelectionRules.TopSizeable));
-        return Rules;
-      }
-    }
-
-    #endregion
-
-    #region Snap lines
-
-    // Добавляем "сиреневую" линию базовой линии текста для дизайнера формы
-    // Линия берется из основного элемента
-    // Взято из 
-    // http://stackoverflow.com/questions/93541/baseline-snaplines-in-custom-winforms-controls
-    //
-
-    public override IList SnapLines
-    {
-      get
-      {
-        /* Code from above */
-        IList snapLines = base.SnapLines;
-
-        // *** This will need to be modified to match your user control
-        UserComboBoxBase control = Control as UserComboBoxBase;
-        if (control == null)
-          return snapLines;
-
-        // *** This will need to be modified to match the item in your user control
-        // This is the control in your UC that you want SnapLines for the entire UC
-        IDesigner designer = TypeDescriptor.CreateDesigner(control.MainControl, typeof(IDesigner));
-        if (designer == null)
-          return snapLines;
-
-        // *** This will need to be modified to match the item in your user control
-        designer.Initialize(control.MainControl);
-
-        using (designer)
-        {
-          ControlDesigner boxDesigner = designer as ControlDesigner;
-          if (boxDesigner == null)
-            return snapLines;
-
-          foreach (SnapLine line in boxDesigner.SnapLines)
-          {
-            if (line.SnapLineType == SnapLineType.Baseline)
-            {
-              // *** This will need to be modified to match the item in your user control
-              snapLines.Add(new SnapLine(SnapLineType.Baseline,
-                 line.Offset + control.MainControl.Top, // всегда 0
-                 line.Filter, line.Priority));
-              break;
-            }
-          }
-        }
-
-        return snapLines;
-      }
-    }
-
-    #endregion
-
-    //public override void InitializeNewComponent(IDictionary defaultValues)
-    //{
-    //  defaultValues.Remove("Text");
-    //  base.InitializeNewComponent(defaultValues);
-    //}
   }
 
   /// <summary>

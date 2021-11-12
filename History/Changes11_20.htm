@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 7.2.1.2 (Windows)"/>
 	<meta name="created" content="2021-10-20T17:35:30.201000000"/>
-	<meta name="changed" content="2021-11-11T17:57:42.739000000"/>
+	<meta name="changed" content="2021-11-12T22:03:18.966000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
 		td p { line-height: 120%; orphans: 0; widows: 0; margin-bottom: 0.25cm; background: transparent }
@@ -764,12 +764,23 @@ DateTimeBox, DateRangeBox, IntEditBox, ...), </span><span lang="ru-RU">то
 - объект <span lang="en-US">Comparer</span></font></p>
 <p><font color="#ff0000"><span lang="ru-RU">В </span></font><font color="#ff0000"><span lang="en-US">string-</span></font><font color="#ff0000"><span lang="ru-RU">коллекциях
 - использовать </span></font><font color="#ff0000"><span lang="en-US">StringComparizonType</span></font><font color="#ff0000"><span lang="ru-RU">.</span></font></p>
-<p><font color="#ff0000">Выделить из </font><font color="#ff0000"><span lang="en-US">DataTools
-</span></font><font color="#ff0000">нестатические классы
-</font><font color="#ff0000"><span lang="en-US">CSVTextConvert </span></font><font color="#ff0000">и
-</font><font color="#ff0000"><span lang="en-US">TabbedTextConvert</span></font></p>
-<p><font color="#ff0000">Убрать дизайнеры для упр. элементов в
-отдельную сборку.</font></p>
+<p><font color="#ff0000">Из </font><font color="#ff0000"><span lang="en-US">DataTools
+</span></font><font color="#ff0000">в </font><font color="#ff0000"><span lang="en-US">StdConvert
+</span></font><font color="#ff0000">перенести методы преобразования
+массивов. </font><font color="#ff0000"><span lang="en-US">CommaStringFromXxx()
+-&gt; ToString(). </span></font><font color="#ff0000">Вместо
+параметра </font><font color="#ff0000"><span lang="en-US">bool
+addSpace - </span></font><font color="#ff0000">параметр </font><font color="#ff0000"><span lang="en-US">string
+separator, </span></font><font color="#ff0000">перегрузки без
+параметра с </font><font color="#ff0000"><span lang="en-US">separator=&quot;,&quot;.
+</span></font><font color="#ff0000">Методы </font><font color="#ff0000"><span lang="en-US">CommaStringToXxx()
+-&gt; ToXxxArray(). </span></font><font color="#ff0000">Перегрузки с
+параметром </font><font color="#ff0000"><span lang="en-US">string
+separator</span></font><font color="#ff0000"> (пробел не включается,
+удаляется автоматически)</font><font color="#ff0000"><span lang="en-US">.
+</span></font><font color="#ff0000">Методы возвращают пустой массив,
+а не </font><font color="#ff0000"><span lang="en-US">null, </span></font><font color="#ff0000">если
+входная строка пустая.</font></p>
 <p><br/>
 <br/>
 

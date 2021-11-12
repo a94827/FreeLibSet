@@ -8,6 +8,7 @@ using FreeLibSet.Config;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
 using FreeLibSet.UICore;
+using FreeLibSet.Controls.FIAS;
 
 /*
  * The BSD License

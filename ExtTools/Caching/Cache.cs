@@ -2142,7 +2142,8 @@ namespace FreeLibSet.Caching
             GetKeysCommaString2((KeyDict)(Pair.Value), sb); // рекурсивный вызов
           else
           {
-            DataTools.CommaStringFromArray(sb, Item.Keys);
+            FreeLibSet.Text.CsvTextConvert cnv = new Text.CsvTextConvert();
+            cnv.ToString(sb, Item.Keys);
             sb.Append(Environment.NewLine);
           }
         }

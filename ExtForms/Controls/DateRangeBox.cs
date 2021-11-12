@@ -6,10 +6,6 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Media;
-using System.Windows.Forms.Design;
-using System.ComponentModel.Design;
-using System.Collections;
-using System.Windows.Forms.Design.Behavior;
 using System.Diagnostics;
 using FreeLibSet.Calendar;
 using FreeLibSet.Forms;
@@ -53,7 +49,7 @@ namespace FreeLibSet.Controls
   /// Снизу выводится текстовое представление введенного интервала дат.
   /// Справа имеются дополнительные кнопки для задания интервала
   /// </summary>
-  [Designer(typeof(DateRangeBoxDesigner))]
+  [Designer(typeof(FreeLibSet.Controls.Design.DateRangeBoxDesigner))]
   [Description("Два поля для ввода интервала дат")]
   [ToolboxBitmap(typeof(DateRangeBox), "DateRangeBox.bmp")]
   [ToolboxItem(true)]
@@ -343,80 +339,6 @@ namespace FreeLibSet.Controls
       catch (Exception e)
       {
         lblPeriod.Text = e.Message; // 05.06.2019
-      }
-    }
-
-    #endregion
-  }
-
-  public class DateRangeBoxDesigner : ControlDesigner
-  {
-    #region Размеры
-
-    /// <summary>
-    /// Разрешено менять только горизонтальные размеры
-    /// </summary>
-    public override SelectionRules SelectionRules
-    {
-      get
-      {
-        SelectionRules Rules = base.SelectionRules;
-        Rules = Rules & (~(System.Windows.Forms.Design.SelectionRules.BottomSizeable | System.Windows.Forms.Design.SelectionRules.TopSizeable));
-        return Rules;
-      }
-    }
-
-    #endregion
-
-    #region Snap lines
-
-    // Добавляем "сиреневую" линию базовой линии текста для дизайнера формы
-    // Линия берется из поля ввода первой даты
-    // Взято из 
-    // http://stackoverflow.com/questions/93541/baseline-snaplines-in-custom-winforms-controls
-    //
-
-    public override IList SnapLines
-    {
-      get
-      {
-        /* Code from above */
-        IList snapLines = base.SnapLines;
-
-        // *** This will need to be modified to match your user control
-        DateRangeBox control = Control as DateRangeBox;
-        if (control == null)
-          return snapLines;
-
-        // *** This will need to be modified to match the item in your user control
-        // This is the control in your UC that you want SnapLines for the entire UC
-        IDesigner designer = TypeDescriptor.CreateDesigner(control.First, typeof(IDesigner));
-        if (designer == null)
-          return snapLines;
-
-        // *** This will need to be modified to match the item in your user control
-        designer.Initialize(control.First);
-
-        using (designer)
-        {
-          ControlDesigner boxDesigner = designer as ControlDesigner;
-          if (boxDesigner == null)
-            return snapLines;
-
-          foreach (SnapLine line in boxDesigner.SnapLines)
-          {
-            if (line.SnapLineType == SnapLineType.Baseline)
-            {
-              // *** This will need to be modified to match the item in your user control
-              snapLines.Add(new SnapLine(SnapLineType.Baseline,
-                 line.Offset + control.First.Top, // всегда 0
-                 line.Filter, line.Priority));
-              break;
-            }
-          }
-        }
-
-        return snapLines;
       }
     }
 

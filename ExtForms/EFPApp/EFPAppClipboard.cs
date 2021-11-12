@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
 using FreeLibSet.Core;
+using FreeLibSet.Text;
 
 /*
  * The BSD License
@@ -270,7 +271,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает прямоугольный блок текста из формата CSV или тектового формата.
+    /// Возвращает прямоугольный блок текста из формата CSV или текстового формата.
     /// Выполняется RepeatCount попыток с задержкой RepeatDelault между попытками. Потом выводится сообщение об ошибке,
     /// если <paramref name="messageIfEmpty"/>=true.
     /// Используются данные в формате TextDataFormat.CommaSeparatedValue, а при отсутствии - в TextDataFormat.Text.
@@ -280,63 +281,23 @@ namespace FreeLibSet.Forms
     /// <returns>Матрица текста или null, если буфер обмена пуст, или возникла ошибка</returns>
     public string[,] GetTextMatrix(bool messageIfEmpty)
     {
-      #region CSV
-
-      string s = GetText(TextDataFormat.CommaSeparatedValue, false); // не выводим сообщение
-      if (HasError)
+      IDataObject dobj = GetDataObject();
+      if (dobj == null)
         return null;
 
-      if (s.Length > 0)
-      {
-        try
-        {
-          try
-          {
-            // Стандартный формат RFC-4180
-            return DataTools.CommaStringToArray2(s);
-          }
-          catch
-          {
-            // Формат Excel
-            return DataTools.CommaStringToArray2(s, ';');
-          }
-        }
-        catch /*(Exception e)*/
-        {
-          _HasError = true;
-          EFPApp.ErrorMessageBox("Данные в буфере обмена в формате CSV нельзя преобразовать в таблицу");
-          return null;
-        }
-      }
+      return WinFormsTools.GetTextMatrix(dobj);
+    }
 
-      #endregion
-
-      #region Text
-
-      s = GetText(DefaultTextFormat, false); // не выводим сообщение
-      if (HasError)
-        return null;
-
-      if (s.Length > 0)
-      {
-        try
-        {
-          return DataTools.TabbedStringToArray2(s);
-        }
-        catch /*(Exception e)*/
-        {
-          _HasError = true;
-          EFPApp.ErrorMessageBox("Текст в буфере обмена нельзя преобразовать в таблицу");
-          return null;
-        }
-      }
-
-      #endregion
-
-      if (messageIfEmpty)
-        EFPApp.ErrorMessageBox("Буфер обмена не содержит текста или данных в формате CSV");
-
-      return null;
+    /// <summary>
+    /// Помещает в буфер обмена данные в форматах Text и CSV.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// </summary>
+    /// <param name="a">Двумерный массив строк</param>
+    public void SetTextMatrix(string[,] a)
+    {
+      DataObject dobj = new DataObject();
+      WinFormsTools.SetTextMatrix(dobj, a);
+      SetDataObject(dobj, true);
     }
 
     #endregion
@@ -345,7 +306,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает данные в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelau между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <param name="data">Данные</param>
     /// <param name="copy">Если нужно сделать данными сохраняющимися после завершения приложения</param>

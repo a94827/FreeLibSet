@@ -15,6 +15,7 @@ using System.Data;
 using System.Globalization;
 using System.ComponentModel;
 using FreeLibSet.Core;
+using FreeLibSet.Text;
 
 /*
  * The BSD License
@@ -1502,13 +1503,13 @@ namespace FreeLibSet.Forms
 
             if ((CopyFormats & EFPDataGridViewCopyFormats.Text) == EFPDataGridViewCopyFormats.Text)
             {
-              txt = DataTools.TabbedStringFromArray2(a, true);
+              txt = new TabTextConvert().ToString(a);
               dobj2.SetData(DataFormats.Text, true, txt);
             }
 
             if ((CopyFormats & EFPDataGridViewCopyFormats.CSV) == EFPDataGridViewCopyFormats.CSV)
             {
-              txt = DataTools.CommaStringFromArray2(a);
+              txt = new CsvTextConvert().ToString(a);
               if (!String.IsNullOrEmpty(txt))
                 dobj2.SetText(txt, TextDataFormat.CommaSeparatedValue);
             }

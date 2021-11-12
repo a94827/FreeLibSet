@@ -4,6 +4,7 @@ using System.Text;
 using FreeLibSet.FIAS;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
+using FreeLibSet.Controls.FIAS;
 
 /*
  * The BSD License

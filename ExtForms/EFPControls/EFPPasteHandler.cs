@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.IO;
 using FreeLibSet.Core;
+using FreeLibSet.Text;
 
 /*
  * The BSD License
@@ -943,72 +944,15 @@ namespace FreeLibSet.Forms
     /// <returns>True, если данные из буфера могут быть вставлены</returns>
     protected override bool OnTestFormat(IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
     {
+
       _TextMatrix = null;
-
-      string s;
-      if (IsCSV)
-      {
-        // 14.01.2015
-        // Формат CSV может быть записан как MemoryStream
-        object obj = data.GetData(DataFormats.CommaSeparatedValue, false);
-        if (obj == null)
-          s = null;
-        else if (obj is String)
-          s = (string)obj;
-        else if (obj is Stream)
-        {
-          ((Stream)obj).Position = 0;
-          StreamReader rdr = new StreamReader((Stream)obj, Encoding.Default);
-          s = rdr.ReadToEnd();
-        }
-        else
-          s = null;
-      }
-      else
-      {
-        // 15.04.2019
-        // Сначала всегда пытаемся получить текст в Unicode
-        // Это помогает решить проблему вставки, например, из Блокнота, когда для Блокнота установлена
-        // английская раскладка клавиатуры. Тогда вместо кириллицы отображаются знаки "?"
-        s = data.GetData(DataFormats.UnicodeText, true) as string;
-        if (String.IsNullOrEmpty(s))
-          s = data.GetData(DataFormats.Text, true) as string;
-      }
-
-      if (String.IsNullOrEmpty(s))
-      {
-        dataInfoText = "Нет данных в формате " + (IsCSV ? "CSV" : "Текст");
-        dataImageKey = "No";
-        return false;
-      }
 
       try
       {
         if (IsCSV)
-        {
-          // Здесь нельзя ничего запрашивать!
-          //if (reason == EFPPasteReason.PasteSpecial)
-          //{
-          //  char separator = QueryCSVFieldDelimiter(s);
-          //  if (separator == '\0')
-          //    return false;
-          //}
-          //else
-          //{
-          try
-          {
-            // Стандартный формат RFC-4180
-            _TextMatrix = DataTools.CommaStringToArray2(s);
-          }
-          catch
-          {
-            // Формат Excel
-            _TextMatrix = DataTools.CommaStringToArray2(s, ';');
-          }
-          //}
-        }
+          _TextMatrix = WinFormsTools.GetTextMatrixCsv(data);
         else
-          _TextMatrix = DataTools.TabbedStringToArray2(s);
+          _TextMatrix = WinFormsTools.GetTextMatrixText(data);
       }
       catch (Exception e)
       {
@@ -1019,11 +963,10 @@ namespace FreeLibSet.Forms
 
       if (_TextMatrix == null)
       {
-        dataInfoText = "Нельзя преобразовать текст в прямоугольный блок";
+        dataInfoText = "Нет данных в формате " + (IsCSV ? "CSV" : "Текст");
         dataImageKey = "No";
         return false;
       }
-
 
       bool Appliable = true;
       if (_TextMatrix.GetLength(0) == 1 && _TextMatrix.GetLength(1) == 1)

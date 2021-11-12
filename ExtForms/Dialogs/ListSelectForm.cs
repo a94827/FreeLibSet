@@ -9,6 +9,7 @@ using System.IO;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Text;
 
 /*
  * The BSD License
@@ -398,13 +399,8 @@ namespace FreeLibSet.Forms
         }
 
         DataObject dobj = new DataObject();
-        string txt;
 
-        txt = DataTools.TabbedStringFromArray2(a, true);
-        dobj.SetData(DataFormats.Text, true, txt);
-
-        txt = DataTools.CommaStringFromArray2(a);
-        dobj.SetText(txt, TextDataFormat.CommaSeparatedValue);
+        WinFormsTools.SetTextMatrix(dobj, a);
 
         byte[] Buffer = CreateHtmlFormat(a);
         //System.IO.File.WriteAllBytes(@"d:\temp\table.html", Buffer);

@@ -4,6 +4,7 @@ using System.Text;
 using FreeLibSet.FIAS;
 using System.Windows.Forms;
 using FreeLibSet.UICore;
+using FreeLibSet.Controls.FIAS;
 
 /*
  * The BSD License

@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms.FIAS
+namespace FreeLibSet.Controls.FIAS
 {
   partial class FiasDBSettingsPanel
   {

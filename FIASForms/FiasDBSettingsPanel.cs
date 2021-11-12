@@ -35,7 +35,7 @@ using System.Windows.Forms;
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace FreeLibSet.Forms.FIAS
+namespace FreeLibSet.Controls.FIAS
 {
 #pragma warning disable 1591
 

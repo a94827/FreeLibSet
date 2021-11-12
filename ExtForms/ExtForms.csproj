@@ -50,6 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Design\DateRangeBoxDesigner.cs" />
+    <Compile Include="Controls\Design\MonthDayBoxDesigner.cs" />
+    <Compile Include="Controls\Design\NumEditBoxBaseDesigner.cs" />
+    <Compile Include="Controls\Design\RadioGroupBoxDesigner.cs" />
+    <Compile Include="Controls\Design\UserComboBoxDesigner.cs" />
+    <Compile Include="Controls\Design\YearMonthBoxDesigner.cs" />
+    <Compile Include="Controls\Design\YearMonthRangeBoxDesigner.cs" />
     <Compile Include="Controls\NumEditBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -103,6 +110,7 @@
     <Compile Include="EFPControls\EFPDataTreeView.cs" />
     <Compile Include="EFPControls\EFPDateRangeBox.cs" />
     <Compile Include="EFPControls\EFPNumEditBox.cs" />
+    <Compile Include="EFPControls\EFPOtherControls.cs" />
     <Compile Include="EFPForm\EFPDialogPosition.cs" />
     <Compile Include="EFPForm\EFPExternalDialogOwnerWindowHandler.cs" />
     <Compile Include="EFPControls\EFPErrorDataGridView.cs" />
@@ -306,7 +314,6 @@
     <Compile Include="Controls\ParamSetComboBox.designer.cs">
       <DependentUpon>ParamSetComboBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PopupDialog.cs" />
     <Compile Include="Win32\PowerSuspendLocker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\RadioGroupBox.cs">

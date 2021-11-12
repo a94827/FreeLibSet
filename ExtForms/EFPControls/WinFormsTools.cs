@@ -10,6 +10,7 @@ using FreeLibSet.IO;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
 using FreeLibSet.Drawing;
+using FreeLibSet.Text;
 
 /*
  * The BSD License
@@ -2581,57 +2582,143 @@ namespace FreeLibSet.Forms
 
     #region Буфер обмена
 
+
     /// <summary>
-    /// Получить текст в виде массива строк и столбцов.
-    /// Извлекается текст в формате CSV или обычный текст
+    /// Добавляет данные в форматах Text и CSV в заданный объект DataObject.
+    /// Сам буфер обмена не участвует в операции.
     /// </summary>
-    /// <returns></returns>
-    public static string[,] GetClipboardStringArray2()
+    /// <param name="dobj">Заполняемый объект</param>
+    /// <param name="a">Двумерный массив строк</param>
+    public static void SetTextMatrix(IDataObject dobj, string[,] a)
     {
+#if DEBUG
+      if (dobj == null)
+        throw new ArgumentNullException("dobj");
+#endif
+
+      string txt;
+      txt = new TabTextConvert().ToString(a);
+      dobj.SetData(DataFormats.Text, true, txt);
+
+      txt = new CsvTextConvert().ToString(a);
+      dobj.SetData(DataFormats.CommaSeparatedValue, txt);
+    }
+
+    /// <summary>
+    /// Возвращает текстовые данные из объекта DataObject, который получен из буфера обмена.
+    /// Проверяются форматы CSV и Text
+    /// В случае отсутствия данных возвращается null.
+    /// Если данные имеют некорректный формат, выбрасывается исключение.
+    /// </summary>
+    /// <param name="dobj">Объект, полученный из буфера обмена</param>
+    /// <returns>Матрица текста или null, если нет данных в подходящем формате</returns>
+    public static string[,] GetTextMatrix(IDataObject dobj)
+    {
+      string[,] res = GetTextMatrixCsv(dobj);
+      if (res == null)
+        res = GetTextMatrixText(dobj);
+      return res;
+    }
+
+    /// <summary>
+    /// Возвращает текстовые данные из объекта DataObject, который получен из буфера обмена.
+    /// Проверяется только формат данных CSV.
+    /// В случае отсутствия данных возвращается null.
+    /// Если данные имеют некорректный формат, выбрасывается исключение.
+    /// </summary>
+    /// <param name="dobj">Объект, полученный из буфера обмена</param>
+    /// <returns>Матрица текста или null, если нет данных в подходящем формате</returns>
+    public static string[,] GetTextMatrixCsv(IDataObject dobj)
+    {
+      if (dobj == null)
+        return null;
+
+      object obj = dobj.GetData(DataFormats.CommaSeparatedValue, false);
+      if (obj == null)
+        return null;
+
+      // 14.01.2015
+      // Формат CSV может быть записан как MemoryStream
+
       string s;
-
-      // 10.09.2012
-      // Сначала - текст, затем - csv
-
-      s = EFPApp.Clipboard.GetText();
-      if (EFPApp.Clipboard.HasError)
-        return null;
-      if (!String.IsNullOrEmpty(s))
+      if (obj is String)
+        s = (string)obj;
+      else if (obj is Stream)
       {
-        try
-        {
-          return DataTools.TabbedStringToArray2(s);
-        }
-        catch (Exception e)
-        {
-          throw new ParsingException("Ошибка преобразования текста из буфера обмена. " + e.Message, e);
-        }
+        ((Stream)obj).Position = 0;
+        StreamReader rdr = new StreamReader((Stream)obj, Encoding.Default);
+        s = rdr.ReadToEnd();
       }
+      else
+        throw new InvalidOperationException("Для данных " + DataFormats.CommaSeparatedValue + " получен объект неизвестного типа: " + obj.GetType().ToString());
 
-      s = EFPApp.Clipboard.GetData("Csv") as String;
-      if (EFPApp.Clipboard.HasError)
+      if (String.IsNullOrEmpty(s))
         return null;
-      if (!String.IsNullOrEmpty(s))
+
+      CsvTextConvert conv = new CsvTextConvert();
+      conv.AutoDetectNewLine = true;
+      try
       {
-        try
-        {
-          try
-          {
-            // Формат RFC 4180
-            return DataTools.CommaStringToArray2(s);
-          }
-          catch
-          {
-            // Формат Excel
-            return DataTools.CommaStringToArray2(s, ';');
-          }
-        }
-        catch (Exception e)
-        {
-          throw new ParsingException("Ошибка преобразования текста CSV из буфера обмена. " + e.Message);
-        }
+        // Стандартный формат RFC-4180
+        conv.FieldDelimiter = ',';
+        return conv.ToArray2(s);
       }
-      return null;
+      catch
+      {
+        // Формат Excel
+        string ls = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+        if (ls.Length == 1 && ls != ",")
+        {
+          conv.FieldDelimiter = ls[0];
+          return conv.ToArray2(s);
+        }
+        else
+          throw;
+      }
+    }
+
+
+    /// <summary>
+    /// Возвращает текстовые данные из объекта DataObject, который получен из буфера обмена.
+    /// Проверяется только формат данных Text.
+    /// В случае отсутствия данных возвращается null.
+    /// Если данные имеют некорректный формат, выбрасывается исключение.
+    /// </summary>
+    /// <param name="dobj">Объект, полученный из буфера обмена</param>
+    /// <returns>Матрица текста или null, если нет данных в подходящем формате</returns>
+    public static string[,] GetTextMatrixText(IDataObject dobj)
+    {
+      if (dobj == null)
+        return null;
+
+      string sFormat = DataFormats.UnicodeText;
+      object obj = dobj.GetData(sFormat);
+      if (obj == null)
+      {
+        sFormat = DataFormats.Text;
+        obj = dobj.GetData(sFormat);
+      }
+      if (obj == null)
+        return null;
+
+      string s;
+      if (obj is String)
+        s = (string)obj;
+      else if (obj is Stream)
+      {
+        ((Stream)obj).Position = 0;
+        StreamReader rdr = new StreamReader((Stream)obj, Encoding.Default);
+        s = rdr.ReadToEnd();
+      }
+      else
+        throw new InvalidOperationException("Для данных " + sFormat + " получен объект неизвестного типа: " + obj.GetType().ToString());
+
+      if (String.IsNullOrEmpty(s))
+        return null;
+
+      TabTextConvert conv = new TabTextConvert();
+      conv.AutoDetectNewLine = true;
+      return conv.ToArray2(s);
     }
 
     #endregion

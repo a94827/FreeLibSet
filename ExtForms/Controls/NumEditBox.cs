@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
-using System.Windows.Forms.Design.Behavior;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Formatting;
@@ -16,7 +13,7 @@ using FreeLibSet.Formatting;
 
 namespace FreeLibSet.Controls
 {
-  [Designer(typeof(NumEditBoxBaseDesigner))]
+  [Designer(typeof(FreeLibSet.Controls.Design.NumEditBoxBaseDesigner))]
   public abstract class NumEditBoxBase<T> : UserControl, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
@@ -865,82 +862,6 @@ namespace FreeLibSet.Controls
     #endregion
   }
 
-
-  public class NumEditBoxBaseDesigner : ControlDesigner
-  {
-    #region Изменение размеров
-
-    /// <summary>
-    /// Разрешено менять только горизонтальные размеры
-    /// </summary>
-    public override SelectionRules SelectionRules
-    {
-      get
-      {
-        SelectionRules Rules = base.SelectionRules;
-        Rules = Rules & (~(System.Windows.Forms.Design.SelectionRules.BottomSizeable | System.Windows.Forms.Design.SelectionRules.TopSizeable));
-        return Rules;
-      }
-    }
-
-    #endregion
-
-    #region Snap lines
-
-    // Добавляем "сиреневую" линию базовой линии текста для дизайнера формы
-    // Линия берется из основного элемента
-    // Взято из 
-    // http://stackoverflow.com/questions/93541/baseline-snaplines-in-custom-winforms-controls
-    //
-
-    public override System.Collections.IList SnapLines
-    {
-      get
-      {
-        /* Code from above */
-        System.Collections.IList snapLines = base.SnapLines;
-
-
-        // *** This will need to be modified to match the item in your user control
-        // This is the control in your UC that you want SnapLines for the entire UC
-        IDesigner designer = TypeDescriptor.CreateDesigner(Control.Controls[0], typeof(IDesigner));
-        if (designer == null)
-          return snapLines;
-
-        // *** This will need to be modified to match the item in your user control
-        designer.Initialize(Control.Controls[0]);
-
-        using (designer)
-        {
-          ControlDesigner boxDesigner = designer as ControlDesigner;
-          if (boxDesigner == null)
-            return snapLines;
-
-          foreach (SnapLine line in boxDesigner.SnapLines)
-          {
-            if (line.SnapLineType == SnapLineType.Baseline)
-            {
-              // *** This will need to be modified to match the item in your user control
-              snapLines.Add(new SnapLine(SnapLineType.Baseline,
-                 line.Offset + Control.Controls[0].Top, // всегда 0
-                 line.Filter, line.Priority));
-              break;
-            }
-          }
-        }
-
-        return snapLines;
-      }
-    }
-
-    #endregion
-
-    //public override void InitializeNewComponent(IDictionary defaultValues)
-    //{
-    //  defaultValues.Remove("Text");
-    //  base.InitializeNewComponent(defaultValues);
-    //}
-  }
 
   /// <summary>
   /// Поле ввода числового значения типа Double

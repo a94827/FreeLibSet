@@ -326,16 +326,4 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
-
-  public class EFPExtPrintPreviewControl : EFPControl<ExtPrintPreviewControl>
-  {
-    #region Конструктор
-
-    public EFPExtPrintPreviewControl(EFPBaseProvider baseProvider, ExtPrintPreviewControl control )
-      : base(baseProvider, control, true)
-    {
-    }
-
-    #endregion
-  }
 }
