@@ -1405,7 +1405,7 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Возможные значения свойства CodeGridFilter.Mode
   /// </summary>
-  public enum CodesFilterMode
+  public enum CodeFilterMode
   {
     /// <summary>
     /// Нет фильтра
@@ -1444,8 +1444,8 @@ namespace FreeLibSet.Data.Docs
       : base(columnName)
     {
       _CanBeEmpty = canBeEmpty;
-      _Mode = CodesFilterMode.NoFilter;
-      _Codes = String.Empty;
+      _Mode = CodeFilterMode.NoFilter;
+      _Codes = DataTools.EmptyStrings;
       _EmptyCode = false;
     }
 
@@ -1456,53 +1456,50 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Текущий режим фильтра
     /// </summary>
-    public CodesFilterMode Mode
-    {
-      get { return _Mode; }
-      set
-      {
-        if (value == _Mode)
-          return;
-        _Mode = value;
-        OnChanged();
-      }
-    }
-    private CodesFilterMode _Mode;
+    public CodeFilterMode Mode { get { return _Mode; } }
+    private CodeFilterMode _Mode;
 
     /// <summary>
-    /// Список включаемых или исключаемых кодов, разделенных запятыми
+    /// Список включаемых или исключаемых кодов.
     /// </summary>
-    public string Codes
-    {
-      get { return _Codes; }
-      set
-      {
-        if (value == null)
-          value = String.Empty;
-        if (value == _Codes)
-          return;
-        _Codes = value;
-        OnChanged();
-      }
-    }
-    private string _Codes;
+    public string[] Codes { get { return _Codes; } }
+    private string[] _Codes;
 
     /// <summary>
     /// Включить ли в фильтр строки без кода.
     /// Свойство действительно только при CanBeEmpty=true
     /// </summary>
-    public bool EmptyCode
-    {
-      get { return _EmptyCode; }
-      set
-      {
-        if (value == _EmptyCode)
-          return;
-        _EmptyCode = value;
-        OnChanged();
-      }
-    }
+    public bool EmptyCode { get { return _EmptyCode; } }
     private bool _EmptyCode;
+
+    /// <summary>
+    /// Установка (или сброс) фильтра
+    /// </summary>
+    /// <param name="mode">Режим фильтра</param>
+    /// <param name="codes">Список кодов</param>
+    /// <param name="emptyCode">Должен ли использоваться пустой код</param>
+    public void SetFilter(CodeFilterMode mode, string[] codes, bool emptyCode)
+    {
+      if (mode == CodeFilterMode.NoFilter)
+      {
+        Clear();
+        return;
+      }
+
+      if (codes == null)
+        codes = DataTools.EmptyStrings;
+
+      if (codes.Length == 0 && (!emptyCode))
+      {
+        Clear();
+        return;
+      }
+
+      _Mode = mode;
+      _Codes = codes;
+      _EmptyCode = emptyCode;
+      OnChanged();
+    }
 
     #endregion
 
@@ -1521,40 +1518,22 @@ namespace FreeLibSet.Data.Docs
     #region Переопределенные методы и свойства
 
     /// <summary>
-    /// Нормализация списка кодов. Удаляет пробелы вокруг запятых
-    /// </summary>
-    /// <param name="s">Строка, введенная пользователем</param>
-    /// <returns>Исправленная строка</returns>
-    protected static string NormCodes(string s)
-    {
-      if (String.IsNullOrEmpty(s))
-        return String.Empty;
-      string[] a = s.Split(',');
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < a.Length; i++)
-      {
-        string s1 = a[i].Trim();
-        if (String.IsNullOrEmpty(s1))
-          continue;
-        if (sb.Length > 0)
-          sb.Append(',');
-        sb.Append(s1);
-      }
-      return sb.ToString();
-    }
-
-    /// <summary>
     /// Очистка фильтра
     /// </summary>
     public override void Clear()
     {
-      Mode = CodesFilterMode.NoFilter;
+      if (IsEmpty)
+        return;
+      _Mode = CodeFilterMode.NoFilter;
+      _Codes = DataTools.EmptyStrings;
+      _EmptyCode = false;
+      OnChanged();
     }
 
     /// <summary>
     /// Возвращает true, если фильтр не установлен
     /// </summary>
-    public override bool IsEmpty { get { return Mode == CodesFilterMode.NoFilter; } }
+    public override bool IsEmpty { get { return Mode == CodeFilterMode.NoFilter; } }
 
     /// <summary>
     /// Получение фильтра для фильтрации строк таблицы данных
@@ -1562,16 +1541,13 @@ namespace FreeLibSet.Data.Docs
     public override DBxFilter GetSqlFilter()
     {
       List<DBxFilter> Filters = new List<DBxFilter>();
-      if (!String.IsNullOrEmpty(Codes))
-      {
-        string[] a = Codes.Split(',');
-        Filters.Add(new ValuesFilter(Code, a));
-      }
+      if (Codes.Length > 0)
+        Filters.Add(new ValuesFilter(Code, Codes));
       if (EmptyCode)
         Filters.Add(new ValueFilter(Code, String.Empty, typeof(string)));
 
       DBxFilter Filter = OrFilter.FromArray(Filters.ToArray());
-      if (Mode == CodesFilterMode.Exclude)
+      if (Mode == CodeFilterMode.Exclude)
         Filter = new NotFilter(Filter);
       return Filter;
     }
@@ -1593,23 +1569,12 @@ namespace FreeLibSet.Data.Docs
     /// <param name="cfg">Секция конфигурации</param>
     public override void ReadConfig(CfgPart cfg)
     {
-      switch (cfg.GetString("Mode"))
-      {
-        case "Include":
-          Mode = CodesFilterMode.Include;
-          break;
-        case "Exclude":
-          Mode = CodesFilterMode.Exclude;
-          break;
-        default:
-          Mode = CodesFilterMode.NoFilter;
-          break;
-      }
-      Codes = cfg.GetString("Codes");
+      CodeFilterMode mode = cfg.GetEnumDef<CodeFilterMode>("Mode", CodeFilterMode.NoFilter);
+      string[] codes = cfg.GetString("Codes").Split(',');
+      bool emptyCode = false;
       if (CanBeEmpty)
-        EmptyCode = cfg.GetBool("EmptyCode");
-      else
-        EmptyCode = false;
+        emptyCode = cfg.GetBool("EmptyCode");
+      SetFilter(mode, codes, emptyCode);
     }
 
     /// <summary>
@@ -1620,10 +1585,10 @@ namespace FreeLibSet.Data.Docs
     {
       switch (Mode)
       {
-        case CodesFilterMode.Include:
+        case CodeFilterMode.Include:
           cfg.SetString("Mode", "Include");
           break;
-        case CodesFilterMode.Exclude:
+        case CodeFilterMode.Exclude:
           cfg.SetString("Mode", "Exclude");
           break;
         default:
@@ -1631,10 +1596,10 @@ namespace FreeLibSet.Data.Docs
           break;
       }
 
-      if (String.IsNullOrEmpty(Codes))
+      if (Codes.Length == 0)
         cfg.Remove("Codes");
       else
-        cfg.SetString("Codes", Codes);
+        cfg.SetString("Codes", String.Join(",", Codes));
 
       if (CanBeEmpty)
         cfg.SetBool("EmptyCode", EmptyCode);
@@ -1660,12 +1625,12 @@ namespace FreeLibSet.Data.Docs
         Flag = EmptyCode;
       else
       {
-        if (String.IsNullOrEmpty(Codes))
+        if (Codes.Length == 0)
           Flag = false;
         else
-          Flag = Codes.Contains(rowValue);
+          Flag = Array.IndexOf<string>(Codes, rowValue) >= 0;
       }
-      if (Mode == CodesFilterMode.Exclude)
+      if (Mode == CodeFilterMode.Exclude)
         return !Flag;
       else
         return Flag;

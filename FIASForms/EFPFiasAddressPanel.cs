@@ -336,6 +336,7 @@ namespace FreeLibSet.Forms.FIAS
       public EFPTextBox2(EFPBaseProvider baseProvider, TextBox control)
         : base(baseProvider, control)
       {
+        CanBeEmpty = true;
         UseIdle = true;
         Control.Leave += new EventHandler(Control_Leave);
         _OrgText = control.Text;

@@ -2761,6 +2761,8 @@ namespace FreeLibSet.RI
 
     #region Диапазон значений
 
+    // Свойства Minimum и Maximum являются вторичными
+
     #region Отдельно для начальной даты
 
     /// <summary>

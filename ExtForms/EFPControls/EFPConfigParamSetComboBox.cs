@@ -112,6 +112,7 @@ namespace FreeLibSet.Forms
 
       efpSelCB = new EFPTextComboBox(baseProvider, control.TheCB);
       efpSelCB.DisplayName = "Готовые наборы";
+      efpSelCB.CanBeEmpty = true;
 
       efpSaveButton = new EFPButton(baseProvider, control.SaveButton);
       efpSaveButton.DisplayName = "Сохранить набор";

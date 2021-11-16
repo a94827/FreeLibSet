@@ -52,7 +52,7 @@ namespace FreeLibSet.Forms.Docs
   {
     #region Конструктор
 
-    public CodeGridFilterForm()
+    public CodeGridFilterForm(string[] codes, string[] names)
     {
       InitializeComponent();
 
@@ -61,21 +61,18 @@ namespace FreeLibSet.Forms.Docs
 
       efpMode = new EFPRadioButtons(efpForm, rbNoFilter);
 
-      efpCodes = new EFPUserTextComboBox(efpForm, edCodes);
+      efpCodes = new EFPCsvCodesComboBox(efpForm, edCodes, codes);
+      efpCodes.Names = names;
       efpCodes.ToolTipText = "Список кодов, разделенных запятыми";
 
       efpEmpty = new EFPCheckBox(efpForm, cbEmpty);
-      efpEmpty.ToolTipText = "В режиме \"Включить коды\" - включить в фильтр строки, в которых поле не установлено." +Environment.NewLine+
+      efpEmpty.ToolTipText = "В режиме \"Включить коды\" - включить в фильтр строки, в которых поле не установлено." + Environment.NewLine +
       "В режиме \"Исключить коды\" - убрать строки с пустым значением поля";
 
       efpCodes.EnabledEx = new DepExpr1<bool, int>(efpMode.SelectedIndexEx, new DepFunction1<bool, int>(CalcCodesEnabled));
       efpEmpty.EnabledEx = efpCodes.EnabledEx;
 
       efpCodes.CanBeEmpty = true;
-      efpCodes.Validating += new UIValidatingEventHandler(efpCodes_Validating);
-      edCodes.PopupClick += new EventHandler(edCodes_PopupClick);
-      edCodes.ClearButton = true;
-      edCodes.ClearClick += new EventHandler(edCodes_ClearClick);
       efpEmpty.CheckedEx.ValueChanged += efpCodes.Validate;
     }
 
@@ -88,88 +85,11 @@ namespace FreeLibSet.Forms.Docs
 
     #region Поля
 
-    public CodeGridFilter TheFilter;
-
     public EFPRadioButtons efpMode;
 
-    public EFPUserTextComboBox efpCodes;
+    public EFPCsvCodesComboBox efpCodes;
 
     public EFPCheckBox efpEmpty;
-
-    #endregion
-
-    #region Поле ввода кодов
-
-    void efpCodes_Validating(object sender, UIValidatingEventArgs args)
-    {
-      if (args.ValidateState == UIValidateState.Error)
-        return; // пустое поле
-      if (String.IsNullOrEmpty(efpCodes.Text))
-      {
-        if (!efpEmpty.Checked)
-          args.SetError("Список должен быть заполнен");
-        return;
-      }
-      string[] a = efpCodes.Text.Split(',');
-      for (int i = 0; i < a.Length; i++)
-      {
-        string s1 = a[i].Trim();
-        if (String.IsNullOrEmpty(s1))
-        {
-          if (efpEmpty.Visible)
-            args.SetError("Ввод пустых кодов не допускается. Используйте флажок внизу");
-          else
-            args.SetError("Пустые коды не допускаются");
-          return;
-        }
-
-        for (int j = 0; j < i; j++)
-        {
-          string s2 = a[j].Trim();
-          if (s2 == s1)
-          {
-            args.SetError("Одинаковые коды \"" + s1 + "\" в позициях " + (j + 1).ToString() + " и " + (i + 1).ToString());
-            return;
-          }
-        }
-
-        string Msg;
-        bool Res = TheFilter.CheckCode(s1, out Msg);
-        if (!Res)
-        {
-          if (String.IsNullOrEmpty(Msg))
-            Msg = "Неизвестная ошибка. Обратитесь к разработчику программы";
-          args.SetError("Ошибка в позиции №" + (i + 1).ToString() + " (" + s1 + "): " + Msg);
-          return;
-        }
-        if (!String.IsNullOrEmpty(Msg))
-        {
-          if (args.ValidateState == UIValidateState.Ok)
-            args.SetWarning("Позиция №" + (i + 1).ToString() + " (" + s1 + "): " + Msg);
-        }
-      }
-    }
-
-    void edCodes_PopupClick(object sender, EventArgs args)
-    {
-      string[] Codes;
-      if (String.IsNullOrEmpty(efpCodes.Text))
-        Codes = DataTools.EmptyStrings;
-      else
-      {
-        Codes = efpCodes.Text.Split(',');
-        for (int i = 0; i < Codes.Length; i++)
-          Codes[i] = Codes[i].Trim();
-      }
-      if (!TheFilter.ShowSelectCodesDialog(ref Codes))
-        return;
-      efpCodes.Text = String.Join(",", Codes).Replace(",", ", ");
-    }
-
-    void edCodes_ClearClick(object Sender, EventArgs Args)
-    {
-      efpCodes.Text = String.Empty;
-    }
 
     #endregion
   }
@@ -209,18 +129,18 @@ namespace FreeLibSet.Forms.Docs
         StringBuilder sb = new StringBuilder();
         switch (Mode)
         {
-          case CodesFilterMode.Include:
+          case CodeFilterMode.Include:
             break;
-          case CodesFilterMode.Exclude:
+          case CodeFilterMode.Exclude:
             sb.Append("Кроме: ");
             break;
           default:
             return String.Empty;
         }
-        sb.Append(Codes.Replace(",", ", "));
+        sb.Append(String.Join(", ", Codes));
         if (EmptyCode)
         {
-          if (!String.IsNullOrEmpty(Codes))
+          if (Codes.Length > 0)
             sb.Append(", ");
           sb.Append("[ Нет ]");
         }
@@ -234,34 +154,37 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      CodeGridFilterForm Form = new CodeGridFilterForm();
-      Form.TheFilter = this;
+      string[] codes, names;
+      GetCodesAndNames(out codes, out names);
+      CodeGridFilterForm Form = new CodeGridFilterForm(codes, names);
       Form.Text = DisplayName;
       Form.efpEmpty.Visible = CanBeEmpty;
 
       Form.efpMode.SelectedIndex = (int)(Mode);
-      Form.efpCodes.Text = Codes;
+      Form.efpCodes.SelectedCodes = Codes;
       Form.efpEmpty.Checked = EmptyCode;
 
       if (EFPApp.ShowDialog(Form, true, dialogPosition) != DialogResult.OK)
         return false;
 
-      Mode = (CodesFilterMode)(Form.efpMode.SelectedIndex);
-      Codes = NormCodes(Form.efpCodes.Text);
-      EmptyCode = Form.efpEmpty.Checked;
+      SetFilter((CodeFilterMode)(Form.efpMode.SelectedIndex),
+        Form.efpCodes.SelectedCodes,
+        Form.efpEmpty.Checked);
       return true;
     }
- 
+
     #endregion
 
     #region Абстрактные методы
 
+#if XXX
     /// <summary>
     /// Показать диалог выбора кодов из справочника
     /// </summary>
     /// <param name="codes">Вход-выход: Выбранные коды</param>
+    /// <param name="dialogPosition">Позиция для выпадающего списка</param>
     /// <returns>true, если выбор сделан</returns>
-    public virtual bool ShowSelectCodesDialog(ref string[] codes)
+    public virtual bool ShowSelectCodesDialog(ref string[] codes, EFPDialogPosition dialogPosition)
     {
       string[] aCodes;
       string[] aNames;
@@ -282,6 +205,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       ListSelectDialog dlg = new ListSelectDialog();
+      dlg.DialogPosition = dialogPosition;
       dlg.Title = DisplayName;
       dlg.ImageKey = ImageKey;
       dlg.Items = new string[aCodes.Length];
@@ -313,6 +237,8 @@ namespace FreeLibSet.Forms.Docs
       codes = lst.ToArray();
       return true;
     }
+#endif
+
 
     /// <summary>
     /// Получить массив доступных кодов и значений.

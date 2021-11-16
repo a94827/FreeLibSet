@@ -144,6 +144,7 @@ namespace FreeLibSet.Forms
 
       SetComboBox.ShowImages = EFPApp.ShowListImages;
       EFPTextComboBox efpSelCB = new EFPTextComboBox(FormProvider, SetComboBox.TheCB);
+      efpSelCB.CanBeEmpty = true;
       efpSelCB.DisplayName = "Готовые наборы";
       efpSelCB.ToolTipText = "Выбор готового набора параметров отчета из выпадающего списка." + Environment.NewLine +
         "В список входят пользовательские наборы, которые вы сохранили, а также до 9 последних наборов параметров построения отчета (история)" + Environment.NewLine + Environment.NewLine +

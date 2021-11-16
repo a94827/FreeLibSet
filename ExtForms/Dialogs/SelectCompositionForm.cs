@@ -30,6 +30,7 @@ namespace FreeLibSet.Forms
       efpPreview.Control.SizeMode = PictureBoxSizeMode.Zoom;
 
       efpSelCB = new EFPTextComboBox(efpForm, cbParamSet.TheCB);
+      efpSelCB.CanBeEmpty = true;
       efpSelCB.DisplayName = "Готовые наборы";
 
       efpSaveButton = new EFPButton(efpForm, cbParamSet.SaveButton);

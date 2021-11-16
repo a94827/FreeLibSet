@@ -92,13 +92,18 @@ namespace FreeLibSet.UICore
       if (firstDate.HasValue && lastDate.HasValue)
       {
         // Обычный сдвиг
-        DateRange dtr = new DateRange(firstDate.Value, lastDate.Value);
+        if (lastDate.Value >= firstDate.Value)
+        {
+          DateRange dtr = new DateRange(firstDate.Value, lastDate.Value);
 
-        dtr = dtr >> (forward ? +1 : -1);
+          dtr = dtr >> (forward ? +1 : -1);
 
-        firstDate = dtr.FirstDate;
-        lastDate = dtr.LastDate;
-        return true;
+          firstDate = dtr.FirstDate;
+          lastDate = dtr.LastDate;
+          return true;
+        }
+        else
+          return false;
       }
 
       if (firstDate.HasValue)

@@ -49,6 +49,7 @@ namespace FreeLibSet.Forms
       {
         SetComboBox.ShowImages = EFPApp.ShowListImages;
         EFPTextComboBox efpSelCB = new EFPTextComboBox(FormProvider, SetComboBox.TheCB);
+        efpSelCB.CanBeEmpty = true;
         efpSelCB.DisplayName = "Готовые наборы";
         efpSelCB.ToolTipText = "Выбор готового набора настроек из выпадающего списка." + Environment.NewLine +
           "В список входят:" + Environment.NewLine +
