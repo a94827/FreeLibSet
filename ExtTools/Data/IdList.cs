@@ -682,7 +682,7 @@ namespace FreeLibSet.Data
     /// <returns></returns>
     public override string ToString()
     {
-      return DataTools.CommaStringFromIds(ToArray(), false);
+      return StdConvert.ToString(ToArray());
     }
 
     /// <summary>

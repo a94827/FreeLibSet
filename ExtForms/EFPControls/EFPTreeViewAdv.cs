@@ -94,7 +94,8 @@ namespace FreeLibSet.Forms
     {
       if (_IndexArray == null)
         return "{Root}";
-      return "{" + DataTools.CommaStringFromIds(_IndexArray, false) + "}";
+      else
+        return "{" + StdConvert.ToString(_IndexArray) + "}";
     }
 
     #endregion

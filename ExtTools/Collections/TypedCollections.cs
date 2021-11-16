@@ -94,8 +94,20 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
+    /// Создает пустую коллекцию с заданным объектом сравнения
+    /// </summary>
+    public OrderSortedList(IEqualityComparer<TKey> keyComparer)
+    {
+      _List = new List<TKey>();
+      _Dict = new Dictionary<TKey, TValue>(keyComparer);
+      _KeyComparer = keyComparer;
+      _Keys = new KeyCollection(this);
+      _Values = new ValueCollection(this);
+    }
+
+    /// <summary>
     /// Создает коллекцию с заданной начальной емкостью.
-    /// Используйте эту верисю конструктора, если заранее известно число элементов
+    /// Используйте эту версию конструктора, если заранее известно число элементов
     /// </summary>
     /// <param name="capacity">Начальная емкость в коллекции</param>
     public OrderSortedList(int capacity)
@@ -107,11 +119,38 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
+    /// Создает коллекцию с заданной начальной емкостью.
+    /// Используйте эту версию конструктора, если заранее известно число элементов.
+    /// </summary>
+    /// <param name="capacity">Начальная емкость в коллекции</param>
+    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
+    public OrderSortedList(int capacity, IEqualityComparer<TKey> keyComparer)
+    {
+      _List = new List<TKey>(capacity);
+      _Dict = new Dictionary<TKey, TValue>(capacity, keyComparer);
+      _KeyComparer = keyComparer;
+      _Keys = new KeyCollection(this);
+      _Values = new ValueCollection(this);
+    }
+
+    /// <summary>
     /// Конструктор копирования
     /// </summary>
     /// <param name="dictionary">Источник данных</param>
     public OrderSortedList(IDictionary<TKey, TValue> dictionary)
       : this(dictionary.Count)
+    {
+      foreach (KeyValuePair<TKey, TValue> Pair in dictionary)
+        Add(Pair.Key, Pair.Value);
+    }
+
+    /// <summary>
+    /// Конструктор копирования
+    /// </summary>
+    /// <param name="dictionary">Источник данных</param>
+    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
+    public OrderSortedList(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> keyComparer)
+      : this(dictionary.Count, keyComparer)
     {
       foreach (KeyValuePair<TKey, TValue> Pair in dictionary)
         Add(Pair.Key, Pair.Value);
@@ -601,6 +640,11 @@ namespace FreeLibSet.Collections
     private Dictionary<TKey, TValue> _Dict;
 
     /// <summary>
+    /// Для восстановления поля _Dict после десериализации
+    /// </summary>
+    private IEqualityComparer<TKey> _KeyComparer;
+
+    /// <summary>
     /// Доступ по ключу
     /// Если запрошен несуществуюший код, генерируется исключение.
     /// Установка значения с несуществующим кодом выполняет добавление элемента
@@ -932,7 +976,7 @@ namespace FreeLibSet.Collections
 #endif
 
       _List = new List<TKey>(InternalKeys.Length);
-      _Dict = new Dictionary<TKey, TValue>(InternalKeys.Length);
+      _Dict = new Dictionary<TKey, TValue>(InternalKeys.Length, _KeyComparer);
       _List.AddRange(InternalKeys);
       for (int i = 0; i < InternalKeys.Length; i++)
         _Dict.Add(InternalKeys[i], InternalValues[i]);
@@ -2980,10 +3024,31 @@ namespace FreeLibSet.Collections
     /// Создает пустую коллекцию.
     /// Эта версия конструктора бесполезна, если не создан производный класс, вызывающий SetReadOnly().
     /// </summary>
+    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
+    public DictionaryWithReadOnly(IEqualityComparer<TKey> keyComparer)
+    {
+      _Source = new Dictionary<TKey, TValue>(keyComparer);
+    }
+
+    /// <summary>
+    /// Создает пустую коллекцию.
+    /// Эта версия конструктора бесполезна, если не создан производный класс, вызывающий SetReadOnly().
+    /// </summary>
     /// <param name="capacity">Начальная емкость коллекции</param>
     protected DictionaryWithReadOnly(int capacity)
     {
       _Source = new Dictionary<TKey, TValue>(capacity);
+    }
+
+    /// <summary>
+    /// Создает пустую коллекцию.
+    /// Эта версия конструктора бесполезна, если не создан производный класс, вызывающий SetReadOnly().
+    /// </summary>
+    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
+    protected DictionaryWithReadOnly(int capacity, IEqualityComparer<TKey> keyComparer)
+    {
+      _Source = new Dictionary<TKey, TValue>(capacity, keyComparer);
     }
 
     #endregion
@@ -3219,6 +3284,17 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
+    /// Конструктор с интерфейсом сравнения значений
+    /// <param name="comparer">Реализация интерфейса для сравнения значений</param>
+    /// </summary>
+    public SingleScopeList(IEqualityComparer<T> comparer)
+    {
+      _List = new List<T>();
+      _Dict = new Dictionary<T, object>(comparer);
+      _Comparer = comparer;
+    }
+
+    /// <summary>
     /// Конструктор пустого списка с заданной емкостью.
     /// Его следует использовать, если число элементов списка известно заранее.
     /// Несмотря на заданный размер, можно будет добавить больше элементов
@@ -3231,8 +3307,22 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
+    /// Конструктор пустого списка с заданной емкостью.
+    /// Его следует использовать, если число элементов списка известно заранее.
+    /// Несмотря на заданный размер, можно будет добавить больше элементов
+    /// </summary>
+    /// <param name="capacity">Начальная емкость списка</param>
+    /// <param name="comparer">Реализация интерфейса для сравнения значений</param>
+    public SingleScopeList(int capacity, IEqualityComparer<T> comparer)
+    {
+      _List = new List<T>(capacity);
+      _Dict = new Dictionary<T, object>(capacity, comparer);
+      _Comparer = comparer;
+    }
+
+    /// <summary>
     /// Конструктор списка, заполненного элементами из другого списка.
-    /// Может возникнуть исключение, если в исходном списке есть повторяющиеся элементы
+    /// Если в исходном списке есть повторяющиеся элементы, то они отбрасываются.
     /// </summary>
     /// <param name="collection">Исходный список. Не может быть null</param>
     public SingleScopeList(ICollection<T> collection)
@@ -3244,11 +3334,37 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Конструктор списка, заполненного элементами из другого списка.
-    /// Может возникнуть исключение, если в исходном списке есть повторяющиеся элементы
+    /// Если в исходном списке есть повторяющиеся элементы, то они отбрасываются.
+    /// </summary>
+    /// <param name="collection">Исходный список. Не может быть null</param>
+    /// <param name="comparer">Реализация интерфейса для сравнения значений</param>
+    public SingleScopeList(ICollection<T> collection, IEqualityComparer<T> comparer)
+      : this(collection.Count, comparer)
+    {
+      foreach (T Item in collection)
+        Add(Item);
+    }
+
+    /// <summary>
+    /// Конструктор списка, заполненного элементами из другого списка.
+    /// Если в исходном списке есть повторяющиеся элементы, то они отбрасываются.
     /// </summary>
     /// <param name="collection">Исходный список. Не может быть null</param>
     public SingleScopeList(IEnumerable<T> collection)
       : this()
+    {
+      foreach (T Item in collection)
+        Add(Item);
+    }
+
+    /// <summary>
+    /// Конструктор списка, заполненного элементами из другого списка.
+    /// Если в исходном списке есть повторяющиеся элементы, то они отбрасываются.
+    /// </summary>
+    /// <param name="collection">Исходный список. Не может быть null</param>
+    /// <param name="comparer">Реализация интерфейса для сравнения значений</param>
+    public SingleScopeList(IEnumerable<T> collection, IEqualityComparer<T> comparer)
+      : this(comparer)
     {
       foreach (T Item in collection)
         Add(Item);
@@ -3269,6 +3385,11 @@ namespace FreeLibSet.Collections
     /// </summary>
     [NonSerialized]
     private Dictionary<T, object> _Dict;
+
+    /// <summary>
+    /// Для восстановления поля _Dict после десериализации
+    /// </summary>
+    private IEqualityComparer<T> _Comparer;
 
     /// <summary>
     /// Доступ по индексу. 
@@ -3611,7 +3732,7 @@ namespace FreeLibSet.Collections
     [OnDeserialized]
     private void OnDeserializedMethod(StreamingContext context)
     {
-      _Dict = new Dictionary<T, object>(_List.Count);
+      _Dict = new Dictionary<T, object>(_List.Count, _Comparer);
       for (int i = 0; i < _List.Count; i++)
         _Dict.Add(_List[i], null);
     }
@@ -3639,12 +3760,31 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
+    /// Создает пустой список
+    /// <param name="comparer">Реализация интерфейса для сравнения элементов списка на больше/меньше для сортировки</param>
+    /// </summary>
+    public SingleScopeSortedList(IComparer<T> comparer)
+    {
+      _List = new SortedList<T, object>(comparer);
+    }
+
+    /// <summary>
     /// Создает пустой список заданной начальной емкости
     /// </summary>
     /// <param name="capacity">Начальная емкость</param>
     public SingleScopeSortedList(int capacity)
     {
       _List = new SortedList<T, object>(capacity);
+    }
+
+    /// <summary>
+    /// Создает пустой список заданной начальной емкости
+    /// <param name="comparer">Реализация интерфейса для сравнения элементов списка на больше/меньше для сортировки</param>
+    /// </summary>
+    /// <param name="capacity">Начальная емкость</param>
+    public SingleScopeSortedList(int capacity, IComparer<T> comparer)
+    {
+      _List = new SortedList<T, object>(capacity, comparer);
     }
 
     /// <summary>
@@ -3666,8 +3806,36 @@ namespace FreeLibSet.Collections
     /// Если в коллекции есть значения null, возникает исключение.
     /// </summary>
     /// <param name="collection">Исходная коллекция</param>
+    /// <param name="comparer">Реализация интерфейса для сравнения элементов списка на больше/меньше для сортировки</param>
+    public SingleScopeSortedList(ICollection<T> collection, IComparer<T> comparer)
+      : this(collection.Count, comparer)
+    {
+      foreach (T Item in collection)
+        Add(Item);
+    }
+
+    /// <summary>
+    /// Создает список и копирует в него элементы из коллекции.
+    /// Если в коллекции есть повторяеющиеся элементы, они отбрасываются.
+    /// Если в коллекции есть значения null, возникает исключение.
+    /// </summary>
+    /// <param name="collection">Исходная коллекция</param>
     public SingleScopeSortedList(IEnumerable<T> collection)
       : this()
+    {
+      foreach (T Item in collection)
+        Add(Item);
+    }
+
+    /// <summary>
+    /// Создает список и копирует в него элементы из коллекции.
+    /// Если в коллекции есть повторяеющиеся элементы, они отбрасываются.
+    /// Если в коллекции есть значения null, возникает исключение.
+    /// </summary>
+    /// <param name="collection">Исходная коллекция</param>
+    /// <param name="comparer">Реализация интерфейса для сравнения элементов списка на больше/меньше для сортировки</param>
+    public SingleScopeSortedList(IEnumerable<T> collection, IComparer<T> comparer)
+      : this(comparer)
     {
       foreach (T Item in collection)
         Add(Item);
@@ -5204,7 +5372,7 @@ namespace FreeLibSet.Collections
   /// Класс является потокобезопасным.
   /// </summary>
   /// <typeparam name="T">Произвольный тип</typeparam>
-  public sealed class ArrayIndexer<T> : IComparer<T>
+  public class ArrayIndexer<T> : IComparer<T>
   {
     #region Конструкторы
 
@@ -5223,6 +5391,21 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
+    /// Создает индексатор для массива
+    /// </summary>
+    /// <param name="collection">Индексируемый массив. Не может быть null</param>
+    /// <param name="comparer">Интерфейс для сравнения элементов</param>
+    public ArrayIndexer(T[] collection, IEqualityComparer<T> comparer)
+    {
+      if (collection == null)
+        throw new ArgumentNullException("collection");
+
+      _Dict = new Dictionary<T, int>(collection.Length, comparer);
+      for (int i = 0; i < collection.Length; i++)
+        _Dict.Add(collection[i], i);
+    }
+
+    /// <summary>
     /// Создает индексатор для объекта, поддерживающего интерфейс ICollection 
     /// </summary>
     /// <param name="collection">Индексируемая коллекция</param>
@@ -5232,6 +5415,25 @@ namespace FreeLibSet.Collections
         throw new ArgumentNullException("collection");
 
       _Dict = new Dictionary<T, int>(collection.Count);
+      int cnt = 0;
+      foreach (T Item in collection)
+      {
+        _Dict.Add(Item, cnt);
+        cnt++;
+      }
+    }
+
+    /// <summary>
+    /// Создает индексатор для объекта, поддерживающего интерфейс ICollection 
+    /// </summary>
+    /// <param name="collection">Индексируемая коллекция</param>
+    /// <param name="comparer">Интерфейс для сравнения элементов</param>
+    public ArrayIndexer(ICollection<T> collection, IEqualityComparer<T> comparer)
+    {
+      if (collection == null)
+        throw new ArgumentNullException("collection");
+
+      _Dict = new Dictionary<T, int>(collection.Count, comparer);
       int cnt = 0;
       foreach (T Item in collection)
       {
@@ -5331,21 +5533,21 @@ namespace FreeLibSet.Collections
     /// </summary>
     public UnknownItemPosition UnknownItemPosition
     {
-      get { return FUnknownItemPosition; }
+      get { return _UnknownItemPosition; }
       set
       {
         switch (value)
         {
           case FreeLibSet.Collections.UnknownItemPosition.First:
           case FreeLibSet.Collections.UnknownItemPosition.Last:
-            FUnknownItemPosition = value;
+            _UnknownItemPosition = value;
             break;
           default:
             throw new ArgumentException();
         }
       }
     }
-    private UnknownItemPosition FUnknownItemPosition;
+    private UnknownItemPosition _UnknownItemPosition;
 
     /// <summary>
     /// Сравнение положения двух элементов.

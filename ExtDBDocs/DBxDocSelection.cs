@@ -854,11 +854,11 @@ namespace FreeLibSet.Data.Docs
         Part2.Clear();
         for (int i = 0; i < TableNames.Length; i++)
         {
-          Int32[] Ids = this[TableNames[i]];
-          if (Ids.Length == 0)
+          Int32[] ids = this[TableNames[i]];
+          if (ids.Length == 0)
             continue;
           CfgPart Part3 = Part2.GetChild(TableNames[i], true);
-          string s = DataTools.CommaStringFromIds(Ids, false);
+          string s = StdConvert.ToString(ids);
           Part3.SetString("Ids", s);
         }
       }
@@ -886,7 +886,7 @@ namespace FreeLibSet.Data.Docs
         if (Part3 == null)
           continue; // ошибка
         string s = Part3.GetString("Ids");
-        Int32[] Ids = DataTools.CommaStringToIds(s);
+        Int32[] Ids = StdConvert.ToInt32Array(s);
         Add(TableNames[i], Ids);
       }
     }

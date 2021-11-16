@@ -1882,6 +1882,14 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    internal static bool GetIgnoreCase(StringComparer comparer)
+    {
+      if (comparer == null)
+        return false;
+      else
+        return comparer.Equals("A", "a");
+    }
+
     #endregion
 
     #region Удаление строк и столбцов из массива

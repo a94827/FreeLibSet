@@ -2747,8 +2747,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="config">Секция конфигурации</param>
     public override void ReadConfig(CfgPart config)
     {
-      int[] a = DataTools.CommaStringToIds(config.GetString("Flags"));
-      if (a == null)
+      int[] a = StdConvert.ToInt32Array(config.GetString("Flags"));
+      if (a.Length == 0)
         FilterFlags = null;
       else
       {
@@ -2778,7 +2778,7 @@ namespace FreeLibSet.Data.Docs
         }
         a = lst.ToArray();
       }
-      config.SetString("Flags", DataTools.CommaStringFromIds(a, false));
+      config.SetString("Flags", StdConvert.ToString(a));
     }
 
     /// <summary>
@@ -3289,7 +3289,7 @@ namespace FreeLibSet.Data.Docs
     public override void ReadConfig(CfgPart config)
     {
       RefDocFilterMode NewMode = config.GetEnum<RefDocFilterMode>("Mode");
-      Int32[] NewDocIds = DataTools.CommaStringToIds(config.GetString("Ids"));
+      Int32[] NewDocIds = StdConvert.ToInt32Array(config.GetString("Ids"));
       SetFilter(NewMode, NewDocIds);
     }
 
@@ -3301,7 +3301,7 @@ namespace FreeLibSet.Data.Docs
     {
       config.SetEnum("Mode", Mode);
       if (DocIds != null)
-        config.SetString("Ids", DataTools.CommaStringFromIds(_DocIds.ToArray(), false));
+        config.SetString("Ids", StdConvert.ToString(_DocIds.ToArray()));
       else
         config.Remove("Ids");
     }

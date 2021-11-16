@@ -89,7 +89,7 @@ namespace ExtTools.tests
         else
         {
           Int32[] ids = DataTools.GetIds(rows[i]);
-          sb.Append(DataTools.CommaStringFromIds(ids, false));
+          sb.Append(StdConvert.ToString(ids));
         }
         sb.Append("}");
       }

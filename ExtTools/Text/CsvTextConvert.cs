@@ -139,7 +139,6 @@ namespace FreeLibSet.Text
     /// </summary>
     /// <param name="sb">Сюда записывается CSV-строка</param>
     /// <param name="a">Массив полей для преобразования в строку</param>
-    /// <param name="fieldDelimiter">Символ-разделитель</param>
     public void ToString(StringBuilder sb, string[] a)
     {
       if (a == null)

@@ -398,7 +398,7 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowTempMessage("Ошибка при получении текста: " + e.Message);
       }
       if (UI.DebugShowIds)
-        Control.Text = "Id=" + DataTools.CommaStringFromIds(Ids, false) + " " + Control.Text;
+        Control.Text = "Id=" + StdConvert.ToString(Ids) + " " + Control.Text;
     }
 
     /// <summary>

@@ -152,7 +152,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return 0;
         else
-          return int.Parse((String)value);
+          return StdConvert.ToInt32((String)value);
       }
 
       if (value is Boolean)
@@ -212,7 +212,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return null;
         else
-          return int.Parse((String)value);
+          return StdConvert.ToInt32((String)value);
       }
 
       if (value is Boolean)
@@ -274,7 +274,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return 0L;
         else
-          return long.Parse((String)value);
+          return StdConvert.ToInt64((String)value);
       }
 
       if (value is Boolean)
@@ -334,7 +334,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return null;
         else
-          return long.Parse((String)value);
+          return StdConvert.ToInt64((String)value);
       }
 
       if (value is Boolean)
@@ -403,7 +403,7 @@ namespace FreeLibSet.Core
         if (s.Length == 0)
           return 0m;
         else
-          return Decimal.Parse(s);
+          return StdConvert.ToDecimal(s);
       }
 
       return Convert.ToDecimal(value); // преобразуется, в том числе, значение null
@@ -428,7 +428,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return null;
         else
-          return Decimal.Parse((String)value);
+          return StdConvert.ToDecimal((String)value);
       }
 
       if (value is Boolean)
@@ -498,7 +498,7 @@ namespace FreeLibSet.Core
         if (s.Length == 0)
           return 0.0;
         else
-          return Double.Parse(s);
+          return StdConvert.ToDouble(s);
       }
 
       return Convert.ToDouble(value); // преобразуется, в том числе, значение null
@@ -523,7 +523,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return null;
         else
-          return Double.Parse((String)value);
+          return StdConvert.ToDouble((String)value);
       }
 
       if (value is Boolean)
@@ -593,7 +593,7 @@ namespace FreeLibSet.Core
         if (s.Length == 0)
           return 0f;
         else
-          return Single.Parse(s);
+          return StdConvert.ToSingle(s);
       }
 
       return Convert.ToSingle(value); // преобразуется, в том числе, значение null
@@ -618,7 +618,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return null;
         else
-          return Single.Parse((String)value);
+          return StdConvert.ToSingle((String)value);
       }
 
       if (value is Boolean)
@@ -768,7 +768,7 @@ namespace FreeLibSet.Core
         if (s.Length == 0)
           return new DateTime();
         else
-          return Convert.ToDateTime(s);
+          return StdConvert.ToDateTime(s, true);
       }
       return Convert.ToDateTime(value);
     }
@@ -822,7 +822,7 @@ namespace FreeLibSet.Core
         if (s.Length == 0)
           return null;
         else
-          return Convert.ToDateTime(s);
+          return StdConvert.ToDateTime(s, true);
       }
       return Convert.ToDateTime(value);
     }
@@ -876,6 +876,13 @@ namespace FreeLibSet.Core
         return TimeSpan.Zero;
       if (value is TimeSpan)
         return (TimeSpan)value;
+      if (value is String)
+      {
+        if (((string)value).Length == 0)
+          return TimeSpan.Zero;
+        else
+          return StdConvert.ToTimeSpan((string)value);
+      }
       throw new InvalidCastException("Тип " + value.GetType().FullName + " нельзя преобразовать в TimeSpan");
     }
 
@@ -963,7 +970,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return Guid.Empty;
         else
-          return new Guid((String)value);
+          return StdConvert.ToGuid((String)value);
       }
 
       if (value is byte[])
@@ -1055,7 +1062,7 @@ namespace FreeLibSet.Core
         if (((String)value).Length == 0)
           return default(T);
         else
-          return (T)Enum.Parse(typeof(T), (String)value, true);
+          return StdConvert.ToEnum<T>((String)value);
       }
 
       int v2 = GetInt(value);
@@ -1115,21 +1122,21 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-      DataColumn Column = row.Table.Columns[columnName];
+      DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
-      if (Column == null)
+      if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
       if (String.IsNullOrEmpty(value))
       {
-        if (Column.AllowDBNull)
+        if (col.AllowDBNull)
           row[columnName] = DBNull.Value;
         else
           row[columnName] = "";
       }
       else
       {
-        int l = Column.MaxLength;
+        int l = col.MaxLength;
         if (l >= 0 && l < value.Length)
           row[columnName] = value.Substring(0, l);
         else
@@ -1157,16 +1164,16 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-      DataColumn Column = row.Table.Columns[columnName];
+      DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
-      if (Column == null)
+      if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (IsIntColumn(Column))
+      if (IsIntColumn(col))
       {
         if (value == 0)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
@@ -1175,13 +1182,13 @@ namespace FreeLibSet.Core
         row[columnName] = value;
         return;
       }
-      if (Column.DataType == typeof(String))
+      if (col.DataType == typeof(String))
       {
         // Для текстового столбца выполняем преобразование, кроме нулевого значения
         if (value == 0)
           SetString(row, columnName, null);
         else
-          SetString(row, columnName, value.ToString());
+          SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
       throw new ArgumentException("Столбец не может принимать числовое значение", "ColumnName");
@@ -1207,16 +1214,16 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-      DataColumn Column = row.Table.Columns[columnName];
+      DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
-      if (Column == null)
+      if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (IsIntColumn(Column))
+      if (IsIntColumn(col))
       {
         if (value == 0L)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
@@ -1225,13 +1232,13 @@ namespace FreeLibSet.Core
         row[columnName] = value;
         return;
       }
-      if (Column.DataType == typeof(String))
+      if (col.DataType == typeof(String))
       {
         // Для текстового столбца выполняем преобразование, кроме нулевого значения
         if (value == 0)
           SetString(row, columnName, null);
         else
-          SetString(row, columnName, value.ToString());
+          SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
       throw new ArgumentException("Столбец не может принимать числовое значение", "ColumnName");
@@ -1257,16 +1264,16 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-      DataColumn Column = row.Table.Columns[columnName];
+      DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
-      if (Column == null)
+      if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (Column.DataType == typeof(float) || Column.DataType == typeof(double))
+      if (col.DataType == typeof(float) || col.DataType == typeof(double))
       {
         if (value == 0)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
@@ -1275,17 +1282,26 @@ namespace FreeLibSet.Core
         row[columnName] = value;
         return;
       }
-      if (Column.DataType == typeof(decimal))
+      if (col.DataType == typeof(decimal))
       {
         if (value == 0)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
           }
         }
         row[columnName] = (decimal)value;
+        return;
+      }
+      if (col.DataType == typeof(String))
+      {
+        // Для текстового столбца выполняем преобразование, кроме нулевого значения
+        if (value == 0f)
+          SetString(row, columnName, null);
+        else
+          SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
       throw new ArgumentException("Столбец не может принимать числовое значение с плавающей точкой", "ColumnName");
@@ -1311,16 +1327,16 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-      DataColumn Column = row.Table.Columns[columnName];
+      DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
-      if (Column == null)
+      if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (Column.DataType == typeof(float) || Column.DataType == typeof(double))
+      if (col.DataType == typeof(float) || col.DataType == typeof(double))
       {
         if (value == 0)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
@@ -1329,17 +1345,26 @@ namespace FreeLibSet.Core
         row[columnName] = value;
         return;
       }
-      if (Column.DataType == typeof(decimal))
+      if (col.DataType == typeof(decimal))
       {
         if (value == 0)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
           }
         }
         row[columnName] = (decimal)value;
+        return;
+      }
+      if (col.DataType == typeof(String))
+      {
+        // Для текстового столбца выполняем преобразование, кроме нулевого значения
+        if (value == 0.0)
+          SetString(row, columnName, null);
+        else
+          SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
       throw new ArgumentException("Столбец не может принимать числовое значение с плавающей точкой", "ColumnName");
@@ -1365,16 +1390,16 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-      DataColumn Column = row.Table.Columns[columnName];
+      DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
-      if (Column == null)
+      if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (Column.DataType == typeof(decimal))
+      if (col.DataType == typeof(decimal))
       {
         if (value == 0)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
@@ -1383,17 +1408,26 @@ namespace FreeLibSet.Core
         row[columnName] = value;
         return;
       }
-      if (Column.DataType == typeof(float) || Column.DataType == typeof(double))
+      if (col.DataType == typeof(float) || col.DataType == typeof(double))
       {
         if (value == 0)
         {
-          if (Column.AllowDBNull)
+          if (col.AllowDBNull)
           {
             row[columnName] = DBNull.Value;
             return;
           }
         }
         row[columnName] = (double)value;
+        return;
+      }
+      if (col.DataType == typeof(String))
+      {
+        // Для текстового столбца выполняем преобразование, кроме нулевого значения
+        if (value == 0m)
+          SetString(row, columnName, null);
+        else
+          SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
       throw new ArgumentException("Столбец не может принимать значение типа Decimal", "ColumnName");
@@ -1417,14 +1451,31 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
-      DataColumn Column = row.Table.Columns[columnName];
-      if (Column == null)
+#endif
+      DataColumn col = row.Table.Columns[columnName];
+#if DEBUG
+      if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (value.HasValue)
-        row[columnName] = value.Value;
-      else
-        row[columnName] = DBNull.Value;
+
+      if (col.DataType == typeof(DateTime))
+      {
+        if (value.HasValue)
+          row[columnName] = value.Value;
+        else
+          row[columnName] = DBNull.Value;
+        return;
+      }
+      if (col.DataType == typeof(String))
+      {
+        // Для текстового столбца выполняем преобразование, кроме нулевого значения
+        if (value.HasValue)
+          SetString(row, columnName, StdConvert.ToString(value.Value, true));
+        else
+          SetString(row, columnName, null);
+        return;
+      }
+      throw new ArgumentException("Столбец не может принимать значение типа DateTime", "ColumnName");
     }
 
     #endregion
@@ -1446,11 +1497,30 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
+      DataColumn col = row.Table.Columns[columnName];
+#if DEBUG
+      if (col == null)
+        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+#endif
 
-      if (value.Ticks == 0L)
-        row[columnName] = DBNull.Value;
-      else
-        row[columnName] = value;
+      if (col.DataType == typeof(TimeSpan))
+      {
+        if (value.Ticks == 0L)
+          row[columnName] = DBNull.Value;
+        else
+          row[columnName] = value;
+        return;
+      }
+      if (col.DataType == typeof(String))
+      {
+        // Для текстового столбца выполняем преобразование, кроме нулевого значения
+        if (value.Ticks == 0L)
+          SetString(row, columnName, null);
+        else
+          SetString(row, columnName, StdConvert.ToString(value));
+        return;
+      }
+      throw new ArgumentException("Столбец не может принимать значение типа TimeSpan", "ColumnName");
     }
 
     #endregion
@@ -1472,10 +1542,11 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-
       DataColumn col = row.Table.Columns[columnName];
+#if DEBUG
       if (col == null)
         throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+#endif
       if (value == Guid.Empty)
         row[columnName] = DBNull.Value;
       else
@@ -1483,7 +1554,7 @@ namespace FreeLibSet.Core
         if (col.DataType == typeof(Guid))
           row[columnName] = value;
         else if (col.DataType == typeof(string))
-          row[columnName] = value.ToString();
+          row[columnName] = StdConvert.ToString(value);
         else if (col.DataType == typeof(byte[]))
           row[columnName] = value.ToByteArray();
         else
@@ -12015,6 +12086,11 @@ namespace FreeLibSet.Core
     /// Пустой массив объектов TimeSpan
     /// </summary>
     public static readonly TimeSpan[] EmptyTimeSpans = new TimeSpan[0];
+
+    /// <summary>
+    /// Пустой массив объектов Guid
+    /// </summary>
+    public static readonly Guid[] EmptyGuids = new Guid[0];
 
     /// <summary>
     /// Пустой массив байт

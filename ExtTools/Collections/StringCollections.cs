@@ -48,7 +48,7 @@ namespace FreeLibSet.Collections
   /// Строки хранятся в списке в порядке добавления. Используйте метод Sort() для сортировки списка
   /// </summary>
   [Serializable]
-  public class SingleScopeStringList : IList<string>, IReadOnlyObject
+  public class SingleScopeStringList : SingleScopeList<string>
   {
     #region Конструкторы
 
@@ -57,10 +57,19 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public SingleScopeStringList(bool ignoreCase)
+      : base(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
-      _List = new List<string>();
-      _Dict = new Dictionary<string, string>();
       _IgnoreCase = ignoreCase;
+    }
+
+    /// <summary>
+    /// Создает пустой список
+    /// </summary>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public SingleScopeStringList(StringComparer comparer)
+      : base(comparer)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -70,10 +79,21 @@ namespace FreeLibSet.Collections
     /// <param name="capacity">Начальная емкость коллекции</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public SingleScopeStringList(int capacity, bool ignoreCase)
+      : base(capacity, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
-      _List = new List<string>(capacity);
-      _Dict = new Dictionary<string, string>(capacity);
       _IgnoreCase = ignoreCase;
+    }
+
+    /// <summary>
+    /// Создает пустой список заданной емкости.
+    /// Используйте этот конструктор, если конечное число элементов в коллекции известно с большой долей вероятности.
+    /// </summary>
+    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public SingleScopeStringList(int capacity, StringComparer comparer)
+      : base(capacity, comparer)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -82,10 +102,20 @@ namespace FreeLibSet.Collections
     /// <param name="src">Коллекция, откуда следует взять строки</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public SingleScopeStringList(ICollection<string> src, bool ignoreCase)
-      : this(src.Count, ignoreCase)
+      : base(src, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
-      foreach (string Item in src)
-        Add(Item);
+      _IgnoreCase = ignoreCase;
+    }
+
+    /// <summary>
+    /// Создает список и заполняет его заданными значениями.
+    /// </summary>
+    /// <param name="src">Коллекция, откуда следует взять строки</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public SingleScopeStringList(ICollection<string> src, StringComparer comparer)
+      : base(src, comparer)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -94,393 +124,31 @@ namespace FreeLibSet.Collections
     /// <param name="src">Коллекция, откуда следует взять строки</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public SingleScopeStringList(IEnumerable<string> src, bool ignoreCase)
-      : this(ignoreCase)
+      : base(src, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
-      foreach (string Item in src)
-        Add(Item);
+      _IgnoreCase = ignoreCase;
+    }
+
+    /// <summary>
+    /// Создает список и заполняет его заданными значениями.
+    /// </summary>
+    /// <param name="src">Коллекция, откуда следует взять строки</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public SingleScopeStringList(IEnumerable<string> src, StringComparer comparer)
+      : base(src, comparer)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     #endregion
 
-    #region Доступ к элементам
+    #region Свойства
 
     /// <summary>
-    /// Основной список.
-    /// Строки хранятся в том регистре, в котором были переданы
-    /// </summary>
-    private List<string> _List;
-
-    /// <summary>
-    /// Ключ - строка. Если IgnoreCase=true, то строка переводится в верхний регистр.
-    /// Значением является та же строка, но с учетом регистра
-    /// </summary>
-    [NonSerialized]
-    private Dictionary<string, string> _Dict;
-
-    /// <summary>
-    /// Доступ по индексу
-    /// </summary>
-    /// <param name="index">Индекс элемента в списке</param>
-    /// <returns>Значение</returns>
-    public string this[int index]
-    {
-      get { return _List[index]; }
-      set
-      {
-        CheckNotReadOnly();
-
-        string value2 = PrepareValue(value);
-
-        if (_Dict.ContainsKey(value2))
-          throw new InvalidOperationException("Значение " + value.ToString() + " уже есть в списке");
-
-        string OldItem = _List[index];
-        _Dict.Remove(PrepareValue(OldItem));
-        try
-        {
-          _Dict.Add(value2, value);
-        }
-        catch
-        {
-          _Dict.Add(PrepareValue(OldItem), OldItem);
-          throw;
-        }
-        _List[index] = value;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает количество строк в списке.
-    /// </summary>
-    public int Count { get { return _List.Count; } }
-
-    /// <summary>
-    /// Текстовое представление "Count=XXX"
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString()
-    {
-      string s = "Count=" + Count.ToString();
-      if (IsReadOnly)
-        s += " (ReadOnly)";
-      return s;
-    }
-
-    #endregion
-
-    #region IgnoreCase
-
-    /// <summary>
-    /// Если true, то регистр строк не учитывается.
-    /// Свойство задается в конструкторе
+    /// Возвращает true, если список не является чувствительным к регистру
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
-
-    private string PrepareValue(string value)
-    {
-      if (value == null)
-        //return null;
-        throw new ArgumentNullException("value"); // 27.12.2020
-
-      if (_IgnoreCase)
-        return value.ToUpperInvariant();
-      else
-        return value;
-    }
-
-    #endregion
-
-    #region Доступ Только для чтения
-
-    /// <summary>
-    /// Возвращает true, есои список был переведен в режим "только чтение"
-    /// </summary>
-    public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
-
-    /// <summary>
-    /// Защищенный метод для перевода списка в режим "только чтение"
-    /// </summary>
-    protected void SetReadOnly()
-    {
-      _IsReadOnly = true;
-    }
-
-    /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
-    /// </summary>
-    public void CheckNotReadOnly()
-    {
-      if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
-    }
-
-    #endregion
-
-    #region IEnumerable<string> Members
-
-    /// <summary>
-    /// Возвращает перечислитель по строкам списка.
-    /// 
-    /// Тип возвращаемого значения может измениться в будущем, 
-    /// гарантируется только реализация интерфейса перечислителя.
-    /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
-    /// </summary>
-    /// <returns>Перечислитель</returns>
-    public List<string>.Enumerator GetEnumerator()
-    {
-      return _List.GetEnumerator();
-    }
-
-    IEnumerator<string> IEnumerable<string>.GetEnumerator()
-    {
-      return _List.GetEnumerator();
-    }
-
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-    {
-      return _List.GetEnumerator();
-    }
-
-    #endregion
-
-    #region IList<string> Members
-
-    /// <summary>
-    /// Возвращает индекс заданной строки в списке.
-    /// При поиске строки учитывается свойство IgnoreCase.
-    /// Поиск является медленным. Если требуется только определить факт надичия строки, используйте Contains().
-    /// </summary>
-    /// <param name="item">Искомая строка</param>
-    /// <returns>Индекс найденной строки или (-1), если строка не найдена</returns>
-    public int IndexOf(string item)
-    {
-      StringComparison Flags = IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-      for (int i = 0; i < _List.Count; i++)
-      {
-        if (String.Equals(item, _List[i], Flags))
-          return i;
-      }
-      return -1;
-    }
-
-    /// <summary>
-    /// Добавляет строку в заданную позицию.
-    /// Если такая строка (с учетом IgnoreCase) уже есть в списке, никаких действий не выполняется.
-    /// </summary>
-    /// <param name="index">Индекс в списке, куда должна быть добавлена строка</param>
-    /// <param name="item">Добавляемая строка</param>
-    public void Insert(int index, string item)
-    {
-      CheckNotReadOnly();
-
-      string value2 = PrepareValue(item);
-
-      if (_Dict.ContainsKey(value2))
-        return;
-
-      _Dict.Add(value2, item);
-      try
-      {
-        _List.Insert(index, item);
-      }
-      catch
-      {
-        _Dict.Remove(value2);
-        throw;
-      }
-    }
-
-    /// <summary>
-    /// Удалить строку из списка в заданной позиции.
-    /// </summary>
-    /// <param name="index">Индекс строки для удаления</param>
-    public void RemoveAt(int index)
-    {
-      CheckNotReadOnly();
-
-      string item = _List[index];
-      _List.RemoveAt(index);
-      _Dict.Remove(PrepareValue(item));
-    }
-
-    #endregion
-
-    #region ICollection<T> Members
-
-    /// <summary>
-    /// Добавляет строку в список.
-    /// Если такая строка уже есть в списке (с учетом IgnoreCase), никаких действий не выполняется.
-    /// </summary>
-    /// <param name="item">Добавляемая строка</param>
-    public void Add(string item)
-    {
-      CheckNotReadOnly();
-
-      string value2 = PrepareValue(item);
-
-      if (_Dict.ContainsKey(value2))
-        return;
-
-      _Dict.Add(value2, item);
-      try
-      {
-        _List.Add(item);
-      }
-      catch
-      {
-        _Dict.Remove(value2);
-      }
-    }
-
-    /// <summary>
-    /// Очищает список
-    /// </summary>
-    public void Clear()
-    {
-      CheckNotReadOnly();
-
-      _List.Clear();
-      _Dict.Clear();
-    }
-
-    /// <summary>
-    /// Возвращает true, если в списке есть такая строка (с учетом IgnoreCase).
-    /// В отличие от IndexOf(), этот метод выполняется быстро.
-    /// </summary>
-    /// <param name="item">Искомая строка</param>
-    /// <returns>Наличие строки в списке</returns>
-    public bool Contains(string item)
-    {
-      return _Dict.ContainsKey(PrepareValue(item));
-    }
-
-    /// <summary>
-    /// Копирует весь список в массив
-    /// </summary>
-    /// <param name="array">Заполняемый массив</param>
-    public void CopyTo(string[] array)
-    {
-      _List.CopyTo(array);
-    }
-
-    /// <summary>
-    /// Копирует весь список в массив
-    /// </summary>
-    /// <param name="array">Заполняемый массив</param>
-    /// <param name="arrayIndex">Индекс в массиве, начиная с которого он заполняется</param>
-    public void CopyTo(string[] array, int arrayIndex)
-    {
-      _List.CopyTo(array, arrayIndex);
-    }
-
-    /// <summary>
-    /// Копирует часть списка в массив.
-    /// </summary>
-    /// <param name="index">Индекс первого элемента в текущем списке, с которого начинать копирование</param>
-    /// <param name="array">Заполняемый массив</param>
-    /// <param name="arrayIndex">Начальный индекс в массиве для заполнения</param>
-    /// <param name="count">Количество элементов, которые нужно скопировать</param>
-    public void CopyTo(int index, string[] array, int arrayIndex, int count)
-    {
-      _List.CopyTo(index, array, arrayIndex, count);
-    }
-
-    /// <summary>
-    /// Удаляет заданную строку из списка (с учетом IgnoreCase).
-    /// Если строки нет в списке, никаких действий не выполняется.
-    /// </summary>
-    /// <param name="item">Удаляемая строка</param>
-    /// <returns>true, если строка была найдена и удалена. 
-    /// false, если строка не найдена в списке.</returns>
-    public bool Remove(string item)
-    {
-      CheckNotReadOnly();
-
-      int p = IndexOf(item);
-      if (p >= 0)
-      {
-        _List.RemoveAt(p);
-        string value2 = PrepareValue(item);
-        _Dict.Remove(value2);
-        return true;
-      }
-      else
-        return false;
-    }
-
-    #endregion
-
-    #region Дополнительные методы
-
-    /// <summary>
-    /// Создает массив строк из списка
-    /// </summary>
-    /// <returns>Новый массив</returns>
-    public string[] ToArray()
-    {
-      return _List.ToArray();
-    }
-
-    /// <summary>
-    /// Групповое добавление элементов списка
-    /// В исходной коллекции могут быть одинаковые элементы, которые пропускаются
-    /// </summary>
-    /// <param name="collection"></param>
-    public void AddRange(IEnumerable<string> collection)
-    {
-      CheckNotReadOnly();
-#if DEBUG
-      if (collection == null)
-        throw new ArgumentException("collection");
-#endif
-      if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
-
-      foreach (string Item in collection)
-        Add(Item);
-    }
-
-    /// <summary>
-    /// Сортировка списка строк.
-    /// При сортировке регистр символов учитывается или игнорируется, в зависимости от свойства IgnoreCase
-    /// </summary>
-    public void Sort()
-    {
-      CheckNotReadOnly();
-
-      if (_IgnoreCase)
-        _List.Sort(StringComparer.OrdinalIgnoreCase);
-      else
-        _List.Sort(StringComparer.Ordinal);
-    }
-
-    /// <summary>
-    /// Заменяет порядок элементов на обратный
-    /// </summary>
-    public void Reverse()
-    {
-      CheckNotReadOnly();
-
-      _List.Reverse();
-    }
-
-    #endregion
-
-    #region Сериализация
-
-    [OnDeserialized]
-    private void OnDeserializedMethod(StreamingContext context)
-    {
-      _Dict = new Dictionary<string, string>(_List.Count);
-      for (int i = 0; i < _List.Count; i++)
-      {
-        string value2 = PrepareValue(_List[i]);
-        _Dict.Add(value2, _List[i]);
-      }
-    }
 
     #endregion
   }
@@ -491,7 +159,7 @@ namespace FreeLibSet.Collections
   /// </summary>
   /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
   [Serializable]
-  public class TypedStringDictionary<TValue> : IDictionary<string, TValue>, IReadOnlyObject, INamedValuesAccess
+  public class TypedStringDictionary<TValue> : DictionaryWithReadOnly<string, TValue>, INamedValuesAccess
   {
     #region Конструкторы
 
@@ -500,9 +168,19 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public TypedStringDictionary(bool ignoreCase)
+      : base(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
       _IgnoreCase = ignoreCase;
-      _MainDict = new Dictionary<string, TValue>();
+    }
+
+    /// <summary>
+    /// Создает пустую коллекцию.
+    /// </summary>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public TypedStringDictionary(StringComparer comparer)
+      : base(comparer)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -511,9 +189,20 @@ namespace FreeLibSet.Collections
     /// <param name="capacity">Начальная емкость коллекции</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public TypedStringDictionary(int capacity, bool ignoreCase)
+      : base(capacity, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
       _IgnoreCase = ignoreCase;
-      _MainDict = new Dictionary<string, TValue>(capacity);
+    }
+
+    /// <summary>
+    /// Создает пустую коллекцию заданной емкости
+    /// </summary>
+    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public TypedStringDictionary(int capacity, StringComparer comparer)
+      : base(capacity, comparer)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -528,287 +217,29 @@ namespace FreeLibSet.Collections
         Add(Pair.Key, Pair.Value);
     }
 
-    #endregion
-
-    #region Доступ к элементам
-
-    // Используется две коллекции Dictionary
-
     /// <summary>
-    /// Основная коллекция.
-    /// Содержит ключи в исходном регистре, независимо от IgnoreCase
+    /// Создает коллецию и заполняет ее значениями
     /// </summary>
-    private Dictionary<string, TValue> _MainDict;
-
-    /// <summary>
-    /// Дополнительная коллекция.
-    /// Существует, когда IgnoreCase=true. 
-    /// Создается при необходимости. В частности, коллекция не сериализуется
-    /// Ключ: - ключи, приведенные к верхнему регистру
-    /// Значение: ключи в исходном регистре.
-    /// </summary>
-    [NonSerialized]
-    private Dictionary<string, string> _AuxDict;
-
-    /// <summary>
-    /// При IgnoreCase переводит ключ в тот регистр, который был задан при первом обращении
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    private string PrepareKey(string key)
+    /// <param name="dictionary">Исходная коллекция, откуда берутся значения для заполнения</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public TypedStringDictionary(IDictionary<string, TValue> dictionary, StringComparer comparer)
+      : this(dictionary.Count, comparer)
     {
-      if (!IgnoreCase)
-        return key;
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
 
-      // Используем метод двойной проверки на случай асинхронного доступа
-      if (_AuxDict == null)
-        PrepareAuxDict();
-
-      string Key2 = key.ToUpperInvariant();
-      string Key3;
-      if (_AuxDict.TryGetValue(Key2, out Key3))
-        return Key3;
-      else
-        return key;
-    }
-
-    private void PrepareAuxDict()
-    {
-      // Конструктор Dictionary по умолчанию устанавливает capacity=0.
-      // Если в коллекции уже есть элементы, то, вероятно, этот метод вызван после десериализации.
-      // Используем MainDict.Count в качестве начальной емкости
-      Dictionary<string, string> AuxDict2 = new Dictionary<string, string>(_MainDict.Count);
-      foreach (KeyValuePair<string, TValue> Pair in _MainDict)
-      {
-        AuxDict2.Add(Pair.Key.ToUpperInvariant(), Pair.Key);
-      }
-
-      // Если все хорошо, устанавливаем основное поле
-      _AuxDict = AuxDict2;
+      foreach (KeyValuePair<string, TValue> Pair in dictionary)
+        Add(Pair.Key, Pair.Value);
     }
 
     #endregion
 
-    #region IgnoreCase
+    #region Свойства
 
     /// <summary>
-    /// Если true, то регистр строк не учитывается.
-    /// Свойство задается в конструкторе
+    /// Возвращает true, если коллекция не является чувствительной к регистру
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
-
-    #endregion
-
-    #region IDictionary<string,TValue> Members
-
-    /// <summary>
-    /// Добавляет пару "Ключ-Значение" в коллекцию.
-    /// В режиме IgnoreCase=true возникнет исключение, если в коллекции уже есть похожий ключ, отличающийся только значением
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <param name="value">Значение</param>
-    public void Add(string key, TValue value)
-    {
-      CheckNotReadOnly();
-      key = PrepareKey(key);
-      _MainDict.Add(key, value);
-      if (_AuxDict != null)
-        _AuxDict.Add(key.ToUpperInvariant(), key);
-    }
-
-    /// <summary>
-    /// Возвращает true, если коллекция содержит указанный ключ
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    public bool ContainsKey(string key)
-    {
-      return _MainDict.ContainsKey(PrepareKey(key));
-    }
-
-    /// <summary>
-    /// Доступ к ключам коллекции.
-    /// Возвращаемая коллекция предназначена только для просмотра.
-    /// </summary>
-    public ICollection<string> Keys { get { return _MainDict.Keys; } }
-
-    /// <summary>
-    /// Удалить ключ из коллекции
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>true, если элемент был удален из коллекции</returns>
-    public bool Remove(string key)
-    {
-      CheckNotReadOnly();
-
-      key = PrepareKey(key);
-      if (_MainDict.Remove(key))
-      {
-        if (_AuxDict != null)
-          _AuxDict.Remove(key.ToUpperInvariant());
-        return true;
-      }
-      else
-        return false;
-    }
-
-    /// <summary>
-    /// Попытка извлечь элемент с заданным ключом из коллекции
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <param name="value">Сюда записывается значение</param>
-    /// <returns>true, если элемент с ключом есть в коллекции</returns>
-    public bool TryGetValue(string key, out TValue value)
-    {
-      key = PrepareKey(key);
-      return _MainDict.TryGetValue(key, out value);
-    }
-
-    /// <summary>
-    /// Коллекция значений.
-    /// Возвращаемая коллекция предназначена толькот для просмотра.
-    /// </summary>
-    public ICollection<TValue> Values { get { return _MainDict.Values; } }
-
-    /// <summary>
-    /// Извлечение или запись значения с ключом.
-    /// Если при чтении запрошен несуществующий ключ, гененируется исключение.
-    /// При установке свойства, либо добавляется новая запись, либо заменяется существующая с таким ключом.
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>Значение</returns>
-    public TValue this[string key]
-    {
-      get
-      {
-        key = PrepareKey(key);
-        return _MainDict[key];
-      }
-      set
-      {
-        key = PrepareKey(key);
-        _MainDict[key] = value;
-        // Коллекция RegDict не меняется
-      }
-    }
-
-    #endregion
-
-    #region ICollection<KeyValuePair<string,TValue>> Members
-
-    void ICollection<KeyValuePair<string, TValue>>.Add(KeyValuePair<string, TValue> item)
-    {
-      Add(item.Key, item.Value);
-    }
-
-    /// <summary>
-    /// Очистить коллекцию
-    /// </summary>
-    public void Clear()
-    {
-      CheckNotReadOnly();
-
-      _MainDict.Clear();
-      _AuxDict = null; // пересоздадим, если понадобиться
-    }
-
-    bool ICollection<KeyValuePair<string, TValue>>.Contains(KeyValuePair<string, TValue> item)
-    {
-      if (_IgnoreCase)
-        item = new KeyValuePair<string, TValue>(PrepareKey(item.Key), item.Value);
-      return ((ICollection<KeyValuePair<string, TValue>>)_MainDict).Contains(item);
-    }
-
-    void ICollection<KeyValuePair<string, TValue>>.CopyTo(KeyValuePair<string, TValue>[] array, int arrayIndex)
-    {
-      ((ICollection<KeyValuePair<string, TValue>>)_MainDict).CopyTo(array, arrayIndex);
-    }
-
-    /// <summary>
-    /// Возвращает количество элементов в коллекции
-    /// </summary>
-    public int Count { get { return _MainDict.Count; } }
-
-    bool ICollection<KeyValuePair<string, TValue>>.Remove(KeyValuePair<string, TValue> item)
-    {
-      return Remove(item.Key);
-    }
-
-    #endregion
-
-    #region IEnumerable<KeyValuePair<string,TValue>> Members
-
-    /// <summary>
-    /// Возвращает перечислитель коллекции.
-    /// Элементами перечисления являются структуры KeyValuePair.
-    /// Ключ в паре имеет тот регистр, который использовался при добавлении элемента в коллекцию.
-    /// 
-    /// Тип возвращаемого значения может измениться в будущем, 
-    /// гарантируется только реализация интерфейса перечислителя.
-    /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
-    /// </summary>
-    /// <returns>Перечислитель</returns>
-    public Dictionary<string, TValue>.Enumerator GetEnumerator()
-    {
-      return _MainDict.GetEnumerator();
-    }
-
-    IEnumerator<KeyValuePair<string, TValue>> IEnumerable<KeyValuePair<string, TValue>>.GetEnumerator()
-    {
-      return GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return GetEnumerator();
-    }
-
-    #endregion
-
-    #region Доступ Только для чтения
-
-    /// <summary>
-    /// Возвращает true, если коллекция была переведена в режим "только чтения"
-    /// </summary>
-    public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
-
-    /// <summary>
-    /// Защищенный метод для перевода коллекции в режим "только чтение"
-    /// </summary>
-    protected void SetReadOnly()
-    {
-      _IsReadOnly = true;
-    }
-
-    /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
-    /// </summary>
-    public void CheckNotReadOnly()
-    {
-      if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
-    }
-
-    #endregion
-
-    #region Десериализация
-
-    // Достаточно стандартной десериализации
-
-    #endregion
-
-    #region Прочее
-
-    /// <summary>
-    /// Возвращает строку вида "Count=XXX"
-    /// </summary>
-    /// <returns>Текстовое представление</returns>
-    public override string ToString()
-    {
-      return "Count=" + Count.ToString();
-    }
 
     #endregion
 
@@ -842,7 +273,7 @@ namespace FreeLibSet.Collections
   /// </summary>
   /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
   [Serializable]
-  public class BidirectionalTypedStringDictionary<TValue> : IDictionary<string, TValue>, IReadOnlyObject, INamedValuesAccess
+  public class BidirectionalTypedStringDictionary<TValue> : BidirectionalDictionary<string, TValue>, INamedValuesAccess
   {
     #region Конструкторы
 
@@ -851,20 +282,41 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public BidirectionalTypedStringDictionary(bool ignoreCase)
+      :base(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal, null)
     {
       _IgnoreCase = ignoreCase;
-      _MainDict = new Dictionary<string, TValue>();
     }
 
+    /// <summary>
+    /// Создает пустую коллекцию.
+    /// </summary>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public BidirectionalTypedStringDictionary(StringComparer comparer)
+      : base(comparer, null)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+    }
+        
     /// <summary>
     /// Создает пустую коллекцию заданной емкости
     /// </summary>
     /// <param name="capacity">Начальная емкость коллекции</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public BidirectionalTypedStringDictionary(int capacity, bool ignoreCase)
+      :base(capacity, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal, null)
     {
       _IgnoreCase = ignoreCase;
-      _MainDict = new Dictionary<string, TValue>(capacity);
+    }
+
+    /// <summary>
+    /// Создает пустую коллекцию заданной емкости
+    /// </summary>
+    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public BidirectionalTypedStringDictionary(int capacity, StringComparer comparer)
+      : base(capacity, comparer, null)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -879,63 +331,16 @@ namespace FreeLibSet.Collections
         Add(Pair.Key, Pair.Value);
     }
 
-    #endregion
-
-    #region Доступ к элементам
-
-    // Используется две коллекции Dictionary
-
     /// <summary>
-    /// Основная коллекция.
-    /// Содержит ключи в исходном регистре, независимо от IgnoreCase
+    /// Создает коллецию и заполняет ее значениями
     /// </summary>
-    private Dictionary<string, TValue> _MainDict;
-
-    /// <summary>
-    /// Дополнительная коллекция.
-    /// Существует, когда IgnoreCase=true. 
-    /// Создается при необходимости. В частности, коллекция не сериализуется
-    /// Ключ: - ключи, приведенные к верхнему регистру
-    /// Значение: ключи в исходном регистре.
-    /// </summary>
-    [NonSerialized]
-    private Dictionary<string, string> _AuxDict;
-
-    /// <summary>
-    /// При IgnoreCase переводит ключ в тот регистр, который был задан при первом обращении
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    private string PrepareKey(string key)
+    /// <param name="dictionary">Исходная коллекция, откуда берутся значения для заполнения</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public BidirectionalTypedStringDictionary(IDictionary<string, TValue> dictionary, StringComparer comparer)
+      : this(dictionary.Count, comparer)
     {
-      if (!IgnoreCase)
-        return key;
-
-      // Используем метод двойной проверки на случай асинхронного доступа
-      if (_AuxDict == null)
-        PrepareAuxDict();
-
-      string Key2 = key.ToUpperInvariant();
-      string Key3;
-      if (_AuxDict.TryGetValue(Key2, out Key3))
-        return Key3;
-      else
-        return key;
-    }
-
-    private void PrepareAuxDict()
-    {
-      // Конструктор Dictionary по умолчанию устанавливает capacity=0.
-      // Если в коллекции уже есть элементы, то, вероятно, этот метод вызван после десериализации.
-      // Используем MainDict.Count в качестве начальной емкости
-      Dictionary<string, string> AuxDict2 = new Dictionary<string, string>(_MainDict.Count);
-      foreach (KeyValuePair<string, TValue> Pair in _MainDict)
-      {
-        AuxDict2.Add(Pair.Key.ToUpperInvariant(), Pair.Key);
-      }
-
-      // Если все хорошо, устанавливаем основное поле
-      _AuxDict = AuxDict2;
+      foreach (KeyValuePair<string, TValue> Pair in dictionary)
+        Add(Pair.Key, Pair.Value);
     }
 
     #endregion
@@ -948,323 +353,6 @@ namespace FreeLibSet.Collections
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
-
-    #endregion
-
-    #region IDictionary<string,TValue> Members
-
-    /// <summary>
-    /// Добавляет пару "Ключ-Значение" в коллекцию.
-    /// В режиме IgnoreCase=true возникнет исключение, если в коллекции уже есть похожий ключ, отличающийся только значением
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <param name="value">Значение</param>
-    public void Add(string key, TValue value)
-    {
-      CheckNotReadOnly();
-      key = PrepareKey(key);
-      _MainDict.Add(key, value);
-      try
-      {
-        if (_AuxDict != null)
-          _AuxDict.Add(key.ToUpperInvariant(), key);
-        if (_ReversedDict != null)
-          _ReversedDict.Add(value, key);
-      }
-      catch
-      {
-        _MainDict.Remove(key);
-        _AuxDict = null;
-        _ReversedDict = null;
-        throw;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если коллекция содержит указанный ключ
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    public bool ContainsKey(string key)
-    {
-      return _MainDict.ContainsKey(PrepareKey(key));
-    }
-
-    /// <summary>
-    /// Доступ к ключам коллекции.
-    /// Возвращаемая коллекция предназначена только для просмотра.
-    /// </summary>
-    public ICollection<string> Keys { get { return _MainDict.Keys; } }
-
-    /// <summary>
-    /// Удалить ключ из коллекции
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>true, если элемент был удален из коллекции</returns>
-    public bool Remove(string key)
-    {
-      CheckNotReadOnly();
-
-      key = PrepareKey(key);
-
-      TValue Value;
-      if (_MainDict.TryGetValue(key, out Value))
-      {
-        _MainDict.Remove(key);
-        if (_AuxDict != null)
-          _AuxDict.Remove(key.ToUpperInvariant());
-        if (_ReversedDict != null)
-          _ReversedDict.Remove(Value);
-        return true;
-      }
-      else
-        return false;
-    }
-
-    /// <summary>
-    /// Попытка извлечь элемент с заданным ключом из коллекции
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <param name="value">Сюда записывается значение</param>
-    /// <returns>true, если элемент с ключом есть в коллекции</returns>
-    public bool TryGetValue(string key, out TValue value)
-    {
-      key = PrepareKey(key);
-      return _MainDict.TryGetValue(key, out value);
-    }
-
-    /// <summary>
-    /// Коллекция значений.
-    /// Возвращаемая коллекция предназначена толькот для просмотра.
-    /// </summary>
-    public ICollection<TValue> Values { get { return _MainDict.Values; } }
-
-    /// <summary>
-    /// Извлечение или запись значения с ключом.
-    /// Если при чтении запрошен несуществующий ключ, гененируется исключение.
-    /// При установке свойства, либо добавляется новая запись, либо заменяется существующая с таким ключом.
-    /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>Значение</returns>
-    public TValue this[string key]
-    {
-      get
-      {
-        key = PrepareKey(key);
-        return _MainDict[key];
-      }
-      set
-      {
-        if (ContainsKey(key))
-        {
-          TValue OldValue = this[key];
-          Remove(key);
-          try
-          {
-            Add(key, value);
-          }
-          catch
-          {
-            Add(key, OldValue);
-            throw;
-          }
-        }
-        else
-        {
-          // Просто добавляем пару
-          Add(key, value);
-        }
-      }
-    }
-
-    #endregion
-
-    #region ICollection<KeyValuePair<string,TValue>> Members
-
-    void ICollection<KeyValuePair<string, TValue>>.Add(KeyValuePair<string, TValue> item)
-    {
-      Add(item.Key, item.Value);
-    }
-
-    /// <summary>
-    /// Очистить коллекцию
-    /// </summary>
-    public void Clear()
-    {
-      CheckNotReadOnly();
-
-      _MainDict.Clear();
-      _AuxDict = null; // пересоздадим, если понадобится
-      _ReversedDict = null;
-    }
-
-    bool ICollection<KeyValuePair<string, TValue>>.Contains(KeyValuePair<string, TValue> item)
-    {
-      if (_IgnoreCase)
-        item = new KeyValuePair<string, TValue>(PrepareKey(item.Key), item.Value);
-      return ((ICollection<KeyValuePair<string, TValue>>)_MainDict).Contains(item);
-    }
-
-    void ICollection<KeyValuePair<string, TValue>>.CopyTo(KeyValuePair<string, TValue>[] array, int arrayIndex)
-    {
-      ((ICollection<KeyValuePair<string, TValue>>)_MainDict).CopyTo(array, arrayIndex);
-    }
-
-    /// <summary>
-    /// Возвращает количество элементов в коллекции
-    /// </summary>
-    public int Count { get { return _MainDict.Count; } }
-
-    bool ICollection<KeyValuePair<string, TValue>>.Remove(KeyValuePair<string, TValue> item)
-    {
-      return Remove(item.Key);
-    }
-
-    #endregion
-
-    #region IEnumerable<KeyValuePair<string,TValue>> Members
-
-    /// <summary>
-    /// Возвращает перечислитель коллекции.
-    /// Элементами перечисления являются структуры KeyValuePair.
-    /// Ключ в паре имеет тот регистр, который использовался при добавлении элемента в коллекцию.
-    /// 
-    /// Тип возвращаемого значения может измениться в будущем, 
-    /// гарантируется только реализация интерфейса перечислителя.
-    /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
-    /// </summary>
-    /// <returns>Перечислитель</returns>
-    public Dictionary<string, TValue>.Enumerator GetEnumerator()
-    {
-      return _MainDict.GetEnumerator();
-    }
-
-    IEnumerator<KeyValuePair<string, TValue>> IEnumerable<KeyValuePair<string, TValue>>.GetEnumerator()
-    {
-      return _MainDict.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return _MainDict.GetEnumerator();
-    }
-
-    #endregion
-
-    #region Обратная коллекция
-
-    /// <summary>
-    /// Обратная коллекция.
-    /// Создается только по необходимости.
-    /// Значением явдяется ключ исходной коллекции в оригинальном регистре
-    /// </summary>
-    [NonSerialized]
-    private Dictionary<TValue, string> _ReversedDict;
-
-    private void PrepareReversed()
-    {
-      if (_ReversedDict != null)
-        return;
-
-      Dictionary<TValue, string> r2 = new Dictionary<TValue, string>(_MainDict.Count);
-      foreach (KeyValuePair<string, TValue> Pair in _MainDict)
-        r2.Add(Pair.Value, Pair.Key);
-      _ReversedDict = r2;
-    }
-
-    /// <summary>
-    /// Возвращает true, если в коллекции содержится указанное значение
-    /// </summary>
-    /// <param name="value">значение для поиска в обратной коллекции</param>
-    /// <returns>true, если значение существует</returns>
-    public bool ContainsValue(TValue value)
-    {
-      PrepareReversed();
-      return _ReversedDict.ContainsKey(value);
-    }
-
-    /// <summary>
-    /// Попытка получить ключ по значению.
-    /// Если значение <paramref name="value"/> существует, возвращает true и по ссылке <paramref name="key"/>
-    /// записывается полученное значение.
-    /// Если значения <paramref name="value"/> не существует, возвращается false, а а апо ссылке записывается
-    /// пустое значение
-    /// </summary>
-    /// <param name="value">значение для поиска в обратной коллекции</param>
-    /// <param name="key">ключ, соответствующий значению</param>
-    /// <returns>true, если значение существует</returns>
-    public bool TryGetKey(TValue value, out string key)
-    {
-      PrepareReversed();
-      return _ReversedDict.TryGetValue(value, out key);
-    }
-
-    /// <summary>
-    /// Удалить значение из коллекции
-    /// </summary>
-    /// <param name="value">значение для поиска и удаления</param>
-    /// <returns>true, если значение было найдено в обратной коллекции</returns>
-    public bool RemoveValue(TValue value)
-    {
-      CheckNotReadOnly();
-      PrepareReversed();
-      string key;
-      if (_ReversedDict.TryGetValue(value, out key))
-      {
-        bool Res = Remove(key);
-        if (!Res)
-          throw new BugException("Ошибка синхронизации основной и обратной коллекции");
-        return true;
-      }
-      else
-        return false;
-    }
-
-    #endregion
-
-    #region Доступ Только для чтения
-
-    /// <summary>
-    /// Возвращает true, если коллекция была переведена в режим "только чтения"
-    /// </summary>
-    public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
-
-    /// <summary>
-    /// Защищенный метод для перевода коллекции в режим "только чтение"
-    /// </summary>
-    protected void SetReadOnly()
-    {
-      _IsReadOnly = true;
-    }
-
-    /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
-    /// </summary>
-    public void CheckNotReadOnly()
-    {
-      if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
-    }
-
-    #endregion
-
-    #region Десериализация
-
-    // Достаточно стандартной десериализации
-
-    #endregion
-
-    #region Прочее
-
-    /// <summary>
-    /// Возвращает строку вида "Count=XXX"
-    /// </summary>
-    /// <returns>Текстовое представление</returns>
-    public override string ToString()
-    {
-      return "Count=" + Count.ToString();
-    }
 
     #endregion
 
@@ -1302,17 +390,18 @@ namespace FreeLibSet.Collections
   /// Интерфейс реализует интерфейс IComparer для сортировки других массивов и списков (метод Compare()).
   /// Класс является потокобезопасным.
   /// </summary>
-  public sealed class StringArrayIndexer : IComparer<string>
+  public sealed class StringArrayIndexer : ArrayIndexer<string>
   {
     #region Конструкторы
+
     /// <summary>
     /// Создает индексатор для массива.
     /// Эта версия конструкторов учитывает регистр символов.
     /// </summary>
     /// <param name="source">Индексируемый массив</param>
     public StringArrayIndexer(string[] source)
-      :this(source, false)
-    { 
+      : this(source, false)
+    {
     }
 
     /// <summary>
@@ -1321,20 +410,20 @@ namespace FreeLibSet.Collections
     /// <param name="source">Индексируемый массив</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public StringArrayIndexer(string[] source, bool ignoreCase)
+      :base(source, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
-      if (source == null)
-        throw new ArgumentNullException("source");
-
-      _Dict = new Dictionary<string, int>(source.Length);
-      for (int i = 0; i < source.Length; i++)
-      {
-        if (ignoreCase)
-          _Dict.Add(source[i].ToUpperInvariant(), i);
-        else
-          _Dict.Add(source[i], i);
-      }
-
       _IgnoreCase = ignoreCase;
+    }
+
+    /// <summary>
+    /// Создает индексатор для массива.
+    /// </summary>
+    /// <param name="source">Индексируемый массив</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public StringArrayIndexer(string[] source, StringComparer comparer)
+      : base(source, comparer)
+    {
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -1343,8 +432,8 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="source">Индексируемая коллекция</param>
     public StringArrayIndexer(ICollection<string> source)
-      :this(source, false)
-    { 
+      : this(source, false)
+    {
     }
 
     /// <summary>
@@ -1353,41 +442,25 @@ namespace FreeLibSet.Collections
     /// <param name="source">Индексируемая коллекция</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
     public StringArrayIndexer(ICollection<string> source, bool ignoreCase)
+      :base(source, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
-      if (source == null)
-        throw new ArgumentNullException("source");
-
-      _Dict = new Dictionary<string, int>(source.Count);
-      int cnt = 0;
-      foreach (string Item in source)
-      {
-        if (ignoreCase)
-          _Dict.Add(Item.ToUpperInvariant(), cnt);
-        else
-          _Dict.Add(Item, cnt);
-        cnt++;
-      }
+      _IgnoreCase = ignoreCase;
     }
 
-    private StringArrayIndexer()
-      : this(DataTools.EmptyStrings, false)
+    /// <summary>
+    /// Создает индексатор для коллекции строк.
+    /// </summary>
+    /// <param name="source">Индексируемая коллекция</param>
+    /// <param name="comparer">Объект для сравнения строк</param>
+    public StringArrayIndexer(ICollection<string> source, StringComparer comparer)
+      : base(source, comparer)
     {
-      _IsReadOnly = true;
+      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
     }
 
     #endregion
 
     #region Свойства
-
-    /// <summary>
-    /// Ключом являются строки, приведенные к верхнему региструк, если IgnoreCase=true
-    /// </summary>
-    private Dictionary<string, int> _Dict;
-
-    /// <summary>
-    /// Количество элементов в массиве
-    /// </summary>
-    public int Count { get { return _Dict.Count; } }
 
     /// <summary>
     /// Если true, то регистр строк не учитывается.
@@ -1398,161 +471,12 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Методы
-
-    /// <summary>
-    /// Строковое представление "Count=XXX"
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString()
-    {
-      return "Count=" + _Dict.Count.ToString();
-    }
-
-    /// <summary>
-    /// Возвращает индекс элемента в массиве.
-    /// В отличие от Array.IndexOf(), выполняется быстро
-    /// </summary>
-    /// <param name="item">Искомая строка</param>
-    /// <returns>Позиция в списке</returns>
-    public int IndexOf(string item)
-    {
-      if (_IgnoreCase)
-        item = item.ToUpperInvariant();
-
-      int p;
-      if (_Dict.TryGetValue(item, out p))
-        return p;
-      else
-        return -1;
-    }
-
-    /// <summary>
-    /// Возвращает true, если в индексированной коллекции/массиве есть указанная строка (с учетом IgnoreCase)
-    /// </summary>
-    /// <param name="item">Искомая строка</param>
-    /// <returns>Признак наличия строки</returns>
-    public bool Contains(string item)
-    {
-      if (_IgnoreCase)
-        item = item.ToUpperInvariant();
-
-      return _Dict.ContainsKey(item);
-    }
-
-
-    /// <summary>
-    /// Возвращает true, если в списке содержатся все элементы, то есть если Contains() возвращает true для каждого элемента.
-    /// Если проверяемый список пустой, возвращает true.
-    /// </summary>
-    /// <param name="items">Проверяемый список элементов</param>
-    /// <returns>Наличие элементов</returns>
-    public bool ContainsAll(IEnumerable<string> items)
-    {
-      foreach (string item in items)
-      {
-        if (!Contains(item))
-          return false;
-      }
-      return true;
-    }
-
-    /// <summary>
-    /// Возвращает true, если в списке есть хотя бы один элемент, то есть если Contains() возвращает true для какого-либо элемента
-    /// Если проверяемый список пустой, возвращает false.
-    /// </summary>
-    /// <param name="items">Проверяемый список элементов</param>
-    /// <returns>Наличие элементов</returns>
-    public bool ContainsAny(IEnumerable<string> items)
-    {
-      foreach (string item in items)
-      {
-        if (Contains(item))
-          return true;
-      }
-      return false;
-    }
-
-    #endregion
-
-    #region IComparer<T> members
-
-    /// <summary>
-    /// Внутренний флаг, установленный для списка Empty
-    /// </summary>
-    private bool _IsReadOnly;
-
-    /// <summary>
-    /// Положение ненайденных элементов при сортировке с помощью метода Compare().
-    /// По умолчанию - First - ненайденные элементы располагаются в начале списка.
-    /// </summary>
-    public UnknownItemPosition UnknownItemPosition
-    {
-      get { return _UnknownItemPosition; }
-      set
-      {
-        if (_IsReadOnly)
-          throw new ObjectReadOnlyException();
-
-        switch (value)
-        {
-          case FreeLibSet.Collections.UnknownItemPosition.First:
-          case FreeLibSet.Collections.UnknownItemPosition.Last:
-            _UnknownItemPosition = value;
-            break;
-          default:
-            throw new ArgumentException();
-        }
-      }
-    }
-    private UnknownItemPosition _UnknownItemPosition;
-
-    /// <summary>
-    /// Сравнение положения двух элементов.
-    /// Метод может быть использован для сортировки произвольных списков и массивов, чтобы
-    /// отсортировать их в соответствии с порядком элементов в текущем объекте StringArrayIndexer.
-    /// Сравнивается положение элементов в текущем объекте, а не строки.
-    /// Если какое-либо значение отсутствует в текущем объекте, то оно будет расположено в
-    /// начале или в конце списка, в зависимости от свойства UnknownItemPosition.
-    /// 
-    /// Метод возвращает отрицательное значение, если <paramref name="x"/> располагается ближе
-    /// к началу списка, чем <paramref name="y"/>. Положительное значение возвращается, если
-    /// <paramref name="x"/> располагается ближе к концу списка, чем <paramref name="y"/>. 
-    /// Если обоих значений нет в текущем списке, то возвращается результат сравнения строк.
-    /// /// </summary>
-    /// <param name="x">Первое сравниваемое значение</param>
-    /// <param name="y">Второе сравниваемое значение</param>
-    /// <returns>Результат сравнение позиций</returns>
-    public int Compare(string x, string y)
-    {
-      int px = IndexOf(x);
-      int py = IndexOf(y);
-
-      if (px < 0 && py < 0)
-      {
-        // Если обоих элементов нет в списке, сравниваем элементы
-        return String.Compare(x, y, IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
-      }
-
-      if (UnknownItemPosition == FreeLibSet.Collections.UnknownItemPosition.Last)
-      {
-        if (px < 0)
-          px = int.MaxValue;
-        if (py < 0)
-          py = int.MaxValue;
-      }
-
-      return px.CompareTo(py);
-    }
-
-    #endregion
-
     #region Статический список
 
     /// <summary>
     /// Пустой список - индексатор
     /// </summary>
-    public static readonly StringArrayIndexer Empty = new StringArrayIndexer();
+    public static readonly StringArrayIndexer Empty = new StringArrayIndexer(DataTools.EmptyStrings, false);
 
     #endregion
   }
@@ -1571,6 +495,8 @@ namespace FreeLibSet.Collections
   /// </summary>
   public sealed class CharArrayIndexer : IComparer<char>
   {
+    // Требуется собственная реализация, а не через ArrayIndexer, т.к. StringComparer не реализует IEqualityComparer для Char
+
     #region Конструкторы
 
     /// <summary>
@@ -1580,7 +506,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="source">Массив символов</param>
     public CharArrayIndexer(char[] source)
-      :this(source, false)
+      : this(source, false)
     {
     }
 
@@ -1615,7 +541,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="source">Строка символов</param>
     public CharArrayIndexer(string source)
-      :this(source, false)
+      : this(source, false)
     {
     }
 

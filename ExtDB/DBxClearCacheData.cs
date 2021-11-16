@@ -547,7 +547,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public int LastVersion { get { return _LastVersion; } }
     /// <summary>
-    /// Можно было бы извлекать последнюю верисю и из списка Items, но так - быстрее.
+    /// Можно было бы извлекать последнюю версию и из списка Items, но так - быстрее.
     /// Блокировку можно, я думаю, не ставить.
     /// Тем более, что это свойство используется только в отладочных целях.
     /// </summary>
@@ -652,7 +652,7 @@ namespace FreeLibSet.Data
         else
         {
           if (version > _LastVersion)
-            throw new ArgumentException("Переданное исходное значение Version=" + version.ToString() + " превышает последнюю существующую верисю буфера");
+            throw new ArgumentException("Переданное исходное значение Version=" + version.ToString() + " превышает последнюю существующую версию буфера");
 
           // Все в порядке.
           // В кольцевом буфере есть элементы и с номером Version, и более новые

@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CsvTextConvertTests.cs" />
     <Compile Include="DepConstTests.cs" />
     <Compile Include="DepDelayedValueTests.cs" />
     <Compile Include="DepInputTests.cs" />

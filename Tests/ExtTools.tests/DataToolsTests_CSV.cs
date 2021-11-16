@@ -1,51 +1,16 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
+using NUnit.Framework;
 
 namespace ExtTools.tests
 {
+#if XXX // TODO: StdConvertTests
+
   [TestFixture]
   class DataToolsTests_CSV
   {
-    [TestCase("ABC|DEF", Result = "ABC,DEF")]
-    [TestCase("|ABC|DEF", Result = ",ABC,DEF")]
-    [TestCase("ABC|DEF|", Result = "ABC,DEF,")]
-    [TestCase("A,BC|DEF", Result = "\"A,BC\",DEF")]
-    public string CommaStringFromArray(string s1)
-    {
-      string[] a = s1.Split('|');
-      return DataTools.CommaStringFromArray(a);
-    }
-
-    [Test]
-    public void CommaStringFromArray_empty()
-    {
-      string s1 = DataTools.CommaStringFromArray(new string[] { });
-      Assert.AreEqual("", s1);
-
-      string s2 = DataTools.CommaStringFromArray(null);
-      Assert.AreEqual("", s2);
-    }
-
-    [TestCase("ABC,DEF", Result = new string[] { "ABC", "DEF" })]
-    [TestCase("ABC,DEF,", Result = new string[] { "ABC", "DEF", "" })]
-    [TestCase("ABC,DEF,,", Result = new string[] { "ABC", "DEF", "", "" })]
-    [TestCase(",,ABC,DEF", Result = new string[] { "", "", "ABC", "DEF" })]
-    [TestCase("ABC,,DEF", Result = new string[] { "ABC", "", "DEF" })]
-    [TestCase("ABC,,,DEF", Result = new string[] { "ABC", "", "", "DEF" })]
-    [TestCase("\"ABC\",\"DE\"\"FG\"", Result = new string[] { "ABC", "DE\"FG" })]
-    [TestCase(" ABC, \"DEF\" ", Result = new string[] { "ABC", "DEF" }, Description = "with spaces")]
-    [TestCase("", Result = null)]
-    //[TestCase("\"ABC", ExpectedException = typeof(ParsingException), Description="last quote missing")]
-    //[TestCase("ABC\"", ExpectedException = typeof(ParsingException), Description = "first quote missing")]
-    [TestCase("\"AB\"CD\"", ExpectedException = typeof(ParsingException), Description = "middle quote missing")]
-    public string[] CommaStringToArray(string s)
-    {
-      return DataTools.CommaStringToArray(s);
-    }
-
     [TestCase("1,2,3,0", Result = "1|2|3|0")]
     public string CommaStringToIds(string s)
     {
@@ -78,4 +43,6 @@ namespace ExtTools.tests
       Assert.AreEqual("", s2);
     }
   }
+
+#endif
 }

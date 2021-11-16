@@ -140,7 +140,6 @@
     <Compile Include="Text\CsvTextConvert.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\DataTools.Csv.cs" />
     <Compile Include="DependedValues\DepTools.cs" />
     <Compile Include="Shell\FileAssociations.cs" />
     <Compile Include="UICore\UIValidator.cs" />

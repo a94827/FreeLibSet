@@ -186,9 +186,9 @@ namespace FreeLibSet.Data.Docs
       }
 
       _IgnoredLocks = new GuidList();
-      string StrIgnoredLocks = dataSet.ExtendedProperties["IgnoredLocks"] as string;
-      Guid[] aIgnoredLocks = DataTools.CommaStringToGuids(StrIgnoredLocks);
-      if (aIgnoredLocks != null)
+      string strIgnoredLocks = dataSet.ExtendedProperties["IgnoredLocks"] as string;
+      Guid[] aIgnoredLocks = StdConvert.ToGuidArray(strIgnoredLocks);
+      if (aIgnoredLocks.Length>0)
         _IgnoredLocks.AddRange(aIgnoredLocks);
       _IgnoredLocks.SetReadOnly();
       _StartTime = DateTime.Now;
@@ -752,7 +752,7 @@ namespace FreeLibSet.Data.Docs
       // Убрано 05.07.2016 
       // Иначе редактор документа DocumentEditor не сможет установить блокировку после создания нового документа
       // FIgnoredLocks.SetReadOnly();
-      _DataSet.ExtendedProperties["IgnoredLocks"] = DataTools.CommaStringFromGuids(_IgnoredLocks.ToArray(), false);
+      _DataSet.ExtendedProperties["IgnoredLocks"] = StdConvert.ToString(_IgnoredLocks.ToArray());
       TimeSpan EditTime = DateTime.Now - StartTime;
       _DataSet.ExtendedProperties["EditTime"] = EditTime.ToString();
       _DataSet.ExtendedProperties["UseAsyngWriting"] = UseAsyncWriting ? "1" : "0";

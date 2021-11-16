@@ -59,7 +59,6 @@ namespace FreeLibSet.Collections
   /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
   public abstract class MRUObjectDictionary<TKey, TValue> : SimpleDisposableObject, IDictionary<TKey, TValue>
   {
-
     #region Статический конструктор
 
     static MRUObjectDictionary()
@@ -85,6 +84,17 @@ namespace FreeLibSet.Collections
       _MaxCapacity = 10;
       _MRU = new LinkedList<KeyValuePair<TKey, TValue>>();
       _Dict = new Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>>();
+    }
+
+    /// <summary>
+    /// Создает пустую коллекцию
+    /// </summary>
+    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
+    public MRUObjectDictionary(IEqualityComparer<TKey> keyComparer)
+    {
+      _MaxCapacity = 10;
+      _MRU = new LinkedList<KeyValuePair<TKey, TValue>>();
+      _Dict = new Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>>(keyComparer);
     }
 
     /// <summary>
@@ -185,7 +195,7 @@ namespace FreeLibSet.Collections
     protected virtual void DestroyItem(TKey key, TValue value)
     {
       if (_IsValueDisposable)
-      {                
+      {
         IDisposable idisp = (IDisposable)value;
         if (idisp != null)
           idisp.Dispose();
@@ -754,7 +764,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Реализация свойства MRU
     /// </summary>
-    public struct MRUCollection: IEnumerable<T>
+    public struct MRUCollection : IEnumerable<T>
     {
       #region Конструктор
 
@@ -1293,12 +1303,40 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
+    /// Создает пустой словарь
+    /// </summary>
+    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
+    public DictionaryWithMRU(IEqualityComparer<TKey> keyComparer)
+    {
+      _Dict = new Dictionary<TKey, NodeAndValue>(keyComparer);
+      _LinkedList = new LinkedList<TKey>();
+      _MaxCapacity = Int32.MaxValue;
+    }
+
+    /// <summary>
     /// Создает словарь и заполняет его значениями из другого словаря.
     /// После вызова конструктора связь между словарями не сохраняется.
     /// </summary>
     /// <param name="source">Словарь, откуда нужно скопировать пары "Ключ-Значение"</param>
     public DictionaryWithMRU(IDictionary<TKey, TValue> source)
       : this()
+    {
+      foreach (KeyValuePair<TKey, TValue> Pair in source)
+        Add(Pair.Key, Pair.Value);
+
+#if DEBUG
+      DebugCheckCount();
+#endif
+    }
+
+    /// <summary>
+    /// Создает словарь и заполняет его значениями из другого словаря.
+    /// После вызова конструктора связь между словарями не сохраняется.
+    /// </summary>
+    /// <param name="source">Словарь, откуда нужно скопировать пары "Ключ-Значение"</param>
+    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
+    public DictionaryWithMRU(IDictionary<TKey, TValue> source, IEqualityComparer<TKey> keyComparer)
+      : this(keyComparer)
     {
       foreach (KeyValuePair<TKey, TValue> Pair in source)
         Add(Pair.Key, Pair.Value);
@@ -1722,7 +1760,7 @@ namespace FreeLibSet.Collections
 
       private DictionaryWithMRU<TKey, TValue> _Owner;
 
-      private  LinkedList<TKey>.Enumerator _En;
+      private LinkedList<TKey>.Enumerator _En;
 
       #endregion
 
@@ -1942,16 +1980,16 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает количество записей в словаре
     /// </summary>
-    public int Count 
-    { 
-      get 
+    public int Count
+    {
+      get
       {
 #if DEBUG
         DebugCheckCount();
 #endif
 
-        return _Dict.Count; 
-      } 
+        return _Dict.Count;
+      }
     }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly { get { return false; } }
