@@ -1546,9 +1546,13 @@ namespace FreeLibSet.Data.Docs
       if (EmptyCode)
         Filters.Add(new ValueFilter(Code, String.Empty, typeof(string)));
 
-      DBxFilter Filter = OrFilter.FromArray(Filters.ToArray());
+      DBxFilter Filter = OrFilter.FromList(Filters);
       if (Mode == CodeFilterMode.Exclude)
+      {
         Filter = new NotFilter(Filter);
+        if (CanBeEmpty && (!EmptyCode))
+          Filter = new OrFilter(Filter, new ValueFilter(Code, String.Empty, typeof(string))); // 17.11.2021
+      }
       return Filter;
     }
 
@@ -1624,12 +1628,7 @@ namespace FreeLibSet.Data.Docs
       if (String.IsNullOrEmpty(rowValue))
         Flag = EmptyCode;
       else
-      {
-        if (Codes.Length == 0)
-          Flag = false;
-        else
-          Flag = Array.IndexOf<string>(Codes, rowValue) >= 0;
-      }
+        Flag = Array.IndexOf<string>(Codes, rowValue) >= 0;
       if (Mode == CodeFilterMode.Exclude)
         return !Flag;
       else

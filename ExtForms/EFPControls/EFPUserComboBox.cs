@@ -145,10 +145,10 @@ namespace FreeLibSet.Forms
     {
       if (_SelectableEx == null)
       {
-        _SelectableEx = new DepInput<bool>(Selectable,SelectableEx_ValueChanged);
+        _SelectableEx = new DepInput<bool>(Selectable, SelectableEx_ValueChanged);
         _SelectableEx.OwnerInfo = new DepOwnerInfo(this, "SelectableEx");
 
-        _SelectableMain = new DepInput<bool>(true,null);
+        _SelectableMain = new DepInput<bool>(true, null);
         _SelectableMain.OwnerInfo = new DepOwnerInfo(this, "SelectableMain");
 
         _SelectableSync = new DepInput<bool>(true, null);
@@ -581,7 +581,7 @@ namespace FreeLibSet.Forms
     {
       if (_EmptyTextEx == null)
       {
-        _EmptyTextEx = new DepInput<string>(EmptyText,EmptyTextEx_ValueChanged);
+        _EmptyTextEx = new DepInput<string>(EmptyText, EmptyTextEx_ValueChanged);
         _EmptyTextEx.OwnerInfo = new DepOwnerInfo(this, "EmptyTextEx");
       }
     }
@@ -638,7 +638,7 @@ namespace FreeLibSet.Forms
     {
       if (_EmptyImageKeyEx == null)
       {
-        _EmptyImageKeyEx = new DepInput<string>(EmptyImageKey,EmptyImageKeyEx_ValueChanged);
+        _EmptyImageKeyEx = new DepInput<string>(EmptyImageKey, EmptyImageKeyEx_ValueChanged);
         _EmptyImageKeyEx.OwnerInfo = new DepOwnerInfo(this, "EmptyImageKeyEx");
       }
     }
@@ -695,7 +695,7 @@ namespace FreeLibSet.Forms
     {
       if (_AllSelectedTextEx == null)
       {
-        _AllSelectedTextEx = new DepInput<string>(EmptyText,AllSelectedTextEx_ValueChanged);
+        _AllSelectedTextEx = new DepInput<string>(EmptyText, AllSelectedTextEx_ValueChanged);
         _AllSelectedTextEx.OwnerInfo = new DepOwnerInfo(this, "AllSelectedTextEx");
       }
     }
@@ -751,7 +751,7 @@ namespace FreeLibSet.Forms
     {
       if (_AllSelectedImageKeyEx == null)
       {
-        _AllSelectedImageKeyEx = new DepInput<string>(AllSelectedImageKey,AllSelectedImageKeyEx_ValueChanged);
+        _AllSelectedImageKeyEx = new DepInput<string>(AllSelectedImageKey, AllSelectedImageKeyEx_ValueChanged);
         _AllSelectedImageKeyEx.OwnerInfo = new DepOwnerInfo(this, "AllSelectedImageKeyEx");
       }
     }
@@ -961,7 +961,7 @@ namespace FreeLibSet.Forms
             if (SingleSelIndex < 0 || SingleSelIndex >= ImageKeys.Length)
               throw new BugException("Неправильный SingleSelIndex=" + SingleSelIndex.ToString());
 #endif
-              _TextValueNeededArgs.ImageKey = ImageKeys[SingleSelIndex];
+            _TextValueNeededArgs.ImageKey = ImageKeys[SingleSelIndex];
           }
           else
             _TextValueNeededArgs.ImageKey = ImageKey;
@@ -1157,18 +1157,27 @@ namespace FreeLibSet.Forms
     public EFPUserTextComboBox(EFPBaseProvider baseProvider, UserTextComboBox control)
       : base(baseProvider, control)
     {
-#if XXX
-      Control.ReadOnly = false; // иначе часто будут бяки
-      PopupButtonEnabled = true;
-      Control.ReadOnlyChanged += Control_ReadOnlyChanged;
-      Control_ReadOnlyChanged(null, null);
-      TextEx.ValueChanged += TextEx_ValueChanged;
-#endif
+      control.ClearButtonToolTipText = "Очистить введенное значение";
     }
 
     #endregion
 
     #region Переопределенные методы и свойства
+
+
+    /// <summary>
+    /// Установка кнопки очистки
+    /// </summary>
+    public override UIValidateState CanBeEmptyMode
+    {
+      get { return base.CanBeEmptyMode; }
+      set
+      {
+        base.CanBeEmptyMode = value;
+        Control.ClearButton = CanBeEmpty;
+      }
+    }
+
 
     /// <summary>
     /// Дублирует соответствующее свойство управляющего элемента UserTextComboBox
@@ -1189,39 +1198,6 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
-
-#if XXX
-    #region Расширение для PopupButtonEnabled и ClearButtonEnabled
-
-    public override bool PopupButtonEnabled
-    {
-      get { return Control.PopupButtonEnabled; }
-      set
-      {
-        FPopupButtonEnabled = value;
-        Control.PopupButtonEnabled = value && (!Control.ReadOnly);
-        InitClearButtonEnabled();
-      }
-    }
-    private bool FPopupButtonEnabled;
-
-    void Control_ReadOnlyChanged(object Sender, EventArgs Args)
-    {
-      PopupButtonEnabled = FPopupButtonEnabled;
-    }
-
-    private void InitClearButtonEnabled()
-    {
-      ClearButtonEnabled = (!Control.ReadOnly) && TextLength > 0;
-    }
-
-    void TextEx_ValueChanged(object sender, EventArgs args)
-    {
-      InitClearButtonEnabled();
-    }
-
-    #endregion
-#endif
 
     #region Свойства для выделения текста
 
@@ -1273,11 +1249,112 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
+  #region Делегат
+
+  /// <summary>
+  /// Аргументы события EFPCsvCodesComboBoxBase.CodeValidating
+  /// </summary>
+  public class EFPCodeValidatingEventArgs : EventArgs, IUIValidableObject
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализация объекта
+    /// </summary>
+    /// <param name="code">Проверяемый код. Не может быть пустым</param>
+    public void Init(string code)
+    {
+      if (String.IsNullOrEmpty(code))
+        throw new ArgumentNullException("code");
+
+      _Code = code;
+      _ValidateState = UIValidateState.Ok;
+      _Message = String.Empty;
+      _Name = String.Empty;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Проверяемый код.
+    /// Не может быть пустым.
+    /// </summary>
+    public string Code { get { return _Code; } }
+    private string _Code;
+
+    /// <summary>
+    /// Сюда можно поместить описание для кода
+    /// </summary>
+    public string Name { get { return _Name; } set { _Name = value; } }
+    private string _Name;
+
+    /// <summary>
+    /// Сообщение об ошибке или предупреждение
+    /// </summary>
+    public string Message { get { return _Message; } }
+    private string _Message;
+
+    #endregion
+
+    #region IUIValidableObject
+
+    /// <summary>
+    /// Задать сообщение об ошибке
+    /// </summary>
+    /// <param name="message">Сообщение</param>
+    public void SetError(string message)
+    {
+      if (message == null)
+        throw new ArgumentNullException("message");
+
+      if (_ValidateState == UIValidateState.Error)
+        return;
+
+      _ValidateState = UIValidateState.Error;
+      _Message = message;
+    }
+
+    /// <summary>
+    /// Задать предупреждение
+    /// </summary>
+    /// <param name="message">Сообщение</param>
+    public void SetWarning(string message)
+    {
+      if (message == null)
+        throw new ArgumentNullException("message");
+
+      if (_ValidateState != UIValidateState.Ok)
+        return;
+
+      _ValidateState = UIValidateState.Warning;
+      _Message = message;
+    }
+
+    /// <summary>
+    /// Текущее состояние
+    /// </summary>
+    public UIValidateState ValidateState { get { return _ValidateState; } }
+    private UIValidateState _ValidateState;
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Делегат события EFPCsvCodesComboBoxBase.CodeValidating
+  /// </summary>
+  /// <param name="sender">Провайдер управляющего элемента</param>
+  /// <param name="args">Аргументы события</param>
+  public delegate void EFPCodeValidatingEventHandler(object sender, EFPCodeValidatingEventArgs args);
+
+  #endregion
+
   /// <summary>
   /// Комбоблок для выбора одного или нескольких кодов, разделенных запятыми.
-  /// Абстрактный класс, который не имеет встроенного списка кодов.
+  /// Базовый класс, который не имеет встроенного списка кодов.
   /// </summary>
-  public abstract class EFPCsvCodesComboBoxBase : EFPUserTextComboBox
+  public class EFPCsvCodesComboBoxBase : EFPUserTextComboBox
   {
     #region Конструктор
 
@@ -1290,6 +1367,10 @@ namespace FreeLibSet.Forms
       : base(baseProvider, control)
     {
       _UseSpace = true;
+      control.PopupButtonToolTipText = "Выбрать коды из списка";
+      control.ClearButtonToolTipText = "Очистить выбранные коды";
+
+      _CodeValidatingEventArgs = new EFPCodeValidatingEventArgs();
     }
 
     #endregion
@@ -1352,7 +1433,7 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodesEx == null)
       {
-        _SelectedCodesEx = new DepInput<string[]>(SelectedCodes,SelectedCodesEx_ValueChanged);
+        _SelectedCodesEx = new DepInput<string[]>(SelectedCodes, SelectedCodesEx_ValueChanged);
         _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
       }
     }
@@ -1400,7 +1481,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Проверка
+    #region Проверка элемента
 
     /// <summary>
     /// Обработка SelectedCodesEx.
@@ -1412,6 +1493,8 @@ namespace FreeLibSet.Forms
       if (_SelectedCodesEx != null)
         _SelectedCodesEx.Value = SelectedCodes;
     }
+
+    private EFPCodeValidatingEventArgs _CodeValidatingEventArgs;
 
     /// <summary>
     /// Проверка корректности значения.
@@ -1438,14 +1521,21 @@ namespace FreeLibSet.Forms
           return;
         }
 
-        string message;
-        if (!TestCode(s, out message))
-        {
-          SetError("Неправильный код \"" + s + "\". " + message);
-          return;
+        _CodeValidatingEventArgs.Init(s);
+        if (_ValidatingCodeEx != null)
+          _ValidatingCodeEx.OwnerSetValue(s);
+        OnCodeValidating(_CodeValidatingEventArgs);
+        switch (_CodeValidatingEventArgs.ValidateState)
+        { 
+          case UIValidateState.Error:
+            SetError("Неправильный код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            return;
+          case UIValidateState.Warning:
+            SetWarning("Код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            break;
         }
-        else if (a.Length == 1 && (!String.IsNullOrEmpty(message)))
-          ValueToolTipText = s + " - " + message;
+        if (a.Length == 1 && (!String.IsNullOrEmpty(_CodeValidatingEventArgs.Name)))
+          ValueToolTipText = s + " - " + _CodeValidatingEventArgs.Name;
 
         if (lst.Contains(s))
         {
@@ -1456,21 +1546,117 @@ namespace FreeLibSet.Forms
       }
     }
 
+    #endregion
+
+    #region Проверка одного кода
+
     /// <summary>
-    /// Проверка кода.
+    /// Событие вызывается для проверки каждого кода в списке
     /// </summary>
-    /// <param name="code">Проверяемый код. Не может быть пустой строкой</param>
-    /// <param name="message">Если код правильный, то сюда может быть помещено текстовое описание кода.
-    /// Если код неправильный, то сюда должен быть помещен текст сообщения об ошибке</param>
-    /// <returns>True, если код правильный, false в случае ошибки</returns>
-    public abstract bool TestCode(string code, out string message);
+    public event EFPCodeValidatingEventHandler CodeValidating;
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
+    /// Используется в валидаторах из списка CodeValidators.
+    /// Не используйте свойство в валидаторах основного списка Validators.
+    /// В основном, предназначено для проверки в удаленном интерфейсе.
+    /// В обычных приложениях удобнее использовать обработчик события CodeValidating.
+    /// </summary>
+    public DepValue<string> ValidatingCodeEx
+    {
+      get
+      {
+        if (_ValidatingCodeEx == null)
+        {
+          _ValidatingCodeEx = new DepOutput<string>(String.Empty);
+          _ValidatingCodeEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingCodeEx");
+        }
+        return _ValidatingCodeEx;
+      }
+    }
+    private DepOutput<string> _ValidatingCodeEx;
+
+
+    /// <summary>
+    /// Список объектов-валидаторов для проверки корректности значения выбранных кодов.
+    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValidatingCodeEx
+    /// (и на других управляемых свойствах, в том числе, других элементов формы).
+    /// В основном, предназначено для проверки в удаленном интерфейсе.
+    /// В обычных приложениях удобнее использовать обработчик события CodeValidating.
+    /// </summary>
+    public UIValidatorList CodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+        {
+          if (ProviderState!=EFPControlProviderState.Initialization)
+            _CodeValidators = UIValidatorList.Empty;
+          else
+            _CodeValidators = new UIValidatorList();
+        }
+        return _CodeValidators;
+      }
+    }
+    private UIValidatorList _CodeValidators;
+
+    /// <summary>
+    /// Возвращает true, если список CodeValidators не пустой.
+    /// Используется для оптимизации, вместо обращения к CodeValidators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+    /// </summary>
+    public bool HasCodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+          return false;
+        else
+          return _CodeValidators.Count > 0;
+      }
+    }
+
+    /// <summary>
+    /// Блокирует список CodeValidators от изменений.
+    /// Присоединяет 
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      if (_CodeValidators!=null)
+      {
+        _CodeValidators.SetReadOnly();
+
+        foreach (FreeLibSet.UICore.UIValidator v in this._CodeValidators)
+        {
+          v.ExpressionEx.ValueChanged += new EventHandler(this.Validate); // Не знаю, нужно ли
+          if (v.PreconditionEx != null)
+            v.PreconditionEx.ValueChanged += new EventHandler(this.Validate);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Проверка кода в списке.
+    /// Непереопределенный метод сначала выполняет проверку с помощью валидаторов CodeValidators(), если они есть, 
+    /// затем вызывает обработчик события CodeValidating, если он установлен.
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnCodeValidating(EFPCodeValidatingEventArgs args)
+    {
+      if (_CodeValidators != null)
+        _CodeValidators.Validate(args);
+
+      if (CodeValidating != null)
+        CodeValidating(this, args);
+    }
 
     #endregion
   }
 
   /// <summary>
   /// Комбоблок для выбора одного или нескольких кодов, разделенных запятыми.
-  /// Хранит список кодов, доступных для выбора, в виде массива
+  /// Хранит список кодов, доступных для выбора, в виде массива.
   /// </summary>
   public class EFPCsvCodesComboBox : EFPCsvCodesComboBoxBase
   {
@@ -1517,6 +1703,7 @@ namespace FreeLibSet.Forms
       _Codes = codes;
       _CodeIndexer = new StringArrayIndexer(codes);
       _Names = names;
+      _UnknownCodeSeverity = UIValidateState.Error;
 
       Control.PopupClick += new EventHandler(Control_PopupClick);
     }
@@ -1629,26 +1816,46 @@ namespace FreeLibSet.Forms
     #region Проверка
 
     /// <summary>
-    /// Проверка кода.
+    /// Нужно ли выдавать сообщение об ошибке или предупреждение, если кода нет в списке.
+    /// По умолчанию - Error.
     /// </summary>
-    /// <param name="code">Проверяемый код. Не может быть пустой строкой</param>
-    /// <param name="message">Если код правильный, то сюда помещается текстовое описание кода, если задано свойство Names.
-    /// Если кода нет в списке Codes, то сюда помещается текст сообщения об ошибке</param>
-    /// <returns>True, если код есть в списке Codes, false в случае ошибки</returns>
-    public override bool TestCode(string code, out string message)
+    public UIValidateState UnknownCodeSeverity
     {
-      int p = _CodeIndexer.IndexOf(code);
+      get { return _UnknownCodeSeverity; }
+      set
+      {
+        if (value == _UnknownCodeSeverity)
+          return;
+        _UnknownCodeSeverity = value;
+        Validate();
+      }
+    }
+    private UIValidateState _UnknownCodeSeverity;
+
+    /// <summary>
+    /// Выполнить проверку одного кода.
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected override void OnCodeValidating(EFPCodeValidatingEventArgs args)
+    {
+      base.OnCodeValidating(args);
+      int p = _CodeIndexer.IndexOf(args.Code);
       if (p < 0)
       {
-        message = "Кода нет в списке";
-        return false;
+        switch (UnknownCodeSeverity)
+        {
+          case UIValidateState.Error:
+            args.SetError("Кода нет в списке");
+            break;
+          case UIValidateState.Warning:
+            args.SetWarning("Кода нет в списке");
+            break;
+        }
       }
       else
       {
-        message = null;
         if (_Names != null)
-          message = _Names[p];
-        return true;
+          args.Name = _Names[p];
       }
     }
 

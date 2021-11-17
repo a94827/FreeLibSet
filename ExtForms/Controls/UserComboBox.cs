@@ -392,7 +392,7 @@ namespace FreeLibSet.Controls
       {
         if (args.KeyCode == Keys.Down || args.KeyCode == Keys.Up)
         {
-          if (args.KeyCode == Keys.Down && args.Alt)
+          if (args.KeyCode == Keys.Down && args.Modifiers == Keys.Alt)
           {
             if (_ThePopupButton.Visible && _ThePopupButton.Enabled)
               _ThePopupButton.PerformClick();
@@ -400,13 +400,19 @@ namespace FreeLibSet.Controls
           args.Handled = true;
         }
 
-        if (args.KeyCode == Keys.Space && ClearButton && ClearButtonEnabled)
+        if (args.KeyCode == Keys.Space && args.Modifiers == Keys.None && ClearButton && ClearButtonEnabled && UseSpaceForClear())
+        {
+            PerformClear();
+            args.Handled = true;
+        }
+
+        if (args.KeyCode == Keys.F12 && args.Modifiers == Keys.None && ClearButton && ClearButtonEnabled)
         {
           PerformClear();
           args.Handled = true;
         }
 
-        if (args.KeyCode == Keys.F2 && EditButton && EditButtonEnabled)
+        if (args.KeyCode == Keys.F2 && args.Modifiers == Keys.None && EditButton && EditButtonEnabled)
         {
           PerformEdit();
           args.Handled = true;
@@ -414,6 +420,16 @@ namespace FreeLibSet.Controls
       }
 
       OnKeyDown(args);
+    }
+
+    /// <summary>
+    /// Возвращает true (для UserSelComboBox), если клавиша "Пробел" нажимает кнопку "Очистить".
+    /// По умолчанию - false
+    /// </summary>
+    /// <returns></returns>
+    protected virtual bool UseSpaceForClear()
+    {
+      return false;
     }
 
 
@@ -1218,6 +1234,19 @@ public new Color BackColor { get { return base.BackColor; } set { base.BackColor
         KeyActivity = true;
 
       base.OnMouseUp(args);
+    }
+
+    #endregion
+
+    #region Обработка клавиши
+
+    /// <summary>
+    /// Клавиша пробела нажимает кнопку очистки
+    /// </summary>
+    /// <returns></returns>
+    protected override bool UseSpaceForClear()
+    {
+      return true;
     }
 
     #endregion

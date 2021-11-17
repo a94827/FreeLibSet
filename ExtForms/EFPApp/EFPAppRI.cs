@@ -1636,6 +1636,7 @@ namespace FreeLibSet.Forms.RI
       {
         base.CanBeEmptyMode = riItem.CanBeEmptyMode;
         base.Names = riItem.Names;
+        base.UnknownCodeSeverity = riItem.UnknownCodeSeverity;
 
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
@@ -1649,6 +1650,12 @@ namespace FreeLibSet.Forms.RI
           else
             riItem.SelectedCodesEx = base.SelectedCodesEx;
         }
+
+        if (riItem.HasCodeValidators)
+          base.CodeValidators.AddRange(riItem.CodeValidators);
+
+        if (riItem.InternalValidatingCodeExConnected)
+          riItem.InternalSetValidatingCodeEx(base.ValidatingCodeEx);
       }
 
       FreeLibSet.RI.CsvCodesComboBox _RIItem;

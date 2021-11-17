@@ -5083,6 +5083,7 @@ namespace FreeLibSet.RI
       _SelectedCodes = DataTools.EmptyStrings;
       _OldSelectedCodes = _SelectedCodes;
       _CanBeEmptyMode = UIValidateState.Error;
+      _UnknownCodeSeverity = UIValidateState.Error;
     }
 
     #endregion
@@ -5244,6 +5245,136 @@ namespace FreeLibSet.RI
       }
     }
     private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #endregion
+
+    #region Проверка отдельных кодов
+
+    #region UnknownCodeSeverity
+
+    /// <summary>
+    /// Нужно ли выдавать сообщение об ошибке или предупреждение, если кода нет в списке Codes.
+    /// По умолчанию - Error.
+    /// Свойство можно задавать только до показа диалога.
+    /// Если коды вне списка допускаются, обычно следует добавить проверку кода в список CodeValidators.
+    /// </summary>
+    public UIValidateState UnknownCodeSeverity
+    {
+      get { return _UnknownCodeSeverity; }
+      set
+      {
+        CheckNotFixed();
+        _UnknownCodeSeverity = value;
+      }
+    }
+    private UIValidateState _UnknownCodeSeverity;
+
+    #endregion
+
+    #region ValidatingCodeEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
+    /// Используется в валидаторах из списка CodeValidators.
+    /// Не используйте свойство в валидаторах основного списка Validators.
+    /// </summary>
+    public DepValue<string> ValidatingCodeEx
+    {
+      get
+      {
+        InitValidatingCodeEx();
+        return _ValidatingCodeEx;
+      }
+    }
+    private DepInput<string> _ValidatingCodeEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValidatingCodeEx присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalValidatingCodeExConnected
+    {
+      get
+      {
+        if (_ValidatingCodeEx == null)
+          return false;
+        else
+          return _ValidatingCodeEx.IsConnected;
+      }
+    }
+
+    private void InitValidatingCodeEx()
+    {
+      if (_ValidatingCodeEx == null)
+      {
+        _ValidatingCodeEx = new DepInput<string>(String.Empty, null);
+        _ValidatingCodeEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingCodeEx");
+      }
+    }
+
+    /// <summary>
+    /// Этот метод не предназначен для использования в пользовательском коде
+    /// </summary>
+    /// <param name="value"></param>
+    public void InternalSetValidatingCodeEx(DepValue<string> value)
+    {
+      InitValidatingCodeEx();
+      _ValidatingCodeEx.Source = value;
+    }
+
+    #endregion
+
+    #region CodeValidators
+
+    /// <summary>
+    /// Список объектов-валидаторов для проверки корректности значения выбранных кодов.
+    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValidatingCodeEx
+    /// (и на других управляемых свойствах, в том числе, других элементов диалога).
+    /// Чтобы использования валидаторов имело смысл, свойство UnknownCodeSeverity должно быть установлено в Ok или Warning,
+    /// иначе будут разрешены только коды из списка Codes.
+    /// </summary>
+    public UIValidatorList CodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+        {
+          if (IsFixed)
+            _CodeValidators = UIValidatorList.Empty;
+          else
+            _CodeValidators = new UIValidatorList();
+        }
+        return _CodeValidators;
+      }
+    }
+    private UIValidatorList _CodeValidators;
+
+    /// <summary>
+    /// Возвращает true, если список CodeValidators не пустой.
+    /// Используется для оптимизации, вместо обращения к CodeValidators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+    /// </summary>
+    public bool HasCodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+          return false;
+        else
+          return _CodeValidators.Count > 0;
+      }
+    }
+
+    /// <summary>
+    /// Фиксация списка CodeValidators
+    /// </summary>
+    protected override void OnSetFixed()
+    {
+      base.OnSetFixed();
+      if (_CodeValidators != null)
+        _CodeValidators.SetReadOnly();
+    }
 
     #endregion
 

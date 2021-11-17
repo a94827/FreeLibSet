@@ -87,7 +87,7 @@ namespace FreeLibSet.Forms
       }
 
       if (!YM2.IsInRange(Minimum, Maximum))
-        SetError("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
+        SetError("Значение должно быть в диапазоне: " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
 
       base.OnValidate();
     }
@@ -365,7 +365,7 @@ namespace FreeLibSet.Forms
       }
 
       if (!(FirstYM2.IsInRange(Minimum, Maximum) && LastYM2.IsInRange(Minimum, Maximum)))
-        SetError("Значение должно быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
+        SetError("Значение должно быть в диапазоне: " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
 
       base.OnValidate();
     }

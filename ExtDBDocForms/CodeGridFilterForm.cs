@@ -52,7 +52,7 @@ namespace FreeLibSet.Forms.Docs
   {
     #region Конструктор
 
-    public CodeGridFilterForm(string[] codes, string[] names)
+    public CodeGridFilterForm(string[] codes, string[] names, EFPCodeValidatingEventHandler codeValidating)
     {
       InitializeComponent();
 
@@ -64,15 +64,17 @@ namespace FreeLibSet.Forms.Docs
       efpCodes = new EFPCsvCodesComboBox(efpForm, edCodes, codes);
       efpCodes.Names = names;
       efpCodes.ToolTipText = "Список кодов, разделенных запятыми";
+      efpCodes.CanBeEmpty = true;
+      efpCodes.CodeValidating += codeValidating;
+      efpCodes.UnknownCodeSeverity = UIValidateState.Warning;
 
       efpEmpty = new EFPCheckBox(efpForm, cbEmpty);
       efpEmpty.ToolTipText = "В режиме \"Включить коды\" - включить в фильтр строки, в которых поле не установлено." + Environment.NewLine +
       "В режиме \"Исключить коды\" - убрать строки с пустым значением поля";
 
       efpCodes.EnabledEx = new DepExpr1<bool, int>(efpMode.SelectedIndexEx, new DepFunction1<bool, int>(CalcCodesEnabled));
+      efpCodes.Validators.AddError(efpCodes.IsNotEmptyEx, "Коды должны быть выбраны", new DepNot(efpEmpty.CheckedEx));
       efpEmpty.EnabledEx = efpCodes.EnabledEx;
-
-      efpCodes.CanBeEmpty = true;
       efpEmpty.CheckedEx.ValueChanged += efpCodes.Validate;
     }
 
@@ -156,7 +158,7 @@ namespace FreeLibSet.Forms.Docs
     {
       string[] codes, names;
       GetCodesAndNames(out codes, out names);
-      CodeGridFilterForm Form = new CodeGridFilterForm(codes, names);
+      CodeGridFilterForm Form = new CodeGridFilterForm(codes, names, new EFPCodeValidatingEventHandler(CodeValidating));
       Form.Text = DisplayName;
       Form.efpEmpty.Visible = CanBeEmpty;
 
@@ -171,6 +173,13 @@ namespace FreeLibSet.Forms.Docs
         Form.efpCodes.SelectedCodes,
         Form.efpEmpty.Checked);
       return true;
+    }
+
+    private void CodeValidating(object sender, EFPCodeValidatingEventArgs args)
+    { 
+      string msg;
+      if (!CheckCode(args.Code, out msg))
+        args.SetError(msg);
     }
 
     #endregion

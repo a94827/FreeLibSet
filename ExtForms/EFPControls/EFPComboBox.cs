@@ -429,8 +429,7 @@ namespace FreeLibSet.Forms
     public EFPMaskedComboBox(EFPBaseProvider baseProvider, UserMaskedComboBox control)
       : base(baseProvider, control)
     {
-      if (String.IsNullOrEmpty(control.ClearButtonToolTipText))
-        control.ClearButtonToolTipText = "Очистить введенное значение";
+       control.ClearButtonToolTipText = "Очистить введенное значение";
     }
 
     #endregion

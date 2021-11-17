@@ -135,14 +135,14 @@ namespace FreeLibSet.Russian
         if (!lastYM.IsEmpty)
         {
           if (firstYM == lastYM)
-            return firstYM.BottomOfMonth.ToString("MMM yyyy ã.");
+            return firstYM.BottomOfMonth.ToString("MMMM yyyy ã.");
           else if (firstYM.Month==1 && lastYM.Month==12)
             return lastYM.EndOfMonth.ToString("yyyy ã."); // 31.08.2018
           else
-            return firstYM.BottomOfMonth.ToString("MMM") + "-" + lastYM.EndOfMonth.ToString("MMM yyyy ã.");
+            return firstYM.BottomOfMonth.ToString("MMMM") + "-" + lastYM.EndOfMonth.ToString("MMMM yyyy ã.");
         }
         else
-          return "ñ " + firstYM.BottomOfMonth.ToString("MMM yyyy ã.");
+          return "ñ " + firstYM.BottomOfMonth.ToString("MMMM yyyy ã.");
       }
       else
       {
