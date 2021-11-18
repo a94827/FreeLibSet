@@ -2635,6 +2635,7 @@ namespace FreeLibSet.Forms
       {
         Exception e = new NullReferenceException("Не найден EFPFormProvider для формы " + form.ToString());
         e.Data["FormClass"] = form.GetType().ToString();
+        e.Data["AvailableFormProviders"] = DataTools.ToStringArray<EFPFormProvider>(_ProviderList.ToArray());
         throw e;
       }
       return res;

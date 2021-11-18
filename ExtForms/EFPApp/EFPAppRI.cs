@@ -689,6 +689,8 @@ namespace FreeLibSet.Forms.RI
     {
       if (riItem is FreeLibSet.RI.Label)
         return new LabelItem((FreeLibSet.RI.Label)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.PasswordBox)
+        return new PasswordBoxItem((FreeLibSet.RI.PasswordBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.TextBox)
         return new TextBoxItem((FreeLibSet.RI.TextBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.IntEditBox)
@@ -820,6 +822,19 @@ namespace FreeLibSet.Forms.RI
       public void ReadValues()
       {
         _RIItem.Text = base.Text;
+      }
+
+      #endregion
+    }
+
+    private class PasswordBoxItem : TextBoxItem
+    {
+      #region Конструктор
+
+      public PasswordBoxItem(FreeLibSet.RI.PasswordBox riItem, EFPBaseProvider baseProvider)
+        : base(riItem, baseProvider)
+      {
+        Control.UseSystemPasswordChar = true;
       }
 
       #endregion
@@ -1917,6 +1932,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Ввод значений
 
+      if (riItem is FreeLibSet.RI.PasswordInputDialog)
+        return new PasswordInputDialogItem((FreeLibSet.RI.PasswordInputDialog)riItem);
       if (riItem is FreeLibSet.RI.TextInputDialog)
         return new TextInputDialogItem((FreeLibSet.RI.TextInputDialog)riItem);
       if (riItem is FreeLibSet.RI.TextComboInputDialog)
@@ -2096,7 +2113,10 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
+      protected FreeLibSet.RI.TextInputDialog RIDialog { get { return _RIDialog; } }
       private FreeLibSet.RI.TextInputDialog _RIDialog;
+
+      protected FreeLibSet.Forms.TextInputDialog WinDlg { get { return _WinDlg; } }
       private FreeLibSet.Forms.TextInputDialog _WinDlg;
 
       #endregion
@@ -2116,6 +2136,19 @@ namespace FreeLibSet.Forms.RI
       public DialogResult ShowDialog()
       {
         return (DialogResult)(int)_WinDlg.ShowDialog();
+      }
+
+      #endregion
+    }
+
+    private class PasswordInputDialogItem : TextInputDialogItem 
+    {
+      #region Конструктор
+
+      public PasswordInputDialogItem(FreeLibSet.RI.PasswordInputDialog riDialog)
+        :base(riDialog)
+      {
+        WinDlg.IsPassword = true;
       }
 
       #endregion
@@ -2226,7 +2259,7 @@ namespace FreeLibSet.Forms.RI
         riDialog.NValueEx = winDlg.NValueEx;
       if (riDialog.InternalValueExConnected)
         riDialog.ValueEx = winDlg.ValueEx;
-      
+
       if (riDialog.HasValidators)
         winDlg.Validators.AddRange(riDialog.Validators);
     }
@@ -2462,7 +2495,7 @@ namespace FreeLibSet.Forms.RI
     }
 
     #region Диалоги ввода диапазона значений
-                     
+
     private class IntRangeDialogItem : IEFPAppRIStandardDialogItem
     {
       #region Конструктор

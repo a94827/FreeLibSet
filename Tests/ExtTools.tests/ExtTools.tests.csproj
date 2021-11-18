@@ -68,6 +68,7 @@
     <Compile Include="MonthDayTests.cs" />
     <Compile Include="PropertyAssert.cs" />
     <Compile Include="TempDirectoryTests.cs" />
+    <Compile Include="WeakReferenceCollectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">

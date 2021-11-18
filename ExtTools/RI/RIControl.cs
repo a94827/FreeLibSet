@@ -564,6 +564,13 @@ namespace FreeLibSet.RI
     #endregion
   }
 
+  /// <summary>
+  /// Поле ввода пароля
+  /// </summary>
+  [Serializable]
+  public class PasswordBox : TextBox 
+  {
+  }
 
   /// <summary>
   /// Поле ввода числа. Базовый класс для IntEditBox, SingleEditBox, DoubleEditBox и DecimalEditBox

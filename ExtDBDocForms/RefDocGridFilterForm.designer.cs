@@ -187,6 +187,7 @@
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel1);
       this.MinimizeBox = false;
+      this.MinimumSize = new System.Drawing.Size(300, 150);
       this.Name = "RefDocGridFilterForm";
       this.panel1.ResumeLayout(false);
       this.panel2.ResumeLayout(false);

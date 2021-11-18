@@ -1031,6 +1031,17 @@ namespace FreeLibSet.Forms
       set { Control.MaxLength = value; }
     }
 
+    /// <summary>
+    /// Возвращает true, если установлено свойство TextBox.PasswordChar или UseSystemPasswordChar
+    /// </summary>
+    public override bool IsPasswordInput
+    {
+      get
+      {
+        return Control.UseSystemPasswordChar || (Control.PasswordChar != 0);
+      }
+    }
+
     #endregion
 
     #region Свойства для выделения текста

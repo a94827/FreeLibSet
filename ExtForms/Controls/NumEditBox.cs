@@ -843,6 +843,7 @@ namespace FreeLibSet.Controls
     {
       base.Select(directed, forward);
       _MainControl.Select();
+      SelectAll();
     }
 
     //protected override void OnContextMenuChanged(EventArgs args)

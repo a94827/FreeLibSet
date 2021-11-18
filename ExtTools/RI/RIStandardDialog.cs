@@ -428,6 +428,23 @@ namespace FreeLibSet.RI
   }
 
   /// <summary>
+  /// Диалог ввода пароля
+  /// </summary>
+  [Serializable]
+  public class PasswordInputDialog : TextInputDialog
+  {
+    #region Конструктор
+
+    public PasswordInputDialog()
+    {
+      Title = "Ввод пароля";
+      Prompt = "Пароль";
+    }
+
+    #endregion
+  }
+
+  /// <summary>
   /// Диалог ввода произвольной строки текста с возможностью выбора из списка возможных значений.
   /// </summary>
   [Serializable]

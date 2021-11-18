@@ -5095,7 +5095,7 @@ namespace FreeLibSet.Collections
   /// Этот класс является потокобезопасным.
   /// Коллекция не является сериализуемой.
   /// Обычно используются только методы Add() без парных вызовов Remove().
-  /// Методы ToArray(), GetEnumerator() автоматически выполяняют удаление "мертвых" ссылок и уменьшают размер объекта.
+  /// Методы ToArray(), GetEnumerator() автоматически выполняют удаление "мертвых" ссылок и уменьшают размер объекта.
   /// Коллекция не может содержать ссылки null.
   /// </summary>
   /// <typeparam name="T">Тип объектов, на которые хранятся ссылки</typeparam>
@@ -5226,9 +5226,8 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Это свойство возвращает количество "живых" ссылок.
-    /// При обращении выполняется сжатие список.
-    /// Обычно не следует использовать это свойство, т.к. оно может уменьшиться в любой момент при
-    /// сборке мусора.
+    /// При обращении выполняется сжатие списка.
+    /// Обычно не следует использовать это свойство, т.к. оно может уменьшиться в любой момент при сборке мусора.
     /// </summary>
     public int Count
     {
@@ -5251,8 +5250,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Удалить элемент из коллекции.
-    /// При поиске используется сравнение ссылок, даже если для класса определен оператор сравнения или
-    /// метод Equals()
+    /// При поиске используется сравнение ссылок, даже если для класса определен оператор сравнения или метод Equals()
     /// </summary>
     /// <param name="item">Удаляемый элемент</param>
     /// <returns>true, если элемент был удален</returns>
@@ -5263,7 +5261,8 @@ namespace FreeLibSet.Collections
 
       lock (_Refs)
       {
-        for (int i = 0; i < _Refs.Count; i++)
+        //for (int i = 0; i < _Refs.Count; i++)
+        for (int i = _Refs.Count - 1; i >= 0; i--) // 18.11.2021 - нужно в обратном порядке
         {
           object x = _Refs[i].Target;
           if (object.ReferenceEquals(x, null))
@@ -5317,25 +5316,43 @@ namespace FreeLibSet.Collections
     /// Возвращает массив "живых" ссылок.
     /// Выполняется сжатие списка
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив ссылок</returns>
     public T[] ToArray()
     {
+      List<T> lst = new List<T>(_Refs.Count);
+
       lock (_Refs)
       {
-        List<T> lst = new List<T>(_Refs.Count);
+        List<int> nullRefIndices = null;
+
         for (int i = 0; i < _Refs.Count; i++)
         {
           T x = (T)(_Refs[i].Target);
 
           if (object.ReferenceEquals(x, null))
-            _Refs.RemoveAt(i); // 27.01.2021
+          {
+            //_Refs.RemoveAt(i); // 27.01.2021
+            // 18.11.2021
+            // Так нельзя. Будет пропущена позиция. Удалять можно только в обратном порядке перебора. Делаем это позже
+            if (nullRefIndices == null)
+              nullRefIndices = new List<int>();
+            nullRefIndices.Add(i);
+          }
           else
             lst.Add(x);
         }
-        _AddCount = 0;
 
-        return lst.ToArray();
-      }
+        if (nullRefIndices != null)
+        {
+          // Обязательно в обратном порядке
+          for (int i = nullRefIndices.Count - 1; i >= 0; i--)
+            _Refs.RemoveAt(nullRefIndices[i]);
+        }
+
+        _AddCount = 0;
+      } // lock
+
+      return lst.ToArray();
     }
 
     #endregion
