@@ -6,7 +6,7 @@ using FreeLibSet.Data.SQLite;
 using FreeLibSet.Data;
 using FreeLibSet.IO;
 
-namespace ExtDB.tests
+namespace ExtDB_tests.Data_SQLite
 {
   [TestFixture]
   public class SQLiteDBxTests

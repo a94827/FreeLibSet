@@ -5,7 +5,7 @@ using NUnit.Framework;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
 
-namespace ExtDB.tests
+namespace ExtDB_tests.Data
 {
   [TestFixture]
   public class DBxTableColumnListTests

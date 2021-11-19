@@ -7,7 +7,7 @@ using FreeLibSet.IO;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
 
-namespace ExtDBDocs.tests
+namespace ExtDBDocs_tests.Data_Docs
 {
   /// <summary>
   /// Базовый класс для DBxBinDataHandlerTests и DBxBinDataValidatorTests
@@ -352,7 +352,7 @@ namespace ExtDBDocs.tests
       {
         Assert.IsTrue(dbs[i].DatabaseExists, dbs[i].DatabaseName + " exists");
         Assert.IsTrue(dbs[i].StructHasBeenUpdated, dbs[i].DatabaseName + " StructHasBeenUpdated");
-        ExtDB.tests.DBxTestHelpers.ValidateStruct(dbs[i].Struct, dbs[i].GetRealStruct(), dbs[i].DatabaseName + ". ");
+        ExtDB_tests.DBxTestHelpers.ValidateStruct(dbs[i].Struct, dbs[i].GetRealStruct(), dbs[i].DatabaseName + ". ");
       }
     }
   }

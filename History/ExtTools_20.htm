@@ -5,7 +5,9 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-11-18T12:46:17.110000000"/>
+	<meta name="changed" content="2021-11-19T12:10:34.695000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -462,7 +464,7 @@
 			<p lang="en-US" align="center">245</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.10.2021-<font color="#000000">1</font><font color="#000000">8</font>.1<font color="#000000">1</font>.2021</p>
+			<p lang="en-US" align="center">21.10.2021-<font color="#000000">19</font>.1<font color="#000000">1</font>.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Изменения пространств имен</span></p>
@@ -567,10 +569,11 @@
 			свойства </span>Format, UpDownHandler <span lang="ru-RU">и
 			</span>Increment <span lang="ru-RU">(в </span>IntEditBox <span lang="ru-RU">убрано
 			свойство </span>ShowUpDown<span lang="ru-RU">)</span></p>
-			<p lang="en-US">- <span lang="ru-RU">Убрано свойство
-			</span>TextInputDialog.IsPassword. <span lang="ru-RU">Предполагается
-			создание классов </span>PasswordTextBox <span lang="ru-RU">и
+			<p lang="en-US">- <span lang="ru-RU">Классы </span>PasswordBox <span lang="ru-RU">и
 			</span>PasswordInputDialog</p>
+			<p lang="en-US">- <span lang="ru-RU">Убрано свойство
+			</span>TextInputDialog.IsPassword. 
+			</p>
 			<p lang="en-US">- <span lang="ru-RU">Убраны свойства
 			Error/</span>Warning<span lang="ru-RU">RegExPattern</span>/Message</p>
 			<p lang="en-US">- <span lang="ru-RU">Переименование
@@ -638,13 +641,18 @@
 			TValue&gt;, BidirectionalDictionary&lt;string, TValue&gt;,
 			</span>ArrayIndexer&lt;string&gt;, <span lang="ru-RU">а не
 			дублируют код. Добавлены конструкторы с аргументом </span>StringComparer.</p>
-			<p lang="en-US">20. <span lang="ru-RU">Исправлена ошибка в
-			</span>WeakReferenceCollection.ToArray(). <span lang="ru-RU">Удаление
-			недействительных ссылок (</span><a href="ExtTools_11.htm#v227p2">v.227
-			<span lang="ru-RU">п.2</span></a><span lang="ru-RU">) могло
+			<p lang="en-US">20. <span lang="ru-RU">Конструкторы
+			BidirectionalDictionary</span>&lt;&gt;, <span lang="ru-RU">принимающие
+			коллекцию, сразу проверяют наличие повторяющихся значений, чтобы
+			исключение выбросилось в конструкторе.</span></p>
+			<p><span lang="en-US">2</span><span lang="en-US">1</span><span lang="en-US">.
+			</span><span lang="ru-RU">Исправлена ошибка в
+			</span><span lang="en-US">WeakReferenceCollection.ToArray().
+			</span><span lang="ru-RU">Удаление недействительных ссылок (</span><a href="ExtTools_11.htm#v227p2"><span lang="en-US">v.227
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">) могло
 			приводить к тому, что возвращался массив меньшего размера. Реально
-			не используемый метод </span>Remove() <span lang="ru-RU">также мог
-			не найти ссылку для удаления.</span></p>
+			не используемый метод </span><span lang="en-US">Remove() </span><span lang="ru-RU">также
+			мог не найти ссылку для удаления.</span></p>
 		</td>
 	</tr>
 </table>

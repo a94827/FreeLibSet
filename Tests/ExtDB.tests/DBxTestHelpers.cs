@@ -4,7 +4,7 @@ using System.Text;
 using FreeLibSet.Data;
 using NUnit.Framework;
 
-namespace ExtDB.tests
+namespace ExtDB_tests
 {
   /// <summary>
   /// Вспомогательные методы для тестирования баз данных

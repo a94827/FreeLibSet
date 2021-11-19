@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Calendar;
 
-namespace ExtTools.tests
+namespace ExtTools_tests
 {
   /// <summary>
   /// Генераторы объектов для тестирования

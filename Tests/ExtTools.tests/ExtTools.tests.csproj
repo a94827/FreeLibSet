@@ -6,7 +6,7 @@
     <ProjectGuid>{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExtTools.tests</RootNamespace>
+    <RootNamespace>ExtTools_tests</RootNamespace>
     <AssemblyName>ExtTools.tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -37,38 +37,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CsvTextConvertTests.cs" />
-    <Compile Include="DepConstTests.cs" />
-    <Compile Include="DepDelayedValueTests.cs" />
-    <Compile Include="DepInputTests.cs" />
-    <Compile Include="DepByIndexTests.cs" />
-    <Compile Include="DepNotTests.cs" />
-    <Compile Include="DepOrTests.cs" />
-    <Compile Include="DepAndTests.cs" />
-    <Compile Include="DepComparerTests.cs" />
-    <Compile Include="DepEqualTests.cs" />
-    <Compile Include="DepIfTests.cs" />
-    <Compile Include="DepInArrayTests.cs" />
-    <Compile Include="DepInRangeTests.cs" />
-    <Compile Include="DepOutputTests.cs" />
-    <Compile Include="DepToolsTests.cs" />
-    <Compile Include="DictionaryWithMRUTests.cs" />
+    <Compile Include="Collections\ArrayIndexerTests.cs" />
+    <Compile Include="Collections\BidirectionalDictionaryTests.cs" />
+    <Compile Include="Text\CsvTextConvertTests.cs" />
+    <Compile Include="DependedValues\DepConstTests.cs" />
+    <Compile Include="DependedValues\DepDelayedValueTests.cs" />
+    <Compile Include="DependedValues\DepInputTests.cs" />
+    <Compile Include="DependedValues\DepByIndexTests.cs" />
+    <Compile Include="DependedValues\DepNotTests.cs" />
+    <Compile Include="DependedValues\DepOrTests.cs" />
+    <Compile Include="DependedValues\DepAndTests.cs" />
+    <Compile Include="DependedValues\DepComparerTests.cs" />
+    <Compile Include="DependedValues\DepEqualTests.cs" />
+    <Compile Include="DependedValues\DepIfTests.cs" />
+    <Compile Include="DependedValues\DepInArrayTests.cs" />
+    <Compile Include="DependedValues\DepInRangeTests.cs" />
+    <Compile Include="DependedValues\DepOutputTests.cs" />
+    <Compile Include="DependedValues\DepToolsTests.cs" />
+    <Compile Include="Collections\DictionaryWithMRUTests.cs" />
     <Compile Include="Creators.cs" />
-    <Compile Include="DataToolsTests_DataRow.cs" />
-    <Compile Include="DataToolsTests_DataView.cs" />
-    <Compile Include="DataToolsTests_CSV.cs" />
-    <Compile Include="DataToolsTests_Other.cs" />
-    <Compile Include="DataToolsTests_String.cs" />
-    <Compile Include="DataToolsTests_Date.cs" />
-    <Compile Include="DataToolsTests_Math.cs" />
-    <Compile Include="DateRangeListTests.cs" />
-    <Compile Include="DateRangeTests.cs" />
-    <Compile Include="ListWithMRUTests.cs" />
-    <Compile Include="MonthDayRangeTests.cs" />
-    <Compile Include="MonthDayTests.cs" />
+    <Compile Include="Core\DataToolsTests_DataRow.cs" />
+    <Compile Include="Core\DataToolsTests_DataView.cs" />
+    <Compile Include="Core\DataToolsTests_Other.cs" />
+    <Compile Include="Core\DataToolsTests_String.cs" />
+    <Compile Include="Core\DataToolsTests_Date.cs" />
+    <Compile Include="Core\DataToolsTests_Math.cs" />
+    <Compile Include="Calendar\DateRangeListTests.cs" />
+    <Compile Include="Calendar\DateRangeTests.cs" />
+    <Compile Include="Collections\ListWithMRUTests.cs" />
+    <Compile Include="Calendar\MonthDayRangeTests.cs" />
+    <Compile Include="Calendar\MonthDayTests.cs" />
     <Compile Include="PropertyAssert.cs" />
-    <Compile Include="TempDirectoryTests.cs" />
-    <Compile Include="WeakReferenceCollectionTests.cs" />
+    <Compile Include="IO\TempDirectoryTests.cs" />
+    <Compile Include="Collections\WeakReferenceCollectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">

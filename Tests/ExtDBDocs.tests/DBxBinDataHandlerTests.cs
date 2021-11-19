@@ -6,7 +6,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.IO;
 using FreeLibSet.Data;
 
-namespace ExtDBDocs.tests
+namespace ExtDBDocs_tests.Data_Docs
 {
   [TestFixture]
   public class DBxBinDataHandlerTests : DBxBinDataTestsBase

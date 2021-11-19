@@ -4628,6 +4628,7 @@ namespace FreeLibSet.Collections
 #endif
 
       _MainDict = new Dictionary<TKey, TValue>(dictionary);
+      PrepareReversed(); // 19.11.2021 - пусть исключение сразу вылезет, а ни когда-нибудь потом
     }
 
     /// <summary>
@@ -4663,6 +4664,7 @@ namespace FreeLibSet.Collections
     {
       _MainDict = new Dictionary<TKey, TValue>(dictionary, keyComparer);
       _ValueComparer = valueComparer;
+      PrepareReversed(); // 19.11.2021 - пусть исключение сразу вылезет, а ни когда-нибудь потом
     }
 
     #endregion
@@ -4972,7 +4974,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Переводит коллекцию в режим просмотра
     /// </summary>
-    public void SetReadOnly()
+    protected void SetReadOnly()
     {
       _IsReadOnly = true;
     }
@@ -5380,7 +5382,7 @@ namespace FreeLibSet.Collections
 
   /// <summary>
   /// Простой класс, реализующий быстрый поиск элементов в массиве.
-  /// Содержит методы Contains и IndexOf.
+  /// Содержит методы Contains() и IndexOf().
   /// Исходный массив должен подходить в качестве ключа коллекции: элементы должны быть уникальными,
   /// значения null недопустимы.
   /// Не содержит исходного массива.

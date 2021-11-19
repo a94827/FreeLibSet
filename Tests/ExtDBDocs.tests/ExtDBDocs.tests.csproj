@@ -8,7 +8,7 @@
     <ProjectGuid>{147B60C0-CAE8-499C-83E5-11D6BBAA4E73}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExtDBDocs.tests</RootNamespace>
+    <RootNamespace>ExtDBDocs_tests.Data_Docs</RootNamespace>
     <AssemblyName>ExtDBDocs.tests</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />

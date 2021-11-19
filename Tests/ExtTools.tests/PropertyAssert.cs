@@ -8,7 +8,7 @@ using System.Diagnostics;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
 
-namespace ExtTools.tests
+namespace ExtTools_tests
 {
   /// <summary>
   /// Object comparer with public properties inspection

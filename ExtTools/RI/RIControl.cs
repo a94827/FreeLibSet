@@ -568,8 +568,236 @@ namespace FreeLibSet.RI
   /// Поле ввода пароля
   /// </summary>
   [Serializable]
-  public class PasswordBox : TextBox 
+  public class PasswordBox : Control 
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает поле ввода
+    /// </summary>
+    public PasswordBox()
+    {
+      _CanBeEmptyMode = UIValidateState.Error;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    #region Text
+
+    /// <summary>
+    /// Введенный текст
+    /// </summary>
+    public string Text
+    {
+      get
+      {
+        if (_Text == null)
+          return String.Empty;
+        else
+          return _Text;
+      }
+      set
+      {
+        if (String.IsNullOrEmpty(value))
+          _Text = null;
+        else
+          _Text = value;
+
+        if (_TextEx != null)
+          _TextEx.Value = _Text;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(Text));
+      }
+    }
+    private string _Text; // храним null вместо пустой строки
+
+    private string _OldText;
+
+    /// <summary>
+    /// Управляемое значение для Text.
+    /// </summary>
+    public DepValue<string> TextEx
+    {
+      get
+      {
+        InitTextEx();
+        return _TextEx;
+      }
+      set
+      {
+        InitTextEx();
+        _TextEx.Source = value;
+      }
+    }
+    private DepInput<string> _TextEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalTextExConnected
+    {
+      get
+      {
+        if (_TextEx == null)
+          return false;
+        else
+          return _TextEx.IsConnected;
+      }
+    }
+
+    private void InitTextEx()
+    {
+      if (_TextEx == null)
+      {
+        _TextEx = new DepInput<string>(Text, TextEx_ValueChanged);
+        _TextEx.OwnerInfo = new DepOwnerInfo(this, "TextEx");
+      }
+    }
+
+    private void TextEx_ValueChanged(object sender, EventArgs args)
+    {
+      Text = _TextEx.Value;
+    }
+
+    #endregion
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если в поле ввода есть текст.
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(!String.IsNullOrEmpty(Text));
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #endregion
+
+    #region Чтение и запись
+
+    /// <summary>
+    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
+    /// которые могут меняться при показе блока диалога.
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Свойство не используется в пользовательском коде.
+    /// </summary>
+    public override bool HasChanges
+    {
+      get
+      {
+        if (base.HasChanges)
+          return true;
+        return Text != _OldText;
+      }
+    }
+
+    /// <summary>
+    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
+    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для записи значений</param>
+    public override void WriteChanges(CfgPart part)
+    {
+      base.WriteChanges(part);
+      part.SetString("Text", Text);
+      _OldText = Text;
+    }
+
+    /// <summary>
+    /// Прочитать изменения, переданные "с другой стороны".
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для чтения значений</param>
+    public override void ReadChanges(CfgPart part)
+    {
+      base.ReadChanges(part);
+      Text = part.GetString("Text");
+      _OldText = Text;
+    }
+
+    /// <summary>
+    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
+    /// в секции конфигурации заданного типа.
+    /// </summary>
+    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
+    /// <returns>true, если элемент может хранить данные</returns>
+    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
+    {
+      return cfgType == RIValueCfgType.Default;
+    }
+
+    /// <summary>
+    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для записи</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      part.SetString(Name, Text);
+    }
+
+    /// <summary>
+    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для чтения значений</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      if (part.HasValue(Name))
+        Text = part.GetString(Name);
+    }
+
+    #endregion
   }
 
   /// <summary>

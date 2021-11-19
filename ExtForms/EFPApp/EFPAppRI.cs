@@ -770,7 +770,7 @@ namespace FreeLibSet.Forms.RI
 
     #region TextBox
 
-    private class TextBoxItem : FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
+    private class TextBoxItem: FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -804,7 +804,6 @@ namespace FreeLibSet.Forms.RI
             riItem.ReadOnlyEx = base.ReadOnlyEx;
           }
         }
-
       }
 
       FreeLibSet.RI.TextBox _RIItem;
@@ -827,14 +826,45 @@ namespace FreeLibSet.Forms.RI
       #endregion
     }
 
-    private class PasswordBoxItem : TextBoxItem
+    private class PasswordBoxItem: FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
       public PasswordBoxItem(FreeLibSet.RI.PasswordBox riItem, EFPBaseProvider baseProvider)
-        : base(riItem, baseProvider)
+        : base(baseProvider, new System.Windows.Forms.TextBox())
       {
         Control.UseSystemPasswordChar = true;
+        _RIItem = riItem;
+        base.CanBeEmptyMode = riItem.CanBeEmptyMode;
+
+        EFPAppRITools.InitControlItem(this, riItem);
+
+        base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
+        if (riItem.InternalTextExConnected)
+        {
+          if (riItem.TextEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.TextEx = riItem.TextEx;
+          else
+            riItem.TextEx = base.TextEx;
+        }
+      }
+
+      FreeLibSet.RI.PasswordBox _RIItem;
+
+      #endregion
+
+      #region IEFPAppRIItem Members
+
+      public void WriteValues()
+      {
+        base.Text = _RIItem.Text;
+        base.Validate();
+      }
+
+      public void ReadValues()
+      {
+        _RIItem.Text = base.Text;
       }
 
       #endregion
@@ -2085,7 +2115,7 @@ namespace FreeLibSet.Forms.RI
 
     #region Диалоги ввода значений
 
-    private class TextInputDialogItem : IEFPAppRIStandardDialogItem
+    private class TextInputDialogItem: IEFPAppRIStandardDialogItem
     {
       #region Конструктор
 
@@ -2113,10 +2143,7 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      protected FreeLibSet.RI.TextInputDialog RIDialog { get { return _RIDialog; } }
       private FreeLibSet.RI.TextInputDialog _RIDialog;
-
-      protected FreeLibSet.Forms.TextInputDialog WinDlg { get { return _WinDlg; } }
       private FreeLibSet.Forms.TextInputDialog _WinDlg;
 
       #endregion
@@ -2141,14 +2168,54 @@ namespace FreeLibSet.Forms.RI
       #endregion
     }
 
-    private class PasswordInputDialogItem : TextInputDialogItem 
+    private class PasswordInputDialogItem: IEFPAppRIStandardDialogItem
     {
       #region Конструктор
 
       public PasswordInputDialogItem(FreeLibSet.RI.PasswordInputDialog riDialog)
-        :base(riDialog)
       {
-        WinDlg.IsPassword = true;
+        _RIDialog = riDialog;
+        _WinDlg = new FreeLibSet.Forms.TextInputDialog();
+        _WinDlg.Title = riDialog.Title;
+        _WinDlg.Prompt = riDialog.Prompt;
+        _WinDlg.IsPassword = true;
+
+        _WinDlg.CanBeEmptyMode = riDialog.CanBeEmptyMode;
+        //_WinDlg.IsPassword = riDialog.IsPassword;
+
+        _WinDlg.Text = riDialog.Text; // обязательное присвоение, иначе свойство обнулится
+        if (riDialog.InternalTextExConnected)
+          riDialog.TextEx = _WinDlg.TextEx;
+
+
+        if (riDialog.HasValidators)
+          _WinDlg.Validators.AddRange(riDialog.Validators);
+      }
+
+      #endregion
+
+      #region Свойства
+
+      private FreeLibSet.RI.PasswordInputDialog _RIDialog;
+      private FreeLibSet.Forms.TextInputDialog _WinDlg;
+
+      #endregion
+
+      #region Чтение и запись значений
+
+      public void WriteValues()
+      {
+        _WinDlg.Text = _RIDialog.Text;
+      }
+
+      public void ReadValues()
+      {
+        _RIDialog.Text = _WinDlg.Text;
+      }
+
+      public DialogResult ShowDialog()
+      {
+        return (DialogResult)(int)_WinDlg.ShowDialog();
       }
 
       #endregion

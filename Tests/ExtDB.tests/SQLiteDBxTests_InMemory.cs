@@ -7,7 +7,7 @@ using FreeLibSet.Data;
 using System.Data;
 using FreeLibSet.Core;
 
-namespace ExtDB.tests
+namespace ExtDB_tests.Data_SQLite
 {
   [TestFixture]
   public class SQLiteDBxTests_InMemory
