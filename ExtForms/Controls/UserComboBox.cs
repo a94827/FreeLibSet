@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -7,36 +10,6 @@ using System.Text;
 using System.Windows.Forms;
 
 #pragma warning disable 1591
-
-/*
- * The BSD License
- * 
- * Copyright (c) 2006-2015, Ageyev A.V.
- * 
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
- * and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 
 /*
  * Комбоблоки, реализующие произвольные действия при нажатии кнопки выбора
@@ -368,6 +341,18 @@ namespace FreeLibSet.Controls
       base.ForeColor = MainControl.ForeColor;
     }
 
+    protected override void OnEnabledChanged(EventArgs e)
+    {
+      base.OnEnabledChanged(e);
+
+      // 22.11.2021
+      if (Enabled)
+      {
+        MainControl.ForeColor = this.ForeColor;
+        MainControl.BackColor = this.BackColor;
+      }
+    }
+
     #endregion
 
     #region Свойство Text
@@ -406,7 +391,7 @@ namespace FreeLibSet.Controls
             args.Handled = true;
         }
 
-        if (args.KeyCode == Keys.F12 && args.Modifiers == Keys.None && ClearButton && ClearButtonEnabled)
+        if (args.KeyCode == Keys.F8 && args.Modifiers == Keys.None && ClearButton && ClearButtonEnabled)
         {
           PerformClear();
           args.Handled = true;

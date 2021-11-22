@@ -1,15 +1,15 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+//
+// Взято из http://www.codeproject.com/Articles/1376/NET-TWAIN-image-scanner
+// Автор: NETMaster
+// licensed under A Public Domain dedication
+// http://creativecommons.org/licenses/publicdomain/
+
+
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-
-/*
- * Взято из http://www.codeproject.com/Articles/1376/NET-TWAIN-image-scanner
- * 
- * Автор: NETMaster
- * 
- * licensed under A Public Domain dedication
- * http://creativecommons.org/licenses/publicdomain/
- */
 
 #pragma warning disable 1591
 

@@ -40,11 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DBxBinDataHandler.cs" />
-    <Compile Include="DBxCachedDocProvider.cs" />
     <Compile Include="DBxChainDocProvider.cs" />
     <Compile Include="DBxCommonFilter.cs" />
-    <Compile Include="DBxDataVersionHandler.cs" />
     <Compile Include="DBxDocDBConnectionHelper.cs" />
     <Compile Include="DBxDocsLock.cs" />
     <Compile Include="DBxDocTypeRefInfo.cs" />

@@ -1,84 +1,13 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Collections;
 using System.Text;
-
 using FreeLibSet.Core;
 using FreeLibSet.Calendar;
-
-/*
- * The BSD License
- * 
- * Copyright (c) 2015, Ageyev A.V.
- * 
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
- * and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
- * Объекты фильтрации, производные от DataFilter, являются общими для клиента и
- * сервера. Их можно передавать от клиента к серверу с помощью сериализации
- *
- * Параметры каждого фильтра задаются в конструкторе и не могут меняться после этого,
- * все поля предназначены только для чтения.
- *
- * Фильтры можно комбинировать с помощью логических операций.
- * 
- * Для создания собственных фильтров необходимо:
- * 1. Создать класс фильтра
- *    [Serializable]
- *    public class MyFilter: DBxFilter
- *    {
- *    }
- * 
- * 2. Создать цепочечный форматизатор для фильтра
- *    public class MyFormatter: DBxSqlChainFormatter
- *    {
- *       // Переопределяем виртуальный метод
- *       public override void FormatFilter(DBxFilter Filter, StringBuilder sb, DBxSQLFormatInfo FormatInfo)
- *       {
- *         if (Filter is MyFilter)
- *         {
- *           // sb.Append(...); 
- *         } 
- *         else
- *           base.FormatFilter(Filter, sb, FormatInfo) 
- *       }
- *    }
- * 
- * 3. Создать собственный класс базы данных, производный от одного из стандартных, и в конструкторе вызвать SetFormatter
- * 
- *    public class MyDB: DBxSqlServer
- *    {
- *       public MyDB(...)
- *         : base(...)
-*        {
- *         DBxSqlFormatter MainObj = base.Formatter;
- *         base.SetFormatter(new MyFormatter(MainObj));
- *       }
- *    }
- */
 
 namespace FreeLibSet.Data
 {

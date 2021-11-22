@@ -1,19 +1,20 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+//
+// Взято из http://www.codeproject.com/Articles/1376/NET-TWAIN-image-scanner
+// Автор: NETMaster
+// licensed under A Public Domain dedication
+// http://creativecommons.org/licenses/publicdomain/
+
+using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-
 using System.Reflection;
 using System.Collections.Generic;
 using FreeLibSet.Core;
 
 /*
- * Взято из http://www.codeproject.com/Articles/1376/NET-TWAIN-image-scanner
- * Автор: NETMaster
- * 
- * licensed under A Public Domain dedication
- * http://creativecommons.org/licenses/publicdomain/
- * 
  * Класс Twain сделан наследником DisposableObject и объявлен internal
  * 
  * Для реальной работы используется класс EFPTwainHandler

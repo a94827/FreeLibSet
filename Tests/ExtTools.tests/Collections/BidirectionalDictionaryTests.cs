@@ -159,20 +159,21 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(newCount, sut.Count, "Count");
     }
 
-    [Test]
-    public void SetReadOnly()
-    {
-      BidirectionalDictionary<int, string> sut = CreateTestObject();
-      sut.SetReadOnly();
 
-      Assert.IsTrue(sut.IsReadOnly, "IsReadOnly");
-      Assert.Catch(delegate() { sut.CheckNotReadOnly(); });
-      Assert.Catch(delegate() { sut.Add(4, "DDD"); });
-      Assert.Catch(delegate() { sut.Remove(5); });
-      Assert.Catch(delegate() { sut.RemoveValue("EEE"); });
-      Assert.Catch(delegate() { sut.Clear(); });
+    //[Test]
+    //public void SetReadOnly()
+    //{
+    //  BidirectionalDictionary<int, string> sut = CreateTestObject();
+    //  sut.SetReadOnly();
 
-      Assert.AreEqual(3, sut.Count, "Count");
-    }
+    //  Assert.IsTrue(sut.IsReadOnly, "IsReadOnly");
+    //  Assert.Catch(delegate() { sut.CheckNotReadOnly(); });
+    //  Assert.Catch(delegate() { sut.Add(4, "DDD"); });
+    //  Assert.Catch(delegate() { sut.Remove(5); });
+    //  Assert.Catch(delegate() { sut.RemoveValue("EEE"); });
+    //  Assert.Catch(delegate() { sut.Clear(); });
+
+    //  Assert.AreEqual(3, sut.Count, "Count");
+    //}
   }
 }

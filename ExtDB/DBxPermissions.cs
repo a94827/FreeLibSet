@@ -1,75 +1,11 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
-
 using System.Runtime.Serialization;
 using FreeLibSet.Core;
-
-/*
- * The BSD License
- * 
- * Copyright (c) 2015, Ageyev A.V.
- * 
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
- * and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
- * Разрешения пользователя DBxPermissions
- * --------------------------------------
- * Применяются при выполнении всех SQL-запросов
- * Управление доступом (полный/просмотр/запрет) на уровнях
- * - Базы данных в-целом
- * - Таблицы
- * - Поля таблицы (например, запрет на просмотр СНИЛСа человека)
- * 
- * Большая часть проверок может быть выполнена сервером базы данных с помощью назначения пользователю ограничений. 
- * Тем не менее, есть проверки, которые нельзя выполнять автоматически (например, запрет редактирования по дате). 
- * Часть (или все) ограничения могут быть не реализованы сервером. Также может быть нецелесообразно создание
- * отдельных учетных записей для каждого пользователя
- * 
- * Реализация
- * ----------
- * 1. Создается список разрешений пользователя UserPermissions. Список содержит объекты, производные от 
- *    UserPermission. Порядок объектов в списке имеет значение. Последние объекты переопределяют предыдущие.
- *    Разрешения могут частично повторяться
- *    В списке могут быть объекты, не относящиеся непосредственно к базе данных, например, разрешение на
- *    построение отчета
- *    Этот шаг может быть пропущен, если разрешения DBxPermissions создаются непосредственно
- * 2. Из полного списка создается объект DBxPermissions, относящийся к работе базы данных. 
- *    Он имеет фиксированную структуру и содержит права на БД/таблицы/столбцы (что примерно соответствует модели
- *    MS SQL Server). DBxPermissions является сериализуемым. 
- * 3. [не реализовано] Для ограничений, которые требуют специальной обработки, создается отдельный список в 
- *    DBxExtPermissions. Этот список не является сериализуемым, т.к. содержит пользовательский код. Список
- *    существует только на сервере и клиенту не передается
- * 3. Класс, производный от DBx, может применить объект DBxPermissions для назначения применимых ограничений
- *    пользователю БД. Объект DBx содержит фиксированный набор флагов, показывающих, какие проверки выполняются
- *    сервером, а какие должны быть выполнены вручную при обработке запроса
- * 4. Объект DBxCon "знает", были ли установлены ограничения пользователя (но не знает какие)
- * 5. При выполнении любого SQL-запроса, если ограничения пользователя применены сервером, используются флаги 
- *    в DBx. Иначе выполняются все проверки (как будто в DBx все флаги не установлены). Выполняются проверки,
- *    зависящие от запроса. Если проверка не проходит, выбрасывается исключение
- */
 
 namespace FreeLibSet.Data
 {

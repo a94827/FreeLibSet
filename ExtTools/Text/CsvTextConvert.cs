@@ -1,3 +1,6 @@
+// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using System;

@@ -56,6 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="IO\AbsPath.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Config\Cfg.cs" />
@@ -84,7 +87,6 @@
     <Compile Include="IO\FileContainer.cs" />
     <Compile Include="IO\FileEnumerators.cs" />
     <Compile Include="IO\FileTools.cs" />
-    <Compile Include="Formatting\FormatParsing.cs" />
     <Compile Include="Formatting\FormatStringTools.cs" />
     <Compile Include="Collections\HistoryList.cs" />
     <Compile Include="Data\IdList.cs" />
@@ -125,7 +127,6 @@
     <Compile Include="Collections\StringCollections.cs" />
     <Compile Include="Core\StdConvert.cs" />
     <Compile Include="Text\TextWithRows.cs" />
-    <Compile Include="Core\Timers.cs" />
     <Compile Include="Diagnosics\TimeSpanTracker.cs" />
     <Compile Include="Models\ITreeModel.cs" />
     <Compile Include="Collections\TypedCollections.cs" />

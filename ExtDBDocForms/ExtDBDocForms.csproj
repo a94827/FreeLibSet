@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DocProviderUI.cs" />
     <Compile Include="EFPDBxViewOrder.cs" />
     <Compile Include="GridFilterRange.cs" />
@@ -83,7 +86,6 @@
       <DependentUpon>EFPDBxTextSearchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPDBxErrorGridView.cs" />
-    <Compile Include="EFPDBxGridViewHieHandler.cs" />
     <Compile Include="EFPDBxViewSync.cs" />
     <Compile Include="EFPDocSelTextGridView.cs" />
     <Compile Include="EFPDocTreeView.cs" />

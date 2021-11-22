@@ -1,4 +1,7 @@
-﻿using FreeLibSet.Controls;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using FreeLibSet.Controls;
 using FreeLibSet.DependedValues;
 using FreeLibSet.UICore;
 using System;

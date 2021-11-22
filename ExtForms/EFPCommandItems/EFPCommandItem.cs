@@ -1,5 +1,5 @@
-﻿// Убрать после тестирования 28.01.2021
-#define USE_OWNER // Наличие свойства EFPCommandItem.Owner
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
 using System.Collections;
@@ -12,35 +12,6 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
 using FreeLibSet.Controls;
-
-/*
- * The BSD License
- * 
- * Copyright (c) 2006-2015, Ageyev A.V.
- * 
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
- * and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
 namespace FreeLibSet.Forms
 {
@@ -612,7 +583,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Объект - владелец
-#if USE_OWNER
 
     /// <summary>
     /// Список, содержащий все команды меню, независимо от иерархии.
@@ -642,7 +612,6 @@ namespace FreeLibSet.Forms
       }
     }
 
-#endif
     #endregion
 
     #region Родительская и дочерние команды
@@ -2286,7 +2255,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public int Count { get { return _AllItems.Count; } }
 
-#if USE_OWNER
     /// <summary>
     /// Возвращает элемент в заданной позиции.
     /// Имеются в виду все команды, а не только команды верхнего уроввня
@@ -2318,8 +2286,6 @@ namespace FreeLibSet.Forms
       return _AllItems.IndexOf(((IObjectWithCode)value).Code);
     }
 
-#endif
-
     /// <summary>
     /// Возвращает иедекс команды в текущем наборы
     /// </summary>
@@ -2349,23 +2315,17 @@ namespace FreeLibSet.Forms
         throw new InvalidOperationException("Команда с кодом \"" + code + "\" уже есть");
 #endif
 
-#if USE_OWNER
       if (item.Owner != null)
         throw new InvalidOperationException("Повторное добавление команды \"" + item.DisplayName + "\" в список");
-#endif
 
       if (item.Parent == null)
         _TopLevelItems.Items.Add(item);
-#if USE_OWNER
       else if (item.Parent.Owner != this)
         throw new InvalidOperationException("Родительская команда " + item.Parent.ToString() + " не была присоединена к коллекции ранее");
-#endif
 
       _AllItems.Add(item);
 
-#if USE_OWNER
       item.Owner = this;
-#endif
 
       if (item.HasIdle)
       {

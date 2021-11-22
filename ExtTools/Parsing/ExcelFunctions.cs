@@ -1,108 +1,12 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Remoting;
 using FreeLibSet.Core;
 using FreeLibSet.Calendar;
-
-/*
- * The BSD License
- * 
- * Copyright (c) 2012-2015, Ageyev A.V.
- * 
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
- * and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
- * Синтаксический разбор текста
- * Класс Parser содержит коллекцию "правил" ParserPart. Класс является "многоразовым"
- * Parser и ParserPart не содержат никаких ссылок на разбиваемый текст
- * Основной метод Parse() выполняет разбор переданных данных
- * 
- * Класс TextWithRows предназначен для хранения исходного текста для разбора. Получая в конструкторе объект
- * string, он выполняет разбиение на строки и позоволяет преобразовывать абсолютную позицию в номер строки и столбца
- * и обратно
- * 
- * Класс ParsingData содержит данные для разбора. Объект создается каждый раз, когда необходимо выполнить разбор
- * - Свойство Text содержит исходный текст в виде TextWithRows
- * - Свойство Tokens содержит результат разбора
- * 
- * Основным результатом синтаксического разбора является массив объектов Token. Token является структурой 
- * фиксированного размера. Тип лексемы определяется строковым полем Token.TokenType, например,
- * "TableRef", "Operation", "Comment", "Space", "Error" и т.д.
- * Объект Token содержит диапазон позиций в исходном тексте, чтобы можно было выполнить подсветку синтаксиса
- * Также он может содержать дополнительные данные, если работы с лексемой недостаточно только текста. 
- * Например, для лексемы "TableRef" задается имя ссылки на таблицы
- * 
- * В процессе разбора, метод Parser.Parse() предлагает каждому объекту ParserPart распознать очередную позицию
- * текста. Класс, производный от ParserPart, пытается сравнить фрагмент текста, начиная с текущей позиции, со
- * "своим" синтаксисом. Например, класс OperationParser проверяет, что очередная позиция содержит "+", "-", "*"
- * или "/". Если условие выполняется, создается лексема "Operation". 
- * 
- * Цикл по ParserPart прекращается, когда очередной элемент смог выполнить разбор.
- * Отсюда следует, что порядок размещения элементов ParserPart имеет значение. Например, если используется 
- * комментарий "//", то CommentParser должен идти до OperationParser. В противном случае, вместо лексемы "Comment"
- * будет добавлено две лексемы "Operation" для операций "/", а затем возникнет ошибка
- * 
- * Если ни один ParserPart не смог распознать текст, добавляется ErrorToken, содержащий один символ, после чего
- * выполняется переход к следующей позиции. Если и следующая позиция содержит ошибку, то новый ErrorToken
- * не добавляется, а к предыдцщему добавляется один символ
- * 
- * Пробельные символы образуют Token типа "Space", также группирующие идущие подряд пробелы
- * Объект Token может содержать ошибку или предупреждение. Метод ParsingData.GetErrorMessages() позволяет
- * собрать список ошибок.
- * 
- * Список объектов Token еще не образуют дерево вычислений, т.к. список является "линейным". Кроме того, 
- * возможно бессмысленное расположение лексем. Например, могут быть обнаружены лексемы:
- * 1. "Operation"
- * 2. "Space"
- * 3. "Operation"
- * 
- * Следующий шаг - это построение дерева вычислений. Он может быть выполнен, только если нет ни одной ErrorToken,
- * то есть когда первый шаг завершился без ошибок.
- * 
- * В общем случае, целью парсинга может быть не получение дерева вычислений, а, например, получение диапазона
- * к которому применимо выражение
- * 
- * Также, из одного исходного условия может быть получено несколько вычисляемых выражений
- * Таким образом, задача парсинга, результатом которой являются объекты Token, отделяется от задачи получения
- * вычисляемого выражения Expression.
- * Для этого используется второй метод IParser.CreateExpression(), получающий на входе ParsingData и
- * возвращающий объект IExpression. 
- * На момент вызова метода все Token уже распознаны.
- * В отличие от первого шага, метод IParser.CreateExpression() вызывается для того IParser, который создал
- * очередную лексему, перебор объектов IParser не нужен.
- * Метод может вернуть null, если лексема не имеет значения, например, это пробел или комментарий. В этом
- * случае разбирается следующая лексема. 
- * 
- * Сериализация
- * ------------
- * Объекты ParserList и реализации IParser, ParsingData и Token не являются сериализуемыми
- * Для передачи ошибок от сервера к клиенту можно использовать метод ParsingData.GetErrorMessages(),
- * который возвращает сериализуемые данные. К каждому ErrorMessageItem к полю Tag присоединяется сериализуемый 
- * объект ParsingErrorItemData, который содержит некоторую часть данных из объекта Token
- */
 
 namespace FreeLibSet.Parsing
 {
