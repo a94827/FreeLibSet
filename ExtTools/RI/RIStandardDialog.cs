@@ -2034,7 +2034,10 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetNullableDate("Value", NValue);
+      if (EditableDateTimeFormatters.Get(Kind).ContainsTime)
+        part.SetNullableDateTime("Value", NValue);
+      else
+        part.SetNullableDate("Value", NValue);
       _OldNValue = NValue;
     }
 
@@ -2047,7 +2050,10 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      NValue = part.GetNullableDate("Value");
+      if (EditableDateTimeFormatters.Get(Kind).ContainsTime)
+        NValue = part.GetNullableDateTime("Value");
+      else
+        NValue = part.GetNullableDate("Value");
       _OldNValue = NValue;
     }
 
@@ -2071,7 +2077,12 @@ namespace FreeLibSet.RI
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
       if (NValue.HasValue)
-        part.SetDate(Name, NValue.Value);
+      {
+        if (EditableDateTimeFormatters.Get(Kind).ContainsTime)
+          part.SetDateTime(Name, NValue.Value);
+        else
+          part.SetDate(Name, NValue.Value);
+      }
       else
         part.SetString(Name, String.Empty);
     }
@@ -2085,7 +2096,12 @@ namespace FreeLibSet.RI
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
       if (part.HasValue(Name))
-        NValue = part.GetNullableDate(Name);
+      {
+        if (EditableDateTimeFormatters.Get(Kind).ContainsTime)
+          NValue = part.GetNullableDateTime(Name);
+        else
+          NValue = part.GetNullableDate(Name);
+      }
     }
 
     #endregion

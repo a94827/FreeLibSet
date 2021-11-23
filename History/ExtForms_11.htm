@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2021-10-25T11:46:48.466000000"/>
+	<meta name="changed" content="2021-11-23T11:21:05.142000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -291,12 +291,13 @@
 			в </span><span lang="en-US">EFPApp.ShowDialog(), </span><span lang="ru-RU">связанное
 			со стеком блоков диалога (</span><a href="#v298p1"><span lang="en-US">v.298
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
-			<p lang="en-US">5. EFPControlBase.LoadConfig() <span lang="ru-RU">вызывает
-			EFPConfigHandler.</span>ReadConfig()<span lang="ru-RU">, если
-			</span>EFPApp.InsideLoadComposition=true<span lang="ru-RU"> (</span><a href="#v199p19">v.199
-			<span lang="ru-RU">п.19</span></a><span lang="ru-RU">)</span>. <span lang="ru-RU">Без
-			этого не загружались настройки фильтров и колонок табличного
-			просмотра</span></p>
+			<p><span lang="en-US">5. EFPControlBase.LoadConfig() </span><span lang="ru-RU">вызывает
+			EFPConfigHandler.</span><span lang="en-US">ReadConfig()</span><span lang="ru-RU">,
+			если </span><span lang="en-US">EFPApp.InsideLoadComposition=true
+			</span><span lang="ru-RU">(</span><a href="#v199p19"><span lang="en-US">v.199
+			</span><span lang="ru-RU">п.19</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Без этого не загружались настройки
+			фильтров и колонок табличного просмотра</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -1759,9 +1760,10 @@
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1<span lang="en-US">. </span>Изменение в
-			<span lang="en-US">DateRangeBox.ShiftDateRange()</span> по
-			перехвату <span lang="en-US">ArgumentOutOfRangeException </span>было
-			сделано неправильно<span lang="en-US">.</span></p>
+			<span lang="en-US">DateRangeBox.ShiftDateRange()</span> (<a href="#v255p2"><span lang="en-US">v.255
+			</span><span lang="ru-RU">п.2</span></a>) по перехвату
+			<span lang="en-US">ArgumentOutOfRangeException </span>было сделано
+			неправильно<span lang="en-US">.</span></p>
 			<p><span lang="en-US">2. </span>Исправлена ошибка во внутреннем
 			методе <span lang="en-US">EFPApp.</span>DoPlaceFormInRectangle<span lang="en-US">()</span>
 			<span lang="ru-RU">(</span><a href="#v206p3"><span lang="en-US">v.206
@@ -2069,8 +2071,9 @@
 			только если пользователь нажимает кнопку &laquo;Подробности&raquo;.
 			Отдельная перегрузка метода, которая записывает </span><span lang="en-US">log-</span><span lang="ru-RU">файл
 			всегда.</span></p>
-			<p lang="en-US">2. <span lang="ru-RU">Метод
-			</span>DateRangeBox.ShiftDateRange() <span lang="ru-RU">для
+			<p lang="en-US"><a name="v255p2"></a>2. <span lang="ru-RU">Метод
+			</span>DateRangeBox.ShiftDateRange() <span lang="ru-RU">(</span><a href="ExtForms.htm#v013p3">v.13
+			<span lang="ru-RU">п.3</span></a><span lang="ru-RU">) </span><span lang="ru-RU">для
 			полуоткрытых интервалов выбрасывал исключение, если, конечная дата
 			&laquo;31.12.9999&raquo; или начальная дата &laquo;01.01.0001&raquo;.
 			Для закрытых интервалов ошибки перехватывались.</span></p>
@@ -2943,7 +2946,7 @@
 			</a></span><a href="#v017p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">понимает клавиши &laquo;</span><span lang="en-US">&gt;</span><span lang="ru-RU">&raquo;
 			и &laquo;</span><span lang="en-US">&lt;</span><span lang="ru-RU">&raquo;</span></p>
-			<p><span lang="ru-RU">4. В локальное меню
+			<p><a name="v229p4"></a><span lang="ru-RU">4. В локальное меню
 			</span><span lang="en-US">EFPDateRangeBoxCommandItems (<a href="#v155p2">v.155
 			</a></span><a href="#v155p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">добавлены команды &laquo;Предыдущий
@@ -3175,9 +3178,9 @@
 			<p lang="en-US">- ListSelectDialog</p>
 			<p lang="en-US">- CodesListSelectDialog</p>
 			<p lang="en-US">- RadioSelectDialog</p>
-			<p><span lang="ru-RU">5</span><span lang="en-US">. </span><span lang="ru-RU">Изменения
-			в </span><span lang="en-US">EFPDateOrRangeBox (<a href="#v197p2">v.197
-			</a></span><a href="#v197p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
+			<p><a name="v222p5"></a><span lang="ru-RU">5</span><span lang="en-US">.
+			</span><span lang="ru-RU">Изменения в </span><span lang="en-US">EFPDateOrRangeBox
+			(<a href="#v197p2">v.197 </a></span><a href="#v197p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
 			</span><span lang="ru-RU">При открытии комбоблока, если выбрана
 			одна дата или значение не введено, появляется календарик для
 			выбора даты, как в </span><span lang="en-US">DateBox, </span><span lang="ru-RU">и
@@ -4203,8 +4206,8 @@
 			(<a href="#v017p2">v.17 </a></span><a href="#v017p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
 			</span><span lang="ru-RU">Оно синхронизировано с
 			</span><span lang="en-US">DateBox.ClearButton</span></p>
-			<p style="margin-bottom: 0.5cm"><span lang="en-US">2. </span><span lang="ru-RU">Провайдер
-			EFPDateOrRangeBox</span></p>
+			<p style="margin-bottom: 0.5cm"><a name="v197p2"></a><span lang="en-US">2.
+			</span><span lang="ru-RU">Провайдер EFPDateOrRangeBox</span></p>
 			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">3. Свойства
 			</span><span lang="en-US">DateRangeDialog.Mininum, Maximum (<a href="#v076p4">v.76
 			</a></span><a href="#v076p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">),
@@ -7293,7 +7296,7 @@
 			<p align="center">20.03.2015</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p>1. Метод <span lang="en-US">DebugTools</span>.<span lang="en-US">LogoutException</span>()
+			<p><a name="v085p1"></a>1. Метод <span lang="en-US">DebugTools</span>.<span lang="en-US">LogoutException</span>()
 			(<a href="#v017p15"><span lang="en-US">v</span><span lang="ru-RU">.17
 			п.15</span></a>) вынесен в модуль <a href="http://ExtTools_11.htm/#v039p1"><span lang="en-US">ExtTools</span></a>,
 			вместе с методами обслуживания <span lang="en-US">log</span>-файлов</p>
@@ -7456,7 +7459,7 @@
 			<span lang="en-US">WinFormsTools</span>.<span lang="en-US">InitAppIcon</span>()
 			(<a href="#v058p8"><span lang="en-US">v</span><span lang="ru-RU">.58
 			п.8</span></a>)</p>
-			<p style="margin-bottom: 0.5cm">2. Свойства
+			<p style="margin-bottom: 0.5cm"><a name="v076p2"></a>2. Свойства
 			<span lang="en-US">NumEditBox</span>.<span lang="en-US">NullableValue
 			</span>и <span lang="en-US">CanEmpty</span>. Свойства
 			<span lang="en-US">EFPNumEditBox</span>.<span lang="en-US">NullableDecimalValue</span>,
@@ -8197,8 +8200,8 @@
 			ControlDesigner.SelectionRules. При добавлении элемента на форму
 			не показываются маркеры изменения вертикальных размеров</p>
 			<p style="margin-bottom: 0.5cm">&nbsp;</p>
-			<p style="margin-bottom: 0.5cm">4. Изменения в иерархии классов
-			комбоблоков. 
+			<p style="margin-bottom: 0.5cm"><a name="v046p4"></a>4. Изменения
+			в иерархии классов комбоблоков. 
 			</p>
 			<p style="margin-bottom: 0.5cm">&ndash; Новый базовый класс
 			UserComboBoxBase содержит необязательное изображение слева,
@@ -8354,9 +8357,9 @@
 			<p align="center">07.07.2013-08.07.2013</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">1. Команда &laquo;Со сканера или
-			камеры&raquo; в кнопке для загрузки изображения
-			EFPThumbnailPictureButton (<a href="#v031p1"><span lang="en-US">v</span><span lang="ru-RU">.31
+			<p style="margin-bottom: 0.5cm"><a name="v041p1"></a>1. Команда
+			&laquo;Со сканера или камеры&raquo; в кнопке для загрузки
+			изображения EFPThumbnailPictureButton (<a href="#v031p1"><span lang="en-US">v</span><span lang="ru-RU">.31
 			п.1</span></a>). Реализовано через TWAIN</p>
 			<p><a name="v041p2"></a>2. Новое свойство
 			<span lang="en-US">ControlRightButton</span>.<span lang="en-US">ComboBoxButton</span>

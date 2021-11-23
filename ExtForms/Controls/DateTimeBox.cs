@@ -112,9 +112,9 @@ namespace FreeLibSet.Controls
       }
       set
       {
-        // 26.08.2013
+        // 26.08.2013, 23.11.2021
         // Отбрасываем время
-        if (value.HasValue && _Formatter.ContainsDate)
+        if (value.HasValue && (!_Formatter.ContainsTime))
           value = value.Value.Date;
 
         if (value == _NValue)
@@ -213,7 +213,21 @@ namespace FreeLibSet.Controls
       get
       {
         Size sz = base.DefaultSize;
-        return new Size(120, sz.Height); // TODO: Определение оптимальной ширины
+
+        EditableDateTimeFormatter f = _Formatter;
+        if (f == null)
+          f = EditableDateTimeFormatters.Date;
+
+        // TODO: Определение оптимальной ширины
+        switch (f.Kind)
+        { 
+          case EditableDateTimeFormatterKind.DateTime:
+          case EditableDateTimeFormatterKind.ShortDateTime:
+            return new Size(200, sz.Height); 
+          default:
+            return new Size(120, sz.Height); // TODO: Определение оптимальной ширины
+        }
+
       }
     }
 

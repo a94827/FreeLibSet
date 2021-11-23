@@ -246,6 +246,8 @@ namespace FreeLibSet.Controls
         {
           if (value.HasValue)
             _NValue = GetRoundedValue(value.Value);
+          else
+            _NValue = null; // 23.11.2021
           if (!_InsideMainControl_TextChanged)
           {
             InitControlText();
@@ -541,34 +543,34 @@ namespace FreeLibSet.Controls
 
     void MainControl_TextChanged(object sender, EventArgs args)
     {
-      if (_InsideValueChanged)
-        return;
-
-      if (_InsideMainControl_TextChanged)
-        return;
-
-      _InsideMainControl_TextChanged = true;
-      try
+      if ((!_InsideValueChanged) && (!_InsideMainControl_TextChanged))
       {
-        if (String.IsNullOrEmpty(_MainControl.Text))
+        _InsideMainControl_TextChanged = true;
+        try
         {
-          NValue = null;
-        }
-        else
-        {
-          string s = _MainControl.Text;
-          FreeLibSet.Forms.WinFormsTools.CorrectNumberString(ref s, this.FormatProvider); // замена точки и запятой
+          if (String.IsNullOrEmpty(_MainControl.Text))
+          {
+            NValue = null;
+            _TextIsValid = true; // 23.11.2021
+          }
+          else
+          {
+            string s = _MainControl.Text;
+            FreeLibSet.Forms.WinFormsTools.CorrectNumberString(ref s, this.FormatProvider); // замена точки и запятой
 
-          T value;
-          _TextIsValid = TryParseText(s, out value);
-          if (_TextIsValid)
-            NValue = value;
+            T value;
+            _TextIsValid = TryParseText(s, out value);
+            if (_TextIsValid)
+              NValue = value;
+          }
+        }
+        finally
+        {
+          _InsideMainControl_TextChanged = false;
         }
       }
-      finally
-      {
-        _InsideMainControl_TextChanged = false;
-      }
+
+      OnTextChanged(EventArgs.Empty); // 23.11.2021
     }
 
     protected abstract bool TryParseText(string s, out T value);

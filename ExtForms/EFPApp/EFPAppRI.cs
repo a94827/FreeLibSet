@@ -245,21 +245,79 @@ namespace FreeLibSet.Forms.RI
   #endregion
 
   /// <summary>
+  /// Аргумент события EFPAppRICreators.BeforeCreate
+  /// </summary>
+  public sealed class EFPAppRIBeforeCreateEventArgs : EventArgs
+  {
+    #region Конструктор
+
+    internal EFPAppRIBeforeCreateEventArgs(RIItem riItem, EFPBaseProvider baseProvider)
+    {
+      _RIItem = riItem;
+      _BaseProvider = baseProvider;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Описатель элемента удаленного пользовательского интерфейса, для которого нужно создать элемент.
+    /// Не может быть null.
+    /// </summary>
+    public RIItem RIItem { get { return _RIItem; } }
+    private RIItem _RIItem;
+
+    /// <summary>
+    /// Базовый провайдер, если создается управляющий элемент.
+    /// Null, если создается блок диалога.
+    /// </summary>
+    public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
+    private EFPBaseProvider _BaseProvider;
+
+    /// <summary>
+    /// Сюда может быть помещена ссылка на созданный объект. В этом случае не будут вызываться методы IEFPAppRICreator.Create().
+    /// </summary>
+    public IEFPAppRIItem Result { get { return _Result; } set { _Result = value; } }
+    private IEFPAppRIItem _Result;
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Делегат события EFPAppRICreators.BeforeCreate
+  /// </summary>
+  /// <param name="sender">Ссылка на объект EFPAppRICreators</param>
+  /// <param name="args">Аргументы события</param>
+  public delegate void EFPAppRIBeforeCreateEventHandler(object sender, EFPAppRIBeforeCreateEventArgs args);
+
+  /// <summary>
   /// Реализация свойства EFPApp.RICreators
   /// </summary>
   public sealed class EFPAppRICreators : List<IEFPAppRICreator>
   {
-    #region Методы
+    #region Метод Create
 
     /// <summary>
     /// Создание IEFPAppRIItem для выбранной RIItem.
     /// Если в списке нет создателя для данного типа класса, генерируется исключение
     /// </summary>
-    /// <param name="item">Описатель объектп удаленного интерфейса</param>
+    /// <param name="item">Описатель объект удаленного интерфейса</param>
     /// <param name="baseProvider">Провайдер для подключения</param>
     /// <returns>Интерфейс управляющего элемента</returns>
     public IEFPAppRIItem Create(RIItem item, EFPBaseProvider baseProvider)
     {
+      if (item == null)
+        throw new ArgumentNullException("item");
+
+      if (BeforeCreate != null)
+      {
+        EFPAppRIBeforeCreateEventArgs args = new EFPAppRIBeforeCreateEventArgs(item, baseProvider);
+        BeforeCreate(this, args);
+        if (args.Result != null)
+          return args.Result;
+      }
+
       for (int i = 0; i < Count; i++)
       {
         IEFPAppRIItem res = this[i].Create(item, baseProvider);
@@ -272,6 +330,14 @@ namespace FreeLibSet.Forms.RI
 
       throw new ArgumentException("В списке EFPApp.RICreators не один из объектов не смог создать управляющий элемент для элемента удаленного интерфейса типа " + item.GetType().ToString());
     }
+
+    /// <summary>
+    /// Событие вызывается при создании любого элемента удаленного пользовательского интерфейса.
+    /// Пользовательский обработчик может, например, проверить аргумент RIItem и, при необходимости, добавить
+    /// IEFPAppRICreator в список, если используется отложенная загрузка библиотек.
+    /// Также, обработчик может создать элемент в обход списка IEFPAppRICreator.
+    /// </summary>
+    public event EFPAppRIBeforeCreateEventHandler BeforeCreate;
 
     #endregion
 
@@ -1071,7 +1137,7 @@ namespace FreeLibSet.Forms.RI
 
         base.Codes = riItem.Codes;
         //base.UnselectedCode = RIItem.UnselectedCode;
-        riItem.SelectedIndexEx = base.SelectedIndexEx;
+        base.SelectedIndex = riItem.SelectedIndex; // испр. 23.11.2021
         if (riItem.InternalSelectedIndexExConnected)
         {
           if (riItem.SelectedIndexEx.HasSource)

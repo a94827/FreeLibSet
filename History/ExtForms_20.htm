@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2021-11-22T17:30:25.813000000"/>
+	<meta name="changed" content="2021-11-23T17:22:23.153000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -253,6 +253,33 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">302</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">23.11.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Исправлена
+			ошибка в E</span><span lang="en-US">FPAppRI.RadioGroupItem (<a href="ExtForms_11.htm#v094p6">v.94
+			</a></span><a href="ExtForms_11.htm#v094p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Начальное состояние инициализировалось
+			неправильно.</span></p>
+			<p><span lang="ru-RU">2. Установка свойства </span><span lang="en-US">DateTimeBox.NValue</span>
+			<span lang="ru-RU">(</span><a href="#v301p5"><span lang="en-US">v.301
+			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">)
+			неправильно отбрасывала компонент времени</span></p>
+			<p><a name="v302p3"></a><span lang="en-US">3. </span><span lang="ru-RU">Событие
+			EFPAppRICreators.</span><span lang="en-US">BeforeCreate (<a href="ExtForms_11.htm#v106p5">v.106
+			</a></span><a href="ExtForms_11.htm#v106p5"><span lang="ru-RU">п.5</span></a><span lang="en-US">).</span></p>
+			<p>4. Исправлены ошибки в <span lang="en-US">NumEditBox&lt;T&gt;.
+			</span>Генерируется событие <span lang="en-US">TextChanged,
+			</span>которое используется в <span lang="en-US">EFPNumEditBox&lt;T&gt;
+			</span>для вызова <span lang="en-US">Validate()</span>,<span lang="en-US">
+			</span>вместо события <span lang="en-US">ValueChanged.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">301</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -260,28 +287,36 @@
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Изменения пространств имен</span></p>
-			<p>2. Убран метод <span lang="en-US">Debug</span>Tools.LogoutException<span lang="en-US">()</span></p>
-			<p><span lang="en-US">3. </span><span lang="ru-RU">Класс </span><span lang="en-US">Twain
-			</span><span lang="ru-RU">переименован в
+			<p>2. Убран метод <span lang="en-US">Debug</span>Tools.LogoutException<span lang="en-US">()</span>
+			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v085p1"><span lang="en-US">v.85
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Класс </span><span lang="en-US">Twain</span>
+			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v041p1"><span lang="en-US">v.41
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">переименован в
 			</span><span lang="en-US">FreeLibSet.Win32.Twain.TwainObject</span></p>
-			<p><span lang="en-US">3. </span><span lang="ru-RU">Перечисление
+			<p><span lang="en-US">4</span><span lang="en-US">. </span><span lang="ru-RU">Перечисление
 			</span><span lang="en-US">EFPValidateState </span><span lang="ru-RU">заменено
-			на </span><span lang="en-US">UIValidateState</span></p>
-			<p><span lang="en-US">4. </span><span lang="ru-RU">Свойство
+			на </span><span lang="en-US">UIValidateState</span> <span lang="ru-RU">(</span><a href="ExtTools_20.htm#v301p10"><span lang="en-US">ExtTools,
+			v.301 </span><span lang="ru-RU">п.10</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">5</span><span lang="en-US">. </span><span lang="ru-RU">Свойство
 			</span><span lang="en-US">EFPControlBase.Validators.</span></p>
-			<p><span lang="en-US">5</span>. <span lang="ru-RU">Управляющий
-			элемент </span><span lang="en-US">DateBox </span><span lang="ru-RU">заменен
-			на </span><span lang="en-US">DateTimeBox, </span><span lang="ru-RU">а
-			</span><span lang="en-US">DateInputDialog - </span><span lang="ru-RU">на
-			</span><span lang="en-US">DateTimeInputDialog. </span><span lang="ru-RU">Новые
-			с</span>войства <span lang="en-US">Kind</span> <span lang="ru-RU">и
-			</span><span lang="en-US">Formatter. </span><span lang="ru-RU">Свойство
+			<p><span lang="en-US">6</span>. <span lang="ru-RU">Управляющий
+			элемент </span><span lang="en-US">DateBox </span><span lang="ru-RU">(</span><a href="ExtForms.htm#v001p1"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			заменен на </span><span lang="en-US">DateTimeBox, </span><span lang="ru-RU">а
+			</span><span lang="en-US">DateInputDialog </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v076p4"><span lang="en-US">v.76
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">) </span><span lang="en-US">-
+			</span><span lang="ru-RU">на </span><span lang="en-US">DateTimeInputDialog.
+			</span><span lang="ru-RU">Новые с</span>войства <span lang="en-US">Kind</span>
+			<span lang="ru-RU">и </span><span lang="en-US">Formatter. </span><span lang="ru-RU">Свойство
 			</span><span lang="en-US">Value </span>переименовано в <span lang="en-US">NValue.
 			</span>Новое свойство <span lang="en-US">Value</span> типа
 			<span lang="en-US">DateTime </span>без значения <span lang="en-US">null.</span></p>
-			<p><span lang="en-US">6. </span><span lang="ru-RU">Класс
-			</span><span lang="en-US">EFPDateBox </span><span lang="ru-RU">заменен
-			на </span><span lang="en-US">EFPDateTimeBox. </span><span lang="ru-RU">Классы
+			<p><span lang="en-US">7</span><span lang="en-US">. </span><span lang="ru-RU">Класс
+			</span><span lang="en-US">EFPDateBox </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p2"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			заменен на </span><span lang="en-US">EFPDateTimeBox. </span><span lang="ru-RU">Классы
 			</span><span lang="en-US">EFPDateTimeBox</span> <span lang="ru-RU">и
 			</span><span lang="en-US">EFPDateTumePicker </span><span lang="ru-RU">выведены
 			из общего класса </span><span lang="en-US">EFPDateTimeControl&lt;T&gt;,
@@ -289,106 +324,138 @@
 			Value, NTime </span><span lang="ru-RU">и </span><span lang="en-US">Time.
 			</span><span lang="ru-RU">Также поддерживается комплект свойств</span>
 			<span lang="en-US">DisabledXxx </span><span lang="ru-RU">и </span><span lang="en-US">XxxEx.</span></p>
-			<p><span lang="en-US">7. </span><span lang="ru-RU">Свойство
+			<p><span lang="en-US">8</span><span lang="en-US">. </span><span lang="ru-RU">Свойство
 			EFPMonthCalendarSingleDay</span><span lang="en-US">.SyncValue
 			</span><span lang="ru-RU">пропускает устанавливаемое значение
 			</span><span lang="en-US">null, </span><span lang="ru-RU">а не
 			выбрасывает исключение.</span></p>
-			<p lang="en-US">8. <span lang="ru-RU">Свойства </span>DateRangeBox,
-			<span lang="ru-RU">EFPDateRangeBox.FirstDate и LastDate</span>
-			<span lang="ru-RU">переименованы в </span>First <span lang="ru-RU">и
-			</span>Last</p>
-			<p lang="en-US">9. <span lang="ru-RU">Убраны управляемые свойства
-			</span>DateOrRangeBox.ValueEx <span lang="ru-RU">и </span>IsNotEmptyEx.
-			<span lang="ru-RU">Свойство </span>Value <span lang="ru-RU">переименовано
-			в </span>DateRange<span lang="ru-RU">. Новые свойства </span>FirstDate,
-			LastDate, FirstDateEx <span lang="ru-RU">и </span>LastDateEx.</p>
-			<p>10. Свойства <span lang="en-US">CanBeEmptyMode </span>вместо
-			<span lang="en-US">WarningIfEmpty. </span>Убрано <span lang="en-US">CanBeEmptyModeEx,
-			MinimumEx, MaximumEx, MaxLengthEx</span><span lang="ru-RU">,
+			<p><span lang="en-US">9</span><span lang="en-US">. </span><span lang="ru-RU">Свойства
+			</span><span lang="en-US">DateRangeBox </span><span lang="ru-RU">(</span><a href="http://ExtForms.htm/#v001p2"><span lang="en-US">v</span><span lang="ru-RU">.1
+			п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">,
+			</span><span lang="ru-RU">EFPDateRangeBox.FirstDate и LastDate</span>
+			<span lang="ru-RU">переименованы в </span><span lang="en-US">First
+			</span><span lang="ru-RU">и </span><span lang="en-US">Last</span></p>
+			<p><span lang="en-US">10</span><span lang="en-US">. </span><span lang="ru-RU">Убраны
+			управляемые свойства </span><span lang="en-US">EFPDateOrRangeBox.ValueEx
+			</span><span lang="ru-RU">и </span><span lang="en-US">IsNotEmptyEx
+			(<a href="ExtForms_11.htm#v197p2">v.197 </a></span><a href="ExtForms_11.htm#v197p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Свойство </span><span lang="en-US">Value
+			</span><span lang="ru-RU">переименовано в </span><span lang="en-US">DateRange</span><span lang="ru-RU">.
+			Новые свойства </span><span lang="en-US">FirstDate, LastDate,
+			FirstDateEx </span><span lang="ru-RU">и </span><span lang="en-US">LastDateEx.</span></p>
+			<p>1<span lang="en-US">1</span>. Свойства <span lang="en-US">CanBeEmptyMode
+			</span>вместо <span lang="en-US">WarningIfEmpty. </span>Убрано
+			<span lang="en-US">CanBeEmptyModeEx, MinimumEx, MaximumEx,
+			MaxLengthEx</span><span lang="ru-RU">,
 			Error/</span><span lang="en-US">Warning</span><span lang="ru-RU">RegExPattern</span><span lang="en-US">/Message</span></p>
-			<p><span lang="en-US">10. </span><span lang="ru-RU">Новые
-			управл</span><span lang="en-US">яющие</span> <span lang="ru-RU">элементы
-			</span><span lang="en-US">IntEditBox, SingleEditBox, DoubleEditBox
-			</span><span lang="ru-RU">и </span><span lang="en-US">DecimalEditBox
-			</span><span lang="ru-RU">с поддержкой произвольного
-			форматирования и инкремента. Провайдеры </span><span lang="en-US">EFPxxxEditBox.
-			</span><span lang="ru-RU">Убраны элементы </span><span lang="en-US">NumEditBox
-			</span><span lang="ru-RU">и </span><span lang="en-US">ExtNumericUpDown
-			</span><span lang="ru-RU">и классы провайдеров </span><span lang="en-US">EFPNumEditBox,
+			<p><a name="v301p12"></a><span lang="en-US">1</span><span lang="en-US">2</span><span lang="en-US">.
+			</span><span lang="ru-RU">Новые управл</span><span lang="en-US">яющие</span>
+			<span lang="ru-RU">элементы </span><span lang="en-US">IntEditBox,
+			SingleEditBox, DoubleEditBox </span><span lang="ru-RU">и
+			</span><span lang="en-US">DecimalEditBox </span><span lang="ru-RU">с
+			поддержкой произвольного форматирования и инкремента. Провайдеры
+			</span><span lang="en-US">EFPxxxEditBox. </span><span lang="ru-RU">Убраны
+			элементы </span><span lang="en-US">NumEditBox</span> <span lang="en-US">(<a href="http://ExtForms.htm/#v001p3">v</a></span><a href="http://ExtForms.htm/#v001p3"><span lang="ru-RU">.1
+			п.3</span></a><span lang="en-US">) </span><span lang="ru-RU">и
+			</span><span lang="en-US">ExtNumericUpDown</span> <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v046p6"><span lang="en-US">v.46
+			</span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">и классы провайдеров </span><span lang="en-US">EFPNumEditBox,
 			EFPExtNumericUpDown </span><span lang="ru-RU">и </span><span lang="en-US">EFPNumericUpDown.</span></p>
-			<p lang="en-US">11. <span lang="ru-RU">Диалоги ввода значений
-			</span>Int/Single/Double/DecimalInputBox <span lang="ru-RU">и
-			</span>RangeBox <span lang="ru-RU">используют новые элементы и
-			свойства </span>Format, FormatProvider, UpDownHandler <span lang="ru-RU">и
-			</span>Increment.</p>
-			<p>12. <font color="#000000">В диалогах ввода значения и диапазона
-			значений - валидаторы, как в управляющих элементах (свойства
-			</font><font color="#000000"><span lang="en-US">Validators) </span></font><font color="#000000">и
-			управляемые свойства для построения валидаторов. Убраны события
-			</font><font color="#000000"><span lang="en-US">Validating.</span></font></p>
-			<p><font color="#000000"><span lang="en-US">13.</span></font><font color="#000000">
-			</font><font color="#000000"><span lang="en-US">EFPCheckBox
-			</span></font><font color="#000000"><span lang="ru-RU">поддерживает
-			свойства </span></font><font color="#000000"><span lang="en-US">CanBeEmpty,
+			<p><span lang="en-US">1</span><span lang="en-US">3</span><span lang="en-US">.
+			</span><span lang="ru-RU">Диалоги ввода значений
+			</span><span lang="en-US">Int/Single/Double/DecimalInputBox (<a href="ExtForms_11.htm#v076p4">v.76
+			</a></span><a href="ExtForms_11.htm#v076p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">и </span><span lang="en-US">RangeBox
+			</span><span lang="ru-RU">используют новые элементы и свойства
+			</span><span lang="en-US">Format, FormatProvider, UpDownHandler </span><span lang="ru-RU">и
+			</span><span lang="en-US">Increment.</span></p>
+			<p>1<span lang="en-US">4</span>. <font color="#000000">В диалогах
+			ввода значения и диапазона значений - валидаторы, как в
+			управляющих элементах (свойства </font><font color="#000000"><span lang="en-US">Validators)
+			</span></font><font color="#000000">и управляемые свойства для
+			построения валидаторов. Убраны события </font><font color="#000000"><span lang="en-US">Validating.</span></font></p>
+			<p><font color="#000000"><span lang="en-US">1</span></font><font color="#000000"><span lang="en-US">5</span></font><font color="#000000"><span lang="en-US">.</span></font><font color="#000000">
+			</font><font color="#000000"><span lang="ru-RU">EFPCheckBox</span></font><font color="#000000">
+			</font><font color="#000000"><span lang="ru-RU">(</span></font><a href="ExtForms_11.htm#v017p2"><font color="#000000"><span lang="en-US">v.17
+			</span></font><font color="#000000"><span lang="ru-RU">п.2</font></span></a><font color="#000000"><span lang="ru-RU">)
+			поддерживает свойства </span></font><font color="#000000"><span lang="en-US">CanBeEmpty,
 			CanBeEmptyMode, IsNotEmptyEx </span></font><font color="#000000"><span lang="ru-RU">и
 			</span></font><font color="#000000"><span lang="en-US">NChecked/Ex
 			</span></font><font color="#000000"><span lang="ru-RU">вместо
 			</span></font><font color="#000000"><span lang="en-US">ThreeState
 			</span></font><font color="#000000"><span lang="ru-RU">и
 			</span></font><font color="#000000"><span lang="en-US">CheckState.</span></font></p>
-			<p lang="en-US">14. <span lang="ru-RU">Убраны методы
+			<p lang="en-US">16. <span lang="ru-RU">Убраны методы
 			</span>EFPApp.InputBox() <span lang="ru-RU">и </span>IntInputBox().</p>
-			<p>1<span lang="en-US">5</span>. Переименование
-			ComboTextInputDialog в <span lang="en-US">TextComboInputDialog.
-			</span><span lang="ru-RU">Добавлено свойство </span><span lang="en-US">Lines.</span></p>
-			<p><span lang="en-US">16. </span><span lang="ru-RU">Методы
-			</span><span lang="en-US">DateRangeBox.ShiftDateRange() </span><span lang="ru-RU">и
+			<p>1<span lang="en-US">7</span>. Переименование
+			ComboTextInputDialog <span lang="en-US">(<a href="ExtForms_11.htm#v076p4">v.76
+			</a></span><a href="ExtForms_11.htm#v076p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)</span>
+			в <span lang="en-US">TextComboInputDialog. </span><span lang="ru-RU">Добавлено
+			свойство </span><span lang="en-US">Lines.</span></p>
+			<p><span lang="en-US">1</span><span lang="en-US">8</span><span lang="en-US">.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">DateRangeBox.ShiftDateRange()
+			</span><span lang="ru-RU">(</span><a href="ExtForms.htm#v013p3"><span lang="en-US">v.13
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">) и
 			</span><span lang="en-US">EFPDateRangeBoxCommandItems.ShiftDateRangeYear()
-			перенесены</span> <span lang="ru-RU">в </span><span lang="en-US">UITools.</span></p>
-			<p><span lang="en-US">17. </span><span lang="ru-RU">Переименование
-			свойств </span><span lang="en-US">RadioGroupBox.ImageIndexes </span><span lang="ru-RU">в
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v229p4"><span lang="en-US">v.229
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)
+			</span><span lang="en-US">перенесены</span> <span lang="ru-RU">в
+			</span><span lang="en-US">UITools.</span></p>
+			<p><span lang="en-US">1</span><span lang="en-US">9</span><span lang="en-US">.
+			</span><span lang="ru-RU">Переименование свойств
+			</span><span lang="en-US">RadioGroupBox.ImageIndexes</span> <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v242p4"><span lang="en-US">v.</span><span lang="ru-RU">242</span>
+			<span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span> <span lang="ru-RU">в
 			</span><span lang="en-US">ImageIndices.</span></p>
-			<p>1<span lang="en-US">8</span>. Свойства EFPFolderBrowserButton,
+			<p><span lang="en-US">20</span>. Свойства EFPFolderBrowserButton,
 			EFPFileDialogButton, EFPWindowsExplorerButton<span lang="en-US">.Path,
 			PathEx </span>и <span lang="en-US">IsNotEmptyEx.</span></p>
-			<p><span lang="en-US">19. </span><span lang="ru-RU">Методы
-			</span><span lang="en-US">WinFormsTools.IsImageShrinkNeeded()
-			</span><span lang="ru-RU">перенесены в </span><span lang="en-US">ImagingTools.</span></p>
-			<p><span lang="en-US">20. </span><span lang="ru-RU">Вспомогательные
-			классы </span><span lang="en-US">TreeViewAdv </span><span lang="ru-RU">переименованы,
-			некоторые перенесены в пространство имен
+			<p><span lang="en-US">21</span><span lang="en-US">. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">WinFormsTools.IsImageShrinkNeeded()</span>
+			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v198p1"><span lang="en-US">v.198
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">перенесены в </span><span lang="en-US">ImagingTools.</span></p>
+			<p><span lang="en-US">2</span><span lang="en-US">2</span><span lang="en-US">.
+			</span><span lang="ru-RU">Вспомогательные классы </span><span lang="en-US">TreeViewAdv
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v092p2"><span lang="en-US">v.92
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			переименованы, некоторые перенесены в пространство имен
 			</span><span lang="en-US">FreeLibSet.Controls.TreeViewAdvInternal.</span></p>
-			<p><span lang="en-US">21. </span><span lang="ru-RU">Методы
-			</span><span lang="en-US">EFPAppClipboard.SetTextMatrix(),
+			<p><span lang="en-US">2</span><span lang="en-US">3</span><span lang="en-US">.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">EFPAppClipboard.SetTextMatrix(),
 			WinFormsTools.GetTextMatrix(), GetTextMatrixCsv(),
-			GetTextMatrixText(), SetTextMatrix(). </span><span lang="ru-RU">Использование
-			</span><span lang="en-US">TabTextConvert </span><span lang="ru-RU">и
-			</span><span lang="en-US">CsvTextConvert </span><span lang="ru-RU">вместо
-			методов </span><span lang="en-US">DataTools.</span></p>
-			<p><span lang="en-US">22. UserComboBoxBase </span><span lang="ru-RU">обрабатывает
-			нажатие клавиши </span><span lang="en-US">&lt;F8&gt; </span><span lang="ru-RU">для
+			GetTextMatrixText(), SetTextMatrix()</span> <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v163p6"><span lang="en-US">v.163
+			</span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Использование </span><span lang="en-US">TabTextConvert
+			</span><span lang="ru-RU">и </span><span lang="en-US">CsvTextConvert
+			</span><span lang="ru-RU">вместо методов </span><span lang="en-US">DataTools.</span></p>
+			<p><span lang="en-US">2</span><span lang="en-US">4</span><span lang="en-US">.
+			UserComboBoxBase </span><span lang="ru-RU">обрабатывает нажатие
+			клавиши </span><span lang="en-US">&lt;F8&gt; </span><span lang="ru-RU">для
 			нажатия кнопки &quot;Очистить&quot;. Очистка с помощью клавиши
 			</span><span lang="en-US">&lt;</span><span lang="ru-RU">Пробел</span><span lang="en-US">&gt;
-			</span><span lang="ru-RU">сохранено для </span><span lang="en-US">UserSelComboBox.</span><span lang="en-US">
-			</span>
-			</p>
-			<p><span lang="en-US">2</span><span lang="en-US">3.
-			UserComboBoxBase </span><span lang="ru-RU">при изменении свойства
-			</span><span lang="en-US">Enabled </span><span lang="ru-RU">с
-			</span><span lang="en-US">false </span><span lang="ru-RU">на </span><span lang="en-US">true
-			</span><span lang="ru-RU">обновляет цвета основного управляющего
-			элемента.</span></p>
-			<p><span lang="en-US">2</span><span lang="en-US">4</span><span lang="en-US">.
+			</span><span lang="ru-RU">сохранено для </span><span lang="en-US">UserSelComboBox.</span>
+						</p>
+			<p><span lang="en-US">2</span><span lang="en-US">5</span><span lang="en-US">.
+			UserComboBoxBase</span> <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v046p4"><span lang="en-US">v.46
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">при изменении свойства </span><span lang="en-US">Enabled
+			</span><span lang="ru-RU">с </span><span lang="en-US">false </span><span lang="ru-RU">на
+			</span><span lang="en-US">true </span><span lang="ru-RU">обновляет
+			цвета основного управляющего элемента.</span></p>
+			<p><span lang="en-US">2</span><span lang="en-US">6</span><span lang="en-US">.
 			</span><span lang="ru-RU">Событие
-			</span><span lang="en-US">EFPCsvCodesComboBoxBase.CodeValidating.
+			</span><span lang="en-US">EFPCsvCodesComboBoxBase.CodeValidating</span>
+			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v258p2"><span lang="en-US">v.258
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">.
 			</span><span lang="ru-RU">Свойства </span><span lang="en-US">CodeValidators
 			</span><span lang="ru-RU">и </span><span lang="en-US">ValidatingCodeEx
 			(</span><span lang="ru-RU">в основном, для удаленного интерфейса</span><span lang="en-US">).
 			</span><span lang="ru-RU">Класс больше не является абстрактным. </span>
 			</p>
-			<p><span lang="ru-RU">2</span><span lang="en-US">5</span><span lang="ru-RU">.
-			Свойство </span><span lang="en-US">EFPCsvCodesComboBox</span><span lang="ru-RU">.</span><span lang="en-US">UnknownCodeSeverity.</span></p>
+			<p><span lang="ru-RU">2</span><span lang="en-US">7</span><span lang="ru-RU">.
+			Свойство </span><span lang="en-US">EFPCsvCodesComboBox</span><span lang="ru-RU">.</span><span lang="en-US">UnknownCodeSeverity</span>
+			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v258p2"><span lang="en-US">v.258
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
 		</td>
 	</tr>
 </table>

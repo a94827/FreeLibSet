@@ -8,6 +8,10 @@ using FreeLibSet.Collections;
 
 namespace FreeLibSet.Data
 {
+  /// <summary>
+  /// Выражение, дополненное альясом.
+  /// Альяс используется для именования полей в таблице результатов запроса SELECT с помощью конструкции "AS".
+  /// </summary>
   [Serializable]
   public sealed class DBxNamedExpression : IObjectWithCode
   {

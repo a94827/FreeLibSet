@@ -383,6 +383,7 @@ namespace FreeLibSet.FIAS.RI
         string errorText;
         if (!FiasFormatStringParser.IsValidFormat(value, out errorText))
           throw new ArgumentException(errorText);
+        _TextFormat = value; // испр. 23.11.2021
       }
     }
     private string _TextFormat;

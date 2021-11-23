@@ -32,7 +32,7 @@ namespace FreeLibSet.Forms
       _CanBeEmptyMode = UIValidateState.Error;
 
       if (!DesignMode)
-        control.ValueChanged += new EventHandler(Control_ValueChanged);
+        control.TextChanged += new EventHandler(Control_TextChanged); // 23.11.2021
     }
 
     #endregion
@@ -241,7 +241,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="sender">Ссылка на DateBox. Игнорируется</param>
     /// <param name="args">Игнорируется</param>
-    private void Control_ValueChanged(object sender, EventArgs args)
+    private void Control_TextChanged(object sender, EventArgs args)
     {
       try
       {
