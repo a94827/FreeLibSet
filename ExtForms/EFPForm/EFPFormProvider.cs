@@ -901,7 +901,7 @@ namespace FreeLibSet.Forms
         return;
 
       if (state == UIValidateState.Ok)
-        errorMessage = "";
+        errorMessage = String.Empty;
 
       StringBuilder sb = new StringBuilder();
 
@@ -1140,6 +1140,9 @@ namespace FreeLibSet.Forms
         return;
       if (!_PrevControlWithToolTip.Visible) // спрятался
         return;
+
+      if (!Form.Visible)
+        return; // 25.11.2021
 
       string tt = _TheToolTip.GetToolTip(_PrevControlWithToolTip);
       // Считаем вручную позицию для отображения
@@ -1591,6 +1594,15 @@ namespace FreeLibSet.Forms
     void Form_Disposed(object sender, EventArgs args)
     {
       _ProviderList.Remove(this);
+
+      // 25.11.2021
+      // Пытаемся исправить неперехватываемое исключение ObjectDisposedException.
+      // Вдруг получится?
+      if (_TheToolTip != null)
+      {
+        _TheToolTip.Dispose();
+        _TheToolTip = null;
+      }
     }
 
     #endregion

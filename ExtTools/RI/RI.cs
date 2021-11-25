@@ -452,8 +452,12 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации. Должен проверяться перед записью</param>
     public virtual void WriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      if (SupportsCfgType(cfgType))
-        OnWriteValues(part, cfgType);
+      try
+      {
+        if (SupportsCfgType(cfgType))
+          OnWriteValues(part, cfgType);
+      }
+      catch { }
     }
 
     /// <summary>
@@ -482,8 +486,12 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     public virtual void ReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      if (SupportsCfgType(cfgType))
-        OnReadValues(part, cfgType);
+      try
+      {
+        if (SupportsCfgType(cfgType))
+          OnReadValues(part, cfgType);
+      }
+      catch { }
     }
 
     /// <summary>

@@ -731,7 +731,7 @@ namespace FreeLibSet.Forms
     /// True, если ли элемент может содержать пустое значение.
     /// Дублирует CanBeEmptyMode
     /// </summary>
-    public virtual bool CanBeEmpty
+    public bool CanBeEmpty
     {
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }

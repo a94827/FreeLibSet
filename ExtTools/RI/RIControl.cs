@@ -58,8 +58,9 @@ namespace FreeLibSet.RI
         if (value && (_EnabledEx == null))
           return;
 
-        if (_EnabledEx != null)
-          _EnabledEx.Value = value;
+        //if (_EnabledEx != null)
+        InitEnabledEx(); // 25.11.2021
+        _EnabledEx.Value = value;
       }
     }
 
@@ -351,8 +352,9 @@ namespace FreeLibSet.RI
         if ((!value) && (_ReadOnlyEx == null))
           return;
 
-        if (_ReadOnlyEx != null)
-          _ReadOnlyEx.Value = value;
+        //if (_ReadOnlyEx != null)
+        InitReadOnlyEx(); // 25.11.2021
+        _ReadOnlyEx.Value = value;
       }
     }
 
@@ -945,6 +947,81 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #region ReadOnly
+
+    /// <summary>
+    /// Режим работы текстового поля для просмотра без возможности редактирования.
+    /// По умолчанию - false - пользователь может редактировать текст
+    /// В отличие от установки свойства Enabled=false, при RedaOnly=true пользователь может выделять текст и копировать его в буфер обмена.
+    /// Контроль введенного значения не выполняется при ReadOnly=true.
+    /// </summary>
+    public bool ReadOnly
+    {
+      // Нет смысла делать свойство ReadOnly как отдельное поле, т.к. оно нужно редко
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false; // обычный вариант
+        else
+          return _ReadOnlyEx.Value;
+      }
+      set
+      {
+        if ((!value) && (_ReadOnlyEx == null))
+          return;
+
+        //if (_ReadOnlyEx != null)
+        InitReadOnlyEx(); // 25.11.2021
+        _ReadOnlyEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для ReadOnly.
+    /// Используется для организации условной блокировки элементов.
+    /// Например, элемент может быть заблокирован, если выключен флажок CheckBox.
+    /// </summary>
+    public DepValue<bool> ReadOnlyEx
+    {
+      get
+      {
+        InitReadOnlyEx();
+        return _ReadOnlyEx;
+      }
+      set
+      {
+        InitReadOnlyEx();
+        _ReadOnlyEx.Source = value;
+      }
+    }
+    private DepInput<bool> _ReadOnlyEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalReadOnlyExConnected
+    {
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false;
+        else
+          return _ReadOnlyEx.IsConnected;
+      }
+    }
+
+    private void InitReadOnlyEx()
+    {
+      if (_ReadOnlyEx == null)
+      {
+        _ReadOnlyEx = new DepInput<bool>(false, null);
+        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
+      }
+    }
+
+    #endregion
+
     #region CanBeEmpty
 
     /// <summary>
@@ -1469,6 +1546,7 @@ namespace FreeLibSet.RI
         throw new ArgumentNullException("text");
       _Text = text;
       _CanBeEmptyMode = UIValidateState.Error;
+      _NChecked = false; // 25.11.2021. а не null
     }
 
     #endregion
@@ -2400,6 +2478,81 @@ namespace FreeLibSet.RI
     }
 
     #endregion
+
+    #endregion
+
+    #region ReadOnly
+
+    /// <summary>
+    /// Режим работы текстового поля для просмотра без возможности редактирования.
+    /// По умолчанию - false - пользователь может редактировать текст
+    /// В отличие от установки свойства Enabled=false, при RedaOnly=true пользователь может выделять текст и копировать его в буфер обмена.
+    /// Контроль введенного значения не выполняется при ReadOnly=true.
+    /// </summary>
+    public bool ReadOnly
+    {
+      // Нет смысла делать свойство ReadOnly как отдельное поле, т.к. оно нужно редко
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false; // обычный вариант
+        else
+          return _ReadOnlyEx.Value;
+      }
+      set
+      {
+        if ((!value) && (_ReadOnlyEx == null))
+          return;
+
+        //if (_ReadOnlyEx != null)
+        InitReadOnlyEx(); // 25.11.2021
+        _ReadOnlyEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для ReadOnly.
+    /// Используется для организации условной блокировки элементов.
+    /// Например, элемент может быть заблокирован, если выключен флажок CheckBox.
+    /// </summary>
+    public DepValue<bool> ReadOnlyEx
+    {
+      get
+      {
+        InitReadOnlyEx();
+        return _ReadOnlyEx;
+      }
+      set
+      {
+        InitReadOnlyEx();
+        _ReadOnlyEx.Source = value;
+      }
+    }
+    private DepInput<bool> _ReadOnlyEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalReadOnlyExConnected
+    {
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false;
+        else
+          return _ReadOnlyEx.IsConnected;
+      }
+    }
+
+    private void InitReadOnlyEx()
+    {
+      if (_ReadOnlyEx == null)
+      {
+        _ReadOnlyEx = new DepInput<bool>(false, null);
+        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
+      }
+    }
 
     #endregion
 
@@ -3870,6 +4023,8 @@ namespace FreeLibSet.RI
       get { return _Month; }
       set
       {
+        if (value < 1 || value > 12)
+          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
         _Month = value;
         if (_MonthEx != null)
           _MonthEx.Value = value;
@@ -4260,6 +4415,8 @@ namespace FreeLibSet.RI
       get { return _FirstMonth; }
       set
       {
+        if (value < 1 || value > 12)
+          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
         _FirstMonth = value;
         if (_FirstMonthEx != null)
           _FirstMonthEx.Value = value;
@@ -4330,6 +4487,8 @@ namespace FreeLibSet.RI
       get { return _LastMonth; }
       set
       {
+        if (value < 1 || value > 12)
+          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
         _LastMonth = value;
         if (_LastMonthEx != null)
           _LastMonthEx.Value = value;
@@ -5473,6 +5632,81 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #region ReadOnly
+
+    /// <summary>
+    /// Режим работы текстового поля для просмотра без возможности редактирования.
+    /// По умолчанию - false - пользователь может редактировать текст
+    /// В отличие от установки свойства Enabled=false, при RedaOnly=true пользователь может выделять текст и копировать его в буфер обмена.
+    /// Контроль введенного значения не выполняется при ReadOnly=true.
+    /// </summary>
+    public bool ReadOnly
+    {
+      // Нет смысла делать свойство ReadOnly как отдельное поле, т.к. оно нужно редко
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false; // обычный вариант
+        else
+          return _ReadOnlyEx.Value;
+      }
+      set
+      {
+        if ((!value) && (_ReadOnlyEx == null))
+          return;
+
+        //if (_ReadOnlyEx != null)
+        InitReadOnlyEx(); // 25.11.2021
+        _ReadOnlyEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для ReadOnly.
+    /// Используется для организации условной блокировки элементов.
+    /// Например, элемент может быть заблокирован, если выключен флажок CheckBox.
+    /// </summary>
+    public DepValue<bool> ReadOnlyEx
+    {
+      get
+      {
+        InitReadOnlyEx();
+        return _ReadOnlyEx;
+      }
+      set
+      {
+        InitReadOnlyEx();
+        _ReadOnlyEx.Source = value;
+      }
+    }
+    private DepInput<bool> _ReadOnlyEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalReadOnlyExConnected
+    {
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false;
+        else
+          return _ReadOnlyEx.IsConnected;
+      }
+    }
+
+    private void InitReadOnlyEx()
+    {
+      if (_ReadOnlyEx == null)
+      {
+        _ReadOnlyEx = new DepInput<bool>(false, null);
+        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
+      }
+    }
+
+    #endregion
+
     #endregion
 
     #region Проверка отдельных кодов
@@ -5947,6 +6181,81 @@ namespace FreeLibSet.RI
 
     #endregion
 
+    #region ReadOnly
+
+    /// <summary>
+    /// Режим работы текстового поля для просмотра без возможности редактирования.
+    /// По умолчанию - false - пользователь может редактировать текст
+    /// В отличие от установки свойства Enabled=false, при RedaOnly=true пользователь может выделять текст и копировать его в буфер обмена.
+    /// Контроль введенного значения не выполняется при ReadOnly=true.
+    /// </summary>
+    public bool ReadOnly
+    {
+      // Нет смысла делать свойство ReadOnly как отдельное поле, т.к. оно нужно редко
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false; // обычный вариант
+        else
+          return _ReadOnlyEx.Value;
+      }
+      set
+      {
+        if ((!value) && (_ReadOnlyEx == null))
+          return;
+
+        //if (_ReadOnlyEx != null)
+        InitReadOnlyEx(); // 25.11.2021
+        _ReadOnlyEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для ReadOnly.
+    /// Используется для организации условной блокировки элементов.
+    /// Например, элемент может быть заблокирован, если выключен флажок CheckBox.
+    /// </summary>
+    public DepValue<bool> ReadOnlyEx
+    {
+      get
+      {
+        InitReadOnlyEx();
+        return _ReadOnlyEx;
+      }
+      set
+      {
+        InitReadOnlyEx();
+        _ReadOnlyEx.Source = value;
+      }
+    }
+    private DepInput<bool> _ReadOnlyEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalReadOnlyExConnected
+    {
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false;
+        else
+          return _ReadOnlyEx.IsConnected;
+      }
+    }
+
+    private void InitReadOnlyEx()
+    {
+      if (_ReadOnlyEx == null)
+      {
+        _ReadOnlyEx = new DepInput<bool>(false, null);
+        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
+      }
+    }
+
+    #endregion
+
     #region Для блока диалога
 
     /// <summary>
@@ -6230,6 +6539,81 @@ namespace FreeLibSet.RI
     {
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region ReadOnly
+
+    /// <summary>
+    /// Режим работы текстового поля для просмотра без возможности редактирования.
+    /// По умолчанию - false - пользователь может редактировать текст
+    /// В отличие от установки свойства Enabled=false, при RedaOnly=true пользователь может выделять текст и копировать его в буфер обмена.
+    /// Контроль введенного значения не выполняется при ReadOnly=true.
+    /// </summary>
+    public bool ReadOnly
+    {
+      // Нет смысла делать свойство ReadOnly как отдельное поле, т.к. оно нужно редко
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false; // обычный вариант
+        else
+          return _ReadOnlyEx.Value;
+      }
+      set
+      {
+        if ((!value) && (_ReadOnlyEx == null))
+          return;
+
+        //if (_ReadOnlyEx != null)
+        InitReadOnlyEx(); // 25.11.2021
+        _ReadOnlyEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для ReadOnly.
+    /// Используется для организации условной блокировки элементов.
+    /// Например, элемент может быть заблокирован, если выключен флажок CheckBox.
+    /// </summary>
+    public DepValue<bool> ReadOnlyEx
+    {
+      get
+      {
+        InitReadOnlyEx();
+        return _ReadOnlyEx;
+      }
+      set
+      {
+        InitReadOnlyEx();
+        _ReadOnlyEx.Source = value;
+      }
+    }
+    private DepInput<bool> _ReadOnlyEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalReadOnlyExConnected
+    {
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false;
+        else
+          return _ReadOnlyEx.IsConnected;
+      }
+    }
+
+    private void InitReadOnlyEx()
+    {
+      if (_ReadOnlyEx == null)
+      {
+        _ReadOnlyEx = new DepInput<bool>(false, null);
+        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
+      }
     }
 
     #endregion
@@ -6760,13 +7144,7 @@ namespace FreeLibSet.RI
     public override void WriteValues(CfgPart part, RIValueCfgType cfgType)
     {
       for (int i = 0; i < _Items.Count; i++)
-      {
-        try
-        {
-          _Items[i].WriteValues(part, cfgType);
-        }
-        catch { }
-      }
+        _Items[i].WriteValues(part, cfgType);
     }
 
     /// <summary>
@@ -6777,13 +7155,7 @@ namespace FreeLibSet.RI
     public override void ReadValues(CfgPart part, RIValueCfgType cfgType)
     {
       for (int i = 0; i < _Items.Count; i++)
-      {
-        try
-        {
-          _Items[i].ReadValues(part, cfgType);
-        }
-        catch { }
-      }
+        _Items[i].ReadValues(part, cfgType);
     }
 
     #endregion

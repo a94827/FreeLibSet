@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.Forms
 {
@@ -15,6 +16,8 @@ namespace FreeLibSet.Forms
   /// Расширяет EFPDataGridView, в основном, для поддержки операций вставки из буфера обмена с автоматическим
   /// добавлением строк.
   /// Инициализация столбцов выполняется при инициализации свойства DataGridView.DataSource ссылкой на DataTable.
+  /// Размеры и форматирование столбцов просмотра можно сделать либор после присоединения таблицы, либо заранее,
+  /// используя класс InputDataGridColumns.
   /// Свойство FixedRows позволяет работать с таблицами произвольного размера или с фиксированным числом строк.
   /// В режиме 
   /// </summary>
@@ -258,91 +261,204 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
-  /// <summary>
-  /// Класс для установки свойств DataColumn.ExtendedProperties для табличного просмотра EFPInputGridView и
-  /// диалога InputGridDataDialog.
-  /// Прикладной код может создавать объект для таблицы, которая будет присоединена к EFPInputGridView.
-  /// Класс InputGridDataDialog имеет свойство Columns для работы со столбцами.
+    /// <summary>
+  /// Класс для установки свойств DataColumn.ExtendedProperties для табличного просмотра InputGridDataDialog
   /// </summary>
-  public class EFPInputDataGridViewColumnProperties : FreeLibSet.RI.InputGridDataColumnProperties
+  public sealed class InputDataGridColumn
   {
-    // Класс переопределяет методы для типа данных HorizontalAlignment
+    // Этот класс не сериализуется.
 
-    #region Конструкторы
+    #region Защищенный конструктор
+
+    internal InputDataGridColumn(DataColumn column)
+    {
+      _Column = column;
+    }
+
+
+    #endregion
+
+    #region Основные свойства
 
     /// <summary>
-    /// Создает объект, присоединенный к таблице, разрешающий изменение свойста
+    /// Столбец таблицы данных
     /// </summary>
-    /// <param name="table">Таблица, свойствами столбцов которой нужно управлять</param>
-    public EFPInputDataGridViewColumnProperties(DataTable table)
-      : this(table, false)
+    public DataColumn Column { get { return _Column; } }
+    private DataColumn _Column;
+
+    #endregion
+
+    #region Значения для столбцов
+
+    // "Format" - задает формат числового столбца или даты/времени.
+    // "TextWidth" - задает ширину столбца в текстовых единицах.
+    // "MinTextWidth" - задает минимальную ширину столбца в текстовых единицах.
+    // "FillWeight" - задает относительную ширину столбца, если столбец должен заполнять просмотр по ширине.
+    // "Align" - задает горизонтальное выравнивание (строковое значение "Left", "Center" или "Right").
+
+    /// <summary>
+    /// Горизонтальное выравнивание
+    /// </summary>
+    public HorizontalAlignment Align
     {
+      get
+      {
+        string s = DataTools.GetString(Column.ExtendedProperties["Align"]);
+        if (String.IsNullOrEmpty(s))
+        {
+          if (DataTools.IsNumericType(Column.DataType))
+            return HorizontalAlignment.Right;
+          if (Column.DataType == typeof(DateTime) || Column.DataType == typeof(bool))
+            return HorizontalAlignment.Center;
+          else
+            return HorizontalAlignment.Left;
+        }
+        else
+          return StdConvert.ToEnum<HorizontalAlignment>(s);
+      }
+      set
+      {
+        Column.ExtendedProperties["Align"] = value.ToString();
+      }
     }
 
     /// <summary>
-    /// Создает объект, присоединенный к таблице
+    /// Формат для числового столбца или столбца даты/времени.
     /// </summary>
-    /// <param name="table">Таблица, свойствами столбцов которой нужно управлять</param>
-    /// <param name="isReadOnly">Если true, то объект позволит только читать свойства, но не устанавливать их</param>
-    public EFPInputDataGridViewColumnProperties(DataTable table, bool isReadOnly)
-      :base(table, isReadOnly)
+    public string Format
     {
+      get       {        return DataTools.GetString(Column.ExtendedProperties["Format"]);      }
+      set      {        Column.ExtendedProperties["Format"] = value;      }
+    }
+
+    /// <summary>
+    /// Ширина столбца как количество символов.
+    /// </summary>
+    public int TextWidth
+    {      
+      get      {        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["TextWidth"]));      }
+      set      {        Column.ExtendedProperties["TextWidth"] = StdConvert.ToString(value);      }
+    }
+
+    /// <summary>
+    /// Минимальная ширина столбца как количество символов.
+    /// </summary>
+    public int MinTextWidth
+    {
+      get      {        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["MinTextWidth"]));      }
+      set      {        Column.ExtendedProperties["MinTextWidth"] = StdConvert.ToString(value);      }
+    }
+
+    /// <summary>
+    /// Весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
+    /// По умолчанию - 0 - используется ширина столбца, задаваемая TextWidth.
+    /// </summary>
+    public int FillWeight
+    {
+      get      {        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["FillWeight"]));      }
+      set      {        Column.ExtendedProperties["FillWeight"] = StdConvert.ToString(value);      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Коллекция объектов InputDataGridColumn с доступом по имени столбца.
+  /// Реализует свойство InputDataGridDialog.Columns и может использоваться в прикладном коде для
+  /// инициализации столбцов EFPInputDataGridView. Свойство EFPInputDataGridView.SourceAsDataTable должно
+  /// устанавливаться после окончания работы с InputDataGridColumns.
+  /// </summary>
+  public sealed class InputDataGridColumns
+  {
+    // Учитываем возможность, что может появится класс табличного просмотра InputGridDataView без блока диалога.
+    // Этот класс не сериализуется.
+
+    #region Защищенный конструктор
+
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект, привязанный к таблице данных
+    /// </summary>
+    /// <param name="table">Таблица данных. Не может быть null</param>
+    public InputDataGridColumns(DataTable table)
+    {
+      if (table == null)
+        throw new ArgumentNullException("table");
+      _Table = table;
+      _Dict = new TypedStringDictionary<InputDataGridColumn>(true);
     }
 
     #endregion
 
-    #region Align
+    #endregion
+
+    #region Доступ к элементам
 
     /// <summary>
-    /// Установить горизонтальное выравнивание для столбца.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
+    /// Таблица данных, в которой находятся столбцы
     /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.</param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public /*new */void SetAlign(string columnName, HorizontalAlignment value)
+    public DataTable Table { get { return _Table; } }
+    private DataTable _Table;
+
+    private TypedStringDictionary<InputDataGridColumn> _Dict;
+
+    /// <summary>
+    /// Доступ к свойствам столбца по имени.
+    /// На момент вызова столбец должен быть добавлен в таблицу.
+    /// </summary>
+    /// <param name="columnName">Имя столбца (свойство DataColumn.ColumnName)</param>
+    /// <returns>Свойства столбца табличного просмотра</returns>
+    public InputDataGridColumn this[string columnName]
     {
-      base.SetAlign(columnName, (FreeLibSet.RI.HorizontalAlignment)(int)value);
+      get
+      {
+        InputDataGridColumn info;
+        if (!_Dict.TryGetValue(columnName, out info))
+        {
+          DataColumn column = Table.Columns[columnName];
+          if (column == null)
+          {
+            if (String.IsNullOrEmpty(columnName))
+              throw new ArgumentNullException("columnName");
+            else
+              throw new ArgumentException("В таблице " + Table.ToString() + " нет столбца с именем \"" + columnName + "\"");
+          }
+          info = new InputDataGridColumn(column);
+          _Dict.Add(columnName, info);
+        }
+        return info;
+      }
     }
 
     /// <summary>
-    /// Установить горизонтальное выравнивание для столбца.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
+    /// Доступ к свойствам столбца.
+    /// На момент вызова столбец должен быть добавлен в таблицу.
     /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public /*new */void SetAlign(DataColumn column, HorizontalAlignment value)
+    /// <param name="column">Столбец DataTable</param>
+    /// <returns>Свойства столбца табличного просмотра</returns>
+    public InputDataGridColumn this[DataColumn column]
     {
-      base.SetAlign(column, (FreeLibSet.RI.HorizontalAlignment)(int)value);
+      get
+      {
+        if (column == null)
+          throw new ArgumentNullException("column");
+        return this[column.ColumnName];
+      }
     }
 
     /// <summary>
-    /// Получить горизонтальное выравнивание для столбца.
-    /// Если значение не было установлено в явном виде, будет возвращено значение по умолчанию.
+    /// Доступ к свойствам последнего столбца, который был добавлен в таблицу.
     /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.</param>
-    /// <returns>Установленное значение</returns>
-    public new HorizontalAlignment GetAlign(string columnName)
+    public InputDataGridColumn LastAdded
     {
-      return (HorizontalAlignment)(int)(base.GetAlign(columnName));
-    }
-
-    /// <summary>
-    /// Получить горизонтальное выравнивание для столбца.
-    /// Если значение не было установлено в явном виде, будет возвращено значение по умолчанию.
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null или пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <returns>Установленное значение</returns>
-    public new HorizontalAlignment GetAlign(DataColumn column)
-    {
-      return (HorizontalAlignment)(int)(base.GetAlign(column));
+      get
+      {
+        if (Table.Columns.Count == 0)
+          return null;
+        else
+          return this[Table.Columns[Table.Columns.Count - 1]];
+      }
     }
 
     #endregion
@@ -351,7 +467,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Диалог для ввода табличных данных.
   /// </summary>
-  public class InputGridDataDialog : BaseInputDialog
+  public class InputDataGridDialog : BaseInputDialog
   {
     #region Конструктор
 
@@ -359,7 +475,7 @@ namespace FreeLibSet.Forms
     /// Инициализирует объект значениями по умолчанию.
     /// Перед выводом диалога должно быть установлено свойство DataSource
     /// </summary>
-    public InputGridDataDialog()
+    public InputDataGridDialog()
     {
       Title = "Таблица";
       ImageKey = "Table";
@@ -378,9 +494,12 @@ namespace FreeLibSet.Forms
     public DataTable Table
     {
       get { return _Table; }
-      set 
-      { 
-        _Table = value;
+      set
+      {
+        if (value == null)
+          _Table = new DataTable();
+        else
+          _Table = value;
         _Columns = null;
       }
     }
@@ -389,16 +508,16 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Доступ к расширенным свойствам столбцов
     /// </summary>
-    public EFPInputDataGridViewColumnProperties Columns
+    public InputDataGridColumns Columns
     {
       get
       {
-        if (_Columns == null && _Table != null)
-          _Columns = new EFPInputDataGridViewColumnProperties(_Table);
+        if (_Columns == null)
+          _Columns = new InputDataGridColumns(_Table);
         return _Columns;
       }
     }
-    private EFPInputDataGridViewColumnProperties _Columns;
+    private InputDataGridColumns _Columns;
 
     /// <summary>
     /// Фиксированные строки.
@@ -491,4 +610,5 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
+
 }

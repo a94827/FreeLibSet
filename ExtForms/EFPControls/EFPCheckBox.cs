@@ -64,7 +64,7 @@ namespace FreeLibSet.Forms
     /// При CanBeEmptyMode=Ok или Warning - разрешено промежуточное состояние.
     /// В режиме Warning для него выдается предупреждение.
     /// </summary>
-    public virtual UIValidateState CanBeEmptyMode
+    public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
       set
@@ -83,7 +83,7 @@ namespace FreeLibSet.Forms
     /// По умолчанию - false.
     /// Дублирует CanBeEmptyMode.
     /// </summary>
-    public virtual bool CanBeEmpty
+    public bool CanBeEmpty
     {
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }

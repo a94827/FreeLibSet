@@ -4859,6 +4859,12 @@ namespace FreeLibSet.RI
 
   #region Ввод табличных данных
 
+  internal interface IInputGridDataView
+  {
+    bool IsFixed { get; }
+    DataTable Table { get; }
+  }
+
   /// <summary>
   /// Диалог для ввода табличных данных.
   /// Данные хранятся в виде таблицы DataTable. См описание свойства Table. 
@@ -4867,14 +4873,14 @@ namespace FreeLibSet.RI
   /// Свойство ReadOnly позволяет показать таблицу без возможности редактирования.
   /// </summary>
   [Serializable]
-  public class InputGridDataDialog : BaseInputDialog
+  public class InputDataGridDialog : BaseInputDialog, IInputGridDataView
   {
     #region Конструктор
 
     /// <summary>
     /// Инициализирует начальные значения диалога
     /// </summary>
-    public InputGridDataDialog()
+    public InputDataGridDialog()
     {
       Title = "Таблица";
 
@@ -4964,17 +4970,17 @@ namespace FreeLibSet.RI
     /// Объект для установки расширенных свойств столбцов (форматирования, размеров, выравнивания текста).
     /// Сама коллекция не хранит данные, для этого используются объекты DataColumn.ExtendedProperties.
     /// </summary>
-    public InputGridDataColumnProperties Columns
+    public InputDataGridColumns Columns
     {
       get
       {
         if (_Columns == null)
-          _Columns = new InputGridDataColumnProperties(Table, IsFixed);
+          _Columns = new InputDataGridColumns(this);
         return _Columns;
       }
     }
     [NonSerialized]
-    private InputGridDataColumnProperties _Columns;
+    private InputDataGridColumns _Columns;
 
     #endregion
 
@@ -5050,43 +5056,30 @@ namespace FreeLibSet.RI
   /// <summary>
   /// Класс для установки свойств DataColumn.ExtendedProperties для табличного просмотра InputGridDataDialog
   /// </summary>
-  public class InputGridDataColumnProperties : IReadOnlyObject
+  public sealed class InputDataGridColumn : IReadOnlyObject
   {
-    // Этот класс не сериализуется
+    // Этот класс не сериализуется.
 
-    #region Конструкторы
+    #region Защищенный конструктор
 
-    /// <summary>
-    /// Создает объект, присоединенный к таблице, разрешающий изменение свойста
-    /// </summary>
-    /// <param name="table">Таблица, свойствами столбцов которой нужно управлять</param>
-    public InputGridDataColumnProperties(DataTable table)
-      : this(table, false)
+    internal InputDataGridColumn(IInputGridDataView riItem, DataColumn column)
     {
+      _RIItem = riItem;
+      _Column = column;
     }
 
-    /// <summary>
-    /// Создает объект, присоединенный к таблице
-    /// </summary>
-    /// <param name="table">Таблица, свойствами столбцов которой нужно управлять</param>
-    /// <param name="isReadOnly">Если true, то объект позволит только читать свойства, но не устанавливать их</param>
-    public InputGridDataColumnProperties(DataTable table, bool isReadOnly)
-    {
-      if (table == null)
-        throw new ArgumentNullException("table");
-      _Table = table;
-      _IsReadOnly = isReadOnly;
-    }
 
     #endregion
 
     #region Основные свойства
 
+    private IInputGridDataView _RIItem;
+
     /// <summary>
-    /// Таблица для управления. Задается в конструкторе
+    /// Столбец таблицы данных
     /// </summary>
-    public DataTable Table { get { return _Table; } }
-    private DataTable _Table;
+    public DataColumn Column { get { return _Column; } }
+    private DataColumn _Column;
 
     #endregion
 
@@ -5098,344 +5091,97 @@ namespace FreeLibSet.RI
     // "FillWeight" - задает относительную ширину столбца, если столбец должен заполнять просмотр по ширине.
     // "Align" - задает горизонтальное выравнивание (строковое значение "Left", "Center" или "Right").
 
-    #region Align
-
     /// <summary>
-    /// Установить горизонтальное выравнивание для столбца.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
+    /// Горизонтальное выравнивание
     /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.</param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetAlign(string columnName, HorizontalAlignment value)
+    public HorizontalAlignment Align
     {
-      CheckNotReadOnly();
-      InternalGetColumn(columnName).ExtendedProperties["Align"] = value.ToString();
-    }
-
-    /// <summary>
-    /// Установить горизонтальное выравнивание для столбца.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetAlign(DataColumn column, HorizontalAlignment value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(column).ExtendedProperties["Align"] = value.ToString();
-    }
-
-    /// <summary>
-    /// Получить горизонтальное выравнивание для столбца.
-    /// Если значение не было установлено в явном виде, будет возвращено значение по умолчанию.
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.</param>
-    /// <returns>Установленное значение</returns>
-    public HorizontalAlignment GetAlign(string columnName)
-    {
-      return DoGetAlign(InternalGetColumn(columnName));
-    }
-
-    /// <summary>
-    /// Получить горизонтальное выравнивание для столбца.
-    /// Если значение не было установлено в явном виде, будет возвращено значение по умолчанию.
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null или пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <returns>Установленное значение</returns>
-    public HorizontalAlignment GetAlign(DataColumn column)
-    {
-      return DoGetAlign(InternalGetColumn(column));
-    }
-
-    private HorizontalAlignment DoGetAlign(DataColumn column)
-    {
-      string s = DataTools.GetString(column.ExtendedProperties["Align"]);
-      if (String.IsNullOrEmpty(s))
+      get
       {
-        if (DataTools.IsNumericType(column.DataType))
-          return HorizontalAlignment.Right;
-        if (column.DataType == typeof(DateTime) || column.DataType == typeof(bool))
-          return HorizontalAlignment.Center;
+        string s = DataTools.GetString(Column.ExtendedProperties["Align"]);
+        if (String.IsNullOrEmpty(s))
+        {
+          if (DataTools.IsNumericType(Column.DataType))
+            return HorizontalAlignment.Right;
+          if (Column.DataType == typeof(DateTime) || Column.DataType == typeof(bool))
+            return HorizontalAlignment.Center;
+          else
+            return HorizontalAlignment.Left;
+        }
         else
-          return HorizontalAlignment.Left;
+          return StdConvert.ToEnum<HorizontalAlignment>(s);
       }
-      else
-        return StdConvert.ToEnum<HorizontalAlignment>(s);
-    }
-
-    #endregion
-
-    #region Format
-
-    /// <summary>
-    /// Установить формат для числового столбца или столбца даты/времени.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.</param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetFormat(string columnName, string value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(columnName).ExtendedProperties["Format"] = value;
-    }
-
-    /// <summary>
-    /// Установить формат для числового столбца или столбца даты/времени.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetFormat(DataColumn column, string value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(column).ExtendedProperties["Format"] = value;
-    }
-
-    /// <summary>
-    /// Получить формат для числового столбца или столбца даты/времени.
-    /// Если значение не было установлено в явном виде, возвращается пустая строка.
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.</param>
-    /// <returns>Установленное значение</returns>
-    public string GetFormat(string columnName)
-    {
-      return DataTools.GetString(InternalGetColumn(columnName).ExtendedProperties["Format"]);
-    }
-
-    /// <summary>
-    /// Получить формат для числового столбца или столбца даты/времени.
-    /// Если значение не было установлено в явном виде, возвращается пустая строка.
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <returns>Установленное значение</returns>
-    public string GetFormat(DataColumn column)
-    {
-      return DataTools.GetString(InternalGetColumn(column).ExtendedProperties["Format"]);
-    }
-
-    #endregion
-
-    #region TextWidth
-
-    /// <summary>
-    /// Установить ширину столбца как количество символов.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.</param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetTextWidth(string columnName, int value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(columnName).ExtendedProperties["TextWidth"] = StdConvert.ToString(value);
-    }
-
-    /// <summary>
-    /// Установить ширину столбца как количество символов.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetTextWidth(DataColumn column, int value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(column).ExtendedProperties["TextWidth"] = StdConvert.ToString(value);
-    }
-
-    /// <summary>
-    /// Получить ширину столбца как количество символов.
-    /// Если значение не было установлено в явном виде, будет возвращено значение 0.
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.</param>
-    /// <returns>Установленное значение</returns>
-    public int GetTextWidth(string columnName)
-    {
-      return StdConvert.ToInt32(DataTools.GetString(InternalGetColumn(columnName).ExtendedProperties["TextWidth"]));
-    }
-
-    /// <summary>
-    /// Получить ширину столбца как количество символов.
-    /// Если значение не было установлено в явном виде, будет возвращено значение 0.
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <returns>Установленное значение</returns>
-    public int GetTextWidth(DataColumn column)
-    {
-      return StdConvert.ToInt32(DataTools.GetString(InternalGetColumn(column).ExtendedProperties["TextWidth"]));
-    }
-
-    #endregion
-
-    #region MinTextWidth
-
-    /// <summary>
-    /// Установить минимальную ширину столбца как количество символов.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.</param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetMinTextWidth(string columnName, int value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(columnName).ExtendedProperties["MinTextWidth"] = StdConvert.ToString(value);
-    }
-
-    /// <summary>
-    /// Установить минимальную ширину столбца как количество символов.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetMinTextWidth(DataColumn column, int value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(column).ExtendedProperties["MinTextWidth"] = StdConvert.ToString(value);
-    }
-
-    /// <summary>
-    /// Получить минимальную ширину столбца как количество символов.
-    /// Если значение не было установлено в явном виде, будет возвращено значение 0.
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.</param>
-    /// <returns>Установленное значение</returns>
-    public int GetMinTextWidth(string columnName)
-    {
-      return StdConvert.ToInt32(DataTools.GetString(InternalGetColumn(columnName).ExtendedProperties["MinTextWidth"]));
-    }
-
-    /// <summary>
-    /// Получить минимальную ширину столбца как количество символов.
-    /// Если значение не было установлено в явном виде, будет возвращено значение 0.
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <returns>Установленное значение</returns>
-    public int GetMinTextWidth(DataColumn column)
-    {
-      return StdConvert.ToInt32(DataTools.GetString(InternalGetColumn(column).ExtendedProperties["MinTextWidth"]));
-    }
-
-    #endregion
-
-    #region FillWeight
-
-    /// <summary>
-    /// Установить весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.</param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetFillWeight(string columnName, int value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(columnName).ExtendedProperties["FillWeight"] = StdConvert.ToString(value);
-    }
-
-    /// <summary>
-    /// Установить весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
-    /// На момент вызова в таблице Table должен быть добавлен столбец, для которого устанавливается значение
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то значение будет применено к последнему добавленному столбцу таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <param name="value">Устанавливаемое значение</param>
-    public void SetFillWeight(DataColumn column, int value)
-    {
-      CheckNotReadOnly();
-      InternalGetColumn(column).ExtendedProperties["FillWeight"] = StdConvert.ToString(value);
-    }
-
-    /// <summary>
-    /// Получить весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
-    /// Если значение не было установлено в явном виде, будет возвращено значение 0 - столбец имеет ширину, определяемую TextWitdh.
-    /// </summary>
-    /// <param name="columnName">Имя столбца DataColumn.ColumnName. Если задана пустая строка,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.</param>
-    /// <returns>Установленное значение</returns>
-    public int GetFillWeight(string columnName)
-    {
-      return StdConvert.ToInt32(DataTools.GetString(InternalGetColumn(columnName).ExtendedProperties["FillWeight"]));
-    }
-
-    /// <summary>
-    /// Получить весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
-    /// Если значение не было установлено в явном виде, будет возвращено значение 0 - столбец имеет ширину, определяемую TextWitdh.
-    /// </summary>
-    /// <param name="column">Столбец таблицы. Если задано null,
-    /// то будет возвращено значение для последнего добавленного столбца таблицы Table.
-    /// Удобнее использовать перегрузку, принимающую пустую строку, чтобы не задавать явное приведение типа "(DataColumn)null".
-    /// </param>
-    /// <returns>Установленное значение</returns>
-    public int GetFillWeight(DataColumn column)
-    {
-      return StdConvert.ToInt32(DataTools.GetString(InternalGetColumn(column).ExtendedProperties["FillWeight"]));
-    }
-
-    #endregion
-
-    #region Внутренние методы
-
-    private DataColumn InternalGetColumn(string columnName)
-    {
-      if (String.IsNullOrEmpty(columnName))
+      set
       {
-        if (Table.Columns.Count == 0)
-          throw new InvalidOperationException("В таблице нет ни одного столбца DataColumn");
-        return Table.Columns[Table.Columns.Count - 1];
-      }
-      else
-      {
-        DataColumn col = Table.Columns[columnName];
-        if (col == null)
-          throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
-        return col;
+        CheckNotReadOnly();
+        Column.ExtendedProperties["Align"] = value.ToString();
       }
     }
 
-    private DataColumn InternalGetColumn(DataColumn column)
+    /// <summary>
+    /// Формат для числового столбца или столбца даты/времени.
+    /// </summary>
+    public string Format
     {
-      if (column == null)
+      get
       {
-        if (Table.Columns.Count == 0)
-          throw new InvalidOperationException("В таблице нет ни одного столбца DataColumn");
-        return Table.Columns[Table.Columns.Count - 1];
+        return DataTools.GetString(Column.ExtendedProperties["Format"]);
       }
-      else
-        return column;
+      set
+      {
+        CheckNotReadOnly();
+        Column.ExtendedProperties["Format"] = value;
+      }
     }
 
-    #endregion
+    /// <summary>
+    /// Ширина столбца как количество символов.
+    /// </summary>
+    public int TextWidth
+    {
+      get
+      {
+        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["TextWidth"]));
+      }
+      set
+      {
+        CheckNotReadOnly();
+        Column.ExtendedProperties["TextWidth"] = StdConvert.ToString(value);
+      }
+    }
+
+    /// <summary>
+    /// Минимальная ширина столбца как количество символов.
+    /// </summary>
+    public int MinTextWidth
+    {
+      get
+      {
+        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["MinTextWidth"]));
+      }
+      set
+      {
+        CheckNotReadOnly();
+        Column.ExtendedProperties["MinTextWidth"] = StdConvert.ToString(value);
+      }
+    }
+
+    /// <summary>
+    /// Весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
+    /// По умолчанию - 0 - используется ширина столбца, задаваемая TextWidth.
+    /// </summary>
+    public int FillWeight
+    {
+      get
+      {
+        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["FillWeight"]));
+      }
+      set
+      {
+        CheckNotReadOnly();
+        Column.ExtendedProperties["FillWeight"] = StdConvert.ToString(value);
+      }
+    }
 
     #endregion
 
@@ -5444,8 +5190,7 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Возвращает true, если можно только получать свойства, но не устанавливать их
     /// </summary>
-    public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
+    public bool IsReadOnly { get { return _RIItem.IsFixed; } }
 
 
     /// <summary>
@@ -5453,8 +5198,99 @@ namespace FreeLibSet.RI
     /// </summary>
     public void CheckNotReadOnly()
     {
-      if (_IsReadOnly)
+      if (IsReadOnly)
         throw new ObjectReadOnlyException("Не разрешено изменение свойств столбцов");
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Реализация свойства InputDataGridDialog.Columns
+  /// Коллекция объектов InputDataGridColumn с доступом по имени столбца.
+  /// </summary>
+  public sealed class InputDataGridColumns
+  {
+    // Учитываем возможность, что может появится класс табличного просмотра InputGridDataView без блока диалога.
+    // Этот класс не сериализуется.
+
+    #region Защищенный конструктор
+
+    internal InputDataGridColumns(IInputGridDataView riItem)
+    {
+      _RIItem = riItem;
+      _Dict = new TypedStringDictionary<InputDataGridColumn>(riItem.Table.Columns.Count, true);
+    }
+
+    #endregion
+
+    #region Защищенные свойства
+
+    internal IInputGridDataView RIItem { get { return _RIItem; } }
+    private IInputGridDataView _RIItem;
+
+    #endregion
+
+    #region Доступ к элементам
+
+    private TypedStringDictionary<InputDataGridColumn> _Dict;
+
+    /// <summary>
+    /// Доступ к свойствам столбца по имени.
+    /// На момент вызова столбец должен быть добавлен в таблицу.
+    /// </summary>
+    /// <param name="columnName">Имя столбца (свойство DataColumn.ColumnName)</param>
+    /// <returns>Свойства столбца табличного просмотра</returns>
+    public InputDataGridColumn this[string columnName]
+    {
+      get
+      {
+        InputDataGridColumn info;
+        if (!_Dict.TryGetValue(columnName, out info))
+        {
+          DataColumn column = _RIItem.Table.Columns[columnName];
+          if (column == null)
+          {
+            if (String.IsNullOrEmpty(columnName))
+              throw new ArgumentNullException("columnName");
+            else
+              throw new ArgumentException("В таблице " + _RIItem.Table.ToString() + " нет столбца с именем \"" + columnName + "\"");
+          }
+          info = new InputDataGridColumn(_RIItem, column);
+          _Dict.Add(columnName, info);
+        }
+        return info;
+      }
+    }
+
+    /// <summary>
+    /// Доступ к свойствам столбца.
+    /// На момент вызова столбец должен быть добавлен в таблицу.
+    /// </summary>
+    /// <param name="column">Столбец DataTable</param>
+    /// <returns>Свойства столбца табличного просмотра</returns>
+    public InputDataGridColumn this[DataColumn column]
+    {
+      get
+      {
+        if (column == null)
+          throw new ArgumentNullException("column");
+        return this[column.ColumnName];
+      }
+    }
+
+    /// <summary>
+    /// Доступ к свойствам последнего столбца, который был добавлен в таблицу.
+    /// </summary>
+    public InputDataGridColumn LastAdded
+    {
+      get
+      {
+        if (_RIItem.Table.Columns.Count == 0)
+          return null;
+        else
+          return this[_RIItem.Table.Columns[_RIItem.Table.Columns.Count - 1]];
+      }
     }
 
     #endregion

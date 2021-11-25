@@ -776,6 +776,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     public event DepInputCheckEventHandler<T> CheckValue;
 
+    [NonSerialized]
     private DepInputCheckEventArgs<T> _CheckValueArgs; // чтобы каждый раз не создавать
 
     #endregion

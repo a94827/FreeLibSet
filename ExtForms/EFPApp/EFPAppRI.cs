@@ -624,6 +624,7 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         // Не надо. Диалог показывается только один раз. _ControlProvider.Attached += new EventHandler(ControlProvider_Attached);
         _ControlProvider.Validating += new UIValidatingEventHandler(ControlProvider_Validating);
+        controlProvider.Enabled = riItem.Enabled; // 25.11.2021
         if (riItem.EnabledExConnected)
         {
           if (riItem.EnabledEx.HasSource)
@@ -832,16 +833,14 @@ namespace FreeLibSet.Forms.RI
             riItem.TextEx = base.TextEx;
         }
 
+        base.ReadOnly = riItem.ReadOnly; // 25.11.2021
         if (riItem.InternalReadOnlyExConnected)
         {
           if (riItem.ReadOnlyEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.ReadOnlyEx = riItem.ReadOnlyEx;
           else
-          {
-            base.ReadOnly = riItem.ReadOnly; // обязательное присвоение, иначе свойство обнулится
             riItem.ReadOnlyEx = base.ReadOnlyEx;
-          }
         }
       }
 
@@ -970,6 +969,16 @@ namespace FreeLibSet.Forms.RI
           controlProvider.ValueEx = riItem.ValueEx;
         else
           riItem.ValueEx = controlProvider.ValueEx;
+      }
+
+      controlProvider.ReadOnly = riItem.ReadOnly;
+      if (riItem.InternalReadOnlyExConnected)
+      {
+        if (riItem.ReadOnlyEx.HasSource)
+          // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+          controlProvider.ReadOnlyEx = riItem.ReadOnlyEx;
+        else
+          riItem.ReadOnlyEx = controlProvider.ReadOnlyEx;
       }
     }
 
@@ -1229,6 +1238,16 @@ namespace FreeLibSet.Forms.RI
             base.TimeEx = riItem.TimeEx;
           else
             riItem.TimeEx = base.TimeEx;
+        }
+
+        base.ReadOnly = riItem.ReadOnly;
+        if (riItem.InternalReadOnlyExConnected)
+        {
+          if (riItem.ReadOnlyEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.ReadOnlyEx = riItem.ReadOnlyEx;
+          else
+            riItem.ReadOnlyEx = base.ReadOnlyEx;
         }
       }
 
@@ -1735,6 +1754,16 @@ namespace FreeLibSet.Forms.RI
             riItem.SelectedCodesEx = base.SelectedCodesEx;
         }
 
+        base.ReadOnly = riItem.ReadOnly; 
+        if (riItem.InternalReadOnlyExConnected)
+        {
+          if (riItem.ReadOnlyEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.ReadOnlyEx = riItem.ReadOnlyEx;
+          else
+            riItem.ReadOnlyEx = base.ReadOnlyEx;
+        }
+
         if (riItem.HasCodeValidators)
           base.CodeValidators.AddRange(riItem.CodeValidators);
 
@@ -1887,6 +1916,16 @@ namespace FreeLibSet.Forms.RI
       {
         base.TheTextBox.CanBeEmptyMode = riItem.CanBeEmptyMode;
 
+        base.TheTextBox.ReadOnly = riItem.ReadOnly; 
+        if (riItem.InternalReadOnlyExConnected)
+        {
+          if (riItem.ReadOnlyEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.TheTextBox.ReadOnlyEx = riItem.ReadOnlyEx;
+          else
+            riItem.ReadOnlyEx = base.TheTextBox.ReadOnlyEx;
+        }
+
         TheButton = new EFPFolderBrowserButton(TheTextBox, Control.TheButton);
         TheButton.Description = riItem.Description;
         TheButton.ShowNewFolderButton = riItem.ShowNewFolderButton;
@@ -1903,6 +1942,8 @@ namespace FreeLibSet.Forms.RI
 
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
+
+        TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
       }
 
       EFPFolderBrowserButton TheButton;
@@ -1950,8 +1991,20 @@ namespace FreeLibSet.Forms.RI
             riItem.PathEx = TheButton.PathEx;
         }
 
+        base.TheTextBox.ReadOnly = riItem.ReadOnly;
+        if (riItem.InternalReadOnlyExConnected)
+        {
+          if (riItem.ReadOnlyEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.TheTextBox.ReadOnlyEx = riItem.ReadOnlyEx;
+          else
+            riItem.ReadOnlyEx = base.TheTextBox.ReadOnlyEx;
+        }
+
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
+
+        TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
       }
 
       EFPFileDialogButton TheButton;
@@ -2048,8 +2101,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Ввод табличных данных
 
-      if (riItem is FreeLibSet.RI.InputGridDataDialog)
-        return new InputGridDataDialogItem((FreeLibSet.RI.InputGridDataDialog)riItem);
+      if (riItem is FreeLibSet.RI.InputDataGridDialog)
+        return new InputGridDataDialogItem((FreeLibSet.RI.InputDataGridDialog)riItem);
 
       #endregion
 
@@ -2990,10 +3043,10 @@ namespace FreeLibSet.Forms.RI
     {
       #region Конструктор
 
-      public InputGridDataDialogItem(FreeLibSet.RI.InputGridDataDialog riDialog)
+      public InputGridDataDialogItem(FreeLibSet.RI.InputDataGridDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new FreeLibSet.Forms.InputGridDataDialog();
+        _WinDlg = new FreeLibSet.Forms.InputDataGridDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.FixedRows = riDialog.FixedRows;
@@ -3005,8 +3058,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.InputGridDataDialog _RIDialog;
-      private FreeLibSet.Forms.InputGridDataDialog _WinDlg;
+      private FreeLibSet.RI.InputDataGridDialog _RIDialog;
+      private FreeLibSet.Forms.InputDataGridDialog _WinDlg;
 
       #endregion
 
