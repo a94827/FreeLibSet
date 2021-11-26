@@ -1603,7 +1603,7 @@ namespace FreeLibSet.Forms
 
         foreach (FreeLibSet.UICore.UIValidator v in this._CodeValidators)
         {
-          v.ExpressionEx.ValueChanged += new EventHandler(this.Validate); // Не знаю, нужно ли
+          v.ResultEx.ValueChanged += new EventHandler(this.Validate); // Не знаю, нужно ли
           if (v.PreconditionEx != null)
             v.PreconditionEx.ValueChanged += new EventHandler(this.Validate);
         }

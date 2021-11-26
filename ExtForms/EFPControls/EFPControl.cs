@@ -734,7 +734,7 @@ namespace FreeLibSet.Forms
         this.Validators.SetReadOnly();
         foreach (FreeLibSet.UICore.UIValidator v in this.Validators)
         {
-          v.ExpressionEx.ValueChanged += new EventHandler(this.Validate);
+          v.ResultEx.ValueChanged += new EventHandler(this.Validate);
           if (v.PreconditionEx != null)
             v.PreconditionEx.ValueChanged += new EventHandler(this.Validate);
         }
@@ -788,7 +788,7 @@ namespace FreeLibSet.Forms
       {
         foreach (FreeLibSet.UICore.UIValidator v in this.Validators)
         {
-          v.ExpressionEx.ValueChanged -= new EventHandler(this.Validate);
+          v.ResultEx.ValueChanged -= new EventHandler(this.Validate);
           if (v.PreconditionEx != null)
             v.PreconditionEx.ValueChanged -= new EventHandler(this.Validate);
         }

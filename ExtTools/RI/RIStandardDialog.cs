@@ -5092,7 +5092,9 @@ namespace FreeLibSet.RI
     // "Align" - задает горизонтальное выравнивание (строковое значение "Left", "Center" или "Right").
 
     /// <summary>
-    /// Горизонтальное выравнивание
+    /// Горизонтальное выравнивание.
+    /// Если свойство не установлено в явном виде, то определяется по типу данных столбца (DataColumn.DataType).
+    /// Для числовых типов используется выравнивание по правому краю, для строк - по левому, для даты/времени и логического типа - по центру.
     /// </summary>
     public HorizontalAlignment Align
     {
@@ -5105,6 +5107,8 @@ namespace FreeLibSet.RI
             return HorizontalAlignment.Right;
           if (Column.DataType == typeof(DateTime) || Column.DataType == typeof(bool))
             return HorizontalAlignment.Center;
+          else if (DataTools.IsNumericType(Column.DataType))
+            return HorizontalAlignment.Right; // 26.11.2021
           else
             return HorizontalAlignment.Left;
         }

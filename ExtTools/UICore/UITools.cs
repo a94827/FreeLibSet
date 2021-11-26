@@ -238,5 +238,29 @@ namespace FreeLibSet.UICore
     #endregion
 
     #endregion
+
+    #region UIValidateResult
+
+    /// <summary>
+    /// Создает вычисляемое выражение, которое возвращает UIValidateResult на основании другого
+    /// вычисляемого выражения логического типа, и фиксированного текста сообщения об ошибке.
+    /// Полученное выражение может быть передано конструктору UIValidator.
+    /// </summary>
+    /// <param name="expressionEx">Вычисляемое выражение, которое должно возвращать true, если проверка успешно пройдена, и false в случае ошибки</param>
+    /// <param name="message">Текст выводимого сообщения об ошибке</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DependedValues.DepValue<UIValidateResult> CreateValidateResultEx(DependedValues.DepValue<bool> expressionEx, string message)
+    {
+      if (expressionEx == null)
+        throw new ArgumentNullException("expressionEx");
+      return new FreeLibSet.DependedValues.DepExpr2<UIValidateResult, bool, string>(expressionEx, message, CreateValidateResult);
+    }
+
+    private static UIValidateResult CreateValidateResult(bool isValid, string message)
+    {
+      return new UIValidateResult(isValid, message);
+    }
+
+    #endregion
   }
 }

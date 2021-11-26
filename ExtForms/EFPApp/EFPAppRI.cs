@@ -733,6 +733,8 @@ namespace FreeLibSet.Forms.RI
         return new PasswordBoxItem((FreeLibSet.RI.PasswordBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.TextBox)
         return new TextBoxItem((FreeLibSet.RI.TextBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.MaskedTextBox)
+        return new MaskedTextBoxItem((FreeLibSet.RI.MaskedTextBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.IntEditBox)
         return new IntEditBoxItem((FreeLibSet.RI.IntEditBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.SingleEditBox)
@@ -864,7 +866,61 @@ namespace FreeLibSet.Forms.RI
       #endregion
     }
 
-    private class PasswordBoxItem: FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
+    private class MaskedTextBoxItem : FreeLibSet.Forms.EFPMaskedTextBox, IEFPAppRIControlItem
+    {
+      #region Конструктор
+
+      public MaskedTextBoxItem(FreeLibSet.RI.MaskedTextBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new System.Windows.Forms.MaskedTextBox())
+      {
+        _RIItem = riItem;
+        base.CanBeEmptyMode = riItem.CanBeEmptyMode;
+        base.Mask = riItem.Mask;
+
+        EFPAppRITools.InitControlItem(this, riItem);
+
+        base.Text = riItem.Text; // обязательное присвоение, иначе свойство обнулится
+        if (riItem.InternalTextExConnected)
+        {
+          if (riItem.TextEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.TextEx = riItem.TextEx;
+          else
+            riItem.TextEx = base.TextEx;
+        }
+
+        base.ReadOnly = riItem.ReadOnly; 
+        if (riItem.InternalReadOnlyExConnected)
+        {
+          if (riItem.ReadOnlyEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.ReadOnlyEx = riItem.ReadOnlyEx;
+          else
+            riItem.ReadOnlyEx = base.ReadOnlyEx;
+        }
+      }
+
+      FreeLibSet.RI.MaskedTextBox _RIItem;
+
+      #endregion
+
+      #region IEFPAppRIItem Members
+
+      public void WriteValues()
+      {
+        base.Text = _RIItem.Text;
+        base.Validate();
+      }
+
+      public void ReadValues()
+      {
+        _RIItem.Text = base.Text;
+      }
+
+      #endregion
+    }
+
+    private class PasswordBoxItem : FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
     {
       #region Конструктор
 

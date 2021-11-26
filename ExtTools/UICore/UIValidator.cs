@@ -221,6 +221,133 @@ namespace FreeLibSet.UICore
   #endregion
 
   /// <summary>
+  /// Структура для хранения результата вычисления проверочного выражения и сообщения об ошибке
+  /// </summary>
+  [Serializable]
+  public struct UIValidateResult : IEquatable<UIValidateResult>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализация структуры
+    /// </summary>
+    /// <param name="isValid">true - правильное значение, false - ошибка</param>
+    /// <param name="message">Сообщение об ошибке. При <paramref name="isValid"/>=true игнорируется</param>
+    public UIValidateResult(bool isValid, string message)
+    {
+      if (isValid)
+        _Message = null;
+      else if (String.IsNullOrEmpty(message))
+        _Message = "Текст сообщения об ошибке не задан";
+      else
+        _Message = message;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Сообщение об ошибке или null.
+    /// </summary>
+    private string _Message;
+
+    /// <summary>
+    /// Результат проверки. True - правильное значение. False - есть ошибка
+    /// </summary>
+    public bool IsValid { get { return Object.ReferenceEquals(_Message, null); } }
+
+    /// <summary>
+    /// Текст сообщения об ошибке при IsValid=false.
+    /// </summary>
+    public string Message
+    {
+      get
+      {
+        if (Object.ReferenceEquals(_Message, null))
+          return String.Empty;
+        else
+          return _Message;
+      }
+    }
+
+    /// <summary>
+    /// Текстовое представление
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+      if (IsValid)
+        return "Ok";
+      else
+        return _Message;
+    }
+
+    #endregion
+
+    #region Сравнение двух объектов
+
+    /// <summary>
+    ///  Сравнение двух объектов.
+    /// </summary>
+    /// <param name="a">Первый сравниваемый объект</param>
+    /// <param name="b">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator ==(UIValidateResult a, UIValidateResult b)
+    {
+      return String.Equals(a._Message, b._Message, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    ///  Сравнение двух объектов.
+    /// </summary>
+    /// <param name="a">Первый сравниваемый объект</param>
+    /// <param name="b">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator !=(UIValidateResult a, UIValidateResult b)
+    {
+      return !(a == b);
+    }
+
+    /// <summary>
+    ///  Сравнение с другим объектом.
+    /// </summary>
+    /// <param name="other">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public bool Equals(UIValidateResult other)
+    {
+      return String.Equals(this._Message, other._Message, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    ///  Сравнение с другим объектом.
+    /// </summary>
+    /// <param name="other">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public override bool Equals(object other)
+    {
+      if (other is UIValidateResult)
+        return (this == (UIValidateResult)other);
+      else
+        return false;
+    }
+
+    /// <summary>
+    /// Хэш код. Требуется для подавления предупреждения компилятора.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+      if (Object.ReferenceEquals(_Message, null))
+        return 0;
+      else
+        return _Message.GetHashCode();
+    }
+
+    #endregion
+  }
+
+  /// <summary>
   /// Описание для одного объекта валидации, присоединенного к управляющему элементу.
   /// Валидаторы могут добавляться к списку Control.Validators.
   /// 
@@ -234,31 +361,16 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает объект
     /// </summary>
-    /// <param name="expression">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="isError">true-ошибка, false-предупреждение</param>
-    public UIValidator(DepValue<bool> expression, string message, bool isError)
-      : this(expression, message, isError, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает объект
-    /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="resultEx">Выражение валидации</param>
     /// <param name="isError">true-ошибка, false-предупреждение</param>
     /// <param name="preconditionEx">Выражение, определяющее необходимость выполнения проверки. Может быть null, если проверка выполняется всегда</param>
-    public UIValidator(DepValue<bool> expressionEx, string message, bool isError, DepValue<bool> preconditionEx)
+    public UIValidator(DepValue<UIValidateResult> resultEx, bool isError, DepValue<bool> preconditionEx)
     {
-      if (expressionEx == null)
-        throw new ArgumentNullException("expression");
-      if (String.IsNullOrEmpty(message))
-        throw new ArgumentNullException("message");
+      if (resultEx == null)
+        throw new ArgumentNullException("resultEx");
 
-      _ExpressionEx = expressionEx;
-      expressionEx.ValueChanged += DummyValueChanged; // Чтобы IsConnected возвращало true
-      _Message = message;
+      _ResultEx = resultEx;
+      resultEx.ValueChanged += DummyValueChanged; // Чтобы IsConnected возвращало true
       _IsError = isError;
       _PreconditionEx = preconditionEx;
       if (preconditionEx != null)
@@ -274,19 +386,13 @@ namespace FreeLibSet.UICore
     #region Свойства
 
     /// <summary>
-    /// Выражение для выполнения проверки.
-    /// Вычисление должно возвращать true, если условие валидации выполнено.
-    /// Если вычисленное значение равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
+    /// Вычисляемое выражение для выполнения проверки.
+    /// Если в вычисленном значении IsValid равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
     /// в зависимости от свойства IsError.
+    /// Не может быть null.
     /// </summary>
-    public DepValue<bool> ExpressionEx { get { return _ExpressionEx; } }
-    private readonly DepValue<bool> _ExpressionEx;
-
-    /// <summary>
-    /// Сообщение, которое будет выдано, если результатом вычисления Expression является false.
-    /// </summary>
-    public string Message { get { return _Message; } }
-    private readonly string _Message;
+    public DepValue<UIValidateResult> ResultEx { get { return _ResultEx; } }
+    private readonly DepValue<UIValidateResult> _ResultEx;
 
     /// <summary>
     /// True, если нарушение условия является ошибкой, false-если предупреждением.
@@ -305,12 +411,12 @@ namespace FreeLibSet.UICore
     private readonly DepValue<bool> _PreconditionEx;
 
     /// <summary>
-    /// Возвращает свойство Message (для отладки)
+    /// Возвращает свойство UIValidateResult.Message или "Ok" (для отладки)
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return Message;
+      return _ResultEx.Value.ToString();
     }
 
     #endregion
@@ -335,6 +441,31 @@ namespace FreeLibSet.UICore
 
     #region Методы создания валидаторов
 
+    #region AddError()
+
+    /// <summary>
+    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// </summary>
+    /// <param name="resultEx">Выражение валидации</param>
+    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    public UIValidator AddError(DepValue<UIValidateResult> resultEx, DepValue<bool> preconditionEx)
+    {
+      UIValidator item = new UIValidator(resultEx, true, preconditionEx);
+      Add(item);
+      return item;
+    }
+
+    /// <summary>
+    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// </summary>
+    /// <param name="resultEx">Выражение валидации</param>
+    public UIValidator AddError(DepValue<UIValidateResult> resultEx)
+    {
+      UIValidator item = new UIValidator(resultEx, true, null);
+      Add(item);
+      return item;
+    }
+
     /// <summary>
     /// Создает объект Validator с IsError=true и добавляет его в список
     /// </summary>
@@ -342,7 +473,7 @@ namespace FreeLibSet.UICore
     /// <param name="message">Сообщение</param>
     public UIValidator AddError(DepValue<bool> expressionEx, string message)
     {
-      UIValidator item = new UIValidator(expressionEx, message, true);
+      UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), true, null);
       Add(item);
       return item;
     }
@@ -355,7 +486,34 @@ namespace FreeLibSet.UICore
     /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
     public UIValidator AddError(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
     {
-      UIValidator item = new UIValidator(expressionEx, message, true, preconditionEx);
+      UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), true, preconditionEx);
+      Add(item);
+      return item;
+    }
+
+    #endregion
+
+    #region AddWarning()
+
+    /// <summary>
+    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// </summary>
+    /// <param name="resultEx">Выражение валидации</param>
+    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    public UIValidator AddWarning(DepValue<UIValidateResult> resultEx, DepValue<bool> preconditionEx)
+    {
+      UIValidator item = new UIValidator(resultEx, false, preconditionEx);
+      Add(item);
+      return item;
+    }
+
+    /// <summary>
+    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// </summary>
+    /// <param name="resultEx">Выражение валидации</param>
+    public UIValidator AddWarning(DepValue<UIValidateResult> resultEx)
+    {
+      UIValidator item = new UIValidator(resultEx, false, null);
       Add(item);
       return item;
     }
@@ -367,7 +525,7 @@ namespace FreeLibSet.UICore
     /// <param name="message">Сообщение</param>
     public UIValidator AddWarning(DepValue<bool> expressionEx, string message)
     {
-      UIValidator item = new UIValidator(expressionEx, message, false);
+      UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), false, null);
       Add(item);
       return item;
     }
@@ -380,10 +538,12 @@ namespace FreeLibSet.UICore
     /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
     public UIValidator AddWarning(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
     {
-      UIValidator item = new UIValidator(expressionEx, message, false, preconditionEx);
+      UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), false, preconditionEx);
       Add(item);
       return item;
     }
+
+    #endregion
 
     #endregion
 
@@ -413,15 +573,15 @@ namespace FreeLibSet.UICore
           if (!this[i].PreconditionEx.Value)
             continue;
         }
-        if (!this[i].ExpressionEx.Value)
+        if (!this[i].ResultEx.Value.IsValid)
         {
           if (this[i].IsError)
           {
-            validableObject.SetError(this[i].Message);
+            validableObject.SetError(this[i].ResultEx.Value.Message);
             break;
           }
           else
-            validableObject.SetWarning(this[i].Message);
+            validableObject.SetWarning(this[i].ResultEx.Value.Message);
         }
       }
     }

@@ -856,28 +856,23 @@ namespace FreeLibSet.FIAS.RI
     #region Строка форматирования адреса
 
     /// <summary>
-    /// Возвращает true, если переданная строка является правильным форматом для текстового представления адреса.
-    /// Вызывается метод FiasFormatStringParser.IsValidFormat(). Информация о причине ошибки теряется
-    /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <returns>true, если формат правильный</returns>
-    public static bool IsValidFormatString(string s)
-    { 
-      string errorMessage;
-      return FiasFormatStringParser.IsValidFormat(s, out errorMessage);
-    }
-
-    /// <summary>
     /// Вычисляемое выражение, которое можно использовать в валидаторе текстового поля ввода формата текстового представления адреса.
     /// 
-    /// Возвращает true, если переданная строка является правильным форматом для текстового представления адреса.
-    /// Вызывается метод FiasFormatStringParser.IsValidFormat(). Информация о причине ошибки теряется
+    /// Возвращает UIValidateResult c IsValid=true, если переданная строка является правильным форматом для текстового представления адреса.
+    /// Вызывается метод FiasFormatStringParser.IsValidFormat().
     /// </summary>
     /// <param name="s">Управляемое свойство проверяемой строки</param>
     /// <returns>true, если формат правильный</returns>
-    public static DepValue<bool> IsValidFormatStringEx(DepValue<string> s)
+    public static DepValue<UIValidateResult> FormatStringValidateResultEx(DepValue<string> s)
     {
-      return new DepExpr1<bool, string>(s, IsValidFormatString);
+      return new DepExpr1<UIValidateResult, string>(s, FormatStringValidateResult);
+    }
+
+    private static UIValidateResult FormatStringValidateResult(string s)
+    {
+      string errorMessage;
+      bool isValid = FiasFormatStringParser.IsValidFormat(s, out errorMessage);
+      return new UIValidateResult(isValid, errorMessage);
     }
 
     /// <summary>
@@ -885,12 +880,11 @@ namespace FreeLibSet.FIAS.RI
     /// Выпадающий список содержит готовые варианты, но можно ввести формат вручную.
     /// Добавлена проверка корректности формата строки.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Управляющий элемент</returns>
     public static TextComboBox CreateFormatStringTextComboBox()
     {
       TextComboBox control = new TextComboBox(FiasFormatStringParser.ComponentTypes);
-      control.Validators.AddError(IsValidFormatStringEx(control.TextEx), 
-        "Неправильная строка формата",
+      control.Validators.AddError(FormatStringValidateResultEx(control.TextEx), 
         control.IsNotEmptyEx);
       return control;
     }
