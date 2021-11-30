@@ -404,9 +404,6 @@
     <Compile Include="Controls\TreeViewAdv\TreeViewAdvRowLayout.cs" />
     <Compile Include="Controls\TreeViewAdv\NativeMethods.cs" />
     <Compile Include="Controls\TreeViewAdv\Helpers\TextHelper.cs" />
-    <Compile Include="Controls\TreeViewAdv\NumericTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\TreeViewAdv\Helpers\AbortableThreadPool.cs" />
     <Compile Include="Drawing\GifDecoder.cs" />
     <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
@@ -439,17 +436,11 @@
     </Compile>
     <Compile Include="Controls\TreeViewAdv\NodeControls\NodeControlsCollection.cs" />
     <Compile Include="Controls\TreeViewAdv\NodeControls\NodeControlValueEventArgs.cs" />
-    <Compile Include="Controls\TreeViewAdv\NodeControls\NodeDecimalTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\TreeViewAdv\NodeControls\NodeEventArgs.cs" />
     <Compile Include="Controls\TreeViewAdv\NodeControls\NodeIcon.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\TreeViewAdv\NodeControls\NodeIntegerTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\TreeViewAdv\NodeControls\NodeNumericUpDown.cs">
+    <Compile Include="Controls\TreeViewAdv\NodeControls\NodeNumEditBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeViewAdv\NodeControls\NodePlusMinus.cs">

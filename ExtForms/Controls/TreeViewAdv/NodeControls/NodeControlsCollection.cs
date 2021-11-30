@@ -89,9 +89,10 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     public NodeControlCollectionEditor(Type type)
       : base(type)
     {
-      _types = new Type[] { typeof(NodeTextBox), typeof(NodeIntegerTextBox), typeof(NodeDecimalTextBox), 
+      _types = new Type[] { typeof(NodeTextBox), 
+        typeof(NodeIntEditBox), typeof(NodeSingleEditBox), typeof(NodeDoubleEditBox), typeof(NodeDecimalEditBox), 
 				typeof(NodeComboBox), typeof(NodeCheckBox),
-				typeof(NodeStateIcon), typeof(NodeIcon), typeof(NodeNumericUpDown), typeof(ExpandingIcon)  };
+				typeof(NodeStateIcon), typeof(NodeIcon), typeof(ExpandingIcon)  };
     }
 
     protected override System.Type[] CreateNewItemTypes()

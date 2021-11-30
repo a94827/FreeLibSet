@@ -5782,6 +5782,437 @@ namespace FreeLibSet.RI
   }
 
   /// <summary>
+  /// Поле ввода одного или нескольких кодов, разделенных запятыми.
+  /// Текущий выбор пользователя задает свойство SelectedCodes.
+  /// Для проверки корректности каждого кода используется свойство CodeValidators
+  /// </summary>
+  [Serializable]
+  public class CsvCodesTextBox : Control
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает поле ввода
+    /// </summary>
+    public CsvCodesTextBox()
+    {
+      _SelectedCodes = DataTools.EmptyStrings;
+      _OldSelectedCodes = _SelectedCodes;
+      _CanBeEmptyMode = UIValidateState.Error;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    #region CanBeEmpty
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне
+    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка
+    /// </summary>
+    public UIValidateState CanBeEmptyMode
+    {
+      get { return _CanBeEmptyMode; }
+      set
+      {
+        CheckNotFixed();
+        _CanBeEmptyMode = value;
+      }
+    }
+    private UIValidateState _CanBeEmptyMode;
+
+    /// <summary>
+    /// Может ли поле быть пустым.
+    /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
+    /// Значение по умолчанию: false (поле является обязательным).
+    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
+    /// При CanBeEmptyMode=Warning это свойство возвращает true.
+    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return CanBeEmptyMode != UIValidateState.Error; }
+      set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
+    }
+
+    #endregion
+
+    #region SelectedCodes
+
+    /// <summary>
+    /// Основное свойство - выбранные коды.
+    /// По умолчанию - пустой массив кодов
+    /// </summary>
+    public string[] SelectedCodes
+    {
+      get { return _SelectedCodes; }
+      set
+      {
+        if (value == null)
+          value = DataTools.EmptyStrings;
+        _SelectedCodes = value;
+        if (_SelectedCodesEx != null)
+          _SelectedCodesEx.Value = value;
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(value.Length > 0);
+      }
+    }
+    private string[] _SelectedCodes;
+    private string[] _OldSelectedCodes;
+
+    /// <summary>
+    /// Управляемое значение для SelectedCodes.
+    /// </summary>
+    public DepValue<string[]> SelectedCodesEx
+    {
+      get
+      {
+        InitSelectedCodesEx();
+        return _SelectedCodesEx;
+      }
+      set
+      {
+        InitSelectedCodesEx();
+        _SelectedCodesEx.Source = value;
+      }
+    }
+    private DepInput<string[]> _SelectedCodesEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства SelectedCodesEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalSelectedCodesExConnected
+    {
+      get
+      {
+        if (_SelectedCodesEx == null)
+          return false;
+        else
+          return _SelectedCodesEx != null;
+      }
+    }
+
+    private void InitSelectedCodesEx()
+    {
+      if (_SelectedCodesEx == null)
+      {
+        _SelectedCodesEx = new DepInput<string[]>(SelectedCodes, SelectedCodesEx_ValueChanged);
+        _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
+      }
+    }
+
+    private void SelectedCodesEx_ValueChanged(object sender, EventArgs args)
+    {
+      SelectedCodes = _SelectedCodesEx.Value;
+    }
+
+    #endregion
+
+    #region IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее true, если введен хотя бы один код (SelectedCodes.Length!=0).
+    /// Может использоваться в валидаторах.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepOutput<bool>(SelectedCodes.Length > 0);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepOutput<bool> _IsNotEmptyEx;
+
+    #endregion
+
+    #region ReadOnly
+
+    /// <summary>
+    /// Режим работы текстового поля для просмотра без возможности редактирования.
+    /// По умолчанию - false - пользователь может редактировать текст
+    /// В отличие от установки свойства Enabled=false, при RedaOnly=true пользователь может выделять текст и копировать его в буфер обмена.
+    /// Контроль введенного значения не выполняется при ReadOnly=true.
+    /// </summary>
+    public bool ReadOnly
+    {
+      // Нет смысла делать свойство ReadOnly как отдельное поле, т.к. оно нужно редко
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false; // обычный вариант
+        else
+          return _ReadOnlyEx.Value;
+      }
+      set
+      {
+        if ((!value) && (_ReadOnlyEx == null))
+          return;
+
+        //if (_ReadOnlyEx != null)
+        InitReadOnlyEx(); // 25.11.2021
+        _ReadOnlyEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для ReadOnly.
+    /// Используется для организации условной блокировки элементов.
+    /// Например, элемент может быть заблокирован, если выключен флажок CheckBox.
+    /// </summary>
+    public DepValue<bool> ReadOnlyEx
+    {
+      get
+      {
+        InitReadOnlyEx();
+        return _ReadOnlyEx;
+      }
+      set
+      {
+        InitReadOnlyEx();
+        _ReadOnlyEx.Source = value;
+      }
+    }
+    private DepInput<bool> _ReadOnlyEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalReadOnlyExConnected
+    {
+      get
+      {
+        if (_ReadOnlyEx == null)
+          return false;
+        else
+          return _ReadOnlyEx.IsConnected;
+      }
+    }
+
+    private void InitReadOnlyEx()
+    {
+      if (_ReadOnlyEx == null)
+      {
+        _ReadOnlyEx = new DepInput<bool>(false, null);
+        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
+      }
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Проверка отдельных кодов
+
+    #region ValidatingCodeEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
+    /// Используется в валидаторах из списка CodeValidators.
+    /// Не используйте свойство в валидаторах основного списка Validators.
+    /// </summary>
+    public DepValue<string> ValidatingCodeEx
+    {
+      get
+      {
+        InitValidatingCodeEx();
+        return _ValidatingCodeEx;
+      }
+    }
+    private DepInput<string> _ValidatingCodeEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValidatingCodeEx присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalValidatingCodeExConnected
+    {
+      get
+      {
+        if (_ValidatingCodeEx == null)
+          return false;
+        else
+          return _ValidatingCodeEx.IsConnected;
+      }
+    }
+
+    private void InitValidatingCodeEx()
+    {
+      if (_ValidatingCodeEx == null)
+      {
+        _ValidatingCodeEx = new DepInput<string>(String.Empty, null);
+        _ValidatingCodeEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingCodeEx");
+      }
+    }
+
+    /// <summary>
+    /// Этот метод не предназначен для использования в пользовательском коде
+    /// </summary>
+    /// <param name="value"></param>
+    public void InternalSetValidatingCodeEx(DepValue<string> value)
+    {
+      InitValidatingCodeEx();
+      _ValidatingCodeEx.Source = value;
+    }
+
+    #endregion
+
+    #region CodeValidators
+
+    /// <summary>
+    /// Список объектов-валидаторов для проверки корректности значения выбранных кодов.
+    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValidatingCodeEx
+    /// (и на других управляемых свойствах, в том числе, других элементов диалога).
+    /// Чтобы использования валидаторов имело смысл, свойство UnknownCodeSeverity должно быть установлено в Ok или Warning,
+    /// иначе будут разрешены только коды из списка Codes.
+    /// </summary>
+    public UIValidatorList CodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+        {
+          if (IsFixed)
+            _CodeValidators = UIValidatorList.Empty;
+          else
+            _CodeValidators = new UIValidatorList();
+        }
+        return _CodeValidators;
+      }
+    }
+    private UIValidatorList _CodeValidators;
+
+    /// <summary>
+    /// Возвращает true, если список CodeValidators не пустой.
+    /// Используется для оптимизации, вместо обращения к CodeValidators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+    /// </summary>
+    public bool HasCodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+          return false;
+        else
+          return _CodeValidators.Count > 0;
+      }
+    }
+
+    /// <summary>
+    /// Фиксация списка CodeValidators
+    /// </summary>
+    protected override void OnSetFixed()
+    {
+      base.OnSetFixed();
+      if (_CodeValidators != null)
+        _CodeValidators.SetReadOnly();
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Чтение и запись
+
+    /// <summary>
+    /// Свойство возвращает true, если для элемента есть непереданные на другую сторону изменения в значениях свойств,
+    /// которые могут меняться при показе блока диалога.
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Свойство не используется в пользовательском коде.
+    /// </summary>
+    public override bool HasChanges
+    {
+      get
+      {
+        if (base.HasChanges)
+          return true;
+        return !Object.ReferenceEquals(_SelectedCodes, _OldSelectedCodes);
+      }
+    }
+
+    /// <summary>
+    /// Записать изменения. Метод вызывается родительским объектом, только если свойство HasChanges вернуло true. 
+    /// На родительском объекте лежит обязанность по созданию раздела конфигурации <paramref name="part"/>
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для записи значений</param>
+    public override void WriteChanges(CfgPart part)
+    {
+      base.WriteChanges(part);
+      part.SetString("SelectedCodes", String.Join(",", _SelectedCodes));
+      _OldSelectedCodes = _SelectedCodes;
+    }
+
+    /// <summary>
+    /// Прочитать изменения, переданные "с другой стороны".
+    /// Однократно задаваемые свойства, которые не могут меняться при работе диалога, не учитываются.
+    /// Метод не используется в пользовательском коде.
+    /// </summary>
+    /// <param name="part">Секция для чтения значений</param>
+    public override void ReadChanges(CfgPart part)
+    {
+      base.ReadChanges(part);
+      string s = part.GetString("SelectedCodes");
+      if (s.Length == 0)
+        _SelectedCodes = DataTools.EmptyStrings;
+      else
+        _SelectedCodes = s.Split(',');
+      _OldSelectedCodes = _SelectedCodes;
+    }
+
+    /// <summary>
+    /// Возвращает true, если элемент поддерживает сохранение своих значений между сеансами работы
+    /// в секции конфигурации заданного типа.
+    /// </summary>
+    /// <param name="cfgType">Тип секции конфигурации, определяющий место ее хранения</param>
+    /// <returns>true, если элемент может хранить данные</returns>
+    protected override bool OnSupportsCfgType(RIValueCfgType cfgType)
+    {
+      return cfgType == RIValueCfgType.Default;
+    }
+
+    /// <summary>
+    /// Записывает значения, сохраняемые между сеансами работы, в заданную секцию конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для записи</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      part.SetString(Name, String.Join(",", _SelectedCodes));
+    }
+
+    /// <summary>
+    /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
+    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// </summary>
+    /// <param name="part">Секция конфигурации для чтения значений</param>
+    /// <param name="cfgType">Тип секции конфигурации</param>
+    protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
+    {
+      if (part.HasValue(Name)) // 14.10.2021
+      {
+        string s = part.GetString(Name);
+        if (s.Length == 0)
+          _SelectedCodes = DataTools.EmptyStrings;
+        else
+          _SelectedCodes = s.Split(',');
+      }
+    }
+
+    #endregion
+  }
+
+
+  /// <summary>
   /// Комбоблок для выбора одного или нескольких кодов, разделенных запятыми.
   /// Текущий выбор пользователя задает свойство SelectedCodes
   /// </summary>

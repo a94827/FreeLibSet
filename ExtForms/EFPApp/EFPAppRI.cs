@@ -763,6 +763,8 @@ namespace FreeLibSet.Forms.RI
         return new ListComboBoxItem((FreeLibSet.RI.ListComboBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.TextComboBox)
         return new TextComboBoxItem((FreeLibSet.RI.TextComboBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.CsvCodesTextBox)
+        return new CsvCodesTextBoxItem((FreeLibSet.RI.CsvCodesTextBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.CsvCodesComboBox)
         return new CsvCodesComboBoxItem((FreeLibSet.RI.CsvCodesComboBox)riItem, baseProvider);
 
@@ -1786,6 +1788,66 @@ namespace FreeLibSet.Forms.RI
       #endregion
     }
 
+    private class CsvCodesTextBoxItem : FreeLibSet.Forms.EFPCsvCodesTextBox, IEFPAppRIControlItem
+    {
+      #region Конструктор
+
+      public CsvCodesTextBoxItem(FreeLibSet.RI.CsvCodesTextBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new System.Windows.Forms.TextBox())
+      {
+        base.Control.Width = 400; // TODO:
+
+        base.CanBeEmptyMode = riItem.CanBeEmptyMode;
+
+        _RIItem = riItem;
+        EFPAppRITools.InitControlItem(this, riItem);
+
+        base.SelectedCodes = riItem.SelectedCodes; // обязательное присвоение, иначе свойство обнулится
+        if (riItem.InternalSelectedCodesExConnected)
+        {
+          if (riItem.SelectedCodesEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.SelectedCodesEx = riItem.SelectedCodesEx;
+          else
+            riItem.SelectedCodesEx = base.SelectedCodesEx;
+        }
+
+        base.ReadOnly = riItem.ReadOnly; 
+        if (riItem.InternalReadOnlyExConnected)
+        {
+          if (riItem.ReadOnlyEx.HasSource)
+            // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
+            base.ReadOnlyEx = riItem.ReadOnlyEx;
+          else
+            riItem.ReadOnlyEx = base.ReadOnlyEx;
+        }
+
+        if (riItem.HasCodeValidators)
+          base.CodeValidators.AddRange(riItem.CodeValidators);
+
+        if (riItem.InternalValidatingCodeExConnected)
+          riItem.InternalSetValidatingCodeEx(base.ValidatingCodeEx);
+      }
+
+      FreeLibSet.RI.CsvCodesTextBox _RIItem;
+
+      #endregion
+
+      #region IEFPAppRIItem Members
+
+      public void WriteValues()
+      {
+        base.SelectedCodes = _RIItem.SelectedCodes;
+      }
+
+      public void ReadValues()
+      {
+        _RIItem.SelectedCodes = base.SelectedCodes;
+      }
+
+      #endregion
+    }
+
     private class CsvCodesComboBoxItem : FreeLibSet.Forms.EFPCsvCodesComboBox, IEFPAppRIControlItem
     {
       #region Конструктор
@@ -1793,6 +1855,8 @@ namespace FreeLibSet.Forms.RI
       public CsvCodesComboBoxItem(FreeLibSet.RI.CsvCodesComboBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new FreeLibSet.Controls.UserTextComboBox(), riItem.Codes)
       {
+        base.Control.Width = 400; // TODO:
+
         base.CanBeEmptyMode = riItem.CanBeEmptyMode;
         base.Names = riItem.Names;
         base.UnknownCodeSeverity = riItem.UnknownCodeSeverity;
@@ -1810,7 +1874,7 @@ namespace FreeLibSet.Forms.RI
             riItem.SelectedCodesEx = base.SelectedCodesEx;
         }
 
-        base.ReadOnly = riItem.ReadOnly; 
+        base.ReadOnly = riItem.ReadOnly;
         if (riItem.InternalReadOnlyExConnected)
         {
           if (riItem.ReadOnlyEx.HasSource)

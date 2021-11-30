@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using FreeLibSet.Shell;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.Forms
 {
@@ -1696,6 +1697,306 @@ namespace FreeLibSet.Forms
     void IEFPTextBoxWithStatusBar.GetCurrentRC(out int row, out int column)
     {
       EFPTextBox.GetCurrentRC(Control.Text, Control.SelectionStart, out row, out column);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Поле ввода одного или нескольких кодов, разделенных запятыми.
+  /// </summary>
+  public class EFPCsvCodesTextBox : EFPTextBox
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает провайдер
+    /// </summary>
+    /// <param name="baseProvider">Базовый провайдер</param>
+    /// <param name="control">Управляющий элемент</param>
+    public EFPCsvCodesTextBox(EFPBaseProvider baseProvider, TextBox control)
+      : base(baseProvider, control)
+    {
+      _UseSpace = true;
+      _CodeValidatingEventArgs = new EFPCodeValidatingEventArgs();
+    }
+
+    #endregion
+
+    #region Список кодов
+
+    /// <summary>
+    /// Список выбранных кодов
+    /// </summary>
+    public string[] SelectedCodes
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(base.Text))
+          return DataTools.EmptyStrings;
+
+        string[] a = base.Text.Split(',');
+        List<string> lst = new List<string>(a.Length);
+        for (int i = 0; i < a.Length; i++)
+        {
+          string s = a[i].Trim();
+          if (s.Length > 0)
+            lst.Add(s);
+        }
+        return lst.ToArray();
+      }
+      set
+      {
+        if (value == null)
+          value = DataTools.EmptyStrings;
+        base.Text = String.Join(_UseSpace ? ", " : ",", value);
+      }
+    }
+
+    /// <summary>
+    /// Управляемое значение для SelectedCodes.
+    /// </summary>
+    public DepValue<string[]> SelectedCodesEx
+    {
+      get
+      {
+        InitSelectedCodesEx();
+        return _SelectedCodesEx;
+      }
+      set
+      {
+        InitSelectedCodesEx();
+        _SelectedCodesEx.Source = value;
+      }
+    }
+    private DepInput<string[]> _SelectedCodesEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства SelectedCodesEx инициализирован.
+    /// Это свойство не предназначено для использования в пользовательском коде.
+    /// </summary>
+    public bool HasSelectedCodesExProperty { get { return _SelectedCodesEx != null; } }
+
+    private void InitSelectedCodesEx()
+    {
+      if (_SelectedCodesEx == null)
+      {
+        _SelectedCodesEx = new DepInput<string[]>(SelectedCodes, SelectedCodesEx_ValueChanged);
+        _SelectedCodesEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodesEx");
+      }
+    }
+
+    private void SelectedCodesEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!InsideTextChanged) // избегаем помех при вводе текста
+        SelectedCodes = _SelectedCodesEx.Value;
+    }
+
+    #endregion
+
+    #region Локальное меню
+
+    /// <summary>
+    /// Установка свойства EFPTextBoxCommandItems.UseConvert=false
+    /// </summary>
+    protected override void OnBeforePrepareCommandItems()
+    {
+      CommandItems.UseConvert = false;
+      base.OnBeforePrepareCommandItems();
+    }
+
+    #endregion
+
+    #region Дополнительные свойства
+
+    /// <summary>
+    /// Если свойство установлено в true (по умолчанию), то между кодами после запятых будет добавляться по одному пробелу.
+    /// Если false, то дополнительные пробелы не добавляются
+    /// </summary>
+    public bool UseSpace
+    {
+      get { return _UseSpace; }
+      set
+      {
+        if (value == _UseSpace)
+          return;
+        _UseSpace = value;
+
+        this.SelectedCodes = this.SelectedCodes; // корректировка пробелов
+      }
+    }
+    private bool _UseSpace;
+
+    #endregion
+
+    #region Проверка элемента
+
+    /// <summary>
+    /// Обработка SelectedCodesEx.
+    /// </summary>
+    protected override void OnTextChanged()
+    {
+      base.OnTextChanged();
+
+      if (_SelectedCodesEx != null)
+        _SelectedCodesEx.Value = SelectedCodes;
+    }
+
+    private EFPCodeValidatingEventArgs _CodeValidatingEventArgs;
+
+    /// <summary>
+    /// Проверка корректности значения.
+    /// </summary>
+    protected override void OnValidate()
+    {
+      base.OnValidate();
+      if (base.ValidateState == UIValidateState.Error)
+        return;
+
+      if (String.IsNullOrEmpty(base.Text))
+        return;
+
+      string[] a = base.Text.Split(',');
+      SingleScopeList<string> lst = new SingleScopeList<string>();
+
+      ValueToolTipText = "Выбрано кодов: " + a.Length.ToString();
+      for (int i = 0; i < a.Length; i++)
+      {
+        string s = a[i].Trim();
+        if (s.Length == 0)
+        {
+          base.SetError("Задан пустой код");
+          return;
+        }
+
+        _CodeValidatingEventArgs.Init(s);
+        if (_ValidatingCodeEx != null)
+          _ValidatingCodeEx.OwnerSetValue(s);
+        OnCodeValidating(_CodeValidatingEventArgs);
+        switch (_CodeValidatingEventArgs.ValidateState)
+        {
+          case UIValidateState.Error:
+            SetError("Неправильный код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            return;
+          case UIValidateState.Warning:
+            SetWarning("Код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            break;
+        }
+        if (a.Length == 1 && (!String.IsNullOrEmpty(_CodeValidatingEventArgs.Name)))
+          ValueToolTipText = s + " - " + _CodeValidatingEventArgs.Name;
+
+        if (lst.Contains(s))
+        {
+          SetError("Код \"" + s + "\" задан дважды");
+          return;
+        }
+        lst.Add(s);
+      }
+    }
+
+    #endregion
+
+    #region Проверка одного кода
+
+    /// <summary>
+    /// Событие вызывается для проверки каждого кода в списке
+    /// </summary>
+    public event EFPCodeValidatingEventHandler CodeValidating;
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
+    /// Используется в валидаторах из списка CodeValidators.
+    /// Не используйте свойство в валидаторах основного списка Validators.
+    /// В основном, предназначено для проверки в удаленном интерфейсе.
+    /// В обычных приложениях удобнее использовать обработчик события CodeValidating.
+    /// </summary>
+    public DepValue<string> ValidatingCodeEx
+    {
+      get
+      {
+        if (_ValidatingCodeEx == null)
+        {
+          _ValidatingCodeEx = new DepOutput<string>(String.Empty);
+          _ValidatingCodeEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingCodeEx");
+        }
+        return _ValidatingCodeEx;
+      }
+    }
+    private DepOutput<string> _ValidatingCodeEx;
+
+
+    /// <summary>
+    /// Список объектов-валидаторов для проверки корректности значения выбранных кодов.
+    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValidatingCodeEx
+    /// (и на других управляемых свойствах, в том числе, других элементов формы).
+    /// В основном, предназначено для проверки в удаленном интерфейсе.
+    /// В обычных приложениях удобнее использовать обработчик события CodeValidating.
+    /// </summary>
+    public UIValidatorList CodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+        {
+          if (ProviderState != EFPControlProviderState.Initialization)
+            _CodeValidators = UIValidatorList.Empty;
+          else
+            _CodeValidators = new UIValidatorList();
+        }
+        return _CodeValidators;
+      }
+    }
+    private UIValidatorList _CodeValidators;
+
+    /// <summary>
+    /// Возвращает true, если список CodeValidators не пустой.
+    /// Используется для оптимизации, вместо обращения к CodeValidators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+    /// </summary>
+    public bool HasCodeValidators
+    {
+      get
+      {
+        if (_CodeValidators == null)
+          return false;
+        else
+          return _CodeValidators.Count > 0;
+      }
+    }
+
+    /// <summary>
+    /// Блокирует список CodeValidators от изменений.
+    /// Присоединяет 
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      if (_CodeValidators != null)
+      {
+        _CodeValidators.SetReadOnly();
+
+        foreach (FreeLibSet.UICore.UIValidator v in this._CodeValidators)
+        {
+          v.ResultEx.ValueChanged += new EventHandler(this.Validate); // Не знаю, нужно ли
+          if (v.PreconditionEx != null)
+            v.PreconditionEx.ValueChanged += new EventHandler(this.Validate);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Проверка кода в списке.
+    /// Непереопределенный метод сначала выполняет проверку с помощью валидаторов CodeValidators(), если они есть, 
+    /// затем вызывает обработчик события CodeValidating, если он установлен.
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnCodeValidating(EFPCodeValidatingEventArgs args)
+    {
+      if (_CodeValidators != null)
+        _CodeValidators.Validate(args);
+
+      if (CodeValidating != null)
+        CodeValidating(this, args);
     }
 
     #endregion
