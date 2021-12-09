@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Data;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -15,9 +16,7 @@ namespace FreeLibSet.Forms
   /// Провайдер табличного просмотра, предназначенного для редактирования данных DataTable "по месту".
   /// Расширяет EFPDataGridView, в основном, для поддержки операций вставки из буфера обмена с автоматическим
   /// добавлением строк.
-  /// Инициализация столбцов выполняется при инициализации свойства DataGridView.DataSource ссылкой на DataTable.
-  /// Размеры и форматирование столбцов просмотра можно сделать либор после присоединения таблицы, либо заранее,
-  /// используя класс InputDataGridColumns.
+  /// Инициализация столбцов выполняется при инициализации свойства Data.
   /// Свойство FixedRows позволяет работать с таблицами произвольного размера или с фиксированным числом строк.
   /// В режиме 
   /// </summary>
@@ -52,16 +51,19 @@ namespace FreeLibSet.Forms
       Control.ReadOnly = false;
       Control.MultiSelect = true;
       Control.AllowUserToOrderColumns = false;
-      Control.DataSourceChanged += new EventHandler(Control_DataSourceChanged);
 
       CanInsertCopy = false;
       CanView = false;
       CommandItems.ClipboardInToolBar = true;
+      UseRowImages = true;
+
+      _ValidatingResults = new Dictionary<int, RowValidatingResults>();
+      _TempValidableObject = new UISimpleValidableObject();
     }
 
     #endregion
 
-    #region Общие свойства
+    #region Свойство FixedRows
 
     /// <summary>
     /// Если свойство установлено в true, то пользователь не может добавлять или удалять строки.
@@ -80,62 +82,87 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики просмотра
+    #region Свойство Data
 
-    void Control_DataSourceChanged(object sender, EventArgs args)
+    /// <summary>
+    /// Просматриваемые данные и настройки столбцов.
+    /// Установка свойства приводит к инициализации просмотра
+    /// </summary>
+    public UIInputGridData Data
+    {
+      get { return _Data; }
+      set
+      {
+        if (_Data != null)
+          _Data.Table.DefaultView.ListChanged -= DV_ListChanged;
+
+        _Data = value;
+        InitColumns();
+
+        if (value == null)
+          SourceAsDataView = null;
+        else
+        {
+          SourceAsDataView = value.Table.DefaultView;
+          if (ProviderState == EFPControlProviderState.Attached)
+            _Data.Table.DefaultView.ListChanged += DV_ListChanged;
+        }
+      }
+    }
+    private UIInputGridData _Data;
+
+    #endregion
+
+    #region Инициализация столбцов
+
+    private void InitColumns()
     {
       if (Columns.Count > 0)
         Columns.Clear();
-      DataTable table = Control.DataSource as DataTable;
-      if (table == null)
-        return;
-      for (int i = 0; i < table.Columns.Count; i++)
-      {
-        string colName = table.Columns[i].ColumnName;
-        string title = table.Columns[i].Caption;
-        string format = DataTools.GetString(table.Columns[i].ExtendedProperties["Format"]);
-        if (String.IsNullOrEmpty(title))
-          title = colName;
-        int TextWidth = DataTools.GetInt(table.Columns[i].ExtendedProperties["TextWidth"]);
-        int MinTextWidth = DataTools.GetInt(table.Columns[i].ExtendedProperties["MinTextWidth"]);
-        int FillWeight = DataTools.GetInt(table.Columns[i].ExtendedProperties["FillWeight"]);
-        string Align = DataTools.GetString(table.Columns[i].ExtendedProperties["Align"]);
 
-        if (table.Columns[i].DataType == typeof(Boolean))
-          Columns.AddBool(colName, true, title);
-        else if (table.Columns[i].DataType == typeof(DateTime))
+      if (_Data == null)
+        return;
+
+      for (int i = 0; i < _Data.Table.Columns.Count; i++)
+      {
+        DataColumn col = _Data.Table.Columns[i];
+        UIInputGridData.ColumnInfo colInfo = _Data.Columns[col.ColumnName];
+
+        string title = col.Caption;
+        if (String.IsNullOrEmpty(title))
+          title = col.ColumnName;
+
+        if (col.DataType == typeof(Boolean))
+          Columns.AddBool(col.ColumnName, true, title);
+        else if (col.DataType == typeof(DateTime))
         {
-          if (String.IsNullOrEmpty(format))
-            Columns.AddDate(colName, true, title);
+          if (String.IsNullOrEmpty(colInfo.Format))
+            Columns.AddDate(col.ColumnName, true, title);
           else
-          {
-            Columns.AddText(colName, true, title);
-            Columns.LastAdded.TextAlign = HorizontalAlignment.Center;
-          }
+            Columns.AddText(col.ColumnName, true, title);
         }
         else
-          Columns.AddText(colName, true, title);
+          Columns.AddText(col.ColumnName, true, title);
 
-        if (TextWidth > 0)
-          Columns.LastAdded.TextWidth = TextWidth;
-        if (FillWeight > 0)
+        if (colInfo.TextWidth > 0)
+          Columns.LastAdded.TextWidth = colInfo.TextWidth;
+        if (colInfo.FillWeight > 0)
         {
           Columns.LastAdded.GridColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-          Columns.LastAdded.GridColumn.FillWeight = FillWeight;
+          Columns.LastAdded.GridColumn.FillWeight = colInfo.FillWeight;
         }
-        switch (Align.ToUpperInvariant())
+        switch (colInfo.Align)
         {
-          case "LEFT": Columns.LastAdded.TextAlign = HorizontalAlignment.Left; break;
-          case "CENTER": Columns.LastAdded.TextAlign = HorizontalAlignment.Center; break;
-          case "RIGHT": Columns.LastAdded.TextAlign = HorizontalAlignment.Right; break;
+          case UIHorizontalAlignment.Left: Columns.LastAdded.TextAlign = HorizontalAlignment.Left; break;
+          case UIHorizontalAlignment.Center: Columns.LastAdded.TextAlign = HorizontalAlignment.Center; break;
+          case UIHorizontalAlignment.Right: Columns.LastAdded.TextAlign = HorizontalAlignment.Right; break;
         }
-        if (!String.IsNullOrEmpty(format))
-          Columns.LastAdded.GridColumn.DefaultCellStyle.Format = format;
+        if (!String.IsNullOrEmpty(colInfo.Format))
+          Columns.LastAdded.GridColumn.DefaultCellStyle.Format = colInfo.Format;
       }
 
       DisableOrdering();
     }
-
 
     #endregion
 
@@ -212,7 +239,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Сжатие таблицы при закрытии формы
+    #region Сжатие и проверка таблицы при закрытии формы
 
     /// <summary>
     /// При закрытии формы выполняет сжатие таблицы данных
@@ -227,7 +254,38 @@ namespace FreeLibSet.Forms
           CompactTable();
 
         if (!Control.ReadOnly)
+        {
           SourceAsDataTable.AcceptChanges();
+          _ValidatingResults.Clear(); // строки могли сдвинуться
+
+          for (int i = 0; i < Data.Table.DefaultView.Count;i++ )
+          {
+            if (ValidateState == UIValidateState.Error)
+              break;
+
+            RowValidatingResults rvr = GetRowValidatingResults(i);
+
+            if (rvr.CellErrors != null)
+            {
+              foreach (KeyValuePair<int, string> pair in rvr.CellErrors)
+              {
+                Control.CurrentCell = Control[pair.Key, i];
+                SetError(pair.Value);
+                break;
+              }
+            }
+
+            if (ValidateState == UIValidateState.Ok && rvr.CellWarnings != null)
+            {
+              foreach (KeyValuePair<int, string> pair in rvr.CellWarnings)
+              {
+                Control.CurrentCell = Control[pair.Key, i];
+                SetWarning(pair.Value);
+                break;
+              }
+            }
+          }
+        }
       }
     }
 
@@ -259,209 +317,171 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
-  }
+
+    #region Обработка изменений
 
     /// <summary>
-  /// Класс для установки свойств DataColumn.ExtendedProperties для табличного просмотра InputGridDataDialog
-  /// </summary>
-  public sealed class InputDataGridColumn
-  {
-    // Этот класс не сериализуется.
-
-    #region Защищенный конструктор
-
-    internal InputDataGridColumn(DataColumn column)
+    /// Результаты проверки для одной строки
+    /// </summary>
+    private struct RowValidatingResults
     {
-      _Column = column;
+      #region Поля
+
+      /// <summary>
+      /// Ячейки с ошибками.
+      /// Ключ - индекс столбца таблицы.
+      /// Значение - текст сообщения.
+      /// Если поле содержит null, то в строке нет сообщений об ошибке
+      /// </summary>
+      public Dictionary<int, string> CellErrors;
+
+      /// <summary>
+      /// Ячейки с предупреждениями.
+      /// Ключ - индекс столбца таблицы.
+      /// Значение - текст сообщения.
+      /// Если поле содержит null, то в строке нет предупреждений
+      /// </summary>
+      public Dictionary<int, string> CellWarnings;
+
+      #endregion
     }
 
-
-    #endregion
-
-    #region Основные свойства
-
     /// <summary>
-    /// Столбец таблицы данных
+    /// Буферизация проверки строк.
+    /// Ключ - индекс строки в просмотре
+    /// Значение - Результат проверки по строке
     /// </summary>
-    public DataColumn Column { get { return _Column; } }
-    private DataColumn _Column;
+    private Dictionary<int, RowValidatingResults> _ValidatingResults;
 
-    #endregion
-
-    #region Значения для столбцов
-
-    // "Format" - задает формат числового столбца или даты/времени.
-    // "TextWidth" - задает ширину столбца в текстовых единицах.
-    // "MinTextWidth" - задает минимальную ширину столбца в текстовых единицах.
-    // "FillWeight" - задает относительную ширину столбца, если столбец должен заполнять просмотр по ширине.
-    // "Align" - задает горизонтальное выравнивание (строковое значение "Left", "Center" или "Right").
-
-    /// <summary>
-    /// Горизонтальное выравнивание.
-    /// Если свойство не установлено в явном виде, то определяется по типу данных столбца (DataColumn.DataType).
-    /// Для числовых типов используется выравнивание по правому краю, для строк - по левому, для даты/времени и логического типа - по центру.
-    /// </summary>
-    public HorizontalAlignment Align
+    void DV_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs args)
     {
-      get
+      if (args.ListChangedType == System.ComponentModel.ListChangedType.ItemChanged)
+        _ValidatingResults.Remove(args.NewIndex);
+      else
+        _ValidatingResults.Clear(); // неохота проверять остальные режимы
+    }
+
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+      if (_Data != null)
+        _Data.Table.DefaultView.ListChanged += DV_ListChanged;
+    }
+
+    protected override void OnDetached()
+    {
+      if (_Data != null)
+        _Data.Table.DefaultView.ListChanged -= DV_ListChanged;
+
+      base.OnDetached();
+    }
+
+    #endregion
+
+    #region Раскраска ячеек с ошибками
+
+    protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
+    {
+      base.OnGetRowAttributes(args);
+      if (Data == null)
+        return;
+      if (args.RowIndex < 0 || args.RowIndex >= Data.Table.DefaultView.Count)
+        return; // заготовка новой строки
+
+      RowValidatingResults rvr = GetRowValidatingResults(args.RowIndex);
+
+      if (rvr.CellErrors != null)
       {
-        string s = DataTools.GetString(Column.ExtendedProperties["Align"]);
-        if (String.IsNullOrEmpty(s))
+        foreach (KeyValuePair<int, string> pair in rvr.CellErrors)
         {
-          if (DataTools.IsNumericType(Column.DataType))
-            return HorizontalAlignment.Right;
-          if (Column.DataType == typeof(DateTime) || Column.DataType == typeof(bool))
-            return HorizontalAlignment.Center;
-          else if (DataTools.IsNumericType(Column.DataType))
-            return HorizontalAlignment.Right; // 26.11.2021
-          else
-            return HorizontalAlignment.Left;
+          string colTitle = Columns[pair.Key].GridColumn.HeaderText;
+          args.AddRowError(colTitle + ". " + pair.Value, Data.Table.Columns[pair.Key].ColumnName);
         }
-        else
-          return StdConvert.ToEnum<HorizontalAlignment>(s);
       }
-      set
+
+      if (rvr.CellWarnings != null)
       {
-        Column.ExtendedProperties["Align"] = value.ToString();
-      }
-    }
-
-    /// <summary>
-    /// Формат для числового столбца или столбца даты/времени.
-    /// </summary>
-    public string Format
-    {
-      get       {        return DataTools.GetString(Column.ExtendedProperties["Format"]);      }
-      set      {        Column.ExtendedProperties["Format"] = value;      }
-    }
-
-    /// <summary>
-    /// Ширина столбца как количество символов.
-    /// </summary>
-    public int TextWidth
-    {      
-      get      {        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["TextWidth"]));      }
-      set      {        Column.ExtendedProperties["TextWidth"] = StdConvert.ToString(value);      }
-    }
-
-    /// <summary>
-    /// Минимальная ширина столбца как количество символов.
-    /// </summary>
-    public int MinTextWidth
-    {
-      get      {        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["MinTextWidth"]));      }
-      set      {        Column.ExtendedProperties["MinTextWidth"] = StdConvert.ToString(value);      }
-    }
-
-    /// <summary>
-    /// Весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
-    /// По умолчанию - 0 - используется ширина столбца, задаваемая TextWidth.
-    /// </summary>
-    public int FillWeight
-    {
-      get      {        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["FillWeight"]));      }
-      set      {        Column.ExtendedProperties["FillWeight"] = StdConvert.ToString(value);      }
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Коллекция объектов InputDataGridColumn с доступом по имени столбца.
-  /// Реализует свойство InputDataGridDialog.Columns и может использоваться в прикладном коде для
-  /// инициализации столбцов EFPInputDataGridView. Свойство EFPInputDataGridView.SourceAsDataTable должно
-  /// устанавливаться после окончания работы с InputDataGridColumns.
-  /// </summary>
-  public sealed class InputDataGridColumns
-  {
-    // Учитываем возможность, что может появится класс табличного просмотра InputGridDataView без блока диалога.
-    // Этот класс не сериализуется.
-
-    #region Защищенный конструктор
-
-    #region Конструктор
-
-    /// <summary>
-    /// Создает объект, привязанный к таблице данных
-    /// </summary>
-    /// <param name="table">Таблица данных. Не может быть null</param>
-    public InputDataGridColumns(DataTable table)
-    {
-      if (table == null)
-        throw new ArgumentNullException("table");
-      _Table = table;
-      _Dict = new TypedStringDictionary<InputDataGridColumn>(true);
-    }
-
-    #endregion
-
-    #endregion
-
-    #region Доступ к элементам
-
-    /// <summary>
-    /// Таблица данных, в которой находятся столбцы
-    /// </summary>
-    public DataTable Table { get { return _Table; } }
-    private DataTable _Table;
-
-    private TypedStringDictionary<InputDataGridColumn> _Dict;
-
-    /// <summary>
-    /// Доступ к свойствам столбца по имени.
-    /// На момент вызова столбец должен быть добавлен в таблицу.
-    /// </summary>
-    /// <param name="columnName">Имя столбца (свойство DataColumn.ColumnName)</param>
-    /// <returns>Свойства столбца табличного просмотра</returns>
-    public InputDataGridColumn this[string columnName]
-    {
-      get
-      {
-        InputDataGridColumn info;
-        if (!_Dict.TryGetValue(columnName, out info))
+        foreach (KeyValuePair<int, string> pair in rvr.CellWarnings)
         {
-          DataColumn column = Table.Columns[columnName];
-          if (column == null)
+          string colTitle = Columns[pair.Key].GridColumn.HeaderText;
+          args.AddRowWarning(colTitle + ". " + pair.Value, Data.Table.Columns[pair.Key].ColumnName);
+        }
+      }
+    }
+
+    private RowValidatingResults GetRowValidatingResults(int rowIndex)
+    {
+      RowValidatingResults rvr;
+
+      if (!_ValidatingResults.TryGetValue(rowIndex, out rvr))
+      {
+        // Требуется проверка
+        rvr = new RowValidatingResults();
+
+        try
+        {
+          ValidateRow(rowIndex, ref rvr);
+        }
+        catch (Exception e)
+        {
+          rvr.CellErrors = new Dictionary<int, string>();
+          rvr.CellErrors.Add(0, "Ошибка при проверке строки. " + e.Message);
+        }
+
+        _ValidatingResults.Add(rowIndex, rvr);
+      }
+      return rvr;
+    }
+
+    /// <summary>
+    /// Чтобы не создавать для каждой ячейки
+    /// </summary>
+    UISimpleValidableObject _TempValidableObject;
+
+    /// <summary>
+    /// Проверка одной строки
+    /// </summary>
+    /// <param name="rowIndex">Индекс строки</param>
+    private void ValidateRow(int rowIndex, ref RowValidatingResults rvr)
+    {
+      DataRow row = GetDataRow(rowIndex);
+      if (row == null)
+        return;
+      Data.InternalSetValidatingRow(row);
+
+      for (int i = 0; i < Data.Table.Columns.Count; i++)
+      {
+        _TempValidableObject.Clear();
+        if (row.IsNull(i))
+        {
+          switch (Data.Columns[i].CanBeEmptyMode)
           {
-            if (String.IsNullOrEmpty(columnName))
-              throw new ArgumentNullException("columnName");
-            else
-              throw new ArgumentException("В таблице " + Table.ToString() + " нет столбца с именем \"" + columnName + "\"");
+            case UIValidateState.Error:
+              _TempValidableObject.SetError("Значение должно быть задано");
+              break;
+            case UIValidateState.Warning:
+              _TempValidableObject.SetWarning("Значение, веротяно, должно быть задано");
+              break;
           }
-          info = new InputDataGridColumn(column);
-          _Dict.Add(columnName, info);
         }
-        return info;
-      }
-    }
 
-    /// <summary>
-    /// Доступ к свойствам столбца.
-    /// На момент вызова столбец должен быть добавлен в таблицу.
-    /// </summary>
-    /// <param name="column">Столбец DataTable</param>
-    /// <returns>Свойства столбца табличного просмотра</returns>
-    public InputDataGridColumn this[DataColumn column]
-    {
-      get
-      {
-        if (column == null)
-          throw new ArgumentNullException("column");
-        return this[column.ColumnName];
-      }
-    }
+        if (Data.Columns[i].HasValidators)
+          Data.Columns[i].Validators.Validate(_TempValidableObject);
 
-    /// <summary>
-    /// Доступ к свойствам последнего столбца, который был добавлен в таблицу.
-    /// </summary>
-    public InputDataGridColumn LastAdded
-    {
-      get
-      {
-        if (Table.Columns.Count == 0)
-          return null;
-        else
-          return this[Table.Columns[Table.Columns.Count - 1]];
+        switch (_TempValidableObject.ValidateState)
+        {
+          case UIValidateState.Error:
+            if (rvr.CellErrors == null)
+              rvr.CellErrors = new Dictionary<int, string>();
+            rvr.CellErrors.Add(i, _TempValidableObject.Message);
+            break;
+
+          case UIValidateState.Warning:
+            if (rvr.CellWarnings == null)
+              rvr.CellWarnings = new Dictionary<int, string>();
+            rvr.CellWarnings.Add(i, _TempValidableObject.Message);
+            break;
+        }
       }
     }
 
@@ -483,7 +503,7 @@ namespace FreeLibSet.Forms
     {
       Title = "Таблица";
       ImageKey = "Table";
-      _Table = new DataTable();
+      _Data = new UIInputGridData();
     }
 
     #endregion
@@ -492,36 +512,27 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Основное свойство - редактируемая таблица данных.
-    /// Список столбцов должен быть заполнен перед показом диалога или свойство должно быть установлено.
-    /// По умолчанию содержит ссылку на пустую таблицу
+    /// В таблицу должны быть добавлены столбцы перед показом диалога.
+    /// Могут использоваться столбцы для просмотра, если установлено свойство DataColumn.Expression.
+    /// Дополнительные параметры для добавленных столбцов, например, формат, задавайте с помощью методов коллекции Columns.
+    /// 
+    /// Если FixedRows=true, то в таблицу следует добавить строки, иначе пользователь не сможет ничего ввести.
+    /// 
+    /// После закрытия блока диалога свойство Table должно быть прочитано заново, так как оно содержит ссылку на новую таблицу.
+    /// По умолчанию - пустая таблица.
     /// </summary>
-    public DataTable Table
+    public UIInputGridData Data
     {
-      get { return _Table; }
+      get { return _Data; }
       set
       {
         if (value == null)
-          _Table = new DataTable();
-        else
-          _Table = value;
-        _Columns = null;
+          throw new ArgumentNullException();
+        _Data = value;
       }
     }
-    private DataTable _Table;
+    private UIInputGridData _Data;
 
-    /// <summary>
-    /// Доступ к расширенным свойствам столбцов
-    /// </summary>
-    public InputDataGridColumns Columns
-    {
-      get
-      {
-        if (_Columns == null)
-          _Columns = new InputDataGridColumns(_Table);
-        return _Columns;
-      }
-    }
-    private InputDataGridColumns _Columns;
 
     /// <summary>
     /// Фиксированные строки.
@@ -577,12 +588,6 @@ namespace FreeLibSet.Forms
     /// <returns>Результат выполнения диалога</returns>
     public override DialogResult ShowDialog()
     {
-      if (_Table == null)
-      {
-        EFPApp.ErrorMessageBox("Данные не присоединены", Title);
-        return DialogResult.Cancel;
-      }
-
       DialogResult res;
 
       using (OKCancelGridForm form = new OKCancelGridForm(!String.IsNullOrEmpty(Prompt)))
@@ -595,7 +600,7 @@ namespace FreeLibSet.Forms
           WinFormsTools.OkCancelFormToOkOnly(form);
 
         EFPInputDataGridView efpGrid = new EFPInputDataGridView(form.ControlWithToolBar);
-        efpGrid.Control.DataSource = Table;
+        efpGrid.Data = this.Data;
         efpGrid.ReadOnly = ReadOnly;
         efpGrid.Control.ReadOnly = ReadOnly;
         efpGrid.FixedRows = FixedRows || ReadOnly;
@@ -607,7 +612,7 @@ namespace FreeLibSet.Forms
       }
 
       if (res == DialogResult.OK)
-        Table.AcceptChanges();
+        this.Data.Table.AcceptChanges();
 
       return res;
     }

@@ -9,16 +9,6 @@ namespace ExtTools_tests.DependedValues
   [TestFixture]
   public class DepByIndexTests
   {
-    [TestCase(-1, "ZZZ")]
-    [TestCase(0, "AAA")]
-    [TestCase(2, "CCC")]
-    [TestCase(3, "ZZZ")]
-    public void ConstTest(int v, string wanted)
-    {
-      DepConst<int> indexArg = new DepConst<int>(v);
-      DepByIndex<string> sut = new DepByIndex<string>(indexArg, new string[] { "AAA", "BBB", "CCC" }, "ZZZ");
-      Assert.AreEqual(wanted, sut.Value);
-    }
     [Test]
     public void DynamicTest()
     {

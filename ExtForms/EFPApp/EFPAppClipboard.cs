@@ -118,7 +118,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает текст в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelau между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <param name="s">Копируемый текст</param>
     public void SetText(string s)
@@ -158,7 +158,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает текст из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelault между попытками. 
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. 
     /// Если буфер обмена пуст или не содержит текста, сообщение об ошибке не выдается.
     /// </summary>
     /// <returns>Текст из буфера обмена или пустая строка</returns>
@@ -182,7 +182,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает текст из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelault между попытками. Потом выводится сообщение об ошибке,
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке,
     /// если <paramref name="messageIfEmpty"/>=true.
     /// </summary>
     /// <param name="format">Формат данных</param>
@@ -232,7 +232,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает прямоугольный блок текста из формата CSV или тектового формата.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelault между попытками. 
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. 
     /// Используются данные в формате TextDataFormat.CommaSeparatedValue, а при отсутствии - в TextDataFormat.Text.
     /// При отсутствии текста в буфере обмена сообщение об ошибке не выводится.
     /// Обычно следует использовать объект EFPPasteTextMatrixFormat для реализации вставки.
@@ -245,7 +245,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает прямоугольный блок текста из формата CSV или текстового формата.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelault между попытками. Потом выводится сообщение об ошибке,
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке,
     /// если <paramref name="messageIfEmpty"/>=true.
     /// Используются данные в формате TextDataFormat.CommaSeparatedValue, а при отсутствии - в TextDataFormat.Text.
     /// Обычно следует использовать объект EFPPasteTextMatrixFormat для реализации вставки.
@@ -317,7 +317,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает данные из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelau между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <returns>Данные из буфера обмена или null в случае ошибки</returns>
     public IDataObject GetDataObject()
@@ -360,7 +360,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает данные в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelau между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <param name="format">Формат данных</param>
     /// <param name="data">Данные</param>
@@ -398,7 +398,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает данные из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelau между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <param name="format">Требуемый формат данных</param>
     /// <returns>Данные из буфера обмена или null в случае ошибки или если нет данных в таком формате</returns>
@@ -442,7 +442,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает изображение в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelau между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <param name="image">Изображение</param>
     public void SetImage(Image image)
@@ -479,7 +479,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает изображение из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelau между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <returns>Данные из буфера обмена или null в случае ошибки или если нет данных в таком формате</returns>
     public Image GetImage()

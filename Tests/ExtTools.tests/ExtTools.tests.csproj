@@ -39,6 +39,9 @@
   <ItemGroup>
     <Compile Include="Collections\ArrayIndexerTests.cs" />
     <Compile Include="Collections\BidirectionalDictionaryTests.cs" />
+    <Compile Include="DependedValues\DepEvalExprTests.cs" />
+    <Compile Include="DependedValues\DepFromArrayTests.cs" />
+    <Compile Include="DependedValues\DepFromDictionaryTests.cs" />
     <Compile Include="Text\CsvTextConvertTests.cs" />
     <Compile Include="DependedValues\DepConstTests.cs" />
     <Compile Include="DependedValues\DepDelayedValueTests.cs" />

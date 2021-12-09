@@ -7,6 +7,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.DependedValues
 {
@@ -87,6 +88,24 @@ namespace FreeLibSet.DependedValues
     object Value { get; }
 
     /// <summary>
+    /// Возвращает тип данных, который имеет значение Value
+    /// </summary>
+    Type ValueType { get; }
+
+    /// <summary>
+    /// Возвращает true для DepInput, если он подключен к внешнему источнику данных.
+    /// Непереопределенный метод возвращает false.
+    /// </summary>
+    bool HasSource { get; }
+
+    /// <summary>
+    /// Возвращает true, если текущий объект соединен с другими,
+    /// то есть имеет имеет источник (HasSource=true) или есть объекты, подключенные к текущему (HasOutputs=true)
+    /// </summary>
+    bool IsConnected { get; }
+
+
+    /// <summary>
     /// Возвращает true, если текущий объект является константой
     /// </summary>
     bool IsConst { get; }
@@ -100,6 +119,24 @@ namespace FreeLibSet.DependedValues
     /// Извещение посылается при изменении значения свойства Value
     /// </summary>
     event EventHandler ValueChanged;
+
+    /// <summary>
+    /// Список входов, подключенных к данному объекту
+    /// </summary>
+    IDepInput[] Outputs { get; }
+
+    /// <summary>
+    /// Возвращает массив объектов-выражений (включая DepAnd, DepOr, DepNot), зависящих от данного.
+    /// Если нет зависимых выражений, возвращается пустой массив.
+    /// Метод не работает, если IsConst=true, т.к. зависимые выражения не присоединяют обработчики ValueChanged.
+    /// Выбрасывается исключение.
+    ///
+    /// Этот метод не следует использовать в прикладном коде
+    /// </summary>
+    /// <param name="recursive">Если true, то будут возвращены и все вложенные выражения.
+    /// Если false, то будут возвращены только выражения, входом которого является текуший объект.</param>
+    /// <returns></returns>
+    IDepExpr[] GetChildExpressions(bool recursive);
 
     #endregion
   }
@@ -238,6 +275,50 @@ namespace FreeLibSet.DependedValues
     /// Непереопределенный метод возвращает false.
     /// </summary>
     public virtual bool IsConst { get { return false; } }
+
+    Type IDepValue.ValueType { get { return typeof(T); } }
+
+    IDepExpr[] IDepValue.GetChildExpressions(bool recursive)
+    {
+      if (IsConst)
+        throw new InvalidOperationException("IsConst=true");
+
+      SingleScopeList<IDepExpr> list = null;
+      DoGetChildExpressions(ref list, recursive);
+      if (list == null)
+        return DepTools.EmptyDepExpr;
+      else
+        return list.ToArray();
+    }
+
+    private void DoGetChildExpressions(ref SingleScopeList<IDepExpr> list, bool recursive)
+    {
+      if (ValueChanged == null)
+        return;
+
+      Delegate[] a = ValueChanged.GetInvocationList();
+      int n1 = -1;
+      for (int i = 0; i < a.Length; i++)
+      {
+        IDepExpr item = a[i].Target as IDepExpr;
+        if (item != null)
+        {
+          if (list == null)
+            list = new SingleScopeList<IDepExpr>();
+          if (n1 < 0)
+            n1 = list.Count;
+
+          list.Add(item);
+        }
+      }
+
+      if (recursive && n1 >= 0)
+      {
+        int n2 = list.Count;
+        for (int i = n1; i < n2; i++)
+          DoGetChildExpressions(ref list, recursive);
+      }
+    }
 
     #endregion
 
@@ -378,6 +459,17 @@ namespace FreeLibSet.DependedValues
       theInput.NextOutput = null;
     }
 
+    IDepInput[] IDepValue.Outputs
+    {
+      get
+      {
+        if (FirstOutput == null)
+          return DepTools.EmptyInputs;
+        else
+          return Outputs;
+      }
+    }
+
     #endregion
 
     #region Отладочные средства
@@ -392,7 +484,6 @@ namespace FreeLibSet.DependedValues
     }
 
     #endregion
-
   }
 
   #endregion
@@ -400,12 +491,26 @@ namespace FreeLibSet.DependedValues
   #region DepOutput
 
   /// <summary>
+  /// Нетипизированный интерфейс, реализуемый DepOutput.
+  /// Для создания экземпляра DepOutput можно использовать метод DepTools.CreateDepOutput().
+  /// </summary>
+  public interface IDepOutput : IDepValue
+  {
+    /// <summary>
+    /// Этот метод вызывается объектом-владельцем для установки значения.
+    /// Присвоение значения null для объекта, хранящего данные значимого типа, устанавливает значение по умолчанию.
+    /// </summary>
+    /// <param name="value">Новое значение</param>
+    void OwnerSetValue(object value);
+  }
+
+  /// <summary>
   /// Неабстрактная реализация DepValue.
   /// Используется для "выходных" свойств, предназначенных только для чтения, но не для изменения внешним кодом
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
-  public class DepOutput<T> : DepValue<T>
+  public class DepOutput<T> : DepValue<T>, IDepOutput
   {
     #region Конструктор
 
@@ -418,6 +523,14 @@ namespace FreeLibSet.DependedValues
       BaseSetValue(value, false);
     }
 
+    /// <summary>
+    /// Создает объект.
+    /// Начальным значением будет пустое значения типа <typeparamref name="T"/>.
+    /// </summary>
+    public DepOutput()
+    {
+    }
+
     #endregion
 
     #region Установка значения
@@ -425,10 +538,18 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Этот метод вызывается объектом-владельцем для установки значения
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">Новое значение</param>
     public void OwnerSetValue(T value)
     {
       BaseSetValue(value, false);
+    }
+
+    void IDepOutput.OwnerSetValue(object value)
+    {
+      if (Object.ReferenceEquals(value, null))
+        OwnerSetValue(default(T));
+      else
+        OwnerSetValue((T)value);
     }
 
     #endregion
@@ -617,14 +738,32 @@ namespace FreeLibSet.DependedValues
   #region DepInput
 
   /// <summary>
+  /// Нетипизированный интерфейс, реализуемый шаблонным классом DepValue.
+  /// Для создания экземпляра DepInput можно использовать метод DepTools.CreateDepInput().
+  /// </summary>
+  public interface IDepInput : IDepValue
+  {
+    /// <summary>
+    /// Чтение и установка значения.
+    /// Присвоение значения null для объекта, хранящего данные значимого типа, устанавливает значение по умолчанию.
+    /// </summary>
+    new object Value { get; set; }
+
+    /// <summary>
+    /// Источник данных
+    /// </summary>
+    IDepValue Source { get; set; }
+  }
+
+  /// <summary>
   /// Реализация DepValue, позволяющая устанавливать значения "снаружи" вручную,
   /// или с помощью источника данных Source
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
-  public class DepInput<T> : DepValue<T>
+  public class DepInput<T> : DepValue<T>, IDepInput
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
     /// Создает объект
@@ -635,13 +774,21 @@ namespace FreeLibSet.DependedValues
     public DepInput(T value, EventHandler valueChangedMainHandler)
     {
       // Может быть null для IsNotEmptyEx
-//#if DEBUG
-//      if (valueChangedMainHandler == null)
-//        throw new ArgumentNullException("valueChangedMainHandler");
-//#endif
+      //#if DEBUG
+      //      if (valueChangedMainHandler == null)
+      //        throw new ArgumentNullException("valueChangedMainHandler");
+      //#endif
 
       BaseSetValue(value, false);
       _ValueChangedMainHandler = valueChangedMainHandler; // после установки значения
+    }
+
+    /// <summary>
+    /// Создает объект без обработчика, который вызывается при изменении значения.
+    /// Начальным значением Value является default(<typeparamref name="T"/>).
+    /// </summary>
+    public DepInput()
+    { 
     }
 
     #endregion
@@ -655,6 +802,18 @@ namespace FreeLibSet.DependedValues
     {
       get { return GetValue(); }
       set { SetValue(value); }
+    }
+
+    object IDepInput.Value
+    {
+      get { return this.Value; }
+      set 
+      {
+        if (Object.ReferenceEquals(value, null))
+          this.Value = default(T);
+        else
+          this.Value = (T)value; 
+      }
     }
 
     /// <summary>
@@ -696,8 +855,8 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     public override void OnValueChanged()
     {
-      if (_ValueChangedMainHandler!=null)
-      _ValueChangedMainHandler(this, EventArgs.Empty);
+      if (_ValueChangedMainHandler != null)
+        _ValueChangedMainHandler(this, EventArgs.Empty);
       base.OnValueChanged();
     }
 
@@ -765,6 +924,12 @@ namespace FreeLibSet.DependedValues
     /// Возвращает true, если текущий объект подключен к источнику данных (Source!=null)
     /// </summary>
     public override bool HasSource { get { return _Source != null; } }
+
+    IDepValue IDepInput.Source
+    {
+      get { return this.Source; }
+      set { this.Source = (DepValue<T>)value; }
+    }
 
     #endregion
 

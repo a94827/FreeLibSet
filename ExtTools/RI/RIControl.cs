@@ -7996,10 +7996,10 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Создает блок диалога
     /// </summary>
-    /// <param name="text">Заголовок окна</param>
-    public Dialog(string text)
+    /// <param name="title">Заголовок окна</param>
+    public Dialog(string title)
     {
-      _Text = text;
+      _Title = title;
 
       _Controls = new Band();
     }
@@ -8012,8 +8012,8 @@ namespace FreeLibSet.RI
     /// Заголовок блока диалога.
     /// Задается в конструкторе.
     /// </summary>
-    public string Text { get { return _Text; } }
-    private string _Text;
+    public string Title { get { return _Title; } }
+    private string _Title;
 
     #endregion
 

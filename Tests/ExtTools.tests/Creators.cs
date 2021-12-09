@@ -12,6 +12,8 @@ namespace ExtTools_tests
   {
     #region Объекты даты и времени
 
+    #region DateTime
+
     /// <summary>
     /// Создает DateTime из строки в формате "ГГГГММДД"
     /// </summary>
@@ -77,6 +79,33 @@ namespace ExtTools_tests
         return ToString(value.FirstDate) + "-" + ToString(value.LastDate);
     }
 
+    #endregion
+
+    #region YearMonth
+
+    /// <summary>
+    /// Создает объект YearMonth из строки вида "YYYYMM".
+    /// Если строка - пустая, возвращает YearMonth.Empty
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static YearMonth CreateYearMonth(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return new YearMonth();
+      else
+      {
+        if (s.Length != 6)
+          throw new ArgumentException();
+        int y = int.Parse(s.Substring(0, 4));
+        int m = int.Parse(s.Substring(4, 2));
+        return new YearMonth(y, m);
+      }
+    }
+
+    #endregion
+
+    #region MonthDay
 
     /// <summary>
     /// Создает объект MonthDay из четырехсимвольной строки "ММДД".
@@ -164,6 +193,8 @@ namespace ExtTools_tests
         a2[i] = ToString(a[i]);
       return String.Join(",", a2);
     }
+
+    #endregion
 
     #endregion
   }

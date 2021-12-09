@@ -66,12 +66,14 @@ namespace FreeLibSet.Calendar
     #region Свойства
 
     /// <summary>
-    /// Год
+    /// Год в диапазоне MinYear-MaxYear.
+    /// Yckb IsEmpty=true, возвращает 0.
     /// </summary>
     public int Year { get { return _Value / 12; } }
 
     /// <summary>
     /// Месяц (1-12)
+    /// Если IsEmpty=true, значение не определено
     /// </summary>
     public int Month { get { return _Value % 12 + 1; } }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
+using System.Reflection;
 
 namespace FreeLibSet.DependedValues
 {
@@ -13,7 +14,9 @@ namespace FreeLibSet.DependedValues
   /// Функции, которые можно использовать с классами DepExprX для вычислений в удаленном пользовательском интерфейсе (RI).
   /// В RI обычно нельзя использовать делегаты на собственные пользовательские методы, если загрузка сборки с этим методом запрещена.
   /// В отличие от стандартных методов Net Framework, методы DepTools не выбрасываются исключения.
-  /// Для каждой функции существует парная функция с суффиксом Ex, которая возвращает готовое выражение DepExprX на основании аргументов DepValue.
+  /// Функции с суффиксом Ex возвращают готовое выражение DepExprX на основании аргументов DepValue.
+  /// 
+  /// Функции CreateXXX() предназначены для создания типизированных классов на основании аргумента Type
   /// </summary>
   public static class DepTools
   {
@@ -27,7 +30,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="s">Строка</param>
     /// <returns>Длина строки</returns>
-    public static int Length(string s)
+    private static int Length(string s)
     {
       if (Object.ReferenceEquals(s, null))
         return 0;
@@ -40,7 +43,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="s">Строка</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<int, string> LengthEx(DepValue<string> s)
+    public static DepValue<int> LengthEx(DepValue<string> s)
     {
       return new DepExpr1<int, string>(s, Length);
     }
@@ -54,7 +57,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Проверяемая строка</param>
     /// <returns>Признак непустой строки</returns>
-    public static bool IsNotEmpty(string value)
+    private static bool IsNotEmpty(string value)
     {
       return !String.IsNullOrEmpty(value);
     }
@@ -64,7 +67,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Проверяемая строка</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, string> IsNotEmptyEx(DepValue<string> value)
+    public static DepValue<bool> IsNotEmptyEx(DepValue<string> value)
     {
       return new DepExpr1<bool, string>(value, IsNotEmpty);
     }
@@ -82,7 +85,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="startIndex">Начальный индекс</param>
     /// <param name="length">Длина подстроки</param>
     /// <returns>Подстрока</returns>
-    public static string Substring(string s, int startIndex, int length)
+    private static string Substring(string s, int startIndex, int length)
     {
       if (String.IsNullOrEmpty(s))
         return String.Empty;
@@ -106,7 +109,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="startIndex">Начальный индекс</param>
     /// <param name="length">Длина подстроки</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr3<string, string, int, int> SubstringEx(DepValue<string> s, DepValue<int> startIndex, DepValue<int> length)
+    public static DepValue<string> SubstringEx(DepValue<string> s, DepValue<int> startIndex, DepValue<int> length)
     {
       return new DepExpr3<string, string, int, int>(s, startIndex, length, Substring);
     }
@@ -118,7 +121,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="startIndex">Начальный индекс</param>
     /// <param name="length">Длина подстроки</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr3<string, string, int, int> SubstringEx(DepValue<string> s, int startIndex, int length)
+    public static DepValue<string> SubstringEx(DepValue<string> s, int startIndex, int length)
     {
       return new DepExpr3<string, string, int, int>(s, startIndex, length, Substring);
     }
@@ -138,7 +141,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Признак совпадения</returns>
-    public static bool StartsWithOrdinal(string s, string substring)
+    private static bool StartsWithOrdinal(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
         return false;
@@ -154,7 +157,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> StartsWithOrdinalEx(DepValue<string> s, DepValue<string> substring)
+    public static DepValue<bool> StartsWithOrdinalEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinal);
     }
@@ -166,10 +169,10 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> StartsWithOrdinalEx(DepValue<string> s, string substring)
+    public static DepValue<bool> StartsWithOrdinalEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinal);
-    }    
+    }
 
     /// <summary>
     /// Возвращает true, если строка <paramref name="s"/> начинается с заданной подстроки.
@@ -182,7 +185,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Признак совпадения</returns>
-    public static bool StartsWithOrdinalIgnoreCase(string s, string substring)
+    private static bool StartsWithOrdinalIgnoreCase(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
         return false;
@@ -198,7 +201,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> StartsWithOrdinalIgnoreCaseEx(DepValue<string> s, DepValue<string> substring)
+    public static DepValue<bool> StartsWithOrdinalIgnoreCaseEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinalIgnoreCase);
     }
@@ -210,7 +213,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> StartsWithOrdinalIgnoreCaseEx(DepValue<string> s, string substring)
+    public static DepValue<bool> StartsWithOrdinalIgnoreCaseEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinalIgnoreCase);
     }
@@ -230,7 +233,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Признак совпадения</returns>
-    public static bool EndsWithOrdinal(string s, string substring)
+    private static bool EndsWithOrdinal(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
         return false;
@@ -246,7 +249,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> EndsWithOrdinalEx(DepValue<string> s, DepValue<string> substring)
+    public static DepValue<bool> EndsWithOrdinalEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinal);
     }
@@ -258,7 +261,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> EndsWithOrdinalEx(DepValue<string> s, string substring)
+    public static DepValue<bool> EndsWithOrdinalEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinal);
     }
@@ -276,7 +279,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Признак совпадения</returns>
-    public static bool EndsWithOrdinalIgnoreCase(string s, string substring)
+    private static bool EndsWithOrdinalIgnoreCase(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
         return false;
@@ -292,7 +295,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> EndsWithOrdinalIgnoreCaseEx(DepValue<string> s, DepValue<string> substring)
+    public static DepValue<bool> EndsWithOrdinalIgnoreCaseEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinalIgnoreCase);
     }
@@ -304,7 +307,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="substring">Подстрока</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> EndsWithOrdinalIgnoreCaseEx(DepValue<string> s, string substring)
+    public static DepValue<bool> EndsWithOrdinalIgnoreCaseEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinalIgnoreCase);
     }
@@ -321,7 +324,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип данных</typeparam>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Текстовое представление</returns>
-    public static string ToString<T>(T value)
+    private static string ToString<T>(T value)
     {
       if (value == null)
         return String.Empty;
@@ -335,7 +338,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип данных</typeparam>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<string, T> ToStringEx<T>(DepValue<T> value)
+    public static DepValue<string> ToStringEx<T>(DepValue<T> value)
     {
       return new DepExpr1<string, T>(value, ToString);
     }
@@ -353,7 +356,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="pattern">Регулярное выражение</param>
     /// <returns>Признак соответствия</returns>
-    public static bool RegexIsMatch(string s, string pattern)
+    private static bool RegexIsMatch(string s, string pattern)
     {
       if (s == null)
         s = String.Empty;
@@ -377,7 +380,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="s">Проверяемая строка</param>
     /// <param name="pattern">Регулярное выражение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<bool, string, string> RegexIsMatchEx(DepValue<string> s, string pattern)
+    public static DepValue<bool> RegexIsMatchEx(DepValue<string> s, string pattern)
     {
       return new DepExpr2<bool, string, string>(s, pattern, RegexIsMatch);
     }
@@ -390,12 +393,14 @@ namespace FreeLibSet.DependedValues
 
     #region Компоненты
 
+    #region Year
+
     /// <summary>
     /// Возвращает год. Если дата не задана, возвращает 0
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Значение компонента</returns>
-    public static int Year(DateTime? dt)
+    private static int Year(DateTime? dt)
     {
       if (dt.HasValue)
         return dt.Value.Year;
@@ -408,17 +413,41 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<int, DateTime?> YearEx(DepValue<DateTime?> dt)
+    public static DepValue<int> YearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<int, DateTime?>(dt, Year);
     }
+
+    /// <summary>
+    /// Возвращает год. Если дата не задана, возвращает 0
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Значение компонента</returns>
+    private static int Year(DateTime dt)
+    {
+      return dt.Year;
+    }
+
+    /// <summary>
+    /// Возвращает год. 
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<int> YearEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<int, DateTime>(dt, Year);
+    }
+
+    #endregion
+
+    #region Month
 
     /// <summary>
     /// Возвращает месяц (1-12). Если дата не задана, возвращает 0
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Значение компонента</returns>
-    public static int Month(DateTime? dt)
+    private static int Month(DateTime? dt)
     {
       if (dt.HasValue)
         return dt.Value.Month;
@@ -431,17 +460,41 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<int, DateTime?> MonthEx(DepValue<DateTime?> dt)
+    public static DepValue<int> MonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<int, DateTime?>(dt, Month);
     }
+
+    /// <summary>
+    /// Возвращает месяц (1-12)
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Значение компонента</returns>
+    private static int Month(DateTime dt)
+    {
+      return dt.Month;
+    }
+
+    /// <summary>
+    /// Возвращает месяц (1-12). 
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<int> MonthEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<int, DateTime>(dt, Month);
+    }
+
+    #endregion
+
+    #region Day
 
     /// <summary>
     /// Возвращает день месяца (1-31). Если дата не задана, возвращает 0
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Значение компонента</returns>
-    public static int Day(DateTime? dt)
+    private static int Day(DateTime? dt)
     {
       if (dt.HasValue)
         return dt.Value.Day;
@@ -454,17 +507,41 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<int, DateTime?> DayEx(DepValue<DateTime?> dt)
+    public static DepValue<int> DayEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<int, DateTime?>(dt, Day);
     }
+
+    /// <summary>
+    /// Возвращает день месяца (1-31). 
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Значение компонента</returns>
+    private static int Day(DateTime dt)
+    {
+      return dt.Day;
+    }
+
+    /// <summary>
+    /// Возвращает день месяца (1-31).
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<int> DayEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<int, DateTime>(dt, Day);
+    }
+
+    #endregion
+
+    #region DayOfWeek
 
     /// <summary>
     /// Возвращает день недели. Если дата не задана, возвращает воскресенье
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Значение компонента</returns>
-    public static DayOfWeek DayOfWeek(DateTime? dt)
+    private static DayOfWeek DayOfWeek(DateTime? dt)
     {
       if (dt.HasValue)
         return dt.Value.DayOfWeek;
@@ -477,21 +554,45 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<DayOfWeek, DateTime?> DayOfWeekEx(DepValue<DateTime?> dt)
+    public static DepValue<DayOfWeek> DayOfWeekEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DayOfWeek, DateTime?>(dt, DayOfWeek);
     }
 
+    /// <summary>
+    /// Возвращает день недели. 
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Значение компонента</returns>
+    private static DayOfWeek DayOfWeek(DateTime dt)
+    {
+      return dt.DayOfWeek;
+    }
+
+    /// <summary>
+    /// Возвращает день недели.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DayOfWeek> DayOfWeekEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<DayOfWeek, DateTime>(dt, DayOfWeek);
+    }
+
+    #endregion
+
     #endregion
 
     #region IsBottom/EndOfXXX()
+
+    #region Year
 
     /// <summary>
     /// Возвращает true, если дата приходится на 1 января
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Результат проверки</returns>
-    public static bool IsBottomOfYear(DateTime? dt)
+    private static bool IsBottomOfYear(DateTime? dt)
     {
       if (dt.HasValue)
         return DataTools.IsBottomOfYear(dt.Value);
@@ -504,9 +605,19 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, DateTime?> IsBottomOfYearEx(DepValue<DateTime?> dt)
+    public static DepValue<bool> IsBottomOfYearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsBottomOfYear);
+    }
+
+    /// <summary>
+    /// Возвращает true, если дата приходится на 1 января
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<bool> IsBottomOfYearEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfYear);
     }
 
     /// <summary>
@@ -514,7 +625,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Результат проверки</returns>
-    public static bool IsEndOfYear(DateTime? dt)
+    private static bool IsEndOfYear(DateTime? dt)
     {
       if (dt.HasValue)
         return DataTools.IsEndOfYear(dt.Value);
@@ -527,65 +638,102 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, DateTime?> IsEndOfYearEx(DepValue<DateTime?> dt)
+    public static DepValue<bool> IsEndOfYearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsEndOfYear);
     }
 
-
     /// <summary>
-    /// Возвращает true, если дата приходится на первый день месяца
-    /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
-    public static bool IsBottomOfMonth(DateTime? dt)
-    {
-      if (dt.HasValue)
-        return DataTools.IsBottomOfMonth(dt.Value);
-      else
-        return false;
-    }
-
-    /// <summary>
-    /// Возвращает true, если дата приходится на первый день месяца
+    /// Возвращает true, если дата приходится на 31 декабря
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, DateTime?> IsBottomOfMonthEx(DepValue<DateTime?> dt)
+    public static DepValue<bool> IsEndOfYearEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<bool, DateTime?>(dt, IsBottomOfMonth);
+      return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfYear);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день месяца
+    /// Возвращает дату 01 января.
+    /// Возвращает null, если <paramref name="dt"/>=null.
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Результат проверки</returns>
-    public static bool IsEndOfMonth(DateTime? dt)
+    private static DateTime? BottomOfYear(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.IsEndOfMonth(dt.Value);
+        return DataTools.BottomOfYear(dt.Value);
       else
-        return false;
+        return null;
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день месяца
+    /// Возвращает дату 01 января.
+    /// Возвращает null, если <paramref name="dt"/>=null.
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, DateTime?> IsEndOfMonthEx(DepValue<DateTime?> dt)
+    public static DepValue<DateTime?> BottomOfYearEx(DepValue<DateTime?> dt)
     {
-      return new DepExpr1<bool, DateTime?>(dt, IsEndOfMonth);
+      return new DepExpr1<DateTime?, DateTime?>(dt, BottomOfYear);
     }
 
+    /// <summary>
+    /// Возвращает дату 01 января.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime> BottomOfYearEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfYear);
+    }
+
+    /// <summary>
+    /// Возвращает дату 31 декабря.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Результат проверки</returns>
+    private static DateTime? EndOfYear(DateTime? dt)
+    {
+      if (dt.HasValue)
+        return DataTools.EndOfYear(dt.Value);
+      else
+        return null;
+    }
+
+    /// <summary>
+    /// Возвращает дату 31 декабря.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime?> EndOfYearEx(DepValue<DateTime?> dt)
+    {
+      return new DepExpr1<DateTime?, DateTime?>(dt, EndOfYear);
+    }
+
+
+    /// <summary>
+    /// Возвращает дату 31 декабря.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime> EndOfYearEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfYear);
+    }
+
+    #endregion
+
+    #region Quarter
 
     /// <summary>
     /// Возвращает true, если дата приходится на первый день квартала
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Результат проверки</returns>
-    public static bool IsBottomOfQuarter(DateTime? dt)
+    private static bool IsBottomOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
         return DataTools.IsBottomOfQuarter(dt.Value);
@@ -598,9 +746,19 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, DateTime?> IsBottomOfQuarterEx(DepValue<DateTime?> dt)
+    public static DepValue<bool> IsBottomOfQuarterEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsBottomOfQuarter);
+    }
+
+    /// <summary>
+    /// Возвращает true, если дата приходится на первый день квартала
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<bool> IsBottomOfQuarterEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfQuarter);
     }
 
     /// <summary>
@@ -608,7 +766,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Результат проверки</returns>
-    public static bool IsEndOfQuarter(DateTime? dt)
+    private static bool IsEndOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
         return DataTools.IsEndOfQuarter(dt.Value);
@@ -621,158 +779,281 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, DateTime?> IsEndOfQuarterEx(DepValue<DateTime?> dt)
+    public static DepValue<bool> IsEndOfQuarterEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsEndOfQuarter);
     }
 
+    /// <summary>
+    /// Возвращает true, если дата приходится на последний день квартала
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<bool> IsEndOfQuarterEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfQuarter);
+    }
+
+    /// <summary>
+    /// Возвращает дату начала квартала.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Результат проверки</returns>
+    private static DateTime? BottomOfQuarter(DateTime? dt)
+    {
+      if (dt.HasValue)
+        return DataTools.BottomOfQuarter(dt.Value);
+      else
+        return null;
+    }
+
+    /// <summary>
+    /// Возвращает дату начала квартала.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime?> BottomOfQuarterEx(DepValue<DateTime?> dt)
+    {
+      return new DepExpr1<DateTime?, DateTime?>(dt, BottomOfQuarter);
+    }
+
+    /// <summary>
+    /// Возвращает дату начала квартала.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepExpr1<DateTime, DateTime> BottomOfQuarterEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfQuarter);
+    }
+
+    /// <summary>
+    /// Возвращает дату конца квартала.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Результат проверки</returns>
+    private static DateTime? EndOfQuarter(DateTime? dt)
+    {
+      if (dt.HasValue)
+        return DataTools.EndOfQuarter(dt.Value);
+      else
+        return null;
+    }
+
+    /// <summary>
+    /// Возвращает дату конца квартала.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime?> EndOfQuarterEx(DepValue<DateTime?> dt)
+    {
+      return new DepExpr1<DateTime?, DateTime?>(dt, EndOfQuarter);
+    }
+
+    /// <summary>
+    /// Возвращает дату конца квартала.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime> EndOfQuarterEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfQuarter);
+    }
+
     #endregion
 
-    #region Min()/Max()
+    #region Month
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Возвращает true, если дата приходится на первый день месяца
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static DateTime Min(params DateTime[] values)
+    /// <param name="dt">Дата</param>
+    /// <returns>Результат проверки</returns>
+    private static bool IsBottomOfMonth(DateTime? dt)
     {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      DateTime res = values[0];
-      for (int i = 1; i < values.Length; i++)
-      {
-        if (values[i] < res)
-          res = values[i];
-      }
-      return res;
+      if (dt.HasValue)
+        return DataTools.IsBottomOfMonth(dt.Value);
+      else
+        return false;
     }
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Возвращает true, если дата приходится на первый день месяца
     /// </summary>
-    /// <param name="values">Список аргументов</param>
+    /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<DateTime, DateTime> MinEx(params DepValue<DateTime>[] values)
+    public static DepValue<bool> IsBottomOfMonthEx(DepValue<DateTime?> dt)
     {
-      return new DepExprTA<DateTime, DateTime>(values, Min);
+      return new DepExpr1<bool, DateTime?>(dt, IsBottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Возвращает true, если дата приходится на первый день месяца
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static DateTime Max(params DateTime[] values)
-    {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      DateTime res = values[0];
-      for (int i = 1; i < values.Length; i++)
-      {
-        if (values[i] > res)
-          res = values[i];
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
+    /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<DateTime, DateTime> MaxEx(params DepValue<DateTime>[] values)
+    public static DepValue<bool> IsBottomOfMonthEx(DepValue<DateTime> dt)
     {
-      return new DepExprTA<DateTime, DateTime>(values, Max);
+      return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// Возвращает true, если дата приходится на последний день месяца
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static DateTime? Min(params DateTime?[] values)
+    /// <param name="dt">Дата</param>
+    /// <returns>Результат проверки</returns>
+    private static bool IsEndOfMonth(DateTime? dt)
     {
-      DateTime? res = null;
-      for (int i = 0; i < values.Length; i++)
-      {
-        if (values[i].HasValue)
-        {
-          if (res.HasValue)
-          {
-            if (values[i].Value < res.Value)
-              res = values[i];
-          }
-          else
-            res = values[i];
-        }
-      }
-      return res;
+      if (dt.HasValue)
+        return DataTools.IsEndOfMonth(dt.Value);
+      else
+        return false;
     }
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// Возвращает true, если дата приходится на последний день месяца
     /// </summary>
-    /// <param name="values">Список аргументов</param>
+    /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<DateTime?, DateTime?> MinEx(params DepValue<DateTime?>[] values)
+    public static DepValue<bool> IsEndOfMonthEx(DepValue<DateTime?> dt)
     {
-      return new DepExprTA<DateTime?, DateTime?>(values, Min);
+      return new DepExpr1<bool, DateTime?>(dt, IsEndOfMonth);
     }
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// Возвращает true, если дата приходится на последний день месяца
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static DateTime? Max(params DateTime?[] values)
-    {
-      DateTime? res = null;
-      for (int i = 0; i < values.Length; i++)
-      {
-        if (values[i].HasValue)
-        {
-          if (res.HasValue)
-          {
-            if (values[i].Value > res.Value)
-              res = values[i];
-          }
-          else
-            res = values[i];
-        }
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает максимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
+    /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<DateTime?, DateTime?> MaxEx(params DepValue<DateTime?>[] values)
+    public static DepValue<bool> IsEndOfMonthEx(DepValue<DateTime> dt)
     {
-      return new DepExprTA<DateTime?, DateTime?>(values, Max);
+      return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfMonth);
     }
+
+    /// <summary>
+    /// Возвращает первый день месяца.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Результат проверки</returns>
+    private static DateTime? BottomOfMonth(DateTime? dt)
+    {
+      if (dt.HasValue)
+        return DataTools.BottomOfMonth(dt.Value);
+      else
+        return null;
+    }
+
+    /// <summary>
+    /// Возвращает первый день месяца.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime?> BottomOfMonthEx(DepValue<DateTime?> dt)
+    {
+      return new DepExpr1<DateTime?, DateTime?>(dt, BottomOfMonth);
+    }
+
+    /// <summary>
+    /// Возвращает первый день месяца.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime> BottomOfMonthEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfMonth);
+    }
+
+    /// <summary>
+    /// Возвращает первый день месяца.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Результат проверки</returns>
+    private static DateTime? EndOfMonth(DateTime? dt)
+    {
+      if (dt.HasValue)
+        return DataTools.EndOfMonth(dt.Value);
+      else
+        return null;
+    }
+
+    /// <summary>
+    /// Возвращает первый день месяца.
+    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime?> EndOfMonthEx(DepValue<DateTime?> dt)
+    {
+      return new DepExpr1<DateTime?, DateTime?>(dt, EndOfMonth);
+    }
+
+    /// <summary>
+    /// Возвращает первый день месяца.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<DateTime> EndOfMonthEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfMonth);
+    }
+
+    #endregion
 
     #endregion
 
     #endregion
 
     #region YearMonth
+
+    #region Компоненты
+
+    private static int Year(YearMonth value)
+    {
+      if (value.IsEmpty)
+        return 0;
+      else
+        return value.Year;
+    }
+
+    /// <summary>
+    /// Возвращает год из структуры YearMonth.
+    /// Если YearMonth.IsEmpty=true, возвращает 0.
+    /// </summary>
+    /// <param name="value">Управляемое исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<int> YearEx(DepValue<YearMonth> value)
+    {
+      return new DepExpr1<int, YearMonth>(value, Year);
+    }
+
+
+    private static int Month(YearMonth value)
+    {
+      if (value.IsEmpty)
+        return 0;
+      else
+        return value.Month;
+    }
+
+    /// <summary>
+    /// Возвращает месяц (1-12) из структуры YearMonth.
+    /// Если YearMonth.IsEmpty=true, возвращает 0.
+    /// </summary>
+    /// <param name="value">Управляемое исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<int> MonthEx(DepValue<YearMonth> value)
+    {
+      return new DepExpr1<int, YearMonth>(value, Month);
+    }
+
+    #endregion
 
     #region NBottom/EndOfMonth()
 
@@ -782,7 +1063,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Дата</returns>
-    public static DateTime? NBottomOfMonth(YearMonth ym)
+    private static DateTime? NBottomOfMonth(YearMonth ym)
     {
       if (ym.IsEmpty)
         return null;
@@ -796,7 +1077,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<DateTime?, YearMonth> NBottomOfMonthEx(DepValue<YearMonth> ym)
+    public static DepValue<DateTime?> NBottomOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime?, YearMonth>(ym, NBottomOfMonth);
     }
@@ -807,7 +1088,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Дата</returns>
-    public static DateTime? NEndOfMonth(YearMonth ym)
+    private static DateTime? NEndOfMonth(YearMonth ym)
     {
       if (ym.IsEmpty)
         return null;
@@ -821,7 +1102,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<DateTime?, YearMonth> NEndOfMonthEx(DepValue<YearMonth> ym)
+    public static DepValue<DateTime?> NEndOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime?, YearMonth>(ym, NEndOfMonth);
     }
@@ -836,9 +1117,9 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Дата</returns>
-    public static DateTime BottomOfMonth(YearMonth ym)
+    private static DateTime BottomOfMonth(YearMonth ym)
     {
-        return ym.BottomOfMonth;
+      return ym.BottomOfMonth;
     }
 
     /// <summary>
@@ -847,7 +1128,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<DateTime, YearMonth> BottomOfMonthEx(DepValue<YearMonth> ym)
+    public static DepValue<DateTime> BottomOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime, YearMonth>(ym, BottomOfMonth);
     }
@@ -858,7 +1139,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Дата</returns>
-    public static DateTime EndOfMonth(YearMonth ym)
+    private static DateTime EndOfMonth(YearMonth ym)
     {
       return ym.EndOfMonth;
     }
@@ -869,7 +1150,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="ym">Месяц и год</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<DateTime, YearMonth> EndOfMonthEx(DepValue<YearMonth> ym)
+    public static DepValue<DateTime> EndOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime, YearMonth>(ym, EndOfMonth);
     }
@@ -884,10 +1165,10 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Год и месяц</returns>
-    public static YearMonth YearMonth(DateTime? dt)
+    private static YearMonth YearMonth(DateTime? dt)
     {
       if (dt.HasValue)
-        return new YearMonth(dt.Value);
+        return YearMonth(dt.Value);
       else
         return new YearMonth();
     }
@@ -898,9 +1179,55 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="dt">Дата</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<YearMonth, DateTime?> YearMonthEx(DepValue<DateTime?> dt)
+    public static DepValue<YearMonth> YearMonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<YearMonth, DateTime?>(dt, YearMonth);
+    }
+
+
+    /// <summary>
+    /// Преобразование даты в структуру YearMonth.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Год и месяц</returns>
+    private static YearMonth YearMonth(DateTime dt)
+    {
+      if (dt.Year >= FreeLibSet.Calendar.YearMonth.MinYear && dt.Year <= FreeLibSet.Calendar.YearMonth.MaxYear)
+        return new YearMonth(dt);
+      else
+        return new YearMonth();
+    }
+
+    /// <summary>
+    /// Преобразование даты в структуру YearMonth.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<YearMonth> YearMonthEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<YearMonth, DateTime>(dt, YearMonth);
+    }
+
+
+    private static YearMonth YearMonth(int year, int month)
+    {
+      if (year >= FreeLibSet.Calendar.YearMonth.MinYear && year <= FreeLibSet.Calendar.YearMonth.MaxYear &&
+        month >= 1 && month <= 12)
+        return new YearMonth(year, month);
+      else
+        return new YearMonth();
+    }
+
+    /// <summary>
+    /// Создание структуры YearMonth из года и месяца (1-12).
+    /// Если год или месяц имеют неправильные значения, возвращается YearMonth.Empty
+    /// </summary>
+    /// <param name="year">Год</param>
+    /// <param name="month">Месяц</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<YearMonth> YearMonthEx(DepValue<int> year, DepValue<int> month)
+    {
+      return new DepExpr2<YearMonth, int, int>(year, month, YearMonth);
     }
 
     #endregion
@@ -912,7 +1239,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Проверяемое значение</param>
     /// <returns>Значение свойства</returns>
-    public static bool IsNotEmpty(YearMonth value)
+    private static bool IsNotEmpty(YearMonth value)
     {
       return !value.IsEmpty;
     }
@@ -922,7 +1249,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Проверяемое значение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, YearMonth> IsNotEmptyEx(DepValue<YearMonth> value)
+    public static DepValue<bool> IsNotEmptyEx(DepValue<YearMonth> value)
     {
       return new DepExpr1<bool, YearMonth>(value, IsNotEmpty);
     }
@@ -931,9 +1258,216 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
+    #region MonthDay
+
+    #region Компоненты
+
+    private static int Month(MonthDay value)
+    {
+      if (value.IsEmpty)
+        return 0;
+      else
+        return value.Month;
+    }
+
+    /// <summary>
+    /// Возвращает месяц (1-12) из структуры MonthDay.
+    /// Если MonthDay.IsEmpty=true, возвращает 0.
+    /// </summary>
+    /// <param name="value">Управляемое исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<int> MonthEx(DepValue<MonthDay> value)
+    {
+      return new DepExpr1<int, MonthDay>(value, Month);
+    }
+
+
+    private static int Day(MonthDay value)
+    {
+      if (value.IsEmpty)
+        return 0;
+      else
+        return value.Day;
+    }
+
+    /// <summary>
+    /// Возвращает день из структуры MonthDay.
+    /// Если MonthDay.IsEmpty=true, возвращает 0.
+    /// </summary>
+    /// <param name="value">Управляемое исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<int> DayEx(DepValue<MonthDay> value)
+    {
+      return new DepExpr1<int, MonthDay>(value, Day);
+    }
+
+    #endregion
+
+    #region MonthDay
+
+    /// <summary>
+    /// Преобразование даты в структуру MonthDay.
+    /// Для значения null возвращает MonthDay.Empty
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Структура</returns>
+    private static MonthDay MonthDay(DateTime? dt)
+    {
+      if (dt.HasValue)
+        return MonthDay(dt.Value);
+      else
+        return new MonthDay();
+    }
+
+    /// <summary>
+    /// Преобразование даты в структуру MonthDay.
+    /// Для значения null возвращает MonthDay.Empty
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<MonthDay> MonthDayEx(DepValue<DateTime?> dt)
+    {
+      return new DepExpr1<MonthDay, DateTime?>(dt, MonthDay);
+    }
+
+
+    /// <summary>
+    /// Преобразование даты в структуру MonthDay.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Структура</returns>
+    private static MonthDay MonthDay(DateTime dt)
+    {
+      return new MonthDay(dt);
+    }
+
+    /// <summary>
+    /// Преобразование даты в структуру MonthDay.
+    /// </summary>
+    /// <param name="dt">Дата</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<MonthDay> MonthDayEx(DepValue<DateTime> dt)
+    {
+      return new DepExpr1<MonthDay, DateTime>(dt, MonthDay);
+    }
+
+
+    private static MonthDay MonthDay(int month, int day)
+    {
+      if (month < 1 || month > 12)
+        return new MonthDay();
+
+      if (day < 1 || day > DateTime.DaysInMonth(2021, month)) // обязательно невисокосный год
+        return new MonthDay();
+
+      return new MonthDay(month, day);
+    }
+
+    /// <summary>
+    /// Создание структуры MonthDay из месяца (1-12) и дня (1-28/30/31).
+    /// Если год или месяц имеют неправильные значения, возвращается MonthDay.Empty
+    /// </summary>
+    /// <param name="month">Месяц</param>
+    /// <param name="day">День</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<MonthDay> MonthDayEx(DepValue<int> month, DepValue<int> day)
+    {
+      return new DepExpr2<MonthDay, int, int>(month, day, MonthDay);
+    }
+
+    #endregion
+
+    #region IsNotEmpty()
+
+    /// <summary>
+    /// Возвращает true, если значение непустое (MonthDay.IsEmpty=false)
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <returns>Значение свойства</returns>
+    private static bool IsNotEmpty(MonthDay value)
+    {
+      return !value.IsEmpty;
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение непустое (MonthDay.IsEmpty=false)
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<bool> IsNotEmptyEx(DepValue<MonthDay> value)
+    {
+      return new DepExpr1<bool, MonthDay>(value, IsNotEmpty);
+    }
+
+    #endregion
+
+    #region GetDate()
+
+    /// <summary>
+    /// Возвращает дату, соответвующую заданному году.
+    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается null.
+    /// </summary>
+    /// <param name="md">Месяц и день</param>
+    /// <param name="year">Год</param>
+    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
+    /// <returns>Дата или null</returns>
+    private static DateTime? GetNDate(MonthDay md, int year, bool february29)
+    {
+      if (md.IsEmpty || year < DateRange.Whole.FirstDate.Year || year > DateRange.Whole.LastDate.Year)
+        return null;
+      else
+        return md.GetDate(year, february29);
+    }
+
+    /// <summary>
+    /// Возвращает дату, соответвующую заданному году.
+    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается null.
+    /// </summary>
+    /// <param name="md">Месяц и день</param>
+    /// <param name="year">Год</param>
+    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
+    /// <returns>Дата или null</returns>
+    public static DepValue<DateTime?> GetNDateEx(DepValue<MonthDay> md, DepValue<int> year, bool february29)
+    {
+      return new DepExpr3<DateTime?, MonthDay, int, bool>(md, year, february29, GetNDate);
+    }
+
+    /// <summary>
+    /// Возвращает дату, соответвующую заданному году.
+    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается DataTime.MinValue.
+    /// </summary>
+    /// <param name="md">Месяц и день</param>
+    /// <param name="year">Год</param>
+    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
+    /// <returns>Дата или null</returns>
+    private static DateTime GetDate(MonthDay md, int year, bool february29)
+    {
+      if (md.IsEmpty || year < DateRange.Whole.FirstDate.Year || year > DateRange.Whole.LastDate.Year)
+        return DateTime.MinValue;
+      else
+        return md.GetDate(year, february29);
+    }
+
+    /// <summary>
+    /// Возвращает дату, соответвующую заданному году.
+    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается DataTime.MinValue.
+    /// </summary>
+    /// <param name="md">Месяц и день</param>
+    /// <param name="year">Год</param>
+    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
+    /// <returns>Дата или null</returns>
+    public static DepValue<DateTime> GetDateEx(DepValue<MonthDay> md, DepValue<int> year, bool february29)
+    {
+      return new DepExpr3<DateTime, MonthDay, int, bool>(md, year, february29, GetDate);
+    }
+
+    #endregion
+
+    #endregion
+
     #region Nullable
 
-    #region ReplaveNull
+    #region ReplaceNull
 
     /// <summary>
     /// Замена для Nullable-значения (оператор ?? в C#).
@@ -942,8 +1476,8 @@ namespace FreeLibSet.DependedValues
     /// <param name="value">Значение, которое может быть null</param>
     /// <param name="nullValue">Замещающее значение для null</param>
     /// <returns>Значение <paramref name="value"/>.Value или <paramref name="nullValue"/>.</returns>
-    public static T ReplaceNull<T>(T? value, T nullValue)
-      where T:struct
+    private static T ReplaceNull<T>(T? value, T nullValue)
+      where T : struct
     {
       return value ?? nullValue;
     }
@@ -954,8 +1488,8 @@ namespace FreeLibSet.DependedValues
     /// <param name="value">Значение, которое может быть null</param>
     /// <param name="nullValue">Замещающее значение для null</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<T, Nullable<T>, T> ReplaceNullEx<T>(DepValue<T?> value, T nullValue)
-      where T:struct
+    public static DepValue<T> ReplaceNullEx<T>(DepValue<T?> value, T nullValue)
+      where T : struct
     {
       return new DepExpr2<T, T?, T>(value, nullValue, ReplaceNull);
     }
@@ -965,7 +1499,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Значение, которое может быть null</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr2<T, Nullable<T>, T> ReplaceNullEx<T>(DepValue<T?> value)
+    public static DepValue<T> ReplaceNullEx<T>(DepValue<T?> value)
       where T : struct
     {
       return new DepExpr2<T, T?, T>(value, default(T), ReplaceNull);
@@ -980,8 +1514,8 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Проверяемое значение</param>
     /// <returns>Признак непустой строки</returns>
-    public static bool IsNotEmpty<T>(T? value)
-      where T:struct
+    private static bool IsNotEmpty<T>(T? value)
+      where T : struct
     {
       return value.HasValue;
     }
@@ -991,14 +1525,13 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Проверяемое значение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<bool, T?> IsNotEmptyEx<T>(DepValue<T?> value)
-      where T:struct
+    public static DepValue<bool> IsNotEmptyEx<T>(DepValue<T?> value)
+      where T : struct
     {
       return new DepExpr1<bool, T?>(value, IsNotEmpty);
     }
 
     #endregion
-
 
     #endregion
 
@@ -1012,7 +1545,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Перечислимое значение</param>
     /// <returns>Преобразованное значение</returns>
-    public static int EnumToInt<T>(T value)
+    private static int EnumToInt<T>(T value)
       where T : struct
     {
       return Convert.ToInt32((object)value);
@@ -1024,7 +1557,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Перечислимое значение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<int, T> EnumToIntEx<T>(DepValue<T> value)
+    public static DepValue<int> EnumToIntEx<T>(DepValue<T> value)
       where T : struct
     {
       return new DepExpr1<int, T>(value, EnumToInt<T>);
@@ -1036,7 +1569,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Целочисленное значение</param>
     /// <returns>Преобразованное значение</returns>
-    public static T EnumFromInt<T>(int value)
+    private static T EnumFromInt<T>(int value)
       where T : struct
     {
       return (T)Enum.ToObject(typeof(T), value);
@@ -1049,7 +1582,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Целочисленное значение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<T,int> EnumFromIntEx<T>(DepValue<int> value)
+    public static DepValue<T> EnumFromIntEx<T>(DepValue<int> value)
       where T : struct
     {
       return new DepExpr1<T, int>(value, EnumFromInt<T>);
@@ -1066,7 +1599,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Перечислимое значение</param>
     /// <returns>Преобразованное значение</returns>
-    public static string EnumToString<T>(T value)
+    private static string EnumToString<T>(T value)
       where T : struct
     {
       return value.ToString();
@@ -1079,7 +1612,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Перечислимое значение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<string, T> EnumToStringEx<T>(DepValue<T> value)
+    public static DepValue<string> EnumToStringEx<T>(DepValue<T> value)
       where T : struct
     {
       return new DepExpr1<string, T>(value, EnumToString);
@@ -1092,7 +1625,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Перечислимое значение</param>
     /// <returns>Преобразованное значение</returns>
-    public static T EnumFromString<T>(string value)
+    private static T EnumFromString<T>(string value)
       where T : struct
     {
       T res;
@@ -1109,7 +1642,7 @@ namespace FreeLibSet.DependedValues
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="value">Перечислимое значение</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<T, string> EnumFromStringEx<T>(DepValue<string> value)
+    public static DepValue<T> EnumFromStringEx<T>(DepValue<string> value)
       where T : struct
     {
       return new DepExpr1<T, string>(value, EnumFromString<T>);
@@ -1129,7 +1662,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="array">Массив</param>
     /// <returns>Длина массива</returns>
-    public static int Length<T>(T[] array)
+    private static int Length<T>(T[] array)
     {
       if (Object.ReferenceEquals(array, null))
         return 0;
@@ -1143,7 +1676,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="array">Массив</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExpr1<int, T[]> LengthEx<T>(DepValue<T[]> array)
+    public static DepValue<int> LengthEx<T>(DepValue<T[]> array)
     {
       return new DepExpr1<int, T[]>(array, Length<T>);
     }
@@ -1156,7 +1689,7 @@ namespace FreeLibSet.DependedValues
 
     #region Min()/Max()
 
-    #region Int32
+    #region Min()
 
     /// <summary>
     /// Возвращает минимальное значение.
@@ -1164,15 +1697,16 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисленное значение</returns>
-    public static int Min(params int[] values)
+    private static T Min<T>(params T[] values)
+      where T : IComparable<T>
     {
       if (values.Length == 0)
         throw new ArgumentException("Список аргументов пустой");
 
-      int res = values[0];
+      T res = values[0];
       for (int i = 1; i < values.Length; i++)
       {
-        if (values[i] < res)
+        if (values[i].CompareTo(res) < 0)
           res = values[i];
       }
       return res;
@@ -1184,76 +1718,55 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<int, int> MinEx(params DepValue<int>[] values)
+    public static DepValue<T> MinEx<T>(params DepValue<T>[] values)
+      where T : IComparable<T>
     {
-      return new DepExprTA<int, int>(values, Min);
+      return new DepExprTA<T, T>(values, Min<T>);
     }
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Возвращает минимальное значение.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисленное значение</returns>
-    public static int Max(params int[] values)
+    private static T? Min<T>(params T?[] values)
+      where T : struct, IComparable<T>
     {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      int res = values[0];
-      for (int i = 1; i < values.Length; i++)
+      T? res = null;
+      for (int i = 0; i < values.Length; i++)
       {
-        if (values[i] > res)
-          res = values[i];
+        if (values[i].HasValue)
+        {
+          if (res.HasValue)
+          {
+            if (values[i].Value.CompareTo(res.Value) < 0)
+              res = values[i];
+          }
+          else
+            res = values[i];
+        }
       }
       return res;
     }
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Возвращает минимальное значение.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<int, int> MaxEx(params DepValue<int>[] values)
+    public static DepValue<T?> MinEx<T>(params DepValue<T?>[] values)
+      where T : struct, IComparable<T>
     {
-      return new DepExprTA<int, int>(values, Max);
+      return new DepExprTA<T?, T?>(values, Min);
     }
 
     #endregion
 
-    #region Single
-
-    /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static float Min(params float[] values)
-    {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      float res = values[0];
-      for (int i = 1; i < values.Length; i++)
-      {
-        if (values[i] < res)
-          res = values[i];
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<float, float> MinEx(params DepValue<float>[] values)
-    {
-      return new DepExprTA<float, float>(values, Min);
-    }
+    #region Max()
 
     /// <summary>
     /// Возвращает максимальное значение.
@@ -1261,15 +1774,16 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисленное значение</returns>
-    public static float Max(params float[] values)
+    private static T Max<T>(params T[] values)
+      where T : IComparable<T>
     {
       if (values.Length == 0)
         throw new ArgumentException("Список аргументов пустой");
 
-      float res = values[0];
+      T res = values[0];
       for (int i = 1; i < values.Length; i++)
       {
-        if (values[i] > res)
+        if (values[i].CompareTo(res) > 0)
           res = values[i];
       }
       return res;
@@ -1281,141 +1795,50 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<float, float> MaxEx(params DepValue<float>[] values)
+    public static DepValue<T> MaxEx<T>(params DepValue<T>[] values)
+      where T : IComparable<T>
     {
-      return new DepExprTA<float, float>(values, Max);
-    }
-
-    #endregion
-
-    #region Double
-
-    /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static double Min(params double[] values)
-    {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      double res = values[0];
-      for (int i = 1; i < values.Length; i++)
-      {
-        if (values[i] < res)
-          res = values[i];
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<double, double> MinEx(params DepValue<double>[] values)
-    {
-      return new DepExprTA<double, double>(values, Min);
+      return new DepExprTA<T, T>(values, Max<T>);
     }
 
     /// <summary>
     /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисленное значение</returns>
-    public static double Max(params double[] values)
+    private static T? Max<T>(params T?[] values)
+      where T : struct, IComparable<T>
     {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      double res = values[0];
-      for (int i = 1; i < values.Length; i++)
+      T? res = null;
+      for (int i = 0; i < values.Length; i++)
       {
-        if (values[i] > res)
-          res = values[i];
+        if (values[i].HasValue)
+        {
+          if (res.HasValue)
+          {
+            if (values[i].Value.CompareTo(res.Value) > 0)
+              res = values[i];
+          }
+          else
+            res = values[i];
+        }
       }
       return res;
     }
 
     /// <summary>
     /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Значения null пропускаются.
+    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
     /// </summary>
     /// <param name="values">Список аргументов</param>
     /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<double, double> MaxEx(params DepValue<double>[] values)
+    public static DepValue<T?> MaxEx<T>(params DepValue<T?>[] values)
+      where T : struct, IComparable<T>
     {
-      return new DepExprTA<double, double>(values, Max);
-    }
-
-    #endregion
-
-    #region Decimal
-
-    /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static decimal Min(params decimal[] values)
-    {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      decimal res = values[0];
-      for (int i = 1; i < values.Length; i++)
-      {
-        if (values[i] < res)
-          res = values[i];
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<decimal, decimal> MinEx(params DepValue<decimal>[] values)
-    {
-      return new DepExprTA<decimal, decimal>(values, Min);
-    }
-
-    /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
-    public static decimal Max(params decimal[] values)
-    {
-      if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
-
-      decimal res = values[0];
-      for (int i = 1; i < values.Length; i++)
-      {
-        if (values[i] > res)
-          res = values[i];
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
-    /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
-    public static DepExprTA<decimal, decimal> MaxEx(params DepValue<decimal>[] values)
-    {
-      return new DepExprTA<decimal, decimal>(values, Max);
+      return new DepExprTA<T?, T?>(values, Max);
     }
 
     #endregion
@@ -1433,7 +1856,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="minimum">Минимальное значение или null, если ограничение не задано</param>
     /// <param name="maximum">Максимальное значение или null, если ограничение не задано</param>
     /// <returns>true, если значение находится внутри диапазона</returns>
-    public static bool InRange<T>(T value, T? minimum, T? maximum)
+    private static bool InRange<T>(T value, T? minimum, T? maximum)
       where T : struct, IComparable<T>
     {
       if (minimum.HasValue)
@@ -1480,6 +1903,192 @@ namespace FreeLibSet.DependedValues
     }
 
     #endregion
+
+    #endregion
+
+    #region Преобразование типов
+
+#if! XXX // Пока не работает
+    /// <summary>
+    /// Если тип T является Nullable-структурой, возвращает значимый тип, для которого объявлена структура.
+    /// Иначе возвращает null
+    /// </summary>
+    /// <param name="t">Проверяемый тип данных</param>
+    /// <returns>Базовый значимый тип или null</returns>
+    private static Type GetNullableBaseType(Type t)
+    {
+      if (!t.IsGenericType)
+        return null;
+
+      if (t.GetGenericTypeDefinition() != typeof(Nullable<>))
+        return null;
+
+      Type[] a = t.GetGenericArguments();
+#if DEBUG
+      if (a.Length != 1)
+        throw new BugException("GetGenericArguments() для типа " + t.ToString());
+#endif
+      return a[0];
+    }
+
+
+    private class DepToType<T> : DepExprOA<T>
+    {
+      #region Конструктор
+
+      public DepToType(IDepValue arg)
+        : base(new IDepValue[1] { arg }, null)
+      {
+        BaseSetValue(Calculate(), false);
+      }
+
+      #endregion
+
+      #region Расчет
+
+      protected override T Calculate()
+      {
+        if (object.ReferenceEquals(Args[0].Value, null))
+          return default(T);
+
+        Type t2 = DepTools.GetNullableBaseType(typeof(T));
+
+        if (t2 == null)
+          return (T)(Convert.ChangeType(Args[0].Value, typeof(T)));
+        else
+          return (T)(Convert.ChangeType(Args[0].Value, t2));
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Преобразование Object к заданному типу.
+    /// Для преобразования используется метод Convert.ChangeType().
+    /// Если исходное значение равно null, то возвращается default(T).
+    /// Работает с любыми типами, включая nullable.
+    /// Если исходное вычисляемое значение уже имеет подходящий тип, оно возвращается без изменений.
+    /// Если для него уже был создан преобразователь, он возвращается существующий экземпляр.
+    /// В противном случае создается новый объект преобразователя
+    /// </summary>
+    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<T> ToTypeEx2<T>(IDepValue value)
+    {
+      if (value == null)
+        throw new ArgumentNullException("value");
+
+      DepValue<T> v2 = value as DepValue<T>;
+      if (v2 != null)
+        return v2;
+
+      if (!value.IsConst) // иначе будет исключение
+      {
+        IDepExpr[] a = value.GetChildExpressions(false);
+        for (int i = 0; i < a.Length; i++)
+        {
+          DepToType<T> v3 = a[i] as DepToType<T>;
+          if (v3 != null)
+            return v3;
+        }
+      }
+
+      // Создаем новый преобразователь
+      return new DepToType<T>(value);
+    }
+
+#endif
+
+    private static T ToType<T>(object[] a)
+    {
+      if (object.ReferenceEquals(a[0], null))
+        return default(T);
+      else
+        return (T)(Convert.ChangeType(a[0], typeof(T)));
+    }
+
+    /// <summary>
+    /// Преобразование Object к заданному типу.
+    /// Для преобразования используется метод Convert.ChangeType().
+    /// Если исходное значение равно null, то возвращается default(T).
+    /// </summary>
+    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<T> ToTypeEx<T>(IDepValue value)
+    {
+      return new DepExprOA<T>(new IDepValue[1] { value }, ToType<T>);
+    }
+
+    private static T? ToNType<T>(object[] a)
+      where T : struct
+    {
+      if (Object.ReferenceEquals(a[0], null))
+        return null;
+      else
+      {
+        T res = (T)(Convert.ChangeType(a[0], typeof(T)));
+        return res;
+      }
+    }
+
+    /// <summary>
+    /// Преобразование Object к заданному Nullable-типу.
+    /// Если исходное значение равно null, то возвращается null.
+    /// Иначе для преобразования используется метод Convert.ChangeType().
+    /// </summary>
+    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<T?> ToNTypeEx<T>(IDepValue value)
+      where T : struct
+    {
+      return new DepExprOA<T?>(new IDepValue[1] { value }, ToNType<T>);
+    }
+
+    #endregion
+
+    #region Методы Create()
+
+    /// <summary>
+    /// Создает экземпляр шаблонного класса DepOutput, используя механизм рефлексии.
+    /// Начальным значением IDepOutput.Value будет значение по умолчанию для типа <paramref name="valueType"/>.
+    /// </summary>
+    /// <param name="valueType">Тип данных, который будет храниться в новом объекте. Должен быть задан.</param>
+    /// <returns>Новый объект DepOutput</returns>
+    public static IDepOutput CreateOutput(Type valueType)
+    {
+      if (valueType == null)
+        throw new ArgumentNullException("valueType");
+
+      Type t2 = typeof(DepOutput<>).MakeGenericType(valueType);
+      ConstructorInfo ci = t2.GetConstructor(new Type[0]);
+      return (IDepOutput)(ci.Invoke(DataTools.EmptyObjects));
+    }
+
+    /// <summary>
+    /// Создает экземпляр шаблонного класса DepInput, используя механизм рефлексии.
+    /// Начальным значением IDepInput.Value будет значение по умолчанию для типа <paramref name="valueType"/>.
+    /// </summary>
+    /// <param name="valueType">Тип данных, который будет храниться в новом объекте. Должен быть задан.</param>
+    /// <returns>Новый объект DepInput</returns>
+    public static IDepInput CreateInput(Type valueType)
+    {
+      if (valueType == null)
+        throw new ArgumentNullException("valueType");
+
+      Type t2 = typeof(DepInput<>).MakeGenericType(valueType);
+      ConstructorInfo ci = t2.GetConstructor(new Type[0]);
+      return (IDepInput)(ci.Invoke(DataTools.EmptyObjects));
+    }
+
+    /// <summary>
+    /// Пустой массив объектов IDepInput.
+    /// </summary>
+    internal static readonly IDepInput[] EmptyInputs = new IDepInput[0];
+
+    internal static IDepExpr[] EmptyDepExpr = new IDepExpr[0];
 
     #endregion
   }

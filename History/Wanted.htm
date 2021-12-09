@@ -5,7 +5,7 @@
 	<title>Что предстоит сделать</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:09:37.104000000"/>
-	<meta name="changed" content="2021-11-30T14:20:40.829000000"/>
+	<meta name="changed" content="2021-12-06T15:04:42.862000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -198,6 +198,20 @@
 			<p><span lang="en-US">3. </span><span lang="ru-RU">Перенос
 			дочерних окон из одного главного окна в другое</span></p>
 			<p lang="en-US">(09.06.2021)</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p style="margin-bottom: 0.5cm">Методы работы с буфером обмена (в
+			классе <span lang="en-US">EFPAppCliboard) </span><span lang="ru-RU">вызывают
+			ошибку, если вызываются не из основного потока приложения.
+			Например, при нажатии кнопки копирования сообщения в окне
+			</span><span lang="en-US">splash-</span><span lang="ru-RU">заставки,
+			показываемой асинхронно. Возникает исключение </span><span lang="en-US">ThreadStateException
+			&quot;Текущий поток должен быть задан как поток однопоточного
+			контейнера (STA), чтобы вызовы OLE стали возможны. Проверьте, что
+			ваша функция Main помечена атрибутом STAThreadAttribute&quot;</span></p>
+			<p><span lang="en-US">(06.12.2021)</span></p>
 		</td>
 	</tr>
 </table>

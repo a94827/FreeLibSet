@@ -62,6 +62,50 @@ namespace FreeLibSet.RI
     }
 
     #endregion
+
+    #region Проверка значений
+
+    ///// <summary>
+    ///// Очистка списка ошибок.
+    ///// Вызывается из метода Validate().
+    ///// Не используется в прикладном коде.
+    ///// </summary>
+    //public override void ClearErrors()
+    //{
+    //  base.ClearErrors();
+    //}
+
+    /// <summary>
+    /// Выполнить проверку значений в диалоге.
+    /// Возвращает false, если хотя бы для одного элемента выставлен признак ошибки.
+    /// Не используется в прикладном коде.
+    /// </summary>
+    /// <returns>Успех проверки</returns>
+    public bool Validate()
+    {
+      ClearErrors();
+      if (_Validating != null)
+        _Validating(this, EventArgs.Empty);
+      RIItem ErrorItem = FindError();
+      return ErrorItem == null;
+    }
+
+    /// <summary>
+    /// Событие вызывается на вызывающей стороне для проверки корректности введенных значений при нажатии кнопки "ОК".
+    /// Обработчик должен проверить значения, введенные пользователем и вызвать Control.SetError() для индикации ошибки.
+    /// 
+    /// Рекомендуется по возможности использовать списки Control.Validators для реализации проверок. 
+    /// Такие проверки выполняются динамически при каждом изменении пользовательского ввода, а не только при нажатии кнопки "ОК".
+    /// </summary>
+    public event EventHandler Validating
+    {
+      add { _Validating += value; }
+      remove { _Validating -= value; }
+    }
+    [NonSerialized]
+    private EventHandler _Validating;
+
+    #endregion
   }
 
   #endregion
@@ -4859,12 +4903,6 @@ namespace FreeLibSet.RI
 
   #region Ввод табличных данных
 
-  internal interface IInputGridDataView
-  {
-    bool IsFixed { get; }
-    DataTable Table { get; }
-  }
-
   /// <summary>
   /// Диалог для ввода табличных данных.
   /// Данные хранятся в виде таблицы DataTable. См описание свойства Table. 
@@ -4873,7 +4911,7 @@ namespace FreeLibSet.RI
   /// Свойство ReadOnly позволяет показать таблицу без возможности редактирования.
   /// </summary>
   [Serializable]
-  public class InputDataGridDialog : BaseInputDialog, IInputGridDataView
+  public class InputDataGridDialog : BaseInputDialog
   {
     #region Конструктор
 
@@ -4884,8 +4922,7 @@ namespace FreeLibSet.RI
     {
       Title = "Таблица";
 
-      _DS = new DataSet();
-      _DS.Tables.Add("Table");
+      _Data = new UIInputGridData();
     }
 
     #endregion
@@ -4902,24 +4939,18 @@ namespace FreeLibSet.RI
     /// 
     /// После закрытия блока диалога свойство Table должно быть прочитано заново, так как оно содержит ссылку на новую таблицу.
     /// По умолчанию - пустая таблица.
-    /// Если значение свойства устанавливается, то создается КОПИЯ таблицы.
     /// </summary>
-    public DataTable Table
+    public UIInputGridData Data
     {
-      get { return _DS.Tables[0]; }
+      get { return _Data; }
       set
       {
         if (value == null)
           throw new ArgumentNullException();
-        DataTable tbl = value.Copy();
-        tbl.TableName = "Table";
-        _DS.Tables.RemoveAt(0);
-        _DS.Tables.Add(tbl);
-
-        _Columns = null;
+        _Data = value;
       }
     }
-    private DataSet _DS;
+    private UIInputGridData _Data;
 
     /// <summary>
     /// Фиксированные строки.
@@ -4966,22 +4997,6 @@ namespace FreeLibSet.RI
     }
     private string _InfoText;
 
-    /// <summary>
-    /// Объект для установки расширенных свойств столбцов (форматирования, размеров, выравнивания текста).
-    /// Сама коллекция не хранит данные, для этого используются объекты DataColumn.ExtendedProperties.
-    /// </summary>
-    public InputDataGridColumns Columns
-    {
-      get
-      {
-        if (_Columns == null)
-          _Columns = new InputDataGridColumns(this);
-        return _Columns;
-      }
-    }
-    [NonSerialized]
-    private InputDataGridColumns _Columns;
-
     #endregion
 
     #region Чтение и запись значений
@@ -4992,7 +5007,6 @@ namespace FreeLibSet.RI
     protected override void OnSetFixed()
     {
       base.OnSetFixed();
-      _Columns = null; // требуется пересоздание объекта с ReadOnly=true.
     }
 
     /// <summary>
@@ -5014,7 +5028,7 @@ namespace FreeLibSet.RI
 
       using (System.IO.StringWriter sw = new System.IO.StringWriter())
       {
-        _DS.WriteXml(sw, XmlWriteMode.WriteSchema);
+        _Data.Table.WriteXml(sw, XmlWriteMode.IgnoreSchema);
         sw.Flush();
         string s = sw.ToString();
         part.SetString("Table", s);
@@ -5034,9 +5048,9 @@ namespace FreeLibSet.RI
       string s = part.GetString("Table");
       using (System.IO.StringReader sr = new System.IO.StringReader(s))
       {
-        DataSet ds = new DataSet();
-        ds.ReadXml(sr, XmlReadMode.ReadSchema);
-        _DS = ds;
+        _Data.Table.Rows.Clear();
+        _Data.Table.ReadXml(sr);
+        _Data.Table.AcceptChanges();
       }
     }
 
@@ -5048,253 +5062,6 @@ namespace FreeLibSet.RI
     protected override bool OnSupportsCfgType(RIValueCfgType сfgType)
     {
       return false;
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Класс для установки свойств DataColumn.ExtendedProperties для табличного просмотра InputGridDataDialog
-  /// </summary>
-  public sealed class InputDataGridColumn : IReadOnlyObject
-  {
-    // Этот класс не сериализуется.
-
-    #region Защищенный конструктор
-
-    internal InputDataGridColumn(IInputGridDataView riItem, DataColumn column)
-    {
-      _RIItem = riItem;
-      _Column = column;
-    }
-
-
-    #endregion
-
-    #region Основные свойства
-
-    private IInputGridDataView _RIItem;
-
-    /// <summary>
-    /// Столбец таблицы данных
-    /// </summary>
-    public DataColumn Column { get { return _Column; } }
-    private DataColumn _Column;
-
-    #endregion
-
-    #region Форматирование столбца
-
-    // "Format" - задает формат числового столбца или даты/времени.
-    // "TextWidth" - задает ширину столбца в текстовых единицах.
-    // "MinTextWidth" - задает минимальную ширину столбца в текстовых единицах.
-    // "FillWeight" - задает относительную ширину столбца, если столбец должен заполнять просмотр по ширине.
-    // "Align" - задает горизонтальное выравнивание (строковое значение "Left", "Center" или "Right").
-
-    /// <summary>
-    /// Горизонтальное выравнивание.
-    /// Если свойство не установлено в явном виде, то определяется по типу данных столбца (DataColumn.DataType).
-    /// Для числовых типов используется выравнивание по правому краю, для строк - по левому, для даты/времени и логического типа - по центру.
-    /// </summary>
-    public HorizontalAlignment Align
-    {
-      get
-      {
-        string s = DataTools.GetString(Column.ExtendedProperties["Align"]);
-        if (String.IsNullOrEmpty(s))
-        {
-          if (DataTools.IsNumericType(Column.DataType))
-            return HorizontalAlignment.Right;
-          if (Column.DataType == typeof(DateTime) || Column.DataType == typeof(bool))
-            return HorizontalAlignment.Center;
-          else if (DataTools.IsNumericType(Column.DataType))
-            return HorizontalAlignment.Right; // 26.11.2021
-          else
-            return HorizontalAlignment.Left;
-        }
-        else
-          return StdConvert.ToEnum<HorizontalAlignment>(s);
-      }
-      set
-      {
-        CheckNotReadOnly();
-        Column.ExtendedProperties["Align"] = value.ToString();
-      }
-    }
-
-    /// <summary>
-    /// Формат для числового столбца или столбца даты/времени.
-    /// </summary>
-    public string Format
-    {
-      get
-      {
-        return DataTools.GetString(Column.ExtendedProperties["Format"]);
-      }
-      set
-      {
-        CheckNotReadOnly();
-        Column.ExtendedProperties["Format"] = value;
-      }
-    }
-
-    /// <summary>
-    /// Ширина столбца как количество символов.
-    /// </summary>
-    public int TextWidth
-    {
-      get
-      {
-        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["TextWidth"]));
-      }
-      set
-      {
-        CheckNotReadOnly();
-        Column.ExtendedProperties["TextWidth"] = StdConvert.ToString(value);
-      }
-    }
-
-    /// <summary>
-    /// Минимальная ширина столбца как количество символов.
-    /// </summary>
-    public int MinTextWidth
-    {
-      get
-      {
-        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["MinTextWidth"]));
-      }
-      set
-      {
-        CheckNotReadOnly();
-        Column.ExtendedProperties["MinTextWidth"] = StdConvert.ToString(value);
-      }
-    }
-
-    /// <summary>
-    /// Весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
-    /// По умолчанию - 0 - используется ширина столбца, задаваемая TextWidth.
-    /// </summary>
-    public int FillWeight
-    {
-      get
-      {
-        return StdConvert.ToInt32(DataTools.GetString(Column.ExtendedProperties["FillWeight"]));
-      }
-      set
-      {
-        CheckNotReadOnly();
-        Column.ExtendedProperties["FillWeight"] = StdConvert.ToString(value);
-      }
-    }
-
-    #endregion
-
-    #region IReadOnlyObject Members
-
-    /// <summary>
-    /// Возвращает true, если можно только получать свойства, но не устанавливать их
-    /// </summary>
-    public bool IsReadOnly { get { return _RIItem.IsFixed; } }
-
-
-    /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
-    /// </summary>
-    public void CheckNotReadOnly()
-    {
-      if (IsReadOnly)
-        throw new ObjectReadOnlyException("Не разрешено изменение свойств столбцов");
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Реализация свойства InputDataGridDialog.Columns
-  /// Коллекция объектов InputDataGridColumn с доступом по имени столбца.
-  /// </summary>
-  public sealed class InputDataGridColumns
-  {
-    // Учитываем возможность, что может появится класс табличного просмотра InputGridDataView без блока диалога.
-    // Этот класс не сериализуется.
-
-    #region Защищенный конструктор
-
-    internal InputDataGridColumns(IInputGridDataView riItem)
-    {
-      _RIItem = riItem;
-      _Dict = new TypedStringDictionary<InputDataGridColumn>(riItem.Table.Columns.Count, true);
-    }
-
-    #endregion
-
-    #region Защищенные свойства
-
-    internal IInputGridDataView RIItem { get { return _RIItem; } }
-    private IInputGridDataView _RIItem;
-
-    #endregion
-
-    #region Доступ к элементам
-
-    private TypedStringDictionary<InputDataGridColumn> _Dict;
-
-    /// <summary>
-    /// Доступ к свойствам столбца по имени.
-    /// На момент вызова столбец должен быть добавлен в таблицу.
-    /// </summary>
-    /// <param name="columnName">Имя столбца (свойство DataColumn.ColumnName)</param>
-    /// <returns>Свойства столбца табличного просмотра</returns>
-    public InputDataGridColumn this[string columnName]
-    {
-      get
-      {
-        InputDataGridColumn info;
-        if (!_Dict.TryGetValue(columnName, out info))
-        {
-          DataColumn column = _RIItem.Table.Columns[columnName];
-          if (column == null)
-          {
-            if (String.IsNullOrEmpty(columnName))
-              throw new ArgumentNullException("columnName");
-            else
-              throw new ArgumentException("В таблице " + _RIItem.Table.ToString() + " нет столбца с именем \"" + columnName + "\"");
-          }
-          info = new InputDataGridColumn(_RIItem, column);
-          _Dict.Add(columnName, info);
-        }
-        return info;
-      }
-    }
-
-    /// <summary>
-    /// Доступ к свойствам столбца.
-    /// На момент вызова столбец должен быть добавлен в таблицу.
-    /// </summary>
-    /// <param name="column">Столбец DataTable</param>
-    /// <returns>Свойства столбца табличного просмотра</returns>
-    public InputDataGridColumn this[DataColumn column]
-    {
-      get
-      {
-        if (column == null)
-          throw new ArgumentNullException("column");
-        return this[column.ColumnName];
-      }
-    }
-
-    /// <summary>
-    /// Доступ к свойствам последнего столбца, который был добавлен в таблицу.
-    /// </summary>
-    public InputDataGridColumn LastAdded
-    {
-      get
-      {
-        if (_RIItem.Table.Columns.Count == 0)
-          return null;
-        else
-          return this[_RIItem.Table.Columns[_RIItem.Table.Columns.Count - 1]];
-      }
     }
 
     #endregion

@@ -683,7 +683,7 @@ namespace FreeLibSet.RI
       if (n == 0)
         return DataTools.EmptyStrings;
       string[] lines = new string[n];
-      for(int i=0; i<n;i++)
+      for (int i = 0; i < n; i++)
         lines[i] = part.GetString(name + "_" + i.ToString());
       return lines;
     }
@@ -855,25 +855,26 @@ namespace FreeLibSet.RI
       while (true)
       {
         TempCfg Cfg = new TempCfg();
-        dialog.WriteChanges(Cfg);
+        dialog.WriteChanges(Cfg); // 21.10.2021 - для сброса RIItem.ErrorMessage
 
-        NamedValues DispArgs = new NamedValues();
-        DispArgs["Action"] = "ShowDialog";
-        DispArgs["Dialog"] = dialog;
-        NamedValues DispRes = _ExecProc.Execute(DispArgs);
-        Cfg = new TempCfg();
-        Cfg.AsXmlText = DispRes.GetString("Changes");
-        dialog.ReadChanges(Cfg);
-
-        DialogResult DlgRes = (DialogResult)(DispRes["DialogResult"]);
-        if (DlgRes == DialogResult.OK || DlgRes == DialogResult.Yes)
+        NamedValues dispArgs = new NamedValues();
+        dispArgs["Action"] = "ShowDialog";
+        dispArgs["Dialog"] = dialog;
+        NamedValues dispRes = _ExecProc.Execute(dispArgs);
+        DialogResult dlgRes = (DialogResult)(dispRes["DialogResult"]);
+        if (dlgRes == DialogResult.OK || dlgRes == DialogResult.Yes)
         {
+          Cfg = new TempCfg();
+          Cfg.AsXmlText = dispRes.GetString("Changes");
+          dialog.ReadChanges(Cfg);
+
           if (!dialog.Validate())
             continue;
+
           dialog.WriteValues(Saver);
         }
 
-        return DlgRes;
+        return dlgRes;
       }
     }
 
@@ -894,22 +895,23 @@ namespace FreeLibSet.RI
       while (true)
       {
         TempCfg Cfg = new TempCfg();
-        dialog.WriteChanges(Cfg);
+        dialog.WriteChanges(Cfg); // 21.10.2021 - для сброса RIItem.ErrorMessage
 
         NamedValues DispArgs = new NamedValues();
         DispArgs["Action"] = "ShowStandardDialog";
         DispArgs["Dialog"] = dialog;
         NamedValues DispRes = _ExecProc.Execute(DispArgs);
-        Cfg = new TempCfg();
-        Cfg.AsXmlText = DispRes.GetString("Changes");
-        dialog.ReadChanges(Cfg);
 
         DialogResult DlgRes = (DialogResult)(DispRes["DialogResult"]);
         if (DlgRes == DialogResult.OK || DlgRes == DialogResult.Yes)
         {
-          // пока нет
-          //if (!Dialog.Validate())
-          //  continue;
+          Cfg = new TempCfg();
+          Cfg.AsXmlText = DispRes.GetString("Changes");
+          dialog.ReadChanges(Cfg);
+
+          if (!dialog.Validate())
+            continue;
+
           dialog.WriteValues(Saver);
         }
         return DlgRes;
@@ -1268,48 +1270,57 @@ namespace FreeLibSet.RI
     /// Если действие не может быть обработано, метод возвращает null. Это значение следует обрабатывать,
     /// генерируя исключение
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="dispArgs"></param>
     /// <param name="ui"></param>
     /// <returns></returns>
-    private NamedValues ExecuteInterfaceCall(NamedValues args, IRemoteInterface ui)
+    private NamedValues ExecuteInterfaceCall(NamedValues dispArgs, IRemoteInterface ui)
     {
-      NamedValues Res;
-      switch (args.GetString("Action"))
+      NamedValues dispRes;
+      DialogResult dlgRes;
+      switch (dispArgs.GetString("Action"))
       {
         case "ShowDialog":
-          Dialog dlg1 = args["Dialog"] as Dialog;
+          Dialog dlg1 = dispArgs["Dialog"] as Dialog;
           if (dlg1 == null)
             throw new NullReferenceException("Не задан аргумент \"Dialog\"");
           dlg1.SetFixed();
 
-          Res = new NamedValues();
-          Res["DialogResult"] = ui.ShowDialog(dlg1);
-          TempCfg Cfg1 = new TempCfg();
-          dlg1.WriteChanges(Cfg1);
-          Res["Changes"] = Cfg1.AsXmlText;
-          return Res;
+          dispRes = new NamedValues();
+          dlgRes = ui.ShowDialog(dlg1);
+          dispRes["DialogResult"] = dlgRes;
+          if (dlgRes == DialogResult.OK || dlgRes == DialogResult.Yes) // 06.12.2021
+          {
+            TempCfg Cfg1 = new TempCfg();
+            dlg1.WriteChanges(Cfg1);
+            dispRes["Changes"] = Cfg1.AsXmlText;
+          }
+          return dispRes;
         case "ShowStandardDialog":
-          StandardDialog dlg2 = args["Dialog"] as StandardDialog;
+          StandardDialog dlg2 = dispArgs["Dialog"] as StandardDialog;
           if (dlg2 == null)
             throw new NullReferenceException("Не задан аргумент \"Dialog\"");
           dlg2.SetFixed();
 
-          Res = new NamedValues();
-          Res["DialogResult"] = ui.ShowDialog(dlg2);
-          TempCfg Cfg2 = new TempCfg();
-          dlg2.WriteChanges(Cfg2);
-          Res["Changes"] = Cfg2.AsXmlText;
-          return Res;
+          dispRes = new NamedValues();
+          dlgRes = ui.ShowDialog(dlg2);
+          dispRes["DialogResult"] = dlgRes;
+          if (dlgRes == DialogResult.OK || dlgRes == DialogResult.Yes) // 06.12.2021
+          {
+            TempCfg Cfg2 = new TempCfg();
+            dlg2.WriteChanges(Cfg2);
+            dispRes["Changes"] = Cfg2.AsXmlText;
+          }
+          return dispRes;
         case "MessageBox":
-          Res = new NamedValues();
+          dispRes = new NamedValues();
 
-          string text = UITools.LinesToText((string[])args["Lines"]); // 27.08.2019
-          Res["DialogResult"] = ui.MessageBox(text,
-            args.GetString("Caption"),
-            (MessageBoxButtons)(args["Buttons"]),
-            (MessageBoxIcon)(args["Icon"]),
-            (MessageBoxDefaultButton)(args["DefaultButton"]));
-          return Res;
+          string text = UITools.LinesToText((string[])dispArgs["Lines"]); // 27.08.2019
+          dispRes["DialogResult"] = ui.MessageBox(text,
+            dispArgs.GetString("Caption"),
+            (MessageBoxButtons)(dispArgs["Buttons"]),
+            (MessageBoxIcon)(dispArgs["Icon"]),
+            (MessageBoxDefaultButton)(dispArgs["DefaultButton"]));
+          return dispRes;
         default:
           return null; // не наше сообщение
       }

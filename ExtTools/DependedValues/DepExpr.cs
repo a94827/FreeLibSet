@@ -10,7 +10,22 @@ using System.Text;
 
 namespace FreeLibSet.DependedValues
 {
-  #region Выражения с одним аргументом
+  #region Интерфейс IDepExpr
+
+  /// <summary>
+  /// Расширяет интерфейс IDepValue списком аргументов
+  /// </summary>
+  public interface IDepExpr : IDepValue
+  {
+    /// <summary>
+    /// Возвращает массив аргументов, которые используются в вычислении
+    /// </summary>
+    IDepValue[] Args { get; }
+  }
+
+  #endregion
+
+  #region Выражения с одним типизированным аргументом
 
   /// <summary>
   /// Прототип вычислителя с одним аргументом
@@ -28,7 +43,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="T1">Тип исходных данных</typeparam>
   [Serializable]
-  public class DepExpr1<TResult, T1> : DepValue<TResult>
+  public class DepExpr1<TResult, T1> : DepValue<TResult>, IDepExpr
   {
     #region Конструкторы
 
@@ -38,7 +53,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="arg">Источник исходных данных. Не может быть null.</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExpr1(DepValue<T1> arg, DepFunction1<TResult, T1> function)
     {
 #if DEBUG
@@ -104,11 +119,20 @@ namespace FreeLibSet.DependedValues
     }
 
     #endregion
+
+    #region IDepExpr Members
+
+    IDepValue[] IDepExpr.Args
+    {
+      get { return new IDepValue[1] { _Arg }; }
+    }
+
+    #endregion
   }
 
   #endregion
 
-  #region Выражения с двумя аргументами
+  #region Выражения с двумя типизированными аргументами
 
   #region Делегат
 
@@ -133,7 +157,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="T1">Тип исходных данных аргумента 1</typeparam>
   /// <typeparam name="T2">Тип исходных данных аргумента 2</typeparam>
   [Serializable]
-  public class DepExpr2<TResult, T1, T2> : DepValue<TResult>
+  public class DepExpr2<TResult, T1, T2> : DepValue<TResult>, IDepExpr
   {
     #region Конструкторы
 
@@ -144,7 +168,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="arg2">Источник исходных данных аргумента 2. Не может быть null.</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExpr2(DepValue<T1> arg1, DepValue<T2> arg2,
       DepFunction2<TResult, T1, T2> function)
     {
@@ -176,9 +200,9 @@ namespace FreeLibSet.DependedValues
     /// <param name="value2">Фиксированное значение 2</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExpr2(DepValue<T1> arg1, T2 value2, DepFunction2<TResult, T1, T2> function)
-      : this(arg1, new DepConst <T2>(value2), function)
+      : this(arg1, new DepConst<T2>(value2), function)
     {
     }
 
@@ -221,7 +245,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      BaseSetValue(Calculate(),false);
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -237,11 +261,20 @@ namespace FreeLibSet.DependedValues
     }
 
     #endregion
+
+    #region IDepExpr Members
+
+    IDepValue[] IDepExpr.Args
+    {
+      get { return new IDepValue[2] { _Arg1, _Arg2 }; }
+    }
+
+    #endregion
   }
 
   #endregion
 
-  #region Выражения с тремя аргументами
+  #region Выражения с тремя типизированными аргументами
 
   #region Делегат
 
@@ -269,7 +302,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="T2">Тип исходных данных аргумента 2</typeparam>
   /// <typeparam name="T3">Тип исходных данных аргумента 3</typeparam>
   [Serializable]
-  public class DepExpr3<TResult, T1, T2, T3> : DepValue<TResult>
+  public class DepExpr3<TResult, T1, T2, T3> : DepValue<TResult>, IDepExpr
   {
     #region Конструкторы
 
@@ -281,7 +314,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="arg3">Источник исходных данных аргумента 3. Не может быть null.</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExpr3(DepValue<T1> arg1, DepValue<T2> arg2, DepValue<T3> arg3,
       DepFunction3<TResult, T1, T2, T3> function)
     {
@@ -319,10 +352,10 @@ namespace FreeLibSet.DependedValues
     /// <param name="value3">Фиксированное значение 3</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExpr3(DepValue<T1> arg1, DepValue<T2> arg2, T3 value3,
       DepFunction3<TResult, T1, T2, T3> function)
-      : this(arg1, arg2, new DepConst <T3>(value3), function)
+      : this(arg1, arg2, new DepConst<T3>(value3), function)
     {
     }
 
@@ -334,10 +367,10 @@ namespace FreeLibSet.DependedValues
     /// <param name="value3">Фиксированное значение 3</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExpr3(DepValue<T1> arg1, T2 value2, T3 value3,
       DepFunction3<TResult, T1, T2, T3> function)
-      : this(arg1, new DepConst <T2>(value2), new DepConst <T3>(value3), function)
+      : this(arg1, new DepConst<T2>(value2), new DepConst<T3>(value3), function)
     {
     }
 
@@ -387,7 +420,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      BaseSetValue(Calculate(),false);
+      BaseSetValue(Calculate(), false);
     }
 
     /// <summary>
@@ -403,6 +436,15 @@ namespace FreeLibSet.DependedValues
     }
 
     #endregion
+
+    #region IDepExpr Members
+
+    IDepValue[] IDepExpr.Args
+    {
+      get { return new IDepValue[3] { _Arg1, _Arg2, _Arg3 }; }
+    }
+
+    #endregion
   }
 
   #endregion
@@ -410,7 +452,7 @@ namespace FreeLibSet.DependedValues
   #region Выражения со списком однотипных аргументов
 
   /// <summary>
-  /// Прототип вычислителя с массивом однотиных аргументов.
+  /// Прототип вычислителя с массивом однотипных аргументов.
   /// "TA"="Typed Array".
   /// </summary>
   /// <typeparam name="TResult">Тип вычисляемого значения</typeparam>
@@ -428,7 +470,7 @@ namespace FreeLibSet.DependedValues
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   /// <typeparam name="TArg">Тип исходных данных</typeparam>
   [Serializable]
-  public class DepExprTA<TResult, TArg> : DepValue<TResult>
+  public class DepExprTA<TResult, TArg> : DepValue<TResult>, IDepExpr
   {
     #region Конструкторы
 
@@ -438,7 +480,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="args">Массив источников исходных данных. Не может быть null или содержать элементы null</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExprTA(DepValue<TArg>[] args, DepFunctionTA<TResult, TArg> function)
     {
 #if DEBUG
@@ -498,7 +540,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      BaseSetValue(Calculate(),false);
+      BaseSetValue(Calculate(), false);
     }
 
     private DepFunctionTA<TResult, TArg> _Function;
@@ -516,6 +558,15 @@ namespace FreeLibSet.DependedValues
       for (int i = 0; i < _Args.Length; i++)
         a[i] = _Args[i].Value;
       return _Function(a);
+    }
+
+    #endregion
+
+    #region IDepExpr Members
+
+    IDepValue[] IDepExpr.Args
+    {
+      get { return _Args; }
     }
 
     #endregion
@@ -542,7 +593,7 @@ namespace FreeLibSet.DependedValues
   /// </summary>
   /// <typeparam name="TResult">Тип результата выражения</typeparam>
   [Serializable]
-  public class DepExprOA<TResult> : DepValue<TResult>
+  public class DepExprOA<TResult> : DepValue<TResult>, IDepExpr
   {
     #region Конструкторы
 
@@ -552,7 +603,7 @@ namespace FreeLibSet.DependedValues
     /// <param name="args">Массив источников исходных данных. Не может быть null или содержать элементы null</param>
     /// <param name="function">Обработчик для вычисления значения. 
     /// Если null, то предполагается, что класс-наследник переопределяет метод Calculate().
-    /// При этом конструктор наследника должен вызвать OwnerSetValue(Calculate()), чтобы вычислить начальное значение</param>
+    /// При этом конструктор наследника должен вызвать BaseSetValue(Calculate(), false), чтобы вычислить начальное значение</param>
     public DepExprOA(IDepValue[] args, DepFunctionOA<TResult> function)
     {
 #if DEBUG
@@ -610,7 +661,7 @@ namespace FreeLibSet.DependedValues
 
     private void SourceValueChanged(object sender, EventArgs args)
     {
-      BaseSetValue(Calculate(),false);
+      BaseSetValue(Calculate(), false);
     }
 
     private DepFunctionOA<TResult> _Function;

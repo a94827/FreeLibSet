@@ -151,6 +151,8 @@ namespace FreeLibSet.Forms.RI
 
       IEFPAppRIFormItem RIItem = EFPApp.RICreators.Create(dialog, null) as IEFPAppRIFormItem;
       RIItem.WriteValues();
+      if (!String.IsNullOrEmpty(dialog.ErrorMessage))
+        EFPApp.ErrorMessageBox(dialog.ErrorMessage, dialog.Title);
       DialogResult Res = (DialogResult)(int)EFPApp.ShowDialog(RIItem.FormProvider.Form, true);
       RIItem.ReadValues();
       return Res;
@@ -168,6 +170,8 @@ namespace FreeLibSet.Forms.RI
 
       IEFPAppRIStandardDialogItem RIItem = EFPApp.RICreators.Create(dialog, null) as IEFPAppRIStandardDialogItem;
       RIItem.WriteValues();
+      if (!String.IsNullOrEmpty(dialog.ErrorMessage))
+        EFPApp.ErrorMessageBox(dialog.ErrorMessage, dialog.Title); // 06.12.2021
       DialogResult Res = RIItem.ShowDialog();
       RIItem.ReadValues();
       return Res;
@@ -395,7 +399,7 @@ namespace FreeLibSet.Forms.RI
       public DialogItem(Dialog dialog)
       {
 
-        base.Text = dialog.Text;
+        base.Text = dialog.Title;
         base.ShowIcon = false;
         base.Icon = WinFormsTools.AppIcon;
         base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
@@ -3170,6 +3174,7 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.FixedRows = riDialog.FixedRows;
+        _WinDlg.Data = riDialog.Data;
         _WinDlg.ReadOnly = riDialog.ReadOnly;
         _WinDlg.InfoText = riDialog.InfoText;
       }
@@ -3187,12 +3192,12 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        _WinDlg.Table = _RIDialog.Table;
+        //_WinDlg.Data = _RIDialog.Data;
       }
 
       public void ReadValues()
       {
-        //_RIDialog.DataSource = _WinDlg.DataSource;
+        //_RIDialog.Data = _WinDlg.Data;
       }
 
       public DialogResult ShowDialog()
