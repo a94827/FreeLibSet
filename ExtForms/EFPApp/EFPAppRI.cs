@@ -818,7 +818,7 @@ namespace FreeLibSet.Forms.RI
 
     #region TextBox
 
-    private class TextBoxItem: FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
+    private class TextBoxItem : FreeLibSet.Forms.EFPTextBox, IEFPAppRIControlItem
     {
       #region Конструктор
 
@@ -895,7 +895,7 @@ namespace FreeLibSet.Forms.RI
             riItem.TextEx = base.TextEx;
         }
 
-        base.ReadOnly = riItem.ReadOnly; 
+        base.ReadOnly = riItem.ReadOnly;
         if (riItem.InternalReadOnlyExConnected)
         {
           if (riItem.ReadOnlyEx.HasSource)
@@ -1816,7 +1816,7 @@ namespace FreeLibSet.Forms.RI
             riItem.SelectedCodesEx = base.SelectedCodesEx;
         }
 
-        base.ReadOnly = riItem.ReadOnly; 
+        base.ReadOnly = riItem.ReadOnly;
         if (riItem.InternalReadOnlyExConnected)
         {
           if (riItem.ReadOnlyEx.HasSource)
@@ -1827,10 +1827,12 @@ namespace FreeLibSet.Forms.RI
         }
 
         if (riItem.HasCodeValidators)
+        {
           base.CodeValidators.AddRange(riItem.CodeValidators);
 
-        if (riItem.InternalValidatingCodeExConnected)
-          riItem.InternalSetValidatingCodeEx(base.ValidatingCodeEx);
+          if (riItem.CodeValidators.InternalValueExConnected)
+            riItem.CodeValidators.InternalSetValueEx(base.CodeValidators.ValueEx);
+        }
       }
 
       FreeLibSet.RI.CsvCodesTextBox _RIItem;
@@ -1889,10 +1891,12 @@ namespace FreeLibSet.Forms.RI
         }
 
         if (riItem.HasCodeValidators)
+        {
           base.CodeValidators.AddRange(riItem.CodeValidators);
 
-        if (riItem.InternalValidatingCodeExConnected)
-          riItem.InternalSetValidatingCodeEx(base.ValidatingCodeEx);
+          if (riItem.CodeValidators.InternalValueExConnected)
+            riItem.CodeValidators.InternalSetValueEx(base.CodeValidators.ValueEx);
+        }
       }
 
       FreeLibSet.RI.CsvCodesComboBox _RIItem;
@@ -2040,7 +2044,7 @@ namespace FreeLibSet.Forms.RI
       {
         base.TheTextBox.CanBeEmptyMode = riItem.CanBeEmptyMode;
 
-        base.TheTextBox.ReadOnly = riItem.ReadOnly; 
+        base.TheTextBox.ReadOnly = riItem.ReadOnly;
         if (riItem.InternalReadOnlyExConnected)
         {
           if (riItem.ReadOnlyEx.HasSource)
@@ -2331,7 +2335,7 @@ namespace FreeLibSet.Forms.RI
 
     #region Диалоги ввода значений
 
-    private class TextInputDialogItem: IEFPAppRIStandardDialogItem
+    private class TextInputDialogItem : IEFPAppRIStandardDialogItem
     {
       #region Конструктор
 
@@ -2384,7 +2388,7 @@ namespace FreeLibSet.Forms.RI
       #endregion
     }
 
-    private class PasswordInputDialogItem: IEFPAppRIStandardDialogItem
+    private class PasswordInputDialogItem : IEFPAppRIStandardDialogItem
     {
       #region Конструктор
 

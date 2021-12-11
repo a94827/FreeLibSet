@@ -1,6 +1,9 @@
 // Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+// Убрать, когда точно ясно будет
+//#define OLD_TOTYPE // Если определено, то используется первоначальный вариант методов ToTypeEx()/ToNTypeEx()
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -1908,97 +1911,7 @@ namespace FreeLibSet.DependedValues
 
     #region Преобразование типов
 
-#if! XXX // Пока не работает
-    /// <summary>
-    /// Если тип T является Nullable-структурой, возвращает значимый тип, для которого объявлена структура.
-    /// Иначе возвращает null
-    /// </summary>
-    /// <param name="t">Проверяемый тип данных</param>
-    /// <returns>Базовый значимый тип или null</returns>
-    private static Type GetNullableBaseType(Type t)
-    {
-      if (!t.IsGenericType)
-        return null;
-
-      if (t.GetGenericTypeDefinition() != typeof(Nullable<>))
-        return null;
-
-      Type[] a = t.GetGenericArguments();
-#if DEBUG
-      if (a.Length != 1)
-        throw new BugException("GetGenericArguments() для типа " + t.ToString());
-#endif
-      return a[0];
-    }
-
-
-    private class DepToType<T> : DepExprOA<T>
-    {
-      #region Конструктор
-
-      public DepToType(IDepValue arg)
-        : base(new IDepValue[1] { arg }, null)
-      {
-        BaseSetValue(Calculate(), false);
-      }
-
-      #endregion
-
-      #region Расчет
-
-      protected override T Calculate()
-      {
-        if (object.ReferenceEquals(Args[0].Value, null))
-          return default(T);
-
-        Type t2 = DepTools.GetNullableBaseType(typeof(T));
-
-        if (t2 == null)
-          return (T)(Convert.ChangeType(Args[0].Value, typeof(T)));
-        else
-          return (T)(Convert.ChangeType(Args[0].Value, t2));
-      }
-
-      #endregion
-    }
-
-    /// <summary>
-    /// Преобразование Object к заданному типу.
-    /// Для преобразования используется метод Convert.ChangeType().
-    /// Если исходное значение равно null, то возвращается default(T).
-    /// Работает с любыми типами, включая nullable.
-    /// Если исходное вычисляемое значение уже имеет подходящий тип, оно возвращается без изменений.
-    /// Если для него уже был создан преобразователь, он возвращается существующий экземпляр.
-    /// В противном случае создается новый объект преобразователя
-    /// </summary>
-    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
-    /// <param name="value">Исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
-    public static DepValue<T> ToTypeEx2<T>(IDepValue value)
-    {
-      if (value == null)
-        throw new ArgumentNullException("value");
-
-      DepValue<T> v2 = value as DepValue<T>;
-      if (v2 != null)
-        return v2;
-
-      if (!value.IsConst) // иначе будет исключение
-      {
-        IDepExpr[] a = value.GetChildExpressions(false);
-        for (int i = 0; i < a.Length; i++)
-        {
-          DepToType<T> v3 = a[i] as DepToType<T>;
-          if (v3 != null)
-            return v3;
-        }
-      }
-
-      // Создаем новый преобразователь
-      return new DepToType<T>(value);
-    }
-
-#endif
+#if OLD_TOTYPE
 
     private static T ToType<T>(object[] a)
     {
@@ -2046,6 +1959,273 @@ namespace FreeLibSet.DependedValues
     {
       return new DepExprOA<T?>(new IDepValue[1] { value }, ToNType<T>);
     }
+
+#else
+
+    /// <summary>
+    /// Если тип T является Nullable-структурой, возвращает значимый тип, для которого объявлена структура.
+    /// Иначе возвращает null
+    /// </summary>
+    /// <param name="t">Проверяемый тип данных</param>
+    /// <returns>Базовый значимый тип или null</returns>
+    private static Type GetNullableBaseType(Type t)
+    {
+      if (!t.IsGenericType)
+        return null;
+
+      if (t.GetGenericTypeDefinition() != typeof(Nullable<>))
+        return null;
+
+      Type[] a = t.GetGenericArguments();
+#if DEBUG
+      if (a.Length != 1)
+        throw new BugException("GetGenericArguments() для типа " + t.ToString());
+#endif
+      return a[0];
+    }
+
+    #region Перечисление FormatProviderKind
+
+    /// <summary>
+    /// Используемый вариант форматировщика
+    /// </summary>
+    private enum FormatProviderKind
+    {
+      /// <summary>
+      /// Нет форматировщика.
+      /// Этот вариант используется, если не используется преобразование в/из строки.
+      /// Например, преобразование из Int32 в Double не треует форматировщика.
+      /// Также этот вариант используется для форматирования с использованием текущей культуры.
+      /// При передаче объектов DepToType по сети культура может не совпадать. 
+      /// Также она, в теории, может динамически меняться в результате работы панели управления.
+      /// </summary>
+      Null,
+
+      /// <summary>
+      /// Задана фиксированная культура (по имени). В частности, может быть задана инвариантная культура "".
+      /// </summary>
+      CultureInfo,
+
+      /// <summary>
+      /// Задан пользовательский объект, реализующий IFormatProvider.
+      /// Если выполняется передача по сети, необходимо, чтобы этот объект был сериализуемым.
+      /// </summary>
+      UserDefined
+    }
+
+    #endregion
+
+    [Serializable]
+    private class DepToType<T> : DepExprOA<T>
+    {
+      #region Конструктор
+
+      public DepToType(IDepValue arg, string cultureName, IFormatProvider userFormatProvider)
+        : base(new IDepValue[1] { arg }, null)
+      {
+        _CultureName = cultureName;
+        _UserFormatProvider = userFormatProvider;
+
+        BaseSetValue(Calculate(), false);
+      }
+
+      #endregion
+
+      #region FormatProvider
+
+      public IFormatProvider FormatProvider
+      {
+        get
+        {
+          if (_CultureName != null) // пустая строка и null - не одно и то же
+          {
+            System.Globalization.CultureInfo ci = System.Globalization.CultureInfo.GetCultureInfo(_CultureName);
+            return ci;
+          }
+          return _UserFormatProvider;
+        }
+      }
+
+      /// <summary>
+      /// Какой тип IFormatProvider используется?
+      /// </summary>
+      public FormatProviderKind FormatProviderKind
+      {
+        get
+        {
+          return GetFormatProviderKind(_CultureName, _UserFormatProvider);
+        }
+      }
+
+      private static FormatProviderKind GetFormatProviderKind(string cultureName, IFormatProvider userFormatProvider)
+      {
+        if (cultureName != null)
+          return DepTools.FormatProviderKind.CultureInfo;
+        if (Object.ReferenceEquals(userFormatProvider, null))
+          return DepTools.FormatProviderKind.Null;
+        else
+          return DepTools.FormatProviderKind.UserDefined;
+      }
+
+      /// <summary>
+      /// Имя культуры для получения форматирования, например, "ru-RU".
+      /// Null - не задано. "" - инвариантная культура
+      /// </summary>
+      public string CultureName { get { return _CultureName; } }
+      private string _CultureName;
+
+      /// <summary>
+      /// Пользовательский объект.
+      /// Вряд ли будет часто использоваться
+      /// </summary>
+      public IFormatProvider UserFormatProvider { get { return _UserFormatProvider; } }
+      private IFormatProvider _UserFormatProvider;
+
+      public bool IsSameFormatProvider(string cultureName, IFormatProvider userFormatProvider)
+      {
+        FormatProviderKind otherKind = GetFormatProviderKind(cultureName, userFormatProvider);
+        if (otherKind != this.FormatProviderKind)
+          return false;
+
+        switch (otherKind)
+        {
+          case DepTools.FormatProviderKind.Null:
+            return true;
+          case DepTools.FormatProviderKind.CultureInfo:
+            return String.Equals(cultureName, this.CultureName, StringComparison.Ordinal);
+          case DepTools.FormatProviderKind.UserDefined:
+            return userFormatProvider.Equals(this.UserFormatProvider); // там может быть пользовательская логика сравнения
+          default:
+            throw new BugException();
+        }
+      }
+
+      #endregion
+
+      #region Расчет
+
+      protected override T Calculate()
+      {
+        if (object.ReferenceEquals(Args[0].Value, null))
+          return default(T);
+
+        Type t2 = DepTools.GetNullableBaseType(typeof(T));
+
+        if (t2 == null)
+        {
+          try { return (T)(Convert.ChangeType(Args[0].Value, typeof(T), FormatProvider)); }
+          catch { return default(T); }
+        }
+        else
+        {
+          try { return (T)(Convert.ChangeType(Args[0].Value, t2, FormatProvider)); }
+          catch { return default(T); }
+        }
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Преобразование Object к заданному типу.
+    /// Для преобразования используется метод Convert.ChangeType().
+    /// Если исходное значение равно null, то возвращается default(T).
+    /// Работает с любыми типами, включая nullable.
+    /// Если исходное вычисляемое значение уже имеет подходящий тип, оно возвращается без изменений.
+    /// Если для него уже был создан преобразователь, он возвращается существующий экземпляр.
+    /// В противном случае создается новый объект преобразователя.
+    /// 
+    /// Эта перегрузка не использует IFormatProvider при вызове метода ChangeType(). Ее следует использовать в двух
+    /// случаях:
+    /// 1. Преобразование не использует строки. Например, для преобразования Int32 в Double не требуется форматизатор.
+    /// 2. Преобразование должно выполняться с учетом текущей культуры. При передаче объектов по сети культуры могут отличаться.
+    /// Также возможно динамическоен изменение текущей культуры в процессе работы. 
+    /// Использование этой перегрузки не идентично вызову перегрузки с аргументом cultureInfo=CultureInfo.CurrentCulture,
+    /// так как не происходит фиксации действующего значения CultureInfo.CurrentCulture.
+    /// </summary>
+    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<T> ToTypeEx<T>(IDepValue value)
+    {
+      return ToTypeEx<T>(value, null, null);
+    }
+
+    /// <summary>
+    /// Преобразование Object к заданному типу.
+    /// Для преобразования используется метод Convert.ChangeType().
+    /// Если исходное значение равно null, то возвращается default(T).
+    /// Работает с любыми типами, включая nullable.
+    /// Если исходное вычисляемое значение уже имеет подходящий тип, оно возвращается без изменений.
+    /// Если для него уже был создан преобразователь, он возвращается существующий экземпляр.
+    /// В противном случае создается новый объект преобразователя.
+    /// 
+    /// Эта перегрузка, использует IFormatProvider при вызове метода ChangeType(). 
+    /// Ее следует использовать для преобразования в/из строк. В частности, можно указывать инвариантную культуру.
+    /// Если задана текущая культура CultureInfo.CurrentCulture, то она фиксируется. При передаче объекта по сети
+    /// будет использоваться та культура, которая действовала на машине, где вызван метод ToTypeEx(), а культура
+    /// на машине, выполняющей преобразование. Это поведение отличается от поведения перегрузки без аргумента <paramref name="formatProvider"/>.
+    /// 
+    /// Также перегрузка позволяет передавать произвольный пользовательский объект, реализующий интерфейс IFormatProvider.
+    /// Если используется передача объекта, то объект должен быть сериализуемым.
+    ///
+    /// При работе в сети не передавайте объекты NumberFormatInfo и DateTimeFormatInfo без крайней необходимости.
+    /// В отличие от CultureInfo, для них не предусмотрено оптимизированной сериализации.
+    /// </summary>
+    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="formatProvider">Используемая культура CultureInfo при преобразовании строк или пользовательский объект
+    /// Не может быть null.</param>
+    /// <returns>Вычисляемое выражение</returns>
+    public static DepValue<T> ToTypeEx<T>(IDepValue value, IFormatProvider formatProvider)
+    {
+      // Можно было бы разрешить использовать null, но тогда непонятно, что это точно означает:
+      // 1. Не передавать FormatProvider совсем (плавающая CurrentCulture)
+      // 2. Зафиксировать CurrentCulture и всегда использовать ее
+
+      if (formatProvider == null)
+        throw new ArgumentNullException("formatProvider");
+
+      System.Globalization.CultureInfo cultureInfo = formatProvider as System.Globalization.CultureInfo;
+      if (!Object.ReferenceEquals(cultureInfo, null))
+        return ToTypeEx<T>(value, cultureInfo.Name, null);
+      else
+        return ToTypeEx<T>(value, null, formatProvider);
+    }
+
+    private static DepValue<T> ToTypeEx<T>(IDepValue value, string cultureName, IFormatProvider userFormatProvider)
+    {
+      if (value == null)
+        throw new ArgumentNullException("value");
+
+#if DEBUG
+      if ((!Object.ReferenceEquals(cultureName, null)) && (!Object.ReferenceEquals(userFormatProvider, null)))
+        throw new BugException();
+#endif
+
+      DepValue<T> v2 = value as DepValue<T>;
+      if (v2 != null)
+        return v2;
+
+      if (!value.IsConst) // иначе будет исключение
+      {
+        IDepExpr[] a = value.GetChildExpressions(false);
+        for (int i = 0; i < a.Length; i++)
+        {
+          DepToType<T> v3 = a[i] as DepToType<T>;
+          if (v3 != null)
+          {
+            if (v3.IsSameFormatProvider(cultureName, userFormatProvider))
+              return v3;
+          }
+        }
+      }
+
+      // Создаем новый преобразователь
+      return new DepToType<T>(value, cultureName, userFormatProvider);
+    }
+
+#endif
 
     #endregion
 

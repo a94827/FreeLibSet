@@ -6012,83 +6012,25 @@ namespace FreeLibSet.RI
 
     #region Проверка отдельных кодов
 
-    #region ValidatingCodeEx
-
-    /// <summary>
-    /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
-    /// Используется в валидаторах из списка CodeValidators.
-    /// Не используйте свойство в валидаторах основного списка Validators.
-    /// </summary>
-    public DepValue<string> ValidatingCodeEx
-    {
-      get
-      {
-        InitValidatingCodeEx();
-        return _ValidatingCodeEx;
-      }
-    }
-    private DepInput<string> _ValidatingCodeEx;
-
-    /// <summary>
-    /// Возвращает true, если обработчик свойства ValidatingCodeEx присоединен к другим объектам в качестве входа.
-    /// Это свойство не предназначено для использования в пользовательском коде
-    /// </summary>
-    public bool InternalValidatingCodeExConnected
-    {
-      get
-      {
-        if (_ValidatingCodeEx == null)
-          return false;
-        else
-          return _ValidatingCodeEx.IsConnected;
-      }
-    }
-
-    private void InitValidatingCodeEx()
-    {
-      if (_ValidatingCodeEx == null)
-      {
-        _ValidatingCodeEx = new DepInput<string>(String.Empty, null);
-        _ValidatingCodeEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingCodeEx");
-      }
-    }
-
-    /// <summary>
-    /// Этот метод не предназначен для использования в пользовательском коде
-    /// </summary>
-    /// <param name="value"></param>
-    public void InternalSetValidatingCodeEx(DepValue<string> value)
-    {
-      InitValidatingCodeEx();
-      _ValidatingCodeEx.Source = value;
-    }
-
-    #endregion
-
     #region CodeValidators
 
     /// <summary>
     /// Список объектов-валидаторов для проверки корректности значения выбранных кодов.
-    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValidatingCodeEx
+    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValueEx
     /// (и на других управляемых свойствах, в том числе, других элементов диалога).
     /// Чтобы использования валидаторов имело смысл, свойство UnknownCodeSeverity должно быть установлено в Ok или Warning,
     /// иначе будут разрешены только коды из списка Codes.
     /// </summary>
-    public UIValidatorList CodeValidators
+    public UIValueValidatorList<string> CodeValidators
     {
       get
       {
         if (_CodeValidators == null)
-        {
-          if (IsFixed)
-            _CodeValidators = UIValidatorList.Empty;
-          else
-            _CodeValidators = new UIValidatorList();
-        }
+          _CodeValidators = new UIValueValidatorList<string>();
         return _CodeValidators;
       }
     }
-    private UIValidatorList _CodeValidators;
+    private UIValueValidatorList<string> _CodeValidators;
 
     /// <summary>
     /// Возвращает true, если список CodeValidators не пустой.
@@ -6498,59 +6440,6 @@ namespace FreeLibSet.RI
 
     #endregion
 
-    #region ValidatingCodeEx
-
-    /// <summary>
-    /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
-    /// Используется в валидаторах из списка CodeValidators.
-    /// Не используйте свойство в валидаторах основного списка Validators.
-    /// </summary>
-    public DepValue<string> ValidatingCodeEx
-    {
-      get
-      {
-        InitValidatingCodeEx();
-        return _ValidatingCodeEx;
-      }
-    }
-    private DepInput<string> _ValidatingCodeEx;
-
-    /// <summary>
-    /// Возвращает true, если обработчик свойства ValidatingCodeEx присоединен к другим объектам в качестве входа.
-    /// Это свойство не предназначено для использования в пользовательском коде
-    /// </summary>
-    public bool InternalValidatingCodeExConnected
-    {
-      get
-      {
-        if (_ValidatingCodeEx == null)
-          return false;
-        else
-          return _ValidatingCodeEx.IsConnected;
-      }
-    }
-
-    private void InitValidatingCodeEx()
-    {
-      if (_ValidatingCodeEx == null)
-      {
-        _ValidatingCodeEx = new DepInput<string>(String.Empty, null);
-        _ValidatingCodeEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingCodeEx");
-      }
-    }
-
-    /// <summary>
-    /// Этот метод не предназначен для использования в пользовательском коде
-    /// </summary>
-    /// <param name="value"></param>
-    public void InternalSetValidatingCodeEx(DepValue<string> value)
-    {
-      InitValidatingCodeEx();
-      _ValidatingCodeEx.Source = value;
-    }
-
-    #endregion
-
     #region CodeValidators
 
     /// <summary>
@@ -6560,21 +6449,16 @@ namespace FreeLibSet.RI
     /// Чтобы использования валидаторов имело смысл, свойство UnknownCodeSeverity должно быть установлено в Ok или Warning,
     /// иначе будут разрешены только коды из списка Codes.
     /// </summary>
-    public UIValidatorList CodeValidators
+    public UIValueValidatorList<string> CodeValidators
     {
       get
       {
         if (_CodeValidators == null)
-        {
-          if (IsFixed)
-            _CodeValidators = UIValidatorList.Empty;
-          else
-            _CodeValidators = new UIValidatorList();
-        }
+          _CodeValidators = new UIValueValidatorList<string>();
         return _CodeValidators;
       }
     }
-    private UIValidatorList _CodeValidators;
+    private UIValueValidatorList<string> _CodeValidators;
 
     /// <summary>
     /// Возвращает true, если список CodeValidators не пустой.

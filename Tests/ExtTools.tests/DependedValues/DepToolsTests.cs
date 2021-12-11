@@ -1,9 +1,12 @@
+//#define OLD_TOTYPE
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Calendar;
+using System.Globalization;
 
 namespace ExtTools_tests.DependedValues
 {
@@ -870,6 +873,8 @@ namespace ExtTools_tests.DependedValues
 
     #region ToTypeEx()
 
+#if OLD_TOTYPE
+
     [Test]
     public void ToType_int_to_int()
     {
@@ -926,27 +931,29 @@ namespace ExtTools_tests.DependedValues
       Assert.IsNull(DepTools.ToNTypeEx<int>(src2).Value, "null");
     }
 
+#else
+
     [Test]
     public void ToTypeEx_int()
     {
       IDepValue src = new DepOutput<int>(123);
 
-      DepValue<int> v1 = DepTools.ToTypeEx2<int>(src);
+      DepValue<int> v1 = DepTools.ToTypeEx<int>(src);
       Assert.AreSame(src, v1, "To Int32");
 
-      DepValue<double> v2 = DepTools.ToTypeEx2<double>(src);
+      DepValue<double> v2 = DepTools.ToTypeEx<double>(src);
       Assert.AreEqual(123.0, v2.Value, "To Double");
 
-      DepValue<double> v3 = DepTools.ToTypeEx2<double>(src);
+      DepValue<double> v3 = DepTools.ToTypeEx<double>(src);
       Assert.AreSame(v2, v3, "To Double again");
 
-      DepValue<int?> v4 = DepTools.ToTypeEx2<int?>(src);
+      DepValue<int?> v4 = DepTools.ToTypeEx<int?>(src);
       Assert.AreEqual(123, v4.Value, "To Nullable<Int32>");
 
-      DepValue<double?> v5 = DepTools.ToTypeEx2<double?>(src);
+      DepValue<double?> v5 = DepTools.ToTypeEx<double?>(src);
       Assert.AreEqual(123.0, v5.Value, "To Nullable<Double>");
 
-      DepValue<string> v6 = DepTools.ToTypeEx2<string>(src);
+      DepValue<string> v6 = DepTools.ToTypeEx<string>(src);
       Assert.AreEqual(123.ToString(), v6.Value, "To String");
 
       ((IDepOutput)src).OwnerSetValue(0);
@@ -956,41 +963,97 @@ namespace ExtTools_tests.DependedValues
       Assert.AreEqual(0.ToString(), v6.Value, "After set value - String");
     }
 
-
-
     [Test]
     public void ToTypeEx_nullable_int()
     {
       IDepValue src = new DepOutput<int?>(123);
 
-      DepValue<int> v1 = DepTools.ToTypeEx2<int>(src);
+      DepValue<int> v1 = DepTools.ToTypeEx<int>(src);
       Assert.AreEqual(123, v1.Value, "To Int32");
 
-      DepValue<double> v2 = DepTools.ToTypeEx2<double>(src);
+      DepValue<double> v2 = DepTools.ToTypeEx<double>(src);
       Assert.AreEqual(123.0, v2.Value, "To Double");
 
-      DepValue<int?> v3 = DepTools.ToTypeEx2<int?>(src);
+      DepValue<int?> v3 = DepTools.ToTypeEx<int?>(src);
       Assert.AreSame(src, v3, "To Nullable<Int32>");
 
-      DepValue<double?> v4 = DepTools.ToTypeEx2<double?>(src);
+      DepValue<double?> v4 = DepTools.ToTypeEx<double?>(src);
       Assert.AreEqual(123.0, v4.Value, "To Nullable<Double>");
 
-      DepValue<string> v5 = DepTools.ToTypeEx2<string>(src);
+      DepValue<string> v5 = DepTools.ToTypeEx<string>(src);
       Assert.AreEqual(123.ToString(), v5.Value, "To String");
 
       ((IDepOutput)src).OwnerSetValue(0);
-      Assert.AreEqual(0, v2.Value, "After set value 0 - Int32");
+      Assert.AreEqual(0, v1.Value, "After set value 0 - Int32");
       Assert.AreEqual(0.0, v2.Value, "After set value 0 - Double");
       Assert.AreEqual(0.0, v4.Value, "After set value 0 - Nullable<Double>");
       Assert.AreEqual(0.ToString(), v5.Value, "After set value 0 - String");
 
       ((IDepOutput)src).OwnerSetValue(null);
-      Assert.AreEqual(0, v2.Value, "After set value null - Int32");
+      Assert.AreEqual(0, v1.Value, "After set value null - Int32");
       Assert.AreEqual(0.0, v2.Value, "After set value null - Double");
       Assert.IsNull(v4.Value, "After set value null - Nullable<Double>");
       Assert.IsNull(v5.Value, "After set value null - String");
     }
 
+    [Test]
+    public void ToTypeEx_string()
+    {
+      IDepValue src = new DepOutput<string>("123");
+
+      DepValue<int> v1 = DepTools.ToTypeEx<int>(src, CultureInfo.InvariantCulture);
+      Assert.AreEqual(123, v1.Value, "To Int32");
+
+      DepValue<double> v2 = DepTools.ToTypeEx<double>(src, CultureInfo.InvariantCulture);
+      Assert.AreEqual(123.0, v2.Value, "To Double");
+
+      DepValue<int?> v3 = DepTools.ToTypeEx<int?>(src, CultureInfo.InvariantCulture);
+      Assert.AreEqual(123, v3.Value, "To Nullable<Int32>");
+
+      DepValue<double?> v4 = DepTools.ToTypeEx<double?>(src, CultureInfo.InvariantCulture);
+      Assert.AreEqual(123.0, v4.Value, "To Nullable<Double>");
+
+      DepValue<string> v5 = DepTools.ToTypeEx<string>(src);
+      Assert.AreSame(src, v5, "To String");
+
+      ((IDepOutput)src).OwnerSetValue("");
+      Assert.AreEqual(0, v1.Value, "After set value String.Empty - Int32");
+      Assert.AreEqual(0.0, v2.Value, "After set value String.Empty - Double");
+      Assert.IsNull(v3.Value, "After set value String.Empty - Nullable<Int32>");
+      Assert.IsNull(v4.Value, "After set value String.Empty - Nullable<Double>");
+      Assert.AreEqual("", v5.Value, "After set value String.Empty - String");
+
+      ((IDepOutput)src).OwnerSetValue("XXX"); // непреобразуемое значение
+      Assert.AreEqual(0, v1.Value, "After set value to wrong text - Int32");
+      Assert.AreEqual(0.0, v2.Value, "After set value to wrong text - Double");
+      Assert.IsNull(v3.Value, "After set value value to wrong text  - Nullable<Int32>");
+      Assert.IsNull(v4.Value, "After set value value to wrong text  - Nullable<DOuble>");
+      Assert.AreEqual("XXX", v5.Value, "After set value String.Empty - String");
+
+      ((IDepOutput)src).OwnerSetValue(null);
+      Assert.AreEqual(0, v1.Value, "After set value null - Int32");
+      Assert.AreEqual(0.0, v2.Value, "After set value null - Double");
+      Assert.IsNull(v3.Value, "After set value null - Nullable<Ште32>");
+      Assert.IsNull(v4.Value, "After set value null - Nullable<Double>");
+      Assert.IsNull(v5.Value, "After set value null - String");
+    }
+
+    [Test]
+    public void ToTypeEx_cultureInfo()
+    {
+      IDepValue src = new DepOutput<double>(-123.45);
+
+      DepValue<string> v1 = DepTools.ToTypeEx<string>(src, CultureInfo.GetCultureInfo("en-US"));
+      DepValue<string> v2 = DepTools.ToTypeEx<string>(src, CultureInfo.GetCultureInfo("ru-RU"));
+
+      Assert.AreEqual("-123.45", v1.Value, "en-US");
+      Assert.AreEqual("-123,45", v2.Value, "ru-RU");
+
+      DepValue<string> v3 = DepTools.ToTypeEx<string>(src, CultureInfo.GetCultureInfo("en-US"));
+      Assert.AreSame(v1, v3, "en-US again");
+    }
+
+#endif
 
     #endregion
 

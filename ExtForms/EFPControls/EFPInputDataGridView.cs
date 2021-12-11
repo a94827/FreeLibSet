@@ -361,6 +361,9 @@ namespace FreeLibSet.Forms
         _ValidatingResults.Clear(); // неохота проверять остальные режимы
     }
 
+    /// <summary>
+    /// Присоединение обработчика ListChanged
+    /// </summary>
     protected override void OnAttached()
     {
       base.OnAttached();
@@ -368,6 +371,9 @@ namespace FreeLibSet.Forms
         _Data.Table.DefaultView.ListChanged += DV_ListChanged;
     }
 
+    /// <summary>
+    /// Отключение обработчика ListChanged
+    /// </summary>
     protected override void OnDetached()
     {
       if (_Data != null)
@@ -380,6 +386,10 @@ namespace FreeLibSet.Forms
 
     #region Раскраска ячеек с ошибками
 
+    /// <summary>
+    /// Получение списка сообщений для строки
+    /// </summary>
+    /// <param name="args"></param>
     protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
     {
       base.OnGetRowAttributes(args);
@@ -441,7 +451,6 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Проверка одной строки
     /// </summary>
-    /// <param name="rowIndex">Индекс строки</param>
     private void ValidateRow(int rowIndex, ref RowValidatingResults rvr)
     {
       DataRow row = GetDataRow(rowIndex);

@@ -98,8 +98,8 @@ namespace FreeLibSet.UICore
     public UIValidateState CanBeEmptyMode
     {
       get { return _CanBeEmptyMode; }
-      set 
-      { 
+      set
+      {
         _CanBeEmptyMode = value;
         foreach (KeyValuePair<string, ColumnInfo> pair in _Dict)
           pair.Value.CanBeEmptyMode = value;
@@ -124,6 +124,155 @@ namespace FreeLibSet.UICore
     #endregion
 
     #region Вложенные классы
+
+    /// <summary>
+    /// Расширяет список свойствами с текущим проверяемым значением
+    /// </summary>
+    [Serializable]
+    public sealed class ColumnValidators : UIValidatorList
+    {
+      #region Защищенный конструктор
+
+      internal ColumnValidators(ColumnInfo columnInfo)
+      {
+        _CI = columnInfo;
+      }
+
+      private ColumnInfo _CI;
+
+      #endregion
+
+      #region ValueEx
+
+      /// <summary>
+      /// Управляемое свойство, возвращающее значение проверяемой строки.
+      /// </summary>
+      public IDepValue ValueEx
+      {
+        get
+        {
+          if (_ValueEx == null)
+          {
+            Type valueType = _CI.Column.DataType;
+            if (valueType == null)
+              valueType = typeof(object);
+            _ValueEx = DepTools.CreateOutput(valueType);
+            _ValueEx.OwnerSetValue(_CI.CurrentValue);
+            _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
+          }
+          return _ValueEx;
+        }
+      }
+      private IDepOutput _ValueEx;
+
+      internal bool ValueExConnected
+      {
+        get
+        {
+          if (_ValueEx == null)
+            return false;
+          else
+            return _ValueEx.IsConnected;
+        }
+      }
+
+      #endregion
+
+      #region IsNotEmptyEx
+
+      /// <summary>
+      /// Управляемое свойство, которое возвращает true, если в поле введено непустое значение.
+      /// </summary>
+      public DepValue<bool> IsNotEmptyEx
+      {
+        get
+        {
+          if (_IsNotEmptyEx == null)
+          {
+            _IsNotEmptyEx = new DepOutput<bool>(!Object.ReferenceEquals(_CI.CurrentValue, null));
+            _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+          }
+          return _IsNotEmptyEx;
+        }
+      }
+      private DepOutput<bool> _IsNotEmptyEx;
+
+      #endregion
+
+      #region Установка значения
+
+      internal void InitValue()
+      {
+        if (_ValueEx != null)
+          _ValueEx.OwnerSetValue(_CI.CurrentValue);
+        if (_IsNotEmptyEx != null)
+          _IsNotEmptyEx.OwnerSetValue(!Object.ReferenceEquals(_CI.CurrentValue, null));
+      }
+
+      #endregion
+
+      #region Форматированный доступ
+
+      /// <summary>
+      /// Вызывает DepTools.ToTypeEx() для свойства ValueEx.
+      /// </summary>
+      /// <typeparam name="T">Тип данных, к которому нужно преобразовать текущее проверяемое значение</typeparam>
+      /// <returns>Вычисляемый объект</returns>
+      public DepValue<T> ToTypeEx<T>()
+      {
+        return DepTools.ToTypeEx<T>(ValueEx);
+      }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как строку.
+      /// </summary>
+      public DepValue<string> AsStringEx { get { return ToTypeEx<string>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как число.
+      /// </summary>
+      public DepValue<int> AsIntEx { get { return ToTypeEx<int>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как число.
+      /// </summary>
+      public DepValue<long> AsInt64Ex { get { return ToTypeEx<long>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как число.
+      /// </summary>
+      public DepValue<float> AsSingleEx { get { return ToTypeEx<float>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как число.
+      /// </summary>
+      public DepValue<double> AsDoubleEx { get { return ToTypeEx<double>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как число.
+      /// </summary>
+      public DepValue<decimal> AsDecimalEx { get { return ToTypeEx<decimal>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как логическое значение.
+      /// </summary>
+      public DepValue<bool> AsBoolEx { get { return ToTypeEx<bool>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое значение как дату/время.
+      /// Пустое значение возвращается как DateTimne.MinValue.
+      /// </summary>
+      public DepValue<DateTime> AsDateTimeEx { get { return ToTypeEx<DateTime>(); } }
+
+      /// <summary>
+      /// Возвращает текущее проверяемое nullable-значение как дату/время.
+      /// </summary>
+      public DepValue<DateTime?> AsNulableDateTimeEx { get { return ToTypeEx<DateTime?>(); } }
+
+      // для GUID'jd и прочих типов вряд ли нужно делать
+
+      #endregion
+    }
 
     /// <summary>
     /// Форматирование и валидаторы для одного столбца данных
@@ -157,6 +306,9 @@ namespace FreeLibSet.UICore
 
       private UIInputGridData _Owner;
 
+      /// <summary>
+      /// Имя столбца
+      /// </summary>
       public string ColumnName { get { return _ColumnName; } }
       private string _ColumnName;
 
@@ -277,16 +429,16 @@ namespace FreeLibSet.UICore
       /// <summary>
       /// Список валидаторов для столбца
       /// </summary>
-      public UIValidatorList Validators
+      public ColumnValidators Validators
       {
         get
         {
           if (_Validators == null)
-            _Validators = new UIValidatorList();
+            _Validators = new ColumnValidators(this);
           return _Validators;
         }
       }
-      private UIValidatorList _Validators;
+      private ColumnValidators _Validators;
 
       /// <summary>
       /// Возвращает true, если список Validators не пустой.
@@ -311,91 +463,20 @@ namespace FreeLibSet.UICore
       /// Текущее проверяемое значение.
       /// Вместо DBNull используется null.
       /// </summary>
-      internal object ValidatingValue
+      internal object CurrentValue
       {
-        get { return _ValidatingValue; }
+        get { return _CurrentValue; }
         set
         {
           if (value is DBNull)
             value = null;
 
-          _ValidatingValue = value;
-          if (_ValidatingValueEx != null)
-            _ValidatingValueEx.OwnerSetValue(value);
-          if (_ValidatingIsNotEmptyEx != null)
-            _ValidatingIsNotEmptyEx.OwnerSetValue(!Object.ReferenceEquals(value, null));
+          _CurrentValue = value;
+          if (_Validators != null)
+            _Validators.InitValue();
         }
       }
-      private object _ValidatingValue;
-
-      #endregion
-
-      #region ValidatingValueEx
-
-      /// <summary>
-      /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
-      /// Используется в валидаторах из списка CodeValidators.
-      /// Не используйте свойство в валидаторах основного списка Validators.
-      /// </summary>
-      public IDepValue ValidatingValueEx
-      {
-        get
-        {
-          if (_ValidatingValueEx == null)
-          {
-            Type valueType = Column.DataType;
-            if (valueType == null)
-              valueType = typeof(object);
-            _ValidatingValueEx = DepTools.CreateOutput(valueType);
-            _ValidatingValueEx.OwnerSetValue(ValidatingValue);
-            _ValidatingValueEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingValueEx");
-          }
-          return _ValidatingValueEx;
-        }
-      }
-      private IDepOutput _ValidatingValueEx;
-
-      /// <summary>
-      /// Возвращает true, если обработчик свойства ValidatingValueEx присоединен к другим объектам в качестве входа.
-      /// Это свойство не предназначено для использования в пользовательском коде
-      /// </summary>
-      public bool InternalValidatingValueExConnected
-      {
-        get
-        {
-          if (_ValidatingValueEx == null)
-            return false;
-          else
-            return _ValidatingValueEx.IsConnected;
-        }
-      }
-
-      public DepValue<T> GetValidatingValueEx<T>()
-      {
-        return (DepValue<T>)ValidatingValueEx;
-      }
-
-      #endregion
-
-      #region ValidatingIsNotEmptyEx
-
-      /// <summary>
-      /// Управляемое свойство, которое возвращает true, если введено непустое значение.
-      /// Используется для валидаторов.
-      /// </summary>
-      public DepValue<bool> ValidatingIsNotEmptyEx
-      {
-        get
-        {
-          if (_ValidatingIsNotEmptyEx == null)
-          {
-            _ValidatingIsNotEmptyEx = new DepOutput<bool>(!Object.ReferenceEquals(_ValidatingValue, null));
-            _ValidatingIsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
-          }
-          return _ValidatingIsNotEmptyEx;
-        }
-      }
-      private DepOutput<bool> _ValidatingIsNotEmptyEx;
+      private object _CurrentValue;
 
       #endregion
 
@@ -512,7 +593,7 @@ namespace FreeLibSet.UICore
       {
         ColumnInfo ci;
         if (_Dict.TryGetValue(row.Table.Columns[i].ColumnName, out ci))
-          ci.ValidatingValue = row[i];
+          ci.CurrentValue = row[i];
       }
     }
 

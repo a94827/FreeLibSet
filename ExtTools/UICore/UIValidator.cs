@@ -426,7 +426,7 @@ namespace FreeLibSet.UICore
   /// Реализация свойства RIItem.Validators
   /// </summary>
   [Serializable]
-  public sealed class UIValidatorList : ListWithReadOnly<UIValidator>
+  public class UIValidatorList : ListWithReadOnly<UIValidator>
   {
     #region Конструктор
 
@@ -618,6 +618,76 @@ namespace FreeLibSet.UICore
 
     #endregion
   }
+
+  /// <summary>
+  /// Список валидаторов, предназначенных для проверки одного значения из списка.
+  /// Расширяет список UIValidatorList свойством ValueEx.
+  /// </summary>
+  [Serializable]
+  public class UIValueValidatorList<T> : UIValidatorList
+  {
+    #region ValueEx
+
+    /// <summary>
+    /// Управляемое свойство, возвращающее текущее проверяемое значение.
+    /// </summary>
+    public DepValue<T> ValueEx
+    {
+      get
+      {
+        InitValueEx();
+        return _ValueEx;
+      }
+    }
+    private DepInput<T> _ValueEx;
+
+    /// <summary>
+    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде
+    /// </summary>
+    public bool InternalValueExConnected
+    {
+      get
+      {
+        if (_ValueEx == null)
+          return false;
+        else
+          return _ValueEx.IsConnected;
+      }
+    }
+
+    private void InitValueEx()
+    {
+      if (_ValueEx == null)
+      {
+        _ValueEx = new DepInput<T>();
+        _ValueEx.OwnerInfo = new DepOwnerInfo(this, "ValueEx");
+      }
+    }
+
+    /// <summary>
+    /// Этот метод не предназначен для использования в пользовательском коде
+    /// </summary>
+    /// <param name="value"></param>
+    public void InternalSetValueEx(DepValue<T> value)
+    {
+      InitValueEx();
+      _ValueEx.Source = value;
+    }
+
+    /// <summary>
+    /// Этот метод не предназначен для использования в пользовательском коде
+    /// </summary>
+    /// <param name="value"></param>
+    public void InternalSetValue(T value)
+    {
+      InitValueEx();
+      _ValueEx.Value = value;
+    }
+
+    #endregion
+  }
+
 
   #region Интерфейсы управляющих элементов
 

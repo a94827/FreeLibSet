@@ -1496,8 +1496,8 @@ namespace FreeLibSet.Forms
         }
 
         _CodeValidatingEventArgs.Init(s);
-        if (_ValidatingCodeEx != null)
-          _ValidatingCodeEx.OwnerSetValue(s);
+        if (_CodeValidators != null)
+          _CodeValidators.InternalSetValue(s);
         OnCodeValidating(_CodeValidatingEventArgs);
         switch (_CodeValidatingEventArgs.ValidateState)
         { 
@@ -1530,49 +1530,22 @@ namespace FreeLibSet.Forms
     public event EFPCodeValidatingEventHandler CodeValidating;
 
     /// <summary>
-    /// Управляемое свойство, возвращающее текущий проверяемый код в списке SelectedCodes.
-    /// Используется в валидаторах из списка CodeValidators.
-    /// Не используйте свойство в валидаторах основного списка Validators.
-    /// В основном, предназначено для проверки в удаленном интерфейсе.
-    /// В обычных приложениях удобнее использовать обработчик события CodeValidating.
-    /// </summary>
-    public DepValue<string> ValidatingCodeEx
-    {
-      get
-      {
-        if (_ValidatingCodeEx == null)
-        {
-          _ValidatingCodeEx = new DepOutput<string>(String.Empty);
-          _ValidatingCodeEx.OwnerInfo = new DepOwnerInfo(this, "ValidatingCodeEx");
-        }
-        return _ValidatingCodeEx;
-      }
-    }
-    private DepOutput<string> _ValidatingCodeEx;
-
-
-    /// <summary>
     /// Список объектов-валидаторов для проверки корректности значения выбранных кодов.
     /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValidatingCodeEx
     /// (и на других управляемых свойствах, в том числе, других элементов формы).
     /// В основном, предназначено для проверки в удаленном интерфейсе.
     /// В обычных приложениях удобнее использовать обработчик события CodeValidating.
     /// </summary>
-    public UIValidatorList CodeValidators
+    public UIValueValidatorList<string> CodeValidators
     {
       get
       {
         if (_CodeValidators == null)
-        {
-          if (ProviderState!=EFPControlProviderState.Initialization)
-            _CodeValidators = UIValidatorList.Empty;
-          else
-            _CodeValidators = new UIValidatorList();
-        }
+          _CodeValidators = new UIValueValidatorList<string>();
         return _CodeValidators;
       }
     }
-    private UIValidatorList _CodeValidators;
+    private UIValueValidatorList<string> _CodeValidators;
 
     /// <summary>
     /// Возвращает true, если список CodeValidators не пустой.
