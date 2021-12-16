@@ -464,7 +464,7 @@ namespace FreeLibSet.Forms
       ciClear.Click += new EventHandler(ciClear_Click);
       Add(ciClear);
 
-      if (!EFPApp.IsMono) // не совместимо
+      if (!EnvironmentTools.IsMono) // не совместимо
       {
         ciScan = new EFPCommandItem("Edit", "Acquire");
         ciScan.MenuText = "Со сканера или камеры";

@@ -2091,7 +2091,7 @@ namespace FreeLibSet.Forms
       switch (ValidateState)
       {
         case UIValidateState.Ok:
-          if (EFPApp.IsMono)
+          if (EnvironmentTools.IsMono)
             Control.ForeColor = _OrgControlForeColor; // 01.10.2013
           else
             Control.ResetForeColor();

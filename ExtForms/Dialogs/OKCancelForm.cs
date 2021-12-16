@@ -206,7 +206,7 @@ namespace FreeLibSet.Forms
       if (TBPanel.Controls.Count == 0)
         return;
 
-      MinMaxInt mm = new MinMaxInt();
+      MinMax<int> mm = new MinMax<int>();
       // Дочерние элементы могут располагаться в любом месте панели, и сверху и снизу.
       // Они получат нормальные координаты только после изменения размеров, а не сейчас
       foreach (Control child in TBPanel.Controls)
@@ -372,7 +372,7 @@ namespace FreeLibSet.Forms
       if (TBPanel.Controls.Count == 0)
         return;
 
-      MinMaxInt mm = new MinMaxInt();
+      MinMax<int> mm = new MinMax<int>();
       // Дочерние элементы могут располагаться в любом месте панели, и сверху и снизу.
       // Они получат нормальные координаты только после изменения размеров, а не сейчас
       foreach (Control child in TBPanel.Controls)

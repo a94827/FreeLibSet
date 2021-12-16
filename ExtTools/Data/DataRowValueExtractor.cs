@@ -1432,7 +1432,7 @@ namespace FreeLibSet.Data
           int p = row.Table.Columns.IndexOf(_FieldName);
           if (p < 0)
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
-          if (row.Table.Columns[p].DataType == typeof(Int32))
+          if (row.Table.Columns[p].DataType == typeof(TimeSpan)) // испр. 5.12.2021
             _FieldIndex = p;
           else
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _FieldName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
@@ -1532,7 +1532,7 @@ namespace FreeLibSet.Data
           int p = row.Table.Columns.IndexOf(_FieldName);
           if (p < 0)
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
-          if (row.Table.Columns[p].DataType == typeof(Int32))
+          if (row.Table.Columns[p].DataType == typeof(TimeSpan))
             _FieldIndex = p;
           else
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _FieldName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());

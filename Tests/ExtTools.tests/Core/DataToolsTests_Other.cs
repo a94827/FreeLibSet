@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework;
 using System.Data;
+using System.Collections;
+using NUnit.Framework;
 using FreeLibSet.Core;
 
 namespace ExtTools_tests.Core
@@ -50,7 +51,7 @@ namespace ExtTools_tests.Core
     [TestCase(100)]
     public void SortDataRow(int rowCount)
     {
-      int[] TestValues = new int[] { 5, 1, 10, 4}; // можно было бы использовать генератор случайных чисел
+      int[] TestValues = new int[] { 5, 1, 10, 4 }; // можно было бы использовать генератор случайных чисел
       DataTable table = new DataTable();
       table.Columns.Add("Col1", typeof(int));
       for (int i = 0; i < rowCount; i++)
@@ -68,6 +69,41 @@ namespace ExtTools_tests.Core
         a2[i] = (int)(a[i]["Col1"]);
 
       CollectionAssert.IsOrdered(a2);
+    }
+
+    [Test]
+    public void NamesAndValuesToPairs()
+    {
+      string[] colNames = new string[] { "F1", "F2", "F3" };
+      object[] values = new object[] { "ABC", 2, 3.0 };
+
+      Hashtable res = DataTools.NamesAndValuesToPairs(colNames, values);
+
+      Assert.AreEqual(3, res.Count, "Count");
+      Assert.AreEqual("ABC", res["F1"], "[0]");
+      Assert.AreEqual(2, res["F2"], "[1]");
+      Assert.AreEqual(3.0, res["F3"], "[2]");
+    }
+
+    [Test]
+    public void PairsToNamesAndValues()
+    {
+      Dictionary<string, object> dict = new Dictionary<string, object>();
+      dict.Add("F1", "ABC");
+      dict.Add("F2", 2);
+      dict.Add("F3", 3.0);
+
+
+      string[] names;
+      object[] values;
+      DataTools.PairsToNamesAndValues(dict, out names, out values);
+
+      Assert.AreEqual(3, names.Length, "Names.Length");
+      Assert.AreEqual(3, values.Length, "Values.Length");
+
+      Assert.AreEqual("ABC", values[Array.IndexOf<string>(names, "F1")], "[0]");
+      Assert.AreEqual(2, values[Array.IndexOf<string>(names, "F2")], "[1]");
+      Assert.AreEqual(3.0, values[Array.IndexOf<string>(names, "F3")], "[2]");
     }
   }
 }

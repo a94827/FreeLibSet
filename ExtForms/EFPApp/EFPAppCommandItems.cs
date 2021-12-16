@@ -907,7 +907,7 @@ namespace FreeLibSet.Forms
         "Help|About"
       };
 
-      MinMaxInt Range = DataTools.GetEnumRange(typeof(EFPAppStdCommandItems));
+      MinMax<int> Range = DataTools.GetEnumRange(typeof(EFPAppStdCommandItems));
 
 #if DEBUG
       if (Range.MaxValue != (a.Length - 1))

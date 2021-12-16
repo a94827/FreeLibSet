@@ -744,7 +744,7 @@ namespace FreeLibSet.Forms
         default:
           if (DataTools.IsIntegerType(v.GetType()) || DataTools.IsFloatType(v.GetType()))
           {
-            valueText = Convert.ToString(v, DataTools.DotNumberConv);
+            valueText = Convert.ToString(v, StdConvert.NumberFormat);
             typeText = "Number";
           }
           break;
@@ -1449,7 +1449,7 @@ namespace FreeLibSet.Forms
         XmlElement elCol = XmlDoc.CreateElement("col", nmspcSpreadsheet);
         SetAttr(elCol, "min", (j + 1).ToString(), String.Empty);
         SetAttr(elCol, "max", (j + 1).ToString(), String.Empty);
-        SetAttr(elCol, "width", Column.TextWidth.ToString("0.##", DataTools.DotNumberConv), String.Empty);
+        SetAttr(elCol, "width", Column.TextWidth.ToString("0.##", StdConvert.NumberFormat), String.Empty);
         elCols.AppendChild(elCol);
       }
 
@@ -1638,7 +1638,7 @@ namespace FreeLibSet.Forms
           try
           {
             double v2 = ((DateTime)v).ToOADate();
-            valueText = Convert.ToString(v2, DataTools.DotNumberConv);
+            valueText = Convert.ToString(v2, StdConvert.NumberFormat);
           }
           catch
           {
@@ -1659,7 +1659,7 @@ namespace FreeLibSet.Forms
         default:
           if (DataTools.IsIntegerType(v.GetType()) || DataTools.IsFloatType(v.GetType()))
           {
-            valueText = Convert.ToString(v, DataTools.DotNumberConv);
+            valueText = Convert.ToString(v, StdConvert.NumberFormat);
             typeText = "n";
           }
           break;
@@ -1947,7 +1947,7 @@ namespace FreeLibSet.Forms
         XmlElement elColProps = XmlDoc.CreateElement("style:table-column-properties", nmspcStyle);
         elColStyle.AppendChild(elColProps);
         float w = (float)(Col.WidthPt) / 72f * 2.54f;
-        SetAttr(elColProps, "style:column-width", w.ToString("0.000", DataTools.DotNumberConv) + "cm", nmspcStyle);
+        SetAttr(elColProps, "style:column-width", w.ToString("0.000", StdConvert.NumberFormat) + "cm", nmspcStyle);
 
 
         XmlElement elColumn = XmlDoc.CreateElement("table:table-column", nmspcTable);
@@ -2365,7 +2365,7 @@ namespace FreeLibSet.Forms
                   if (DataTools.IsIntegerType(CellValue.GetType()) || DataTools.IsFloatType(CellValue.GetType()))
                   {
                     SetAttr(elCell, "office:value-type", "float", nmspcOffice);
-                    SetAttr(elCell, "office:value", Convert.ToString(CellValue, DataTools.DotNumberConv), nmspcOffice);
+                    SetAttr(elCell, "office:value", Convert.ToString(CellValue, StdConvert.NumberFormat), nmspcOffice);
                   }
                   break;
               }

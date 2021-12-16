@@ -275,28 +275,28 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Создает объект MinMaxDateTime, равный текущему интервалу
     /// </summary>
-    public MinMaxDateTime MinMaxDate
+    public MinMax<DateTime> MinMaxDate
     {
       get
       {
         if (IsEmpty)
-          return new MinMaxDateTime(); // 16.08.2021
+          return new MinMax<DateTime>(); // 16.08.2021
         else
-          return new MinMaxDateTime(FirstDate, LastDate);
+          return new MinMax<DateTime>(FirstDate, LastDate);
       }
     }
 
     /// <summary>
     /// Создает объект MinMaxInt, соответствующий годам в текущем интервале
     /// </summary>
-    public MinMaxInt MinMaxYear
+    public MinMax<int> MinMaxYear
     {
       get
       {
         if (IsEmpty)
-          return new MinMaxInt(); // 16.08.2021
+          return new MinMax<Int32>(); // 16.08.2021
         else
-          return new MinMaxInt(FirstDate.Year, LastDate.Year);
+          return new MinMax<Int32>(FirstDate.Year, LastDate.Year);
       }
     }
 
@@ -949,14 +949,14 @@ namespace FreeLibSet.Calendar
     /// Возвращает MinMaxDateTime для списка, куда входит минимальная и максимальная дата
     /// Возвращает пустой объект, если список интервалов пустой.
     /// </summary>
-    public MinMaxDateTime MinMaxDate
+    public MinMax<DateTime> MinMaxDate
     {
       get
       {
         if (Count > 0)
-          return new MinMaxDateTime(FirstDate.Value, LastDate.Value);
+          return new MinMax<DateTime>(FirstDate.Value, LastDate.Value);
         else
-          return new MinMaxDateTime();
+          return new MinMax<DateTime>();
       }
     }
 
@@ -964,14 +964,14 @@ namespace FreeLibSet.Calendar
     /// Возвращает MinMaxInt для минимального и максимального года в списке.
     /// Возвращает пустой объект, если список интервалов пустой.
     /// </summary>
-    public MinMaxInt MinMaxYear
+    public MinMax<Int32> MinMaxYear
     {
       get
       {
         if (Count > 0)
-          return new MinMaxInt(FirstDate.Value.Year, LastDate.Value.Year);
+          return new MinMax<Int32>(FirstDate.Value.Year, LastDate.Value.Year);
         else
-          return new MinMaxInt();
+          return new MinMax<Int32>();
       }
     }
 

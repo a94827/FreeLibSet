@@ -58,11 +58,11 @@ namespace FreeLibSet.Core
       // 26.03.2018
       // Используем статический конструктор, чтобы поля инициализировались в правильном порядке,
       // а не как придется
-      FIsWine = GetIsWine();
-      FIsMono = Type.GetType("Mono.Runtime") != null;
+      _IsWine = GetIsWine();
+      _IsMono = Type.GetType("Mono.Runtime") != null;
 
-      FWinNTProductType = GetWinNTProductType();
-      FOSVersionText = GetOSVersionText();
+      _WinNTProductType = GetWinNTProductType();
+      _OSVersionText = GetOSVersionText();
     }
 
     #endregion
@@ -127,8 +127,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает true, если выполнение осуществляется под MONO, а не .NET Framework
     /// </summary>
-    public static bool IsMono { get { return FIsMono; } }
-    private static bool FIsMono;
+    public static bool IsMono { get { return _IsMono; } }
+    private static bool _IsMono;
 
     /// <summary>
     /// Возвращает читаемое название версии .NET Framework с указанием разрядности
@@ -149,8 +149,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Текстовое представление для версии ОС Environment.OSVersion, дополненное разрядностью (32 bit, 64 bit)
     /// </summary>
-    public static string OSVersionText { get { return FOSVersionText; } }
-    private static string FOSVersionText;
+    public static string OSVersionText { get { return _OSVersionText; } }
+    private static string _OSVersionText;
 
     private static string GetOSVersionText()
     {
@@ -204,8 +204,8 @@ namespace FreeLibSet.Core
     /// Возвращает уточненный тип операционной системы Windows NT.
     /// Значение действительно только, если Systrem.Environment.OSVersion.Platform = Win32NT
     /// </summary>
-    public static WinNTProductType WinNTProductType { get { return FWinNTProductType; } }
-    private static WinNTProductType FWinNTProductType;
+    public static WinNTProductType WinNTProductType { get { return _WinNTProductType; } }
+    private static WinNTProductType _WinNTProductType;
 
     private static WinNTProductType GetWinNTProductType()
     {
@@ -504,8 +504,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает true, если приложение запущено под Wine (https://www.winehq.org)
     /// </summary>
-    public static bool IsWine { get { return FIsWine; } }
-    private static bool FIsWine;
+    public static bool IsWine { get { return _IsWine; } }
+    private static bool _IsWine;
 
     private static bool GetIsWine()
     {

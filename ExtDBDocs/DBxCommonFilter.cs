@@ -2248,7 +2248,7 @@ namespace FreeLibSet.Data.Docs
       else
         v2 = DataTools.GetInt(v1);
 
-      return DataTools.IntInRange(v2, FirstValue, LastValue);
+      return DataTools.IsInRange<Int32>(v2, FirstValue, LastValue);
     }
 
     /// <summary>
@@ -2258,7 +2258,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.IntInRange(0, FirstValue, LastValue))
+      if (NullIsZero && DataTools.IsInRange<Int32>(0, FirstValue, LastValue))
         Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(int)), Filter);
       return Filter;
     }
@@ -2329,7 +2329,7 @@ namespace FreeLibSet.Data.Docs
       else
         v2 = DataTools.GetSingle(v1);
 
-      return DataTools.SingleInRange(v2, FirstValue, LastValue);
+      return DataTools.IsInRange<Single>(v2, FirstValue, LastValue);
     }
 
     /// <summary>
@@ -2339,7 +2339,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.SingleInRange(0, FirstValue, LastValue))
+      if (NullIsZero && DataTools.IsInRange<Single>(0, FirstValue, LastValue))
         Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), Filter);
       return Filter;
     }
@@ -2410,7 +2410,7 @@ namespace FreeLibSet.Data.Docs
       else
         v2 = DataTools.GetDouble(v1);
 
-      return DataTools.DoubleInRange(v2, FirstValue, LastValue);
+      return DataTools.IsInRange<Double>(v2, FirstValue, LastValue);
     }
 
     /// <summary>
@@ -2420,7 +2420,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.DoubleInRange(0, FirstValue, LastValue))
+      if (NullIsZero && DataTools.IsInRange<Double>(0, FirstValue, LastValue))
         Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(double)), Filter);
       return Filter;
     }
@@ -2491,7 +2491,7 @@ namespace FreeLibSet.Data.Docs
       else
         v2 = DataTools.GetDecimal(v1);
 
-      return DataTools.DecimalInRange(v2, FirstValue, LastValue);
+      return DataTools.IsInRange<Decimal>(v2, FirstValue, LastValue);
     }
 
     /// <summary>
@@ -2501,7 +2501,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.DecimalInRange(0, FirstValue, LastValue))
+      if (NullIsZero && DataTools.IsInRange<Decimal>(0, FirstValue, LastValue))
         Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), Filter);
       return Filter;
     }

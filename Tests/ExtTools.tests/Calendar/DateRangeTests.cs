@@ -159,7 +159,7 @@ namespace ExtTools_tests.Calendar
     public void MinMaxDate()
     {
       DateRange sut = new DateRange(2021);
-      MinMaxDateTime wanted = new MinMaxDateTime(new DateTime(2021, 1, 1), new DateTime(2021, 12, 31));
+      MinMax<DateTime> wanted = new MinMax<DateTime>(new DateTime(2021, 1, 1), new DateTime(2021, 12, 31));
       Assert.AreEqual(wanted, sut.MinMaxDate);
     }
 
@@ -167,7 +167,7 @@ namespace ExtTools_tests.Calendar
     public void MinMaxYear()
     {
       DateRange sut = new DateRange(2021);
-      MinMaxInt wanted = new MinMaxInt(2021, 2021);
+      MinMax<Int32> wanted = new MinMax<Int32>(2021, 2021);
       Assert.AreEqual(wanted, sut.MinMaxYear);
     }
 

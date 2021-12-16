@@ -925,13 +925,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-
-    /// <summary>
-    /// Возвращает true, если выполнение осуществляется под MONO, а не .NET Framework
-    /// </summary>
-    public static bool IsMono { get { return _IsMono; } } // нужна часто
-    private static readonly bool _IsMono = (Type.GetType("Mono.Runtime") != null);
-
     /// <summary>
     /// Расширенные методы работы с буфером обмена
     /// </summary>

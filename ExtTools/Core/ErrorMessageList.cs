@@ -78,7 +78,10 @@ namespace FreeLibSet.Core
 
       _Kind = kind;
       _Text = text;
-      _Code = code;
+      if (code == null)
+        _Code = String.Empty;
+      else
+        _Code = code;
       _Tag = tag;
     }
 
@@ -128,16 +131,16 @@ namespace FreeLibSet.Core
     /// Поле может быть использовано для идентификации объекта, в котором
     /// произошла ошибка.
     /// При копировании сообщения об ошибке значение свойства также копируется
-    /// Свойство устанавливается в конструкторе или после создания объекта.
+    /// Свойство устанавливается в конструкторе.
     /// Для списка ошибок можно использовать метод ErrorMessageList.SetTag()
     /// </summary>
-    public object Tag { get { return _Tag; } set { _Tag = value; } }
-    private object _Tag;
+    public object Tag { get { return _Tag; } }
+    private readonly object _Tag;
 
     /// <summary>
     /// Возвращает true, если структура не была инициализирована с помощью конструктора
     /// </summary>
-    public bool IsEmpty { get { return _Text == null; } }
+    public bool IsEmpty { get { return Object.ReferenceEquals(_Text, null); } }
 
     #endregion
 
@@ -505,16 +508,6 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Добавить сообщение об ошибке с возможностью задать код
-    /// </summary>
-    /// <param name="text">Сообщение</param>
-    /// <param name="code">Код ошибки</param>
-    public void AddError(string text, int code)
-    {
-      Add(new ErrorMessageItem(ErrorMessageKind.Error, text, code.ToString()));
-    }
-
-    /// <summary>
     /// Добавить сообщение об ошибке с возможностью задать код и пользовательские данные
     /// </summary>
     /// <param name="text">Сообщение</param>
@@ -523,17 +516,6 @@ namespace FreeLibSet.Core
     public void AddError(string text, string code, object tag)
     {
       Add(new ErrorMessageItem(ErrorMessageKind.Error, text, code, tag));
-    }
-
-    /// <summary>
-    /// Добавить сообщение об ошибке с возможностью задать код и пользовательские данные
-    /// </summary>
-    /// <param name="text">Сообщение</param>
-    /// <param name="code">Код ошибки</param>
-    /// <param name="tag">Пользовательские данные</param>
-    public void AddError(string text, int code, object tag)
-    {
-      Add(new ErrorMessageItem(ErrorMessageKind.Error, text, code.ToString(), tag));
     }
 
     /// <summary>
@@ -565,16 +547,6 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Добавить предупреждение с возможностью задать код
-    /// </summary>
-    /// <param name="text">Сообщение</param>
-    /// <param name="code">Код предупреждения</param>
-    public void AddWarning(string text, int code)
-    {
-      Add(new ErrorMessageItem(ErrorMessageKind.Warning, text, code.ToString()));
-    }
-
-    /// <summary>
     /// Добавить предупреждение с возможностью задать код и пользовательские данные
     /// </summary>
     /// <param name="text">Сообщение</param>
@@ -583,17 +555,6 @@ namespace FreeLibSet.Core
     public void AddWarning(string text, string code, object tag)
     {
       Add(new ErrorMessageItem(ErrorMessageKind.Warning, text, code, tag));
-    }
-
-    /// <summary>
-    /// Добавить предупреждение с возможностью задать код и пользовательские данные
-    /// </summary>
-    /// <param name="text">Сообщение</param>
-    /// <param name="code">Код предупреждения</param>
-    /// <param name="tag">Пользовательские данные</param>
-    public void AddWarning(string text, int code, object tag)
-    {
-      Add(new ErrorMessageItem(ErrorMessageKind.Warning, text, code.ToString(), tag));
     }
 
     /// <summary>
@@ -625,16 +586,6 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Добавить информационное сообщение с возможностью задать код 
-    /// </summary>
-    /// <param name="text">Сообщение</param>
-    /// <param name="code">Код сообщения</param>
-    public void AddInfo(string text, int code)
-    {
-      Add(new ErrorMessageItem(ErrorMessageKind.Info, text, code.ToString()));
-    }
-
-    /// <summary>
     /// Добавить информационное сообщение с возможностью задать код и пользовательские данные
     /// </summary>
     /// <param name="text">Сообщение</param>
@@ -643,17 +594,6 @@ namespace FreeLibSet.Core
     public void AddInfo(string text, string code, object tag)
     {
       Add(new ErrorMessageItem(ErrorMessageKind.Info, text, code, tag));
-    }
-
-    /// <summary>
-    /// Добавить информационное сообщение с возможностью задать код и пользовательские данные
-    /// </summary>
-    /// <param name="text">Сообщение</param>
-    /// <param name="code">Код сообщения</param>
-    /// <param name="tag">Пользовательские данные</param>
-    public void AddInfo(string text, int code, object tag)
-    {
-      Add(new ErrorMessageItem(ErrorMessageKind.Info, text, code.ToString(), tag));
     }
 
     /// <summary>
@@ -742,10 +682,10 @@ namespace FreeLibSet.Core
       ErrorMessageList List2 = new ErrorMessageList();
       for (int i = 0; i < Count; i++)
       {
-        ErrorMessageKind Kind = this[i].Kind;
-        if (Kind > maxKind)
-          Kind = maxKind;
-        List2.Add(new ErrorMessageItem(Kind, this[i]));
+        ErrorMessageKind thisKind = this[i].Kind;
+        if (Compare(thisKind , maxKind) > 0)
+          thisKind = maxKind;
+        List2.Add(new ErrorMessageItem(thisKind, this[i]));
       }
       return List2;
     }
@@ -806,31 +746,6 @@ namespace FreeLibSet.Core
       {
         ErrorMessageItem src = base[i];
         base[i] = new ErrorMessageItem(src.Kind, src.Text, code, src.Tag);
-      }
-    }
-
-    /// <summary>
-    /// Установка свойства Code для всех сообщений в списке
-    /// </summary>
-    /// <param name="code">Новое значение свойства</param>
-    public void SetCode(int code)
-    {
-      SetCode(code, 0);
-    }
-
-    /// <summary>
-    /// Установка свойства Code для всех сообщений в списке
-    /// </summary>
-    /// <param name="code">Новое значение свойства</param>
-    /// <param name="startIndex">Индекс сообщения в списке, с которого должна выполняться установка</param>
-    public void SetCode(int code, int startIndex)
-    {
-      CheckNotReadOnly();
-
-      for (int i = startIndex; i < base.Count; i++)
-      {
-        ErrorMessageItem src = base[i];
-        base[i] = new ErrorMessageItem(src.Kind, src.Text, code.ToString(), src.Tag);
       }
     }
 
@@ -1036,10 +951,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Метод сравнения серьезности сообщений
-    /// Возвращает (-1), если первое сообщение менее серьезно, чем второе
-    /// Возвращает (+1), если первое сообщение более серьезно, чем второе
-    /// Возвращает 0, если уровень серьезности одинаковый
+    /// Метод сравнения серьезности сообщений.
+    /// Возвращает положительное значение, если первое сообщение более серьезно, чем второе.
+    /// Возвращает отрицательное значение, если первое сообщение менее серьезно, чем второе.
+    /// Возвращает 0, если уровень серьезности одинаковый.
     /// </summary>
     /// <param name="kind1">Первое сравниваемое сообщение</param>
     /// <param name="kind2">Второе сравниваемое сообщение</param>

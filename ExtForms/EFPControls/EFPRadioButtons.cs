@@ -10,6 +10,7 @@ using System.Drawing;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
 using FreeLibSet.UICore;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -216,7 +217,7 @@ namespace FreeLibSet.Forms
             _Controls[i].ForeColor = EFPApp.Colors.LabelWarningForeColor;
             break;
           default:
-            if (EFPApp.IsMono)
+            if (EnvironmentTools.IsMono)
               _Controls[i].ForeColor = SystemColors.ControlText; // 01.10.2013
             else
               _Controls[i].ResetForeColor();

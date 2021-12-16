@@ -457,7 +457,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Форматировщик для чисел.
-    /// Разделитель - точка
+    /// Разделитель - точка. Разделителей групп разрядов нет
     /// </summary>
     public static readonly NumberFormatInfo NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
 

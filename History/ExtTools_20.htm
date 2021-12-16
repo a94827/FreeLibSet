@@ -5,7 +5,15 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-12-11T16:23:49.729000000"/>
+	<meta name="changed" content="2021-12-16T16:44:31.472000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -453,12 +461,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -487,6 +495,89 @@
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">306</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">14.12.2021-16.12.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Свойство
+			</span>ErrorMessageItem.Tag <span lang="ru-RU">сделано </span>readonly.
+			ErrorMessageItem <span lang="ru-RU">стала структурой однократной
+			записи.</span></p>
+			<p lang="en-US"><span lang="ru-RU">2. Изменения в </span>ErrorMessageList</p>
+			<p lang="en-US"><span lang="ru-RU">- Убраны перегрузки методов
+			</span>ErrorMessageList.AddError(), AddWarning(), AddInfo() <span lang="ru-RU">и
+			</span>SetCode(), <span lang="ru-RU">принимающий код в виде
+			числового аргумента</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Исправлена ошибка в методе
+			</span>LimitKind().</p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Исправлены
+			перегузки </span><span lang="en-US">DataTools.GetTimeSpan() </span><span lang="ru-RU">и
+			</span><span lang="en-US">GetDateTime() (<a href="ExtTools_11.htm#v001p1">v.1
+			</a></span><a href="ExtTools_11.htm#v001p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">с аргументом </span><span lang="en-US">DataRow.
+			</span><span lang="ru-RU">Возникала ошибка, если в поле хранится
+			значение </span><span lang="en-US">DBNull</span></p>
+			<p>4. Убрано поле <span lang="en-US">DataTools.DotNumberConv, </span>т.к.
+			оно дублирует <span lang="en-US">StdConvert.NumberFormat.</span></p>
+			<p><span lang="en-US">5. </span>Исправлены ошибки в
+			DataRowTimeSpanExtractor и DataRowNullableTimeSpanExtractor (<a href="ExtTools_11.htm#v132p3"><span lang="en-US">v.132
+			</span>п.3</a>)</p>
+			<p>6. Изменения в агрегатных методах <span lang="en-US">DataTools</span></p>
+			<p><span lang="en-US">- </span>Убраны перегрузки <span lang="en-US">методов</span>
+			<span lang="en-US">Sum/Min/Max/MinMaxInt/In64/Single/Double/Decimal/DateTime/TimeSpan/Value(),
+			GetRowCount(), </span>принимающие аргумент - массив <span lang="en-US">DataRow[].
+			</span>Дублировали перегрузки, принимающие <span lang="en-US">IEnumerable&lt;DataRow&gt;.</span>
+						</p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Убраны
+			перегрузки, принимающие одномерный массив значений. Они
+			дублируются перегрузками, </span><span lang="en-US">принимающими
+			IEnumerable&lt;</span><span lang="ru-RU">Тип данных</span><span lang="en-US">&gt;</span><span lang="ru-RU">.
+			Методы </span><span lang="en-US">Sum/Min/Max/AverageValue(),
+			</span><span lang="ru-RU">принимающие массив значений, заменены на
+			принимающие аргумент </span><span lang="en-US">IEnumerable.</span></p>
+			<p><span lang="en-US">-</span> <span lang="ru-RU">Исправлены имена
+			некоторых перегрузок методов </span><span lang="en-US">MinMaxXXX().</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Исправлена
+			реализация одной из перегрузок </span><span lang="en-US">AverageDecimal()</span></p>
+			<p>7. Исправлены ошибки в математических методах
+			<span lang="en-US">DataTools.SumValues(), SubstractValues(),
+			NegValue(), MultiplyValues(), DivideValues(). </span>В них
+			операция выполнялась не на скорректированном значении, а на
+			исходном. Методы <span lang="en-US">SumValues </span>и
+			<span lang="en-US">SubstractValues() </span>позволяют
+			прибавить/вычитать <span lang="en-US">TimeSpan </span>к/из
+			<span lang="en-US">DateTime.</span> Методы <span lang="en-US">MultiplyValues()
+			</span>и <span lang="en-US">DivideValues() </span>могут
+			обрабатывать <span lang="en-US">TimeSpan</span> и числа<span lang="en-US">.</span></p>
+			<p>8<span lang="en-US">. </span>Методы <span lang="en-US">DataTools.XxxInRange()
+			</span>заменены на один шаблонный метод <span lang="en-US">IsInRange&lt;T&gt;()</span></p>
+			<p><span lang="en-US">9. В</span>место отдельных структур
+			<span lang="en-US">MinMaxXXX </span>создана шаблонная структура
+			<span lang="en-US">MinMax&lt;T&gt;.</span><span lang="en-US">
+			</span><span lang="ru-RU">Добавлен конструктор, принимающий
+			</span><span lang="en-US">IEnumerable&lt;T&gt;. </span><span lang="ru-RU">В
+			</span><span lang="en-US">DataTools </span><span lang="ru-RU">убраны
+			перегрузки методов </span><span lang="en-US">MinMaxXXX(),
+			</span><span lang="ru-RU">принимающие перечислитель</span></p>
+			<p><span lang="ru-RU">10. Метод </span><span lang="en-US">DataTools.AreArraysEqual()
+			</span><span lang="ru-RU">с аргументами </span><span lang="en-US">Array
+			</span><span lang="ru-RU">обрабатывает многомерные массивы</span></p>
+			<p><span lang="ru-RU">11. Исправлена ошибка в
+			</span><span lang="en-US">DataTools.AreArraysEqual(), </span><span lang="ru-RU">принимающем
+			строки (</span><a href="ExtTools_11.htm#v243p2"><span lang="en-US">v.243
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="ru-RU">12. Убран метод </span><span lang="en-US">DataTools.AreIdsEqual(),
+			</span><span lang="ru-RU">т.к. его дублирует
+			</span><span lang="en-US">AreArraysEqual&lt;Int32&gt;().</span></p>
+			<p><span lang="en-US">13. </span><span lang="ru-RU">Оптимизирован
+			метод DataTools.MergeArraysOnce</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">()</span><span lang="en-US">
+			</span><span lang="ru-RU">с использованием </span><span lang="en-US">ArrayIndexer&lt;T&gt;.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -580,8 +671,7 @@
 			<p><span lang="en-US">12. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">UIValueValidatorList.</span></p>
 			<p><a name="v305p13"></a><span lang="en-US">13. </span><span lang="ru-RU">В
-			классах </span><span lang="en-US">EFP</span><span lang="en-US">CsvCodesTextBox
-			</span><span lang="ru-RU">(</span><a href="#v304p5"><span lang="en-US">v.304
+			классах </span><span lang="en-US">EFPCsvCodesTextBox </span><span lang="ru-RU">(</span><a href="#v304p5"><span lang="en-US">v.304
 			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">) и
 			CsvCodesComboBox (</span><a href="#v301p12"><span lang="en-US">v.301
 			</span><span lang="ru-RU">п.12</span></a><span lang="ru-RU">)

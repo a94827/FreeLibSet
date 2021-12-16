@@ -640,7 +640,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя поля</param>
     /// <param name="range">Диапазон значений, которые должны храниться в поле</param>
     /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, MinMaxInt range)
+    public DBxColumnStruct AddInt(string columnName, MinMax<Int32> range)
     {
       if (range.HasValue)
         return AddInt(columnName, range.MinValue, range.MaxValue);
@@ -657,7 +657,7 @@ namespace FreeLibSet.Data
     /// <param name="range">Диапазон значений, которые должны храниться в поле</param>
     /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
     /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, MinMaxInt range, bool nullable)
+    public DBxColumnStruct AddInt(string columnName, MinMax<Int32> range, bool nullable)
     {
       if (range.HasValue)
         return AddInt(columnName, range.MinValue, range.MaxValue, nullable);

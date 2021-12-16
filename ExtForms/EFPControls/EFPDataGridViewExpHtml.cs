@@ -454,7 +454,7 @@ namespace FreeLibSet.Forms
                   sFormat = " STYLE=\"vnd.ms-excel.numberformat:@\"";
                 if (DataTools.IsIntegerType(CellArgs.OriginalValue.GetType()) ||
                   DataTools.IsFloatType(CellArgs.OriginalValue.GetType()))
-                  sNum = " x:num=\"" + Convert.ToString(CellArgs.OriginalValue, DataTools.DotNumberConv) + "\"";
+                  sNum = " x:num=\"" + Convert.ToString(CellArgs.OriginalValue, StdConvert.NumberFormat) + "\"";
               }
             }
           }

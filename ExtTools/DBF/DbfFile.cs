@@ -1991,7 +1991,7 @@ namespace FreeLibSet.DBF
           {
             s = s.TrimStart(' ');
             if (DBStruct[fieldIndex].Precision > 0)
-              return decimal.Parse(s, DataTools.DotNumberConv);
+              return decimal.Parse(s, StdConvert.NumberFormat);
             else if (DBStruct[fieldIndex].Length > 9)
               return long.Parse(s);
             else
@@ -2189,7 +2189,7 @@ namespace FreeLibSet.DBF
             s = s.Trim(' ');
             if (s.Length == 0)
               return 0f; // 21.03.2017
-            return float.Parse(s, DataTools.DotNumberConv);
+            return float.Parse(s, StdConvert.NumberFormat);
           }
           catch (Exception e)
           {
@@ -2236,7 +2236,7 @@ namespace FreeLibSet.DBF
             s = s.Trim(' ');
             if (s.Length == 0)
               return 0.0; // 21.03.2017
-            return double.Parse(s, DataTools.DotNumberConv);
+            return double.Parse(s, StdConvert.NumberFormat);
           }
           catch (Exception e)
           {
@@ -2282,7 +2282,7 @@ namespace FreeLibSet.DBF
             s = s.Trim(' ');
             if (s.Length == 0)
               return 0m; // 21.03.2017
-            return decimal.Parse(s, DataTools.DotNumberConv);
+            return decimal.Parse(s, StdConvert.NumberFormat);
           }
           catch (Exception e)
           {
@@ -2479,7 +2479,7 @@ namespace FreeLibSet.DBF
         return 0;
 
       string s = Encoding.ASCII.GetString(_RecordBuffer, LastPos - nc + 1, nc);
-      return uint.Parse(s, DataTools.DotNumberConv);
+      return uint.Parse(s, StdConvert.NumberFormat);
     }
 
     private byte[] ReadMemoValue(uint memoBlockEntry, string fieldName)
@@ -2765,7 +2765,7 @@ namespace FreeLibSet.DBF
       {
         byte[] Bytes = Encoding.GetBytes(value);
         uint MemoBlockEntry = WriteMemoValue(fieldIndex, Bytes);
-        value = MemoBlockEntry.ToString("d10", DataTools.DotNumberConv);
+        value = MemoBlockEntry.ToString("d10", StdConvert.NumberFormat);
         Encoding.GetBytes(value, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
         _RecordModified = true;
         _TableModified = true;
@@ -2895,7 +2895,7 @@ namespace FreeLibSet.DBF
       switch (DBStruct[fieldIndex].Type)
       {
         case 'N':
-          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, DataTools.DotNumberConv), DBStruct[fieldIndex].Length);
+          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat), DBStruct[fieldIndex].Length);
           Encoding.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
         default:
@@ -2931,7 +2931,7 @@ namespace FreeLibSet.DBF
       switch (DBStruct[fieldIndex].Type)
       {
         case 'N':
-          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, DataTools.DotNumberConv), DBStruct[fieldIndex].Length);
+          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat), DBStruct[fieldIndex].Length);
           Encoding.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
         default:
@@ -2968,7 +2968,7 @@ namespace FreeLibSet.DBF
       switch (DBStruct[fieldIndex].Type)
       {
         case 'N':
-          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, DataTools.DotNumberConv), DBStruct[fieldIndex].Length);
+          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat), DBStruct[fieldIndex].Length);
           Encoding.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
         default:
@@ -3005,7 +3005,7 @@ namespace FreeLibSet.DBF
       switch (DBStruct[fieldIndex].Type)
       {
         case 'N':
-          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, DataTools.DotNumberConv), DBStruct[fieldIndex].Length);
+          string s = DataTools.PadLeft(value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat), DBStruct[fieldIndex].Length);
           Encoding.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
         default:
