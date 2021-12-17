@@ -89,7 +89,7 @@ namespace FreeLibSet.Remoting
     /// </summary>
     /// <param name="ds">Набор данных, который будет входить в кэшируемые данные.
     /// Если null, то никаких действий не выполняется</param>
-    public static void PrepareDataSet(System.Data.DataSet ds)
+    public static void PrepareDataSet(DataSet ds)
     {
       if (ds == null)
         return;
@@ -131,6 +131,42 @@ namespace FreeLibSet.Remoting
       else
         return System.Data.SerializationFormat.Xml;
     }
+
+    #region Обработка DataTable.DateTimeMode
+
+    /// <summary>
+    /// Устанавливает для всех столбцов всех таблиц набора, имеющих тип данных DateTime, свойство
+    /// DataColumn.DateTimeMode = DataSetDateTime.Unspecified, если текущим значением
+    /// является DataSetDateTime.UnspecifiedLocal.
+    /// Применение метода позволяет избежать ошибок передачи данных между компьютерами,
+    /// если на них действуют разные часовые пояса.
+    /// </summary>
+    /// <param name="ds">Проверяемый набор</param>
+    public static void SetUnspecifiedDateTimeMode(DataSet ds)
+    {
+      for (int i = 0; i < ds.Tables.Count; i++)
+        SetUnspecifiedDateTimeMode(ds.Tables[i]);
+    }
+
+    /// <summary>
+    /// Устанавливает для всех столбцов таблицы, имеющих тип данных DateTime, свойство
+    /// DataColumn.DateTimeMode = DataSetDateTime.Unspecified, если текущим значением
+    /// является DataSetDateTime.UnspecifiedLocal.
+    /// Применение метода позволяет избежать ошибок передачи данных между компьютерами,
+    /// если на них действуют разные часовые пояса.
+    /// </summary>
+    /// <param name="table">Проверяемая таблица</param>
+    public static void SetUnspecifiedDateTimeMode(DataTable table)
+    {
+      for (int i = 0; i < table.Columns.Count; i++)
+      {
+        DataColumn Column = table.Columns[i];
+        if (Column.DataType == typeof(DateTime) && Column.DateTimeMode == DataSetDateTime.UnspecifiedLocal)
+          Column.DateTimeMode = DataSetDateTime.Unspecified;
+      }
+    }
+
+    #endregion
 
     #endregion
   }

@@ -3999,6 +3999,7 @@ namespace FreeLibSet.Forms
       }
     }
 
+#if XXX
     /// <summary>
     /// Выделяет строку в просмотре, соответствующую заданной строке DataRow.
     /// Используйте установку свойства CurrentDataRow
@@ -4011,6 +4012,7 @@ namespace FreeLibSet.Forms
     {
       CurrentDataRow = row;
     }
+#endif
 
     /// <summary>
     /// Расширение свойств SelectedRows / SelectedDataRows
@@ -4640,6 +4642,7 @@ namespace FreeLibSet.Forms
       }
     }
 
+#if XXX
     /// <summary>
     /// Получить столбцы с заданными условиями в виде массива
     /// </summary>
@@ -4657,6 +4660,7 @@ namespace FreeLibSet.Forms
       }
       return Columns.ToArray();
     }
+#endif
 
     /// <summary>
     /// Получить массив видимых столбцов в просмотре в порядке вывода на экран
@@ -4799,6 +4803,7 @@ namespace FreeLibSet.Forms
     }
 
 
+#if XXX
     /// <summary>
     /// Обновить все строки табличного просмотра.
     /// </summary>
@@ -4808,6 +4813,7 @@ namespace FreeLibSet.Forms
     {
       InvalidateAllRows();
     }
+#endif
 
     /// <summary>
     /// Обновить все строки табличного просмотра.

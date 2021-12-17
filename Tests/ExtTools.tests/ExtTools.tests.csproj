@@ -46,6 +46,7 @@
     <Compile Include="DependedValues\DepEvalExprTests.cs" />
     <Compile Include="DependedValues\DepFromArrayTests.cs" />
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />
+    <Compile Include="Remoting\SerializationToolsTests.cs" />
     <Compile Include="Text\CsvTextConvertTests.cs" />
     <Compile Include="DependedValues\DepConstTests.cs" />
     <Compile Include="DependedValues\DepDelayedValueTests.cs" />

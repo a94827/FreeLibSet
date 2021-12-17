@@ -29,18 +29,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowIntExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowIntExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -50,16 +50,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -94,26 +94,26 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Int32))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return 0;
           else
             return (int)v;
         }
         else
-          return DataTools.GetInt(row[~_FieldIndex]);
+          return DataTools.GetInt(row[~_ColumnIndex]);
       }
     }
 
@@ -139,18 +139,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableIntExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableIntExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -160,16 +160,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -205,19 +205,19 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Int32))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -225,7 +225,7 @@ namespace FreeLibSet.Data
         }
         else
         {
-          object v = row[~_FieldIndex];
+          object v = row[~_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -256,18 +256,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowInt64Extractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowInt64Extractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -277,16 +277,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -304,7 +304,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -321,26 +321,26 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Int64))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return 0L;
           else
             return (Int64)v;
         }
         else
-          return DataTools.GetInt64(row[~_FieldIndex]);
+          return DataTools.GetInt64(row[~_ColumnIndex]);
       }
     }
 
@@ -366,18 +366,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableInt64Extractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableInt64Extractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -387,16 +387,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -414,7 +414,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -432,19 +432,19 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Int64))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -452,7 +452,7 @@ namespace FreeLibSet.Data
         }
         else
         {
-          object v = row[~_FieldIndex];
+          object v = row[~_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -483,18 +483,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowSingleExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowSingleExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -504,16 +504,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -531,7 +531,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -548,26 +548,26 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Single))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return 0f;
           else
             return (float)v;
         }
         else
-          return DataTools.GetSingle(row[~_FieldIndex]);
+          return DataTools.GetSingle(row[~_ColumnIndex]);
       }
     }
 
@@ -594,18 +594,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableSingleExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableSingleExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -615,16 +615,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -642,7 +642,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -660,19 +660,19 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Int64))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -680,7 +680,7 @@ namespace FreeLibSet.Data
         }
         else
         {
-          object v = row[~_FieldIndex];
+          object v = row[~_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -711,18 +711,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowDoubleExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowDoubleExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -732,16 +732,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -759,7 +759,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -776,26 +776,26 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Double))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return 0.0;
           else
             return (double)v;
         }
         else
-          return DataTools.GetDouble(row[~_FieldIndex]);
+          return DataTools.GetDouble(row[~_ColumnIndex]);
       }
     }
 
@@ -821,18 +821,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableDoubleExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableDoubleExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -842,16 +842,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -869,7 +869,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -887,19 +887,19 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Double))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -907,7 +907,7 @@ namespace FreeLibSet.Data
         }
         else
         {
-          object v = row[~_FieldIndex];
+          object v = row[~_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -938,18 +938,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowDecimalExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowDecimalExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -959,16 +959,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -986,7 +986,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1003,26 +1003,26 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Decimal))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return 0m;
           else
             return (decimal)v;
         }
         else
-          return DataTools.GetDecimal(row[~_FieldIndex]);
+          return DataTools.GetDecimal(row[~_ColumnIndex]);
       }
     }
 
@@ -1048,18 +1048,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableDecimalExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableDecimalExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1069,16 +1069,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1096,7 +1096,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1114,19 +1114,19 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Decimal))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -1134,7 +1134,7 @@ namespace FreeLibSet.Data
         }
         else
         {
-          object v = row[~_FieldIndex];
+          object v = row[~_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -1167,18 +1167,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowDateTimeExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowDateTimeExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1188,16 +1188,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1210,7 +1210,7 @@ namespace FreeLibSet.Data
     /// Индекс поля (больший или равный 0).
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1227,17 +1227,17 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Int32))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _FieldName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        object v = row[_FieldIndex];
+        object v = row[_ColumnIndex];
         if (v is DBNull)
           return DateTime.MinValue;
         else
@@ -1269,18 +1269,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableDateTimeExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableDateTimeExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1290,16 +1290,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1312,7 +1312,7 @@ namespace FreeLibSet.Data
     /// Индекс поля (больший или равный 0).
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1329,17 +1329,17 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(DateTime)) // 28.11.2017
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _FieldName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        object v = row[_FieldIndex];
+        object v = row[_ColumnIndex];
         if (v is DBNull)
           return null;
         else
@@ -1369,18 +1369,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowTimeSpanExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowTimeSpanExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1390,16 +1390,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1412,7 +1412,7 @@ namespace FreeLibSet.Data
     /// Индекс поля (больший или равный 0).
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1429,17 +1429,17 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(TimeSpan)) // испр. 5.12.2021
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _FieldName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        object v = row[_FieldIndex];
+        object v = row[_ColumnIndex];
         if (v is DBNull)
           return TimeSpan.Zero;
         else
@@ -1469,18 +1469,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableTimeSpanExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableTimeSpanExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1490,16 +1490,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1512,7 +1512,7 @@ namespace FreeLibSet.Data
     /// Индекс поля (больший или равный 0).
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1529,17 +1529,17 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(TimeSpan))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _FieldName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        object v = row[_FieldIndex];
+        object v = row[_ColumnIndex];
         if (v is DBNull)
           return null;
         else
@@ -1569,18 +1569,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowStringExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowStringExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1590,16 +1590,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1617,7 +1617,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1634,26 +1634,26 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(String))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return String.Empty;
           else
             return ((string)v).Trim();
         }
         else
-          return DataTools.GetString(row[~_FieldIndex]);
+          return DataTools.GetString(row[~_ColumnIndex]);
       }
     }
 
@@ -1679,18 +1679,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowBoolExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowBoolExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1700,16 +1700,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1727,7 +1727,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1744,26 +1744,26 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Boolean))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return false;
           else
             return (bool)v;
         }
         else
-          return DataTools.GetBool(row[~_FieldIndex]);
+          return DataTools.GetBool(row[~_ColumnIndex]);
       }
     }
 
@@ -1789,18 +1789,18 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Инициализирует структуру.
     /// </summary>
-    /// <param name="fieldName">Имя поля</param>
-    public DataRowNullableBoolExtractor(string fieldName)
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableBoolExtractor(string columnName)
     {
 #if DEBUG
-      if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName");
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
 #endif
 
-      _FieldName = fieldName;
+      _ColumnName = columnName;
       // Требуется компилятору для конструктора структуры
       _CurrentTable = null;
-      _FieldIndex = 0;
+      _ColumnIndex = 0;
     }
 
     #endregion
@@ -1810,16 +1810,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Имя поля, из которого извлекаются значения
     /// </summary>
-    public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство FieldName</returns>
+    /// <returns>Свойство ColumnName</returns>
     public override string ToString()
     {
-      return _FieldName;
+      return _ColumnName;
     }
 
     /// <summary>
@@ -1837,7 +1837,7 @@ namespace FreeLibSet.Data
     /// а для извлечения с преобразованием - 0xFFFFFFFE.
     /// Имеет смысл, только когда CurrentTable не null.
     /// </summary>
-    private int _FieldIndex;
+    private int _ColumnIndex;
 
     #endregion
 
@@ -1855,19 +1855,19 @@ namespace FreeLibSet.Data
       {
         if (!Object.ReferenceEquals(row.Table, _CurrentTable))
         {
-          int p = row.Table.Columns.IndexOf(_FieldName);
+          int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _FieldName + "\"");
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
           if (row.Table.Columns[p].DataType == typeof(Boolean))
-            _FieldIndex = p;
+            _ColumnIndex = p;
           else
-            _FieldIndex = ~p;
+            _ColumnIndex = ~p;
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
-        if (_FieldIndex >= 0)
+        if (_ColumnIndex >= 0)
         {
-          object v = row[_FieldIndex];
+          object v = row[_ColumnIndex];
           if (v is DBNull)
             return null;
           else
@@ -1875,7 +1875,7 @@ namespace FreeLibSet.Data
         }
         else
         {
-          object v = row[~_FieldIndex];
+          object v = row[~_ColumnIndex];
           if (v is DBNull)
             return null;
           else

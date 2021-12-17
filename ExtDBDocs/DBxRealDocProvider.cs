@@ -2933,7 +2933,7 @@ namespace FreeLibSet.Data.Docs
       }
 
       // При передаче клиенту предотвращаем преобразование времени из-за разных часовых поясов
-      DataTools.SetUnspecifiedDateTimeMode(ResTable);
+      SerializationTools.SetUnspecifiedDateTimeMode(ResTable);
       ResTable.AcceptChanges();
 
       return ResTable;
@@ -2961,7 +2961,7 @@ namespace FreeLibSet.Data.Docs
       }
 
       // При передаче клиенту предотвращаем преобразование времени из-за разных часовых поясов
-      DataTools.SetUnspecifiedDateTimeMode(ResTable);
+      SerializationTools.SetUnspecifiedDateTimeMode(ResTable);
       ResTable.AcceptChanges();
 
       return ResTable;
@@ -3246,7 +3246,7 @@ namespace FreeLibSet.Data.Docs
           DataTable TableDocActions = Con.FillSelect("DocActions", null,
             new AndFilter(new ValueFilter("DocTableId", DocType.TableId),
             new ValueFilter("DocId", docId)));
-          Int32[] UserActionIds = DataTools.GetIdsFromField(TableDocActions, "UserActionId");
+          Int32[] UserActionIds = DataTools.GetIdsFromColumn(TableDocActions, "UserActionId");
           if (UserActionIds.Length > 0)
             ds.Tables.Add(Con.FillSelect("UserActions", null, new IdsFilter("Id", UserActionIds)));
           else

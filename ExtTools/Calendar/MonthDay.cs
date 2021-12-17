@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Data;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
 
@@ -524,21 +523,6 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Получить nullable-значение из заданного для и месяца.
-    /// </summary>
-    /// <param name="month">Месяц. Может быть в диапазоне от 0 до 12</param>
-    /// <param name="day">День, может быть от 0 до 31</param>
-    /// <returns>Заполненная структура или null</returns>
-    [Obsolete("Структура MonthDay теперь поддерживает пустое значение Empty. Нет причин использовать nullable-значение", false)]
-    public static Nullable<MonthDay> NullableFromMonthDay(int month, int day)
-    {
-      if (month == 0 || day == 0)
-        return null;
-      else
-        return new MonthDay(month, day);
-    }
-
-    /// <summary>
     /// Получить значение из заданного для и месяца.
     /// В отличие от однотипного конструктора, позволяет передать значения 0.
     /// </summary>
@@ -552,73 +536,6 @@ namespace FreeLibSet.Calendar
       else
         return new MonthDay(month, day);
     }
-
-    /// <summary>
-    /// Получить null или заполненную структуру из строки DataRow
-    /// </summary>
-    /// <param name="row">Строка таблицы</param>
-    /// <param name="monthFieldName">Имя числового поля с номером месяца</param>
-    /// <param name="dayFieldName">Имя числового поля с номером дня</param>
-    /// <returns>Структура MonthDay или null</returns>
-    [Obsolete("Структура MonthDay теперь поддерживает пустое значение Empty. Нет причин использовать nullable-значение", false)]
-    public static Nullable<MonthDay> NullableFromDataRow(DataRow row, string monthFieldName, string dayFieldName)
-    {
-      int Month = DataTools.GetInt(row, monthFieldName);
-      int Day = DataTools.GetInt(row, dayFieldName);
-
-#pragma warning disable 0618 // Подавление сообщения Obsolete
-      return NullableFromMonthDay(Month, Day);
-#pragma warning restore 0618
-    }
-
-    /// <summary>
-    /// Получить структуру из строки DataRow.
-    /// Может быть возвращена пустая структура Empty
-    /// </summary>
-    /// <param name="row">Строка таблицы</param>
-    /// <param name="monthFieldName">Имя числового поля с номером месяца</param>
-    /// <param name="dayFieldName">Имя числового поля с номером дня</param>
-    /// <returns>Структура MonthDay</returns>
-    public static MonthDay FromDataRow(DataRow row, string monthFieldName, string dayFieldName)
-    {
-      int Month = DataTools.GetInt(row, monthFieldName);
-      int Day = DataTools.GetInt(row, dayFieldName);
-      return FromMonthDay(Month, Day);
-    }
-
-    // Метод не нужен, так как есть однотипный конструктор
-
-    ///// <summary>
-    ///// Получить структуру или null из порядкового номера дня в году.
-    ///// Для нулевого значения возвращается пустая структура Empty
-    ///// </summary>
-    ///// <param name="IntValue">Номер дня в невисокосном году (1-365) или 0</param>
-    ///// <returns>Структура MonthDay или null</returns>
-    //public static MonthDay? NullableFromIntValue(int IntValue)
-    //{
-    //  if (IntValue == 0)
-    //    return null;
-    //  else
-    //    return FromIntValue(IntValue);
-    //}
-
-    ///// <summary>
-    ///// Получить структуру из порядкового номера дня в году.
-    ///// Для нулевого значения возвращается пустая структура Empty
-    ///// </summary>
-    ///// <param name="IntValue">Номер дня в невисокосном году (1-365) или 0</param>
-    ///// <returns>Структура MonthDay</returns>
-    //public static MonthDay FromIntValue(int IntValue)
-    //{
-    //  if (IntValue < 0 || IntValue > 365)
-    //    throw new ArgumentOutOfRangeException("IntValue", IntValue, "Номер дня в году должен быть в диапазоне от 1 до 365 или значение 0 - пустое значение");
-    //  if (IntValue == 0)
-    //    return Empty;
-
-    //  DateTime dt = new DateTime(2001, 1, 1);
-    //  dt = dt.AddDays(IntValue - 1);
-    //  return new MonthDay(dt);
-    //}
 
     #endregion
   }
@@ -849,43 +766,6 @@ namespace FreeLibSet.Calendar
     #endregion
 
     #region Пересечение
-
-
-#if XXX // Плохой метод. Не нужен.
-    /// <summary>
-    /// Возвращает пересечение двух интервалов. Поле Tag берется из первого интервала
-    /// Если интервалы не пересекаются, или один из интервалов пустой, возвращается пустой интервал с Tag=null.
-    /// Если обменять местами аргументы, то результат должен быть тот же самый, за исключением свойства Tag.
-    /// </summary>
-    /// <param name="r1">Первый диапазон</param>
-    /// <param name="r2">Второй диапазон</param>
-    /// <returns>Общий интервал</returns>
-    [Obsolete("Этот метод бесполезен. Два интервала могут иметь 2 пересечения. Например, интервалы [01.02-30.09] и [01.08-31.03] дают пересечения [01.02-31.03] и [01.08-30.09]")]
-    public static MonthDayRange GetCross(MonthDayRange r1, MonthDayRange r2)
-    {
-      if (r1.IsEmpty || r2.IsEmpty)
-        return Empty;
-
-      // Хорошо бы сделать без DateRange, но это очень сложно
-      DateRange dr11 = r1.GetDateRange(2002, false); // 2002-2003 год. Точно без високосного года 
-      DateRange dr21 = r2.GetDateRange(2002, false); // 2002-2003
-      DateRange dr = DateRange.GetCross(dr11, dr21);
-      if (dr.IsEmpty)
-      {
-        // 22.09.2021
-        // Проверяем со сдвигом на год назад
-        DateRange dr22 = r2.GetDateRange(2002, true); // 2001-2002
-        dr = DateRange.GetCross(dr11, dr22);
-        if (dr.IsEmpty)
-        {
-          DateRange dr12 = r1.GetDateRange(2002, true); // 2001-2002
-          dr = DateRange.GetCross(dr12, dr21);
-        }
-      }
-      return new MonthDayRange(dr); // поле Tag копируется правильно.
-
-    }
-#endif
 
     /// <summary>
     /// Возвращает пересечение двух интервалов. Поле Tag берется из первого интервала.

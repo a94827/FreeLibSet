@@ -3567,7 +3567,7 @@ namespace FreeLibSet.Forms.Docs
 
     void DocTree_GetDocSel(object sender, EFPDBxTreeViewDocSelEventArgs args)
     {
-      Int32[] Ids = DataTools.GetIdsFromField(args.DataRows, "Id");
+      Int32[] Ids = DataTools.GetIdsFromColumn(args.DataRows, "Id");
       PerformGetDocSel(args.DocSel, Ids, args.Reason);
     }
 
@@ -3702,7 +3702,7 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      Int32[] DocIds = DataTools.GetIdsFromField(ControlProvider.SourceAsDataView, "Id");
+      Int32[] DocIds = DataTools.GetIdsFromColumn(ControlProvider.SourceAsDataView, "Id");
       this.RecalcColumns(DocIds, new PerformRefreshDelegate(ControlProvider.PerformRefresh));
     }
 
@@ -3748,7 +3748,7 @@ namespace FreeLibSet.Forms.Docs
 
     void DocGrid_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
     {
-      Int32[] Ids = DataTools.GetIdsFromField(args.DataRows, "Id");
+      Int32[] Ids = DataTools.GetIdsFromColumn(args.DataRows, "Id");
       PerformGetDocSel(args.DocSel, Ids, args.Reason);
     }
 

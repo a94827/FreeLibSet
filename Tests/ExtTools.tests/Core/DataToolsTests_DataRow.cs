@@ -371,5 +371,22 @@ namespace ExtTools_tests.Core
     }
 
     #endregion
+
+    #region GetValues()
+
+    [Test]
+    public void GetValues()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(string));
+      tbl.Columns.Add("F2", typeof(int));
+      tbl.Columns.Add("F3", typeof(bool));
+      DataRow row = tbl.Rows.Add("AAA", DBNull.Value, true);
+
+      object[] res = DataTools.GetValues(row, "F3,F2,F1");
+      Assert.AreEqual(new object[] { true, null, "AAA" }, res);
+    }
+
+    #endregion
   }
 }

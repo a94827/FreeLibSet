@@ -18,6 +18,7 @@ namespace FreeLibSet.Forms
    * Провайдеры управляющих элементов для полей выбора файлов и каталогов
    */
 
+#if XXX
   /// <summary>
   /// Провайдер комбоблока с историей, предназначенного для выбора каталога на диске.
   /// Обычно этот комбоблок сопровождается кнопкой "Обзор", к которой присоединяется EFPFolderBrowserButton.
@@ -122,6 +123,7 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
+#endif
 
   /// <summary>
   /// Базовый класс для EFPFilePathValidator и EFPFolderPathValidator

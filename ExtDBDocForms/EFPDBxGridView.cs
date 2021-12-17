@@ -174,7 +174,7 @@ namespace FreeLibSet.Forms.Docs
       if (!DataRows[0].Table.Columns.Contains(columnName))
         return;
 
-      Int32[] Ids = DataTools.GetIdsFromField(DataRows, columnName);
+      Int32[] Ids = DataTools.GetIdsFromColumn(DataRows, columnName);
       if (useHandler)
       {
         DocTypeUIBase dtb = ControlProvider.UI.DocTypes.FindByTableName(tableName);
@@ -606,7 +606,7 @@ namespace FreeLibSet.Forms.Docs
       {
         DataRow[] Rows = SelectedDataRows;
         // return DataTools.GetIds(Rows);
-        return DataTools.GetIdsFromField(Rows, "Id"); // 21.01.2016
+        return DataTools.GetIdsFromColumn(Rows, "Id"); // 21.01.2016
       }
       set
       {
@@ -676,7 +676,7 @@ namespace FreeLibSet.Forms.Docs
         else
           Rows = base.GetDataRows(rowIndices);
 
-        Int32[] Ids = DataTools.GetIdsFromField(Rows, "Id");
+        Int32[] Ids = DataTools.GetIdsFromColumn(Rows, "Id");
         if (Ids.Length > 0)
           ClearCacheForUpdate(Ids); // 24.10.2017
 

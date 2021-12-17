@@ -2387,6 +2387,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private static readonly Dictionary<string, Icon> _MainImageIcons = new Dictionary<string, Icon>();
 
+#if XXX
     /// <summary>
     /// Установка значка формы (свойства Form.Icon и Form.ShowIcon)
     /// Если задано имя изображения, то форма будет иметь значок.
@@ -2400,6 +2401,7 @@ namespace FreeLibSet.Forms
     {
       InitMainImageIcon(form, imageKey, false);
     }
+#endif
 
     /// <summary>
     /// Установка значка формы (свойства Form.Icon и Form.ShowIcon)
@@ -2597,12 +2599,14 @@ namespace FreeLibSet.Forms
 
     #region Немодальные формы
 
+
+#if XXX
     /// <summary>
     /// Возвращает список открытых дочерних MDI-форм.
     /// </summary>
     [Obsolete("Это свойство является устаревшим и предназначено только для программ, поддерживающих единственное окно MDI. " +
        "В новых программах используйте метод Interface.GetChildForms()", false)]
-    public static Form[] MdiChildren
+    internal static Form[] MdiChildren
     {
       get
       {
@@ -2616,6 +2620,7 @@ namespace FreeLibSet.Forms
           return MainWindow.MdiChildren;
       }
     }
+#endif
 
     /// <summary>
     /// Выводит дочернюю форму.
@@ -2647,6 +2652,7 @@ namespace FreeLibSet.Forms
       }
     }
 
+#if XXX
     /// <summary>
     /// Вывод формы со встраиванием в интерфейс MDI
     /// Может быть добавлено несколько одинаковых форм.
@@ -2657,7 +2663,9 @@ namespace FreeLibSet.Forms
     {
       ShowChildForm(form);
     }
+#endif
 
+#if XXX
     /// <summary>
     /// Вывод формы со встраиванием в интерфейс MDI
     /// Можно запретить добавление, если такая форма уже есть.
@@ -2699,8 +2707,9 @@ namespace FreeLibSet.Forms
       // Надо добавить форму
       ShowChildForm(form);
     }
+#endif
 
-
+#if XXX
     /// <summary>
     /// Делает попытку закрыть все открытые формы
     /// </summary>
@@ -2724,7 +2733,9 @@ namespace FreeLibSet.Forms
           break;
       }
     }
+#endif
 
+#if XXX
     /// <summary>
     /// Найти MDI-форму заданного класса.
     /// Возвращает первую найденную форму или null
@@ -2749,8 +2760,10 @@ namespace FreeLibSet.Forms
 
 #pragma warning restore 0618
     }
+#endif
 
-    /// <summary>
+    #if XXX
+/// <summary>
     /// Найти и активировать форму заданного класса.
     /// Возвращает true в случае успеха
     /// </summary>
@@ -2774,7 +2787,10 @@ namespace FreeLibSet.Forms
       frm.Activate();
       return true;
     }
+#endif
 
+
+#if XXX
     /// <summary>
     /// Выполнение команд меню "Окно"
     /// </summary>
@@ -2789,6 +2805,7 @@ namespace FreeLibSet.Forms
 
       EFPApp.MainWindow.LayoutMdi(layout);
     }
+#endif
 
     #endregion
 

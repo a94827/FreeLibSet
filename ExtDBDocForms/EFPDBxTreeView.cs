@@ -138,7 +138,7 @@ namespace FreeLibSet.Forms.Docs
       if (!DataRows[0].Table.Columns.Contains(columnName))
         return;
 
-      Int32[] Ids = DataTools.GetIdsFromField(DataRows, columnName);
+      Int32[] Ids = DataTools.GetIdsFromColumn(DataRows, columnName);
       if (useHandler)
       {
         DocTypeUIBase dtb = ControlProvider.UI.DocTypes.FindByTableName(tableName);

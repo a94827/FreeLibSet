@@ -308,6 +308,7 @@ namespace FreeLibSet.Forms
         return new EFPCommandItem(this[stdItem]);
     }
 
+#if XXX
     /// <summary>
     /// Создание стандартной команды.
     /// Команда создается, но ни к чему не присоединяется.
@@ -323,6 +324,7 @@ namespace FreeLibSet.Forms
     {
       return CreateStdCommand(stdItem);
     }
+#endif
 
     /// <summary>
     /// Создание стандартной команды.
@@ -680,6 +682,7 @@ namespace FreeLibSet.Forms
 
 #pragma warning disable 0618 // обход [Obsolete]
 
+#if XXX
     /// <summary>
     /// Обработка команды "Сверху вниз"
     /// </summary>
@@ -781,6 +784,7 @@ namespace FreeLibSet.Forms
       this[EFPAppStdCommandItems.ArrangeIcons].Enabled = HasWindows;
       this[EFPAppStdCommandItems.CloseAll].Enabled = HasWindows;
     }
+#endif
 
 #pragma warning restore 0618
 

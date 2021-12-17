@@ -7,6 +7,7 @@ using System.Text;
 using System.Data;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.Remoting;
 
 /*
  * Редактирование документов
@@ -126,7 +127,7 @@ namespace FreeLibSet.Data.Docs
       _DocProvider = docProvider;
 
       _DataSet = new DataSet();
-      DataTools.SetUnspecifiedDateTimeMode(_DataSet);
+      SerializationTools.SetUnspecifiedDateTimeMode(_DataSet);
       _DataSet.ExtendedProperties["DocSet"] = this;
       _MultiDocs = new NamedList<DBxMultiDocs>();
       _IgnoredLocks = new GuidList();

@@ -416,7 +416,7 @@ namespace FreeLibSet.Forms.Docs
         try
         {
           RefTable = Params.DocTypeUI.GetDocRefTable(Params.DocId, ciShowHiddenRefs.Checked, true);
-          Int32[] FromDocTableIds = DataTools.GetIdsFromField(RefTable, "FromDocTableId");
+          Int32[] FromDocTableIds = DataTools.GetIdsFromColumn(RefTable, "FromDocTableId");
           DataTable StatTable = new DataTable();
           StatTable.Columns.Add("FromDocTypeName", typeof(string));
           StatTable.Columns.Add("FromDocTableId", typeof(Int32));
@@ -584,7 +584,7 @@ namespace FreeLibSet.Forms.Docs
 
       Int32 FromDocTableId = DataTools.GetInt(rows[0], "FromDocTableId");
       string FromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(FromDocTableId);
-      Int32[] FromDocIds = DataTools.GetIdsFromField(rows, "FromDocId");
+      Int32[] FromDocIds = DataTools.GetIdsFromColumn(rows, "FromDocId");
       UI.DocTypes[FromDocTypeName].PerformEditing(FromDocIds, efpRefDet.State, false);
     }
 

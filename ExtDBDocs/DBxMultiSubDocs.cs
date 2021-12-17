@@ -1544,7 +1544,7 @@ namespace FreeLibSet.Data.Docs
 
 
       // При удалении нужно сбрасывать списки поддокументов, т.к. строки в состоянии Added удаляются из списка
-      Int32[] DocIds = DataTools.GetIdsFromField(_Table, "DocId");
+      Int32[] DocIds = DataTools.GetIdsFromColumn(_Table, "DocId");
       for (int i = 0; i < DocIds.Length; i++)
         ResetRowsForDocId(DocIds[i]);
 

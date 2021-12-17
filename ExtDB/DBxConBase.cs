@@ -11,6 +11,7 @@ using System.Threading;
 using System.ComponentModel;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
+using FreeLibSet.Remoting;
 
 namespace FreeLibSet.Data
 {
@@ -3464,7 +3465,7 @@ namespace FreeLibSet.Data
       TraceSqlEnd(ti, null);
 
       // При передаче клиенту предотвращаем преобразование времени из-за разных часовых поясов
-      DataTools.SetUnspecifiedDateTimeMode(Table);
+      SerializationTools.SetUnspecifiedDateTimeMode(Table);
       return Table;
     }
 

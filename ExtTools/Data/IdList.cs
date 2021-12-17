@@ -770,7 +770,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получение значений поля "Id" из массива строк. В отличие от FromField()
+    /// Получение значений поля "Id" из массива строк. В отличие от FromColumn()
     /// не проверяет нулевые значения и не проверяет повторы.
     /// </summary>
     /// <param name="rows">Массив строк</param>
@@ -800,7 +800,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получение значений поля "Id" из массива строк DataRowView. В отличие от FromField()
+    /// Получение значений поля "Id" из массива строк DataRowView. В отличие от FromColumn()
     /// не проверяет нулевые значения и не проверяет повторы
     /// </summary>
     /// <param name="rows">Массив строк типа DataRowView</param>
@@ -846,7 +846,7 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region FromField
+    #region FromColumn
 
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
@@ -856,7 +856,7 @@ namespace FreeLibSet.Data
     /// <param name="table">Таблица данных</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromField(DataTable table, string columnName)
+    public static IdList FromColumn(DataTable table, string columnName)
     {
       if (table == null)
         return new IdList(); // 20.08.2019
@@ -894,7 +894,7 @@ namespace FreeLibSet.Data
     /// <param name="dv">Коллекция строк таблицы данных</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromField(DataView dv, string columnName)
+    public static IdList FromColumn(DataView dv, string columnName)
     {
       if (dv == null)
         return new IdList(); // 20.08.2019
@@ -934,7 +934,7 @@ namespace FreeLibSet.Data
     /// <param name="rows">Массив однотипных строк</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromField(ICollection<DataRow> rows, string columnName)
+    public static IdList FromColumn(ICollection<DataRow> rows, string columnName)
     {
       if (rows == null)
         return new IdList(); // 20.08.2019
@@ -976,7 +976,7 @@ namespace FreeLibSet.Data
     /// <param name="rows">Массив однотипных строк как коллекция DataRowView</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromField(ICollection<DataRowView> rows, string columnName)
+    public static IdList FromColumn(ICollection<DataRowView> rows, string columnName)
     {
       if (rows == null)
         return new IdList(); // 20.08.2019

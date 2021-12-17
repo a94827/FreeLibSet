@@ -2412,24 +2412,6 @@ namespace FreeLibSet.Caching
     }
 
 
-#if XXX
-    /// <summary>
-    /// Вспомогательный метод получение буферизованных данных.
-    /// Возвращает объект кэша, только если он есть в кэше. Иначе возвращается null.
-    /// Эта версия проверяет только наличие объектов в памяти (CachePersistance.MemoryOnly)
-    /// </summary>
-    /// <typeparam name="T">Тип буферизованных данных</typeparam>
-    /// <param name="keys">Массив ключей для поиска объекта. Для заданного типа данных длина списка ключей должна быть всегда одинаковой.
-    /// Длина ключа не может быть меньше 1. Ключи используются для организации структуры каталогов хранилища с соответствующими ограничениями на допустимые символы</param>
-    /// <returns>Сохраненный объект или null</returns>
-    [Obsolete("Используйте перегрузку метода с аргументом persistance", false)]
-    public static T GetItemIfExists<T>(string[] keys)
-      where T : class
-    {
-      return GetItemIfExists<T>(keys, CachePersistance.MemoryOnly, Params.LockTimeout);
-    }
-#endif
-
     /// <summary>
     /// Вспомогательный метод получение буферизованных данных.
     /// Возвращает объект кэша, только если он есть в кэше. Иначе возвращается null
@@ -6442,24 +6424,6 @@ namespace FreeLibSet.Caching
       return GetMainObj(GetMainObjMode.Create).GetItem<T>(keys, persistance, factory, lockTimeout);
     }
 
-
-#if XXX
-    /// <summary>
-    /// Вспомогательный метод получение буферизованных данных.
-    /// Возвращает объект кэша, только если он есть в кэше. Иначе возвращается null.
-    /// Эта версия проверяет только наличие объектов в памяти (CachePersistance.MemoryOnly)
-    /// </summary>
-    /// <typeparam name="T">Тип буферизованных данных</typeparam>
-    /// <param name="keys">Массив ключей для поиска объекта. Для заданного типа данных длина списка ключей должна быть всегда одинаковой.
-    /// Длина ключа не может быть меньше 1. Ключи используются для организации структуры каталогов хранилища с соответствующими ограничениями на допустимые символы</param>
-    /// <returns>Сохраненный объект или null</returns>
-    [Obsolete("Используйте перегрузку метода с аргументом persistance", false)]
-    public static T GetItemIfExists<T>(string[] keys)
-      where T : class
-    {
-      return GetItemIfExists<T>(keys, CachePersistance.MemoryOnly, Params.LockTimeout);
-    }
-#endif
 
     /// <summary>
     /// Вспомогательный метод получение буферизованных данных.

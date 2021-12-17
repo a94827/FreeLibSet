@@ -495,7 +495,7 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
-      DataTools.SetUnspecifiedDateTimeMode(Table2);
+      SerializationTools.SetUnspecifiedDateTimeMode(Table2);
       return Table2;
     }
 

@@ -604,5 +604,87 @@ namespace ExtTools_tests.Core
     }
 
     #endregion
+
+    #region ToArray1()
+
+    [Test]
+    public void ToArray1_from_2d()
+    {
+      int[,] a = new int[3, 2] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+      int[] res = DataTools.ToArray1<int>(a);
+      Assert.AreEqual(new int[] { 1, 2, 3, 4, 5, 6 }, res);
+    }
+
+    [Test]
+    public void ToArray1_from_jagged_1d()
+    {
+      int[][] a = new int[][] { new int[] { 1, 2, 3 }, null, new int[] { 4, 5 } };
+      int[] res = DataTools.ToArray1<int>(a);
+      Assert.AreEqual(new int[] { 1, 2, 3, 4, 5 }, res);
+    }
+
+    [Test]
+    public void ToArray1_from_jagged_2d()
+    {
+      int[,][] a = new int[2, 2][] { { new int[] { 1, 2, 3 }, new int[] { 4, 5 } }, { null, new int[] { 6 } } };
+      int[] res = DataTools.ToArray1<int>(a);
+      Assert.AreEqual(new int[] { 1, 2, 3, 4, 5, 6 }, res);
+    }
+
+    #endregion
+
+    #region ToArray2()
+
+    [Test]
+    public void ToArray2()
+    {
+      int[][] a = new int[3][] { new int[] { 1, 2 }, null, new int[] { 3, 4, 5, 6 } };
+      int[,] res = DataTools.ToArray2<int>(a);
+      Assert.AreEqual(new int[3, 4] { { 1, 2, 0, 0 }, { 0, 0, 0, 0 }, { 3, 4, 5, 6 } }, res);
+    }
+
+    #endregion
+
+    #region GetBlockedArray()
+
+    [Test]
+    public void GetBlockedArray()
+    {
+      int[] a = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+      int[][] res = DataTools.GetBlockedArray<int>(a, 3);
+      int[][] wanted = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 }, new int[] { 7, 8, 9 }, new int[] { 10 } };
+      Assert.AreEqual(wanted, res);
+    }
+
+    #endregion
+
+    #region GetArrayNotNullCount()/GetArrayNullCount()
+
+    [Test]
+    public void GetArrayNullNotNullCount_1d()
+    {
+      string[] a = new string[] { "AAA", null, null, "BBB", "CCC", "DDD" };
+      Assert.AreEqual(4, DataTools.GetArrayNotNullCount(a, false), "GetArrayNotNullCount()");
+      Assert.AreEqual(2, DataTools.GetArrayNullCount(a, false), "GetArrayNotNullCount()");
+    }
+
+
+    [Test]
+    public void GetArrayNullNotNullCount_2d()
+    {
+      string[,] a = new string[,] { { "AAA", null }, { null, "BBB" }, { "CCC", "DDD" } };
+      Assert.AreEqual(4, DataTools.GetArrayNotNullCount(a, false), "GetArrayNotNullCount()");
+      Assert.AreEqual(2, DataTools.GetArrayNullCount(a, false), "GetArrayNotNullCount()");
+    }
+
+    [Test]
+    public void GetArrayNullNotNullCount_jagged()
+    {
+      string[][] a = new string[][] { new string[] { "AAA", null }, new string[] { null, "BBB" }, new string[] { "CCC", "DDD" } };
+      Assert.AreEqual(4, DataTools.GetArrayNotNullCount(a, true), "GetArrayNotNullCount()");
+      Assert.AreEqual(2, DataTools.GetArrayNullCount(a, true), "GetArrayNotNullCount()");
+    }
+
+    #endregion
   }
 }

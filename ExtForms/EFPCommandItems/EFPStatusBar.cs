@@ -37,6 +37,8 @@ namespace FreeLibSet.Forms
     }
 
 #pragma warning disable 0618 // обход [Obsolete]
+
+#if XXX
     /// <summary>
     /// Эта версия конструктора предназначена для создания панелей на уровне приложения
     /// </summary>
@@ -45,6 +47,8 @@ namespace FreeLibSet.Forms
       : this(EFPApp.StatusBar, null)
     {
     }
+#endif
+
 #pragma warning restore 0618 
 
     /// <summary>

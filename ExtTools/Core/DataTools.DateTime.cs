@@ -786,42 +786,6 @@ namespace FreeLibSet.Core
       return true;
     }
 
-    /// <summary>
-    /// Получить комплементарный интервал дат. Например, для периода "10 октября-15 мая"
-    /// возвращается интервал "16 мая-09 октября".
-    /// 29 февраля не бывает
-    /// </summary>
-    /// <param name="orgFirstDay">Исходный интервал - начало</param>
-    /// <param name="orgLastDay">Исходный интервал - окончание</param>
-    /// <param name="newFirstDay">Результат - начало</param>
-    /// <param name="newLastDay">Результат - окончание</param>
-    [Obsolete("Используйте свойство MonthDayRange.Complement", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void ComplementDateRange(MonthDay orgFirstDay, MonthDay orgLastDay,
-      out MonthDay newFirstDay, out MonthDay newLastDay)
-    {
-      newFirstDay = orgLastDay.NextDay;
-      newLastDay = orgFirstDay.PrevDay;
-    }
-
-    /// <summary>
-    /// Получить комплементарный интервал дат. Например, для периода "10 октября-15 мая"
-    /// возвращается интервал "16 мая-09 октября".
-    /// 29 февраля не бывает
-    /// </summary>
-    /// <param name="firstDay">Начало периода (вход и выход)</param>
-    /// <param name="lastDay">Окончание периода (вход и выход)</param>
-    [Obsolete("Используйте свойство MonthDayRange.Complement", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void ComplementDateRange(ref MonthDay firstDay, ref MonthDay lastDay)
-    {
-      MonthDay md1 = firstDay;
-      MonthDay md2 = lastDay;
-#pragma warning disable 0618 // Подавление сообщения Obsolete
-      ComplementDateRange(md1, md2, out firstDay, out lastDay);
-#pragma warning restore 0618
-    }
-
     #endregion
 
     #region Сравнение TimeSpan

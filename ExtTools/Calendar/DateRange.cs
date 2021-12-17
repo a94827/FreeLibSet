@@ -349,18 +349,6 @@ namespace FreeLibSet.Calendar
     /// </summary>
     /// <param name="date">Проверяемая дата</param>
     /// <returns>true, если дата попадает в диапазон</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("Используйте метод Contains()", false)]
-    public bool DateInRange(DateTime date)
-    {
-      return Contains(date);
-    }
-
-    /// <summary>
-    /// Попадает ли заданная дата в интервал
-    /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true, если дата попадает в диапазон</returns>
     public bool Contains(DateTime date)
     {
       date = date.Date;

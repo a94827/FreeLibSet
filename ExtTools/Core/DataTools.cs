@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Collections;
 using FreeLibSet.Data;
 using FreeLibSet.Collections;
+using FreeLibSet.Calendar;
 
 namespace FreeLibSet.Core
 {
@@ -2024,9 +2025,9 @@ namespace FreeLibSet.Core
     /// <typeparam name="T">Тип объектов</typeparam>
     /// <param name="list1">Первый сравниваемый объек</param>
     /// <param name="list2">Второй сравниваемый объек</param>
-    /// <param name="comparer"></param>
+    /// <param name="comparer">Компаратор</param>
     /// <returns>true, если перечислители содержат одинаковые объекты</returns>
-    public static bool AreEnumerablesEqual<T>(IEnumerable<T> list1, IEnumerable<T> list2, IComparer<T> comparer)
+    public static bool AreEnumerablesEqual<T>(IEnumerable<T> list1, IEnumerable<T> list2, IEqualityComparer<T> comparer)
     {
       if (comparer == null)
         return AreEnumerablesEqual<T>(list1, list2);
@@ -2052,7 +2053,7 @@ namespace FreeLibSet.Core
             if (!has1)
               break;
 
-            if (comparer.Compare(en1.Current, en2.Current) != 0)
+            if (!comparer.Equals(en1.Current, en2.Current))
               return false;
           }
         }
@@ -2636,13 +2637,25 @@ namespace FreeLibSet.Core
     /// <returns>Копия таблицы, содержащая <paramref name="ids"/>.Length строк</returns>
     public static DataTable CloneTableForSelectedIds(DataTable table, Int32[] ids)
     {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (ids == null)
+        throw new ArgumentNullException("ids");
+#endif
+
+      string sPK = GetPrimaryKey(table);
+      if (sPK.Length == 0)
+        throw new ArgumentException("У таблицы " + table.TableName + " не задан первичный ключ");
+      if (sPK.IndexOf(',') >= 0)
+        throw new ArgumentException("У таблицы " + table.TableName + " задан составной первичный ключ");
 
       DataTable Table2 = table.Clone();
       for (int i = 0; i < ids.Length; i++)
       {
         DataRow Row1 = table.Rows.Find(ids[i]);
         if (Row1 == null)
-          throw new InvalidOperationException("Для таблицы \"" + table.TableName + "\" не удалось получить строку с Id=" + ids[i].ToString());
+          throw new InvalidOperationException("Для таблицы \"" + table.TableName + "\" не удалось получить строку со значением первичного ключа " + sPK + "=" + ids[i].ToString());
         Table2.Rows.Add(Row1.ItemArray);
       }
       return Table2;
@@ -2662,10 +2675,23 @@ namespace FreeLibSet.Core
     /// <returns>Копия таблицы, содержащая Values.Length строк</returns>
     public static DataTable CloneOrSameTableForSelectedIds(DataTable table, Int32[] ids)
     {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (ids == null)
+        throw new ArgumentNullException("ids");
+#endif
+
+      string sPK = GetPrimaryKey(table);
+      if (sPK.Length == 0)
+        throw new ArgumentException("У таблицы " + table.TableName + " не задан первичный ключ");
+      if (sPK.IndexOf(',') >= 0)
+        throw new ArgumentException("У таблицы " + table.TableName + " задан составной первичный ключ");
+
       // Сначала пытаемся проверить, не подойдет ли исходная таблица
       if (table.Rows.Count == ids.Length)
       {
-        DataRowInt64Extractor extId = new DataRowInt64Extractor("Id");
+        DataRowInt64Extractor extId = new DataRowInt64Extractor(sPK); // исправлено 17.12.2021
 
         bool Good = true;
         for (int i = 0; i < ids.Length; i++)
@@ -2682,42 +2708,6 @@ namespace FreeLibSet.Core
 
       // Возвращаем копию таблицы
       return CloneTableForSelectedIds(table, ids);
-    }
-
-    #endregion
-
-    #region Обработка DataTable.DateTimeMode
-
-    /// <summary>
-    /// Устанавливает для всех столбцов всех таблиц набора, имеющих тип данных DateTime, свойство
-    /// DataColumn.DateTimeMode = DataSetDateTime.Unspecified, если текущим значением
-    /// является DataSetDateTime.UnspecifiedLocal.
-    /// Применение метода позволяет избежать ошибок передачи данных между компьютерами,
-    /// если на них действуют разные часовые пояса.
-    /// </summary>
-    /// <param name="ds">Проверяемый набор</param>
-    public static void SetUnspecifiedDateTimeMode(DataSet ds)
-    {
-      for (int i = 0; i < ds.Tables.Count; i++)
-        SetUnspecifiedDateTimeMode(ds.Tables[i]);
-    }
-
-    /// <summary>
-    /// Устанавливает для всех столбцов таблицы, имеющих тип данных DateTime, свойство
-    /// DataColumn.DateTimeMode = DataSetDateTime.Unspecified, если текущим значением
-    /// является DataSetDateTime.UnspecifiedLocal.
-    /// Применение метода позволяет избежать ошибок передачи данных между компьютерами,
-    /// если на них действуют разные часовые пояса.
-    /// </summary>
-    /// <param name="table">Проверяемая таблица</param>
-    public static void SetUnspecifiedDateTimeMode(DataTable table)
-    {
-      for (int i = 0; i < table.Columns.Count; i++)
-      {
-        DataColumn Column = table.Columns[i];
-        if (Column.DataType == typeof(DateTime) && Column.DateTimeMode == DataSetDateTime.UnspecifiedLocal)
-          Column.DateTimeMode = DataSetDateTime.Unspecified;
-      }
     }
 
     #endregion
@@ -2752,10 +2742,19 @@ namespace FreeLibSet.Core
     /// Если в целевом наборе <paramref name="ds"/> уже есть таблица с совпадающим именем,
     /// она удаляется из набора
     /// </summary>
-    /// <param name="ds">Целевой набор данных</param>
-    /// <param name="table">Присоежиняемыая таблицы</param>
+    /// <param name="ds">Целевой набор данных. Не может быть null</param>
+    /// <param name="table">Присоежиняемыая таблицы. Не может быть null</param>
     public static void AddTableToDataSet(DataSet ds, DataTable table)
     {
+      if (ds == null) // эта проверка обязательно нужна
+        throw new ArgumentNullException("ds"); 
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+#endif
+      if (Object.ReferenceEquals(table.DataSet, ds))
+        return; // 17.12.2021
+
       if (table.DataSet != null)
         table.DataSet.Tables.Remove(table);
 
@@ -2802,7 +2801,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region GetIdsFromField
+    #region GetIdsFromColumn
 
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
@@ -2812,7 +2811,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица данных</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromField(DataTable table, string columnName)
+    public static Int32[] GetIdsFromColumn(DataTable table, string columnName)
     {
 #if DEBUG
       if (table == null)
@@ -2862,7 +2861,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Коллекция строк таблицы данных</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromField(DataView dv, string columnName)
+    public static Int32[] GetIdsFromColumn(DataView dv, string columnName)
     {
       if (dv == null)
         throw new ArgumentNullException("dv");
@@ -2915,7 +2914,7 @@ namespace FreeLibSet.Core
     /// <param name="rows">Массив однотипных строк</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromField(ICollection<DataRow> rows, string columnName)
+    public static Int32[] GetIdsFromColumn(ICollection<DataRow> rows, string columnName)
     {
 #if DEBUG
       if (rows == null)
@@ -2973,7 +2972,7 @@ namespace FreeLibSet.Core
     /// <param name="rows">Массив однотипных строк как коллекция DataRowView</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromField(ICollection<DataRowView> rows, string columnName)
+    public static Int32[] GetIdsFromColumn(ICollection<DataRowView> rows, string columnName)
     {
 #if DEBUG
       if (rows == null)
@@ -3087,7 +3086,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение значений поля "Id" из массива строк. В отличие от GetIdsFromField()
+    /// Получение значений поля "Id" из массива строк. В отличие от GetIdsFromColumn()
     /// не проверяет нулевые значения и не проверяет повторы.
     /// Обрабатываются все строки, включая удаленные
     /// </summary>
@@ -3121,7 +3120,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение значений поля "Id" из массива строк DataRowView. В отличие от GetIdsFromField()
+    /// Получение значений поля "Id" из массива строк DataRowView. В отличие от GetIdsFromColumn()
     /// не проверяет нулевые значения и не проверяет повторы.
     /// Обрабатываются все строки, включая удаленные
     /// </summary>
@@ -3168,7 +3167,7 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (table == null)
-        throw new ArgumentNullException("Table");
+        throw new ArgumentNullException("table");
 #endif
 
       if (table.Rows.Count == 0)
@@ -3188,7 +3187,7 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (table == null)
-        throw new ArgumentNullException("Table");
+        throw new ArgumentNullException("table");
 #endif
 
       if (table.Rows.Count == 0)
@@ -3285,7 +3284,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получить массив идентификаторов для ключевого поля "Id" в таблице
     /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
-    /// не больше N-элементов
+    /// не больше <paramref name="n"/> элементов.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="n"></param>
@@ -3331,7 +3330,7 @@ namespace FreeLibSet.Core
     /// строк, входящих в просмотр DataView
     /// Порядок полученных идентификаторов соответствует порядку строк в просмотре
     /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
-    /// не больше N-элементов
+    /// не больше <paramref name="n"/> элементов.
     /// </summary>
     /// <param name="dv">Просмотр DataView</param>
     /// <param name="n"></param>
@@ -3375,7 +3374,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получение значений поля "Id" из массива строк.
     /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
-    /// не больше N-элементов
+    /// не больше <paramref name="n"/> элементов.
     /// </summary>
     /// <param name="rows">Массив строк</param>
     /// <param name="n">Количество элементов в результирующих массивах</param>
@@ -3419,76 +3418,6 @@ namespace FreeLibSet.Core
         Index++;
       }
       return res;
-    }
-
-    /// <summary>
-    /// Получить двумерный массив идентификаторов из одномерного
-    /// Порядок полученных идентификаторов соответствует порядку строк в просмотре
-    /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
-    /// не больше <paramref name="n"/> элементов
-    /// </summary>
-    /// <param name="ids">Исходный одномерный массив</param>
-    /// <param name="n">Длина подмассивов</param>
-    /// <returns>Jagged-массив</returns>
-    public static Int32[][] GetBlockedIds(Int32[] ids, int n)
-    {
-      return GetBlockedArray<Int32>(ids, n);
-    }
-
-    #endregion
-
-    #region GetIdsFromArray
-
-    /// <summary>
-    /// Получить массив идентификаторов из другого массива.
-    /// Повторяющиеся и нулевые идентификаторы пропускаются
-    /// </summary>
-    /// <param name="ids">Массив идентификаторов</param>
-    /// <returns></returns>
-    public static Int32[] GetIdsFromArray(Int32[] ids)
-    {
-      if (ids == null || ids.Length == 0)
-        return EmptyIds;
-
-      List<Int32> Ids2 = new List<Int32>();
-      for (int i = 0; i < ids.Length; i++)
-      {
-        if (ids[i] == 0)
-          continue;
-        if (!Ids2.Contains(ids[i]))
-          Ids2.Add(ids[i]);
-      }
-      return Ids2.ToArray();
-    }
-
-    #endregion
-
-    #region MergeIds
-
-    /// <summary>
-    /// Объединение нескольких массивов идентификаторов, полученных из нескольких мест, в один массив.
-    /// Повторы отбрасываются.
-    /// Для работы с массивами идентификаторов рекомендуется использовать класс IdList.
-    /// </summary>
-    /// <param name="idArrays">Объединяемые массивы идентификаторов</param>
-    /// <returns>Объединенный массив</returns>
-    public static Int32[] MergeIds(params Int32[][] idArrays)
-    {
-      if (idArrays.Length == 0)
-        return EmptyIds;
-
-      List<Int32> a = new List<int>();
-      a.AddRange(idArrays[0]);
-      for (int i = 1; i < idArrays.Length; i++)
-      {
-        for (int j = 0; j < idArrays[i].Length; j++)
-        {
-          Int32 Id = idArrays[i][j];
-          if (!a.Contains(Id))
-            a.Add(Id);
-        }
-      }
-      return a.ToArray();
     }
 
     #endregion
@@ -3609,7 +3538,7 @@ namespace FreeLibSet.Core
     public static DataTable TableFromIds(Int32[] ids)
     {
       DataTable Table = new DataTable();
-      Table.Columns.Add("Id");
+      Table.Columns.Add("Id", typeof(Int32));
       if (ids != null)
       {
         for (int i = 0; i < ids.Length; i++)
@@ -3659,22 +3588,6 @@ namespace FreeLibSet.Core
         res[i] = table.Rows[startIndex + i];
       return res;
     }
-
-#if XXXXX
-    /*
-     * int Start=0;
-     * DataRow[] Rows;
-     * while(GetDataTableRowsBlock(Table, out Rows, ref Start, 100)
-     * {
-     *   for (int i=0; i<Rows.Length; i++)
-     *   {
-     *     // Действия со строками таблицы
-     *   }
-     * }
-     */
-
-    public static DataRow[] GetDataTableRowsBlock(DataTable Table, int Start, int Count)
-#endif
 
     #endregion
 
@@ -3821,7 +3734,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region GetStringsFromField
+    #region GetStringsFromColumn
 
     /// <summary>
     /// Получение списка строковых значений поля. 
@@ -3833,7 +3746,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля типа String или другого типа,
     /// обрабатываемого функцией GetString()</param>
     /// <returns>Массив идентификаторов</returns>
-    public static string[] GetStringsFromField(DataTable table, string columnName)
+    public static string[] GetStringsFromColumn(DataTable table, string columnName)
     {
 #if DEBUG
       if (table == null)
@@ -3878,7 +3791,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля типа String или другого типа,
     /// обрабатывемого функцией GetString()</param>
     /// <returns>Массив идентификаторов</returns>
-    public static string[] GetStringsFromField(DataView dv, string columnName)
+    public static string[] GetStringsFromColumn(DataView dv, string columnName)
     {
 #if DEBUG
       if (dv == null)
@@ -3921,10 +3834,10 @@ namespace FreeLibSet.Core
     /// Возвращаемый массив сортируется.
     /// </summary>
     /// <param name="rows">Массив однотипных строк</param>
-    /// <param name="ColumnName">Имя поля типа String или другого типа,
+    /// <param name="columnName">Имя поля типа String или другого типа,
     /// обрабатывемого функцией GetString()</param>
     /// <returns>Массив идентификаторов</returns>
-    public static string[] GetStringsFromField(ICollection<DataRow> rows, string ColumnName)
+    public static string[] GetStringsFromColumn(ICollection<DataRow> rows, string columnName)
     {
 #if DEBUG
       if (rows == null)
@@ -3939,7 +3852,7 @@ namespace FreeLibSet.Core
       foreach (DataRow Row in rows)
       {
         if (ColPos < 1)
-          ColPos = GetColumnPosWithCheck(Row.Table, ColumnName);
+          ColPos = GetColumnPosWithCheck(Row.Table, columnName);
 
         string s = DataTools.GetString(Row[ColPos]);
         if (String.IsNullOrEmpty(s))
@@ -3961,7 +3874,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region GetValuesFromField
+    #region GetValuesFromColumn
 
     /// <summary>
     /// Получить значения поля для всех строк таблицы в виде массива
@@ -3973,27 +3886,27 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица исходных данных</param>
     /// <param name="columnName">Имя столбца, из которого извлекаются значения</param>
     /// <returns>Массив значений поля</returns>
-    public static T[] GetValuesFromField<T>(DataTable table, string columnName)
+    public static T[] GetValuesFromColumn<T>(DataTable table, string columnName)
     {
-      int FieldPos = GetColumnPosWithCheck(table, columnName);
+      int colPos = GetColumnPosWithCheck(table, columnName);
 
       T[] res = new T[table.Rows.Count];
 
       Type ResType = typeof(T);
-      if (ResType == table.Columns[FieldPos].DataType)
+      if (ResType == table.Columns[colPos].DataType)
       {
         for (int i = 0; i < table.Rows.Count; i++)
         {
-          if (!table.Rows[i].IsNull(FieldPos))
-            res[i] = (T)(table.Rows[i][FieldPos]);
+          if (!table.Rows[i].IsNull(colPos))
+            res[i] = (T)(table.Rows[i][colPos]);
         }
       }
       else
       {
         for (int i = 0; i < table.Rows.Count; i++)
         {
-          if (!table.Rows[i].IsNull(FieldPos))
-            res[i] = (T)(Convert.ChangeType(table.Rows[i][FieldPos], ResType));
+          if (!table.Rows[i].IsNull(colPos))
+            res[i] = (T)(Convert.ChangeType(table.Rows[i][colPos], ResType));
         }
       }
       return res;
@@ -4008,23 +3921,23 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр для таблицы исходных данных</param>
     /// <param name="columnName">Имя столбца, из которого извлекаются значения</param>
     /// <returns>Массив значений поля</returns>
-    public static T[] GetValuesFromField<T>(DataView dv, string columnName)
+    public static T[] GetValuesFromColumn<T>(DataView dv, string columnName)
     {
 #if DEBUG
       if (dv == null)
         throw new ArgumentNullException("dv");
 #endif
-      int FieldPos = GetColumnPosWithCheck(dv.Table, columnName);
+      int colPos = GetColumnPosWithCheck(dv.Table, columnName);
 
       T[] res = new T[dv.Count];
       Type ResType = typeof(T);
-      if (ResType == dv.Table.Columns[FieldPos].DataType)
+      if (ResType == dv.Table.Columns[colPos].DataType)
       {
         for (int i = 0; i < dv.Count; i++)
         {
           DataRow Row = dv[i].Row;
-          if (!Row.IsNull(FieldPos))
-            res[i] = (T)(Row[FieldPos]);
+          if (!Row.IsNull(colPos))
+            res[i] = (T)(Row[colPos]);
         }
       }
       else
@@ -4032,9 +3945,36 @@ namespace FreeLibSet.Core
         for (int i = 0; i < dv.Count; i++)
         {
           DataRow Row = dv[i].Row;
-          if (!Row.IsNull(FieldPos))
-            res[i] = (T)(Convert.ChangeType(Row[FieldPos], ResType));
+          if (!Row.IsNull(colPos))
+            res[i] = (T)(Convert.ChangeType(Row[colPos], ResType));
         }
+      }
+      return res;
+    }
+
+
+    /// <summary>
+    /// Получить значения поля для строк таблицы в массиве. 
+    /// Повторы и пустые значения не отбрасываются. Количество и порядок элементов в результируюшем массиве соответствуют <paramref name="rows"/>.
+    /// Хранящиеся в таблице значения DBNull заменяются на default
+    /// </summary>
+    /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов DataColumn.DataType)</typeparam>
+    /// <param name="rows">Массив однотипных строк</param>
+    /// <param name="columnName">Имя столбца, из которого извлекаются значения</param>
+    /// <returns>Массив значений поля</returns>
+    public static T[] GetValuesFromColumn<T>(DataRow[] rows, string columnName)
+    {
+#if DEBUG
+      if (rows == null)
+        throw new ArgumentNullException("rows");
+#endif
+
+      T[] res = new T[rows.Length];
+      for (int i = 0; i < rows.Length; i++)
+      {
+        object x = rows[i][columnName];
+        if (!(x is DBNull))
+          res[i] = (T)(Convert.ChangeType(x, typeof(T)));
       }
       return res;
     }
@@ -4052,7 +3992,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static int[] GetUniqueInts(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
@@ -4080,7 +4020,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Массив уникальных значений</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static int[] GetUniqueInts(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
@@ -4109,42 +4049,10 @@ namespace FreeLibSet.Core
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
     /// </summary>
-    /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
-    public static int[] GetUniqueInts(DataRow[] rows, string columnName, bool skipNulls)
-    {
-      if (rows == null)
-        return EmptyInts;
-      // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor Extr = new DataRowNullableIntExtractor(columnName);
-      SingleScopeList<int> lst = new SingleScopeList<int>();
-      for (int i = 0; i < rows.Length; i++)
-      {
-        if (rows[i] == null)
-          continue;
-        if (rows[i].RowState == DataRowState.Deleted)
-          continue;
-        int? v = Extr[rows[i]];
-        if (skipNulls)
-        {
-          if (!v.HasValue)
-            continue;
-        }
-        lst.Add(v ?? 0);
-      }
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Получить все уникальные значения для одного поля таблицы.
-    /// Возвращаемый массив не является отсортированным.
-    /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static int[] GetUniqueInts(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
@@ -4181,7 +4089,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static long[] GetUniqueInt64s(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
@@ -4210,7 +4118,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Массив уникальных значений</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static long[] GetUniqueInt64s(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
@@ -4239,42 +4147,10 @@ namespace FreeLibSet.Core
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
     /// </summary>
-    /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
-    public static long[] GetUniqueInt64s(DataRow[] rows, string columnName, bool skipNulls)
-    {
-      if (rows == null)
-        return EmptyInt64s;
-      // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor Extr = new DataRowNullableInt64Extractor(columnName);
-      SingleScopeList<long> lst = new SingleScopeList<long>();
-      for (int i = 0; i < rows.Length; i++)
-      {
-        if (rows[i] == null)
-          continue;
-        if (rows[i].RowState == DataRowState.Deleted)
-          continue;
-        long? v = Extr[rows[i]];
-        if (skipNulls)
-        {
-          if (!v.HasValue)
-            continue;
-        }
-        lst.Add(v ?? 0L);
-      }
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Получить все уникальные значения для одного поля таблицы.
-    /// Возвращаемый массив не является отсортированным.
-    /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static long[] GetUniqueInt64s(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
@@ -4311,7 +4187,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static float[] GetUniqueSingles(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
@@ -4339,7 +4215,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Массив уникальных значений</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static float[] GetUniqueSingles(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
@@ -4367,42 +4243,10 @@ namespace FreeLibSet.Core
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
     /// </summary>
-    /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
-    public static float[] GetUniqueSingles(DataRow[] rows, string columnName, bool skipNulls)
-    {
-      if (rows == null)
-        return EmptySingles;
-      // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor Extr = new DataRowNullableSingleExtractor(columnName);
-      SingleScopeList<float> lst = new SingleScopeList<float>();
-      for (int i = 0; i < rows.Length; i++)
-      {
-        if (rows[i] == null)
-          continue;
-        if (rows[i].RowState == DataRowState.Deleted)
-          continue;
-        float? v = Extr[rows[i]];
-        if (skipNulls)
-        {
-          if (!v.HasValue)
-            continue;
-        }
-        lst.Add(v ?? 0f);
-      }
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Получить все уникальные значения для одного поля таблицы.
-    /// Возвращаемый массив не является отсортированным.
-    /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static float[] GetUniqueSingles(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
@@ -4439,7 +4283,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static double[] GetUniqueDoubles(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
@@ -4467,7 +4311,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Массив уникальных значений</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static double[] GetUniqueDoubles(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
@@ -4495,42 +4339,10 @@ namespace FreeLibSet.Core
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
     /// </summary>
-    /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
-    public static double[] GetUniqueDoubles(DataRow[] rows, string columnName, bool skipNulls)
-    {
-      if (rows == null)
-        return EmptyDoubles;
-      // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor Extr = new DataRowNullableDoubleExtractor(columnName);
-      SingleScopeList<double> lst = new SingleScopeList<double>();
-      for (int i = 0; i < rows.Length; i++)
-      {
-        if (rows[i] == null)
-          continue;
-        if (rows[i].RowState == DataRowState.Deleted)
-          continue;
-        double? v = Extr[rows[i]];
-        if (skipNulls)
-        {
-          if (!v.HasValue)
-            continue;
-        }
-        lst.Add(v ?? 0.0);
-      }
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Получить все уникальные значения для одного поля таблицы.
-    /// Возвращаемый массив не является отсортированным.
-    /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static double[] GetUniqueDoubles(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
@@ -4567,7 +4379,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static decimal[] GetUniqueDecimals(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
@@ -4596,7 +4408,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Массив уникальных значений</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static decimal[] GetUniqueDecimals(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
@@ -4625,42 +4437,10 @@ namespace FreeLibSet.Core
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
     /// </summary>
-    /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
-    public static decimal[] GetUniqueDecimals(DataRow[] rows, string columnName, bool skipNulls)
-    {
-      if (rows == null)
-        return EmptyDecimals;
-      // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor Extr = new DataRowNullableDecimalExtractor(columnName);
-      SingleScopeList<decimal> lst = new SingleScopeList<decimal>();
-      for (int i = 0; i < rows.Length; i++)
-      {
-        if (rows[i] == null)
-          continue;
-        if (rows[i].RowState == DataRowState.Deleted)
-          continue;
-        decimal? v = Extr[rows[i]];
-        if (skipNulls)
-        {
-          if (!v.HasValue)
-            continue;
-        }
-        lst.Add(v ?? 0m);
-      }
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Получить все уникальные значения для одного поля таблицы.
-    /// Возвращаемый массив не является отсортированным.
-    /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static decimal[] GetUniqueDecimals(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
@@ -4697,7 +4477,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static DateTime[] GetUniqueDateTimes(DataView dv, string columnName)
     {
       if (dv == null)
@@ -4722,7 +4502,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <returns>Массив уникальных значений</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static DateTime[] GetUniqueDateTimes(DataTable table, string columnName)
     {
       if (table == null)
@@ -4749,37 +4529,9 @@ namespace FreeLibSet.Core
     /// Возвращаемый массив не является отсортированным.
     /// Значения DBNull пропускаются.
     /// </summary>
-    /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Найденное значение или null</returns>
-    public static DateTime[] GetUniqueDateTimes(DataRow[] rows, string columnName)
-    {
-      if (rows == null)
-        return EmptyDateTimes;
-      // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor Extr = new DataRowNullableDateTimeExtractor(columnName);
-      SingleScopeList<DateTime> lst = new SingleScopeList<DateTime>();
-      for (int i = 0; i < rows.Length; i++)
-      {
-        if (rows[i] == null)
-          continue;
-        if (rows[i].RowState == DataRowState.Deleted)
-          continue;
-        DateTime? v = Extr[rows[i]];
-        if (v.HasValue)
-          lst.Add(v.Value);
-      }
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Получить все уникальные значения для одного поля таблицы.
-    /// Возвращаемый массив не является отсортированным.
-    /// Значения DBNull пропускаются.
-    /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static DateTime[] GetUniqueDateTimes(IEnumerable<DataRow> rows, string columnName)
     {
       if (rows == null)
@@ -4812,7 +4564,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static TimeSpan[] GetUniqueTimeSpans(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
@@ -4841,7 +4593,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Массив уникальных значений</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static TimeSpan[] GetUniqueTimeSpans(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
@@ -4870,42 +4622,10 @@ namespace FreeLibSet.Core
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
     /// </summary>
-    /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
-    public static TimeSpan[] GetUniqueTimeSpans(DataRow[] rows, string columnName, bool skipNulls)
-    {
-      if (rows == null)
-        return EmptyTimeSpans;
-      // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor Extr = new DataRowNullableTimeSpanExtractor(columnName);
-      SingleScopeList<TimeSpan> lst = new SingleScopeList<TimeSpan>();
-      for (int i = 0; i < rows.Length; i++)
-      {
-        if (rows[i] == null)
-          continue;
-        if (rows[i].RowState == DataRowState.Deleted)
-          continue;
-        TimeSpan? v = Extr[rows[i]];
-        if (skipNulls)
-        {
-          if (!v.HasValue)
-            continue;
-        }
-        lst.Add(v ?? TimeSpan.Zero);
-      }
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Получить все уникальные значения для одного поля таблицы.
-    /// Возвращаемый массив не является отсортированным.
-    /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    /// <returns>Найденное значение или null</returns>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
     public static TimeSpan[] GetUniqueTimeSpans(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
@@ -4933,16 +4653,204 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    ///// <summary>
-    ///// Получить все уникальные значения для одного поля таблицы.
-    ///// В список входят все варианты значения, включая DBNull
-    ///// </summary>
-    ///// <param name="Table">Таблица</param>
-    ///// <param name="FieldName">Имя поля</param>
-    ///// <returns></returns>
-    //public object[] GetUniqueValues(DataTable Table, string FieldName)
-    //{ 
-    //}
+    #region Guid
+
+    /// <summary>
+    /// Получить все уникальные значения для одного поля таблицы.
+    /// Возвращаемый массив не является отсортированным.
+    /// </summary>
+    /// <param name="dv">Просмотр</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как Guid.Empty</param>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
+    public static Guid[] GetUniqueGuids(DataView dv, string columnName, bool skipNulls)
+    {
+      if (dv == null)
+        return EmptyGuids;
+      if (dv.Count == 0)
+        return EmptyGuids;
+      int p = GetColumnPosWithCheck(dv.Table, columnName);
+
+      SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
+      foreach (DataRowView drv in dv)
+      {
+        if (skipNulls)
+        {
+          if (drv.Row.IsNull(p))
+            continue;
+        }
+        lst.Add(DataTools.GetGuid(drv.Row[p]));
+      }
+      return lst.ToArray();
+    }
+
+    /// <summary>
+    /// Получить все уникальные значения для одного поля таблицы.
+    /// Возвращаемый массив не является отсортированным.
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как Guid.Empty</param>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
+    public static Guid[] GetUniqueGuids(DataTable table, string columnName, bool skipNulls)
+    {
+      if (table == null)
+        return EmptyGuids;
+      if (table.Rows.Count == 0)
+        return EmptyGuids;
+      int p = GetColumnPosWithCheck(table, columnName);
+
+      SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
+      foreach (DataRow Row in table.Rows)
+      {
+        if (Row.RowState == DataRowState.Deleted)
+          continue;
+        if (skipNulls)
+        {
+          if (Row.IsNull(p))
+            continue;
+        }
+        lst.Add(DataTools.GetGuid(Row[p]));
+      }
+
+      return lst.ToArray();
+    }
+
+    /// <summary>
+    /// Получить все уникальные значения для одного поля таблицы.
+    /// Возвращаемый массив не является отсортированным.
+    /// </summary>
+    /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как Guid.Empty</param>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
+    public static Guid[] GetUniqueGuids(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    {
+      if (rows == null)
+        return EmptyGuids;
+      // Строки могут относиться к разным таблицам
+      SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
+      foreach (DataRow Row in rows)
+      {
+        if (Row == null)
+          continue;
+        if (Row.RowState == DataRowState.Deleted)
+          continue;
+
+
+        object v = Row[columnName];
+        if (skipNulls)
+        {
+          if (v is DBNull)
+            continue;
+        }
+        lst.Add(DataTools.GetGuid(v));
+      }
+      return lst.ToArray();
+    }
+
+    #endregion
+
+    #region Enum
+
+    /// <summary>
+    /// Получить все уникальные значения для одного поля таблицы.
+    /// Возвращаемый массив не является отсортированным.
+    /// </summary>
+    /// <param name="dv">Просмотр</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как значение default</param>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
+    public static T[] GetUniqueEnums<T>(DataView dv, string columnName, bool skipNulls)
+      where T:struct
+    {
+      if (dv == null)
+        return new T[0];
+      if (dv.Count == 0)
+        return new T[0];
+      int p = GetColumnPosWithCheck(dv.Table, columnName);
+
+      SingleScopeList<T> lst = new SingleScopeList<T>();
+      foreach (DataRowView drv in dv)
+      {
+        if (skipNulls)
+        {
+          if (drv.Row.IsNull(p))
+            continue;
+        }
+        lst.Add(DataTools.GetEnum<T>(drv.Row[p]));
+      }
+      return lst.ToArray();
+    }
+
+    /// <summary>
+    /// Получить все уникальные значения для одного поля таблицы.
+    /// Возвращаемый массив не является отсортированным.
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как значение default</param>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
+    public static T[] GetUniqueEnums<T>(DataTable table, string columnName, bool skipNulls)
+      where T : struct
+    {
+      if (table == null)
+        return new T[0];
+      if (table.Rows.Count == 0)
+        return new T[0];
+      int p = GetColumnPosWithCheck(table, columnName);
+
+      SingleScopeList<T> lst = new SingleScopeList<T>();
+      foreach (DataRow Row in table.Rows)
+      {
+        if (Row.RowState == DataRowState.Deleted)
+          continue;
+        if (skipNulls)
+        {
+          if (Row.IsNull(p))
+            continue;
+        }
+        lst.Add(DataTools.GetEnum<T>(Row[p]));
+      }
+
+      return lst.ToArray();
+    }
+
+    /// <summary>
+    /// Получить все уникальные значения для одного поля таблицы.
+    /// Возвращаемый массив не является отсортированным.
+    /// </summary>
+    /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как значение default</param>
+    /// <returns>Массив уникальных значений или пустой массив</returns>
+    public static T[] GetUniqueEnums<T>(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+      where T : struct
+    {
+      if (rows == null)
+        return new T[0];
+      // Строки могут относиться к разным таблицам
+      SingleScopeList<T> lst = new SingleScopeList<T>();
+      foreach (DataRow Row in rows)
+      {
+        if (Row == null)
+          continue;
+        if (Row.RowState == DataRowState.Deleted)
+          continue;
+
+
+        object v = Row[columnName];
+        if (skipNulls)
+        {
+          if (v is DBNull)
+            continue;
+        }
+        lst.Add(DataTools.GetEnum<T>(v));
+      }
+      return lst.ToArray();
+    }
+
+    #endregion
 
     #endregion
 
@@ -5384,7 +5292,7 @@ namespace FreeLibSet.Core
     /// Эта версия позволяет выполнить замену значений DBNull на 0 или пустую строку, в зависимости от типа данных
     /// </summary>
     /// <param name="srcTable">Исходная таблица, из которой берутся строки.
-    /// Таблица должна содержать все поля, перечисленные в KeyFieldNames</param>
+    /// Таблица должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
     /// <param name="keyTable">Сюда записывается вспомогательная таблица значений полей</param>
     /// <param name="rows">Сюда записывается двумерный массив ссылок на строки таблицы
@@ -5398,7 +5306,7 @@ namespace FreeLibSet.Core
       if (srcTable == null)
         throw new ArgumentNullException("SrcTable");
       if (String.IsNullOrEmpty(keyColumnNames))
-        throw new ArgumentNullException("KeyFieldNames");
+        throw new ArgumentNullException("KeyColumnNames");
 #endif
 
       string[] aKeyColumnNames = keyColumnNames.Split(',');
@@ -5415,7 +5323,7 @@ namespace FreeLibSet.Core
       // Среди значений полей, по которым выполяется группировка, могут быть DBNull.
       // Их нельзя применять в качестве первичных ключей таблицы, но можно использовать в сортировке DataView.Sort
 
-      //DataTools.SetPrimaryKey(KeyTable, KeyFieldNames);
+      //DataTools.SetPrimaryKey(KeyTable, KeyColumnNames);
       object[] KeyValues = new object[aKeyColumnNames.Length];
       keyTable.DefaultView.Sort = keyColumnNames;
 
@@ -5542,7 +5450,7 @@ namespace FreeLibSet.Core
     /// Эта версия позволяет выполнить замену значений DBNull на 0 или пустую строку, в зависимости от типа данных
     /// </summary>
     /// <param name="srcDataView">Исходная DataView, из которого берутся строки.
-    /// Таблица, на основе которой построен SrcDataView, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
+    /// Таблица, на основе которой построен <paramref name="srcDataView"/>, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
     /// <param name="keyTable">Сюда записывается вспомогательная таблица значений полей</param>
     /// <param name="rows">Сюда записывается двумерный массив ссылок на строки таблицы
@@ -5556,30 +5464,30 @@ namespace FreeLibSet.Core
       if (srcDataView == null)
         throw new ArgumentNullException("srcDataView");
       if (String.IsNullOrEmpty(keyColumnNames))
-        throw new ArgumentNullException("keyFieldNames");
+        throw new ArgumentNullException("keyColumnNames");
 #endif
-      string[] aKeyFieldNames = keyColumnNames.Split(',');
-      int[] KeyFieldPoss = new int[aKeyFieldNames.Length];
+      string[] aKeyColumnNames = keyColumnNames.Split(',');
+      int[] KeyColumnPoss = new int[aKeyColumnNames.Length];
       keyTable = new DataTable();
-      for (int i = 0; i < aKeyFieldNames.Length; i++)
+      for (int i = 0; i < aKeyColumnNames.Length; i++)
       {
-        KeyFieldPoss[i] = GetColumnPosWithCheck(srcDataView.Table, aKeyFieldNames[i]);
-        DataColumn SrcCol = srcDataView.Table.Columns[KeyFieldPoss[i]];
+        KeyColumnPoss[i] = GetColumnPosWithCheck(srcDataView.Table, aKeyColumnNames[i]);
+        DataColumn SrcCol = srcDataView.Table.Columns[KeyColumnPoss[i]];
         keyTable.Columns.Add(SrcCol.ColumnName, SrcCol.DataType); // другие ограничения не применяем
       }
       // 26.01.2016
       // Среди значений полей, по которым выполяется группировка, могут быть DBNull.
       // Их нельзя применять в качестве первичных ключей таблицы, но можно использовать в сортировке DataView.Sort
 
-      //DataTools.SetPrimaryKey(KeyTable, KeyFieldNames);
-      object[] KeyValues = new object[aKeyFieldNames.Length];
+      //DataTools.SetPrimaryKey(KeyTable, KeyColumnNames);
+      object[] KeyValues = new object[aKeyColumnNames.Length];
       keyTable.DefaultView.Sort = keyColumnNames;
 
       // 15.02.2019
       // Сначала добавляем все строки в ключевую таблицу, а затем - сортируем ее
       foreach (DataRowView SrcDRV in srcDataView)
       {
-        InitGroupRowsKeyValues(SrcDRV.Row, KeyValues, KeyFieldPoss, dbNullAsZero);
+        InitGroupRowsKeyValues(SrcDRV.Row, KeyValues, KeyColumnPoss, dbNullAsZero);
         DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues);
       }
       keyTable = keyTable.DefaultView.ToTable();
@@ -5591,7 +5499,7 @@ namespace FreeLibSet.Core
 
       foreach (DataRowView SrcDRV in srcDataView)
       {
-        InitGroupRowsKeyValues(SrcDRV.Row, KeyValues, KeyFieldPoss, dbNullAsZero);
+        InitGroupRowsKeyValues(SrcDRV.Row, KeyValues, KeyColumnPoss, dbNullAsZero);
         DataRow KeyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues); // 26.01.2017
 
         int KeyRowIndex = keyTable.Rows.IndexOf(KeyRow);
@@ -5714,13 +5622,13 @@ namespace FreeLibSet.Core
       }
 
 
-      string[] aKeyFieldNames = keyColumnNames.Split(',');
-      int[] KeyFieldPoss = new int[aKeyFieldNames.Length];
+      string[] aKeyColumnNames = keyColumnNames.Split(',');
+      int[] KeyColumnPoss = new int[aKeyColumnNames.Length];
       keyTable = new DataTable();
-      for (int i = 0; i < aKeyFieldNames.Length; i++)
+      for (int i = 0; i < aKeyColumnNames.Length; i++)
       {
-        KeyFieldPoss[i] = GetColumnPosWithCheck(srcRows[0].Table, aKeyFieldNames[i]);
-        DataColumn SrcCol = srcRows[0].Table.Columns[KeyFieldPoss[i]];
+        KeyColumnPoss[i] = GetColumnPosWithCheck(srcRows[0].Table, aKeyColumnNames[i]);
+        DataColumn SrcCol = srcRows[0].Table.Columns[KeyColumnPoss[i]];
         keyTable.Columns.Add(SrcCol.ColumnName, SrcCol.DataType); // другие ограничения не применяем
       }
 
@@ -5728,15 +5636,15 @@ namespace FreeLibSet.Core
       // Среди значений полей, по которым выполяется группировка, могут быть DBNull.
       // Их нельзя применять в качестве первичных ключей таблицы, но можно использовать в сортировке DataView.Sort
 
-      //DataTools.SetPrimaryKey(KeyTable, KeyFieldNames);
-      object[] KeyValues = new object[aKeyFieldNames.Length];
+      //DataTools.SetPrimaryKey(KeyTable, KeyColumnNames);
+      object[] KeyValues = new object[aKeyColumnNames.Length];
       keyTable.DefaultView.Sort = keyColumnNames;
 
       // 15.02.2019
       // Сначала добавляем все строки в ключевую таблицу, а затем - сортируем ее
       for (int j = 0; j < srcRows.Length; j++)
       {
-        InitGroupRowsKeyValues(srcRows[j], KeyValues, KeyFieldPoss, dbNullAsZero);
+        InitGroupRowsKeyValues(srcRows[j], KeyValues, KeyColumnPoss, dbNullAsZero);
         DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues);
       }
       keyTable = keyTable.DefaultView.ToTable();
@@ -5748,7 +5656,7 @@ namespace FreeLibSet.Core
 
       for (int j = 0; j < srcRows.Length; j++)
       {
-        InitGroupRowsKeyValues(srcRows[j], KeyValues, KeyFieldPoss, dbNullAsZero);
+        InitGroupRowsKeyValues(srcRows[j], KeyValues, KeyColumnPoss, dbNullAsZero);
         DataRow KeyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues); // 26.01.2017
 
         int KeyRowIndex = keyTable.Rows.IndexOf(KeyRow);
@@ -6920,7 +6828,7 @@ namespace FreeLibSet.Core
       return res;
     }
 
-    #region GetDataViewSortFieldNames
+    #region GetDataViewSortColumnNames
 
     /// <summary>
     /// Извлечь имена столбцов из свойства DataView.Sort.
@@ -7182,8 +7090,8 @@ namespace FreeLibSet.Core
       if (p < 0)
       {
         row = dv.Table.NewRow();
-        string FieldName = GetDataViewSortSingleColumnName(dv.Sort);
-        row[FieldName] = searchValue;
+        string colName = GetDataViewSortSingleColumnName(dv.Sort);
+        row[colName] = searchValue;
         dv.Table.Rows.Add(row);
         return true;
       }
@@ -7235,11 +7143,11 @@ namespace FreeLibSet.Core
       if (p < 0)
       {
         row = dv.Table.NewRow();
-        string[] FieldNames = GetDataViewSortColumnNames(dv.Sort); // не может вернуть null, т.к. dvSort - непустая строка
-        if (searchValues.Length != FieldNames.Length)
-          throw new ArgumentException("Длина списка значений (" + searchValues.Length.ToString() + ") не совпадает с числом полей для сортироки (" + FieldNames.Length.ToString() + ") заданном в свойстве Sort объекта DataView", "searchValues");
-        for (int i = 0; i < FieldNames.Length; i++)
-          row[FieldNames[i]] = searchValues[i];
+        string[] colNames = GetDataViewSortColumnNames(dv.Sort); // не может вернуть null, т.к. dvSort - непустая строка
+        if (searchValues.Length != colNames.Length)
+          throw new ArgumentException("Длина списка значений (" + searchValues.Length.ToString() + ") не совпадает с числом полей для сортироки (" + colNames.Length.ToString() + ") заданном в свойстве Sort объекта DataView", "searchValues");
+        for (int i = 0; i < colNames.Length; i++)
+          row[colNames[i]] = searchValues[i];
         dv.Table.Rows.Add(row);
         return true;
       }
@@ -7277,9 +7185,9 @@ namespace FreeLibSet.Core
       DataTable ResTable = srcTable.Clone();
       if (srcTable.Rows.Count == 0)
         return ResTable;
-      int[] UniqueFieldPoss = new int[uniqueColumnNames.Length];
+      int[] UniqueColPoss = new int[uniqueColumnNames.Length];
       for (int j = 0; j < uniqueColumnNames.Length; j++)
-        UniqueFieldPoss[j] = GetColumnPosWithCheck(srcTable, uniqueColumnNames[j]);
+        UniqueColPoss[j] = GetColumnPosWithCheck(srcTable, uniqueColumnNames[j]);
 
       ResTable.DefaultView.Sort = String.Join(",", uniqueColumnNames);
       ResTable.DefaultView.RowFilter = String.Empty;
@@ -7292,7 +7200,7 @@ namespace FreeLibSet.Core
           continue;
 
         for (int j = 0; j < uniqueColumnNames.Length; j++)
-          Keys[j] = SrcRow[UniqueFieldPoss[j]];
+          Keys[j] = SrcRow[UniqueColPoss[j]];
 
         if (ResTable.DefaultView.Find(Keys) < 0)
           ResTable.Rows.Add(SrcRow.ItemArray);
@@ -7344,9 +7252,9 @@ namespace FreeLibSet.Core
       DataTable ResTable = srcDV.Table.Clone();
       if (srcDV.Count == 0)
         return ResTable;
-      int[] UniqueFieldPoss = new int[uniqueColumnNames.Length];
+      int[] UniqueColPoss = new int[uniqueColumnNames.Length];
       for (int j = 0; j < uniqueColumnNames.Length; j++)
-        UniqueFieldPoss[j] = GetColumnPosWithCheck(srcDV.Table, uniqueColumnNames[j]);
+        UniqueColPoss[j] = GetColumnPosWithCheck(srcDV.Table, uniqueColumnNames[j]);
 
       ResTable.DefaultView.Sort = String.Join(",", uniqueColumnNames);
       ResTable.DefaultView.RowFilter = String.Empty;
@@ -7357,7 +7265,7 @@ namespace FreeLibSet.Core
         DataRow SrcRow = srcDV[i].Row;
 
         for (int j = 0; j < uniqueColumnNames.Length; j++)
-          Keys[j] = SrcRow[UniqueFieldPoss[j]];
+          Keys[j] = SrcRow[UniqueColPoss[j]];
 
         if (ResTable.DefaultView.Find(Keys) < 0)
           ResTable.Rows.Add(SrcRow.ItemArray);

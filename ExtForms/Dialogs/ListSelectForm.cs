@@ -662,18 +662,6 @@ namespace FreeLibSet.Forms
     private bool _CanBeEmpty;
 
     /// <summary>
-    /// True, если должна быть выбрана хотя бы одна позиция в списке
-    /// (по умолчанию - true)
-    /// </summary>
-    [Obsolete("Используйте свойство CanBeEmpty", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool Required
-    {
-      get { return !CanBeEmpty; }
-      set { CanBeEmpty = !value; }
-    }
-
-    /// <summary>
     /// Имя изображения (одного на все элементы). 
     /// Изображения извлекаются из списка EFPApp.MainImages.
     /// Может перекрываться с помощью ImageKeys
@@ -1180,19 +1168,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
     private bool _CanBeEmpty;
-
-    /// <summary>
-    /// True, если должна быть выбрана хотя бы одна позиция в списке
-    /// (по умолчанию - true)
-    /// </summary>
-    [Obsolete("Используйте свойство CanBeEmpty", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool Required
-    {
-      get { return !CanBeEmpty; }
-      set { CanBeEmpty = !value; }
-    }
-
 
     /// <summary>
     /// Имя изображения (одного на все элементы). Может перекрываться с помощью

@@ -551,27 +551,6 @@ namespace FreeLibSet.Calendar
 
     #endregion
 
-    #region Устаревшие свойства
-
-    /// <summary>
-    /// Устаревшее свойство
-    /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Browsable(false)]
-    [Obsolete("Используйте свойство FirstYM", false)]
-    public YearMonth FirstMonth { get { return _FirstYM; } }
-
-
-    /// <summary>
-    /// Устаревшее свойство
-    /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Browsable(false)]
-    [Obsolete("Используйте свойство LastYM", false)]
-    public YearMonth LastMonth { get { return _LastYM; } }
-
-    #endregion
-
     #region Методы
 
     /// <summary>

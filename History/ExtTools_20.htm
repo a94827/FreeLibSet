@@ -5,7 +5,10 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-12-16T16:44:31.472000000"/>
+	<meta name="changed" content="2021-12-17T16:29:00.535000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -502,7 +505,7 @@
 			<p lang="en-US" align="center">306</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">14.12.2021-16.12.2021</p>
+			<p lang="en-US" align="center">14.12.2021-17.12.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Свойство
@@ -531,7 +534,8 @@
 			<p>6. Изменения в агрегатных методах <span lang="en-US">DataTools</span></p>
 			<p><span lang="en-US">- </span>Убраны перегрузки <span lang="en-US">методов</span>
 			<span lang="en-US">Sum/Min/Max/MinMaxInt/In64/Single/Double/Decimal/DateTime/TimeSpan/Value(),
-			GetRowCount(), </span>принимающие аргумент - массив <span lang="en-US">DataRow[].
+			GetRowCount(), </span><span lang="en-US">GetUniqueXXX(),
+			</span>принимающие аргумент - массив <span lang="en-US">DataRow[].
 			</span>Дублировали перегрузки, принимающие <span lang="en-US">IEnumerable&lt;DataRow&gt;.</span>
 						</p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">Убраны
@@ -559,11 +563,10 @@
 			</span>заменены на один шаблонный метод <span lang="en-US">IsInRange&lt;T&gt;()</span></p>
 			<p><span lang="en-US">9. В</span>место отдельных структур
 			<span lang="en-US">MinMaxXXX </span>создана шаблонная структура
-			<span lang="en-US">MinMax&lt;T&gt;.</span><span lang="en-US">
-			</span><span lang="ru-RU">Добавлен конструктор, принимающий
-			</span><span lang="en-US">IEnumerable&lt;T&gt;. </span><span lang="ru-RU">В
-			</span><span lang="en-US">DataTools </span><span lang="ru-RU">убраны
-			перегрузки методов </span><span lang="en-US">MinMaxXXX(),
+			<span lang="en-US">MinMax&lt;T&gt;.</span> <span lang="ru-RU">Добавлен
+			конструктор, принимающий </span><span lang="en-US">IEnumerable&lt;T&gt;.
+			</span><span lang="ru-RU">В </span><span lang="en-US">DataTools
+			</span><span lang="ru-RU">убраны перегрузки методов </span><span lang="en-US">MinMaxXXX(),
 			</span><span lang="ru-RU">принимающие перечислитель</span></p>
 			<p><span lang="ru-RU">10. Метод </span><span lang="en-US">DataTools.AreArraysEqual()
 			</span><span lang="ru-RU">с аргументами </span><span lang="en-US">Array
@@ -572,12 +575,47 @@
 			</span><span lang="en-US">DataTools.AreArraysEqual(), </span><span lang="ru-RU">принимающем
 			строки (</span><a href="ExtTools_11.htm#v243p2"><span lang="en-US">v.243
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
-			<p><span lang="ru-RU">12. Убран метод </span><span lang="en-US">DataTools.AreIdsEqual(),
-			</span><span lang="ru-RU">т.к. его дублирует
-			</span><span lang="en-US">AreArraysEqual&lt;Int32&gt;().</span></p>
+			<p><span lang="ru-RU">12. Убран метод</span><span lang="ru-RU">ы</span><span lang="ru-RU">
+			</span><span lang="en-US">DataTools.AreIdsEqual(), </span><span lang="ru-RU">т.к.
+			его дублирует </span><span lang="en-US">AreArraysEqual&lt;Int32&gt;()</span><span lang="ru-RU">,
+			GetIdsFromArray(), </span><span lang="en-US">MergeIds() (</span><span lang="ru-RU">можно
+			использовать класс </span><span lang="en-US">IdList)</span><span lang="en-US">.</span></p>
 			<p><span lang="en-US">13. </span><span lang="ru-RU">Оптимизирован
-			метод DataTools.MergeArraysOnce</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">()</span><span lang="en-US">
-			</span><span lang="ru-RU">с использованием </span><span lang="en-US">ArrayIndexer&lt;T&gt;.</span></p>
+			метод DataTools.MergeArraysOnce</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">()</span>
+			<span lang="ru-RU">с использованием </span><span lang="en-US">ArrayIndexer&lt;T&gt;.</span></p>
+			<p><span lang="en-US">14. </span><span lang="ru-RU">Перегрузка
+			</span><span lang="en-US">DataTools.AreEnumerablesEqual&lt;T&gt;()
+			</span><span lang="ru-RU">с компаратором принимает аргумент типа
+			</span><span lang="en-US">IEqualiyComparer&lt;T&gt;, </span><span lang="ru-RU">а
+			не </span><span lang="en-US">IComparer&lt;T&gt;</span></p>
+			<p><span lang="en-US">15.
+			DataTools.CloneOrSameTableForSelectedIds() </span><span lang="ru-RU">предполагал,
+			что поле первичного ключа имеет имя &quot;</span><span lang="en-US">Id</span><span lang="ru-RU">&quot;</span><span lang="en-US">.</span></p>
+			<p><span lang="en-US">16. DataTools.AddTableToDataSet() </span><span lang="ru-RU">не
+			выполняет никаких действий, если таблица уже принадлежит набору</span></p>
+			<p><span lang="ru-RU">17. Переименование методов</span><span lang="en-US">:</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">DataTools.GetIdsFromField</span><span lang="en-US">()
+			</span><span lang="ru-RU">в </span><span lang="en-US">GetIdsFromColumn()</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">DataTools.</span><span lang="en-US">GetStringsFromField()
+			</span><span lang="ru-RU">в GetStringsFrom</span><span lang="en-US">Column()</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">DataTools.</span><span lang="en-US">GetValuesFromField&lt;T&gt;()
+			</span><span lang="ru-RU">в GetValuesFrom</span><span lang="en-US">Column</span><span lang="ru-RU">&lt;T&gt;</span></p>
+			<p><span lang="ru-RU">- </span><span lang="en-US">IdList.FromField</span><span lang="ru-RU">()
+			в </span><span lang="en-US">FromColumn().</span></p>
+			<p lang="en-US">18. <span lang="ru-RU">Убраны методы
+			</span>MonthDay.FromDataRow() <span lang="ru-RU">и
+			NullableFromDataRow()</span></p>
+			<p lang="en-US">19. <span lang="ru-RU">Убраны методы с атрибутом
+			</span>[Obsolete]</p>
+			<p lang="en-US">20. <span lang="ru-RU">Методы
+			</span>DataTools.<span lang="ru-RU">SetUnspecifiedDateTimeMode()</span>
+			<span lang="ru-RU">перенесены в </span>SerializationTools.</p>
+			<p>21. <span lang="en-US">DataTools.TableFromIds() (<a href="ExtTools_11.htm#v061p5">v.61
+			</a></span><a href="ExtTools_11.htm#v061p5">п.5</a><span lang="en-US">)
+			</span>создавал столбец с <span lang="en-US">DataType=String, </span>а
+			не <span lang="en-US">Int32.</span></p>
+			<p><span lang="en-US">22. </span>Методы <span lang="en-US">DataTools.GetUniqueGuids()
+			</span>и <span lang="en-US">GetUniqueEnums&lt;T&gt;()</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
