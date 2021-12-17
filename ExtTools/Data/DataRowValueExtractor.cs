@@ -1886,4 +1886,424 @@ namespace FreeLibSet.Data
 
     #endregion
   }
+
+  /// <summary>
+  /// Извлечение значения поля с заданным именем из строк DataRow.
+  /// Рекомендуется для использования, когда в цикле требуется извлекать значение одного поля по имени 
+  /// из множества строк, при этом строки могут относиться к разным таблицам.
+  /// При извлечении очередного значения проверяется, относится ли строка DataRow к той же DataTable, что
+  /// и при предыдущем вызове. Если нет, то определяется индекс столбца DataColumn в таблице. 
+  /// При последующих вызовах используется доступ по индексу поля, а не по имени, что квеличивает скорость
+  /// извлечения значения.
+  /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
+  /// Как правило, структура используется как локальная переменная в пределах одного метода.
+  /// </summary>
+  [StructLayout(LayoutKind.Auto)]
+  public struct DataRowGuidExtractor
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализирует структуру.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    public DataRowGuidExtractor(string columnName)
+    {
+#if DEBUG
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
+#endif
+
+      _ColumnName = columnName;
+      // Требуется компилятору для конструктора структуры
+      _CurrentTable = null;
+      _ColumnIndex = 0;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя поля, из которого извлекаются значения
+    /// </summary>
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
+
+    /// <summary>
+    /// Возвращает имя поля.
+    /// </summary>
+    /// <returns>Свойство ColumnName</returns>
+    public override string ToString()
+    {
+      return _ColumnName;
+    }
+
+    /// <summary>
+    /// Таблица, из которой посндний раз было извлечено значения.
+    /// До первого извлечения содержит null.
+    /// </summary>
+    private DataTable _CurrentTable;
+
+    /// <summary>
+    /// Индекс поля (больший или равный 0), если для извлечения значения используется прямой доступ к полю,
+    /// когда поле имеет подходящий тип.
+    /// Если при извлечении значения требуется преобразование, то содержит отрицательное значение, 
+    /// которое является двоичным сопряжением (оператор "~") индекса поля.
+    /// Например, если поле имеет индекс 1, то для простого извлечения поля хранится значение 0x00000001,
+    /// а для извлечения с преобразованием - 0xFFFFFFFE.
+    /// Имеет смысл, только когда CurrentTable не null.
+    /// </summary>
+    private int _ColumnIndex;
+
+    #endregion
+
+    #region Извлечение значений
+
+    /// <summary>
+    /// Извлечение значения поля из строки.
+    /// </summary>
+    /// <param name="row">Строка таблицы</param>
+    /// <returns>Значение поля</returns>
+    public Guid this[DataRow row]
+    {
+      get
+      {
+        if (!Object.ReferenceEquals(row.Table, _CurrentTable))
+        {
+          int p = row.Table.Columns.IndexOf(_ColumnName);
+          if (p < 0)
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+          if (row.Table.Columns[p].DataType == typeof(Guid))
+            _ColumnIndex = p;
+          else
+            _ColumnIndex = ~p;
+          _CurrentTable = row.Table; // присваиваем в последнюю очередь
+        }
+
+        if (_ColumnIndex >= 0)
+        {
+          object v = row[_ColumnIndex];
+          if (v is DBNull)
+            return Guid.Empty;
+          else
+            return (Guid)v;
+        }
+        else
+          return DataTools.GetGuid(row[~_ColumnIndex]);
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Извлечение значения поля с заданным именем из строк DataRow.
+  /// Рекомендуется для использования, когда в цикле требуется извлекать значение одного поля по имени 
+  /// из множества строк, при этом строки могут относиться к разным таблицам.
+  /// При извлечении очередного значения проверяется, относится ли строка DataRow к той же DataTable, что
+  /// и при предыдущем вызове. Если нет, то определяется индекс столбца DataColumn в таблице. 
+  /// При последующих вызовах используется доступ по индексу поля, а не по имени, что квеличивает скорость
+  /// извлечения значения.
+  /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
+  /// Как правило, структура используется как локальная переменная в пределах одного метода.
+  /// </summary>
+  [StructLayout(LayoutKind.Auto)]
+  public struct DataRowNullableGuidExtractor
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализирует структуру.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableGuidExtractor(string columnName)
+    {
+#if DEBUG
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
+#endif
+
+      _ColumnName = columnName;
+      // Требуется компилятору для конструктора структуры
+      _CurrentTable = null;
+      _ColumnIndex = 0;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя поля, из которого извлекаются значения
+    /// </summary>
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
+
+    /// <summary>
+    /// Возвращает имя поля.
+    /// </summary>
+    /// <returns>Свойство ColumnName</returns>
+    public override string ToString()
+    {
+      return _ColumnName;
+    }
+
+    /// <summary>
+    /// Таблица, из которой посндний раз было извлечено значения.
+    /// До первого извлечения содержит null.
+    /// </summary>
+    private DataTable _CurrentTable;
+
+    /// <summary>
+    /// Индекс поля (больший или равный 0), если для извлечения значения используется прямой доступ к полю,
+    /// когда поле имеет подходящий тип.
+    /// Если при извлечении значения требуется преобразование, то содержит отрицательное значение, 
+    /// которое является двоичным сопряжением (оператор "~") индекса поля.
+    /// Например, если поле имеет индекс 1, то для простого извлечения поля хранится значение 0x00000001,
+    /// а для извлечения с преобразованием - 0xFFFFFFFE.
+    /// Имеет смысл, только когда CurrentTable не null.
+    /// </summary>
+    private int _ColumnIndex;
+
+    #endregion
+
+    #region Извлечение значений
+
+    /// <summary>
+    /// Извлечение значения поля из строки.
+    /// Если поле не содержит значения (DBNull), возвращается null
+    /// </summary>
+    /// <param name="row">Строка таблицы</param>
+    /// <returns>Значение поля или null</returns>
+    public Guid? this[DataRow row]
+    {
+      get
+      {
+        if (!Object.ReferenceEquals(row.Table, _CurrentTable))
+        {
+          int p = row.Table.Columns.IndexOf(_ColumnName);
+          if (p < 0)
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+          if (row.Table.Columns[p].DataType == typeof(Guid))
+            _ColumnIndex = p;
+          else
+            _ColumnIndex = ~p;
+          _CurrentTable = row.Table; // присваиваем в последнюю очередь
+        }
+
+        if (_ColumnIndex >= 0)
+        {
+          object v = row[_ColumnIndex];
+          if (v is DBNull)
+            return null;
+          else
+            return (Guid)v;
+        }
+        else
+        {
+          object v = row[~_ColumnIndex];
+          if (v is DBNull)
+            return null;
+          else
+            return DataTools.GetGuid(v);
+        }
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Извлечение значения поля с заданным именем из строк DataRow.
+  /// Рекомендуется для использования, когда в цикле требуется извлекать значение одного поля по имени 
+  /// из множества строк, при этом строки могут относиться к разным таблицам.
+  /// При извлечении очередного значения проверяется, относится ли строка DataRow к той же DataTable, что
+  /// и при предыдущем вызове. Если нет, то определяется индекс столбца DataColumn в таблице. 
+  /// При последующих вызовах используется доступ по индексу поля, а не по имени, что квеличивает скорость
+  /// извлечения значения.
+  /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
+  /// Как правило, структура используется как локальная переменная в пределах одного метода.
+  /// </summary>
+  [StructLayout(LayoutKind.Auto)]
+  public struct DataRowEnumExtractor<T>
+    where T : struct
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализирует структуру.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    public DataRowEnumExtractor(string columnName)
+    {
+#if DEBUG
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
+#endif
+
+      _ColumnName = columnName;
+      // Требуется компилятору для конструктора структуры
+      _CurrentTable = null;
+      _ColumnIndex = 0;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя поля, из которого извлекаются значения
+    /// </summary>
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
+
+    /// <summary>
+    /// Возвращает имя поля.
+    /// </summary>
+    /// <returns>Свойство ColumnName</returns>
+    public override string ToString()
+    {
+      return _ColumnName;
+    }
+
+    /// <summary>
+    /// Таблица, из которой посндний раз было извлечено значения.
+    /// До первого извлечения содержит null.
+    /// </summary>
+    private DataTable _CurrentTable;
+
+    /// <summary>
+    /// Индекс поля (больший или равный 0).
+    /// Не используется инвертированный индекс, как в других структурах
+    /// </summary>
+    private int _ColumnIndex;
+
+    #endregion
+
+    #region Извлечение значений
+
+    /// <summary>
+    /// Извлечение значения поля из строки.
+    /// </summary>
+    /// <param name="row">Строка таблицы</param>
+    /// <returns>Значение поля</returns>
+    public T this[DataRow row]
+    {
+      get
+      {
+        if (!Object.ReferenceEquals(row.Table, _CurrentTable))
+        {
+          int p = row.Table.Columns.IndexOf(_ColumnName);
+          if (p < 0)
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+          _ColumnIndex = p;
+          _CurrentTable = row.Table; // присваиваем в последнюю очередь
+        }
+
+        return DataTools.GetEnum<T>(row[_ColumnIndex]);
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Извлечение значения поля с заданным именем из строк DataRow.
+  /// Рекомендуется для использования, когда в цикле требуется извлекать значение одного поля по имени 
+  /// из множества строк, при этом строки могут относиться к разным таблицам.
+  /// При извлечении очередного значения проверяется, относится ли строка DataRow к той же DataTable, что
+  /// и при предыдущем вызове. Если нет, то определяется индекс столбца DataColumn в таблице. 
+  /// При последующих вызовах используется доступ по индексу поля, а не по имени, что квеличивает скорость
+  /// извлечения значения.
+  /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
+  /// Как правило, структура используется как локальная переменная в пределах одного метода.
+  /// </summary>
+  [StructLayout(LayoutKind.Auto)]
+  public struct DataRowNullableEnumExtractor<T>
+    where T : struct
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализирует структуру.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    public DataRowNullableEnumExtractor(string columnName)
+    {
+#if DEBUG
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
+#endif
+
+      _ColumnName = columnName;
+      // Требуется компилятору для конструктора структуры
+      _CurrentTable = null;
+      _ColumnIndex = 0;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя поля, из которого извлекаются значения
+    /// </summary>
+    public string ColumnName { get { return _ColumnName; } }
+    private string _ColumnName;
+
+    /// <summary>
+    /// Возвращает имя поля.
+    /// </summary>
+    /// <returns>Свойство ColumnName</returns>
+    public override string ToString()
+    {
+      return _ColumnName;
+    }
+
+    /// <summary>
+    /// Таблица, из которой посндний раз было извлечено значения.
+    /// До первого извлечения содержит null.
+    /// </summary>
+    private DataTable _CurrentTable;
+
+    /// <summary>
+    /// Индекс поля (больший или равный 0).
+    /// Не используется инвертированный индекс, как в других структурах
+    /// </summary>
+    private int _ColumnIndex;
+
+    #endregion
+
+    #region Извлечение значений
+
+    /// <summary>
+    /// Извлечение значения поля из строки.
+    /// Если поле не содержит значения (DBNull), возвращается null
+    /// </summary>
+    /// <param name="row">Строка таблицы</param>
+    /// <returns>Значение поля или null</returns>
+    public T? this[DataRow row]
+    {
+      get
+      {
+        if (!Object.ReferenceEquals(row.Table, _CurrentTable))
+        {
+          int p = row.Table.Columns.IndexOf(_ColumnName);
+          if (p < 0)
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+          _ColumnIndex = p;
+          _CurrentTable = row.Table; // присваиваем в последнюю очередь
+        }
+
+        object v = row[_ColumnIndex];
+        if (v is DBNull)
+          return null;
+        else
+          return DataTools.GetEnum<T>(v);
+      }
+    }
+
+    #endregion
+  }
 }

@@ -4729,6 +4729,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyGuids;
       // Строки могут относиться к разным таблицам
+      DataRowNullableGuidExtractor Extr = new DataRowNullableGuidExtractor(columnName);
       SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
       foreach (DataRow Row in rows)
       {
@@ -4738,13 +4739,13 @@ namespace FreeLibSet.Core
           continue;
 
 
-        object v = Row[columnName];
+        Guid? v = Extr[Row];
         if (skipNulls)
         {
           if (v is DBNull)
             continue;
         }
-        lst.Add(DataTools.GetGuid(v));
+        lst.Add(v ?? Guid.Empty);
       }
       return lst.ToArray();
     }
@@ -4830,6 +4831,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return new T[0];
       // Строки могут относиться к разным таблицам
+      DataRowNullableEnumExtractor<T> Extr = new DataRowNullableEnumExtractor<T>(columnName);
       SingleScopeList<T> lst = new SingleScopeList<T>();
       foreach (DataRow Row in rows)
       {
@@ -4839,13 +4841,13 @@ namespace FreeLibSet.Core
           continue;
 
 
-        object v = Row[columnName];
+        T? v = Extr[Row];
         if (skipNulls)
         {
-          if (v is DBNull)
+          if (!v.HasValue)
             continue;
         }
-        lst.Add(DataTools.GetEnum<T>(v));
+        lst.Add(v ?? default(T));
       }
       return lst.ToArray();
     }
