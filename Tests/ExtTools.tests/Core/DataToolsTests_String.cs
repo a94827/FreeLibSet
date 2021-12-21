@@ -10,6 +10,8 @@ namespace ExtTools_tests.Core
   [TestFixture]
   class DataToolsTests_String
   {
+    #region AddStrIfNotEmpty()
+
     [TestCase("ABC", "DEF", ",", "ABC,DEF")]
     [TestCase("ABC", "", ",", "ABC")]
     [TestCase("", "DEF", ",", "DEF")]
@@ -25,6 +27,10 @@ namespace ExtTools_tests.Core
       DataTools.AddStrIfNotEmpty(sb2, addedStr, separator);
       Assert.AreEqual(wanted, sb2.ToString(), "StringBuilder overload");
     }
+
+    #endregion
+
+    #region BytesToHex() / HexToBytes()
 
     [TestCase("0|200|255", false, "00c8ff")]
     [TestCase("0|200|255", true, "00C8FF")]
@@ -53,15 +59,6 @@ namespace ExtTools_tests.Core
       Assert.AreEqual("", s2);
     }
 
-    [TestCase("ABC", Result = "abc")]
-    [TestCase("abc", Result = "ABC")]
-    [TestCase("AbCd", Result = "aBcD")]
-    [TestCase("..ABC", Result = "..abc")]
-    public string ChangeUpperLowerInvariant(string s)
-    {
-      return DataTools.ChangeUpperLowerInvariant(s);
-    }
-
     [TestCase("abCD00", Result = "171|205|0")]
     [TestCase("", Result = "")]
     [TestCase(null, Result = "")]
@@ -73,6 +70,42 @@ namespace ExtTools_tests.Core
         a2[i] = StdConvert.ToString(a1[i]);
       return String.Join("|", a2);
     }
+
+    #endregion
+
+    #region ChangeUpperLowerInvariant()
+
+    [TestCase("ABC", Result = "abc")]
+    [TestCase("abc", Result = "ABC")]
+    [TestCase("AbCd", Result = "aBcD")]
+    [TestCase("..ABC", Result = "..abc")]
+    public string ChangeUpperLowerInvariant(string s)
+    {
+      return DataTools.ChangeUpperLowerInvariant(s);
+    }
+
+    #endregion
+
+    #region New Line Separators
+
+    [Test]
+    public void LineSeparators()
+    {
+      Assert.AreEqual(1, DataTools.CRLFSeparators.Length, "CRLFSeparators.Length");
+      Assert.AreEqual("\r\n", DataTools.CRLFSeparators[0], "CRLFSeparators");
+
+      Assert.AreEqual(1, DataTools.NewLineSeparators.Length, "NewLineSeparators.Length");
+      Assert.AreEqual(Environment.NewLine, DataTools.NewLineSeparators[0], "NewLineSeparators");
+
+      Assert.GreaterOrEqual(DataTools.AllPossibleLineSeparators.Length, 2, "AllPossibleLineSeparators.Length");
+      Assert.IsTrue(Array.IndexOf<string>(DataTools.AllPossibleLineSeparators, "\r\n") >= 0, "AllPossibleLineSeparators contains Windows");
+      Assert.IsTrue(Array.IndexOf<string>(DataTools.AllPossibleLineSeparators, "\n") >= 0, "AllPossibleLineSeparators contains Linux");
+      Assert.IsTrue(Array.IndexOf<string>(DataTools.AllPossibleLineSeparators, Environment.NewLine) >= 0, "AllPossibleLineSeparators contains Environment.NewLine");
+    }
+
+    #endregion
+
+    #region GetNewLineSeparators()
 
     [TestCase("ABC\r\nDEF", Result = "\r\n")]
     [TestCase("ABC\r\n\r\nDEF", Result = "\r\n")]
@@ -91,6 +124,10 @@ namespace ExtTools_tests.Core
       return DataTools.GetNewLineSeparators(s);
     }
 
+    #endregion
+
+    #region GetCharCount()
+
     [TestCase("ABCABCA", 'A', Result = 3)]
     [TestCase("BCD", 'A', Result = 0)]
     [TestCase("", 'A', Result = 0)]
@@ -99,6 +136,10 @@ namespace ExtTools_tests.Core
     {
       return DataTools.GetCharCount(s, searchChar);
     }
+
+    #endregion
+
+    #region IndexOfAny() / IndexOfAnyOther()
 
     [TestCase("ABCD", "DB", 1)]
     [TestCase("ABCD", "YZ", -1)]
@@ -140,6 +181,10 @@ namespace ExtTools_tests.Core
       }
     }
 
+    #endregion
+
+    #region IsSubstring()
+
     [TestCase("ABCDEF", 2, "cde", StringComparison.OrdinalIgnoreCase, Result = true)]
     [TestCase("ABCDEF", 2, "cde", StringComparison.Ordinal, Result = false)]
     [TestCase("ABCDEF", 4, "zzz", StringComparison.OrdinalIgnoreCase, Result = false, Description = "no exception throws")]
@@ -152,6 +197,10 @@ namespace ExtTools_tests.Core
     {
       return DataTools.IsSubstring(s, startPos, substring, comparisionType);
     }
+
+    #endregion
+
+    #region JoinNotEmptyStrings()
 
     [TestCase(",", "ABC", "DEF", "GHI", Result = "ABC,DEF,GHI")]
     [TestCase(",", "", "DEF", "GHI", Result = "DEF,GHI")]
@@ -177,6 +226,10 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(s1, s3, "Overloads with string[] and IEnumerable returns different results");
       return s1;
     }
+
+    #endregion
+
+    #region PadXXX()
 
     [TestCase("AB", 5, "#AB##")]
     [TestCase("AB", 2, "AB")]
@@ -219,6 +272,10 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(wanted.Replace('#', ' '), res2, "overload with 2 args");
     }
 
+    #endregion
+
+    #region RemoveChars() RemoveOtherChars()
+
     [TestCase("ABCDEF", "DCBZ", "AEF")]
     [TestCase("ABCDEF", "XYZ", "ABCDEF")]
     [TestCase("", "XYZ", "")]
@@ -238,17 +295,6 @@ namespace ExtTools_tests.Core
       }
     }
 
-    [TestCase("ABCCD", 'C', Result = "ABCD")]
-    [TestCase("AABCAA", 'A', Result = "ABCA")]
-    [TestCase("AAABC", 'A', Result = "ABC")]
-    [TestCase("AAABC", 'Z', Result = "AAABC")]
-    [TestCase("", 'Z', Result = "")]
-    [TestCase(null, 'Z', Result = "")]
-    public string RemoveDoubleChars(string str, char searchChar)
-    {
-      return DataTools.RemoveDoubleChars(str, searchChar);
-    }
-
     [TestCase("ABCDEF", "DCBZ", "BCD")]
     [TestCase("ABCDEF", "XYZ", "")]
     [TestCase("", "XYZ", "")]
@@ -266,6 +312,25 @@ namespace ExtTools_tests.Core
         Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
       }
     }
+
+    #endregion
+
+    #region RemoveDoubleChars()
+
+    [TestCase("ABCCD", 'C', Result = "ABCD")]
+    [TestCase("AABCAA", 'A', Result = "ABCA")]
+    [TestCase("AAABC", 'A', Result = "ABC")]
+    [TestCase("AAABC", 'Z', Result = "AAABC")]
+    [TestCase("", 'Z', Result = "")]
+    [TestCase(null, 'Z', Result = "")]
+    public string RemoveDoubleChars(string str, char searchChar)
+    {
+      return DataTools.RemoveDoubleChars(str, searchChar);
+    }
+
+    #endregion
+
+    #region ReplaceAny() / ReplaceAnyOther()
 
     [TestCase("ABCDEF", "DBZ", '0', "A0C0EF")]
     [TestCase("", "DB", '0', "")]
@@ -305,6 +370,9 @@ namespace ExtTools_tests.Core
       }
     }
 
+    #endregion
+
+    #region ReplaceChars()
 
     [TestCase("ABCDEF", "DFA", "123", "3BC1E2")]
     [TestCase("", "DF", "12", "")]
@@ -328,6 +396,9 @@ namespace ExtTools_tests.Core
       Assert.Catch<ArgumentException>(delegate() { DataTools.ReplaceChars("ABCDEF", "ABC", "12"); });
     }
 
+    #endregion
+
+    #region ReplaceCharRange()
 
     [TestCase("AHBCEF", 'B', 'C', '0', "AH00EF")]
     [TestCase("", 'B', 'C', '0', "")]
@@ -338,6 +409,10 @@ namespace ExtTools_tests.Core
       string res = DataTools.ReplaceCharRange(str, firstChar, lastChar, replaceChar);
       Assert.AreEqual(wanted, res);
     }
+
+    #endregion
+
+    #region ReplaceDigits()
 
     [TestCase("1AB", '0', Result = "0AB")]
     [TestCase("AB0", '0', Result = "AB0")]
@@ -352,6 +427,10 @@ namespace ExtTools_tests.Core
         Assert.AreEqual(str.Length, res.Length);
       return res;
     }
+
+    #endregion
+
+    #region StrXXX()
 
     [TestCase("AB", 5, Result = "AB")]
     [TestCase("AB", 2, Result = "AB")]
@@ -372,6 +451,34 @@ namespace ExtTools_tests.Core
     {
       return DataTools.StrRight(s, length);
     }
+
+    #endregion
+
+    #region ToUpperInvariant() / ToLowerInvariant() / ToUpperFirstInvariant() / ToUpperWordsInvariant()
+
+    [Test]
+    public void ToUpperInvariant_for_array()
+    {
+      string[] a = new string[] { "abc", null, "DEF" };
+
+      string[] res = DataTools.ToUpperInvariant(a);
+
+      Assert.AreEqual(a.Length, res.Length);
+      Assert.AreEqual(res[0], "ABC");
+      Assert.IsNull(res[1]);
+      Assert.AreEqual(res[2], "DEF");
+    }
+
+    [Test]
+    public void ToUpperInvariant_for_array_null()
+    {
+      string[] a = null;
+
+      string[] res = DataTools.ToUpperInvariant(a);
+
+      Assert.IsNull(res);
+    }
+
 
     [Test]
     public void ToLowerInvariant_for_array()
@@ -405,6 +512,22 @@ namespace ExtTools_tests.Core
     {
       return DataTools.ToUpperFirstInvariant(s);
     }
+
+    [TestCase("ABC DEF", Result = "Abc Def")]
+    [TestCase("_ABC DEF", Result = "_Abc Def")]
+    [TestCase("abc def", Result = "Abc Def")]
+    [TestCase("abc  def", Result = "Abc  Def")] // два разделителя подряд
+    [TestCase("abc123def", Result = "Abc123Def")]
+    [TestCase("", Result = "")]
+    [TestCase(null, Result = "")]
+    public string ToUpperWordsInvariant(string s)
+    {
+      return DataTools.ToUpperWordsInvariant(s);
+    }
+
+    #endregion
+
+    #region ToStringArray()
 
     [TestCase("1|2|3", "1,2,3")]
     [TestCase("1", "1")]
@@ -440,8 +563,11 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(wanted, s5, "System.Collections.IEnumerable");
     }
 
+    #endregion
 
-    [TestCase(",", "1|2|3",  "1,2,3")]
+    #region ToStringJoin()
+
+    [TestCase(",", "1|2|3", "1,2,3")]
     [TestCase(",", "1", "1")]
     [TestCase(",", "", "")]
     public void ToStringJoin(string separator, string sValues, string wanted)
@@ -475,41 +601,9 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(wanted, s5, "System.Collections.IEnumerable");
     }
 
-    [Test]
-    public void ToUpperInvariant_for_array()
-    {
-      string[] a = new string[] { "abc", null, "DEF" };
+    #endregion
 
-      string[] res = DataTools.ToUpperInvariant(a);
-
-      Assert.AreEqual(a.Length, res.Length);
-      Assert.AreEqual(res[0], "ABC");
-      Assert.IsNull(res[1]);
-      Assert.AreEqual(res[2], "DEF");
-    }
-
-    [Test]
-    public void ToUpperInvariant_for_array_null()
-    {
-      string[] a = null;
-
-      string[] res = DataTools.ToLowerInvariant(a);
-
-      Assert.IsNull(res);
-    }
-
-    [TestCase("ABC DEF", Result = "Abc Def")]
-    [TestCase("_ABC DEF", Result = "_Abc Def")]
-    [TestCase("abc def", Result = "Abc Def")]
-    [TestCase("abc  def", Result = "Abc  Def")] // два разделителя подряд
-    [TestCase("abc123def", Result = "Abc123Def")]
-    [TestCase("", Result = "")]
-    [TestCase(null, Result = "")]
-    public string ToUpperWordsInvariant(string s)
-    {
-      return DataTools.ToUpperWordsInvariant(s);
-    }
-
+    #region TrimStart/EndNewLineSeparators()
 
     [TestCase("\r\n\r\nABC\r\n\r\n", true, Result = "\r\n\r\nABC")]
     [TestCase("\r\n\r\nABC\r\n\r\n", false, Result = "\r\n\r\nABC\r\n")]
@@ -560,5 +654,116 @@ namespace ExtTools_tests.Core
     {
       return DataTools.TrimStartNewLineSeparators(s, trimAll, "\n");
     }
+
+    #endregion
+
+    #region IndexOf()
+
+    [TestCase("AAAAA", StringComparison.Ordinal, -1)]
+    [TestCase("AAAAA", StringComparison.OrdinalIgnoreCase, 0)]
+    [TestCase("", StringComparison.Ordinal, -1)]
+    public void IndexOf(string searchStr, StringComparison comparisonType, int wanted)
+    {
+      string[] a = new string[] { "AaAaA", "BbBbB" };
+
+      int res = DataTools.IndexOf(a, searchStr, comparisonType);
+      Assert.AreEqual(wanted, res);
+    }
+
+    #endregion
+
+    #region StrToCSharpString()
+
+    [TestCase("Hello\r\n\"world\"", "\"Hello\\r\\n\\\"world\\\"\"")]
+    [TestCase("", "\"\"")]
+    public void StrToCSharpString(string s, string wanted)
+    {
+      Assert.AreEqual(wanted, DataTools.StrToCSharpString(s));
+    }
+
+    #endregion
+
+    #region RemoveEmptyRows() / RemoveEmptyColumns()
+
+    [Test]
+    public void RemoveEmptyRows()
+    {
+      string[,] a = RemoveEmptyRowsAndColumns_CreateTestArray();
+      string[,] res = DataTools.RemoveEmptyRows(a);
+      Assert.AreEqual(new string[2, 3] { { "AAA", "BBB", "" }, { "CCC", "", null } }, res);
+    }
+
+    [Test]
+    public void RemoveEmptyColumns()
+    {
+      string[,] a = RemoveEmptyRowsAndColumns_CreateTestArray();
+      string[,] res = DataTools.RemoveEmptyColumns(a);
+      Assert.AreEqual(new string[3, 2] { { "AAA", "BBB"}, { "CCC", ""}, {"", null} }, res);
+    }
+
+    [Test]
+    public void RemoveEmptyRowsAndColumns()
+    {
+      string[,] a = RemoveEmptyRowsAndColumns_CreateTestArray();
+      string[,] res = DataTools.RemoveEmptyRowsAndColumns(a);
+      Assert.AreEqual(new string[2, 2] { { "AAA", "BBB"}, { "CCC", ""} }, res);
+    }
+
+    private static string[,] RemoveEmptyRowsAndColumns_CreateTestArray()
+    {
+      return new string[3, 3] { { "AAA", "BBB", "" }, { "CCC", "", null }, { "", null, "" } };
+    }
+
+    #endregion
+
+    #region RemoveSoftHyphens()
+
+    [Test]
+    public void RemoveSoftHyphens()
+    {
+      string s = "event-dri^ven ap^p^li^ca^ti^on".Replace('^', '\u00AD');
+
+      string res = DataTools.RemoveSoftHyphens(s);
+      Assert.AreEqual("event-driven application", res);
+    }
+
+    #endregion
+
+    #region StrTo/FromSpecCharsStr/Array()
+
+    [Test]
+    public void StrFromSpecCharsStr()
+    {
+      string s = "A" + '\u00AD' + "B" + '\u00A0'+"C";
+      string wanted="A^B_C";
+      Assert.AreEqual(wanted, DataTools.StrFromSpecCharsStr(s));
+    }
+
+    [Test]
+    public void StrToSpecCharsStr()
+    {
+      string s = "A^B_C";
+      string wanted = "A" + '\u00AD' + "B" + '\u00A0' + "C";
+      Assert.AreEqual(wanted, DataTools.StrToSpecCharsStr(s));
+    }
+
+
+    [Test]
+    public void StrFromSpecCharsArray()
+    {
+      string[] a = { "A" + '\u00AD' + "B" + '\u00A0' + "C", "D" + '\u00AD' +"E"};
+      string wanted="A^B_C|D^E";
+      Assert.AreEqual(wanted, DataTools.StrFromSpecCharsArray(a));
+    }
+
+    [Test]
+    public void StrToSpecCharsArray()
+    {
+      string s = "A^B_C|D^E";
+      string[] wanted = { "A" + '\u00AD' + "B" + '\u00A0' + "C", "D" + '\u00AD' + "E" };
+      Assert.AreEqual(wanted, DataTools.StrToSpecCharsArray(s));
+    }
+
+    #endregion
   }
 }

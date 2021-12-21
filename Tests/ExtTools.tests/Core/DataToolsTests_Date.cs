@@ -24,12 +24,18 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region Constants()
+
     [Test]
     public void Constants()
     {
       Assert.AreEqual(DateTime.MinValue, Creators.CreateDate(MinDate));
       Assert.AreEqual(DateTime.MaxValue.Date, Creators.CreateDate(MaxDate));
     }
+
+    #endregion
+
+    #region DateInRange()
 
     [TestCase(MinDate, "", "", Result = true)]
     [TestCase(MaxDate, "", "", Result = true)]
@@ -45,6 +51,10 @@ namespace ExtTools_tests.Core
       return DataTools.DateInRange(Creators.CreateDate(testDate),
         Creators.CreateNDate(firstDate), Creators.CreateNDate(lastDate));
     }
+
+    #endregion
+
+    #region DateRangeCrossed()
 
     [TestCase("20210701", "20210710", "20210710", "20210711", Result = true)]
     [TestCase("20210701", "20210710", "20210630", "20210701", Result = true)]
@@ -63,6 +73,10 @@ namespace ExtTools_tests.Core
         Creators.CreateNDate(firstDate2), Creators.CreateNDate(lastDate2));
     }
 
+    #endregion
+
+    #region DateToRange()
+
     [TestCase("20210714", "20210101", "20211231", "20210714")]
     [TestCase("20210714", "20210714", "20211231", "20210714")]
     [TestCase("20210714", "20210101", "20210714", "20210714")]
@@ -78,9 +92,13 @@ namespace ExtTools_tests.Core
       DateTime dt = Creators.CreateDate(testDate);
       DataTools.DateToRange(ref dt,
         Creators.CreateNDate(firstDate), Creators.CreateNDate(lastDate));
-      
+
       Assert.AreEqual(Creators.CreateDate(res), dt);
     }
+
+    #endregion
+
+    #region GetDateRangeCross()
 
     [TestCase("20210714", "20210715", "20210716", "20210717", false, "", "")]
     [TestCase("20210714", "20210716", "20210715", "20210717", true, "20210715", "20210716")]
@@ -101,6 +119,9 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(Creators.CreateNDate(sdt12res), dt12, "LastDate1");
     }
 
+    #endregion
+
+    #region GetDateRangeUnion()
 
     [TestCase("20210714", "20210715", "20210716", "20210717", "20210714", "20210717")]
     [TestCase("20210801", "20210831", "20210714", "20210714", "20210714", "20210831")]
@@ -120,6 +141,9 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(Creators.CreateNDate(sdt12res), dt12, "LastDate1");
     }
 
+    #endregion
+
+    #region YearInRange()
 
     [TestCase(2021, "20211231", "20211231", Result = true)]
     [TestCase(2022, "20211231", "20211231", Result = false)]
@@ -132,6 +156,10 @@ namespace ExtTools_tests.Core
     {
       return DataTools.YearInRange(year, Creators.CreateNDate(firstDate), Creators.CreateNDate(lastDate));
     }
+
+    #endregion
+
+    #region Bottom/EndOfYear/Quarter/Month/Week()
 
     [TestCase("20210101", "20210101")]
     [TestCase("20210924", "20210101")]
@@ -289,5 +317,120 @@ namespace ExtTools_tests.Core
       DateTime res = DataTools.EndOfWeekSunday(dt);
       Assert.AreEqual(sWanted, Creators.ToString(res));
     }
+
+    #endregion
+
+    #region Min/Max()
+
+    [TestCase("20211220", "20211221", "20211220")]
+    public void Min_DateTime(string s1, string s2, string sWanted)
+    {
+      DateTime dt1 = Creators.CreateDate(s1);
+      DateTime dt2 = Creators.CreateDate(s2);
+      DateTime wanted = Creators.CreateDate(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Min(dt1, dt2), "#1");
+      Assert.AreEqual(wanted, DataTools.Min(dt2, dt1), "#2");
+    }
+
+    [TestCase("20211220", "20211221", "20211221")]
+    public void Max_DateTime(string s1, string s2, string sWanted)
+    {
+      DateTime dt1 = Creators.CreateDate(s1);
+      DateTime dt2 = Creators.CreateDate(s2);
+      DateTime wanted = Creators.CreateDate(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Max(dt1, dt2), "#1");
+      Assert.AreEqual(wanted, DataTools.Max(dt2, dt1), "#2");
+    }
+
+    [TestCase("20211220", "20211221", "20211220")]
+    [TestCase("20211220", "", "20211220")]
+    [TestCase("", "", "")]
+    public void Min_NDateTime(string s1, string s2, string sWanted)
+    {
+      DateTime? dt1 = Creators.CreateNDate(s1);
+      DateTime? dt2 = Creators.CreateNDate(s2);
+      DateTime? wanted = Creators.CreateNDate(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Min(dt1, dt2), "#1");
+      Assert.AreEqual(wanted, DataTools.Min(dt2, dt1), "#2");
+    }
+
+    [TestCase("20211220", "20211221", "20211221")]
+    [TestCase("20211220", "", "20211220")]
+    [TestCase("", "", "")]
+    public void Max_NDateTime(string s1, string s2, string sWanted)
+    {
+      DateTime? dt1 = Creators.CreateNDate(s1);
+      DateTime? dt2 = Creators.CreateNDate(s2);
+      DateTime? wanted = Creators.CreateNDate(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Max(dt1, dt2), "#1");
+      Assert.AreEqual(wanted, DataTools.Max(dt2, dt1), "#2");
+    }
+
+    #endregion
+
+    #region IsEqualYearAndMonth()
+
+    [TestCase("20211220", "20211221", true)]
+    [TestCase("20211220", "20211120", false)]
+    [TestCase("20211220", "20201220", false)]
+    public void IsEqualYearAndMonth_DateTime(string s1, string s2, bool wanted)
+    {
+      DateTime dt1 = Creators.CreateDate(s1);
+      DateTime dt2 = Creators.CreateDate(s2);
+
+      Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt1, dt2), "#1");
+      Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt2, dt1), "#2");
+    }
+
+    [TestCase("20211220", "20211221", true)]
+    [TestCase("20211220", "20211120", false)]
+    [TestCase("20211220", "20201220", false)]
+    [TestCase("20211220", "", false)]
+    [TestCase("", "", true)]
+    public void IsEqualYearAndMonth_NDateTime(string s1, string s2, bool wanted)
+    {
+      DateTime? dt1 = Creators.CreateNDate(s1);
+      DateTime? dt2 = Creators.CreateNDate(s2);
+
+      Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt1, dt2), "#1");
+      Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt2, dt1), "#2");
+    }
+
+    #endregion
+
+    #region CreateDateTime()
+
+    [TestCase(2021, 12, 21, "20211221")]
+    [TestCase(2021, 12, 0, "20211201")]
+    [TestCase(2021, 12, 32, "20211231")]
+    [TestCase(2020, 2, 30, "20200229")]
+    [TestCase(2021, 0, 15, "20210115")]
+    [TestCase(2021, 13, 15, "20211215")]
+    public void CreateDateTime_YMD(int y, int m, int d, string sWanted)
+    {
+      DateTime wanted = Creators.CreateDate(sWanted);
+
+      DateTime res = DataTools.CreateDateTime(y, m, d);
+      Assert.AreEqual(wanted, res);
+    }
+
+    [TestCase("20211215", 21, "20211221")]
+    [TestCase("20211215", 0, "20211201")]
+    [TestCase("20211215", 32, "20211231")]
+    public void CreateDateTime_DateTime(string sDate, int d, string sWanted)
+    {
+      DateTime date = Creators.CreateDate(sDate);
+      DateTime wanted = Creators.CreateDate(sWanted);
+
+      DateTime res = DataTools.CreateDateTime(date, d);
+      Assert.AreEqual(wanted, res);
+    }
+
+
+    #endregion
   }
 }

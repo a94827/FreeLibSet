@@ -5,6 +5,7 @@ using System.Data;
 using System.Collections;
 using NUnit.Framework;
 using FreeLibSet.Core;
+using System.ComponentModel;
 
 namespace ExtTools_tests.Core
 {
@@ -815,7 +816,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void TableFromIds()
     {
-      DataTable tbl = DataTools.TableFromIds(new Int32[]{3,1,2});
+      DataTable tbl = DataTools.TableFromIds(new Int32[] { 3, 1, 2 });
 
       Assert.AreEqual(1, tbl.Columns.Count, "Columns.Count");
       Assert.AreEqual("Id", tbl.Columns[0].ColumnName, "ColumnName");
@@ -859,7 +860,7 @@ namespace ExtTools_tests.Core
       DoTestGetDataRowEnumerable(tbl, "1,4,7", "DataTable");
       DoTestGetDataRowEnumerable(tbl.DefaultView, "1,4,7", "DataView");
       DoTestGetDataRowEnumerable(DataTools.GetDataTableRows(tbl), "1,4,7", "DataRow[]");
-      DoTestGetDataRowEnumerable(new DataRowView[]{tbl.DefaultView[1], tbl.DefaultView[2]}, "4,7", "DataRowView[]");
+      DoTestGetDataRowEnumerable(new DataRowView[] { tbl.DefaultView[1], tbl.DefaultView[2] }, "4,7", "DataRowView[]");
 
       // Пока не поддерживается
       //DataSet ds = new DataSet();
@@ -871,11 +872,11 @@ namespace ExtTools_tests.Core
 
     private static void DoTestGetDataRowEnumerable(object x, string wanted, string message)
     {
-      List<int> lst=new List<int>();
-      foreach(DataRow row in DataTools.GetDataRowEnumerable(x))
+      List<int> lst = new List<int>();
+      foreach (DataRow row in DataTools.GetDataRowEnumerable(x))
         lst.Add(DataTools.GetInt(row, "F1"));
 
-      string sRes=StdConvert.ToString(lst.ToArray());
+      string sRes = StdConvert.ToString(lst.ToArray());
 
       Assert.AreEqual(wanted, sRes, message);
     }
@@ -923,6 +924,1440 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(wanted, DataTools.GetValuesFromColumn<int>(tbl, "F1"), "DataTable");
       Assert.AreEqual(wanted, DataTools.GetValuesFromColumn<int>(tbl.DefaultView, "F1"), "DataView");
       Assert.AreEqual(wanted, DataTools.GetValuesFromColumn<int>(DataTools.GetDataTableRows(tbl), "F1"), "DataRow[]");
+    }
+
+    #endregion
+
+    #region GetUniqueXXX()
+
+    #region GetUniqueInts()
+
+    [Test]
+    public void GetUniqueInts_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Rows.Add(1);
+      tbl.Rows.Add(2);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2);
+      tbl.Rows.Add(DBNull.Value);
+
+      int[] wanted = new int[] { 1, 2 };
+
+      int[] res1 = DataTools.GetUniqueInts(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      int[] res2 = DataTools.GetUniqueInts(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      int[] res3 = DataTools.GetUniqueInts(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueInts_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Rows.Add(1);
+      tbl.Rows.Add(2);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2);
+      tbl.Rows.Add(DBNull.Value);
+
+      int[] wanted = new int[] { 0, 1, 2 };
+
+      int[] res1 = DataTools.GetUniqueInts(tbl, "F1", false);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      int[] res2 = DataTools.GetUniqueInts(tbl.DefaultView, "F1", false);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      int[] res3 = DataTools.GetUniqueInts(DataTools.GetDataTableRows(tbl), "F1", false);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueInt64s()
+
+    [Test]
+    public void GetUniqueInt64s_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(long));
+      tbl.Rows.Add(1L);
+      tbl.Rows.Add(2L);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2L);
+      tbl.Rows.Add(DBNull.Value);
+
+      long[] wanted = new long[] { 1L, 2L };
+
+      long[] res1 = DataTools.GetUniqueInt64s(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      long[] res2 = DataTools.GetUniqueInt64s(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      long[] res3 = DataTools.GetUniqueInt64s(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueInt64s_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(long));
+      tbl.Rows.Add(1L);
+      tbl.Rows.Add(2L);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2L);
+      tbl.Rows.Add(DBNull.Value);
+
+      long[] wanted = new long[] { 0L, 1L, 2L };
+
+      long[] res1 = DataTools.GetUniqueInt64s(tbl, "F1", false);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      long[] res2 = DataTools.GetUniqueInt64s(tbl.DefaultView, "F1", false);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      long[] res3 = DataTools.GetUniqueInt64s(DataTools.GetDataTableRows(tbl), "F1", false);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueSingles()
+
+    [Test]
+    public void GetUniqueSingles_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(float));
+      tbl.Rows.Add(1f);
+      tbl.Rows.Add(2f);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2f);
+      tbl.Rows.Add(DBNull.Value);
+
+      float[] wanted = new float[] { 1f, 2f };
+
+      float[] res1 = DataTools.GetUniqueSingles(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      float[] res2 = DataTools.GetUniqueSingles(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      float[] res3 = DataTools.GetUniqueSingles(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueSingles_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(float));
+      tbl.Rows.Add(1f);
+      tbl.Rows.Add(2f);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2f);
+      tbl.Rows.Add(DBNull.Value);
+
+      float[] wanted = new float[] { 0f, 1f, 2f };
+
+      float[] res1 = DataTools.GetUniqueSingles(tbl, "F1", false);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      float[] res2 = DataTools.GetUniqueSingles(tbl.DefaultView, "F1", false);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      float[] res3 = DataTools.GetUniqueSingles(DataTools.GetDataTableRows(tbl), "F1", false);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueDoubles()
+
+    [Test]
+    public void GetUniqueDoubles_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(double));
+      tbl.Rows.Add(1.0);
+      tbl.Rows.Add(2.0);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2.0);
+      tbl.Rows.Add(DBNull.Value);
+
+      double[] wanted = new double[] { 1.0, 2.0 };
+
+      double[] res1 = DataTools.GetUniqueDoubles(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      double[] res2 = DataTools.GetUniqueDoubles(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      double[] res3 = DataTools.GetUniqueDoubles(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueDoubles_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(double));
+      tbl.Rows.Add(1.0);
+      tbl.Rows.Add(2.0);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2.0);
+      tbl.Rows.Add(DBNull.Value);
+
+      double[] wanted = new double[] { 0.0, 1.0, 2.0 };
+
+      double[] res1 = DataTools.GetUniqueDoubles(tbl, "F1", false);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      double[] res2 = DataTools.GetUniqueDoubles(tbl.DefaultView, "F1", false);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      double[] res3 = DataTools.GetUniqueDoubles(DataTools.GetDataTableRows(tbl), "F1", false);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueDecimals()
+
+    [Test]
+    public void GetUniqueDecimals_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(decimal));
+      tbl.Rows.Add(1m);
+      tbl.Rows.Add(2m);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2m);
+      tbl.Rows.Add(DBNull.Value);
+
+      decimal[] wanted = new decimal[] { 1m, 2m };
+
+      decimal[] res1 = DataTools.GetUniqueDecimals(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      decimal[] res2 = DataTools.GetUniqueDecimals(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      decimal[] res3 = DataTools.GetUniqueDecimals(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueDecimals_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(decimal));
+      tbl.Rows.Add(1m);
+      tbl.Rows.Add(2m);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(2m);
+      tbl.Rows.Add(DBNull.Value);
+
+      decimal[] wanted = new decimal[] { 1m, 2m };
+
+      decimal[] res1 = DataTools.GetUniqueDecimals(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      decimal[] res2 = DataTools.GetUniqueDecimals(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      decimal[] res3 = DataTools.GetUniqueDecimals(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueDateTimes()
+
+    [Test]
+    public void GetUniqueDateTimes()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(DateTime));
+      tbl.Rows.Add(new DateTime(2021, 12, 21));
+      tbl.Rows.Add(new DateTime(2021, 12, 20));
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(new DateTime(2021, 12, 21));
+      tbl.Rows.Add(DBNull.Value);
+
+      DateTime[] wanted = new DateTime[] { new DateTime(2021, 12, 20), new DateTime(2021, 12, 21) };
+
+      DateTime[] res1 = DataTools.GetUniqueDateTimes(tbl, "F1");
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      DateTime[] res2 = DataTools.GetUniqueDateTimes(tbl.DefaultView, "F1");
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      DateTime[] res3 = DataTools.GetUniqueDateTimes(DataTools.GetDataTableRows(tbl), "F1");
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueTimeSpans()
+
+    [Test]
+    public void GetUniqueTimeSpans_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(TimeSpan));
+      tbl.Rows.Add(new TimeSpan(1, 2, 3));
+      tbl.Rows.Add(new TimeSpan(4, 5, 6));
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(new TimeSpan(4, 5, 6));
+      tbl.Rows.Add(DBNull.Value);
+
+      TimeSpan[] wanted = new TimeSpan[] { new TimeSpan(1, 2, 3), new TimeSpan(4, 5, 6) };
+
+      TimeSpan[] res1 = DataTools.GetUniqueTimeSpans(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      TimeSpan[] res2 = DataTools.GetUniqueTimeSpans(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      TimeSpan[] res3 = DataTools.GetUniqueTimeSpans(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueTimeSpans_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(TimeSpan));
+      tbl.Rows.Add(new TimeSpan(1, 2, 3));
+      tbl.Rows.Add(new TimeSpan(4, 5, 6));
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(new TimeSpan(4, 5, 6));
+      tbl.Rows.Add(DBNull.Value);
+
+      TimeSpan[] wanted = new TimeSpan[] { TimeSpan.Zero, new TimeSpan(1, 2, 3), new TimeSpan(4, 5, 6) };
+
+      TimeSpan[] res1 = DataTools.GetUniqueTimeSpans(tbl, "F1", false);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      TimeSpan[] res2 = DataTools.GetUniqueTimeSpans(tbl.DefaultView, "F1", false);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      TimeSpan[] res3 = DataTools.GetUniqueTimeSpans(DataTools.GetDataTableRows(tbl), "F1", false);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueGuids()
+
+    [Test]
+    public void GetUniqueGuids_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(Guid));
+      tbl.Rows.Add(Creators.Row1.VGuid);
+      tbl.Rows.Add(Creators.Row2.VGuid);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(Creators.Row1.VGuid);
+      tbl.Rows.Add(DBNull.Value);
+
+      Guid[] wanted = new Guid[] { Creators.Row1.VGuid, Creators.Row2.VGuid };
+      Array.Sort(wanted); // не уверен насчет порядка тестовых GUID.
+
+      Guid[] res1 = DataTools.GetUniqueGuids(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      Guid[] res2 = DataTools.GetUniqueGuids(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      Guid[] res3 = DataTools.GetUniqueGuids(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueGuids_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(Guid));
+      tbl.Rows.Add(Creators.Row1.VGuid);
+      tbl.Rows.Add(Creators.Row2.VGuid);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(Creators.Row1.VGuid);
+      tbl.Rows.Add(DBNull.Value);
+
+      Guid[] wanted = new Guid[] { Guid.Empty, Creators.Row1.VGuid, Creators.Row2.VGuid };
+      Array.Sort(wanted); // не уверен насчет порядка тестовых GUID.
+
+      Guid[] res1 = DataTools.GetUniqueGuids(tbl, "F1", false);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      Guid[] res2 = DataTools.GetUniqueGuids(tbl.DefaultView, "F1", false);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      Guid[] res3 = DataTools.GetUniqueGuids(DataTools.GetDataTableRows(tbl), "F1", false);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #region GetUniqueEnums()
+
+    [Test]
+    public void GetUniqueEnums_skipNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Rows.Add((int)Creators.TestEnum.One);
+      tbl.Rows.Add((int)Creators.TestEnum.Two);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add((int)Creators.TestEnum.One);
+      tbl.Rows.Add(DBNull.Value);
+
+      Creators.TestEnum[] wanted = new Creators.TestEnum[] { Creators.TestEnum.One, Creators.TestEnum.Two };
+
+      Creators.TestEnum[] res1 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl, "F1", true);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      Creators.TestEnum[] res2 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl.DefaultView, "F1", true);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      Creators.TestEnum[] res3 = DataTools.GetUniqueEnums<Creators.TestEnum>(DataTools.GetDataTableRows(tbl), "F1", true);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    [Test]
+    public void GetUniqueEnums_withNulls()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Rows.Add((int)Creators.TestEnum.One);
+      tbl.Rows.Add((int)Creators.TestEnum.Two);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add((int)Creators.TestEnum.One);
+      tbl.Rows.Add(DBNull.Value);
+
+      Creators.TestEnum[] wanted = new Creators.TestEnum[] { Creators.TestEnum.Zero, Creators.TestEnum.One, Creators.TestEnum.Two };
+
+      Creators.TestEnum[] res1 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl, "F1", false);
+      Array.Sort(res1);
+      Assert.AreEqual(wanted, res1, "DataTable");
+
+      Creators.TestEnum[] res2 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl.DefaultView, "F1", false);
+      Array.Sort(res2);
+      Assert.AreEqual(wanted, res2, "DataView");
+
+      Creators.TestEnum[] res3 = DataTools.GetUniqueEnums<Creators.TestEnum>(DataTools.GetDataTableRows(tbl), "F1", false);
+      Array.Sort(res3);
+      Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
+    }
+
+    #endregion
+
+    #endregion
+
+    #region GetColumnNames, GetTableNames
+
+    [Test]
+    public static void GetColumnNames()
+    {
+      DataTable tbl = CreateTestTable123();
+      string[] res = DataTools.GetColumnNames(tbl);
+      Assert.AreEqual(new string[] { "F1", "F2", "F3" }, res);
+    }
+
+    [Test]
+    public static void GetTableNames()
+    {
+      DataSet ds = new DataSet();
+      ds.Tables.Add("T1");
+      ds.Tables.Add("T2");
+
+      string[] res = DataTools.GetTableNames(ds);
+      Assert.AreEqual(new string[] { "T1", "T2" }, res);
+    }
+
+    #endregion
+
+    #region SetBoundariesFlags()
+
+    [Test]
+    public void SetBoundariesFlags_DataTable()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetBoundariesFlags(tbl, "F1", "F2", "F3");
+      SetBoundariesFlags_CheckResult(tbl);
+    }
+
+    [Test]
+    public void SetBoundariesFlags_DataView()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetBoundariesFlags(tbl.DefaultView, "F1", "F2", "F3");
+      SetBoundariesFlags_CheckResult(tbl);
+    }
+
+    private static DataTable SetBoundariesFlags_CreateTestTable()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Columns.Add("F2", typeof(bool));
+      tbl.Columns.Add("F3", typeof(bool));
+
+      tbl.Rows.Add(1);
+      tbl.Rows.Add(2);
+      tbl.Rows.Add(2);
+      tbl.Rows.Add(3);
+      tbl.Rows.Add(3);
+      tbl.Rows.Add(3);
+
+      return tbl;
+    }
+
+
+    private void SetBoundariesFlags_CheckResult(DataTable tbl)
+    {
+      bool[] res1 = DataTools.GetValuesFromColumn<bool>(tbl, "F2");
+      Assert.AreEqual(new bool[] { true, true, false, true, false, false }, res1, "Begin flags");
+
+      bool[] res2 = DataTools.GetValuesFromColumn<bool>(tbl, "F3");
+      Assert.AreEqual(new bool[] { true, false, true, false, false, true }, res2, "End flags");
+    }
+
+    #endregion
+
+    #region AreValuesEqual()
+
+    [TestCase(1, 1, true)]
+    [TestCase(1, 2, false)]
+    [TestCase(1, null, false)]
+    [TestCase(0, null, false)]
+    [TestCase(null, null, true)]
+    public void AreValuesEqual(object v1, object v2, bool wanted)
+    {
+      if (v1 == null)
+        v1 = DBNull.Value;
+      if (v2 == null)
+        v2 = DBNull.Value;
+
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Rows.Add(v1);
+      tbl.Rows.Add(v2);
+
+      Assert.AreEqual(wanted, DataTools.AreValuesEqual(tbl.Rows[0], tbl.Rows[1], "F1"), "DataRow with ColumnName");
+      Assert.AreEqual(wanted, DataTools.AreValuesEqual(tbl.Rows[0], tbl.Rows[1], 0), "DataRow with ColumnPos");
+      Assert.AreEqual(wanted, DataTools.AreValuesEqual(tbl.DefaultView[0], tbl.DefaultView[1], "F1"), "DataRowView with ColumnName");
+      Assert.AreEqual(wanted, DataTools.AreValuesEqual(tbl.DefaultView[0], tbl.DefaultView[1], 0), "DataRowView with ColumnPos");
+      Assert.AreEqual(wanted, DataTools.AreValuesEqual(v1, v2), "Object");
+    }
+
+    #endregion
+
+    #region GetRandomId()
+
+    [Test]
+    public void GetRandomId()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(Int32)); // Не обязательно "Id"
+      DataTools.SetPrimaryKey(tbl, "F1");
+
+      for (int i = 0; i < 1000; i++)
+      {
+        Int32 id = DataTools.GetRandomId(tbl);
+        tbl.Rows.Add(id);
+      }
+    }
+
+    #endregion
+
+    #region CopyRowsToRows()
+
+    [Test]
+    public void CopyRowsToRows_DataSet()
+    {
+      DataSet dsSrc = new DataSet();
+      dsSrc.ExtendedProperties["Test1"] = "AAA";
+
+      DataTable tbl1 = CreateTestTable123(); // эта таблица копируется
+      tbl1.TableName = "T1";
+      tbl1.Rows[0]["F1"] = 1000;
+      tbl1.ExtendedProperties["Test2"] = "BBB";
+      dsSrc.Tables.Add(tbl1);
+
+      DataTable tbl2 = dsSrc.Tables.Add("T2"); // эта таблица не копируется
+      tbl2.Columns.Add("F4", typeof(int));
+      tbl2.Rows.Add(123);
+
+      DataSet dsRes = new DataSet();
+      dsRes.ExtendedProperties["Test3"] = "CCC";
+
+      DataTable tbl1res = CreateTestTable123(); // эта таблица переписывается
+      tbl1res.TableName = "T1";
+      tbl1res.ExtendedProperties["Test4"] = "DDD";
+      dsRes.Tables.Add(tbl1res);
+
+      dsRes.Tables.Add("T3"); // эта таблица сохраняется
+
+      DataTools.CopyRowsToRows(dsSrc, dsRes);
+
+      Assert.AreEqual(new string[] { "T1", "T2" }, DataTools.GetTableNames(dsSrc), "Source TableNames");
+      Assert.AreEqual(new string[] { "T1", "T3" }, DataTools.GetTableNames(dsRes), "Result TableNames");
+
+      Assert.AreEqual(new int[] { 1000, 4, 7 }, DataTools.GetValuesFromColumn<int>(tbl1res, "F1"), "F1");
+
+      Assert.AreEqual("AAA", DataTools.GetString(dsRes.ExtendedProperties["Test1"]), "ExtendedProperties #1");
+      Assert.AreEqual("BBB", DataTools.GetString(dsRes.Tables["T1"].ExtendedProperties["Test2"]), "ExtendedProperties #2");
+      Assert.AreEqual("CCC", DataTools.GetString(dsRes.ExtendedProperties["Test3"]), "ExtendedProperties #3");
+      Assert.AreEqual("DDD", DataTools.GetString(dsRes.Tables["T1"].ExtendedProperties["Test4"]), "ExtendedProperties #4");
+    }
+
+    [Test]
+    public void CopyRowsToRows_DataTable_replace()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      tblSrc.Rows[0]["F1"] = 1000;
+      tblSrc.ExtendedProperties["Test1"] = "AAA";
+      tblSrc.Columns["F1"].ExtendedProperties["Test3"] = "CCC";
+
+      DataTable tblRes = CreateTestTable123();
+      tblRes.ExtendedProperties["Test2"] = "BBB";
+
+      DataTools.CopyRowsToRows(tblSrc, tblRes, false, false);
+      Assert.AreEqual(new int[] { 1000, 4, 7 }, DataTools.GetValuesFromColumn<int>(tblRes, "F1"), "F1");
+
+      Assert.AreEqual("AAA", DataTools.GetString(tblRes.ExtendedProperties["Test1"]), "ExtendedProperties #1");
+      Assert.AreEqual("BBB", DataTools.GetString(tblRes.ExtendedProperties["Test2"]), "ExtendedProperties #2");
+      Assert.AreEqual("CCC", DataTools.GetString(tblRes.Columns["F1"].ExtendedProperties["Test3"]), "ExtendedProperties #3");
+    }
+
+    [Test]
+    public void CopyRowsToRows_DataTable_add()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      tblSrc.Rows[0]["F1"] = 1000;
+
+      DataTable tblRes = CreateTestTable123();
+
+      DataTools.CopyRowsToRows(tblSrc, tblRes, false, true);
+      Assert.AreEqual(new int[] { 1, 4, 7, 1000, 4, 7 }, DataTools.GetValuesFromColumn<int>(tblRes, "F1"), "F1");
+    }
+
+    [Test]
+    public void CopyRowsToRows_DataTable_useColumnNames()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      tblSrc.Rows[0]["F1"] = 1000;
+
+      DataTable tblRes = new DataTable();
+      tblRes.Columns.Add("F2", typeof(int));
+      tblRes.Columns.Add("F1", typeof(int));
+
+      DataTools.CopyRowsToRows(tblSrc, tblRes, true, true);
+      Assert.AreEqual(new int[] { 1000, 4, 7 }, DataTools.GetValuesFromColumn<int>(tblRes, "F1"), "F1");
+    }
+
+    #endregion
+
+    #region CopyRowValues()
+
+    [Test]
+    public void CopyRowValues_useColumnNames()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      DataRow rowSrc = tblSrc.Rows[0];
+
+      DataTable tblRes = new DataTable();
+      tblRes.Columns.Add("F2", typeof(int));
+      tblRes.Columns.Add("F1", typeof(int));
+      DataRow rowRes = tblRes.NewRow();
+
+      DataTools.CopyRowValues(rowSrc, rowRes, true);
+      Assert.AreEqual(new object[] { 2, 1 }, rowRes.ItemArray);
+    }
+
+    [Test]
+    public void CopyRowValues_useColumnPositions()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      DataRow rowSrc = tblSrc.Rows[0];
+
+      DataTable tblRes = tblSrc.Clone();
+      DataRow rowRes = tblRes.NewRow();
+
+      DataTools.CopyRowValues(rowSrc, rowRes, false);
+      Assert.AreEqual(new object[] { 1, 2, 3 }, rowRes.ItemArray);
+    }
+
+
+    [Test]
+    public void CopyRowValues_with_columnNames_1()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      DataRow rowSrc = tblSrc.Rows[0];
+
+      DataTable tblRes = tblSrc.Clone();
+      DataRow rowRes = tblRes.NewRow();
+
+      DataTools.CopyRowValues(rowSrc, rowRes, new string[] { "F1", "F3" });
+      Assert.AreEqual(new object[] { 1, DBNull.Value, 3 }, rowRes.ItemArray);
+    }
+
+    [Test]
+    public void CopyRowValues_with_columnNames_2()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      DataRow rowSrc = tblSrc.Rows[0];
+
+      DataTable tblRes = tblSrc.Clone();
+      DataRow rowRes = tblRes.NewRow();
+
+      DataTools.CopyRowValues(rowSrc, rowRes, "F3,F2");
+      Assert.AreEqual(new object[] { DBNull.Value, 2, 3 }, rowRes.ItemArray);
+    }
+
+    #endregion
+
+    #region CopyRowValuesForPrefix()
+
+    [Test]
+    public void CopyRowValuesForPrefix()
+    {
+      DataTable tblSrc = CreateTestTable123();
+      DataRow rowSrc = tblSrc.Rows[0];
+
+      DataTable tblRes = new DataTable();
+      tblRes.Columns.Add("A3", typeof(int));
+      tblRes.Columns.Add("A2", typeof(int));
+      tblRes.Columns.Add("A4", typeof(int)); // нее будет найдено
+      DataRow rowRes = tblRes.NewRow();
+
+      DataTools.CopyRowValuesForPrefix(rowSrc, rowRes, "F", "A");
+      Assert.AreEqual(new object[] { 3, 2, DBNull.Value }, rowRes.ItemArray);
+    }
+
+    #endregion
+
+    #region ReplaceNulls()
+
+    [Test]
+    public void ReplaceNulls_DataTable()
+    {
+      DataTable tbl = ReplaceNulls_CreateTestTable();
+      DataTools.ReplaceNulls(tbl, "F1", 100);
+      Assert.AreEqual(new int[] { 1, 100, 3, 100, 5 }, DataTools.GetValuesFromColumn<int>(tbl, "F1"));
+    }
+
+    [Test]
+    public void ReplaceNulls_DataView()
+    {
+      DataTable tbl = ReplaceNulls_CreateTestTable();
+      DataTools.ReplaceNulls(tbl.DefaultView, "F1", 100);
+      Assert.AreEqual(new int[] { 1, 100, 3, 100, 5 }, DataTools.GetValuesFromColumn<int>(tbl, "F1"));
+    }
+
+    [Test]
+    public void ReplaceNulls_DataRowArray()
+    {
+      DataTable tbl = ReplaceNulls_CreateTestTable();
+      DataRow[] a = new DataRow[] { tbl.Rows[2], tbl.Rows[3] };
+      DataTools.ReplaceNulls(a, "F1", 100);
+      Assert.AreEqual(new int[] { 1, 0, 3, 100, 5 }, DataTools.GetValuesFromColumn<int>(tbl, "F1"));
+    }
+
+    private DataTable ReplaceNulls_CreateTestTable()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Rows.Add(1);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(3);
+      tbl.Rows.Add(DBNull.Value);
+      tbl.Rows.Add(5);
+      return tbl;
+    }
+
+    #endregion
+
+    #region StrTrim()
+
+    [Test]
+    public void StrTrim_DataTable_ColumnName()
+    {
+      DataTable tbl = StrTrim_CreateTestTable();
+      DataTools.StrTrim(tbl, "F2");
+      Assert.AreEqual(new object[] { "AAA ", " XXX", " ", "EEE", null }, DataTools.GetValuesFromColumn<string>(tbl, "F1"), "Not changed");
+      Assert.AreEqual(new object[] { "BBB", "DDD", null, "FFF", null }, DataTools.GetValuesFromColumn<string>(tbl, "F2"), "Changed");
+    }
+
+    [Test]
+    public void StrTrim_DataTable_ColumnIndex()
+    {
+      DataTable tbl = StrTrim_CreateTestTable();
+      DataTools.StrTrim(tbl, 0);
+      Assert.AreEqual(new object[] { "AAA", "XXX", null, "EEE", null }, DataTools.GetValuesFromColumn<string>(tbl, "F1"), "Changed");
+      Assert.AreEqual(new object[] { "BBB", "DDD ", null, " FFF", " " }, DataTools.GetValuesFromColumn<string>(tbl, "F2"), "Not changed");
+    }
+
+    [Test]
+    public void StrTrim_DataTable_AllColumns()
+    {
+      DataTable tbl = StrTrim_CreateTestTable();
+      DataTools.StrTrim(tbl);
+      Assert.AreEqual(new object[] { "AAA", "XXX", null, "EEE", null }, DataTools.GetValuesFromColumn<string>(tbl, "F1"), "#1");
+      Assert.AreEqual(new object[] { "BBB", "DDD", null, "FFF", null }, DataTools.GetValuesFromColumn<string>(tbl, "F2"), "#2");
+    }
+
+    [Test]
+    public void StrTrim_DataSet()
+    {
+      DataSet ds = new DataSet();
+      DataTable tbl = StrTrim_CreateTestTable();
+      ds.Tables.Add(tbl);
+
+      DataTools.StrTrim(tbl);
+      Assert.AreEqual(new object[] { "AAA", "XXX", null, "EEE", null }, DataTools.GetValuesFromColumn<string>(tbl, "F1"), "#1");
+      Assert.AreEqual(new object[] { "BBB", "DDD", null, "FFF", null }, DataTools.GetValuesFromColumn<string>(tbl, "F2"), "#2");
+    }
+
+    private DataTable StrTrim_CreateTestTable()
+    {
+      // В тестовой таблице не должно быть значений String.Empty, т.к. не четко определено,
+      // должны ли они заменяться на DBNull
+
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(string));
+      tbl.Columns.Add("F2", typeof(string));
+
+      tbl.Rows.Add("AAA ", "BBB"); // [0]
+      tbl.Rows.Add(" XXX", "DDD "); // [1]
+      tbl.Rows.Add(" ", DBNull.Value); // [2]
+      tbl.Rows.Add("EEE", " FFF"); // [3]
+      tbl.Rows.Add(DBNull.Value, " "); // [4]
+      return tbl;
+    }
+
+    #endregion
+
+    #region UpdateXXXByPrimaryKey()
+
+    #region UpdateRowsByPrimaryKey()
+
+    [Test]
+    public void UpdateRowsByPrimaryKey_useColumnPos()
+    {
+      DataTable tblSrc = UpdateXXXByPrimaryKey_CreateTable();
+
+      DataTable tblRes = tblSrc.Clone();
+      DataTools.SetPrimaryKey(tblRes, "F1,F2");
+      tblRes.Rows.Add(1, "AAA", 100);
+      tblRes.Rows.Add(4, "BBB", 100); // Такой строки нет
+      tblRes.Rows.Add(2, "BBB", 100);
+
+      DataTools.UpdateRowsByPrimaryKey(tblSrc, tblRes, false);
+      Assert.AreEqual(new int[] { 1, 100, 2 }, DataTools.GetValuesFromColumn<int>(tblRes, "F3"), "F3");
+    }
+
+    [Test]
+    public void UpdateRowsByPrimaryKey_useColumnName()
+    {
+      DataTable tblSrc = UpdateXXXByPrimaryKey_CreateTable();
+
+      DataTable tblRes = new DataTable();
+      tblRes.Columns.Add("F3", typeof(int));
+      tblRes.Columns.Add("F4", typeof(int));
+      tblRes.Columns.Add("F1", typeof(int));
+      tblRes.Columns.Add("F2", typeof(string));
+      DataTools.SetPrimaryKey(tblRes, "F1,F2");
+      tblRes.Rows.Add(100, 100, 1, "AAA");
+      tblRes.Rows.Add(100, 100, 4, "BBB"); // Такой строки нет
+      tblRes.Rows.Add(100, 100, 2, "BBB");
+
+      DataTools.UpdateRowsByPrimaryKey(tblSrc, tblRes, true);
+      Assert.AreEqual(new int[] { 1, 100, 2 }, DataTools.GetValuesFromColumn<int>(tblRes, "F3"), "F3");
+      Assert.AreEqual(new int[] { 100, 100, 100 }, DataTools.GetValuesFromColumn<int>(tblRes, "F4"), "F4");
+    }
+
+    #endregion
+
+    #region UpdateTableByPrimaryKey()
+
+    [Test]
+    public void UpdateTableByPrimaryKey_useColumnPos()
+    {
+      DataTable tblSrc = UpdateXXXByPrimaryKey_CreateTable();
+
+      DataTable tblRes = tblSrc.Clone();
+      DataTools.SetPrimaryKey(tblRes, "F1,F2");
+      tblRes.Rows.Add(1, "AAA", 100);
+      tblRes.Rows.Add(4, "BBB", 100); // Такой строки нет
+      tblRes.Rows.Add(2, "BBB", 100);
+
+      DataTools.UpdateTableByPrimaryKey(tblSrc, tblRes, false);
+
+      // Порядок строк в таблице tblRes не определен. Надо отсортировать вручную
+      tblRes.DefaultView.Sort = "F1,F2";
+      tblRes = tblRes.DefaultView.ToTable();
+
+      Assert.AreEqual(new int[] { 1, 2, 3 }, DataTools.GetValuesFromColumn<int>(tblRes, "F1"), "F1");
+      Assert.AreEqual(new string[] { "AAA", "BBB", "CCC" }, DataTools.GetValuesFromColumn<string>(tblRes, "F2"), "F2");
+      Assert.AreEqual(new int[] { 1, 2, 3 }, DataTools.GetValuesFromColumn<int>(tblRes, "F3"), "F3");
+    }
+
+    [Test]
+    public void UpdateTableByPrimaryKey_useColumnName()
+    {
+      DataTable tblSrc = UpdateXXXByPrimaryKey_CreateTable();
+
+      DataTable tblRes = new DataTable();
+      tblRes.Columns.Add("F3", typeof(int));
+      tblRes.Columns.Add("F4", typeof(int));
+      tblRes.Columns.Add("F1", typeof(int));
+      tblRes.Columns.Add("F2", typeof(string));
+      DataTools.SetPrimaryKey(tblRes, "F1,F2");
+      tblRes.Rows.Add(10, 100, 1, "AAA");
+      tblRes.Rows.Add(20, 200, 123, "BBB"); // Такой строки нет
+      tblRes.Rows.Add(30, 300, 2, "BBB");
+
+      DataTools.UpdateTableByPrimaryKey(tblSrc, tblRes, true);
+
+      // Порядок строк в таблице tblRes не определен. Надо отсортировать вручную
+      tblRes.DefaultView.Sort = "F1,F2";
+      tblRes = tblRes.DefaultView.ToTable();
+
+      Assert.AreEqual(new int[] { 1, 2, 3 }, DataTools.GetValuesFromColumn<int>(tblRes, "F1"), "F1");
+      Assert.AreEqual(new string[] { "AAA", "BBB", "CCC" }, DataTools.GetValuesFromColumn<string>(tblRes, "F2"), "F2");
+      Assert.AreEqual(new int[] { 1, 2, 3 }, DataTools.GetValuesFromColumn<int>(tblRes, "F3"), "F3"); // обновленные значения
+      Assert.AreEqual(new int[] { 100, 300, 0 }, DataTools.GetValuesFromColumn<int>(tblRes, "F4"), "F4"); // необновленные значения
+    }
+
+    #endregion
+
+    #region Вспомогательные методы
+
+    private static DataTable UpdateXXXByPrimaryKey_CreateTable()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      tbl.Columns.Add("F2", typeof(string));
+      tbl.Columns.Add("F3", typeof(int));
+      tbl.Rows.Add(1, "AAA", 1);
+      tbl.Rows.Add(2, "BBB", 2);
+      tbl.Rows.Add(3, "CCC", 3);
+      return tbl;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region FindDataRowView()/FindDataRowViewIndex()
+
+    [TestCase(5, 3, 2)]
+    [TestCase(5, -3, -1)]
+    [TestCase(5, 6, -1)]
+    [TestCase(200, 3, 2)]
+    [TestCase(200, -3, -1)]
+    [TestCase(200, 201, -1)]
+    public void FindDataRowView_FindDataRowViewIndex(int nRows, int value, int wantedIndex)
+    {
+      // Реализация отличается для отсортированных DataView, содержащих больше 50 строк
+
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(int));
+      DataRow row = null;
+      for (int i = 1; i <= nRows; i++)
+      {
+        DataRow row1 = tbl.Rows.Add(i); // Эти строки попадут в DataView
+        if (i == value)
+          row = row1;
+        DataRow row2 = tbl.Rows.Add(-i); // Эти строки не пройдут фильтр
+        if ((-i) == value)
+          row = row2;
+      }
+      tbl.DefaultView.Sort = "F1";
+      tbl.DefaultView.RowFilter = "F1>0";
+
+      int res1 = DataTools.FindDataRowViewIndex(tbl.DefaultView, row);
+      Assert.AreEqual(wantedIndex, res1, "FindDataRowViewIndex()");
+
+      DataRowView res2 = DataTools.FindDataRowView(tbl.DefaultView, row);
+      if (wantedIndex >= 0)
+      {
+        Assert.IsNotNull(res2, "FindDataRowView() return not null");
+        Assert.AreEqual(value, res2.Row["F1"], "FindDataRowView() row");
+      }
+      else
+        Assert.IsNull(res2, "FindDataRowView() return null");
+    }
+
+    #endregion
+
+    #region GetDataViewRows()
+
+    [Test]
+    public void GetDataViewRows_ok()
+    {
+      DataTable tbl = CreateTestTable123();
+      tbl.DefaultView.Sort = "F1 DESC";
+      tbl.DefaultView.RowFilter = "F3>=6";
+
+      DataRow[] res = DataTools.GetDataViewRows(tbl.DefaultView);
+      Assert.AreEqual(new DataRow[] { tbl.Rows[2], tbl.Rows[1] }, res);
+    }
+
+    [Test]
+    public void GetDataViewRows_null()
+    {
+      DataRow[] res = DataTools.GetDataViewRows(null);
+      Assert.AreEqual(new DataRow[] { }, res);
+    }
+
+    #endregion
+
+    #region GetDataViewIdIndexDictionary()
+
+    [Test]
+    public void GetDataViewIdIndexDictionary()
+    {
+      DataTable tbl = DataTools.TableFromIds(new int[] { 1, 3, 5, 2, 4, 6 });
+      tbl.DefaultView.Sort = "Id DESC";
+      tbl.DefaultView.RowFilter = "Id>=3"; // 6,5,4,3
+
+      IDictionary<int, int> res = DataTools.GetDataViewIdIndexDictionary(tbl.DefaultView);
+      Assert.AreEqual(4, res.Count, "Count");
+      Assert.AreEqual(0, res[6], "[6]");
+      Assert.AreEqual(1, res[5], "[5]");
+      Assert.AreEqual(2, res[4], "[4]");
+      Assert.AreEqual(3, res[3], "[3]");
+    }
+
+    #endregion
+
+    #region GetDataViewSortColumnNames/SingleColumnName/Sort()
+
+    [Test]
+    public void GetDataViewSortColumnNames_simple()
+    {
+      Assert.AreEqual(new string[] { "F1", "F2" }, DataTools.GetDataViewSortColumnNames("F1,F2 DESC"));
+    }
+
+    [Test]
+    public void GetDataViewSortColumnNames_with_brackets()
+    {
+      Assert.AreEqual(new string[] { "F1", "F2" }, DataTools.GetDataViewSortColumnNames("[F1],[F2] DESC"));
+    }
+
+    [Test]
+    public void GetDataViewSortColumnNames_empty()
+    {
+      Assert.AreEqual(new string[] { }, DataTools.GetDataViewSortColumnNames(""));
+    }
+
+    [Test]
+    public void GetDataViewSortColumnNames_full()
+    {
+      string[] columnNames;
+      ListSortDirection[] directions;
+      DataTools.GetDataViewSortColumnNames("F1,F2 DESC", out columnNames, out directions);
+
+      Assert.AreEqual(new string[] { "F1", "F2" }, columnNames, "ColumnNames");
+      Assert.AreEqual(new ListSortDirection[] { ListSortDirection.Ascending, ListSortDirection.Descending }, directions, "Directions");
+    }
+
+    [Test]
+    public void GetDataViewSortSingleColumnName_simple()
+    {
+      Assert.AreEqual("F1", DataTools.GetDataViewSortSingleColumnName("F1 DESC"));
+    }
+
+    [Test]
+    public void GetDataViewSortSingleColumnName_empty()
+    {
+      Assert.AreEqual("", DataTools.GetDataViewSortSingleColumnName(""));
+    }
+
+    [Test]
+    public void GetDataViewSortSingleColumnName_full()
+    {
+      string columnName;
+      ListSortDirection direction;
+      DataTools.GetDataViewSortSingleColumnName("F1 DESC", out columnName, out direction);
+
+      Assert.AreEqual("F1", columnName, "ColumnName");
+      Assert.AreEqual(ListSortDirection.Descending, direction, "Direction");
+    }
+
+    [Test]
+    public void GetDataViewSortSingleColumnName_with_brackets()
+    {
+      Assert.AreEqual("F1", DataTools.GetDataViewSortSingleColumnName("[F1] DESC"));
+    }
+
+    [Test]
+    public void GetDataViewSortSingleColumnName_exception()
+    {
+      Assert.Catch(delegate() { DataTools.GetDataViewSortSingleColumnName("F1,F2"); });
+    }
+
+    [Test]
+    public void GetDataViewSort_normal()
+    {
+      string res = DataTools.GetDataViewSort(new string[] { "F1", "F2" },
+        new ListSortDirection[] { ListSortDirection.Ascending, ListSortDirection.Descending });
+
+      // Чтобы тест не был хрупким
+      res = res.Replace("[", "");
+      res = res.Replace("]", "");
+      res = res.Replace(" ASC", "");
+      res = res.Replace(", ", ",");
+
+      Assert.AreEqual("F1,F2 DESC", res);
+    }
+
+    [Test]
+    public void GetDataViewSort_empty()
+    {
+      string res = DataTools.GetDataViewSort(new string[] { },
+        new ListSortDirection[] { });
+
+      Assert.AreEqual("", res);
+    }
+
+    [Test]
+    public void GetDataViewSort_exceptions()
+    {
+      Assert.Catch(delegate() { DataTools.GetDataViewSort(new string[] { "F1", "F2" }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "missed direction");
+      Assert.Catch(delegate() { DataTools.GetDataViewSort(new string[] { }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "extra direction");
+      Assert.Catch(delegate() { DataTools.GetDataViewSort(new string[] { "" }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "empty column name");
+    }
+
+    #endregion
+
+    #region GetDataViewLikeExpressionString()
+
+    [TestCase("ABC", @"LIKE 'ABC*'")]
+    [TestCase("A*B%C", @"LIKE 'A[*]B[%]C*'")]
+    [TestCase("A[B]C", @"LIKE 'A[[]B[]]C*'")]
+    public void GetDataViewLikeExpressionString(string str, string wanted)
+    {
+      string res = DataTools.GetDataViewLikeExpressionString(str);
+      Assert.AreEqual(wanted, res);
+    }
+
+    #endregion
+
+    #region FindOrAddDataRow()
+
+    [TestCase(4, false)]
+    [TestCase(10, true)]
+    public void FindOrAddDataRow_1_3arg(int value, bool wanted)
+    {
+      DataTable tbl = CreateTestTable123();
+      tbl.DefaultView.Sort = "F1";
+
+      DataRow resRow;
+      bool res = DataTools.FindOrAddDataRow(tbl.DefaultView, value, out resRow);
+      Assert.AreEqual(wanted, res, "result");
+      Assert.AreEqual(wanted ? 4 : 3, tbl.Rows.Count, "Rows.Count");
+      Assert.AreEqual(value, resRow["F1"], "row value");
+    }
+
+    [TestCase(4, false)]
+    [TestCase(10, true)]
+    public void FindOrAddDataRow_1_2arg(int value, bool wanted)
+    {
+      DataTable tbl = CreateTestTable123();
+      tbl.DefaultView.Sort = "F1";
+
+      DataRow resRow = DataTools.FindOrAddDataRow(tbl.DefaultView, value);
+      Assert.AreEqual(wanted ? 4 : 3, tbl.Rows.Count, "Rows.Count");
+      Assert.AreEqual(value, resRow["F1"], "row value");
+    }
+
+    [TestCase(4, 5, false)]
+    [TestCase(10, 11, true)]
+    public void FindOrAddDataRow_multi_3arg(int value1, int value2, bool wanted)
+    {
+      DataTable tbl = CreateTestTable123();
+      tbl.DefaultView.Sort = "F1,F2";
+
+      object[] keys = new object[] { value1, value2 };
+      DataRow resRow;
+      bool res = DataTools.FindOrAddDataRow(tbl.DefaultView, keys, out resRow);
+      Assert.AreEqual(wanted, res, "result");
+      Assert.AreEqual(wanted ? 4 : 3, tbl.Rows.Count, "Rows.Count");
+      Assert.AreEqual(value1, resRow["F1"], "row value #1");
+      Assert.AreEqual(value2, resRow["F2"], "row value #2");
+    }
+
+    [TestCase(4, 5, false)]
+    [TestCase(10, 11, true)]
+    public void FindOrAddDataRow_multi_2arg(int value1, int value2, bool wanted)
+    {
+      DataTable tbl = CreateTestTable123();
+      tbl.DefaultView.Sort = "F1,F2";
+
+      object[] keys = new object[] { value1, value2 };
+      DataRow resRow = DataTools.FindOrAddDataRow(tbl.DefaultView, keys);
+      Assert.AreEqual(wanted ? 4 : 3, tbl.Rows.Count, "Rows.Count");
+      Assert.AreEqual(value1, resRow["F1"], "row value #1");
+      Assert.AreEqual(value2, resRow["F2"], "row value #2");
+    }
+
+    #endregion
+
+    #region CreateUniqueTable()
+
+    public void CreateUniqueTable()
+    {
+      DataTable tbl = CreateTestTable123();
+      tbl.Rows.Add(1, 2, 10); // повтор по полям F1,F2
+
+      int[] wantedF3 = new int[] { 3, 6, 9 };
+
+      DataTable res1 = DataTools.CreateUniqueTable(tbl, new string[] { "F1", "F2" });
+      Assert.AreEqual(wantedF3, DataTools.GetValuesFromColumn<int>(res1, "F3"), "DataTable, string[]");
+
+      DataTable res2 = DataTools.CreateUniqueTable(tbl, "F1,F2");
+      Assert.AreEqual(wantedF3, DataTools.GetValuesFromColumn<int>(res2, "F3"), "DataTable, CSV-string");
+
+      DataTable res3 = DataTools.CreateUniqueTable(tbl.DefaultView, new string[] { "F1", "F2" });
+      Assert.AreEqual(wantedF3, DataTools.GetValuesFromColumn<int>(res3, "F3"), "DataView, string[]");
+
+      DataTable res4 = DataTools.CreateUniqueTable(tbl.DefaultView, "F1,F2");
+      Assert.AreEqual(wantedF3, DataTools.GetValuesFromColumn<int>(res4, "F3"), "DataView, CSV-string");
+    }
+
+    #endregion
+
+    #region GetKeys()/GetValues()
+
+    [Test]
+    public void GetKeys_GetValues()
+    {
+      Dictionary<int, string> dict = new Dictionary<int, string>();
+      dict.Add(2, "AAA");
+      dict.Add(1, "BBB");
+
+      int[] keys = DataTools.GetKeys<int, string>(dict);
+      string[] values = DataTools.GetValues<int, string>(dict);
+
+      // порядок возвращаемых ключей, строго говоря, не определен
+      Assert.AreEqual(2, keys.Length, "keys length");
+      Assert.AreEqual(2, values.Length, "values length");
+
+      int p1 = Array.IndexOf<int>(keys, 1);
+      int p2 = Array.IndexOf<int>(keys, 2);
+      Assert.IsTrue(p1 >= 0, "keys[1]");
+      Assert.IsTrue(p2 >= 0, "keys[2]");
+
+      Assert.AreEqual("BBB", values[p1], "values[1]");
+      Assert.AreEqual("AAA", values[p2], "values[2]");
+    }
+
+    #endregion
+
+    #region MD5
+
+    [TestCase("", "d41d8cd98f00b204e9800998ecf8427e")] // https://ru.wikipedia.org/wiki/MD5
+    [TestCase("414243", "902fbdd2b1df0c4f70b4a5d23525e932")] // строка "ABC"
+    public void MD5Sum(string sBytes, string wanted)
+    {
+      byte[] b = DataTools.HexToBytes(sBytes);
+      Assert.AreEqual(wanted, DataTools.MD5Sum(b));
+    }
+
+    // Тестовые суммы для строк получены на сайте https://dencode.com/ в режиме "UTF-16LE"
+
+    [TestCase("ABC", "716774b53a92b98525bba179a159cc71")]
+    [TestCase("123", "5fa285e1bebe0a6623e33afc04a1fbd5")]
+    [TestCase("", "d41d8cd98f00b204e9800998ecf8427e")] // https://ru.wikipedia.org/wiki/MD5
+    public void MD5SumFromString(string s, string wanted)
+    {
+      Assert.AreEqual(wanted, DataTools.MD5SumFromString(s));
+    }
+
+    #endregion
+
+    #region IsEmptyValue() / GetEmptyValue()
+
+    [Test]
+    public void IsEmptyValue()
+    {
+      Assert.IsTrue(DataTools.IsEmptyValue(null), "null");
+      Assert.IsTrue(DataTools.IsEmptyValue(DBNull.Value), "DBNull");
+      Assert.IsTrue(DataTools.IsEmptyValue(String.Empty), "String.Empty");
+      Assert.IsTrue(DataTools.IsEmptyValue(0), "0");
+      Assert.IsFalse(DataTools.IsEmptyValue(1), "1");
+
+      Assert.IsTrue(DataTools.IsEmptyValue(DataTools.EmptyInts), "Array[0]");
+      Assert.IsFalse(DataTools.IsEmptyValue(new int[] { 0 }), "Array[0]");
+
+      int? nv1 = 1;
+      Assert.IsFalse(DataTools.IsEmptyValue(nv1), "int?=1");
+      int? nvnull = null;
+      Assert.IsTrue(DataTools.IsEmptyValue(nvnull), "int?=null");
+    }
+
+    [Test]
+    public void GetEmptyValue()
+    {
+      Assert.IsNull(DataTools.GetEmptyValue(null));
+      Assert.AreEqual(0, DataTools.GetEmptyValue(typeof(int)));
+      Assert.AreEqual("", DataTools.GetEmptyValue(typeof(string)));
+      Assert.AreEqual(DateTime.MinValue, DataTools.GetEmptyValue(typeof(DateTime)));
+      Assert.IsNull(DataTools.GetEmptyValue(typeof(int?)));
+    }
+
+    #endregion
+
+    #region AreAllDecimalZeros()
+
+    [Test]
+    public void AreAllDecimalZeros_DataRow_ColumnNames()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(decimal));
+      tbl.Columns.Add("F2", typeof(decimal));
+      tbl.Columns.Add("F3", typeof(decimal));
+      tbl.Rows.Add(1m, 0m, DBNull.Value); // 0
+      Assert.IsFalse(DataTools.AreAllDecimalZeros(tbl.Rows[0], "F1"), "F1");
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl.Rows[0], "F2"), "F2");
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl.Rows[0], "F3"), "F3");
+      Assert.IsFalse(DataTools.AreAllDecimalZeros(tbl.Rows[0], "F1,F2"), "F1,F2");
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl.Rows[0], "F2,F3"), "F2,F3");
+    }
+
+
+    [Test]
+    public void AreAllDecimalZeros_DataRow_whole()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(decimal));
+      tbl.Columns.Add("F2", typeof(decimal));
+      tbl.Columns.Add("F3", typeof(decimal));
+      tbl.Rows.Add(1m, 0m, DBNull.Value); // 0
+      tbl.Rows.Add(0m, 0m, DBNull.Value); // 1
+      Assert.IsFalse(DataTools.AreAllDecimalZeros(tbl.Rows[0]), "[0]");
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl.Rows[1]), "[1]");
+    }
+
+    [Test]
+    public void AreAllDecimalZeros_DataTable_ColumnNames()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(decimal));
+      tbl.Columns.Add("F2", typeof(decimal));
+      tbl.Columns.Add("F3", typeof(decimal));
+      tbl.Rows.Add(1m, 0m, DBNull.Value); // 0
+      tbl.Rows.Add(0m, 0m, DBNull.Value); // 1
+      Assert.IsFalse(DataTools.AreAllDecimalZeros(tbl, "F1"), "F1");
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl, "F2"), "F2");
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl, "F3"), "F3");
+      Assert.IsFalse(DataTools.AreAllDecimalZeros(tbl, "F1,F2"), "F1,F2");
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl, "F2,F3"), "F2,F3");
+    }
+
+
+    [Test]
+    public void AreAllDecimalZeros_DataTable_whole()
+    {
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("F1", typeof(decimal));
+      tbl.Columns.Add("F2", typeof(decimal));
+      tbl.Columns.Add("F3", typeof(decimal));
+      tbl.Rows.Add(); // 0
+      tbl.Rows.Add(); // 1
+
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl), "#1");
+
+      tbl.Rows[1]["F1"] = 0m;
+      Assert.IsTrue(DataTools.AreAllDecimalZeros(tbl), "#2");
+
+      tbl.Rows[1]["F1"] = 1m;
+      Assert.IsFalse(DataTools.AreAllDecimalZeros(tbl), "#3");
+    }
+
+    #endregion
+
+    #region GetEnumRange()
+
+    [Test]
+    public void GetEnumRange()
+    {
+      MinMax<int> r = DataTools.GetEnumRange(typeof(Creators.TestEnum));
+      Assert.AreEqual(0, r.MinValue, "MinValue");
+      Assert.AreEqual(3, r.MaxValue, "MaxValue");
+    }
+
+
+    [Test]
+    public void Swap()
+    {
+      int v1 = 1;
+      int v2 = 2;
+      DataTools.Swap<int>(ref v1, ref v2);
+
+      Assert.AreEqual(2, v1, "v1");
+      Assert.AreEqual(1, v2, "v2");
     }
 
     #endregion

@@ -81,11 +81,17 @@ namespace FreeLibSet.Core
         Decl = xmlDoc.ChildNodes[0] as XmlDeclaration;
       if (Decl != null)
       {
-        Encoding OldEncoding = Encoding.GetEncoding(Decl.Encoding);
-        if (encoding.WebName == OldEncoding.WebName)
-          return; // Никаких действий выполнять не надо
-        else
-          Decl.Encoding = encoding.WebName;
+        if (!String.IsNullOrEmpty(Decl.Encoding)) // 21.12.2021
+        {
+          try
+          {
+            Encoding OldEncoding = Encoding.GetEncoding(Decl.Encoding);
+            if (encoding.WebName == OldEncoding.WebName)
+              return; // Никаких действий выполнять не надо
+          }
+          catch { } // 21.12.2021
+        }
+        Decl.Encoding = encoding.WebName;
       }
       else
       {

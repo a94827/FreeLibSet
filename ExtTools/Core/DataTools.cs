@@ -1147,7 +1147,7 @@ namespace FreeLibSet.Core
       if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (IsIntColumn(col))
+      if (IsIntegerType(col.DataType))
       {
         if (value == 0)
         {
@@ -1197,7 +1197,7 @@ namespace FreeLibSet.Core
       if (col == null)
         throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
 #endif
-      if (IsIntColumn(col))
+      if (IsIntegerType(col.DataType))
       {
         if (value == 0L)
         {
@@ -4742,7 +4742,7 @@ namespace FreeLibSet.Core
         Guid? v = Extr[Row];
         if (skipNulls)
         {
-          if (v is DBNull)
+          if (!v.HasValue)
             continue;
         }
         lst.Add(v ?? Guid.Empty);
@@ -4853,21 +4853,6 @@ namespace FreeLibSet.Core
     }
 
     #endregion
-
-    #endregion
-
-    #region IsIntColumn
-
-    /// <summary>
-    /// Возвращает true, если столбец предназначен для хранения целых чисел
-    /// (8,16,32 или-битных, со знаком или без него) 
-    /// </summary>
-    /// <param name="column">Столбец таблицы</param>
-    /// <returns>true, если Целочисленный столбец</returns>
-    public static bool IsIntColumn(DataColumn column)
-    {
-      return IsIntegerType(column.DataType);
-    }
 
     #endregion
 
@@ -5131,7 +5116,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Расширенное сравнение двух значений на равенство. Значения null и DBNull
-    /// считаются одинаковыми. Для сравнения используется метод Object.IsEqual.
+    /// считаются одинаковыми. Для сравнения используется метод Object.Equals().
     /// Если одно значение содержит null или DBNull, а второе - нет, то возвращается
     /// false.
     /// </summary>
@@ -5241,6 +5226,15 @@ namespace FreeLibSet.Core
     /// <returns>Идентификатор для новой строки</returns>
     public static Int32 GetRandomId(DataTable table)
     {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+#endif
+      if (table.PrimaryKey.Length != 1)
+        throw new ArgumentException("Таблица должна иметь первичный ключ по одному полю");
+      if (table.PrimaryKey[0].DataType!=typeof(Int32))
+        throw new ArgumentException("Таблица должна иметь первичный ключ по числовому полю");
+
       lock (_TheRandom)
       {
         while (true)
@@ -6067,8 +6061,11 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Копирование "Строка в строку".
-    /// Копируются все таблицы из исходного набора в конечный набор
-    /// Копируются ExtendedProperties
+    /// Копируются все таблицы из исходного набора в конечный набор.
+    /// Копируются только таблицы, существующие в обоих наборах. Они должны иметь одинаковую структуру.
+    /// Строки заменяются, а не добавляются, то есть при копировании таблицы используются аргументы useColumnNames=false
+    /// и addRows=false.
+    /// Копируются ExtendedProperties как для DataSet, так и для копируемых таблиц.
     /// </summary>
     /// <param name="srcDS">Исходный набор данных</param>
     /// <param name="dstDS">Заполняемый набор данным</param>
@@ -6984,11 +6981,18 @@ namespace FreeLibSet.Core
       if (columnNames.Length == 0)
         return String.Empty;
       if (columnNames.Length == 1 && directions[0] == ListSortDirection.Ascending)
+      {
+        if (String.IsNullOrEmpty(columnNames[0]))
+          throw new ArgumentException("columnNames[0] is null or empty", "columnNames");
         return columnNames[0];
+      }
 
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < columnNames.Length; i++)
       {
+        if (String.IsNullOrEmpty(columnNames[i]))
+          throw new ArgumentException("columnNames[" + i.ToString() + "] is null or empty", "columnNames");
+
         if (i > 0)
           sb.Append(',');
         sb.Append(columnNames[i]);
@@ -7591,7 +7595,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// "Классическая" функция обмена двуж значений по ссылке
+    /// "Классическая" функция обмена двух значений по ссылке
     /// </summary>
     /// <typeparam name="T">Тип данных</typeparam>
     /// <param name="refValue1">Ссылка на первый объект или значение</param>

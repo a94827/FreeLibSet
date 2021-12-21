@@ -5,11 +5,35 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using System.Runtime.InteropServices;
 using FreeLibSet.Core;
 
 namespace FreeLibSet.Data
 {
+  /// <summary>
+  /// Интерфейс, реализуемый структурами DataRowXXXExtractor.
+  /// Предназначен, в основном, для целей тестирования.
+  /// Не следует использовать в прикладном коде.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  public interface IDataRowExtractor<T>
+  {
+    #region Свойства
+
+    /// <summary>
+    /// Имя поля, из которого извлекаются значения
+    /// </summary>
+    string ColumnName { get; }
+
+    /// <summary>
+    /// Извлечение значения поля из строки.
+    /// </summary>
+    /// <param name="row">Строка таблицы</param>
+    /// <returns>Значение поля</returns>
+    T this[DataRow row] { get; }
+
+    #endregion
+  }
+
   /// <summary>
   /// Извлечение значения поля с заданным именем из строк DataRow.
   /// Рекомендуется для использования, когда в цикле требуется извлекать значение одного поля по имени 
@@ -21,8 +45,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowIntExtractor
+  public struct DataRowIntExtractor : IDataRowExtractor<Int32>
   {
     #region Конструктор
 
@@ -131,8 +154,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableIntExtractor
+  public struct DataRowNullableIntExtractor : IDataRowExtractor<Int32?>
   {
     #region Конструктор
 
@@ -248,8 +270,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowInt64Extractor
+  public struct DataRowInt64Extractor : IDataRowExtractor<Int64>
   {
     #region Конструктор
 
@@ -358,8 +379,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableInt64Extractor
+  public struct DataRowNullableInt64Extractor : IDataRowExtractor<Int64?>
   {
     #region Конструктор
 
@@ -475,8 +495,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowSingleExtractor
+  public struct DataRowSingleExtractor : IDataRowExtractor<Single>
   {
     #region Конструктор
 
@@ -586,8 +605,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableSingleExtractor
+  public struct DataRowNullableSingleExtractor : IDataRowExtractor<Single?>
   {
     #region Конструктор
 
@@ -703,8 +721,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowDoubleExtractor
+  public struct DataRowDoubleExtractor : IDataRowExtractor<Double>
   {
     #region Конструктор
 
@@ -813,8 +830,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableDoubleExtractor
+  public struct DataRowNullableDoubleExtractor : IDataRowExtractor<Double?>
   {
     #region Конструктор
 
@@ -930,8 +946,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowDecimalExtractor
+  public struct DataRowDecimalExtractor : IDataRowExtractor<Decimal>
   {
     #region Конструктор
 
@@ -1040,8 +1055,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableDecimalExtractor
+  public struct DataRowNullableDecimalExtractor : IDataRowExtractor<Decimal?>
   {
     #region Конструктор
 
@@ -1159,8 +1173,7 @@ namespace FreeLibSet.Data
   /// DataRowNullableDateTimeExtractor возвращает значение null, если поле содержит пустое значение,
   /// а DataRowDateTimeExtractor - DateTime.MinValue.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowDateTimeExtractor
+  public struct DataRowDateTimeExtractor : IDataRowExtractor<DateTime>
   {
     #region Конструктор
 
@@ -1230,7 +1243,7 @@ namespace FreeLibSet.Data
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
-          if (row.Table.Columns[p].DataType == typeof(Int32))
+          if (row.Table.Columns[p].DataType == typeof(DateTime))
             _ColumnIndex = p;
           else
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
@@ -1261,8 +1274,7 @@ namespace FreeLibSet.Data
   /// DataRowNullableDateTimeExtractor возвращает значение null, если поле содержит пустое значение,
   /// а DataRowDateTimeExtractor - DateTime.MinValue.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableDateTimeExtractor
+  public struct DataRowNullableDateTimeExtractor : IDataRowExtractor<DateTime?>
   {
     #region Конструктор
 
@@ -1361,8 +1373,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowTimeSpanExtractor
+  public struct DataRowTimeSpanExtractor : IDataRowExtractor<TimeSpan>
   {
     #region Конструктор
 
@@ -1461,8 +1472,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableTimeSpanExtractor
+  public struct DataRowNullableTimeSpanExtractor : IDataRowExtractor<TimeSpan?>
   {
     #region Конструктор
 
@@ -1561,8 +1571,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowStringExtractor
+  public struct DataRowStringExtractor : IDataRowExtractor<String>
   {
     #region Конструктор
 
@@ -1671,8 +1680,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowBoolExtractor
+  public struct DataRowBoolExtractor : IDataRowExtractor<Boolean>
   {
     #region Конструктор
 
@@ -1781,8 +1789,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableBoolExtractor
+  public struct DataRowNullableBoolExtractor : IDataRowExtractor<Boolean?>
   {
     #region Конструктор
 
@@ -1898,8 +1905,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowGuidExtractor
+  public struct DataRowGuidExtractor : IDataRowExtractor<Guid>
   {
     #region Конструктор
 
@@ -2008,8 +2014,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableGuidExtractor
+  public struct DataRowNullableGuidExtractor : IDataRowExtractor<Guid?>
   {
     #region Конструктор
 
@@ -2125,8 +2130,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowEnumExtractor<T>
+  public struct DataRowEnumExtractor<T> : IDataRowExtractor<T>
     where T : struct
   {
     #region Конструктор
@@ -2197,7 +2201,10 @@ namespace FreeLibSet.Data
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
-          _ColumnIndex = p;
+          if (row.Table.Columns[p].DataType == typeof(int) || row.Table.Columns[p].DataType == typeof(string))
+            _ColumnIndex = p;
+          else
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
@@ -2219,8 +2226,7 @@ namespace FreeLibSet.Data
   /// Не предназначено для работы с удаленными строками с RowState=Deleted или Detached.
   /// Как правило, структура используется как локальная переменная в пределах одного метода.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
-  public struct DataRowNullableEnumExtractor<T>
+  public struct DataRowNullableEnumExtractor<T> : IDataRowExtractor<T?>
     where T : struct
   {
     #region Конструктор
@@ -2292,7 +2298,10 @@ namespace FreeLibSet.Data
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
             throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
-          _ColumnIndex = p;
+          if (row.Table.Columns[p].DataType == typeof(int) || row.Table.Columns[p].DataType == typeof(string))
+            _ColumnIndex = p;
+          else
+            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 

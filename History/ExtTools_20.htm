@@ -5,7 +5,9 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-12-17T16:58:57.534000000"/>
+	<meta name="changed" content="2021-12-21T15:26:34.582000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -506,7 +508,7 @@
 			<p lang="en-US" align="center">306</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">14.12.2021-17.12.2021</p>
+			<p lang="en-US" align="center">14.12.2021-21.12.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Свойство
@@ -576,11 +578,12 @@
 			</span><span lang="en-US">DataTools.AreArraysEqual(), </span><span lang="ru-RU">принимающем
 			строки (</span><a href="ExtTools_11.htm#v243p2"><span lang="en-US">v.243
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
-			<p><span lang="ru-RU">12. Убран методы</span>
+			<p><span lang="ru-RU">12. Убраны</span> <span lang="ru-RU">методы</span>
 			<span lang="en-US">DataTools.AreIdsEqual(), </span><span lang="ru-RU">т.к.
 			его дублирует </span><span lang="en-US">AreArraysEqual&lt;Int32&gt;()</span><span lang="ru-RU">,
 			GetIdsFromArray(), </span><span lang="en-US">MergeIds() (</span><span lang="ru-RU">можно
-			использовать класс </span><span lang="en-US">IdList).</span></p>
+			использовать класс </span><span lang="en-US">IdList)</span><span lang="ru-RU">,
+			</span><span lang="en-US">IsIntColumn().</span></p>
 			<p><span lang="en-US">13. </span><span lang="ru-RU">Оптимизирован
 			метод DataTools.MergeArraysOnce</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">()</span>
 			<span lang="ru-RU">с использованием </span><span lang="en-US">ArrayIndexer&lt;T&gt;.</span></p>
@@ -616,12 +619,15 @@
 			</span>создавал столбец с <span lang="en-US">DataType=String, </span>а
 			не <span lang="en-US">Int32.</span></p>
 			<p><span lang="en-US">22. </span>Методы <span lang="en-US">DataTools.GetUniqueGuids()
-			</span>и <span lang="en-US">GetUniqueEnums&lt;T&gt;()</span><span lang="en-US">.
-			</span>
+			</span>и <span lang="en-US">GetUniqueEnums&lt;T&gt;(). </span>
 			</p>
-			<p><span lang="ru-RU">23. Структуры DataRowGuidExtractor,
+			<p>23. Структуры DataRowGuidExtractor,
 			DataRowNullableGuidExtractor, DataRowEnumExtractor&lt;T&gt; и
-			DataRowNullableEnumExtractor&lt;T&gt;</span></p>
+			DataRowNullableEnumExtractor&lt;T&gt;</p>
+			<p lang="en-US">24. DataTools.SetXmlEncoding() (<a href="ExtTools_11.htm#v115p1">v.115
+			<span lang="ru-RU">п.1</span></a>) <span lang="ru-RU">вызывал
+			исключение, если </span>xml-<span lang="ru-RU">документ содержит
+			декларацию, но в ней не задан параметр </span>Encoding.</p>
 		</td>
 	</tr>
 	<tr valign="top">
