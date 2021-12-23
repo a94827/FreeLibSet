@@ -82,6 +82,25 @@ namespace ExtTools_tests
 
     #endregion
 
+    #region TimeSpan
+
+    /// <summary>
+    /// Преобразует строку вида "Ч:М:С" в структуру TimeSpan.
+    /// Для пустой строки возвращает null.
+    /// </summary>
+    /// <param name="s">Строка</param>
+    /// <returns>Nullable-структура</returns>
+    public static TimeSpan? CreateNTimeSpan(string s)
+    {
+      if (s.Length == 0)
+        return null;
+      else
+        return TimeSpan.Parse(s);
+    }
+
+
+    #endregion
+
     #region YearMonth
 
     /// <summary>

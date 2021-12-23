@@ -459,7 +459,15 @@ namespace FreeLibSet.Core
     /// Форматировщик для чисел.
     /// Разделитель - точка. Разделителей групп разрядов нет
     /// </summary>
-    public static readonly NumberFormatInfo NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+    public static readonly NumberFormatInfo NumberFormat = CreateNumberFormat();
+
+    private static NumberFormatInfo CreateNumberFormat()
+    {
+      NumberFormatInfo fi = (NumberFormatInfo)(CultureInfo.InvariantCulture.NumberFormat.Clone());
+      fi.NumberGroupSeparator = String.Empty;
+      fi.NumberGroupSizes = DataTools.EmptyInts;
+      return fi;
+    }
 
     /// <summary>
     /// Форматировщик даты времени.

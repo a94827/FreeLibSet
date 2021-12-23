@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
+using FreeLibSet.Calendar;
 
 namespace ExtTools_tests.Core
 {
@@ -37,19 +38,60 @@ namespace ExtTools_tests.Core
 
     #region DateInRange()
 
-    [TestCase(MinDate, "", "", Result = true)]
-    [TestCase(MaxDate, "", "", Result = true)]
-    [TestCase("20210714", "20210714", "20210714", Result = true)]
-    [TestCase("20210714", "20210713", "20210713", Result = false)]
-    [TestCase("20210714", "20210715", "20210715", Result = false)]
-    [TestCase("20210714", "20210714", "", Result = true)]
-    [TestCase("20210714", "20210715", "", Result = false)]
-    [TestCase("20210714", "", "20210714", Result = true)]
-    [TestCase("20210714", "", "20210713", Result = false)]
-    public bool DateInRange(string testDate, string firstDate, string lastDate)
+    [TestCase(MinDate, "", "", true)]
+    [TestCase(MaxDate, "", "", true)]
+    [TestCase("20210714", "20210714", "20210714", true)]
+    [TestCase("20210714", "20210713", "20210713", false)]
+    [TestCase("20210714", "20210715", "20210715", false)]
+    [TestCase("20210714", "20210714", "", true)]
+    [TestCase("20210714", "20210715", "", false)]
+    [TestCase("20210714", "", "20210714", true)]
+    [TestCase("20210714", "", "20210713", false)]
+    public void DateInRange(string sTestDate, string sFirstDate, string sLastDate, bool wanted)
     {
-      return DataTools.DateInRange(Creators.CreateDate(testDate),
-        Creators.CreateNDate(firstDate), Creators.CreateNDate(lastDate));
+      DateTime testDate = Creators.CreateDate(sTestDate);
+      DateTime? firstDate = Creators.CreateNDate(sFirstDate);
+      DateTime? lastDate = Creators.CreateNDate(sLastDate);
+
+      bool res1 = DataTools.DateInRange(testDate, firstDate, lastDate);
+      Assert.AreEqual(wanted, res1, "Nullable<DateTime>");
+
+      bool res2 = DataTools.DateInRange(testDate, firstDate.HasValue, firstDate ?? DateTime.MinValue, lastDate.HasValue, lastDate ?? DateTime.MinValue);
+      Assert.AreEqual(wanted, res2, "bool+Date");
+    }
+
+    #endregion
+
+    #region DateRangeInRange()
+
+    [TestCase("20210101", "20210131", "20201201", "20210228", true)]
+    [TestCase("20210101", "20210131", "20210101", "20210131", true)]
+    [TestCase("20210101", "20210131", "20210102", "20210131", false)]
+    [TestCase("20210101", "20210131", "20210101", "20210130", false)]
+    [TestCase("20210101", "20210131", "20210101", "", true)]
+    [TestCase("20210101", "20210131", "", "20210131", true)]
+    [TestCase("20210101", "20210131", "20210102", "", false)]
+    [TestCase("20210101", "20210131", "", "20210130", false)]
+    [TestCase("20210101", "20210131", "", "", true)]
+    [TestCase("", "20210131", "20201201", "20210228", false)]
+    [TestCase("20210101", "", "20201201", "20210228", false)]
+    [TestCase("", "", "20201201", "20210228", false)]
+    [TestCase("", "20210131", "", "20210131", true)]
+    [TestCase("", "20210131", "", "20210130", false)]
+    [TestCase("20210101", "", "20210101", "", true)]
+    [TestCase("20210101", "", "20210102", "", false)]
+    [TestCase("", "", "20210101", "", false)]
+    [TestCase("", "", "", "20210131", false)]
+    [TestCase("", "", "", "", true)]
+    public void DateRangeInRange(string sFirstDate1, string sLastDate1, string sFirstDate2, string sLastDate2, bool wanted)
+    {
+      DateTime? firstDate1 = Creators.CreateNDate(sFirstDate1);
+      DateTime? lastDate1 = Creators.CreateNDate(sLastDate1);
+      DateTime? firstDate2 = Creators.CreateNDate(sFirstDate2);
+      DateTime? lastDate2 = Creators.CreateNDate(sLastDate2);
+
+      bool res = DataTools.DateRangeInRange(firstDate1, lastDate1, firstDate2, lastDate2);
+      Assert.AreEqual(wanted, res);
     }
 
     #endregion
@@ -370,6 +412,55 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(wanted, DataTools.Max(dt2, dt1), "#2");
     }
 
+    [TestCase("1:2:3", "1:2:4", "1:2:3")]
+    public void Min_TimeSpan(string s1, string s2, string sWanted)
+    {
+      TimeSpan ts1 = TimeSpan.Parse(s1);
+      TimeSpan ts2 = TimeSpan.Parse(s2);
+      TimeSpan wanted = TimeSpan.Parse(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Min(ts1, ts2), "#1");
+      Assert.AreEqual(wanted, DataTools.Min(ts2, ts1), "#2");
+    }
+
+    [TestCase("1:2:3", "1:2:4", "1:2:4")]
+    public void Max_TimeSpan(string s1, string s2, string sWanted)
+    {
+      TimeSpan ts1 = TimeSpan.Parse(s1);
+      TimeSpan ts2 = TimeSpan.Parse(s2);
+      TimeSpan wanted = TimeSpan.Parse(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Max(ts1, ts2), "#1");
+      Assert.AreEqual(wanted, DataTools.Max(ts2, ts1), "#2");
+    }
+
+
+    [TestCase("1:2:3", "1:2:4", "1:2:3")]
+    [TestCase("1:2:3", "", "1:2:3")]
+    [TestCase("", "", "")]
+    public void Min_NTimeSpan(string s1, string s2, string sWanted)
+    {
+      TimeSpan? ts1 = Creators.CreateNTimeSpan(s1);
+      TimeSpan? ts2 = Creators.CreateNTimeSpan(s2);
+      TimeSpan? wanted = Creators.CreateNTimeSpan(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Min(ts1, ts2), "#1");
+      Assert.AreEqual(wanted, DataTools.Min(ts2, ts1), "#2");
+    }
+
+    [TestCase("1:2:3", "1:2:4", "1:2:4")]
+    [TestCase("1:2:3", "", "1:2:3")]
+    [TestCase("", "", "")]
+    public void Max_NTimeSpan(string s1, string s2, string sWanted)
+    {
+      TimeSpan? ts1 = Creators.CreateNTimeSpan(s1);
+      TimeSpan? ts2 = Creators.CreateNTimeSpan(s2);
+      TimeSpan? wanted = Creators.CreateNTimeSpan(sWanted);
+
+      Assert.AreEqual(wanted, DataTools.Max(ts1, ts2), "#1");
+      Assert.AreEqual(wanted, DataTools.Max(ts2, ts1), "#2");
+    }
+
     #endregion
 
     #region IsEqualYearAndMonth()
@@ -430,6 +521,84 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(wanted, res);
     }
 
+
+    #endregion
+
+    #region CreateDateTimeIfValid()
+
+    // Год не проверяем
+
+    [TestCase(2020, 2, 29, true)]
+    [TestCase(2020, 0, 1, false)]
+    [TestCase(2020, 13, 1, false)]
+    [TestCase(2020, 2, 0, false)]
+    [TestCase(2020, 2, 30, false)]
+    public void CreateDateTimeIfValid_date(int year, int month, int day, bool isValid)
+    {
+      DateTime? res = DataTools.CreateDateTimeIfValid(year, month, day);
+      Assert.AreEqual(isValid, res.HasValue, "HasValue");
+      if (res.HasValue)
+      {
+        Assert.AreEqual(year, res.Value.Year, "year");
+        Assert.AreEqual(month, res.Value.Month, "month");
+        Assert.AreEqual(day, res.Value.Day, "day");
+      }
+    }
+
+    [TestCase(2020, 2, 29, 23, 59, 59, true)]
+    [TestCase(2020, 0, 1, 23, 59, 59, false)]
+    [TestCase(2020, 13, 1, 23, 59, 59, false)]
+    [TestCase(2020, 2, 0, 23, 59, 59, false)]
+    [TestCase(2020, 2, 30, 23, 59, 59, false)]
+    [TestCase(2020, 2, 29, -1, 59, 59, false)]
+    [TestCase(2020, 2, 29, 24, 59, 59, false)]
+    [TestCase(2020, 2, 30, 23, -1, 59, false)]
+    [TestCase(2020, 2, 30, 23, 60, 59, false)]
+    [TestCase(2020, 2, 29, 24, 59, -1, false)]
+    [TestCase(2020, 2, 29, 24, 59, 60, false)]
+    public void CreateDateTimeIfValid_datetime(int year, int month, int day, int hour, int minute, int second, bool isValid)
+    {
+      DateTime? res = DataTools.CreateDateTimeIfValid(year, month, day, hour, minute, second);
+      Assert.AreEqual(isValid, res.HasValue, "HasValue");
+      if (res.HasValue)
+      {
+        Assert.AreEqual(year, res.Value.Year, "year");
+        Assert.AreEqual(month, res.Value.Month, "month");
+        Assert.AreEqual(day, res.Value.Day, "day");
+        Assert.AreEqual(hour, res.Value.Hour, "hour");
+        Assert.AreEqual(minute, res.Value.Minute, "minute");
+        Assert.AreEqual(second, res.Value.Second, "second");
+      }
+    }
+
+    [TestCase(2020, 2, 29, 23, 59, 59, 0, true)]
+    [TestCase(2020, 0, 1, 23, 59, 59, 0, false)]
+    [TestCase(2020, 13, 1, 23, 59, 59, 0, false)]
+    [TestCase(2020, 2, 0, 23, 59, 59, 0, false)]
+    [TestCase(2020, 2, 30, 23, 59, 59, 0, false)]
+    [TestCase(2020, 2, 29, -1, 59, 59, 0, false)]
+    [TestCase(2020, 2, 29, 24, 59, 59, 0, false)]
+    [TestCase(2020, 2, 30, 23, -1, 59, 0, false)]
+    [TestCase(2020, 2, 30, 23, 60, 59, 0, false)]
+    [TestCase(2020, 2, 29, 24, 59, -1, 0, false)]
+    [TestCase(2020, 2, 29, 24, 59, 60, 0, false)]
+    [TestCase(2020, 2, 29, 23, 59, 59, -1, false)]
+    [TestCase(2020, 2, 29, 23, 59, 59, 1000, false)]
+    public void CreateDateTimeIfValid_datetime_ms(int year, int month, int day, int hour, int minute, int second, int millisecond, bool isValid)
+    {
+      DateTime? res = DataTools.CreateDateTimeIfValid(year, month, day, hour, minute, second, millisecond);
+      Assert.AreEqual(isValid, res.HasValue, "HasValue");
+      if (res.HasValue)
+      {
+        Assert.AreEqual(year, res.Value.Year, "year");
+        Assert.AreEqual(month, res.Value.Month, "month");
+        Assert.AreEqual(day, res.Value.Day, "day");
+        Assert.AreEqual(hour, res.Value.Hour, "hour");
+        Assert.AreEqual(minute, res.Value.Minute, "minute");
+        Assert.AreEqual(second, res.Value.Second, "second");
+        Assert.AreEqual(millisecond, res.Value.Millisecond, "millisecond");
+      }
+    }
 
     #endregion
   }

@@ -204,7 +204,7 @@ namespace FreeLibSet.Data
     /// <returns>Наличие поля</returns>
     public bool Contains(string name)
     {
-      return _ColumnNameIndexer.Contains(name);
+      return ColumnNameIndexer.Contains(name);
     }
 
     /// <summary>
@@ -213,10 +213,10 @@ namespace FreeLibSet.Data
     /// <returns></returns>
     public string[] GetNames()
     {
-      string[] FColumnNames = new string[Table.Columns.Count];
+      string[] colNames = new string[Table.Columns.Count];
       for (int i = 0; i < Table.Columns.Count; i++)
-        FColumnNames[i] = Table.Columns[i].ColumnName;
-      return FColumnNames;
+        colNames[i] = Table.Columns[i].ColumnName;
+      return colNames;
     }
 
     #endregion
@@ -333,7 +333,7 @@ namespace FreeLibSet.Data
       if (_CurrentRow == null)
         return false;
       else
-        return _ColumnNameIndexer.Contains(name);
+        return ColumnNameIndexer.Contains(name);
     }
 
     /// <summary>

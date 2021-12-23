@@ -91,7 +91,11 @@ namespace FreeLibSet.Forms
     /// <param name="preparationData">Внутренние данные</param>
     protected override void OnShowChildForm(Form form, object preparationData)
     {
-      CurrentMainWindowLayout.ShowChildForm(form);
+      EFPAppMainWindowLayoutMDI mw = CurrentMainWindowLayout;
+      if (mw == null)
+        mw = (EFPAppMainWindowLayoutMDI)ShowMainWindow(); // 23.12.2021
+
+      mw.ShowChildForm(form);
     }
 
     /// <summary>
@@ -148,7 +152,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Управляющий объект для главного окна MDI.
   /// </summary>
-  public sealed class EFPAppMainWindowLayoutMDI: EFPAppMainWindowLayout
+  public sealed class EFPAppMainWindowLayoutMDI : EFPAppMainWindowLayout
   {
     #region Защищенный конструктор
 

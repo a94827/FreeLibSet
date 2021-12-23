@@ -421,7 +421,7 @@ namespace FreeLibSet.Core
     /// <param name="month">Месяц</param>
     /// <param name="day">День</param>
     /// <returns>Объект DateTime или null</returns>
-    public static DateTime? GetNullableDateTime(int year, int month, int day)
+    public static DateTime? CreateDateTimeIfValid(int year, int month, int day)
     {
       if (IsValidYMD(year, month, day))
         return new DateTime(year, month, day);
@@ -440,7 +440,7 @@ namespace FreeLibSet.Core
     /// <param name="minute">Минуты</param>
     /// <param name="second">Секунды</param>
     /// <returns>Объект DateTime или null</returns>
-    public static DateTime? GetNullableDateTime(int year, int month, int day, int hour, int minute, int second)
+    public static DateTime? CreateDateTimeIfValid(int year, int month, int day, int hour, int minute, int second)
     {
       if (IsValidYMD(year, month, day) && IsValidHMS(hour, minute, second))
         return new DateTime(year, month, day, hour, minute, second);
@@ -460,7 +460,7 @@ namespace FreeLibSet.Core
     /// <param name="second">Секунды</param>
     /// <param name="millisecond">Миллисекунды</param>
     /// <returns>Объект DateTime или null</returns>
-    public static DateTime? GetNullableDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
+    public static DateTime? CreateDateTimeIfValid(int year, int month, int day, int hour, int minute, int second, int millisecond)
     {
       if (IsValidYMD(year, month, day) && IsValidHMS(hour, minute, second) && IsValidMS(millisecond))
         return new DateTime(year, month, day, hour, minute, second, millisecond);
@@ -539,27 +539,6 @@ namespace FreeLibSet.Core
           return false;
       }
       return true;
-    }
-
-    /// <summary>
-    /// Возвращает true, если дата попадает в диапазон.
-    /// Диапазон задается структурами MonthDay, задающими только день и месяц, но не год.
-    /// Год извлекается из проверяемой даты <paramref name="testDate"/>.
-    /// <paramref name="firstDay"/> может задавать и большую дату, чем <paramref name="lastDay"/>.
-    /// Например, если Date=19.09.2017, FirstDate=01.08., LastDate=01.03., то метод возвращает true.
-    /// </summary>
-    /// <param name="testDate">Проверяемая дата</param>
-    /// <param name="firstDay">Первая дата диапазона</param>
-    /// <param name="lastDay">Вторая дата диапазона</param>
-    /// <returns>true, если дата попала</returns>
-    public static bool DateInRange(DateTime testDate, MonthDay firstDay, MonthDay lastDay)
-    {
-      DateTime dt1 = firstDay.GetDate(testDate.Year, false);
-      DateTime dt2 = lastDay.GetDate(testDate.Year, true);
-      if (dt1 > dt2)
-        return testDate >= dt1 || testDate <= dt2;
-      else
-        return testDate >= dt1 && testDate <= dt2;
     }
 
     /// <summary>

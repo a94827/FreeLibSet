@@ -127,7 +127,7 @@ namespace ExtTools_tests.Core
     [TestCase("T1:2:3", null, "T1:2:3")]
     [TestCase(null, "T1:2:3", "T1:2:3")]
     [TestCase("T1:2:3", "T3:4:5", "T4:6:8")]
-    [TestCase("D20211215", "T2:0:0:0", "D20211217")]
+    [TestCase("D20211215", "T2.0:0:0", "D20211217")]
     public void SumValues(object a, object b, object wanted)
     {
       ConvertMathArg(ref a);
@@ -153,8 +153,8 @@ namespace ExtTools_tests.Core
     [TestCase(5L, 3.0, 2.0)]
     [TestCase("M5", 3L, "M2")]
     [TestCase("T1:2:3", "T1:2:2", "T0:0:1")]
-    [TestCase("D20211215", "T2:0:0:0", "D20211213")]
-    [TestCase("D20211215", "D20211213", "T2:0:0:0")]
+    [TestCase("D20211215", "T2.0:0:0", "D20211213")]
+    [TestCase("D20211215", "D20211213", "T2.0:0:0")]
     public void SubstractValues(object a, object b, object wanted)
     {
       ConvertMathArg(ref a);

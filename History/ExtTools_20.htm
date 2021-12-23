@@ -5,7 +5,11 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-12-21T15:26:34.582000000"/>
+	<meta name="changed" content="2021-12-23T17:54:31.054000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -467,12 +471,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -508,7 +512,7 @@
 			<p lang="en-US" align="center">306</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">14.12.2021-21.12.2021</p>
+			<p lang="en-US" align="center">14.12.2021-23.12.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Свойство
@@ -530,10 +534,15 @@
 			</span><span lang="ru-RU">Возникала ошибка, если в поле хранится
 			значение </span><span lang="en-US">DBNull</span></p>
 			<p>4. Убрано поле <span lang="en-US">DataTools.DotNumberConv, </span>т.к.
-			оно дублирует <span lang="en-US">StdConvert.NumberFormat.</span></p>
-			<p><span lang="en-US">5. </span>Исправлены ошибки в
-			DataRowTimeSpanExtractor и DataRowNullableTimeSpanExtractor (<a href="ExtTools_11.htm#v132p3"><span lang="en-US">v.132
-			</span>п.3</a>)</p>
+			оно дублирует <span lang="en-US">StdConvert.NumberFormat.</span> <span lang="ru-RU">В
+			</span><span lang="en-US">StdConvert.NumberFormat</span>
+			<span lang="ru-RU">установлены свойства NumberGroupSeparator=&quot;&quot;
+			и NumberGroupSizes</span><span lang="en-US">=int[0].</span></p>
+			<p><span lang="ru-RU">5</span><span lang="en-US">.
+			DataTools.SetXmlEncoding() (<a href="ExtTools_11.htm#v115p1">v.115
+			</a></span><a href="ExtTools_11.htm#v115p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">вызывал исключение, если </span><span lang="en-US">xml-</span><span lang="ru-RU">документ
+			содержит декларацию, но в ней не задан параметр </span><span lang="en-US">Encoding.</span></p>
 			<p>6. Изменения в агрегатных методах <span lang="en-US">DataTools</span></p>
 			<p><span lang="en-US">- </span>Убраны перегрузки <span lang="en-US">методов</span>
 			<span lang="en-US">Sum/Min/Max/MinMaxInt/In64/Single/Double/Decimal/DateTime/TimeSpan/Value(),
@@ -549,27 +558,37 @@
 			</span><span lang="ru-RU">принимающие массив значений, заменены на
 			принимающие аргумент </span><span lang="en-US">IEnumerable.</span></p>
 			<p><span lang="en-US">-</span> <span lang="ru-RU">Исправлены имена
-			некоторых перегрузок методов </span><span lang="en-US">MinMaxXXX().</span></p>
+			некоторых перегрузок методов </span><span lang="en-US">MinMaxXXX()</span><span lang="ru-RU">
+			(</span><a href="ExtTools_11.htm#v162p3"><span lang="en-US">v.162
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">Исправлена
-			реализация одной из перегрузок </span><span lang="en-US">AverageDecimal()</span></p>
+			реализация одной из перегрузок </span><span lang="en-US">AverageDecimal()</span><span lang="ru-RU">
+			(</span><a href="ExtTools_11.htm#v105p2"><span lang="en-US">v.105
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
 			<p>7. Исправлены ошибки в математических методах
 			<span lang="en-US">DataTools.SumValues(), SubstractValues(),
-			NegValue(), MultiplyValues(), DivideValues(). </span>В них
-			операция выполнялась не на скорректированном значении, а на
-			исходном. Методы <span lang="en-US">SumValues </span>и
+			NegValue(), MultiplyValues(), DivideValues()</span><span lang="ru-RU">
+			(</span><a href="ExtTools_11.htm#v192p1"><span lang="en-US">v.192
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span>В них операция выполнялась не на скорректированном
+			значении, а на исходном. Методы <span lang="en-US">SumValues </span>и
 			<span lang="en-US">SubstractValues() </span>позволяют
 			прибавить/вычитать <span lang="en-US">TimeSpan </span>к/из
 			<span lang="en-US">DateTime.</span> Методы <span lang="en-US">MultiplyValues()
 			</span>и <span lang="en-US">DivideValues() </span>могут
 			обрабатывать <span lang="en-US">TimeSpan</span> и числа<span lang="en-US">.</span></p>
 			<p>8<span lang="en-US">. </span>Методы <span lang="en-US">DataTools.XxxInRange()
+			</span><span lang="en-US">(<a href="ExtTools_11.htm#v156p4">v.156
+			</a></span><a href="ExtTools_11.htm#v156p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
 			</span>заменены на один шаблонный метод <span lang="en-US">IsInRange&lt;T&gt;()</span></p>
 			<p><span lang="en-US">9. В</span>место отдельных структур
-			<span lang="en-US">MinMaxXXX </span>создана шаблонная структура
-			<span lang="en-US">MinMax&lt;T&gt;.</span> <span lang="ru-RU">Добавлен
-			конструктор, принимающий </span><span lang="en-US">IEnumerable&lt;T&gt;.
-			</span><span lang="ru-RU">В </span><span lang="en-US">DataTools
-			</span><span lang="ru-RU">убраны перегрузки методов </span><span lang="en-US">MinMaxXXX(),
+			<span lang="en-US">MinMaxXXX </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v008p3"><span lang="en-US">v.8
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
+			</span>создана шаблонная структура <span lang="en-US">MinMax&lt;T&gt;.</span>
+			<span lang="ru-RU">Добавлен конструктор, принимающий
+			</span><span lang="en-US">IEnumerable&lt;T&gt;. </span><span lang="ru-RU">В
+			</span><span lang="en-US">DataTools </span><span lang="ru-RU">убраны
+			перегрузки методов </span><span lang="en-US">MinMaxXXX(),
 			</span><span lang="ru-RU">принимающие перечислитель</span></p>
 			<p><span lang="ru-RU">10. Метод </span><span lang="en-US">DataTools.AreArraysEqual()
 			</span><span lang="ru-RU">с аргументами </span><span lang="en-US">Array
@@ -579,11 +598,19 @@
 			строки (</span><a href="ExtTools_11.htm#v243p2"><span lang="en-US">v.243
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
 			<p><span lang="ru-RU">12. Убраны</span> <span lang="ru-RU">методы</span>
-			<span lang="en-US">DataTools.AreIdsEqual(), </span><span lang="ru-RU">т.к.
-			его дублирует </span><span lang="en-US">AreArraysEqual&lt;Int32&gt;()</span><span lang="ru-RU">,
-			GetIdsFromArray(), </span><span lang="en-US">MergeIds() (</span><span lang="ru-RU">можно
-			использовать класс </span><span lang="en-US">IdList)</span><span lang="ru-RU">,
+			<span lang="ru-RU">DataTools</span><span lang="ru-RU">:</span></p>
+			<p><span lang="ru-RU">- </span><span lang="ru-RU">AreIdsEqual</span><span lang="en-US">(),
+			</span><span lang="ru-RU">т.к. его дублирует
+			</span><span lang="en-US">AreArraysEqual&lt;Int32&gt;()</span></p>
+			<p><span lang="ru-RU">-</span><span lang="ru-RU">
+			GetIdsFromArray()</span></p>
+			<p><span lang="ru-RU">- </span><span lang="en-US">MergeIds()
+			(</span><span lang="ru-RU">можно использовать класс </span><span lang="en-US">IdList)</span><span lang="ru-RU">,
 			</span><span lang="en-US">IsIntColumn().</span></p>
+			<p><span lang="ru-RU">-</span><span lang="ru-RU"> перегрузка
+			</span><span lang="en-US">DateInRange(), </span><span lang="ru-RU">принимающая
+			пару аргументов </span><span lang="en-US">MonthDay, </span><span lang="ru-RU">так
+			как есть дублирующий метод </span><span lang="en-US">MonthDayRange.Contains().</span></p>
 			<p><span lang="en-US">13. </span><span lang="ru-RU">Оптимизирован
 			метод DataTools.MergeArraysOnce</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">()</span>
 			<span lang="ru-RU">с использованием </span><span lang="en-US">ArrayIndexer&lt;T&gt;.</span></p>
@@ -596,7 +623,9 @@
 			DataTools.CloneOrSameTableForSelectedIds() </span><span lang="ru-RU">предполагал,
 			что поле первичного ключа имеет имя &quot;</span><span lang="en-US">Id</span><span lang="ru-RU">&quot;</span><span lang="en-US">.</span></p>
 			<p><span lang="en-US">16. DataTools.AddTableToDataSet() </span><span lang="ru-RU">не
-			выполняет никаких действий, если таблица уже принадлежит набору</span></p>
+			выполняет никаких действий, если таблица уже принадлежит набору</span><span lang="ru-RU">
+			(</span><a href="ExtTools_11.htm#v058p3"><span lang="en-US">v.58
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span></p>
 			<p><span lang="ru-RU">17. Переименование методов</span><span lang="en-US">:</span></p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">DataTools.GetIdsFromField</span><span lang="en-US">()
 			</span><span lang="ru-RU">в </span><span lang="en-US">GetIdsFromColumn()</span></p>
@@ -621,13 +650,19 @@
 			<p><span lang="en-US">22. </span>Методы <span lang="en-US">DataTools.GetUniqueGuids()
 			</span>и <span lang="en-US">GetUniqueEnums&lt;T&gt;(). </span>
 			</p>
-			<p>23. Структуры DataRowGuidExtractor,
+			<p><span lang="ru-RU">23</span><span lang="en-US">. </span>Исправлены
+			ошибки в DataRowTimeSpanExtractor и
+			DataRowNullableTimeSpanExtractor (<a href="ExtTools_11.htm#v132p3"><span lang="en-US">v.132
+			</span>п.3</a>)</p>
+			<p>24. Структуры DataRowGuidExtractor,
 			DataRowNullableGuidExtractor, DataRowEnumExtractor&lt;T&gt; и
 			DataRowNullableEnumExtractor&lt;T&gt;</p>
-			<p lang="en-US">24. DataTools.SetXmlEncoding() (<a href="ExtTools_11.htm#v115p1">v.115
-			<span lang="ru-RU">п.1</span></a>) <span lang="ru-RU">вызывал
-			исключение, если </span>xml-<span lang="ru-RU">документ содержит
-			декларацию, но в ней не задан параметр </span>Encoding.</p>
+			<p><span lang="en-US">25. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">DataTools.GetNullableDateTime()</span><span lang="ru-RU">,
+			собирающие </span><span lang="en-US">DateTime </span><span lang="ru-RU">из
+			компонентов</span> <span lang="en-US">(<a href="ExtTools_11.htm#v126p1">v.126
+			</a></span><a href="ExtTools_11.htm#v126p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">,
+			переименованы в </span><span lang="en-US">CreateDateTimeIfValid()</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
