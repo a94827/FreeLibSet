@@ -1148,19 +1148,19 @@ namespace FreeLibSet.Data
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
     /// <returns>Перечислитель</returns>
-    public ArrayEnumerator<string> GetEnumerator()
+    public ArrayEnumerable<string>.Enumerator GetEnumerator()
     {
-      return new ArrayEnumerator<string>(_Items);
+      return new ArrayEnumerable<string>.Enumerator(_Items);
     }
 
     IEnumerator<string> IEnumerable<string>.GetEnumerator()
     {
-      return new ArrayEnumerator<string>(_Items);
+      return new ArrayEnumerable<string>.Enumerator(_Items);
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-      return new ArrayEnumerator<string>(_Items);
+      return new ArrayEnumerable<string>.Enumerator(_Items);
     }
 
     #endregion
@@ -2340,7 +2340,7 @@ namespace FreeLibSet.Data
     public IEnumerator<DBxTableColumnName> GetEnumerator()
     {
       // Неохота делать свой перечислитель
-      return new ArrayEnumerator<DBxTableColumnName>(ToArray());
+      return new ArrayEnumerable<DBxTableColumnName>.Enumerator(ToArray());
     }
 
     #endregion

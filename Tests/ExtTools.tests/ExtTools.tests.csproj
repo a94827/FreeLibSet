@@ -45,10 +45,14 @@
     <Compile Include="Core\DataToolsTests_AggregateFunctions.cs" />
     <Compile Include="Core\DataToolsTests_Arrays.cs" />
     <Compile Include="Core\DataToolsTests_Xml.cs" />
+    <Compile Include="Core\DisposableObjectTests.cs" />
     <Compile Include="Core\DummyNamedValuesTests.cs" />
+    <Compile Include="Core\EnumerableTests.cs" />
     <Compile Include="Core\ErrorMessageListTests.cs" />
     <Compile Include="Core\MinMaxTests.cs" />
     <Compile Include="Core\StdConvertTests.cs" />
+    <Compile Include="Data\DataTableRepeaterTests.cs" />
+    <Compile Include="Data\DataViewRowPairEnumarableTests.cs" />
     <Compile Include="Data\DataRowExtractorTests.cs" />
     <Compile Include="DependedValues\DepEvalExprTests.cs" />
     <Compile Include="DependedValues\DepFromArrayTests.cs" />

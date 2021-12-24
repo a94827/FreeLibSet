@@ -5249,22 +5249,22 @@ namespace FreeLibSet.Remoting
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
     /// <returns></returns>
-    public ArrayEnumerator<IExecProcCallBack> GetEnumerator()
+    public ArrayEnumerable<IExecProcCallBack>.Enumerator GetEnumerator()
     {
       IExecProcCallBack[] a = ToArray();
-      return new ArrayEnumerator<IExecProcCallBack>(a);
+      return new ArrayEnumerable<IExecProcCallBack>.Enumerator(a);
     }
 
     IEnumerator<IExecProcCallBack> IEnumerable<IExecProcCallBack>.GetEnumerator()
     {
       IExecProcCallBack[] a = ToArray();
-      return new ArrayEnumerator<IExecProcCallBack>(a);
+      return new ArrayEnumerable<IExecProcCallBack>.Enumerator(a);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
       IExecProcCallBack[] a = ToArray();
-      return new ArrayEnumerator<IExecProcCallBack>(a);
+      return new ArrayEnumerable<IExecProcCallBack>.Enumerator(a);
     }
 
     /// <summary>

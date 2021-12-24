@@ -1056,19 +1056,19 @@ namespace FreeLibSet.Data
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
     /// <returns></returns>
-    public ArrayEnumerator<DBxExpression> GetEnumerator()
+    public ArrayEnumerable<DBxExpression>.Enumerator GetEnumerator()
     {
-      return new ArrayEnumerator<DBxExpression>(_Items);
+      return new ArrayEnumerable<DBxExpression>.Enumerator(_Items);
     }
 
     IEnumerator<DBxExpression> IEnumerable<DBxExpression>.GetEnumerator()
     {
-      return new ArrayEnumerator<DBxExpression>(_Items);
+      return new ArrayEnumerable<DBxExpression>.Enumerator(_Items);
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-      return new ArrayEnumerator<DBxExpression>(_Items);
+      return new ArrayEnumerable<DBxExpression>.Enumerator(_Items);
     }
 
     #endregion

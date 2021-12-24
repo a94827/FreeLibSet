@@ -95,7 +95,8 @@ namespace FreeLibSet.Data
     /// <param name="disposing"></param>
     protected override void Dispose(bool disposing)
     {
-      if (disposing)
+      if (disposing &&
+        this.MasterTable != null /* добавлено 24.12.2021 */)
         this.MasterTable = null;
       base.Dispose(disposing);
     }
@@ -244,7 +245,7 @@ namespace FreeLibSet.Data
     /// На момент вызова свойство MasterTable может быть null.
     /// </summary>
     protected virtual void OnMasterTableChanged()
-    { 
+    {
     }
 
     private bool _InsideRowChanged;
@@ -306,7 +307,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Выполняет полное перестроение строк в SlaveTable.
     /// Этот метод нет смысла использовать в прикладном коде, так как обновление обычно выполняется созданием
-    /// новой ведущией таблицы (загрузкой из базы данных) и установкой свойства MasterTable.
+    /// новой ведущей таблицы (загрузкой из базы данных) и установкой свойства MasterTable.
     /// </summary>
     public void Refresh()
     {

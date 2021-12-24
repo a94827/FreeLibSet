@@ -5,49 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
-using Microsoft.Win32;
-using System.Data;
-using System.Runtime.InteropServices;
-using FreeLibSet.Core;
 
 namespace FreeLibSet.Core
 {
-  /// <summary>
-  /// Пустой перечислитель.
-  /// Реализует интерфейс IEnumerator для коллекции, не содержащей элементов
-  /// </summary>
-  /// <typeparam name="T">Тип "перечислимых" объектов</typeparam>
-  [Serializable]
-  public sealed class DummyEnumerator<T> : IEnumerator<T>
-  {
-    #region IEnumerator<T> Members
-
-    T IEnumerator<T>.Current
-    {
-      get { return default(T); }
-    }
-
-    void IDisposable.Dispose()
-    {
-    }
-
-    object IEnumerator.Current
-    {
-      get { return null; }
-    }
-
-    bool IEnumerator.MoveNext()
-    {
-      return false;
-    }
-
-    void IEnumerator.Reset()
-    {
-    }
-
-    #endregion
-  }
-
   /// <summary>
   /// Реализует интерфейс IEnumerable для коллекции, не содержащей элементов
   /// </summary>
@@ -55,85 +15,70 @@ namespace FreeLibSet.Core
   [Serializable]
   public sealed class DummyEnumerable<T> : IEnumerable<T>
   {
+    /// <summary>
+    /// Пустой перечислитель.
+    /// Реализует интерфейс IEnumerator для коллекции, не содержащей элементов
+    /// </summary>
+    public struct Enumerator : IEnumerator<T>
+    {
+      #region IEnumerator<T> Members
+
+      /// <summary>
+      /// Возвращает пустое значение
+      /// </summary>
+      public T Current
+      {
+        get { return default(T); }
+      }
+
+      /// <summary>
+      /// Ничего не делает
+      /// </summary>
+      public void Dispose()
+      {
+      }
+
+      object IEnumerator.Current
+      {
+        get { return null; }
+      }
+
+      /// <summary>
+      /// Всегда возвращает false
+      /// </summary>
+      /// <returns></returns>
+      public bool MoveNext()
+      {
+        return false;
+      }
+
+      void IEnumerator.Reset()
+      {
+      }
+
+      #endregion
+    }
+
     #region IEnumerable<T> Members
+
+    /// <summary>
+    /// Возвращает фиктивный перечислитель
+    /// </summary>
+    /// <returns></returns>
+    public Enumerator GetEnumerator()
+    {
+      return new Enumerator();
+    }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return new DummyEnumerator<T>();
+      return new Enumerator();
     }
 
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return new DummyEnumerator<T>();
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// "Перечислитель" для одного элемента.
-  /// Не учитывает равенство объекта null, то есть, если объект равен null, то он все равно будет перечислен.
-  /// Если требуется пустой перечислитель, используйте DummyEnumerator.
-  /// </summary>
-  /// <typeparam name="T">Тип перечислимого объекта</typeparam>
-  [Serializable]
-  public struct SingleObjectEnumerator<T> : IEnumerator<T>
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает псевдоперечислитель для одного объекта
-    /// </summary>
-    /// <param name="singleObject">Единственный объект</param>
-    public SingleObjectEnumerator(T singleObject)
-    {
-      _Object = singleObject;
-      _Flag = false;
-    }
-
-    #endregion
-
-    #region IEnumerator<T> Members
-
-    private T _Object;
-    private bool _Flag;
-
-    /// <summary>
-    /// Возвращает текущее значение
-    /// </summary>
-    public T Current { get { return _Object; } }
-
-    /// <summary>
-    /// Ничего не делает
-    /// </summary>
-    public void Dispose()
-    {
-    }
-
-    object IEnumerator.Current
-    {
-      get { return _Object; }
-    }
-
-    /// <summary>
-    /// Переход к следующему значению
-    /// </summary>
-    /// <returns>Наличие значения</returns>
-    public bool MoveNext()
-    {
-      if (_Flag)
-        return false;
-      else
-      {
-        _Flag = true;
-        return true;
-      }
-    }
-
-    void IEnumerator.Reset()
-    {
-      _Flag = false;
+      return new Enumerator();
     }
 
     #endregion
@@ -164,16 +109,140 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    /// <summary>
+    /// "Перечислитель" для одного элемента.
+    /// </summary>
+    public struct Enumerator : IEnumerator<T>
+    {
+      #region Конструктор
+
+      /// <summary>
+      /// Создает псевдоперечислитель для одного объекта
+      /// </summary>
+      /// <param name="singleObject">Единственный объект</param>
+      public Enumerator(T singleObject)
+      {
+        _Object = singleObject;
+        _Flag = false;
+      }
+
+      #endregion
+
+      #region IEnumerator<T> Members
+
+      private T _Object;
+      private bool _Flag;
+
+      /// <summary>
+      /// Возвращает текущее значение
+      /// </summary>
+      public T Current { get { return _Object; } }
+
+      /// <summary>
+      /// Ничего не делает
+      /// </summary>
+      public void Dispose()
+      {
+      }
+
+      object IEnumerator.Current
+      {
+        get { return _Object; }
+      }
+
+      /// <summary>
+      /// Переход к следующему значению.
+      /// При первом вызове возвращает true, при втором - false.
+      /// </summary>
+      /// <returns>Наличие значения</returns>
+      public bool MoveNext()
+      {
+        if (_Flag)
+          return false;
+        else
+        {
+          _Flag = true;
+          return true;
+        }
+      }
+
+      void IEnumerator.Reset()
+      {
+        _Flag = false;
+      }
+
+      #endregion
+    }
+
     #region IEnumerable<T> Members
+
+    /// <summary>
+    /// Создает новый перечислитель по объекту
+    /// </summary>
+    /// <returns></returns>
+    public Enumerator GetEnumerator()
+    {
+      return new Enumerator(_Object);
+    }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return new SingleObjectEnumerator<T>(_Object);
+      return new Enumerator(_Object);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return new SingleObjectEnumerator<T>(_Object);
+      return new Enumerator(_Object);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Простейшая обертка над объектом, реализующим интерфейс IEnumerator.
+  /// Реализует интерфейс IEnumerable, чтобы можно было применять оператор foreach.
+  /// Структура является "одноразовой", так как повторный оператор foreach получил бы тот же экземпляр перечислителя.
+  /// </summary>
+  /// <typeparam name="T">Тип перечислителя</typeparam>
+  [Serializable]
+  public struct EnumerableWrapper<T> : IEnumerable<T>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализирует объект
+    /// </summary>
+    /// <param name="enumerator">Перечислитель. Не может быть null</param>
+    public EnumerableWrapper(IEnumerator<T> enumerator)
+    {
+      if (enumerator == null)
+        throw new ArgumentNullException("enumerator");
+      _Enumerator = enumerator;
+    }
+
+    #endregion
+
+    #region GetEnumerator()
+
+    private IEnumerator<T> _Enumerator;
+
+    /// <summary>
+    /// Возвращает перечислитель, переданный конструктору.
+    /// Повторный вызов вызывает исключение.
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public IEnumerator<T> GetEnumerator()
+    {
+      if (_Enumerator == null)
+        throw new InvalidOperationException("Повторный вызов перечислителя не допускается");
+      IEnumerator<T> res = _Enumerator;
+      _Enumerator = null;
+      return res;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return GetEnumerator();
     }
 
     #endregion
@@ -226,7 +295,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Вызывает Reset()
     /// </summary>
-    public void Dispose()
+    public virtual void Dispose()
     {
       Reset();
     }
@@ -292,16 +361,11 @@ namespace FreeLibSet.Core
   /// </summary>
   /// <typeparam name="T">Тип перечислимых объектов</typeparam>
   [Serializable]
-  public sealed class GroupArrayEnumerator<T> : GroupEnumerator<T>
+  public sealed class GroupArrayEnumerable<T> : IEnumerable<T>
   {
     #region Конструктор
 
-    /// <summary>
-    /// Создает перечислитель с заданным списком объектов.
-    /// </summary>
-    /// <param name="groups">Фиксированный список перечислителей.
-    /// Массив не может содержать значения null, т.к. в этом случае перечисление завершится досрочно</param>
-    public GroupArrayEnumerator(IEnumerator<T>[] groups)
+    public GroupArrayEnumerable(IEnumerable<T>[] groups)
     {
       if (groups == null)
         throw new ArgumentNullException("groups");
@@ -310,86 +374,89 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region Список групп
-
-    private IEnumerator<T>[] _Groups;
+    #region Свойства
 
     /// <summary>
-    /// Возвращает следующую группу из списка
+    /// Массив групп
     /// </summary>
-    /// <param name="groupIndex">Индекс следующей группы</param>
-    /// <returns>Очередной перечислитель или null, если список групп пустой</returns>
-    protected override IEnumerator<T> GetNextGroup(int groupIndex)
-    {
-      if (groupIndex >= _Groups.Length)
-        return null;
-      else
-        return _Groups[groupIndex];
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Типизированный перечислитель по массиву.
-  /// Метод Array.GetEnumerator() возвращает нетипизированный перечислитель
-  /// </summary>
-  /// <typeparam name="T">Тип элементов массива</typeparam>
-  [Serializable]
-  [StructLayout(LayoutKind.Auto)]
-  public struct ArrayEnumerator<T> : IEnumerator<T>
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает перечислитель для одномерного массива
-    /// </summary>
-    /// <param name="a">Массив</param>
-    public ArrayEnumerator(T[] a)
-    {
-      if (a == null)
-        throw new ArgumentNullException("a");
-      _Array = a;
-      _Index = -1;
-    }
-
-    private T[] _Array;
-    private int _Index;
+    public IEnumerable<T>[] Groups { get { return _Groups; } }
+    private IEnumerable<T>[] _Groups;
 
     #endregion
 
-    #region IEnumerator<T> Members
-
     /// <summary>
-    /// Возвращает текущий элемент массива
+    /// Рекурсивный перечислитель, который по очереди вызывает другие перечислители, заданные в массиве.
+    /// Этот класс является менее полезным, чем GroupEnumerator, т.к. требует, чтобы дочерение перечислители
+    /// были созданы заранее.
     /// </summary>
-    public T Current { get { return _Array[_Index]; } }
-
-    /// <summary>
-    /// Ничего не делает
-    /// </summary>
-    public void Dispose()
+    [Serializable]
+    public sealed class Enumerator : GroupEnumerator<T>
     {
+      #region Конструктор
+
+      /// <summary>
+      /// Создает перечислитель с заданным списком объектов.
+      /// </summary>
+      /// <param name="groups">Фиксированный список перечислителей.
+      /// Массив не может содержать значения null, т.к. в этом случае перечисление завершится досрочно</param>
+      public Enumerator(IEnumerator<T>[] groups)
+      {
+        if (groups == null)
+          throw new ArgumentNullException("groups");
+        _Groups = groups;
+      }
+
+      #endregion
+
+      #region Список групп
+
+      private IEnumerator<T>[] _Groups;
+
+      /// <summary>
+      /// Возвращает следующую группу из списка
+      /// </summary>
+      /// <param name="groupIndex">Индекс следующей группы</param>
+      /// <returns>Очередной перечислитель или null, если список групп пустой</returns>
+      protected override IEnumerator<T> GetNextGroup(int groupIndex)
+      {
+        if (groupIndex >= _Groups.Length)
+          return null;
+        else
+          return _Groups[groupIndex];
+      }
+
+      /// <summary>
+      /// Вызывает Dispose() для всех перечислителей
+      /// </summary>
+      public override void Dispose()
+      {
+        base.Dispose();
+        for (int i = 0; i < _Groups.Length; i++)
+          _Groups[i].Dispose(); // может быть повторный вызов
+      }
+
+      #endregion
     }
 
-    object IEnumerator.Current { get { return _Array[_Index]; } }
+    #region GetEnumerator()
 
-    /// <summary>
-    /// Переходит к следующему элементу массива
-    /// </summary>
-    /// <returns></returns>
-    public bool MoveNext()
+    public Enumerator GetEnumerator()
     {
-      _Index++;
-      return _Index < _Array.Length;
+      IEnumerator<T>[] a = new IEnumerator<T>[_Groups.Length];
+      for (int i = 0; i < _Groups.Length; i++)
+        a[i] = _Groups[i].GetEnumerator();
+
+      return new Enumerator(a);
     }
 
-    /// <summary>
-    /// Сброс перечислителя
-    /// </summary>
-    void IEnumerator.Reset()
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      _Index = -1;
+      return GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return GetEnumerator();
     }
 
     #endregion
@@ -426,25 +493,87 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    /// <summary>
+    /// Типизированный перечислитель по массиву.
+    /// Метод Array.GetEnumerator() возвращает нетипизированный перечислитель
+    /// </summary>
+    public struct Enumerator : IEnumerator<T>
+    {
+      #region Конструктор
+
+      /// <summary>
+      /// Создает перечислитель для одномерного массива
+      /// </summary>
+      /// <param name="a">Массив</param>
+      public Enumerator(T[] a)
+      {
+        if (a == null)
+          throw new ArgumentNullException("a");
+        _Array = a;
+        _Index = -1;
+      }
+
+      private T[] _Array;
+      private int _Index;
+
+      #endregion
+
+      #region IEnumerator<T> Members
+
+      /// <summary>
+      /// Возвращает текущий элемент массива
+      /// </summary>
+      public T Current { get { return _Array[_Index]; } }
+
+      /// <summary>
+      /// Ничего не делает
+      /// </summary>
+      public void Dispose()
+      {
+      }
+
+      object IEnumerator.Current { get { return _Array[_Index]; } }
+
+      /// <summary>
+      /// Переходит к следующему элементу массива
+      /// </summary>
+      /// <returns></returns>
+      public bool MoveNext()
+      {
+        _Index++;
+        return _Index < _Array.Length;
+      }
+
+      /// <summary>
+      /// Сброс перечислителя
+      /// </summary>
+      void IEnumerator.Reset()
+      {
+        _Index = -1;
+      }
+
+      #endregion
+    }
+
     #region IEnumerable<T> Members
 
     /// <summary>
     /// Создает новый перечислитель для массива
     /// </summary>
     /// <returns>Перечислитель</returns>
-    public ArrayEnumerator<T> GetEnumerator()
+    public Enumerator GetEnumerator()
     {
-      return new ArrayEnumerator<T>(_Array);
+      return new Enumerator(_Array);
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(_Array);
+      return new Enumerator(_Array);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(_Array);
+      return new Enumerator(_Array);
     }
 
     #endregion
@@ -838,265 +967,6 @@ namespace FreeLibSet.Core
     public void Reset()
     {
       _Enumerator.Reset();
-    }
-
-    #endregion
-  }
-}
-
-namespace FreeLibSet.Data
-{
-  /// <summary>
-  /// Поиск строк в таблице с совпадающими значениями полей, входящих в DataView.Sort.
-  /// Реализует перечислитель по массивам строк с одинаковыми значениями полей.
-  /// </summary>
-  public sealed class DataViewRowPairEnumarable : IEnumerable<DataRow[]>
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает объект, для которого можно вызвать оператор foreach.
-    /// Будут возвращаться только строки с совпадающими значениями полей.
-    /// При сравнении учитываются все столбцы, заданные в DataView.Sort
-    /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством Sort</param>
-    public DataViewRowPairEnumarable(DataView dv)
-      : this(dv, 0, false)
-    {
-    }
-
-    /// <summary>
-    /// Создает объект, для которого можно вызвать оператор foreach.
-    /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством Sort</param>
-    /// <param name="compareColumnCount">Количество столбцов, участвующих в сравнении.
-    /// В сравнении участвуют первые столбцы, заданные в DataView.Sort, но могут использоваться не все столбцы.
-    /// Нулевое значение означает использование всех столбцов.</param>
-    public DataViewRowPairEnumarable(DataView dv, int compareColumnCount)
-      : this(dv, compareColumnCount, false)
-    {
-    }
-
-    /// <summary>
-    /// Создает объект, для которого можно вызвать оператор foreach.
-    /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством Sort</param>
-    /// <param name="compareColumnCount">Количество столбцов, участвующих в сравнении.
-    /// В сравнении участвуют первые столбцы, заданные в DataView.Sort, но могут использоваться не все столбцы.
-    /// Нулевое значение означает использование всех столбцов.</param>
-    /// <param name="enumSingleRows">Если true, то будут перебраны все строки в DataView, включая одиночные.
-    /// Если false, то будут возвращаться только строки с совпадающими значениями полей.</param>
-    public DataViewRowPairEnumarable(DataView dv, int compareColumnCount, bool enumSingleRows)
-    {
-      if (dv == null)
-        throw new ArgumentNullException("dv");
-      if (String.IsNullOrEmpty(dv.Sort))
-        throw new InvalidOperationException("Не установлено свойство DataView.Sort");
-
-      _DV = dv;
-      string[] aColNames = DataTools.GetDataViewSortColumnNames(dv.Sort);
-
-      if (compareColumnCount == 0)
-        compareColumnCount = aColNames.Length;
-
-      if (compareColumnCount < 1 || compareColumnCount >= aColNames.Length)
-        throw new ArgumentOutOfRangeException("compareColumnCount", compareColumnCount, "Количество столбцов для сравнения должно быть в диапазоне от 1 до " + (aColNames.Length - 1).ToString());
-
-      _ColPoss = new int[compareColumnCount];
-      for (int i = 0; i < compareColumnCount; i++)
-      {
-        _ColPoss[i] = dv.Table.Columns.IndexOf(aColNames[i]);
-        if (_ColPoss[i] < 0)
-          throw new BugException("Не найден столбец \"" + aColNames[i] + "\"");
-      }
-      _EnumSingleRows = enumSingleRows;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Набор данных, по которому выполняется перечисление
-    /// </summary>
-    public DataView DV { get { return _DV; } }
-    private DataView _DV;
-
-    /// <summary>
-    /// Массив текущих позиций столбцов, входящих в DataView.Sort.
-    /// </summary>
-    private int[] _ColPoss;
-
-    /// <summary>
-    /// Надо ли перебирать одиночные строки (true) или только с совпадющими значениями (false).
-    /// </summary>
-    public bool EnumSingleRows { get { return _EnumSingleRows; } }
-    private bool _EnumSingleRows;
-
-    #endregion
-
-    #region Внутренние методы
-
-    internal bool AreRowsEqual(DataRow row1, DataRow row2)
-    {
-      for (int i = 0; i < _ColPoss.Length; i++)
-      {
-        if (!AreValuesEqual(row1, row2, _ColPoss[i], !_DV.Table.CaseSensitive))
-          //if (!DataTools.AreValuesEqual(row1, row2, _ColPoss[i]))
-          return false;
-      }
-      return true;
-    }
-    /// <summary>
-    /// Сравнение значений одного поля для двух строк.
-    /// Возвращает значение true, если значения одинаковы. Если есть пустые
-    /// значения DBNull, то строки считаются одинаковыми, если обе строки содержат
-    /// DBNull
-    /// </summary>
-    /// <param name="row1">Первая сравниваемая строка</param>
-    /// <param name="row2">Вторая сравниваемая строка</param>
-    /// <param name="columnPos">Позиция столбца</param>
-    /// <param name="ignoreCase">Если столбец имеет строковый тип, то сравнение выполняется без учета регистра, как это обычно делается при поиске в DataView</param>
-    /// <returns>true, если значения одинаковы</returns>
-    private static bool AreValuesEqual(DataRow row1, DataRow row2, int columnPos, bool ignoreCase)
-    {
-      object x1 = row1[columnPos];
-      object x2 = row2[columnPos];
-
-      if (ignoreCase)
-      {
-        string s1 = x1 as String;
-        string s2 = x2 as String;
-        if (!(Object.ReferenceEquals(s1, null)) || Object.ReferenceEquals(s2, null))
-          return String.Equals(s1, s2, StringComparison.OrdinalIgnoreCase);
-      }
-
-      return x1.Equals(x2);
-    }
-
-    #endregion
-
-    #region Перечислитель
-
-    /// <summary>
-    /// Реализация перечислителя.
-    /// </summary>
-    [StructLayout(LayoutKind.Auto)]
-    public struct Enumerator : IEnumerator<DataRow[]>
-    {
-      #region Конструктор
-
-      internal Enumerator(DataViewRowPairEnumarable owner)
-      {
-        _Owner = owner;
-        _CurrIndex = -1;
-        _CurrCount = 1;
-      }
-
-      #endregion
-
-      #region Поля
-
-      /// <summary>
-      /// Просматриваемый набор данных
-      /// </summary>
-      private DataViewRowPairEnumarable _Owner;
-
-      /// <summary>
-      /// Индекс первой строки в блоке повторяющихся строк
-      /// </summary>
-      private int _CurrIndex;
-
-      /// <summary>
-      /// Количество повторяющихся строк. Минимум 2, если найдено
-      /// </summary>
-      private int _CurrCount;
-
-      #endregion
-
-      #region IEnumerator<DataRow[]> Members
-
-      /// <summary>
-      /// Основной метод.
-      /// Выполняет поиск последовательности одинаковых строк
-      /// </summary>
-      /// <returns>true, если найдены очередные одинаковые строки</returns>
-      public bool MoveNext()
-      {
-        while ((_CurrIndex + _CurrCount) < _Owner._DV.Count)
-        {
-          _CurrIndex += _CurrCount;
-
-          DataRow row0 = _Owner._DV[_CurrIndex].Row;
-          _CurrCount = 1;
-
-          while ((_CurrIndex + _CurrCount) < _Owner._DV.Count)
-          {
-            DataRow row2 = _Owner._DV[_CurrIndex + _CurrCount].Row;
-            if (_Owner.AreRowsEqual(row0, row2))
-              _CurrCount++;
-            else
-              break;
-          }
-
-          if (_CurrCount >= 2 || _Owner._EnumSingleRows)
-            return true;
-        }
-
-        _CurrCount = 0;
-        return false;
-      }
-
-      /// <summary>
-      /// Возвращает текущий блок из двух или более одинаковых строк, если EnumSingleRows=false.
-      /// При EnumSingleRows=false могут возвращаться массивы из одного элемента.
-      /// </summary>
-      public DataRow[] Current
-      {
-        get
-        {
-          DataRow[] a = new DataRow[_CurrCount];
-          for (int i = 0; i < a.Length; i++)
-            a[i] = _Owner._DV[_CurrIndex + i].Row;
-          return a;
-        }
-      }
-
-      /// <summary>
-      /// Ничего не делает
-      /// </summary>
-      public void Dispose()
-      {
-      }
-
-      object System.Collections.IEnumerator.Current { get { return Current; } }
-
-      void System.Collections.IEnumerator.Reset()
-      {
-        _CurrIndex = -1;
-        _CurrCount = 1;
-      }
-
-      #endregion
-    }
-
-    /// <summary>
-    /// Возвращает перечислитель
-    /// </summary>
-    /// <returns></returns>
-    public Enumerator GetEnumerator()
-    {
-      return new Enumerator(this);
-    }
-
-    IEnumerator<DataRow[]> IEnumerable<DataRow[]>.GetEnumerator()
-    {
-      return new Enumerator(this);
-    }
-
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-    {
-      return new Enumerator(this);
     }
 
     #endregion

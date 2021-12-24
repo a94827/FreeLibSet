@@ -1239,11 +1239,11 @@ namespace FreeLibSet.Collections
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
     /// <returns>Перечислитель</returns>
-    public ArrayEnumerator<T> GetEnumerator()
+    public ArrayEnumerable<T>.Enumerator GetEnumerator()
     {
       lock (SyncRoot)
       {
-        return new ArrayEnumerator<T>(GetCopyArray());
+        return new ArrayEnumerable<T>.Enumerator(GetCopyArray());
       }
     }
 
@@ -1931,19 +1931,19 @@ namespace FreeLibSet.Collections
     /// Первым будет перечислена голова очереди, а в последнюю очередь - хвост.
     /// </summary>
     /// <returns></returns>
-    public ArrayEnumerator<T> GetEnumerator()
+    public ArrayEnumerable<T>.Enumerator GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     #endregion
@@ -2215,19 +2215,19 @@ namespace FreeLibSet.Collections
     /// будет извлечен Pop() в последнюю очередь.
     /// </summary>
     /// <returns>Перечислитель</returns>
-    public ArrayEnumerator<T> GetEnumerator()
+    public ArrayEnumerable<T>.Enumerator GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     #endregion
@@ -5269,19 +5269,19 @@ namespace FreeLibSet.Collections
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
     /// <returns></returns>
-    public ArrayEnumerator<T> GetEnumerator()
+    public ArrayEnumerable<T>.Enumerator GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return new ArrayEnumerator<T>(ToArray());
+      return new ArrayEnumerable<T>.Enumerator(ToArray());
     }
 
     #endregion
@@ -5706,19 +5706,19 @@ namespace FreeLibSet.Collections
     /// Возвращает фиктивный перечислитель DummyEnumerator
     /// </summary>
     /// <returns>DummyEnumerator</returns>
-    public DummyEnumerator<T> GetEnumerator()
+    public DummyEnumerable<T>.Enumerator GetEnumerator()
     {
-      return new DummyEnumerator<T>();
+      return new DummyEnumerable<T>.Enumerator();
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return new DummyEnumerator<T>();
+      return new DummyEnumerable<T>.Enumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return new DummyEnumerator<T>();
+      return new DummyEnumerable<T>.Enumerator();
     }
 
     #endregion

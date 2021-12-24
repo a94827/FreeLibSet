@@ -465,7 +465,7 @@ namespace FreeLibSet.Controls
 
       public IEnumerator<RadioGroupBoxItemImage> GetEnumerator()
       {
-        return new ArrayEnumerator<RadioGroupBoxItemImage>(_Items);
+        return new ArrayEnumerable<RadioGroupBoxItemImage>.Enumerator(_Items);
       }
 
       #endregion

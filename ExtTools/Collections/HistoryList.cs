@@ -360,12 +360,12 @@ namespace FreeLibSet.Collections
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
     /// <returns>Перечислитель</returns>
-    public FreeLibSet.Core.ArrayEnumerator<string> GetEnumerator()
+    public ArrayEnumerable<string>.Enumerator GetEnumerator()
     {
       if (_Items == null)
-        return new ArrayEnumerator<string>(DataTools.EmptyStrings);
+        return new ArrayEnumerable<string>.Enumerator(DataTools.EmptyStrings);
       else
-        return new ArrayEnumerator<string>(_Items);
+        return new ArrayEnumerable<string>.Enumerator(_Items);
     }
 
     IEnumerator<string> IEnumerable<string>.GetEnumerator()

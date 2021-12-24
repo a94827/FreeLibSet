@@ -2091,7 +2091,7 @@ namespace FreeLibSet.Forms
 
       private EFPOneLevelCommandItems _Items;
 
-      private static readonly DummyEnumerator<EFPCommandItem> _Dummy = new DummyEnumerator<EFPCommandItem>();
+      private static readonly DummyEnumerable<EFPCommandItem>.Enumerator _Dummy = new DummyEnumerable<EFPCommandItem>.Enumerator();
 
       /// <summary>
       /// На каждый элемент меню возвращаем два перечислителя.
@@ -2115,7 +2115,7 @@ namespace FreeLibSet.Forms
             return _Dummy;
         }
         else
-          return new SingleObjectEnumerator<EFPCommandItem>(_Items[ItemIndex]);
+          return new SingleObjectEnumerable<EFPCommandItem>.Enumerator(_Items[ItemIndex]);
       }
 
       #endregion

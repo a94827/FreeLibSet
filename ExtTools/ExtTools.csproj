@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Core\DataTools.Arrays.cs" />
     <Compile Include="Core\DataTools.Math.cs" />
+    <Compile Include="Data\DataEnumerators.cs" />
     <Compile Include="DependedValues\DepFromArray.cs" />
     <Compile Include="IO\AbsPath.cs" />
     <Compile Include="Caching\Cache.cs" />

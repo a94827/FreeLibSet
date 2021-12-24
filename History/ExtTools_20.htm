@@ -5,7 +5,10 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-12-23T17:54:31.054000000"/>
+	<meta name="changed" content="2021-12-24T15:18:49.476000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -471,12 +474,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -505,6 +508,45 @@
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">307</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">24.12.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Структура
+			</span>EnumaerableWrapper&lt;T&gt;</p>
+			<p lang="en-US">2. <span lang="ru-RU">Изменения в перечислителях:</span></p>
+			<p><span lang="ru-RU">- Класс </span><span lang="en-US">DummyEnumerator&lt;T&gt;
+			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v055p1"><span lang="en-US">v.55
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			заменен на структуру </span><span lang="en-US">DummyEnumerable&lt;T&gt;.Enumerator
+			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v161p3"><span lang="en-US">v.161
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span></p>
+			<p>- <span lang="en-US">SingleObjectEnumerator&lt;T&gt; </span>(<a href="ExtTools_11.htm#v153p1"><span lang="en-US">v.153
+			</span>п.1</a>) заменен на <span lang="en-US">SingleObjectEnumerable&lt;T&gt;.Enumerator</span>
+			(<a href="ExtTools_11.htm#v161p3"><span lang="en-US">v.161 </span>п.3</a>)</p>
+			<p><span lang="en-US">- ArrayEnumerator&lt;T&gt; (<a href="ExtTools_11.htm#v201p3">v.201
+			</a></span><a href="ExtTools_11.htm#v201p3">п.3</a><span lang="en-US">)
+			</span>заменен на <span lang="en-US">ArrayEnumerable&lt;T&gt;.Enumerator</span></p>
+			<p><span lang="en-US">- </span>Новый класс
+			<span lang="en-US">GroupArrayEnumerable&lt;T&gt;. </span>Класс
+			<span lang="en-US">GroupArrayEnumerator&lt;T&gt;</span> (<a href="ExtTools_11.htm#v153p1"><span lang="en-US">v.153
+			</span>п.1</a>) заменен на <span lang="en-US">GroupArrayEnumerable&lt;T&gt;.Enumerator.
+			</span>Метод <span lang="en-US">Dispose() </span>вызывает
+			<span lang="en-US">Dispose() </span>у входящих в группу
+			перечислителей</p>
+			<p>3. Исправлен<span lang="ru-RU">ы ошибки в</span>
+			DataViewRowPairEnumarable (<a href="ExtTools_11.htm#v214p1"><span lang="en-US">v.214
+			</span>п.1</a>)</p>
+			<p lang="en-US">4. DataTableRepeater.Dispose() <span lang="ru-RU">(</span><a href="ExtTools_11.htm#v235p1">v.235
+			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">) вызывал
+			исключение, если таблица </span>SlaveTable <span lang="ru-RU">не
+			инициализировалась</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -558,17 +600,16 @@
 			</span><span lang="ru-RU">принимающие массив значений, заменены на
 			принимающие аргумент </span><span lang="en-US">IEnumerable.</span></p>
 			<p><span lang="en-US">-</span> <span lang="ru-RU">Исправлены имена
-			некоторых перегрузок методов </span><span lang="en-US">MinMaxXXX()</span><span lang="ru-RU">
-			(</span><a href="ExtTools_11.htm#v162p3"><span lang="en-US">v.162
+			некоторых перегрузок методов </span><span lang="en-US">MinMaxXXX()</span>
+			<span lang="ru-RU">(</span><a href="ExtTools_11.htm#v162p3"><span lang="en-US">v.162
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">Исправлена
-			реализация одной из перегрузок </span><span lang="en-US">AverageDecimal()</span><span lang="ru-RU">
-			(</span><a href="ExtTools_11.htm#v105p2"><span lang="en-US">v.105
+			реализация одной из перегрузок </span><span lang="en-US">AverageDecimal()</span>
+			<span lang="ru-RU">(</span><a href="ExtTools_11.htm#v105p2"><span lang="en-US">v.105
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
 			<p>7. Исправлены ошибки в математических методах
 			<span lang="en-US">DataTools.SumValues(), SubstractValues(),
-			NegValue(), MultiplyValues(), DivideValues()</span><span lang="ru-RU">
-			(</span><a href="ExtTools_11.htm#v192p1"><span lang="en-US">v.192
+			NegValue(), MultiplyValues(), DivideValues()</span> <span lang="ru-RU">(</span><a href="ExtTools_11.htm#v192p1"><span lang="en-US">v.192
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">.
 			</span>В них операция выполнялась не на скорректированном
 			значении, а на исходном. Методы <span lang="en-US">SumValues </span>и
@@ -578,8 +619,7 @@
 			</span>и <span lang="en-US">DivideValues() </span>могут
 			обрабатывать <span lang="en-US">TimeSpan</span> и числа<span lang="en-US">.</span></p>
 			<p>8<span lang="en-US">. </span>Методы <span lang="en-US">DataTools.XxxInRange()
-			</span><span lang="en-US">(<a href="ExtTools_11.htm#v156p4">v.156
-			</a></span><a href="ExtTools_11.htm#v156p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			(<a href="ExtTools_11.htm#v156p4">v.156 </a></span><a href="ExtTools_11.htm#v156p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
 			</span>заменены на один шаблонный метод <span lang="en-US">IsInRange&lt;T&gt;()</span></p>
 			<p><span lang="en-US">9. В</span>место отдельных структур
 			<span lang="en-US">MinMaxXXX </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v008p3"><span lang="en-US">v.8
@@ -598,16 +638,15 @@
 			строки (</span><a href="ExtTools_11.htm#v243p2"><span lang="en-US">v.243
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
 			<p><span lang="ru-RU">12. Убраны</span> <span lang="ru-RU">методы</span>
-			<span lang="ru-RU">DataTools</span><span lang="ru-RU">:</span></p>
-			<p><span lang="ru-RU">- </span><span lang="ru-RU">AreIdsEqual</span><span lang="en-US">(),
+			<span lang="ru-RU">DataTools:</span></p>
+			<p><span lang="ru-RU">- AreIdsEqual</span><span lang="en-US">(),
 			</span><span lang="ru-RU">т.к. его дублирует
 			</span><span lang="en-US">AreArraysEqual&lt;Int32&gt;()</span></p>
-			<p><span lang="ru-RU">-</span><span lang="ru-RU">
-			GetIdsFromArray()</span></p>
+			<p><span lang="ru-RU">-</span> <span lang="ru-RU">GetIdsFromArray()</span></p>
 			<p><span lang="ru-RU">- </span><span lang="en-US">MergeIds()
 			(</span><span lang="ru-RU">можно использовать класс </span><span lang="en-US">IdList)</span><span lang="ru-RU">,
 			</span><span lang="en-US">IsIntColumn().</span></p>
-			<p><span lang="ru-RU">-</span><span lang="ru-RU"> перегрузка
+			<p><span lang="ru-RU">-</span> <span lang="ru-RU">перегрузка
 			</span><span lang="en-US">DateInRange(), </span><span lang="ru-RU">принимающая
 			пару аргументов </span><span lang="en-US">MonthDay, </span><span lang="ru-RU">так
 			как есть дублирующий метод </span><span lang="en-US">MonthDayRange.Contains().</span></p>
@@ -623,8 +662,8 @@
 			DataTools.CloneOrSameTableForSelectedIds() </span><span lang="ru-RU">предполагал,
 			что поле первичного ключа имеет имя &quot;</span><span lang="en-US">Id</span><span lang="ru-RU">&quot;</span><span lang="en-US">.</span></p>
 			<p><span lang="en-US">16. DataTools.AddTableToDataSet() </span><span lang="ru-RU">не
-			выполняет никаких действий, если таблица уже принадлежит набору</span><span lang="ru-RU">
-			(</span><a href="ExtTools_11.htm#v058p3"><span lang="en-US">v.58
+			выполняет никаких действий, если таблица уже принадлежит набору</span>
+			<span lang="ru-RU">(</span><a href="ExtTools_11.htm#v058p3"><span lang="en-US">v.58
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span></p>
 			<p><span lang="ru-RU">17. Переименование методов</span><span lang="en-US">:</span></p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">DataTools.GetIdsFromField</span><span lang="en-US">()
