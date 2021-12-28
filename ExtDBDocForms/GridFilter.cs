@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms.Docs
 
     IEnumerator<IEFPGridFilter> IEnumerable<IEFPGridFilter>.GetEnumerator()
     {
-      return new ConvertEnumerator<IEFPGridFilter>(base.GetEnumerator());
+      return new ConvertEnumerable<IEFPGridFilter>.Enumerator(base.GetEnumerator());
     }
 
     #endregion

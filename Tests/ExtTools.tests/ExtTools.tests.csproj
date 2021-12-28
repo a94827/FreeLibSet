@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Collections\ArrayIndexerTests.cs" />
     <Compile Include="Collections\BidirectionalDictionaryTests.cs" />
+    <Compile Include="Collections\HistoryListTests.cs" />
     <Compile Include="Core\DataRowValueArrayTests.cs" />
     <Compile Include="Core\DataTableValueArrayTests.cs" />
     <Compile Include="Core\DataToolsTests_AggregateFunctions.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Data\DataTableRepeaterTests.cs" />
     <Compile Include="Data\DataViewRowPairEnumarableTests.cs" />
     <Compile Include="Data\DataRowExtractorTests.cs" />
+    <Compile Include="Data\DataViewSortBuilderTests.cs" />
     <Compile Include="DependedValues\DepEvalExprTests.cs" />
     <Compile Include="DependedValues\DepFromArrayTests.cs" />
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />

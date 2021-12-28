@@ -148,15 +148,15 @@ namespace ExtTools_tests.Core
     }
 
     [Test]
-    public void ConvertEnumerator()
+    public void ConvertEnumerable()
     {
       string[,] a = new string[2, 2] { { "AAA", "BBB" }, { "CCC", "DDD" } };
-      System.Collections.IEnumerator en = a.GetEnumerator(); // нетипизированный перечислитель
+      System.Collections.IEnumerable en = a; // нетипизированный перечислитель
 
-      ConvertEnumerator<string> sut = new ConvertEnumerator<string>(en);
+      ConvertEnumerable<string> sut = new ConvertEnumerable<string>(en);
 
       string sum = String.Empty;
-      foreach (string item in new EnumerableWrapper<string>(sut))
+      foreach (string item in sut)
         sum += item;
 
       Assert.AreEqual("AAABBBCCCDDD", sum);

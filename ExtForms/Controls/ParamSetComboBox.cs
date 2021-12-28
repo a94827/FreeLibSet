@@ -214,7 +214,7 @@ namespace FreeLibSet.Controls
 
       public IEnumerator<ParamSetComboBoxItem> GetEnumerator()
       {
-        return new ConvertEnumerator<ParamSetComboBoxItem>(_Owner.TheCB.Items.GetEnumerator());
+        return new ConvertEnumerable<ParamSetComboBoxItem>.Enumerator(_Owner.TheCB.Items.GetEnumerator());
       }
 
       System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

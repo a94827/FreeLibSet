@@ -19,6 +19,7 @@ namespace FreeLibSet.Core
     /// Пустой перечислитель.
     /// Реализует интерфейс IEnumerator для коллекции, не содержащей элементов
     /// </summary>
+    [Serializable]
     public struct Enumerator : IEnumerator<T>
     {
       #region IEnumerator<T> Members
@@ -112,6 +113,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// "Перечислитель" для одного элемента.
     /// </summary>
+    [Serializable]
     public struct Enumerator : IEnumerator<T>
     {
       #region Конструктор
@@ -361,10 +363,14 @@ namespace FreeLibSet.Core
   /// </summary>
   /// <typeparam name="T">Тип перечислимых объектов</typeparam>
   [Serializable]
-  public sealed class GroupArrayEnumerable<T> : IEnumerable<T>
+  public struct GroupArrayEnumerable<T> : IEnumerable<T>
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает перечислитель
+    /// </summary>
+    /// <param name="groups">Массив исходных перечислителей</param>
     public GroupArrayEnumerable(IEnumerable<T>[] groups)
     {
       if (groups == null)
@@ -440,6 +446,10 @@ namespace FreeLibSet.Core
 
     #region GetEnumerator()
 
+    /// <summary>
+    /// Создает перечислитель
+    /// </summary>
+    /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
     {
       IEnumerator<T>[] a = new IEnumerator<T>[_Groups.Length];
@@ -466,6 +476,7 @@ namespace FreeLibSet.Core
   /// Получение типизированного перечислителя для массива
   /// </summary>
   /// <typeparam name="T"></typeparam>
+  [Serializable]
   public struct ArrayEnumerable<T> : IEnumerable<T>
   {
     #region Конструктор
@@ -497,6 +508,7 @@ namespace FreeLibSet.Core
     /// Типизированный перечислитель по массиву.
     /// Метод Array.GetEnumerator() возвращает нетипизированный перечислитель
     /// </summary>
+    [Serializable]
     public struct Enumerator : IEnumerator<T>
     {
       #region Конструктор
@@ -590,7 +602,7 @@ namespace FreeLibSet.Core
   /// </summary>
   /// <typeparam name="T">Тип данных, хранящихся в массиве</typeparam>
   [Serializable]
-  public class ArraySegmentEnumerable<T> : IEnumerable<ArraySegment<T>>
+  public struct ArraySegmentEnumerable<T> : IEnumerable<ArraySegment<T>>
   {
     #region Конструктор
 
@@ -738,7 +750,7 @@ namespace FreeLibSet.Core
   /// </summary>
   /// <typeparam name="T">Тип данных, хранящихся в массиве</typeparam>
   [Serializable]
-  public class ArrayBlockEnumerable<T> : IEnumerable<T[]>
+  public struct ArrayBlockEnumerable<T> : IEnumerable<T[]>
   {
     #region Конструктор
 
@@ -890,7 +902,7 @@ namespace FreeLibSet.Core
   /// </summary>
   /// <typeparam name="T">Тип данных, которые перечисляются. Должно быть классом, а не структурой</typeparam>
   [Serializable]
-  public sealed class ConvertEnumerator<T> : IEnumerator<T>
+  public struct ConvertEnumerable<T> : IEnumerable<T>
     where T : class
   {
     #region Конструктор
@@ -898,75 +910,131 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создает перечислитель
     /// </summary>
-    /// <param name="enumerator">Нетипизированный перечислитель</param>
-    public ConvertEnumerator(System.Collections.IEnumerator enumerator)
+    /// <param name="enumerable">Исходный перечислитель</param>
+    public ConvertEnumerable(System.Collections.IEnumerable enumerable)
     {
-      if (enumerator == null)
-        throw new ArgumentNullException("enumerator");
-      _Enumerator = enumerator;
+      if (enumerable == null)
+        throw new ArgumentNullException("enumerable");
+      _Enumerable = enumerable;
     }
 
     #endregion
 
     #region Поля
 
-    /// <summary>
-    /// Оригинальный перечислитель
-    /// </summary>
-    System.Collections.IEnumerator _Enumerator;
-
-    /// <summary>
-    /// Сохраняем текущий элемент, чтобы избежать повторного преобразования
-    /// </summary>
-    T _Current;
+    private System.Collections.IEnumerable _Enumerable;
 
     #endregion
 
-    #region IEnumerator<T> Members
-
     /// <summary>
-    /// Возвращает текущий элемент перечисления
+    /// Перечислитель, выполняющий преобразование типа данных.
+    /// Получает на входе нетипизированный перечислитель и использует его для перебора элементов.
+    /// При запросе очередного элемента выполняется его преобразование в тип <typeparamref name="T"/>
+    /// с помощью оператора "as". Если преобразование невозможно, элемент перечисления пропускается
     /// </summary>
-    public T Current { get { return _Current; } }
-
-    /// <summary>
-    /// Уничтожает перечислитель
-    /// </summary>
-    public void Dispose()
+    [Serializable]
+    public struct Enumerator : IEnumerator<T>
     {
-      IDisposable Disp = _Enumerator as IDisposable;
-      if (Disp != null)
-        Disp.Dispose();
-      _Enumerator = null;
-    }
+      #region Конструктор
 
-    #endregion
-
-    #region IEnumerator Members
-
-    object IEnumerator.Current { get { return _Current; } }
-
-    /// <summary>
-    /// Переход к очередному элементу перечисления.
-    /// </summary>
-    /// <returns>true, если есть следующий элемент</returns>
-    public bool MoveNext()
-    {
-      while (_Enumerator.MoveNext())
+      /// <summary>
+      /// Создает перечислитель
+      /// </summary>
+      /// <param name="enumerator">Нетипизированный перечислитель</param>
+      public Enumerator(System.Collections.IEnumerator enumerator)
       {
-        _Current = _Enumerator.Current as T;
-        if (_Current != null)
-          return true;
+        if (enumerator == null)
+          throw new ArgumentNullException("enumerator");
+        _Enumerator = enumerator;
+        _Current = null;
       }
-      return false;
+
+      #endregion
+
+      #region Поля
+
+      /// <summary>
+      /// Оригинальный перечислитель
+      /// </summary>
+      System.Collections.IEnumerator _Enumerator;
+
+      /// <summary>
+      /// Сохраняем текущий элемент, чтобы избежать повторного преобразования
+      /// </summary>
+      T _Current;
+
+      #endregion
+
+      #region IEnumerator<T> Members
+
+      /// <summary>
+      /// Возвращает текущий элемент перечисления
+      /// </summary>
+      public T Current { get { return _Current; } }
+
+      /// <summary>
+      /// Уничтожает перечислитель
+      /// </summary>
+      public void Dispose()
+      {
+        IDisposable Disp = _Enumerator as IDisposable;
+        if (Disp != null)
+          Disp.Dispose();
+        _Enumerator = null;
+        _Current = null;
+      }
+
+      #endregion
+
+      #region IEnumerator Members
+
+      object IEnumerator.Current { get { return _Current; } }
+
+      /// <summary>
+      /// Переход к очередному элементу перечисления.
+      /// </summary>
+      /// <returns>true, если есть следующий элемент</returns>
+      public bool MoveNext()
+      {
+        while (_Enumerator.MoveNext())
+        {
+          _Current = _Enumerator.Current as T;
+          if (_Current != null)
+            return true;
+        }
+        return false;
+      }
+
+      /// <summary>
+      /// Перезапуск перечислителя
+      /// </summary>
+      void IEnumerator.Reset()
+      {
+        _Enumerator.Reset();
+      }
+
+      #endregion
     }
 
+    #region IEnumerable<T> members
+
     /// <summary>
-    /// Перезапуск перечислителя
+    /// Создает новый перечислитель
     /// </summary>
-    public void Reset()
+    /// <returns>Перечислитель</returns>
+    public Enumerator GetEnumerator()
     {
-      _Enumerator.Reset();
+      return new Enumerator(_Enumerable.GetEnumerator());
+    }
+
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+      throw new NotImplementedException();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      throw new NotImplementedException();
     }
 
     #endregion
