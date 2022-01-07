@@ -986,19 +986,11 @@ namespace FreeLibSet.Controls
     [Browsable(false)]
     public new bool AutoSize { get { return base.AutoSize; } set { base.AutoSize = value; } }
 
-
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Bindable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Browsable(false)]
     public new AutoSizeMode AutoSizeMode { get { return base.AutoSizeMode; } set { base.AutoSizeMode = value; } }
-    /*
-[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-[Bindable(false)]
-[EditorBrowsable(EditorBrowsableState.Never)]
-[Browsable(false)]
-public new Color BackColor { get { return base.BackColor; } set { base.BackColor = value; } }
-      */
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Bindable(false)]
@@ -1392,6 +1384,8 @@ public new Color BackColor { get { return base.BackColor; } set { base.BackColor
     /// Возвращает true, если команда отмены поддерживается.
     /// Для MaskedTextBox возвращает false
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
     public bool UndoSupported
     {
       get
@@ -1403,6 +1397,8 @@ public new Color BackColor { get { return base.BackColor; } set { base.BackColor
     /// <summary>
     /// Доступность команды "Отменить" в данный момент
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
     public bool CanUndo { get { return MainControl.CanUndo; } }
 
     /// <summary>

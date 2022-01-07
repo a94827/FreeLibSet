@@ -43,18 +43,10 @@ namespace FreeLibSet.Forms.Docs
     private IDBxDocValues _Values;
 
     /// <summary>
-    /// Добавить форму для последующего разрушения
-    /// Метод должен вызываться до того, как управляющий элемент переприсоединяется
-    /// к форме редактора
+    /// Значок, который по умолчанию задается для первой добавляемой вкладки (DocEditPage.ImageKey).
+    /// Возвращает значение DocTypeUIBase.SingleDocImageKey.
     /// </summary>
-    /// <param name="form"></param>
-    public void AddFormToDispose(Form form)
-    {
-      if (form == null)
-        return;
-      if (EditorForm.DisposeFormList.IndexOf(form) < 0)
-        EditorForm.DisposeFormList.Add(form);
-    }
+    public abstract string MainImageKey { get;}
 
     #endregion
 
@@ -80,6 +72,12 @@ namespace FreeLibSet.Forms.Docs
 
       EFPTabPage TabPage = _EditorForm.TabControlProvider.TabPages.Add(title);
       DocEditPage Page = new DocEditPage(_EditorForm.Pages, TabPage);
+
+      // 07.01.2022. Инициализируем значок по умолчанию для страницы
+      if (_EditorForm.TabControlProvider.TabPages.Count == 1)
+        Page.ImageKey = MainImageKey;
+      else
+        Page.ImageKey = "Properties";
 
       //Size sz = new Size();
       //sz.Width = MainControl.DisplayRectangle.Width;
@@ -802,6 +800,20 @@ namespace FreeLibSet.Forms.Docs
 
     #region Внутренняя реализация
 
+    /// <summary>
+    /// Добавить форму для последующего разрушения.
+    /// Метод должен вызываться до того, как управляющий элемент переприсоединяется
+    /// к форме редактора
+    /// </summary>
+    /// <param name="form"></param>
+    public void AddFormToDispose(Form form)
+    {
+      if (form == null)
+        return;
+      if (EditorForm.DisposeFormList.IndexOf(form) < 0)
+        EditorForm.DisposeFormList.Add(form);
+    }
+
     private static void TabPageResize(object sender, EventArgs args)
     {
       TabPage tp = (TabPage)sender;
@@ -892,6 +904,14 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает свойство DocumentEditor.IsReadOnly
     /// </summary>
     public override bool IsReadOnly { get { return Editor.IsReadOnly; } }
+
+    /// <summary>
+    /// Возвращает свойство DocTypeUI.SingleDocImageKey
+    /// </summary>
+    public override string MainImageKey
+    {
+      get { return DocTypeUI.SingleDocImageKey; }
+    }
 
     #endregion
 
@@ -1254,6 +1274,14 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает значение свойства SubDocumentEditor.IsReadOnly
     /// </summary>
     public override bool IsReadOnly { get { return Editor.IsReadOnly; } }
+
+    /// <summary>
+    /// Возвращает свойство SubDocTypeUI.SingleDocImageKey
+    /// </summary>
+    public override string MainImageKey
+    {
+      get { return Editor.SubDocTypeUI.SingleDocImageKey; }
+    }
 
     #endregion
   }

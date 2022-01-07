@@ -893,6 +893,71 @@ namespace FreeLibSet.Controls
     //}
 
     #endregion
+
+    #region Заглушки для свойств
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new BorderStyle BorderStyle { get { return base.BorderStyle; } set { base.BorderStyle = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new Image BackgroundImage { get { return base.BackgroundImage; } set { base.BackgroundImage = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new ImageLayout BackgroundImageLayout { get { return base.BackgroundImageLayout; } set { base.BackgroundImageLayout = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new AutoValidate AutoValidate { get { return base.AutoValidate; } set { base.AutoValidate = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new bool AutoScroll { get { return base.AutoScroll; } set { base.AutoScroll = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new Size AutoScrollMargin { get { return base.AutoScrollMargin; } set { base.AutoScrollMargin = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new Size AutoScrollMinSize { get { return base.AutoScrollMinSize; } set { base.AutoScrollMinSize = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new bool AutoSize { get { return base.AutoSize; } set { base.AutoSize = value; } }
+
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new AutoSizeMode AutoSizeMode { get { return base.AutoSizeMode; } set { base.AutoSizeMode = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Bindable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    public new Padding Padding { get { return base.Padding; } set { base.Padding = value; } }
+
+    #endregion
   }
 
 

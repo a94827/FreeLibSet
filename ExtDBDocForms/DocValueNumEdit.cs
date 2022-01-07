@@ -18,126 +18,12 @@ using FreeLibSet.Data.Docs;
 
 namespace FreeLibSet.Forms.Docs
 {
-  #region Decimal
-
-  /// <summary>
-  /// Переходник для числового поля
-  /// </summary>
-  public class DocValueDecimalEditBox : DocValueControlBase2<decimal>
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает переходник.
-    /// </summary>
-    /// <param name="docValue">Доступ к значению поля</param>
-    /// <param name="controlProvider">Провайдер управляющего элемента</param>
-    /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
-    /// Если false, то при групповом редактировании поле скрывается</param>
-    public DocValueDecimalEditBox(DBxDocValue docValue, EFPDecimalEditBox controlProvider, bool canMultiEdit)
-      : base(docValue, controlProvider, true, canMultiEdit)
-    {
-      SetCurrentValueEx(controlProvider.ValueEx);
-      DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Провайдер управляющего элемента
-    /// </summary>
-    public new EFPDecimalEditBox ControlProvider { get { return (EFPDecimalEditBox)(base.ControlProvider); } }
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Инициализация управляющего элемента текущим значением
-    /// </summary>
-    protected override void ValueToControl()
-    {
-      CurrentValueEx.Value = DocValue.AsDecimal;
-    }
-
-    /// <summary>
-    /// Инициализация текущего значения из управляющего элемента
-    /// </summary>
-    protected override void ValueFromControl()
-    {
-      DocValue.SetDecimal(CurrentValueEx.Value);
-    }
-
-    #endregion
-  }
-
-#if XXXX
-  public class DocValueCheckBoxWithDecimalNumEditBox : DocValueCheckBoxWithControl<decimal>
-  {
-  #region Конструктор
-
-    public DocValueCheckBoxWithDecimalNumEditBox(IDocValue DocValue, EFPCheckBox ControlProvider1,
-      IEFPNumEditBox ControlProvider2, bool CanMultiEdit)
-      : base(DocValue, ControlProvider1, ControlProvider2, CanMultiEdit)
-    {
-      ControlProvider2.EnabledEx = new DepAnd(ControlProvider1.EnabledEx,
-        new DepEqual<CheckState>(ControlProvider1.CheckStateEx, CheckState.Checked));
-      ControlProvider2.DecimalValueEx.ValueChanged += new EventHandler(ControlChanged2);
-    }
-
-    #endregion
-
-  #region Свойства
-
-    /// <summary>
-    /// Провайдер основного управляющего элемента для ввода числового значения
-    /// </summary>
-    public new IEFPNumEditBox ControlProvider2 { get { return (IEFPNumEditBox)(base.ControlProvider2); } }
-
-    #endregion
-
-  #region Переопределенные методы и свойства
-
-    protected override decimal ZeroValue
-    {
-      get { return 0; }
-    }
-
-    protected override decimal GetControlValue2()
-    {
-      return ControlProvider2.DecimalValue;
-    }
-
-    protected override void ValueToControl()
-    {
-      decimal v = DocValue.AsDecimal;
-      CurrentValue.Value = v;
-      if (v != 0m)
-        ControlProvider2.DecimalValue = v;
-    }
-
-    protected override void ValueFromControl()
-    {
-      if (CurrentValue.Value == 0m)
-        DocValue.SetNull();
-      else
-        DocValue.AsDecimal = CurrentValue.Value;
-    }
-
-    #endregion
-  }
-#endif
-
-  #endregion
-
   #region Integer
 
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class DocValueIntEditBox : DocValueControlBase2<int>
+  public class DocValueIntEditBox : DocValueControlBase2<int?>
   {
     #region Конструктор
 
@@ -151,7 +37,7 @@ namespace FreeLibSet.Forms.Docs
     public DocValueIntEditBox(DBxDocValue docValue, EFPIntEditBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.ValueEx);
+      SetCurrentValueEx(controlProvider.NValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -173,7 +59,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = DocValue.AsInteger;
+      if (this.ControlProvider.CanBeEmpty && DocValue.IsNull)
+        CurrentValueEx.Value = null;
+      else
+        CurrentValueEx.Value = DocValue.AsInteger;
     }
 
     /// <summary>
@@ -181,7 +70,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueFromControl()
     {
-      DocValue.SetInteger(CurrentValueEx.Value);
+      if (this.ControlProvider.CanBeEmpty && (!CurrentValueEx.Value.HasValue))
+        DocValue.SetNull();
+      else
+        DocValue.SetInteger(CurrentValueEx.Value ?? 0);
     }
 
     #endregion
@@ -201,7 +93,7 @@ namespace FreeLibSet.Forms.Docs
       ControlProvider2.DecimalValueEx.ValueChanged += new EventHandler(ControlChanged2);
     }
 
-    #endregion
+  #endregion
 
   #region Свойства
 
@@ -210,7 +102,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public new IEFPNumEditBox ControlProvider2 { get { return (IEFPNumEditBox)(base.ControlProvider2); } }
 
-    #endregion
+  #endregion
 
   #region Переопределенные методы и свойства
 
@@ -240,7 +132,7 @@ namespace FreeLibSet.Forms.Docs
         DocValue.AsInteger = CurrentValue.Value;
     }
 
-    #endregion
+  #endregion
   }
 #endif
 
@@ -251,7 +143,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class DocValueSingleEditBox : DocValueControlBase2<float>
+  public class DocValueSingleEditBox : DocValueControlBase2<float?>
   {
     #region Конструктор
 
@@ -265,7 +157,7 @@ namespace FreeLibSet.Forms.Docs
     public DocValueSingleEditBox(DBxDocValue docValue, EFPSingleEditBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.ValueEx);
+      SetCurrentValueEx(controlProvider.NValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -287,7 +179,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = DocValue.AsSingle;
+      if (this.ControlProvider.CanBeEmpty && DocValue.IsNull)
+        CurrentValueEx.Value = null;
+      else
+        CurrentValueEx.Value = DocValue.AsSingle;
     }
 
     /// <summary>
@@ -295,7 +190,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueFromControl()
     {
-      DocValue.SetSingle(CurrentValueEx.Value);
+      if (this.ControlProvider.CanBeEmpty && (!CurrentValueEx.Value.HasValue))
+        DocValue.SetNull();
+      else
+        DocValue.SetSingle(CurrentValueEx.Value ?? 0f);
     }
 
     #endregion
@@ -315,7 +213,7 @@ namespace FreeLibSet.Forms.Docs
       ControlProvider2.DecimalValueEx.ValueChanged += new EventHandler(ControlChanged2);
     }
 
-    #endregion
+  #endregion
 
   #region Свойства
 
@@ -324,7 +222,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public new IEFPNumEditBox ControlProvider2 { get { return (IEFPNumEditBox)(base.ControlProvider2); } }
 
-    #endregion
+  #endregion
 
   #region Переопределенные методы и свойства
 
@@ -354,7 +252,7 @@ namespace FreeLibSet.Forms.Docs
         DocValue.AsSingle = CurrentValue.Value;
     }
 
-    #endregion
+  #endregion
   }
 #endif
 
@@ -365,20 +263,19 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class DocValueDoubleEditBox : DocValueControlBase2<double>
-  {
+  public class DocValueDoubleEditBox : DocValueControlBase2<double?> {
     #region Конструктор
 
-    /// <summary>
-    /// Создает переходник
-    /// </summary>
-    /// <param name="docValue">Объект для доступа к значению поля</param>
-    /// <param name="controlProvider">Провайдер управляющего элемента</param>
-    /// <param name="canMultiEdit">True, если допускается групповое редактирование</param>
+      /// <summary>
+      /// Создает переходник
+      /// </summary>
+      /// <param name="docValue">Объект для доступа к значению поля</param>
+      /// <param name="controlProvider">Провайдер управляющего элемента</param>
+      /// <param name="canMultiEdit">True, если допускается групповое редактирование</param>
     public DocValueDoubleEditBox(DBxDocValue docValue, EFPDoubleEditBox controlProvider, bool canMultiEdit)
       : base(docValue, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.ValueEx);
+      SetCurrentValueEx(controlProvider.NValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -400,7 +297,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = DocValue.AsDouble;
+      if (this.ControlProvider.CanBeEmpty && DocValue.IsNull)
+        CurrentValueEx.Value = null;
+      else
+        CurrentValueEx.Value = DocValue.AsDouble;
     }
 
     /// <summary>
@@ -408,7 +308,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueFromControl()
     {
-      DocValue.SetDouble(CurrentValueEx.Value);
+      if (this.ControlProvider .CanBeEmpty && (!CurrentValueEx.Value.HasValue))
+        DocValue.SetNull();
+      else
+        DocValue.SetDouble(CurrentValueEx.Value ?? 0.0);
     }
 
     #endregion
@@ -428,7 +331,7 @@ namespace FreeLibSet.Forms.Docs
       ControlProvider2.DecimalValueEx.ValueChanged += new EventHandler(ControlChanged2);
     }
 
-    #endregion
+  #endregion
 
   #region Свойства
 
@@ -437,7 +340,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public new IEFPNumEditBox ControlProvider2 { get { return (IEFPNumEditBox)(base.ControlProvider2); } }
 
-    #endregion
+  #endregion
 
   #region Переопределенные методы и свойства
 
@@ -467,7 +370,127 @@ namespace FreeLibSet.Forms.Docs
         DocValue.AsDouble = CurrentValue.Value;
     }
 
+  #endregion
+  }
+#endif
+
+  #endregion
+
+  #region Decimal
+
+  /// <summary>
+  /// Переходник для числового поля
+  /// </summary>
+  public class DocValueDecimalEditBox : DocValueControlBase2<decimal?>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает переходник.
+    /// </summary>
+    /// <param name="docValue">Доступ к значению поля</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
+    /// Если false, то при групповом редактировании поле скрывается</param>
+    public DocValueDecimalEditBox(DBxDocValue docValue, EFPDecimalEditBox controlProvider, bool canMultiEdit)
+      : base(docValue, controlProvider, true, canMultiEdit)
+    {
+      SetCurrentValueEx(controlProvider.NValueEx);
+      DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
+    }
+
     #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Провайдер управляющего элемента
+    /// </summary>
+    public new EFPDecimalEditBox ControlProvider { get { return (EFPDecimalEditBox)(base.ControlProvider); } }
+
+    #endregion
+
+    #region Переопределенные методы
+
+    /// <summary>
+    /// Инициализация управляющего элемента текущим значением
+    /// </summary>
+    protected override void ValueToControl()
+    {
+      if (this.ControlProvider.CanBeEmpty && DocValue.IsNull)
+        CurrentValueEx.Value = null;
+      else
+        CurrentValueEx.Value = DocValue.AsDecimal;
+    }
+
+    /// <summary>
+    /// Инициализация текущего значения из управляющего элемента
+    /// </summary>
+    protected override void ValueFromControl()
+    {
+      if (this.ControlProvider.CanBeEmpty && (!CurrentValueEx.Value.HasValue))
+        DocValue.SetNull();
+      else
+        DocValue.SetDecimal(CurrentValueEx.Value ?? 0m);
+    }
+
+    #endregion
+  }
+
+#if XXXX
+  public class DocValueCheckBoxWithDecimalNumEditBox : DocValueCheckBoxWithControl<decimal>
+  {
+  #region Конструктор
+
+    public DocValueCheckBoxWithDecimalNumEditBox(IDocValue DocValue, EFPCheckBox ControlProvider1,
+      IEFPNumEditBox ControlProvider2, bool CanMultiEdit)
+      : base(DocValue, ControlProvider1, ControlProvider2, CanMultiEdit)
+    {
+      ControlProvider2.EnabledEx = new DepAnd(ControlProvider1.EnabledEx,
+        new DepEqual<CheckState>(ControlProvider1.CheckStateEx, CheckState.Checked));
+      ControlProvider2.DecimalValueEx.ValueChanged += new EventHandler(ControlChanged2);
+    }
+
+  #endregion
+
+  #region Свойства
+
+    /// <summary>
+    /// Провайдер основного управляющего элемента для ввода числового значения
+    /// </summary>
+    public new IEFPNumEditBox ControlProvider2 { get { return (IEFPNumEditBox)(base.ControlProvider2); } }
+
+  #endregion
+
+  #region Переопределенные методы и свойства
+
+    protected override decimal ZeroValue
+    {
+      get { return 0; }
+    }
+
+    protected override decimal GetControlValue2()
+    {
+      return ControlProvider2.DecimalValue;
+    }
+
+    protected override void ValueToControl()
+    {
+      decimal v = DocValue.AsDecimal;
+      CurrentValue.Value = v;
+      if (v != 0m)
+        ControlProvider2.DecimalValue = v;
+    }
+
+    protected override void ValueFromControl()
+    {
+      if (CurrentValue.Value == 0m)
+        DocValue.SetNull();
+      else
+        DocValue.AsDecimal = CurrentValue.Value;
+    }
+
+  #endregion
   }
 #endif
 

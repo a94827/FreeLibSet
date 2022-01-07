@@ -556,10 +556,12 @@ namespace FreeLibSet.Forms.Docs
           case ColumnNewMode.Saved:
             if (insertCopy)
               continue;
-            if (Value.Value == null || Value.Value is DBNull)
-            {
+
+            // Условия убраны 07.01.2022
+            //if (Value.Value == null || Value.Value is DBNull)
+            //{
               SetIfNotNull(Value, UI.Value);
-            }
+            //}
             break;
 
           case ColumnNewMode.SavedIfChangedElseDefault:
