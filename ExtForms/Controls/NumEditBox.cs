@@ -298,6 +298,7 @@ namespace FreeLibSet.Controls
     #region Свойство Increment
 
     [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IUpDownHandler<T?> UpDownHandler
     {
       get { return _UpDownHandler; }
@@ -432,6 +433,7 @@ namespace FreeLibSet.Controls
     /// Форматировщик для числового значения
     /// </summary>
     [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IFormatProvider FormatProvider
     {
       get
@@ -625,6 +627,30 @@ namespace FreeLibSet.Controls
       base.OnFontChanged(args);
       if (_MainControl != null)
         _MainControl.Font = this.Font;
+    }
+
+    [DefaultValue(typeof(Color), "Window")]
+    public override Color BackColor
+    {
+      get      {        return base.BackColor;      }
+      set      {        base.BackColor = value;      }
+    }
+
+    [DefaultValue(typeof(Color), "WindowText")]
+    public override Color ForeColor
+    {
+      get      {        return base.ForeColor;      }
+      set      {        base.ForeColor = value;      }
+    }
+
+    public override void ResetBackColor()
+    {
+      base.BackColor = SystemColors.Window;
+    }
+
+    public override void ResetForeColor()
+    {
+      base.ForeColor = SystemColors.WindowText;
     }
 
     protected override void OnForeColorChanged(EventArgs args)
@@ -827,9 +853,9 @@ namespace FreeLibSet.Controls
       get
       {
         if (_MainControl == null)
-          return base.DefaultSize;
+          return new Size(150, 20);
         else
-          return _MainControl.Size;
+          return new Size(150, _MainControl.Size.Height);
       }
     }
 
@@ -907,6 +933,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public override int DecimalPlaces { get { return 0; } }
 
     #endregion
