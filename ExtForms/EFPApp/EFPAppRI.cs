@@ -1011,8 +1011,8 @@ namespace FreeLibSet.Forms.RI
       controlProvider.CanBeEmptyMode = riItem.CanBeEmptyMode;
       controlProvider.Minimum = riItem.Minimum;
       controlProvider.Maximum = riItem.Maximum;
-      controlProvider.Control.Format = riItem.Format;
-      controlProvider.Control.UpDownHandler = riItem.UpDownHandler;
+      controlProvider.Format = riItem.Format;
+      controlProvider.UpDownHandler = riItem.UpDownHandler;
       EFPAppRITools.InitControlItem(controlProvider, riItem);
 
       controlProvider.NValue = riItem.NValue; // обязательное присвоение, иначе свойство обнулится

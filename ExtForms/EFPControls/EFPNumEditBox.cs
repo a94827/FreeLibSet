@@ -15,7 +15,7 @@ namespace FreeLibSet.Forms
   /// Базовый класс
   /// </summary>
   /// <typeparam name="T"></typeparam>
-  public class EFPNumEditBoxBase<T> : EFPSyncControl<NumEditBoxBase<T>>, IEFPReadOnlyControl, IEFPSimpleTextBox
+  public class EFPNumEditBoxBase<T> : EFPSyncControl<NumEditBoxBase>, IEFPReadOnlyControl, IEFPSimpleTextBox
       where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
@@ -25,14 +25,14 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер. Должен быть задан</param>
     /// <param name="control">Управляющий элемент</param>
-    public EFPNumEditBoxBase(EFPBaseProvider baseProvider, NumEditBoxBase<T> control)
-      : base(baseProvider, control, true)
+    public EFPNumEditBoxBase(EFPBaseProvider baseProvider, INumEditBox<T> control)
+      : base(baseProvider, (NumEditBoxBase)control, true)
     {
       _SavedNValue = control.NValue;
       _CanBeEmptyMode = UIValidateState.Error;
 
       if (!DesignMode)
-        control.TextChanged += new EventHandler(Control_TextChanged); // 23.11.2021
+        this.Control.TextChanged += new EventHandler(Control_TextChanged); // 23.11.2021
     }
 
     #endregion
@@ -84,6 +84,8 @@ namespace FreeLibSet.Forms
         NValue = default(T);
     }
 
+    private INumEditBox<T> Control2{get{return (INumEditBox<T>)Control;}}
+
     #endregion
 
     #region Свойства Value/NValue
@@ -99,7 +101,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public T? NValue
     {
-      get { return Control.NValue; }
+      get { return Control2.NValue; }
       set
       {
         _SavedNValue = value;
@@ -224,11 +226,11 @@ namespace FreeLibSet.Forms
       //if (InsideValueChanged)
       //  return;
       if (AllowDisabledValue && (!EnabledState))
-        Control.NValue = DisabledNValue;
+        Control2.NValue = DisabledNValue;
       else if (_HasSavedNValue)
       {
         _HasSavedNValue = false; // сбрасываем признак сохраненного значения
-        Control.NValue = _SavedNValue;
+        Control2.NValue = _SavedNValue;
       }
     }
 
@@ -553,6 +555,29 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Format
+
+    /// <summary>
+    /// Форматирование текстового вывода
+    /// </summary>
+    public string Format { get { return Control.Format; } set { Control.Format = value; } }
+
+    #endregion
+
+    #region Increment
+
+    /// <summary>
+    /// Интерфейс для "прокрутки" значения
+    /// </summary>
+    public IUpDownHandler<T?> UpDownHandler { get { return Control2.UpDownHandler; } set { Control2.UpDownHandler = value; } }
+
+    /// <summary>
+    /// Инкремент (если задано положительное значение)
+    /// </summary>
+    public T Increment { get { return Control2.Increment; } set { Control2.Increment = value; } }
+
+    #endregion
+
     #region Диапазон допустимых значений
 
     /// <summary>
@@ -563,10 +588,10 @@ namespace FreeLibSet.Forms
     /// </summary>
     public T? Minimum
     {
-      get { return Control.Minimum; }
+      get { return Control2.Minimum; }
       set
       {
-        Control.Minimum = value;
+        Control2.Minimum = value;
         Validate();
       }
     }
@@ -579,10 +604,10 @@ namespace FreeLibSet.Forms
     /// </summary>
     public T? Maximum
     {
-      get { return Control.Maximum; }
+      get { return Control2.Maximum; }
       set
       {
-        Control.Maximum = value;
+        Control2.Maximum = value;
         Validate();
       }
     }

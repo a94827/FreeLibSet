@@ -1133,7 +1133,7 @@ namespace FreeLibSet.Forms
       EFPNumEditBoxBase<T> efpValue = CreateControlProvider(form.FormProvider);
       efpValue.Control.Dock = DockStyle.Top;
       efpValue.Control.Format = Format;
-      efpValue.Control.Increment = Increment;
+      efpValue.Increment = Increment;
       form.MainPanel.Controls.Add(efpValue.Control);
 
       efpValue.Label = form.MainLabel;

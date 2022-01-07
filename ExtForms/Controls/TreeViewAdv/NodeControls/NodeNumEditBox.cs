@@ -187,17 +187,18 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     protected override Control CreateEditor(TreeNodeAdv node)
     {
-      NumEditBoxBase<T> control = DoCreateEditor(node);
-      control.UpDownHandler = this.UpDownHandler;
-      control.Minimum = this.Minimum;
-      control.Maximum = this.Maximum;
+      INumEditBox<T> control2 = DoCreateEditor(node);
+      NumEditBoxBase control = (NumEditBoxBase)control2;
+      control2.UpDownHandler = this.UpDownHandler;
+      control2.Minimum = this.Minimum;
+      control2.Maximum = this.Maximum;
       control.Format = this.Format;
       control.FormatProvider = this.FormatProvider;
-      SetEditControlProperties(control, node);
+      SetEditControlProperties((Control)control2, node);
       return control;
     }
 
-    protected abstract NumEditBoxBase<T> DoCreateEditor(TreeNodeAdv node);
+    protected abstract INumEditBox<T> DoCreateEditor(TreeNodeAdv node);
 
     protected override void DisposeEditor(Control editor)
     {
@@ -210,7 +211,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
   {
     #region Переопределенные методы
 
-    protected override NumEditBoxBase<int> DoCreateEditor(TreeNodeAdv node)
+    protected override INumEditBox<int> DoCreateEditor(TreeNodeAdv node)
     {
       IntEditBox control = new IntEditBox();
       control.NValue = (int?)GetValue(node);
@@ -247,7 +248,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     #region Переопределенные методы
 
-    protected override NumEditBoxBase<Single> DoCreateEditor(TreeNodeAdv node)
+    protected override INumEditBox<float> DoCreateEditor(TreeNodeAdv node)
     {
       SingleEditBox control = new SingleEditBox();
       control.NValue = (float?)GetValue(node);
@@ -284,7 +285,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     #region Переопределенные методы
 
-    protected override NumEditBoxBase<Double> DoCreateEditor(TreeNodeAdv node)
+    protected override INumEditBox<double> DoCreateEditor(TreeNodeAdv node)
     {
       DoubleEditBox control = new DoubleEditBox();
       control.NValue = (double?)GetValue(node);
@@ -321,7 +322,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     #region Переопределенные методы
 
-    protected override NumEditBoxBase<decimal> DoCreateEditor(TreeNodeAdv node)
+    protected override INumEditBox<decimal> DoCreateEditor(TreeNodeAdv node)
     {
       DecimalEditBox control = new DecimalEditBox();
       control.NValue = (decimal?)GetValue(node);

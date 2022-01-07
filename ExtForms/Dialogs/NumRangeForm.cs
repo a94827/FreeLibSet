@@ -396,8 +396,8 @@ namespace FreeLibSet.Forms
       p.efpFirstValue.Control.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
       p.efpFirstValue.Control.Location = new Point(form.lblMinimum.Left, form.lblMinimum.Bottom);
       p.efpFirstValue.Control.Size = new Size(form.lblMinimum.Width, form.lblMinimum.Height);
-      p.efpFirstValue.Control.Format = Format;
-      p.efpFirstValue.Control.UpDownHandler = UpDownHandler;
+      p.efpFirstValue.Format = Format;
+      p.efpFirstValue.UpDownHandler = UpDownHandler;
       p.efpFirstValue.Control.TabIndex = 1;
       form.lblMinimum.Parent.Controls.Add(p.efpFirstValue.Control);
 
@@ -412,7 +412,7 @@ namespace FreeLibSet.Forms
       p.efpLastValue.Control.Location = new Point(form.lblMaximum.Left, form.lblMaximum.Bottom);
       p.efpLastValue.Control.Size = new Size(form.lblMaximum.Width, form.lblMaximum.Height);
       p.efpLastValue.Control.Format = Format;
-      p.efpLastValue.Control.UpDownHandler = UpDownHandler;
+      p.efpLastValue.UpDownHandler = UpDownHandler;
       p.efpLastValue.Control.TabIndex = 3;
       form.lblMaximum.Parent.Controls.Add(p.efpLastValue.Control);
 

@@ -28,7 +28,7 @@ namespace FreeLibSet.Forms.Docs
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpMode = new EFPRadioButtons(efpForm, rbNoFilter);
       efpYear = new EFPIntEditBox(efpForm, edYear);
-      efpYear.Control.Increment = 1;
+      efpYear.Increment = 1;
       efpYear.Minimum = 1900;
       efpYear.Maximum = 2099;
       efpYear.EnabledEx = efpMode[1].CheckedEx;

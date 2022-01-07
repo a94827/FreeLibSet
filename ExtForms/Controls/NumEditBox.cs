@@ -12,18 +12,243 @@ using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Formatting;
 using System.ComponentModel.Design.Serialization;
+using System.Runtime.CompilerServices;
 
 #pragma warning disable 1591
 
 namespace FreeLibSet.Controls
 {
   [Designer(typeof(FreeLibSet.Controls.Design.NumEditBoxBaseDesigner))]
-  public abstract class NumEditBoxBase<T> : UserControl, IMinMaxSource<T?>
-    where T : struct, IFormattable, IComparable<T>
+  public abstract class NumEditBoxBase : UserControl
   {
+    #region Вложенный класс
+
+    internal abstract class UntypedInfo
+    {
+      internal NumEditBoxBase Control { get { return _Control; } set { _Control = value; } }
+      private NumEditBoxBase _Control;
+
+      internal abstract void InitControlText();
+
+      internal abstract void MainControl_TextChanged(object sender, EventArgs args);
+
+      internal abstract void PerformIncrement(int sign);
+
+      internal abstract IFormattable DefaultValue { get;}
+    }
+
+    internal class TypedInfo<T> : UntypedInfo, IMinMaxSource<T?>
+      where T : struct, IFormattable, IComparable<T>
+    {
+      private INumEditBox<T> Control2 { get { return (INumEditBox<T>)Control; } }
+
+      internal override IFormattable DefaultValue { get { return default(T); } }
+
+      #region Свойства Value/NValue
+
+      public T? NValue
+      {
+        get { return _NValue; }
+        set
+        {
+          if (value.Equals(_NValue))
+            return;
+
+          if (Control._InsideValueChanged)
+            return;
+          Control._InsideValueChanged = true;
+          try
+          {
+            if (value.HasValue)
+              _NValue = Control2.GetRoundedValue(value.Value);
+            else
+              _NValue = null; // 23.11.2021
+            if (!Control._InsideMainControl_TextChanged)
+            {
+              InitControlText();
+              Control._TextIsValid = true;
+            }
+            Control.OnValueChanged(EventArgs.Empty);
+          }
+          finally
+          {
+            Control._InsideValueChanged = false;
+          }
+        }
+      }
+      private T? _NValue; // текущее значение
+
+      public T Value
+      {
+        get { return NValue ?? default(T); }
+        set { NValue = value; }
+      }
+
+
+      #endregion
+
+      #region Свойство Increment
+
+      [Browsable(false)]
+      public IUpDownHandler<T?> UpDownHandler
+      {
+        get { return _UpDownHandler; }
+        set
+        {
+          if (Object.ReferenceEquals(value, _UpDownHandler))
+            return;
+          _UpDownHandler = value;
+
+          bool newUpDown = (value != null);
+          if (newUpDown != Control.IsUpDown)
+            Control.InitMainControl(newUpDown);
+        }
+      }
+      private IUpDownHandler<T?> _UpDownHandler;
+
+      [Bindable(true)]
+      //[RefreshProperties(RefreshProperties.All)]
+      [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
+      [Category("Appearance")]
+      [DefaultValue(0.0)]
+      public T Increment
+      {
+        get
+        {
+          IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
+          if (incObj == null)
+            return default(T);
+          else
+            return incObj.Increment;
+        }
+        set
+        {
+          if (value.Equals(this.Increment))
+            return;
+
+          if (value.CompareTo(default(T)) < 0)
+            throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+
+          if (value.CompareTo(default(T)) == 0)
+            UpDownHandler = null;
+          else
+            UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
+        }
+      }
+
+      internal override void PerformIncrement(int sign)
+      {
+        if (Control.ReadOnly)
+          return;
+        if (!Control.TextIsValid)
+          return;
+        try
+        {
+          bool hasNext, hasPrev;
+          T? nextValue, prevValue;
+          UpDownHandler.GetUpDown(NValue, out hasNext, out nextValue, out hasPrev, out prevValue);
+
+          bool has = sign > 0 ? hasNext : hasPrev;
+          T? value = sign > 0 ? nextValue : prevValue;
+
+          if (has)
+            NValue = value;
+        }
+        catch { } // Перехват OvertflowException
+
+      }
+
+      #endregion
+
+      #region Свойства Minimum и Maximum
+
+      [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+      //[RefreshProperties(RefreshProperties.All)]
+      [Description("Минимальное значение, используемое для прокрутки")]
+      [Category("Appearance")]
+      [DefaultValue(null)]
+      public T? Minimum
+      {
+        get { return _Minimum; }
+        set { _Minimum = value; }
+      }
+      private T? _Minimum;
+
+      [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+      //[RefreshProperties(RefreshProperties.All)]
+      [Description("Максимальное значение, используемое для прокрутки")]
+      [Category("Appearance")]
+      [DefaultValue(null)]
+      public T? Maximum
+      {
+        get { return _Maximum; }
+        set { _Maximum = value; }
+      }
+      private T? _Maximum;
+
+      #endregion
+
+      #region Текстовое представление
+
+      internal override void InitControlText()
+      {
+        if (_NValue.HasValue)
+        {
+          {
+            try
+            {
+              Control._MainControl.Text = _NValue.Value.ToString(Control.Format, Control.FormatProvider);
+            }
+            catch
+            {
+              Control._MainControl.ToString();
+            }
+          }
+        }
+        else
+          Control._MainControl.Text = String.Empty;
+      }
+
+      internal override void MainControl_TextChanged(object sender, EventArgs args)
+      {
+        if ((!Control._InsideValueChanged) && (!Control._InsideMainControl_TextChanged))
+        {
+          Control._InsideMainControl_TextChanged = true;
+          try
+          {
+            if (String.IsNullOrEmpty(Control._MainControl.Text))
+            {
+              NValue = null;
+              Control._TextIsValid = true; // 23.11.2021
+            }
+            else
+            {
+              string s = Control._MainControl.Text;
+              FreeLibSet.Forms.WinFormsTools.CorrectNumberString(ref s, Control.FormatProvider); // замена точки и запятой
+
+              T value;
+              Control._TextIsValid = Control2.TryParseText(s, out value);
+              if (Control._TextIsValid)
+                NValue = value;
+            }
+          }
+          finally
+          {
+            Control._InsideMainControl_TextChanged = false;
+          }
+        }
+
+        Control.OnTextChanged(EventArgs.Empty); // 23.11.2021
+      }
+
+      #endregion
+    }
+
+    #endregion
+
     #region Конструктор
 
-    public NumEditBoxBase()
+    internal NumEditBoxBase(UntypedInfo untypedInfo)
     {
       _Format = String.Empty;
       SetStyle(ControlStyles.FixedHeight, true);
@@ -31,10 +256,20 @@ namespace FreeLibSet.Controls
       base.BackColor = SystemColors.Window;
       base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
 
+      _UntypedInfo = untypedInfo;
+      _UntypedInfo.Control = this;
+
       InitMainControl(false);
       _MainControl.Text = String.Empty;
       _TextIsValid = true;
     }
+
+    internal UntypedInfo UTI 
+    {
+      [MethodImpl(MethodImplOptions.NoInlining)]
+      get { return _UntypedInfo; } 
+    }
+    private UntypedInfo _UntypedInfo;
 
     #endregion
 
@@ -44,7 +279,7 @@ namespace FreeLibSet.Controls
     {
       #region Конструктор
 
-      internal InternalUpDown(NumEditBoxBase<T> owner)
+      internal InternalUpDown(NumEditBoxBase owner)
       {
         _Owner = owner;
         foreach (Control c in base.Controls)
@@ -59,7 +294,7 @@ namespace FreeLibSet.Controls
           throw new BugException("Не найден TextBox");
       }
 
-      private NumEditBoxBase<T> _Owner;
+      private NumEditBoxBase _Owner;
 
       #endregion
 
@@ -78,12 +313,12 @@ namespace FreeLibSet.Controls
 
       public override void UpButton()
       {
-        _Owner.PerformIncrement(+1);
+        _Owner._UntypedInfo.PerformIncrement(+1);
       }
 
       public override void DownButton()
       {
-        _Owner.PerformIncrement(-1);
+        _Owner._UntypedInfo.PerformIncrement(-1);
       }
 
       protected override void UpdateEditText()
@@ -191,7 +426,7 @@ namespace FreeLibSet.Controls
         base.Controls.Add(_MainControl);
 
         // После этого присоединяем обработчики
-        _MainControl.TextChanged += MainControl_TextChanged;
+        _MainControl.TextChanged += _UntypedInfo.MainControl_TextChanged;
 
         _MainControl.KeyDown += new System.Windows.Forms.KeyEventHandler(MainControl_KeyDown);
         _MainControl.KeyUp += new KeyEventHandler(MainControl_KeyUp);
@@ -227,54 +462,6 @@ namespace FreeLibSet.Controls
 
     private bool _InsideValueChanged;
 
-    [Bindable(true)]
-    [DefaultValue(null)]
-    [RefreshProperties(RefreshProperties.All)]
-    [Description("Текущее значение с выделением пустого значения")]
-    [Category("Appearance")]
-    public T? NValue
-    {
-      get { return _NValue; }
-      set
-      {
-        if (value.Equals(_NValue))
-          return;
-
-        if (_InsideValueChanged)
-          return;
-        _InsideValueChanged = true;
-        try
-        {
-          if (value.HasValue)
-            _NValue = GetRoundedValue(value.Value);
-          else
-            _NValue = null; // 23.11.2021
-          if (!_InsideMainControl_TextChanged)
-          {
-            InitControlText();
-            _TextIsValid = true;
-          }
-          OnValueChanged(EventArgs.Empty);
-        }
-        finally
-        {
-          _InsideValueChanged = false;
-        }
-      }
-    }
-    private T? _NValue; // текущее значение
-
-    [Bindable(true)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [RefreshProperties(RefreshProperties.All)]
-    [Description("Текущее значение без поддержки null")]
-    [Category("Appearance")]
-    [Browsable(false)]
-    public T Value
-    {
-      get { return NValue ?? default(T); }
-      set { NValue = value; }
-    }
 
     protected virtual void OnValueChanged(EventArgs args)
     {
@@ -285,114 +472,6 @@ namespace FreeLibSet.Controls
     [Description("Посылается после изменения свойств NValue/Value")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
-
-    /// <summary>
-    /// Переопределенный метод должен выполнить округление с учетом количества десятичных знаков в формате
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    protected abstract T GetRoundedValue(T value);
-
-    #endregion
-
-    #region Свойство Increment
-
-    [Browsable(false)]
-    public IUpDownHandler<T?> UpDownHandler
-    {
-      get { return _UpDownHandler; }
-      set
-      {
-        if (Object.ReferenceEquals(value, _UpDownHandler))
-          return;
-        _UpDownHandler = value;
-
-        bool newUpDown = (value != null);
-        if (newUpDown != IsUpDown)
-          InitMainControl(newUpDown);
-      }
-    }
-    private IUpDownHandler<T?> _UpDownHandler;
-
-    [Bindable(true)]
-    //[RefreshProperties(RefreshProperties.All)]
-    [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
-    [Category("Appearance")]
-    [DefaultValue(0.0)]
-    public T Increment
-    {
-      get
-      {
-        IncrementUpDownHandler<T> incObj = UpDownHandler as IncrementUpDownHandler<T>;
-        if (incObj == null)
-          return default(T);
-        else
-          return incObj.Increment;
-      }
-      set
-      {
-        if (value.Equals(this.Increment))
-          return;
-
-        if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
-
-        if (value.CompareTo(default(T)) == 0)
-          UpDownHandler = null;
-        else
-          UpDownHandler = IncrementUpDownHandler<T>.Create(value, this);
-      }
-    }
-
-    internal void PerformIncrement(int sign)
-    {
-      if (ReadOnly)
-        return;
-      if (!TextIsValid)
-        return;
-      try
-      {
-        bool hasNext, hasPrev;
-        T? nextValue, prevValue;
-        UpDownHandler.GetUpDown(NValue, out hasNext, out nextValue, out hasPrev, out prevValue);
-
-        bool has = sign > 0 ? hasNext : hasPrev;
-        T? value = sign > 0 ? nextValue : prevValue;
-
-        if (has)
-          NValue = value;
-      }
-      catch { } // Перехват OvertflowException
-
-    }
-
-    #endregion
-
-    #region Свойства Minimum и Maximum
-
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-    //[RefreshProperties(RefreshProperties.All)]
-    [Description("Минимальное значение, используемое для прокрутки")]
-    [Category("Appearance")]
-    [DefaultValue(null)]
-    public T? Minimum
-    {
-      get { return _Minimum; }
-      set { _Minimum = value; }
-    }
-    private T? _Minimum;
-
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-    //[RefreshProperties(RefreshProperties.All)]
-    [Description("Максимальное значение, используемое для прокрутки")]
-    [Category("Appearance")]
-    [DefaultValue(null)]
-    public T? Maximum
-    {
-      get { return _Maximum; }
-      set { _Maximum = value; }
-    }
-    private T? _Maximum;
 
     #endregion
 
@@ -415,7 +494,7 @@ namespace FreeLibSet.Controls
 
         // Проверяем корректность формата
         // Используем InvariantCulture во избежание неожиданностей от национальных настроек
-        default(T).ToString(value, CultureInfo.InvariantCulture); // может произойти FormatException
+        _UntypedInfo.DefaultValue.ToString(value, CultureInfo.InvariantCulture); // может произойти FormatException
 
         _Format = value;
         OnFormatChanged();
@@ -425,7 +504,7 @@ namespace FreeLibSet.Controls
 
     private void OnFormatChanged()
     {
-      InitControlText();
+      _UntypedInfo.InitControlText();
     }
 
     /// <summary>
@@ -512,25 +591,6 @@ namespace FreeLibSet.Controls
 
     #region Текстовое представление
 
-    private void InitControlText()
-    {
-      if (_NValue.HasValue)
-      {
-        {
-          try
-          {
-            _MainControl.Text = _NValue.Value.ToString(Format, FormatProvider);
-          }
-          catch
-          {
-            _MainControl.ToString();
-          }
-        }
-      }
-      else
-        _MainControl.Text = String.Empty;
-    }
-
     /// <summary>
     /// Свойство возвращает true, если текущий введенный текст может быть преобразован в число
     /// </summary>
@@ -541,40 +601,6 @@ namespace FreeLibSet.Controls
     private bool _TextIsValid;
 
     private bool _InsideMainControl_TextChanged;
-
-    void MainControl_TextChanged(object sender, EventArgs args)
-    {
-      if ((!_InsideValueChanged) && (!_InsideMainControl_TextChanged))
-      {
-        _InsideMainControl_TextChanged = true;
-        try
-        {
-          if (String.IsNullOrEmpty(_MainControl.Text))
-          {
-            NValue = null;
-            _TextIsValid = true; // 23.11.2021
-          }
-          else
-          {
-            string s = _MainControl.Text;
-            FreeLibSet.Forms.WinFormsTools.CorrectNumberString(ref s, this.FormatProvider); // замена точки и запятой
-
-            T value;
-            _TextIsValid = TryParseText(s, out value);
-            if (_TextIsValid)
-              NValue = value;
-          }
-        }
-        finally
-        {
-          _InsideMainControl_TextChanged = false;
-        }
-      }
-
-      OnTextChanged(EventArgs.Empty); // 23.11.2021
-    }
-
-    protected abstract bool TryParseText(string s, out T value);
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Bindable(false)]
@@ -840,7 +866,7 @@ namespace FreeLibSet.Controls
     protected override void OnLeave(EventArgs args)
     {
       if (_TextIsValid)
-        InitControlText();
+        _UntypedInfo.InitControlText();
 
       base.OnLeave(args);
     }
@@ -869,6 +895,68 @@ namespace FreeLibSet.Controls
     #endregion
   }
 
+  /// <summary>
+  /// Типизированные свойства, которые должны реализовываться в Int/Single/Double/DecimalEditBox.
+  /// Этот интерфейс используется внутри ExtForms.dll и не предназначен для прикладного кода.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  public interface INumEditBox<T>
+    where T : struct, IFormattable, IComparable<T>
+  {
+    #region Свойства
+
+    /// <summary>
+    /// Текущее значение с поддержкой null
+    /// </summary>
+    T? NValue { get;set;}
+
+    /// <summary>
+    /// Текущее значение без поддержки null.
+    /// </summary>
+    T Value { get;set;}
+
+    /// <summary>
+    /// Интерфейс для "прокрутки" значения
+    /// </summary>
+    IUpDownHandler<T?> UpDownHandler { get;set;}
+
+    /// <summary>
+    /// Инкремент (если задано положительное значение)
+    /// </summary>
+    T Increment { get;set;}
+
+    /// <summary>
+    /// Минимально допустимое значение, если не null. Используется при "прокрутке".
+    /// </summary>
+    T? Minimum { get; set;}
+
+    /// <summary>
+    /// Максимально допустимое значение, если не null. Используется при "прокрутке".
+    /// </summary>
+    T? Maximum { get; set;}
+
+    #endregion
+
+    #region Методы
+
+
+    /// <summary>
+    /// Метод должен выполнить округление с учетом количества десятичных знаков в формате
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    T GetRoundedValue(T value);
+
+    /// <summary>
+    /// Должен вызвать <typeparamref name="T"/>.TryParse().
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    bool TryParseText(string s, out T value);
+
+    #endregion
+  }
 
   /// <summary>
   /// Поле ввода числового значения типа Double
@@ -877,9 +965,64 @@ namespace FreeLibSet.Controls
   [ToolboxBitmap(typeof(IntEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   [DesignerSerializer("System.Windows.Forms.Design.ControlCodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.ComponentModel.Design.Serialization.CodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
-  public class IntEditBox : NumEditBoxBase<Int32>
+  public class IntEditBox : NumEditBoxBase, INumEditBox<Int32>
   {
-    #region Переопределенные методы
+    #region Конструктор
+
+    public IntEditBox()
+      : base(new TypedInfo<int>())
+    {
+    }
+
+    #endregion
+
+    #region INumEditBox<Int32> implementation
+
+    private TypedInfo<Int32> TI 
+    {
+      [MethodImpl(MethodImplOptions.NoInlining)]
+      get { return (TypedInfo<Int32>)(base.UTI); } 
+    }
+
+    [Bindable(true)]
+    [DefaultValue(null)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение с выделением пустого значения")]
+    [Category("Appearance")]
+    public int? NValue { get { return TI.NValue; } set { TI.NValue = value; } }
+
+    [Bindable(true)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение без поддержки null")]
+    [Category("Appearance")]
+    [Browsable(false)]
+    public int Value { get { return TI.Value; } set { TI.Value = value; } }
+
+    [Browsable(false)]
+    public IUpDownHandler<int?> UpDownHandler { get { return TI.UpDownHandler; } set { TI.UpDownHandler = value; } }
+
+    [Bindable(true)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
+    [Category("Appearance")]
+    [DefaultValue(0)]
+    public int Increment { get { return TI.Increment; } set { TI.Increment = value; } }
+
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Минимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public int? Minimum { get { return TI.Minimum; } set { TI.Minimum = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Максимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public int? Maximum { get { return TI.Maximum; } set { TI.Maximum = value; } }
 
     /// <summary>
     /// Вызывает метод Int32.TryParse() с соответствующими флагами
@@ -887,7 +1030,7 @@ namespace FreeLibSet.Controls
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="result">Числовое значение</param>
     /// <returns>true, если преобразование выполнено</returns>
-    protected override bool TryParseText(string s, out int result)
+    bool INumEditBox<int>.TryParseText(string s, out int result)
     {
       return Int32.TryParse(s, NumberStyles.Integer | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
@@ -897,7 +1040,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     /// <param name="value">Значение до округления</param>
     /// <returns>Округленное значение</returns>
-    protected override int GetRoundedValue(int value)
+    int INumEditBox<int>.GetRoundedValue(int value)
     {
       return value;
     }
@@ -918,9 +1061,59 @@ namespace FreeLibSet.Controls
   [Description("Поле ввода числового значения типа Single")]
   [ToolboxBitmap(typeof(SingleEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
-  public class SingleEditBox : NumEditBoxBase<Single>
+  public class SingleEditBox : NumEditBoxBase, INumEditBox<Single>
   {
-    #region Переопределенные методы
+    #region Конструктор
+
+    public SingleEditBox()
+      :base(new TypedInfo<float>())
+    {
+    }
+
+    #endregion
+
+    #region INumEditBox<Single> implementation
+
+    private TypedInfo<Single> TI { get { return (TypedInfo<Single>)UTI; } }
+
+    [Bindable(true)]
+    [DefaultValue(null)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение с выделением пустого значения")]
+    [Category("Appearance")]
+    public float? NValue { get { return TI.NValue; } set { TI.NValue = value; } }
+
+    [Bindable(true)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение без поддержки null")]
+    [Category("Appearance")]
+    [Browsable(false)]
+    public float Value { get { return TI.Value; } set { TI.Value = value; } }
+
+    [Browsable(false)]
+    public IUpDownHandler<float?> UpDownHandler { get { return TI.UpDownHandler; } set { TI.UpDownHandler = value; } }
+
+    [Bindable(true)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
+    [Category("Appearance")]
+    [DefaultValue(0f)]
+    public float Increment { get { return TI.Increment; } set { TI.Increment = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Минимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public float? Minimum { get { return TI.Minimum; } set { TI.Minimum = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Максимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public float? Maximum { get { return TI.Maximum; } set { TI.Maximum = value; } }
 
     /// <summary>
     /// Вызывает метод Single.TryParse() с соответствующими флагами
@@ -928,7 +1121,7 @@ namespace FreeLibSet.Controls
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="result">Числовое значение</param>
     /// <returns>true, если преобразование выполнено</returns>
-    protected override bool TryParseText(string s, out float result)
+    bool INumEditBox<float>.TryParseText(string s, out float result)
     {
       return Single.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
@@ -938,7 +1131,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     /// <param name="value">Значение до округления</param>
     /// <returns>Округленное значение</returns>
-    protected override float GetRoundedValue(float value)
+    float INumEditBox<float>.GetRoundedValue(float value)
     {
       int dp = this.DecimalPlaces;
       if (dp >= 0)
@@ -957,9 +1150,59 @@ namespace FreeLibSet.Controls
   [Description("Поле ввода числового значения типа Double")]
   [ToolboxBitmap(typeof(DoubleEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
-  public class DoubleEditBox : NumEditBoxBase<Double>
+  public class DoubleEditBox : NumEditBoxBase, INumEditBox<Double>
   {
-    #region Переопределенные методы
+    #region Конструктор
+
+    public DoubleEditBox()
+      :base(new TypedInfo<double>())
+    {
+    }
+
+    #endregion
+
+    #region INumEditBox<Double> implementation
+
+    private TypedInfo<Double> TI { get { return (TypedInfo<Double>)UTI; } }
+
+    [Bindable(true)]
+    [DefaultValue(null)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение с выделением пустого значения")]
+    [Category("Appearance")]
+    public double? NValue { get { return TI.NValue; } set { TI.NValue = value; } }
+
+    [Bindable(true)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение без поддержки null")]
+    [Category("Appearance")]
+    [Browsable(false)]
+    public double Value { get { return TI.Value; } set { TI.Value = value; } }
+
+    [Browsable(false)]
+    public IUpDownHandler<double?> UpDownHandler { get { return TI.UpDownHandler; } set { TI.UpDownHandler = value; } }
+
+    [Bindable(true)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
+    [Category("Appearance")]
+    [DefaultValue(0.0)]
+    public double Increment { get { return TI.Increment; } set { TI.Increment = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Минимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public double? Minimum { get { return TI.Minimum; } set { TI.Minimum = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Максимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public double? Maximum { get { return TI.Maximum; } set { TI.Maximum = value; } }
 
     /// <summary>
     /// Вызывает метод Double.TryParse() с соответствующими флагами
@@ -967,7 +1210,7 @@ namespace FreeLibSet.Controls
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="result">Числовое значение</param>
     /// <returns>true, если преобразование выполнено</returns>
-    protected override bool TryParseText(string s, out double result)
+    bool INumEditBox<double>.TryParseText(string s, out double result)
     {
       return Double.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
@@ -977,7 +1220,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     /// <param name="value">Значение до округления</param>
     /// <returns>Округленное значение</returns>
-    protected override double GetRoundedValue(double value)
+    double INumEditBox<double>.GetRoundedValue(double value)
     {
       int dp = this.DecimalPlaces;
       if (dp >= 0)
@@ -995,9 +1238,59 @@ namespace FreeLibSet.Controls
   [Description("Поле ввода числового значения типа Decimal")]
   [ToolboxBitmap(typeof(DecimalEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
-  public class DecimalEditBox : NumEditBoxBase<Decimal>
+  public class DecimalEditBox : NumEditBoxBase, INumEditBox<Decimal>
   {
-    #region Переопределенные методы
+    #region Конструктор
+
+    public DecimalEditBox()
+      :base(new TypedInfo<decimal>())
+    {
+    }
+
+    #endregion
+
+    #region INumEditBox<Decimal> implementation
+
+    private TypedInfo<Decimal> TI { get { return (TypedInfo<Decimal>)UTI; } }
+
+    [Bindable(true)]
+    [DefaultValue(null)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение с выделением пустого значения")]
+    [Category("Appearance")]
+    public decimal? NValue { get { return TI.NValue; } set { TI.NValue = value; } }
+
+    [Bindable(true)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [RefreshProperties(RefreshProperties.All)]
+    [Description("Текущее значение без поддержки null")]
+    [Category("Appearance")]
+    [Browsable(false)]
+    public decimal Value { get { return TI.Value; } set { TI.Value = value; } }
+
+    [Browsable(false)]
+    public IUpDownHandler<decimal?> UpDownHandler { get { return TI.UpDownHandler; } set { TI.UpDownHandler = value; } }
+
+    [Bindable(true)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
+    [Category("Appearance")]
+    [DefaultValue(0.0)]
+    public decimal Increment { get { return TI.Increment; } set { TI.Increment = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Минимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public decimal? Minimum { get { return TI.Minimum; } set { TI.Minimum = value; } }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    //[RefreshProperties(RefreshProperties.All)]
+    [Description("Максимальное значение, используемое для прокрутки")]
+    [Category("Appearance")]
+    [DefaultValue(null)]
+    public decimal? Maximum { get { return TI.Maximum; } set { TI.Maximum = value; } }
 
     /// <summary>
     /// Вызывает метод Decimal.TryParse() с соответствующими флагами
@@ -1005,7 +1298,7 @@ namespace FreeLibSet.Controls
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="result">Числовое значение</param>
     /// <returns>true, если преобразование выполнено</returns>
-    protected override bool TryParseText(string s, out decimal result)
+    bool INumEditBox<decimal>.TryParseText(string s, out decimal result)
     {
       return Decimal.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
@@ -1015,7 +1308,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     /// <param name="value">Значение до округления</param>
     /// <returns>Округленное значение</returns>
-    protected override decimal GetRoundedValue(decimal value)
+    decimal INumEditBox<decimal>.GetRoundedValue(decimal value)
     {
       int dp = this.DecimalPlaces;
       if (dp >= 0)
