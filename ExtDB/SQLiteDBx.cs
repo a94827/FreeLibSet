@@ -1565,6 +1565,9 @@ namespace FreeLibSet.Data.SQLite
 
       int p2 = typeStr.IndexOf(')');
       string s = typeStr.Substring(p1 + 1, p2 - p1 - 1);
+      int p3 = s.IndexOf(',');
+      if (p3 >= 0)
+        s = s.Substring(0, p3); // 06.01.2022
       length = int.Parse(s);
       typeStr = typeStr.Substring(0, p1);
     }

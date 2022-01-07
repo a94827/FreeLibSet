@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Formatting;
+using System.ComponentModel.Design.Serialization;
 
 #pragma warning disable 1591
 
@@ -875,6 +876,7 @@ namespace FreeLibSet.Controls
   [Description("Поле ввода целого числа")]
   [ToolboxBitmap(typeof(IntEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
+  [DesignerSerializer("System.Windows.Forms.Design.ControlCodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.ComponentModel.Design.Serialization.CodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
   public class IntEditBox : NumEditBoxBase<Int32>
   {
     #region Переопределенные методы
