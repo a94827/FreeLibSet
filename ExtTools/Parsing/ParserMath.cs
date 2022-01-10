@@ -1290,7 +1290,8 @@ namespace FreeLibSet.Parsing
         // Если левого операнда нет, то может быть только унарная операция
         if (!UnaryOps.Contains(OpToken.TokenType))
         {
-          data.CurrToken.SetError("Не найден левый операнд для операции \"" + OpToken.TokenType + "\". Операция не может быть унарной");
+          //data.CurrToken. Исправлено 10.01.2022
+          OpToken.SetError("Не найден левый операнд для операции \"" + OpToken.TokenType + "\". Операция не может быть унарной");
           return null;
         }
         return new UnaryExpression(OpToken, RightExpession, UnaryOps[OpToken.TokenType].CalcMethod);
@@ -1299,7 +1300,8 @@ namespace FreeLibSet.Parsing
       // Формальность
       if (!BinaryOps.Contains(OpToken.TokenType))
       {
-        data.CurrToken.SetError("Операция \"" + OpToken.TokenType + "\" не может быть бинарной");
+        //data.CurrToken. Исправлено 10.01.2022
+        OpToken.SetError("Операция \"" + OpToken.TokenType + "\" не может быть бинарной");
         return null;
       }
 

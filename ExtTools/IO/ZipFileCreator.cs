@@ -231,7 +231,7 @@ namespace FreeLibSet.IO
     public static void CheckZipLibAvailable()
     {
       if (!ZipLibAvailable)
-        throw new SharpZipLibNotFoundException();
+        throw new DllNotFoundException("Не удалось загрузить библиотеку ICSharpCode.SharpZipLib.dll. Без нее невозможно создание сжатых zip-файлов");
     }
 
     #endregion
@@ -239,7 +239,7 @@ namespace FreeLibSet.IO
     #region Наличие библиотеки SevenZipSharp
 
     /// <summary>
-    /// Возвращает true, если библиотека ICSharpCode.SharpZipLib.dll загружена
+    /// Возвращает true, если библиотека SevenZipSharp.dll загружена
     /// и можно создавать объекты ZipFileCreator
     /// </summary>
     public static bool SevenZipSharpAvailable
@@ -320,7 +320,7 @@ namespace FreeLibSet.IO
       }
       catch { }
 
-      throw new FileNotFoundException("Не найдена библиотека " + FileName + ". " + SevenZipSharpAvailabilityError);
+      throw new FileNotFoundException("Не найден файл " + FileName);
     }
 
     /// <summary>
@@ -329,40 +329,11 @@ namespace FreeLibSet.IO
     public static void CheckSevenZipSharpAvailable()
     {
       if (!SevenZipSharpAvailable)
-        throw new FileNotFoundException("Не найдена библиотека SevenZipSharp.dll"); // ??
+        throw new DllNotFoundException("Не найдена библиотека SevenZipSharp.dll для работы с архивами 7z. " + SevenZipSharpAvailabilityError); // ??
     }
 
     #endregion
   }
-
-
-  /// <summary>
-  /// Специальный тип исключения об отсутствии библиотеки SharpZipLib
-  /// </summary>
-  [Serializable]
-  public class SharpZipLibNotFoundException : ApplicationException
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает исключение
-    /// </summary>
-    public SharpZipLibNotFoundException()
-      : base("Не удалось загрузить библиотеку ICSharpCode.SharpZipLib.dll. Без нее невозможно создание сжатых файлов; в частности документов Microsoft Office 2007/2010 и Open Office")
-    {
-    }
-
-    /// <summary>
-    /// Эта версия конструктора нужна для правильной десериализации
-    /// </summary>
-    protected SharpZipLibNotFoundException(SerializationInfo info, StreamingContext context)
-      : base(info, context)
-    {
-    }
-
-    #endregion
-  }
-
 
   #region Перечисление
 
