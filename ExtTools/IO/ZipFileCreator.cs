@@ -249,24 +249,42 @@ namespace FreeLibSet.IO
       {
         lock (DataTools.InternalSyncRoot)
         {
-          if (!_SevenZipSharpAvailable.HasValue)
+          if (_SevenZipSharpAvailabilityError == null)
           {
             try
             {
               TrySevenZipSharp();
-              _SevenZipSharpAvailable = true;
+              _SevenZipSharpAvailabilityError = String.Empty;
             }
-            catch
+            catch (Exception e)
             {
-              _SevenZipSharpAvailable = false;
+              _SevenZipSharpAvailabilityError = e.Message;
             }
           }
 
-          return _SevenZipSharpAvailable.Value;
+          return _SevenZipSharpAvailabilityError.Length == 0;
         }
       }
     }
-    private static bool? _SevenZipSharpAvailable = null;
+
+    /// <summary>
+    /// Возвращает сообщение об ошибке, если SevenZipSharpAvailable возвращает false.
+    /// </summary>
+    public static string SevenZipSharpAvailabilityError
+    {
+      get
+      {
+        bool dummy = SevenZipSharpAvailable;
+        return _SevenZipSharpAvailabilityError;
+      }
+    }
+
+    /// <summary>
+    /// Если null, то проверка еще не выполнялась.
+    /// Если пустая строка, то библиотека присутствует.
+    /// Если непустая строка, то содержит текст сообщения об ошибке
+    /// </summary>
+    private static string _SevenZipSharpAvailabilityError = null;
 
     /// <summary>
     /// Это должно быть в отдельном методе, т.к. он может не запускаться
@@ -278,23 +296,31 @@ namespace FreeLibSet.IO
       // Инициализация библиотеки 7z.dll
       string FileName = (IntPtr.Size == 8) ? "7z64.dll" : "7z.dll";
 
-      AbsPath RootDir = new AbsPath(SomeType.Assembly.GetName().CodeBase).ParentDir;
-      if (File.Exists((RootDir + FileName).Path))
+      try
       {
-        // ReSharper disable once AccessToStaticMemberViaDerivedType
-        SevenZip.SevenZipCompressor.SetLibraryPath((RootDir + FileName).Path);
-        return;
+        AbsPath RootDir = new AbsPath(SomeType.Assembly.GetName().CodeBase).ParentDir;
+        if (File.Exists((RootDir + FileName).Path))
+        {
+          // ReSharper disable once AccessToStaticMemberViaDerivedType
+          SevenZip.SevenZipCompressor.SetLibraryPath((RootDir + FileName).Path);
+          return;
+        }
       }
+      catch { }
 
-      RootDir = FileTools.ApplicationBaseDir;
-      if (File.Exists((RootDir + FileName).Path))
+      try
       {
-        // ReSharper disable once AccessToStaticMemberViaDerivedType
-        SevenZip.SevenZipCompressor.SetLibraryPath((RootDir + FileName).Path);
-        return;
+        AbsPath RootDir = FileTools.ApplicationBaseDir;
+        if (File.Exists((RootDir + FileName).Path))
+        {
+          // ReSharper disable once AccessToStaticMemberViaDerivedType
+          SevenZip.SevenZipCompressor.SetLibraryPath((RootDir + FileName).Path);
+          return;
+        }
       }
+      catch { }
 
-      throw new FileNotFoundException("Не найдена библиотека " + FileName);
+      throw new FileNotFoundException("Не найдена библиотека " + FileName + ". " + SevenZipSharpAvailabilityError);
     }
 
     /// <summary>
