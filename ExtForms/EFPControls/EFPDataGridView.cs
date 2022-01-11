@@ -6725,7 +6725,8 @@ namespace FreeLibSet.Forms
 
         if ((!testOnly) && (Rect.Bottom - 1) >= Control.RowCount)
         {
-          int addCount = Rect.Bottom - Control.RowCount + 1;
+          int addCount = Rect.Bottom - Control.RowCount + 1; 
+          //int addCount = Rect.Bottom - Control.RowCount + (Control.AllowUserToAddRows ? 0 : 1); // изм. 11.01.2022
 #if DEBUG
           if (addCount <= 0)
             throw new BugException("addCount=" + addCount.ToString());
@@ -6765,18 +6766,14 @@ namespace FreeLibSet.Forms
         }
       }
 
-      //Handler.Control.CancelEdit();
-
-      //if (OldCell != null)
-      //  Handler.Control.CurrentCell = OldCell;
-      //Handler.Control.CancelEdit();
-
       #endregion
 
       #region Записываем значение
 
       if (!testOnly)
       {
+        DataGridViewCell oldCell = Control.CurrentCell;
+
         for (int i = Rect.Top; i < Rect.Bottom; i++)
         {
           for (int j = Rect.Left; j < Rect.Right; j++)
@@ -6790,6 +6787,12 @@ namespace FreeLibSet.Forms
         }
 
         Control.EndEdit();
+
+        // 11.01.2022
+        // Надо сразу обновить текущую строку, как будто пользователь перешел на другую строку, а потом вернулся обратно.
+        // Иначе текущая строка оказывается некомплектной и для нее могут возникать ошибки контроля в EFPInputDataGridView.
+        Control.CurrentCell = null;
+        Control.CurrentCell = oldCell;
       }
 
       #endregion
