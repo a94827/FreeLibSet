@@ -307,7 +307,7 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Переопределенные методы
-   
+
     /// <summary>
     /// Выполняет преобразование строки в дату.
     /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating
@@ -375,7 +375,7 @@ namespace FreeLibSet.Forms
       : base(code, displayName)
     {
     }
- 
+
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
     /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
@@ -458,7 +458,7 @@ namespace FreeLibSet.Forms
       : base(code, displayName)
     {
     }
-  
+
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
     /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
@@ -541,7 +541,7 @@ namespace FreeLibSet.Forms
       : base(code, displayName)
     {
     }
- 
+
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
     /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
@@ -624,7 +624,7 @@ namespace FreeLibSet.Forms
       : base(code, displayName)
     {
     }
-    
+
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
     /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
@@ -700,7 +700,7 @@ namespace FreeLibSet.Forms
     /// <param name="textValues">Список текстовых значений</param>
     public EFPSelRCEnumColumn(string code, string displayName, string[] textValues)
       : this(code, displayName, textValues, null)
-    { 
+    {
     }
 
     /// <summary>
@@ -931,10 +931,15 @@ namespace FreeLibSet.Forms
         Control.CellValueNeeded += new DataGridViewCellValueEventHandler(Control_CellValueNeeded);
         Control.CellValuePushed += new DataGridViewCellValueEventHandler(Control_CellValuePushed);
       }
-      GetCellAttributes += TheGridHandler_GetCellAttributes;
 
       base.ReadOnly = true; // 11.01.2017
       base.CanView = false; // 11.01.2017
+
+      base.UseRowImages = true; // 12.01.2022
+
+      // 12.01.2022
+      Columns.AddBool("RowFlag", false, String.Empty); // будет удален при установке SourceData
+      base.MarkRowsColumnIndex = 0;
     }
 
     private EFPSelRCValidatingEventArgs _ValidatingArgs;
@@ -1004,6 +1009,8 @@ namespace FreeLibSet.Forms
 
       Columns.Clear();
       Columns.AddBool("RowFlag", false, String.Empty);
+      Columns.LastAdded.GridColumn.ToolTipText = "Использование строки";
+      Columns.LastAdded.GridColumn.DividerWidth = 1; // 12.01.2022
 
       string[] DisplayNames = new string[AllColumns.Length + 1];
       DisplayNames[0] = NoneColText;
@@ -1014,6 +1021,7 @@ namespace FreeLibSet.Forms
       for (int i = 0; i < SelColumns.Length; i++)
       {
         DataGridViewComboBoxColumn Col = new DataGridViewComboBoxColumn();
+        Col.Name = "Col" + (i + 1).ToString(); // 12.01.2022
         Col.HeaderText = (i + 1).ToString();
         //Col.DropDownWidth = Math.Max(DropDownWidth, Col.Width);
         Col.DropDownWidth = DropDownWidth; // расширение до столбца выполняется автоматически
@@ -1035,6 +1043,7 @@ namespace FreeLibSet.Forms
 
       base.FrozenColumns = 1;
       Control.Rows[0].Frozen = true;
+      Control.Rows[0].DividerHeight = 1; // 12.01.2022
       base.MarkRowsColumnIndex = 0;
 
       for (int i = 0; i < SelRows.Length; i++)
@@ -1311,7 +1320,40 @@ namespace FreeLibSet.Forms
       }
     }
 
-    void TheGridHandler_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    /// <summary>
+    /// Получение списка ошибок и предупреждений для строки, если есть ячейки с неправильным форматированием
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
+    {
+      if (args.RowIndex >= 1 && SelRows[args.RowIndex - 1]) // серые ячейки делаем поштучно
+      {
+        for (int i = 0; i < SelColumns.Length; i++)
+        {
+          if (SelColumns[i] != null)
+          {
+            _ValidatingArgs.InitSourceData(SourceData[args.RowIndex - 1, i]);
+            SelColumns[i].PerformValidating(_ValidatingArgs);
+            switch (_ValidatingArgs.ValidateState)
+            {
+              case UIValidateState.Error:
+                args.AddRowError(_ValidatingArgs.ErrorText, Columns[i + 1].Name);
+                break;
+              case UIValidateState.Warning:
+                args.AddRowWarning(_ValidatingArgs.ErrorText, Columns[i + 1].Name);
+                break;
+            }
+          }
+        }
+      }
+      base.OnGetRowAttributes(args);
+    }
+
+    /// <summary>
+    /// Раскраска серых ячеек
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected override void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
     {
       if (args.RowIndex == 0)
       {
@@ -1327,41 +1369,24 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        if (args.ColumnIndex == 0)
+        // Строка таблицы
+        if (args.ColumnIndex >= 1)
         {
-        }
-        else
-        {
-          // Ячейка текстовой таблицы
+          // Столбец данных
           if (SelRows[args.RowIndex - 1])
           {
-            EFPSelRCColumn Col = SelColumns[args.ColumnIndex - 1];
-            if (Col == null)
+            if (SelColumns[args.ColumnIndex - 1] == null)
               args.Grayed = true;
-            else
-            {
-              _ValidatingArgs.InitSourceData(SourceData[args.RowIndex - 1, args.ColumnIndex - 1]);
-              Col.PerformValidating(_ValidatingArgs);
-              switch (_ValidatingArgs.ValidateState)
-              {
-                case UIValidateState.Error:
-                  args.ColorType = EFPDataGridViewColorType.Error;
-                  args.ToolTipText = _ValidatingArgs.ErrorText;
-                  break;
-                case UIValidateState.Warning:
-                  args.ColorType = EFPDataGridViewColorType.Warning;
-                  args.ToolTipText = _ValidatingArgs.ErrorText;
-                  break;
-              }
-            }
           }
           else
             args.Grayed = true;
-
           args.ReadOnly = true;
           args.ReadOnlyMessage = "Нельзя редактировать значения";
         }
+        // Ячейка с флажком никогда не делается серой
       }
+
+      base.OnGetCellAttributes(args);
     }
 
     #endregion
@@ -1419,8 +1444,16 @@ namespace FreeLibSet.Forms
               SelColumns[j].PerformValidating(_ValidatingArgs);
               if (_ValidatingArgs.ValidateState == UIValidateState.Error)
               {
-                Control.CurrentCell = Control[j + 1, i + 1];
-                base.SetError(_ValidatingArgs.ErrorText);
+                // 12.01.2022
+                // Переход на ошибочную ячейку не выполняем.
+                // Например, пусть выбрана строка с ошибкой и установленным флажком.
+                // Пользователь выключает флажок.
+                // Фокус прыгает на другую строку с ошибкой.
+                // Теперь можно использовать Ctrl+] и Ctrl+[ для поиска ошибок.
+                //Control.CurrentCell = Control[j + 1, i + 1];
+
+                base.SetError("Строка "+ (i+1).ToString()+", столбец "+(j+1).ToString()+" ("+SelColumns[j].DisplayName+"). "+ 
+                  _ValidatingArgs.ErrorText);
                 return;
               }
             }
@@ -1431,7 +1464,8 @@ namespace FreeLibSet.Forms
       if (!HasRows)
       {
         this.CurrentColumnIndex = 0;
-        EFPApp.ShowTempMessage("Нет ни одной выбранной строки данных");
+        //EFPApp.ShowTempMessage("Нет ни одной выбранной строки данных");
+        base.SetError("Нет ни одной выбранной строки данных"); // 12.01.2022
         return;
       }
 

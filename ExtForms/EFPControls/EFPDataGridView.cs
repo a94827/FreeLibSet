@@ -998,8 +998,19 @@ namespace FreeLibSet.Forms
     /// Значение подсказки для строки не копируется в это поле. Можно использовать
     /// значение RowToolTipText
     /// </summary>
-    public string ToolTipText { get { return _ToolTipText; } set { _ToolTipText = value; } }
+    public string ToolTipText 
+    { 
+      get { return _ToolTipText; } 
+      set 
+      { 
+        _ToolTipText = value;
+        _ToolTipTextHasBeenSet = true;
+      } 
+    }
     private string _ToolTipText;
+
+    internal bool ToolTipTextHasBeenSet { get { return _ToolTipTextHasBeenSet; } }
+    private bool _ToolTipTextHasBeenSet;
 
     /// <summary>
     /// Текст всплывающей подсказки для строки.
@@ -1123,6 +1134,8 @@ namespace FreeLibSet.Forms
           }
         }
       }
+
+      _ToolTipTextHasBeenSet = false;
     }
 
     #endregion
@@ -6725,7 +6738,7 @@ namespace FreeLibSet.Forms
 
         if ((!testOnly) && (Rect.Bottom - 1) >= Control.RowCount)
         {
-          int addCount = Rect.Bottom - Control.RowCount + 1; 
+          int addCount = Rect.Bottom - Control.RowCount + 1;
           //int addCount = Rect.Bottom - Control.RowCount + (Control.AllowUserToAddRows ? 0 : 1); // изм. 11.01.2022
 #if DEBUG
           if (addCount <= 0)
@@ -7478,23 +7491,19 @@ namespace FreeLibSet.Forms
           DoControl_RowHeaderCellPainting(args);
         else if (args.RowIndex >= 0)
         {
+          DataGridViewPaintParts pp = args.PaintParts;
           if (args.CellStyle.ForeColor == Color.Transparent)
-          {
-            args.Paint(args.ClipBounds, args.PaintParts & (~DataGridViewPaintParts.ContentForeground));
-          }
-          else
-          {
-            args.Paint(args.ClipBounds, args.PaintParts);
+            pp &= ~(DataGridViewPaintParts.ContentForeground|DataGridViewPaintParts.ContentBackground);
+          args.Paint(args.ClipBounds, pp);
 
-            if (_GetCellAttributesArgs.DiagonalUpBorder >= EFPDataGridViewBorderStyle.Thin)
-              args.Graphics.DrawLine(CreateBorderPen(args.CellStyle.ForeColor, _GetCellAttributesArgs.DiagonalUpBorder),
-                args.CellBounds.Left, args.CellBounds.Bottom - 1, args.CellBounds.Right - 1, args.CellBounds.Top);
-            if (_GetCellAttributesArgs.DiagonalDownBorder >= EFPDataGridViewBorderStyle.Thin)
-              args.Graphics.DrawLine(CreateBorderPen(args.CellStyle.ForeColor, _GetCellAttributesArgs.DiagonalDownBorder),
-                args.CellBounds.Left, args.CellBounds.Top, args.CellBounds.Right - 1, args.CellBounds.Bottom - 1);
+          if (_GetCellAttributesArgs.DiagonalUpBorder >= EFPDataGridViewBorderStyle.Thin)
+            args.Graphics.DrawLine(CreateBorderPen(args.CellStyle.ForeColor, _GetCellAttributesArgs.DiagonalUpBorder),
+              args.CellBounds.Left, args.CellBounds.Bottom - 1, args.CellBounds.Right - 1, args.CellBounds.Top);
+          if (_GetCellAttributesArgs.DiagonalDownBorder >= EFPDataGridViewBorderStyle.Thin)
+            args.Graphics.DrawLine(CreateBorderPen(args.CellStyle.ForeColor, _GetCellAttributesArgs.DiagonalDownBorder),
+              args.CellBounds.Left, args.CellBounds.Top, args.CellBounds.Right - 1, args.CellBounds.Bottom - 1);
 
-            args.Handled = true;
-          }
+          args.Handled = true; 
         }
       }
       catch (Exception e)
@@ -8094,7 +8103,11 @@ namespace FreeLibSet.Forms
         {
           string sHead = col.GridColumn.ToolTipText;
           if (String.IsNullOrEmpty(sHead))
+          {
             sHead = col.GridColumn.HeaderText;
+            if (String.IsNullOrEmpty(sHead))
+              sHead = "Столбец без названия";
+          }
           sText = sHead + ": " + sText;
         }
       }
@@ -8102,7 +8115,12 @@ namespace FreeLibSet.Forms
       // 3. Пользовательский обработчик
       DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.ToolTip);
       _GetCellAttributesArgs.ToolTipText = sText;
-      return DoGetCellAttributes(columnIndex).ToolTipText;
+      DoGetCellAttributes(columnIndex);
+
+      if (_GetCellAttributesArgs.ContentVisible || _GetCellAttributesArgs.ToolTipTextHasBeenSet)
+        return _GetCellAttributesArgs.ToolTipText;
+      else
+        return String.Empty; // 12.01.2022
     }
 
 

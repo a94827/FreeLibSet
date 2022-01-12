@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-01-07T13:37:15.328000000"/>
+	<meta name="changed" content="2022-01-12T16:45:36.382000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -257,15 +257,50 @@
 			<p lang="en-US" align="center">308</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">07.01.2022</p>
+			<p lang="en-US" align="center">07.01.2022-12.01.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">У свойства
-			</span>NumEditBoxBase&lt;T&gt;.UpDownHandler (<a href="#v301p12">v.301
-			<span lang="ru-RU">п.12</span></a>) <span lang="ru-RU">установлен
-			атрибут [DesignerSerializationVisibility(Hidden)]. Возникала
-			ошибка сериализации при работе дизайнера с выдачей бессмысленного
+			<p><span lang="en-US">1. </span><span lang="ru-RU">У свойства
+			</span><span lang="en-US">NumEditBoxBase&lt;T&gt;.UpDownHandler
+			(<a href="#v301p12">v.301 </a></span><a href="#v301p12"><span lang="ru-RU">п.12</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">установлен атрибут
+			[DesignerSerializationVisibility(Hidden)]. Возникала ошибка
+			сериализации при работе дизайнера с выдачей бессмысленного
 			сообщения об ошибке. Другие мелкие исправления в компоненте.</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Изменения в
+			табличном просмотре выбора строк и столбцов EFPSelRCDataGridView
+			(</span><a href="ExtForms_11.htm#v091p3"><span lang="en-US">v.91
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">):</span></p>
+			<p>- Показываются значки для строк, содержащих ячейки с ошибками и
+			предупреждениями. Работают команды перехода между такими строками.</p>
+			<p lang="en-US">- <span lang="ru-RU">При установке/снятии отметки
+			строки больше не меняется текущая ячейка. </span>
+			</p>
+			<p lang="en-US"><span lang="ru-RU">- Команды отметки строк не
+			работали в мастерах </span>Wizard, <span lang="ru-RU">т.к. список
+			команд меню инициализировался раньше установки свойства
+			</span>SourceData<span lang="ru-RU">. Свойство MarkRowsColumnIndex
+			теперь устанавливается в конструкторе.</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Другие мелкие исправления.</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Исправлена
+			ошибка в обработчике события </span><span lang="en-US">DataGridView.CellPainting
+			</span><span lang="ru-RU">в </span><span lang="en-US">EFPDataGridView.
+			</span><span lang="ru-RU">Свойство
+			DataGridViewCellPaintingEventArgs.</span><span lang="en-US">Handled
+			</span><span lang="ru-RU">не устанавливалось при рисовании ячеек с
+			</span><span lang="en-US">ForeColor=Transparent </span><span lang="ru-RU">(при
+			EFPDataGridViewCellAttributesEventArgs</span><span lang="en-US">.ContentVisible=false</span><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Скорее всего, ошибка появилась после
+			изменения (</span><a href="ExtForms_11.htm#v234p3"><span lang="en-US">v.234
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">).
+			</span><font color="#ce181e"><span lang="ru-RU">Требуется
+			уточнение</span></font><span lang="ru-RU">.</span></p>
+			<p lang="en-US">4. EFPDataGridView.GetCellToolTipText() <span lang="ru-RU">не
+			возвращает подсказку по значению ячейки, если 
+			EFPDataGridViewCellAttributesEventArgs</span>.ContentVisible=false<span lang="ru-RU">
+			и подсказка не была установлена обработчиком события в явном виде.
+			Внутреннее свойство
+			EFPDataGridViewCellAttributesEventArgs</span>.ToolTipTextHasBeenSet</p>
 		</td>
 	</tr>
 	<tr valign="top">
