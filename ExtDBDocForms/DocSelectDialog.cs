@@ -316,7 +316,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Диалог с текстовым представлением доументов EFPDocSelTextGridView
+    #region Диалог с текстовым представлением документов EFPDocSelTextGridView
 
     private DialogResult ShowDialogMultiList()
     {

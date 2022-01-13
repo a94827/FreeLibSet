@@ -859,6 +859,7 @@ namespace FreeLibSet.Forms.Docs
         control.PopupButtonToolTipText = "Выбрать: " + DocType.PluralTitle;
         control.ClearButtonToolTipText = "Очистить поле выбора";
       }
+      _SelectionMode = DocSelectionMode.MultiList;
     }
 
     /// <summary>
@@ -1286,6 +1287,30 @@ namespace FreeLibSet.Forms.Docs
     #region Выпадающий список
 
     /// <summary>
+    /// Режим выбора документов в выпадающем списке.
+    /// Допустимые значения: MultiSelect, MultiList и MultiCheckBoxes.
+    /// По умолчанию - MultiSelect
+    /// </summary>
+    public DocSelectionMode SelectionMode
+    {
+      get { return _SelectionMode; }
+      set
+      {
+        switch (value)
+        {
+          case DocSelectionMode.MultiSelect:
+          case DocSelectionMode.MultiList:
+          case DocSelectionMode.MultiCheckBoxes:
+            _SelectionMode = value;
+            break;
+          default:
+            throw new ArgumentException();
+        }
+      }
+    }
+    private DocSelectionMode _SelectionMode;
+
+    /// <summary>
     /// Показывает блок диалога для выбора нескольких документов.
     /// Используется метод DocTypeUI.SelectDocs().
     /// Затем устанавливается свойство DocIds.
@@ -1299,7 +1324,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       DocSelectDialog dlg = new DocSelectDialog(DocTypeUI);
-      dlg.SelectionMode = DocSelectionMode.MultiList;
+      dlg.SelectionMode = SelectionMode;
       if (!String.IsNullOrEmpty(DisplayName))
         dlg.Title = DisplayName;
       dlg.CanBeEmpty = CanBeEmpty;
@@ -1561,6 +1586,7 @@ namespace FreeLibSet.Forms.Docs
 
       _DocId = 0;
       _DocIdWasSet = false;
+      _SelectionMode = DocSelectionMode.MultiSelect;
     }
 
     /// <summary>
@@ -2049,6 +2075,29 @@ namespace FreeLibSet.Forms.Docs
     #region Выпадающий список
 
     /// <summary>
+    /// Режим выбора документов в выпадающем списке.
+    /// Допустимые значения: MultiSelect и MultiCheckBoxes.
+    /// По умолчанию - MultiSelect
+    /// </summary>
+    public DocSelectionMode SelectionMode
+    {
+      get { return _SelectionMode;}
+      set
+      {
+        switch (value)
+        { 
+          case DocSelectionMode.MultiSelect:
+          case DocSelectionMode.MultiCheckBoxes:
+            _SelectionMode = value;
+            break;
+          default:
+            throw new ArgumentException();
+        }
+      }
+    }
+    private DocSelectionMode _SelectionMode;
+
+    /// <summary>
     /// Показывает диалог выбора одного или нескольких поддокументов для заданного документа 
     /// c помощью SubDocTypeUI.SelectSubDocs().
     /// Затем устанавливается свойство SubDocIds.
@@ -2067,7 +2116,7 @@ namespace FreeLibSet.Forms.Docs
       DBxSingleDoc Doc = DocSet[DocType.Name].View(DocId);
 
       SubDocSelectDialog dlg = new SubDocSelectDialog(SubDocTypeUI, Doc.SubDocs[SubDocTypeName].SubDocs);
-      dlg.SelectionMode = DocSelectionMode.MultiSelect;
+      dlg.SelectionMode = SelectionMode;
       if (!String.IsNullOrEmpty(DisplayName))
         dlg.Title = DisplayName;
       dlg.CanBeEmpty = CanBeEmpty;

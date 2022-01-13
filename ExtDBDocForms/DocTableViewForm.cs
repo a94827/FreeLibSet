@@ -499,6 +499,12 @@ namespace FreeLibSet.Forms.Docs
           _DocTreeView.CanMultiEdit = false;
         }
       }
+      else if (mode == DocTableViewMode.SelectMultiWithFlags)
+      {
+        _DocGridView.MarkRowIds = IdList.Empty; // 13.01.2022
+        //if (_DocTreeView!=null)
+          // TODO: _DocTreeView.MarkRowIds = IdList.Empty; 
+      }
 
 
       _DocGridView.LoadConfig(); // табличка фильтров нужна сразу
@@ -804,8 +810,13 @@ namespace FreeLibSet.Forms.Docs
         {
           switch (ActiveTab)
           {
-            case DocViewFormActiveTab.Grid: return DocGridView.SelectedIds;
-            case DocViewFormActiveTab.Tree: return DocTreeView.SelectedIds;
+            case DocViewFormActiveTab.Grid: 
+              if (Mode==DocTableViewMode.SelectMultiWithFlags)
+                return DocGridView.MarkRowIds.ToArray();
+              else
+                return DocGridView.SelectedIds;
+            case DocViewFormActiveTab.Tree: 
+              return DocTreeView.SelectedIds;
             default:
               throw new BugException();
           }
@@ -834,8 +845,16 @@ namespace FreeLibSet.Forms.Docs
 
       switch (ActiveTab)
       {
-        case DocViewFormActiveTab.Grid: DocGridView.SelectedIds = value; break;
-        case DocViewFormActiveTab.Tree: DocTreeView.SelectedIds = value; break;
+        case DocViewFormActiveTab.Grid:
+          if (value == null)
+            value = DataTools.EmptyIds;
+          if (Mode == DocTableViewMode.SelectMultiWithFlags)
+            DocGridView.MarkRowIds = new IdList(value);
+          DocGridView.SelectedIds = value; 
+          break;
+        case DocViewFormActiveTab.Tree: 
+          DocTreeView.SelectedIds = value; 
+          break;
       }
     }
 

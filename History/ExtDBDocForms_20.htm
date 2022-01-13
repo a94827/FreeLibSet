@@ -5,7 +5,7 @@
 	<title>»зменени€ в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2022-01-07T21:58:28.507000000"/>
+	<meta name="changed" content="2022-01-13T16:22:52.782000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -129,21 +129,35 @@ Forms</span>)</h1>
 			<p lang="en-US" align="center">308</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">07.01.2022</p>
+			<p lang="en-US" align="center">07.01.2022-13.01.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU"> лассы
-			</span>DocValueInt/Single/Double/DecimalEditBox (<a href="#v301p2">v.301
-			<span lang="ru-RU">п.2</span></a>) <span lang="ru-RU">присоедин€ютс€
-			к свойству </span>NValue <span lang="ru-RU">управл€ющего элемента,
-			чтобы поддерживать пустые значени€, когда</span>
-			EFPNumEditBoxBase&lt;T&gt;.CanBeEmpty=true</p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU"> лассы
+			</span><span lang="en-US">DocValueInt/Single/Double/DecimalEditBox
+			(<a href="#v301p2">v.301 </a></span><a href="#v301p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">присоедин€ютс€ к свойству </span><span lang="en-US">NValue
+			</span><span lang="ru-RU">управл€ющего элемента, чтобы
+			поддерживать пустые значени€, когда</span>
+			<span lang="en-US">EFPNumEditBoxBase&lt;T&gt;.CanBeEmpty=true</span></p>
 			<p>2. —войство InitDocEditFormEventArgsBase.<span lang="en-US">MainImageKey
 			(<a href="ExtDBDocForms_11.htm#v001p10">v.1 </a></span><a href="ExtDBDocForms_11.htm#v001p10">п.10</a><span lang="en-US">)</span>,
 			возвращающий значок дл€ документа/поддокумента<span lang="en-US">.
 			</span>ѕри добавлении первой страницы, метод <span lang="en-US">AddPage()
 			</span>устанавливает <span lang="en-US">DocEditPage.ImageKey. </span>ƒл€
 			второй и последующих страниц используетс€ значок &quot;<span lang="en-US">Properties</span>&quot;<span lang="en-US">.</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">—войства
+			EFPMultiDocComboBox (</span><a href="ExtDBDocForms_11.htm#v071p2"><span lang="en-US">v.71
+			</span><span lang="ru-RU">п2</span></a><span lang="ru-RU">),
+			EFPMultiSubDocComboBox.SelectionMode (</span><a href="ExtDBDocForms_11.htm#v094p3"><span lang="en-US">v.94
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">, </span><a href="ExtDBDocForms_11.htm#v133p4"><span lang="en-US">v.133
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="ru-RU">4. </span><span lang="en-US">EFPDocTableView.Init()
+			(<a href="ExtDBDocForms_11.htm#v085p1">v.85 </a></span><a href="ExtDBDocForms_11.htm#v085p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">инициализирует </span><span lang="en-US">EFPDBxGridView.MarkRowIds
+			</span><span lang="ru-RU">при
+			</span><span lang="en-US">Mode=DocTableViewMode.SelectMultiWithFlags.
+			</span><span lang="ru-RU">Ќе работал выбор документов с помощью
+			флажков дл€ </span><span lang="en-US">DocSelectDialog.SelectionMode=MultiCheckBoxes</span><span lang="ru-RU">.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
