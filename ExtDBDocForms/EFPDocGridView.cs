@@ -1097,7 +1097,7 @@ namespace FreeLibSet.Forms.Docs
 
           // 12.02.2021, 18.10.2021
           switch (ColName)
-          { 
+          {
             case "CreateTime":
             case "CreateUserId":
             case "ChangeTime":

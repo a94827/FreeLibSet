@@ -5,7 +5,7 @@
 	<title>»зменени€ в доп. управл€ющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-01-12T16:45:36.382000000"/>
+	<meta name="changed" content="2022-01-13T22:31:59.123000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -257,7 +257,7 @@
 			<p lang="en-US" align="center">308</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">07.01.2022-12.01.2022</p>
+			<p lang="en-US" align="center">07.01.2022-13.01.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">” свойства
@@ -281,25 +281,24 @@
 			команд меню инициализировалс€ раньше установки свойства
 			</span>SourceData<span lang="ru-RU">. —войство MarkRowsColumnIndex
 			теперь устанавливаетс€ в конструкторе.</span></p>
-			<p lang="en-US"><span lang="ru-RU">- ƒругие мелкие исправлени€.</span></p>
+			<p>- ƒругие мелкие исправлени€.</p>
 			<p><span lang="en-US">3. </span><span lang="ru-RU">»справлена
 			ошибка в обработчике событи€ </span><span lang="en-US">DataGridView.CellPainting
 			</span><span lang="ru-RU">в </span><span lang="en-US">EFPDataGridView.
-			</span><span lang="ru-RU">—войство
-			DataGridViewCellPaintingEventArgs.</span><span lang="en-US">Handled
-			</span><span lang="ru-RU">не устанавливалось при рисовании €чеек с
-			</span><span lang="en-US">ForeColor=Transparent </span><span lang="ru-RU">(при
-			EFPDataGridViewCellAttributesEventArgs</span><span lang="en-US">.ContentVisible=false</span><span lang="ru-RU">)</span><span lang="en-US">.
-			</span><span lang="ru-RU">—корее всего, ошибка по€вилась после
+			</span><span lang="en-US">ѕ</span><span lang="ru-RU">осле
 			изменени€ (</span><a href="ExtForms_11.htm#v234p3"><span lang="en-US">v.234
-			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">).
-			</span><font color="#ce181e"><span lang="ru-RU">“ребуетс€
-			уточнение</span></font><span lang="ru-RU">.</span></p>
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span><span lang="ru-RU">,
+			с</span><span lang="ru-RU">войство
+			DataGridViewCellPaintingEventArgs.</span><span lang="en-US">Handled
+			</span><span lang="ru-RU">перестало устанавливатьс€ </span><span lang="ru-RU">не
+			устанавливалось при рисовании €чеек с </span><span lang="en-US">ForeColor=Transparent</span><span lang="ru-RU">,
+			что, фактически, аннулировало действие свойства
+			</span><span lang="ru-RU">EFPDataGridViewCellAttributesEventArgs</span><span lang="en-US">.ContentVisible=false</span></p>
 			<p lang="en-US">4. EFPDataGridView.GetCellToolTipText() <span lang="ru-RU">не
-			возвращает подсказку по значению €чейки, если 
-			EFPDataGridViewCellAttributesEventArgs</span>.ContentVisible=false<span lang="ru-RU">
-			и подсказка не была установлена обработчиком событи€ в €вном виде.
-			¬нутреннее свойство
+			возвращает подсказку по значению €чейки, если
+			EFPDataGridViewCellAttributesEventArgs</span>.ContentVisible=false
+			<span lang="ru-RU">и подсказка не была установлена обработчиком
+			событи€ в €вном виде. ¬нутреннее свойство
 			EFPDataGridViewCellAttributesEventArgs</span>.ToolTipTextHasBeenSet</p>
 		</td>
 	</tr>
