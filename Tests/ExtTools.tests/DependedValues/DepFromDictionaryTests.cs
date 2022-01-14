@@ -9,6 +9,7 @@ namespace ExtTools_tests.DependedValues
   [TestFixture]
   public class DepFromDictionaryTests
   {
+    [Test]
     public void DynamicTest()
     {
       Dictionary<float, string> dict=new Dictionary<float, string>();

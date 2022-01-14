@@ -9,6 +9,7 @@ namespace ExtTools_tests.DependedValues
   [TestFixture]
   public class DepFromArrayTests
   {
+    [Test]
     public void DynamicTest()
     {
       DepInput<int> indexArg = new DepInput<int>(0, null);

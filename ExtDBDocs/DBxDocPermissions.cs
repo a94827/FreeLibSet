@@ -291,21 +291,21 @@ namespace FreeLibSet.Data.Docs
       docProvider.UserPermissions.SetReadOnly();
       for (int i = 0; i < docProvider.UserPermissions.Count; i++)
       {
-        IDBxDocPermission Item = docProvider.UserPermissions[i] as IDBxDocPermission;
-        if (Item == null)
+        IDBxDocPermission item = docProvider.UserPermissions[i] as IDBxDocPermission;
+        if (item == null)
           continue;
 
-        string TableNames = Item.TableNames;
+        string TableNames = item.TableNames;
         if (String.IsNullOrEmpty(TableNames))
-          throw new NullReferenceException("Свойство \"TableNames\" для объекта " + Item.ToString() + " не вернуло список таблиц");
+          throw new NullReferenceException("Свойство \"TableNames\" для объекта " + item.ToString() + " не вернуло список таблиц");
         if (TableNames.IndexOf(',') >= 0)
         {
           string[] a = TableNames.Split(',');
           for (int j = 0; j < a.Length; j++)
-            AddItem(a[j], Item);
+            AddItem(a[j], item);
         }
         else
-          AddItem(TableNames, Item);
+          AddItem(TableNames, item);
       }
     }
 

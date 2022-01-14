@@ -295,7 +295,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавляет разрешение в список, используя генератор разрешения.
-    /// Перебираются все генераторы разрешений в списке Creators и для каждого из них
+    /// Вызывается метод UserPermissionCreators.Create() для создания экземпляра UserPermission.
     /// </summary>
     /// <param name="classCode">Код класса разрешения</param>
     /// <returns>Созданное разрешение</returns>
