@@ -398,6 +398,8 @@ namespace FreeLibSet.Data.Docs
 
     #region Заготовки таблиц
 
+    #region GetTemplate()
+
     /// <summary>
     /// Получение пустой таблицы документа. Используется буферизация структур.
     /// Полученную таблицу можно менять, т.к. возвращается всегда копия таблицы
@@ -444,12 +446,6 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Внутреннее хранилище структур таблиц, чтобы не запрашивать
-    /// одно и тоже
-    /// </summary>
-    private SyncDictionary<String, DataTable> _BufStructs;
-
-    /// <summary>
     /// Получение пустой таблицы документа. Используется буферизация структур.
     /// Полученную таблицу можно менять, т.к. возвращается всегда копия таблицы
     /// Если у пользователя есть ограничения на доступ к отдельным полям таблицы, может быть возвращена
@@ -465,17 +461,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      if (_BufStructs == null)
-        _BufStructs = new SyncDictionary<string, DataTable>();
+      string tableName = String.IsNullOrEmpty(subDocTypeName) ? docTypeName : subDocTypeName;
 
-      string TableName = String.IsNullOrEmpty(subDocTypeName) ? docTypeName : subDocTypeName;
-
-      DataTable Table1;
-      if (!_BufStructs.TryGetValue(TableName, out Table1))
-      {
-        Table1 = DoGetTemplate(TableName, !String.IsNullOrEmpty(subDocTypeName));
-        _BufStructs[TableName] = Table1; // при асинхронном вызове ничего плохого не случится
-      }
+      DataTable Table1 = GetBufferedTemplate(tableName);
 
       // Возвращаем копию набора. Оригинал потом пригодится
       DataTable Table2 = Table1.Clone();
@@ -497,6 +485,40 @@ namespace FreeLibSet.Data.Docs
 
       SerializationTools.SetUnspecifiedDateTimeMode(Table2);
       return Table2;
+    }
+
+    #endregion
+
+    #region Буферизация структур таблиц
+
+    /// <summary>
+    /// Внутреннее хранилище структур таблиц, чтобы не запрашивать
+    /// одно и тоже
+    /// </summary>
+    private SyncDictionary<String, DataTable> _BufStructs;
+
+    /// <summary>
+    /// Возвращает буферизованное описание таблицы
+    /// </summary>
+    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
+    /// <returns>Таблица, которую нельзя менять</returns>
+    private DataTable GetBufferedTemplate(string tableName)
+    {
+      if (_BufStructs == null)
+        _BufStructs = new SyncDictionary<string, DataTable>();
+
+      DataTable Table1;
+      if (!_BufStructs.TryGetValue(tableName, out Table1))
+      {
+        DBxDocTypeBase dtb = DocTypes.FindByTableName(tableName);
+        if (dtb == null)
+          throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
+
+
+        Table1 = DoGetTemplate(tableName, dtb.IsSubDoc);
+        _BufStructs[tableName] = Table1; // при асинхронном вызове ничего плохого не случится
+      }
+      return Table1;
     }
 
     private static DBxColumns AuxDocSysColumns = new DBxColumns("CreateTime,CreateUserId,ChangeTime,ChangeUserId");
@@ -582,6 +604,10 @@ namespace FreeLibSet.Data.Docs
       return Table;
     }
 
+    #endregion
+
+    #region GetColumnNameIndexer()
+
     /// <summary>
     /// Получить индексатор для имен полей документа/поддокумента.
     /// Список полей соответствует получаемому методом GetTemplate() без системных столбцов.
@@ -598,15 +624,7 @@ namespace FreeLibSet.Data.Docs
       StringArrayIndexer indexer;
       if (!_ColumnNameIndexers.TryGetValue(tableName, out indexer))
       {
-        DBxDocType dt;
-        DBxSubDocType sdt;
-        if (!DocTypes.FindByTableName(tableName, out dt, out sdt))
-          throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
-        DataTable table;
-        if (sdt == null)
-          table = GetTemplate(dt.Name, null, false);
-        else
-          table = GetTemplate(dt.Name, sdt.Name, false);
+        DataTable table = GetBufferedTemplate(tableName);
 
         indexer = new StringArrayIndexer(DataTools.GetColumnNames(table), true);
         _ColumnNameIndexers[tableName] = indexer; // 28.08.2020 - обеспечение потокобезопасности
@@ -614,6 +632,39 @@ namespace FreeLibSet.Data.Docs
       return indexer;
     }
     private SyncDictionary<string, StringArrayIndexer> _ColumnNameIndexers;
+
+    #endregion
+
+    #region GetColumnDef()
+
+#if !XXX 
+    // Эта перегрузка потенциально опасна, вдруг таблица, возвращаемая SELECT(), имеет другой порядок столбцов. По идее, не должно, но кто его знает. Лучше обращаться по имени столбца
+    // Зато быстрее
+
+    /// <summary>
+    /// Используется в реализациях интерфейса IDBxDocValue
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnIndex">Индекс столбца</param>
+    /// <returns>Описание столбца</returns>
+    internal DataColumn GetColumnDef(string tableName, int columnIndex)
+    {
+      return GetBufferedTemplate(tableName).Columns[columnIndex];
+    }
+#else
+    /// <summary>
+    /// Используется в реализациях интерфейса IDBxDocValue
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя столбца</param>
+    /// <returns>Описание столбца</returns>
+    internal DataColumn GetColumnDef(string tableName, string columnName)
+    {
+      return GetBufferedTemplate(tableName).Columns[columnName];
+    }
+#endif
+
+    #endregion
 
     #endregion
 

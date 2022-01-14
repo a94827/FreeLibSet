@@ -635,6 +635,12 @@ namespace FreeLibSet.Data.Docs
           throw new ObjectReadOnlyException("Редактирование значений не допускается");
       }
 
+      private DataColumn GetColumnDef(int index)
+      {
+        //return _MultiDocs.DocProvider.GetColumnDef(_MultiDocs.DocType.Name, this[index].Name);
+        return _MultiDocs.DocProvider.GetColumnDef(_MultiDocs.DocType.Name, index);
+      }
+
       public new bool GetValueReadOnly(int index)
       {
         if (IsReadOnly)
@@ -643,7 +649,17 @@ namespace FreeLibSet.Data.Docs
         if (index < _MultiDocs.DocProvider.MainDocTableServiceColumns.Count)
           return true; // Id и Deleted
 
-        return base.GetValueReadOnly(index);
+        return GetColumnDef(index).ReadOnly;
+      }
+
+      public new bool AllowDBNull(int index)
+      {
+        return GetColumnDef(index).AllowDBNull;
+      }
+
+      public new int MaxLength(int index)
+      {
+        return GetColumnDef(index).MaxLength;
       }
 
       #endregion
@@ -705,6 +721,28 @@ namespace FreeLibSet.Data.Docs
     internal void ResetValueBuffer(int index)
     {
       _DocValues.ResetBuffer(index);
+    }
+
+    /// <summary>
+    /// Значения флажков AllowDBNull для оптимизации IDBxDocValues
+    /// </summary>
+    internal bool[] AllowDBNullFlags
+    {
+      get
+      {
+        if (_AllowDBNullFlags == null)
+          InitAllowDBNullFlags();
+        return _AllowDBNullFlags;
+      }
+    }
+    private bool[] _AllowDBNullFlags;
+
+    private void InitAllowDBNullFlags()
+    {
+      bool[] a = new bool[_Table.Columns.Count];
+      for (int i = 0; i < _Table.Columns.Count; i++)
+        a[i] = DataTools.GetBool(_Table.Columns[i].ExtendedProperties["AllowDBNull"]);
+      _AllowDBNullFlags= a;
     }
 
     #endregion
@@ -841,14 +879,20 @@ namespace FreeLibSet.Data.Docs
           return Row.IsNull(index);
       }
 
+      private DataColumn GetColumnDef(int index)
+      {
+        //return _MultiDocs.DocProvider.GetColumnDef(_MultiDocs.DocType.Name, this[index].Name);
+        return _MultiDocs.DocProvider.GetColumnDef(_MultiDocs.DocType.Name, index);
+      }
+
       public bool AllowDBNull(int index)
       {
-        return _MultiDocs.Table.Columns[index].AllowDBNull;
+        return GetColumnDef(index).AllowDBNull;
       }
 
       public int MaxLength(int index)
       {
-        return _MultiDocs.Table.Columns[index].MaxLength;
+        return GetColumnDef(index).MaxLength;
       }
 
       public bool GetValueReadOnly(int index)
@@ -859,7 +903,7 @@ namespace FreeLibSet.Data.Docs
         if (index < _MultiDocs.DocProvider.MainDocTableServiceColumns.Count)
           return true; // Id и Deleted
 
-        return _MultiDocs.Table.Columns[index].ReadOnly;
+        return GetColumnDef(index).ReadOnly;
       }
 
       bool IDBxDocValues.GetGrayed(int index)
@@ -1146,9 +1190,13 @@ namespace FreeLibSet.Data.Docs
         ds.Tables.Remove(_Table);
         ds.Tables.Add(Table2);
         DataTools.SetPrimaryKey(Table2, "Id");
-        _Table = Table2;
+        _Table = Table2; // 
         _Table.AcceptChanges(); // переход в режим View
         _DocValues.Table = _Table;
+
+        // 14.01.2022. Замечание:
+        // В этот момент меняется структура таблицы. Свойства DataColumn.AllowDBNull и MaxLength могут быть не инициализированы правильно,
+        // т.к. таблица является результатом выполнения SELECT(). Поэтому на них нельзя ориентироваться в DBxDocValue
       }
       else
       {

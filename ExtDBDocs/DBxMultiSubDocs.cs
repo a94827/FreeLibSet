@@ -592,7 +592,13 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
-      bool IDBxDocValues.GetValueReadOnly(int index)
+      private DataColumn GetColumnDef(int index)
+      {
+        //return _MultiSubDocs.DocProvider.GetColumnDef(_MultiSubDocs.SubDocType.Name, this[index].Name);
+        return _MultiSubDocs.DocProvider.GetColumnDef(_MultiSubDocs.SubDocType.Name, index);
+      }
+
+      public new bool GetValueReadOnly(int index)
       {
         if (IsReadOnly)
           return true;
@@ -600,7 +606,17 @@ namespace FreeLibSet.Data.Docs
         if (index < _MultiSubDocs.DocProvider.SubDocTableServiceColumns.Count)
           return true; // Id и Deleted
 
-        return base.GetValueReadOnly(index);
+        return GetColumnDef(index).ReadOnly;
+      }
+
+      public new bool AllowDBNull(int index)
+      {
+        return GetColumnDef(index).AllowDBNull;
+      }
+
+      public new int MaxLength(int index)
+      {
+        return GetColumnDef(index).MaxLength;
       }
 
       #endregion
@@ -1044,14 +1060,20 @@ namespace FreeLibSet.Data.Docs
           return Row.IsNull(index);
       }
 
+      private DataColumn GetColumnDef(int index)
+      {
+        //return _MultiSubDocs.DocProvider.GetColumnDef(_MultiSubDocs.SubDocType.Name, this[index].Name);
+        return _MultiSubDocs.DocProvider.GetColumnDef(_MultiSubDocs.SubDocType.Name, index);
+      }
+
       public bool AllowDBNull(int index)
       {
-        return Row.Table.Columns[index].AllowDBNull;
+        return GetColumnDef(index).AllowDBNull;
       }
 
       public int MaxLength(int index)
       {
-        return _MultiSubDocs.Table.Columns[index].MaxLength;
+        return GetColumnDef(index).MaxLength;
       }
 
       public bool GetValueReadOnly(int index)
@@ -1062,7 +1084,7 @@ namespace FreeLibSet.Data.Docs
         if (index < _MultiSubDocs.DocProvider.MainDocTableServiceColumns.Count)
           return true; // Id и Deleted
 
-        return _MultiSubDocs.Table.Columns[index].ReadOnly;
+        return GetColumnDef(index).ReadOnly;
       }
 
       public bool GetGrayed(int index)
