@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-01-14T12:53:36.122000000"/>
+	<meta name="changed" content="2022-01-19T16:03:33.409000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -38,12 +38,12 @@
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
 		@page { margin: 2cm }
-		p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		h1 { margin-bottom: 0.21cm; background: transparent; orphans: 2; widows: 2 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -79,29 +79,32 @@
 			<p lang="en-US" align="center">308</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">14.01.2022</p>
+			<p lang="en-US" align="center">14.01.2022-19.01.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Изменена реализация
-			интерфейса </span>IDBxDocValues <span lang="ru-RU">в объектах
-			</span>DBxDocSet<span lang="ru-RU"> (</span><a href="ExtDBDocs_11.htm#v001p3">v.1
-			<span lang="ru-RU">п.3</span></a><span lang="ru-RU">). Во
-			внутренних классах </span>DBxMultiDocs.SingleDocValues,
-			MulriDocValues, DBxMultiSubDocs.SingleSubDocValues <span lang="ru-RU">и
-			</span>MultiSubDocValues <span lang="ru-RU">изменены методы
-			</span>GetValueReadOnly(), AllowDBNull() <span lang="ru-RU">и
-			</span>MaxLength(). <span lang="ru-RU">Они обращаются не к
-			столбцам </span>DataColumn <span lang="ru-RU">текущей таблицы, а к
-			столбцам шаблона. </span>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменена
+			реализация интерфейса </span><span lang="en-US">IDBxDocValues </span><span lang="ru-RU">в
+			объектах </span><span lang="en-US">DBxDocSet </span><span lang="ru-RU">(</span><a href="ExtDBDocs_11.htm#v001p3"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">). Во
+			внутренних классах </span><span lang="en-US">DBxMultiDocs.SingleDocValues,
+			MulriDocValues, DBxMultiSubDocs.SingleSubDocValues </span><span lang="ru-RU">и
+			</span><span lang="en-US">MultiSubDocValues </span><span lang="ru-RU">изменены
+			методы </span><span lang="en-US">GetValueReadOnly(), AllowDBNull()
+			</span><span lang="ru-RU">и </span><span lang="en-US">MaxLength().
+			</span><span lang="ru-RU">Они обращаются не к столбцам </span><span lang="en-US">DataColumn
+			</span><span lang="ru-RU">текущей таблицы, а к столбцам шаблона. </span>
 			</p>
-			<p lang="en-US">2. <span lang="ru-RU">Внутренний метод
-			</span>DBxDocProvider.GetColumnDef(tableName, columnName).
-			<span lang="ru-RU">Изменена внутренняя реализация методов
-			</span>GetTemplate() (<a href="ExtDBDocs_11.htm#v001p2">v.1 <span lang="ru-RU">п.2</span></a>).
-			<span lang="ru-RU">Метод GetColumnNameIndexer() (</span><a href="ExtDBDocs_11.htm#v094p1">v.94
-			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не вызывает
-			</span>GetTemplate() <span lang="ru-RU">для создания ненужной
-			копии таблицы.</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Внутренний
+			метод </span><span lang="en-US">DBxDocProvider.GetColumnDef(tableName,
+			columnName). </span><span lang="ru-RU">Изменена внутренняя
+			реализация методов </span><span lang="en-US">GetTemplate() (<a href="ExtDBDocs_11.htm#v001p2">v.1
+			</a></span><a href="ExtDBDocs_11.htm#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Метод GetColumnNameIndexer() (</span><a href="ExtDBDocs_11.htm#v094p1"><span lang="en-US">v.94
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не
+			вызывает </span><span lang="en-US">GetTemplate() </span><span lang="ru-RU">для
+			создания ненужной копии таблицы.</span></p>
+			<p lang="en-US">3. <span lang="ru-RU">Вспомогательные методы
+			</span>DBxDocProvider.GetTextValues()</p>
 		</td>
 	</tr>
 	<tr valign="top">

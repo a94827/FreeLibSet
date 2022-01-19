@@ -2061,7 +2061,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Поиск описания документа по идентификатору в таблице "DocTypes".
     /// В текущей реализации, только описания документов, но не поддокументов, имеют идентификаторы.
-    /// Если задан недействительный идентфикатор, возвращается null.
+    /// Если задан недействительный идентификатор, возвращается null.
     /// </summary>
     /// <param name="tableId">Идентификатор в таблице "DocTypes"</param>
     /// <returns>Описание документа или null</returns>
@@ -2699,7 +2699,7 @@ foreach (ServerSubDocType sdt in dt.SubDocs)
     public const string CreateTime = "CreateTime";
 
     /// <summary>
-    /// Имя ссылочного поля, содержащего идентфикатор пользователя, создавшего документ
+    /// Имя ссылочного поля, содержащего идентификатор пользователя, создавшего документ
     /// </summary>
     public const string CreateUserId = "CreateUserId";
 
@@ -2710,7 +2710,7 @@ foreach (ServerSubDocType sdt in dt.SubDocs)
     public const string ChangeTime = "ChangeTime";
 
     /// <summary>
-    /// Имя ссылочного поля, содержащего идентфикатор пользователя, последним изменивший документ.
+    /// Имя ссылочного поля, содержащего идентификатор пользователя, последним изменивший документ.
     /// Если документ был только создан, но ни разу не изменялся, поле содержит NULL.
     /// </summary>
     public const string ChangeUserId = "ChangeUserId";

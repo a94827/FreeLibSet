@@ -29,7 +29,7 @@ namespace FreeLibSet.Data.Docs
   /// Сам по себе класс DBxDocProvider является потокобезопасным, но производные классы могут ограничивать работу
   /// только тем потоком, который использовался для создания объекта. Привязка к потоку задается при создании DBxDocProvider
   /// </summary>
-  public abstract class DBxDocProvider:
+  public abstract class DBxDocProvider :
     MarshalByRefSponsoredObject,
     IDBxCacheSource,
     IDBxConReadOnlyPKInt32,
@@ -637,7 +637,7 @@ namespace FreeLibSet.Data.Docs
 
     #region GetColumnDef()
 
-#if !XXX 
+#if !XXX
     // Эта перегрузка потенциально опасна, вдруг таблица, возвращаемая SELECT(), имеет другой порядок столбцов. По идее, не должно, но кто его знает. Лучше обращаться по имени столбца
     // Зато быстрее
 
@@ -2223,10 +2223,61 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получение текстового представления для документа / поддокумента
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="id">Идентификатор</param>
+    /// <param name="tableName">Имя таблицы. Должно быть задано имя существующего документа или поддокумента</param>
+    /// <param name="id">Идентификатор. Если задано значение 0, возвращается пустая строка</param>
     /// <returns>Текстовое представление</returns>
     public abstract string GetTextValue(string tableName, Int32 id);
+
+    /// <summary>
+    /// Получение текстового представления для нескольких документов или поддокументов одного вида.
+    /// Этот метод можно использовать, например, для вывода текста в табличках фильтров.
+    /// Количество строк в возвращаемом массиве равно <paramref name="ids"/>.Length.
+    /// Если <paramref name="ids"/>=null или задан пустой массив, возвращается пустой массив строк.
+    /// Массив может содержать повторяющиеся идентификаторы. Для идентификаторов 0 возвращаются пустые строки.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы. Должно быть задано имя существующего документа или поддокумента</param>
+    /// <param name="ids">Массив идентификаторов. Может быть null или пустым массивом</param>
+    /// <returns>Текстовое представление</returns>
+    public string[] GetTextValues(string tableName, Int32[] ids)
+    {
+      // Пока нет смысла делать методы GetTextValues() виртуальными.
+
+      if (ids == null)
+        return DataTools.EmptyStrings;
+      if (ids.Length == 0)
+        return DataTools.EmptyStrings;
+      string[] a = new string[ids.Length];
+      for (int i = 0; i < ids.Length; i++)
+        a[i] = GetTextValue(tableName, ids[i]);
+      return a;
+    }
+
+    /// <summary>
+    /// Получение текстового представления для нескольких документов или поддокументов одного вида.
+    /// Этот метод можно использовать, например, для вывода текста в табличках фильтров.
+    /// Количество строк в возвращаемом массиве равно <paramref name="ids"/>.Count.
+    /// Если <paramref name="ids"/>=null или задан пустой список, возвращается пустой массив строк.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы. Должно быть задано имя существующего документа или поддокумента</param>
+    /// <param name="ids">Список идентификаторов. Может быть null или пустым списком</param>
+    /// <returns>Текстовое представление</returns>
+    public string[] GetTextValues(string tableName, IdList ids)
+    {
+      // Пока нет смысла делать методы GetTextValues() виртуальными.
+
+      if (ids == null)
+        return DataTools.EmptyStrings;
+      if (ids.Count == 0)
+        return DataTools.EmptyStrings;
+      string[] a = new string[ids.Count];
+      int cnt = 0;
+      foreach (Int32 id in ids)
+      {
+        a[cnt] = GetTextValue(tableName, id);
+        cnt++;
+      }
+      return a;
+    }
 
     /// <summary>
     /// Имя пользователя

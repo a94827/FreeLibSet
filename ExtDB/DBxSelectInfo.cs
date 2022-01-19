@@ -125,7 +125,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавить выражение с указание альяса.
+    /// Добавить выражение с указанием альяса.
     /// </summary>
     /// <param name="expression">Выражение. Не может быть null.</param>
     /// <param name="alias">Альяс. Должен быть задан</param>
@@ -135,12 +135,33 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает объект выражения DBxColumn и добавляет его в список
+    /// Создает объект выражения DBxColumn и добавляет его в список.
+    /// Если имя <paramref name="columnNames"/> содержит запятые, создается несколько столбцов.
     /// </summary>
-    /// <param name="columnName">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано</param>
-    public void Add(string columnName)
+    /// <param name="columnNames">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Может содержать запятые для задания нескольких полей</param>
+    public void Add(string columnNames)
     {
-      Add(new DBxColumn(columnName));
+      if (String.IsNullOrEmpty(columnNames))
+        throw new ArgumentNullException("columnNames");
+      if (columnNames.IndexOf(',') >= 0)
+      {
+        string[] a = columnNames.Split(',');
+        for (int i = 0; i < a.Length; i++)
+          Add(new DBxColumn(a[i]));
+      }
+      else
+        Add(new DBxColumn(columnNames));
+    }
+
+
+    /// <summary>
+    /// Создает объект выражения DBxColumn и добавляет его в список с указанием альяса.
+    /// Можно задать только одно имя поля.
+    /// </summary>
+    /// <param name="columnNames">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Не может содержать запятые</param>
+    public void Add(string columnName, string alias)
+    {
+      Add(new DBxColumn(columnName), alias);
     }
 
     /// <summary>
@@ -228,14 +249,14 @@ namespace FreeLibSet.Data
     /// Список выражений для GROUP BY.
     /// По умолчанию список пустой
     /// </summary>
-    public IList<DBxExpression> GroupBy 
-    { 
-      get 
+    public IList<DBxExpression> GroupBy
+    {
+      get
       {
         if (_GroupBy == null)
           _GroupBy = new List<DBxExpression>();
-        return _GroupBy; 
-      } 
+        return _GroupBy;
+      }
     }
     private List<DBxExpression> _GroupBy;
 
@@ -276,8 +297,8 @@ namespace FreeLibSet.Data
 
     private static void GetExpressionInfo(DBxExpression expression, out bool hasColumn, out bool hasAgregate)
     {
-      hasColumn=false;
-      hasAgregate=false;
+      hasColumn = false;
+      hasAgregate = false;
       DoGetExpressionInfo(expression, ref hasColumn, ref hasAgregate);
     }
 
@@ -290,7 +311,7 @@ namespace FreeLibSet.Data
       else if (expression is DBxFunction)
       {
         DBxFunction f = (DBxFunction)expression;
-        for (int i=0; i<f.Arguments.Length;i++)
+        for (int i = 0; i < f.Arguments.Length; i++)
           DoGetExpressionInfo(f.Arguments[i], ref hasColumn, ref hasAgregate);
       }
     }
@@ -376,9 +397,9 @@ namespace FreeLibSet.Data
         // 25.12.2019
         // В инструкции OrderBy могут идти как ссылки на поля таблицы, так и альясы из списка Expressions
         // Альясы не надо добавлять в список полей
-        DBxColumnList list2=new DBxColumnList();        
+        DBxColumnList list2 = new DBxColumnList();
         for (int i = 0; i < OrderBy.Parts.Length; i++)
-        { 
+        {
           list2.Clear();
           OrderBy.Parts[i].Expression.GetColumnNames(list2);
           for (int j = 0; j < list2.Count; j++)

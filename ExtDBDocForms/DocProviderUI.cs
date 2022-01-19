@@ -470,7 +470,7 @@ namespace FreeLibSet.Forms.Docs
     /// используя DBUI.TextHandlers
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="id">Идентфикатор</param>
+    /// <param name="id">Идентификатор</param>
     /// <returns>Текстовое представление</returns>
     public override string GetTextValue(string tableName, Int32 id)
     {
