@@ -158,7 +158,8 @@ namespace FreeLibSet.Data
     /// Создает объект выражения DBxColumn и добавляет его в список с указанием альяса.
     /// Можно задать только одно имя поля.
     /// </summary>
-    /// <param name="columnNames">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Не может содержать запятые</param>
+    /// <param name="columnName">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Не может содержать запятые</param>
+    /// <param name="alias">Альяс</param>
     public void Add(string columnName, string alias)
     {
       Add(new DBxColumn(columnName), alias);

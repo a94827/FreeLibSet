@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Data;
 using System.ComponentModel;
 using FastColoredTextBoxNS;
+using FreeLibSet.Forms;
 
 /*
  * The BSD License
