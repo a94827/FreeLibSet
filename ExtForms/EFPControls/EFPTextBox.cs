@@ -358,7 +358,7 @@ namespace FreeLibSet.Forms
     #region Свойство Text
 
     /// <summary>
-    /// Доступ к свойству Text.ValueEx без принудительного создания объекта
+    /// Введенный текст (свойство Control.Text)
     /// </summary>
     public string Text
     {
@@ -383,11 +383,15 @@ namespace FreeLibSet.Forms
       //if (InsideTextChanged)
       //  return;
       if (AllowDisabledText && (!EnabledState))
-        Control.Text = DisabledText;
+      {
+        if (!String.Equals(ControlText, DisabledText)) // 21.01.2022
+          ControlText = DisabledText;
+      }
       else if (_HasSavedText)
       {
         _HasSavedText = false;
-        Control.Text = _SavedText;
+        if (!String.Equals(ControlText, _SavedText)) // 21.01.2022
+          ControlText = _SavedText;
       }
     }
 

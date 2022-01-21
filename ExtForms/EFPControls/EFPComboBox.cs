@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms
     #region Свойство Text
 
     /// <summary>
-    /// Свойство TextComboBox.Text.
+    /// Свойство ComboBox.Text.
     /// </summary>
     protected override string ControlText
     {
@@ -56,7 +56,7 @@ namespace FreeLibSet.Forms
       {
         // 06.12.2011
         // Без сброса SelectedIndex, если есть список строк в комбоблоке и до этого
-        // была выбрана одна из строк, до показа формы на экране, текст установится,
+        // была выбрана одна из строк до показа формы на экране, текст установится,
         // но после вывода формы на экран будет заменен выбранной ранее строкой
         //  Control.SelectedIndex = -1;
 
@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
         // Если комбоблок уже на экране и установлено свойство AutoCompleteMode=Append,
         // то начинаются глюки при ввода текста в редакторе адреса в поле "Улица"
         // и "населенный пункт", включая попытку записи по неправильному адресу памяти
-        // Оставляем сброс только, если форма еще не на экране
+        // Оставляем сброс, только если форма еще не на экране
 
         if (!Control.Visible)
           Control.SelectedIndex = -1;
@@ -75,10 +75,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство TextLength
+    #region Свойство ControlMaxLength
 
     /// <summary>
-    /// Свойство TextComboBox.MaxLength.
+    /// Свойство ComboBox.MaxLength.
     /// </summary>
     protected override int ControlMaxLength
     {
@@ -98,7 +98,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Автоматическое преобразование регистра символов к верхнему или нижнему регистру.
-    /// По умолчанию преобразование не выполняется
+    /// По умолчанию преобразование не выполняется (CharacterCasing.Normal).
     /// </summary>
     public CharacterCasing CharacterCasing
     {
@@ -195,7 +195,7 @@ namespace FreeLibSet.Forms
     #region Свойства для выделения текста
 
     /// <summary>
-    /// Свойство TextComboBox.SelectionStart.
+    /// Свойство ComboBox.SelectionStart.
     /// </summary>
     public override int SelectionStart
     {
@@ -204,7 +204,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство TextComboBox.SelectionLength.
+    /// Свойство ComboBox.SelectionLength.
     /// </summary>
     public override int SelectionLength
     {
@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство TextComboBox.SelectedText.
+    /// Свойство ComboBox.SelectedText.
     /// </summary>
     public override string SelectedText
     {
@@ -254,7 +254,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Обработчик комбоблока для ввода текста и списком, хранящим историю изменений
-  /// (например, список последних открытых файлов)
+  /// (например, список последних открытых файлов).
   /// Расширяет класс EFPTextComboBox массивом строк HistList
   /// </summary>
   public class EFPHistComboBox : EFPTextComboBox
@@ -278,9 +278,9 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Максимальная длина списка истории
-    /// Возможные значения: от 2 до 100. По умолчанию: 10
-    /// Свойство должно устанавливаться до записи/чтения HistList
+    /// Максимальная длина списка истории.
+    /// Возможные значения: от 2 до 100. По умолчанию: 10.
+    /// Свойство должно устанавливаться до записи/чтения свойства HistList.
     /// </summary>
     public int MaxHistLength
     {
@@ -297,16 +297,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Список истории. Более новые значения идут в начале списка, а более старые 
-    /// - в конце. Таким образом, первый элемент массива содержит текущее значение
+    /// - в конце. Таким образом, первый элемент массива содержит текущее значение.
     /// При записи свойства заполняется выпадающий список, а свойство Text получает
     /// значение первой строки (если массив не пустой). Если массив длиннее MaxHistLength,
-    /// то лишние элементы отбрасываются
+    /// то лишние элементы отбрасываются.
     /// При чтении свойства первому элементу массива присваивается текущее значение
     /// (свойство Text), остальные элементы сдвигаются. Если в списке истории 
     /// присутствует такое значение, то оно пропускается (то есть строки переставляются).
-    /// Если значение не введено (пустое поле), то оно будет включено
+    /// Если значение не введено (пустое поле), то оно будет включено.
     /// Если требуется корректировка вводимого значения (например, добавление "\" к
-    /// имени каталога), то она должна выполняться до чтения свойства
+    /// имени каталога), то она должна выполняться до чтения свойства.
     /// </summary>
     public HistoryList HistList
     {
@@ -356,10 +356,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дополнительные строки по умолчанию. По умолчани - нет дополнительных строк
+    /// Дополнительные строки по умолчанию. По умолчанию - нет дополнительных строк (пустой массив).
     /// Свойство должно устанавливаться ПОСЛЕ HistList. При этом внизу списка 
-    /// добавляются дополнительные строкм, если они отсутствуют в основном списке
-    /// При чтении свойства HistList дополнительные строки не попадают в список
+    /// добавляются дополнительные строкм, если они отсутствуют в основном списке.
+    /// При чтении свойства HistList дополнительные строки не попадают в список.
     /// </summary>
     public string[] DefaultItems
     {
@@ -436,7 +436,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка кнопки очистки
+    /// Установка видимости кнопки очистки [x] (свойство UserComboBoxBase.ClearButton).
     /// </summary>
     public override UIValidateState CanBeEmptyMode
     {
@@ -483,7 +483,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получение текста от управляющего элемента
     /// Когда не заполнено ни одного символа по маске, свойство MaskedTextBox.Text
-    /// иногда возвращает пустую строку, а иногда - маску с пробелами вместо знаков
+    /// иногда возвращает пустую строку, а иногда - маску с пробелами вместо знаков.
     /// </summary>
     /// <returns></returns>
     protected override string ControlText
@@ -513,7 +513,7 @@ namespace FreeLibSet.Forms
     #region Свойство Mask
 
     /// <summary>
-    /// Маска
+    /// Маска.
     /// По умолчанию - пустая строка
     /// </summary>
     public string Mask
@@ -557,7 +557,7 @@ namespace FreeLibSet.Forms
     }
     private DepInput<string> _MaskEx;
 
-    private void MaskEx_ValueChanged(object Sender, EventArgs Args)
+    private void MaskEx_ValueChanged(object sender, EventArgs args)
     {
       Mask = _MaskEx.Value;
     }
@@ -598,7 +598,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство, разрешающее частичное заполнение маски. По умолчанию - false.
     /// При этом выдается ошибка, если введены не все символы маски. Однако, 
-    /// полностью пустое значение проверяется с помощью свойства EmptyCheck
+    /// полностью пустое значение проверяется с помощью свойства CanBeEmpty.
     /// </summary>
     public bool MaskCanBePartial
     {
@@ -618,7 +618,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство, разрешающее частичное заполнение маски. По умолчанию - false.
     /// При этом выдается ошибка, если введены не все символы маски. Однако, 
-    /// полностью пустое значение проверяется с помощью свойства EmptyCheck
+    /// полностью пустое значение проверяется с помощью свойства CanBeEmpty.
+    /// Управляемое свойство.
     /// </summary>
     public DepValue<bool> MaskCanBePartialEx
     {

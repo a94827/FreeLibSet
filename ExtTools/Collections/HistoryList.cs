@@ -335,7 +335,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает копию массива строк в виде списка
     /// </summary>
-    /// <returns>Масси строк</returns>
+    /// <returns>Массив строк</returns>
     public string[] ToArray()
     {
       if (_Items == null)
