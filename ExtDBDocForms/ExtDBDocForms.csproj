@@ -47,6 +47,7 @@
     </Compile>
     <Compile Include="DocProviderUI.cs" />
     <Compile Include="EFPDBxViewOrder.cs" />
+    <Compile Include="EFPAllSubDocComboBox.cs" />
     <Compile Include="GridFilterRange.cs" />
     <Compile Include="GroupGridFilterForm.cs">
       <SubType>Form</SubType>

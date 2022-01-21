@@ -166,7 +166,7 @@ namespace FreeLibSet.Forms.Docs
     #region Версии без DocumentEditor
 
     /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встривания в редактор документа.
+    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент - табличный просмотр</param>
@@ -178,7 +178,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встривания в редактор документа.
+    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент - табличный просмотр</param>
@@ -192,7 +192,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встривания в редактор документа.
+    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент - табличный просмотр</param>
@@ -209,7 +209,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встривания в редактор документа.
+    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
@@ -220,7 +220,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встривания в редактор документа.
+    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
@@ -233,7 +233,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встривания в редактор документа.
+    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
@@ -314,9 +314,6 @@ namespace FreeLibSet.Forms.Docs
 
       CanInlineEdit = true;
 
-      if (mainEditor != null)
-        mainEditor.AfterWrite += new DocEditEventHandler(MainEditor_AfterWrite);
-
       _UserInitData = userInitData; // 28.02.2019
 
       base.ShowRowCountInTopLeftCellToolTipText = true; // 15.12.2017
@@ -383,12 +380,17 @@ namespace FreeLibSet.Forms.Docs
     /// может использовать актуальные значения полей основного документа
     /// По умолчанию (false) проверка не выполняется. Допускается редактирование
     /// поддокументов, даже если на какой-либо вкладке редактора основного документа
-    /// есть некорректно заполненные поля
+    /// есть некорректно заполненные поля.
     /// </summary>
     public bool ValidateBeforeEdit
     {
       get { return _ValidateBeforeEdit; }
-      set { _ValidateBeforeEdit = value; }
+      set 
+      {
+        if (value && _MainEditor == null)
+          throw new InvalidOperationException("Нельзя устанавливать свойство ValidateBeforeEdit в true, т.к. просмотр не относится к DocumentEditor"); // 21.01.2022
+        _ValidateBeforeEdit = value; 
+      }
     }
     private bool _ValidateBeforeEdit;
 
@@ -828,6 +830,28 @@ namespace FreeLibSet.Forms.Docs
 
     #region Редактирование поддокумента
 
+    /// <summary>
+    /// Присоединяет обработчик в DocumentEditor
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      if (_MainEditor != null)
+        _MainEditor.AfterWrite += new DocEditEventHandler(MainEditor_AfterWrite);
+    }
+
+    /// <summary>
+    /// Отсоединяет обработчик от DocumentEditor
+    /// </summary>
+    protected override void OnDetached()
+    {
+      if (_MainEditor != null)
+        _MainEditor.AfterWrite -= new DocEditEventHandler(MainEditor_AfterWrite); 
+
+      base.OnDetached();
+    }
+
     void MainEditor_AfterWrite(object sender, DocEditEventArgs args)
     {
       // 21.01.2016
@@ -1035,7 +1059,8 @@ namespace FreeLibSet.Forms.Docs
 
         if (!String.IsNullOrEmpty(ManualOrderColumn))
           InitOrderValues(_SubDocs.SubDocsView.Table, true); // 21.04.2020
-        _MainEditor.SubDocsChangeInfo.Changed = true;
+        if (_MainEditor != null) // 21.01.2022
+          _MainEditor.SubDocsChangeInfo.Changed = true;
         return;
       }
 
