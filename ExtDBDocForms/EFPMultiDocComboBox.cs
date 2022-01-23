@@ -413,7 +413,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство
+    #region Свойство MaxTextItemCount
 
     /// <summary>
     /// Максимальное количество идентификаторов, которое может быть выбрано, при котором

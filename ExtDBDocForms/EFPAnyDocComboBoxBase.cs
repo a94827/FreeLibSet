@@ -44,6 +44,7 @@ namespace FreeLibSet.Forms.Docs
       _UI = ui;
 
       _EmptyText = DefaultEmptyText;
+      _EmptyImageKey = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
       control.ClearButton = false; // 08.11.2021
       control.PopupClick += new EventHandler(Control_PopupClick);
