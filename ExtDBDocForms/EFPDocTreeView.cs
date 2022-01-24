@@ -34,7 +34,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="ui">Интерфейс доступа к документам</param>
     /// <param name="docTypeName">Имя вида документов</param>
     public EFPDocTreeView(EFPBaseProvider baseProvider, TreeViewAdv control, DBUI ui, string docTypeName)
-      : this(baseProvider, control, ui.DocTypes[docTypeName], String.Empty, null)
+      : this(baseProvider, control, ui.DocTypes[docTypeName])
     {
     }
 
@@ -45,34 +45,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="control">Управляющий элемент - дерево</param>
     /// <param name="docTypeUI">Интерфейс доступа к виду документов</param>
     public EFPDocTreeView(EFPBaseProvider baseProvider, TreeViewAdv control, DocTypeUI docTypeUI)
-      : this(baseProvider, control, docTypeUI, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - дерево</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPDocTreeView(EFPBaseProvider baseProvider, TreeViewAdv control, DocTypeUI docTypeUI, string defaultConfigName)
-      : this(baseProvider, control, docTypeUI, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - дерево</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="DefaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPDocTreeView(EFPBaseProvider baseProvider, TreeViewAdv control, DocTypeUI docTypeUI, string DefaultConfigName, object userInitData)
       : base(baseProvider, control, docTypeUI.UI)
     {
-      Init(docTypeUI, DefaultConfigName, userInitData);
+      Init(docTypeUI);
     }
 
     /// <summary>
@@ -82,7 +57,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="ui">Интерфейс доступа к документам</param>
     /// <param name="docTypeName">Имя вида документов</param>
     public EFPDocTreeView(IEFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DBUI ui, string docTypeName)
-      : this(controlWithToolBar, ui.DocTypes[docTypeName], String.Empty, null)
+      : this(controlWithToolBar, ui.DocTypes[docTypeName])
     {
     }
 
@@ -92,35 +67,12 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
     public EFPDocTreeView(IEFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DocTypeUI docTypeUI)
-      : this(controlWithToolBar, docTypeUI, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPDocTreeView(IEFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DocTypeUI docTypeUI, string defaultConfigName)
-      : this(controlWithToolBar, docTypeUI, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="DefaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPDocTreeView(IEFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DocTypeUI docTypeUI, string DefaultConfigName, object userInitData)
       : base(controlWithToolBar, docTypeUI.UI)
     {
-      Init(docTypeUI, DefaultConfigName, userInitData);
+      Init(docTypeUI);
     }
 
-    private void Init(DocTypeUI docTypeUI, string defaultConfigName, object userInitData)
+    private void Init(DocTypeUI docTypeUI)
     {
       if (docTypeUI == null)
         throw new ArgumentNullException("docTypeUI");
@@ -129,17 +81,11 @@ namespace FreeLibSet.Forms.Docs
 
       base.GridProducer = docTypeUI.GridProducer;
       base.ConfigSectionName = DocType.Name;
-      base.DefaultConfigName = defaultConfigName; // 25.03.2021
       base.ReadOnly = docTypeUI.UI.DocProvider.DBPermissions.TableModes[DocType.Name] != DBxAccessMode.Full;
       base.CanView = true;
       base.CanMultiEdit = docTypeUI.CanMultiEdit;
       //Control.LabelEdit = false;
       Control.SelectionMode = TreeViewAdvSelectionMode.Multi; // Можно удалять несколько записей, но не всегда можно редактировать
-      _UserInitData = userInitData; // 28.02.2019
-      _UsedColumnNameList = new DBxColumnList();
-
-      docTypeUI.PerformInitTree(this, false, _UsedColumnNameList, userInitData);
-      _UsedColumnNames = new DBxColumns(_UsedColumnNameList);
 
       _BrowserGuid = Guid.NewGuid();
 
@@ -177,20 +123,26 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Эти данные передаются обработчику инициализации табличного просмотра
+    /// Эти данные передаются обработчику инициализации просмотра.
+    /// Свойство может устанавливаться только до вызова события Created, то есть сразу после вызова конструктора
     /// </summary>
-    public object UserInitData { get { return _UserInitData; } }
+    public object UserInitData 
+    { 
+      get { return _UserInitData; }
+      set
+      {
+        CheckHasNotBeenCreated();
+        _UserInitData = value;
+      }
+    }
     private object _UserInitData;
 
 
-    internal DBxColumns UsedColumnNames { get { return _UsedColumnNames; } }
-    private DBxColumns _UsedColumnNames; // для обновления строк
-
     /// <summary>
-    /// Используется при инициализации просмотра и внутри метода MyRefresh()
-    /// для сбора списка требуемых полей
+    /// Список используемых столбцов в базовом наборе данных
     /// </summary>
-    private DBxColumnList _UsedColumnNameList;
+    internal DBxColumns UsedColumnNames { get { return _UsedColumnNames; } }
+    private DBxColumns _UsedColumnNames; 
 
     #endregion
 
@@ -926,6 +878,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void OnCreated()
     {
+      DBxColumnList columns = new DBxColumnList();
+      DocTypeUI.PerformInitTree(this, false, columns, _UserInitData);
+      _UsedColumnNames = new DBxColumns(columns);
+
       base.OnCreated();
 
       if (SourceAsDataTable == null)

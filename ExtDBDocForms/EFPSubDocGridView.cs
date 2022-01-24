@@ -85,41 +85,10 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
     public EFPSubDocGridView(EFPBaseProvider baseProvider, DataGridView control, DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
-      : this(baseProvider, control, mainEditor, subDocs, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для встраивания в редактор документа
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - табличный просмотр</param>
-    /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPSubDocGridView(EFPBaseProvider baseProvider, DataGridView control, DocumentEditor mainEditor, DBxMultiSubDocs subDocs,
-      string defaultConfigName)
-      : this(baseProvider, control, mainEditor, subDocs, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для встраивания в редактор документа
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - табличный просмотр</param>
-    /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPSubDocGridView(EFPBaseProvider baseProvider, DataGridView control, DocumentEditor mainEditor, DBxMultiSubDocs subDocs,
-      string defaultConfigName, object userInitData)
       : base(baseProvider, control, mainEditor.UI)
     {
-      Init(mainEditor, subDocs, defaultConfigName, userInitData);
+      Init(mainEditor, subDocs);
     }
-
-
 
     /// <summary>
     /// Создает провайдер для встраивания в редактор документа
@@ -128,37 +97,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
     public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
-      : this(controlWithToolBar, mainEditor, subDocs, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для встраивания в редактор документа
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DocumentEditor mainEditor, DBxMultiSubDocs subDocs,
-      string defaultConfigName)
-      : this(controlWithToolBar, mainEditor, subDocs, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для встраивания в редактор документа
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DocumentEditor mainEditor, DBxMultiSubDocs subDocs,
-      string defaultConfigName, object userInitData)
       : base(controlWithToolBar, mainEditor.UI)
     {
-      Init(mainEditor, subDocs, defaultConfigName, userInitData);
-
+      Init(mainEditor, subDocs);
     }
 
     #endregion
@@ -173,40 +114,10 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
     /// <param name="ui">Пользовательский интерфейс для документов</param>
     public EFPSubDocGridView(EFPBaseProvider baseProvider, DataGridView control, DBxMultiSubDocs subDocs, DBUI ui)
-      : this(baseProvider, control, subDocs, ui, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - табличный просмотр</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="ui">Пользовательский интерфейс для документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPSubDocGridView(EFPBaseProvider baseProvider, DataGridView control, DBxMultiSubDocs subDocs, DBUI ui,
-      string defaultConfigName)
-      : this(baseProvider, control, subDocs, ui, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - табличный просмотр</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="ui">Пользовательский интерфейс для документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPSubDocGridView(EFPBaseProvider baseProvider, DataGridView control, DBxMultiSubDocs subDocs, DBUI ui,
-      string defaultConfigName, object userInitData)
       : base(baseProvider, control, ui)
     {
-      Init(null, subDocs, defaultConfigName, userInitData);
+      Init(null, subDocs);
     }
-
 
     /// <summary>
     /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
@@ -215,41 +126,14 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
     /// <param name="ui">Пользовательский интерфейс для документов</param>
     public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DBxMultiSubDocs subDocs, DBUI ui)
-      : this(controlWithToolBar, subDocs, ui, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="ui">Пользовательский интерфейс для документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DBxMultiSubDocs subDocs, DBUI ui,
-      string defaultConfigName)
-      : this(controlWithToolBar, subDocs, ui, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер для выбора (или автономного просмотра) списка поддокументов без встраивания в редактор документа.
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="ui">Пользовательский интерфейс для документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DBxMultiSubDocs subDocs, DBUI ui,
-      string defaultConfigName, object userInitData)
       : base(controlWithToolBar, ui)
     {
-      Init(null, subDocs, defaultConfigName, userInitData);
+      Init(null, subDocs);
     }
 
     #endregion
 
-    private void Init(DocumentEditor mainEditor, DBxMultiSubDocs subDocs, string defaultConfigName, object userInitData)
+    private void Init(DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
     {
 #if DEBUG
       //      if (MainEditor == null)
@@ -272,7 +156,6 @@ namespace FreeLibSet.Forms.Docs
 
       base.GridProducer = _SubDocTypeUI.GridProducer;
       base.ConfigSectionName = subDocs.SubDocType.Name;
-      base.DefaultConfigName = defaultConfigName;
       CommandItems.EnterAsOk = false;
       Control.MultiSelect = true;
 
@@ -313,8 +196,6 @@ namespace FreeLibSet.Forms.Docs
       base.DisableOrdering();
 
       CanInlineEdit = true;
-
-      _UserInitData = userInitData; // 28.02.2019
 
       base.ShowRowCountInTopLeftCellToolTipText = true; // 15.12.2017
 
@@ -406,12 +287,21 @@ namespace FreeLibSet.Forms.Docs
     public bool CanInlineEdit { get { return _CanInlineEdit; } set { _CanInlineEdit = value; } }
     private bool _CanInlineEdit;
 
-    /// <summary>
-    /// Эти данные передаются обработчику инициализации табличного просмотра
-    /// </summary>
-    public object UserInitData { get { return _UserInitData; } }
-    private object _UserInitData;
 
+    /// <summary>
+    /// Эти данные передаются обработчику инициализации просмотра.
+    /// Свойство может устанавливаться только до вызова события Created, то есть сразу после вызова конструктора
+    /// </summary>
+    public object UserInitData
+    {
+      get { return _UserInitData; }
+      set
+      {
+        CheckHasNotBeenCreated();
+        _UserInitData = value;
+      }
+    }
+    private object _UserInitData;
 
     /// <summary>
     /// Имена столбцов, необходимых для просмотра.

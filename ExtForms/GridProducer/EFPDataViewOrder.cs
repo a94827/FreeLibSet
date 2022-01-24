@@ -195,7 +195,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Порядок сортировки для DataView.Sort.
-    /// Не может быть пустой строкой.
+    /// Может быть пустой строкой.
     /// Задается в конструкторе
     /// </summary>
     public string Sort { get { return _Sort; } }
@@ -325,7 +325,10 @@ namespace FreeLibSet.Forms
     /// <returns>Объект сортировки</returns>
     public EFPDataViewOrder Add(string sort, string displayName, EFPDataGridViewSortInfo sortInfo)
     {
-      EFPDataViewOrder Item = new EFPDataViewOrder(sort);
+      string name = sort;
+      if (String.IsNullOrEmpty(sort))
+        name = "*"; // 24.01.2022
+      EFPDataViewOrder Item = new EFPDataViewOrder(name, sort);
       if (sortInfo.IsEmpty)
       {
         string[] aColNames;

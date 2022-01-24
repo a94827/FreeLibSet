@@ -106,7 +106,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="ui">Интерфейс доступа к документам</param>
     /// <param name="docTypeName">Имя вида документов</param>
     public EFPDocGridView(EFPBaseProvider baseProvider, DataGridView control, DBUI ui, string docTypeName)
-      : this(baseProvider, control, ui.DocTypes[docTypeName], String.Empty, null)
+      : this(baseProvider, control, ui.DocTypes[docTypeName])
     {
     }
 
@@ -117,34 +117,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="control">Управляющий элемент - дерево</param>
     /// <param name="docTypeUI">Интерфейс доступа к виду документов</param>
     public EFPDocGridView(EFPBaseProvider baseProvider, DataGridView control, DocTypeUI docTypeUI)
-      : this(baseProvider, control, docTypeUI, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - дерево</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPDocGridView(EFPBaseProvider baseProvider, DataGridView control, DocTypeUI docTypeUI, string defaultConfigName)
-      : this(baseProvider, control, docTypeUI, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - дерево</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPDocGridView(EFPBaseProvider baseProvider, DataGridView control, DocTypeUI docTypeUI, string defaultConfigName, object userInitData)
       : base(baseProvider, control, docTypeUI.UI)
     {
-      Init(docTypeUI, defaultConfigName, userInitData);
+      Init(docTypeUI);
     }
 
     /// <summary>
@@ -154,7 +129,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="ui">Интерфейс доступа к документам</param>
     /// <param name="docTypeName">Имя вида документов</param>
     public EFPDocGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DBUI ui, string docTypeName)
-      : this(controlWithToolBar, ui.DocTypes[docTypeName], String.Empty, null)
+      : this(controlWithToolBar, ui.DocTypes[docTypeName])
     {
     }
 
@@ -164,45 +139,20 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
     public EFPDocGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DocTypeUI docTypeUI)
-      : this(controlWithToolBar, docTypeUI, String.Empty, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    public EFPDocGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DocTypeUI docTypeUI, string defaultConfigName)
-      : this(controlWithToolBar, docTypeUI, defaultConfigName, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает провайдер
-    /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду просматриваемых документов</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки табличного просмотра</param>
-    /// <param name="userInitData">Пользовательские данные передаются обработчику инициализации табличного просмотра</param>
-    public EFPDocGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DocTypeUI docTypeUI, string defaultConfigName, object userInitData)
       : base(controlWithToolBar, docTypeUI.UI)
     {
-      Init(docTypeUI, defaultConfigName, userInitData);
+      Init(docTypeUI);
     }
 
-    private void Init(DocTypeUI docTypeUI, string defaultConfigName, object userInitData)
+    private void Init(DocTypeUI docTypeUI)
     {
       if (docTypeUI == null)
         throw new ArgumentNullException("docTypeUI");
 
       _DocTypeUI = docTypeUI;
-      _UserInitData = userInitData;
 
       base.GridProducer = docTypeUI.GridProducer; // 25.03.2021
       base.ConfigSectionName = DocType.Name;
-      base.DefaultConfigName = DefaultConfigName;
       base.ReadOnly = docTypeUI.UI.DocProvider.DBPermissions.TableModes[DocType.Name] != DBxAccessMode.Full;
       base.CanView = true;
       base.EditData += new EventHandler(MyEdit);
@@ -263,9 +213,18 @@ namespace FreeLibSet.Forms.Docs
     public DBxDocType DocType { get { return _DocTypeUI.DocType; } }
 
     /// <summary>
-    /// Эти данные передаются обработчику инициализации табличного просмотра
+    /// Эти данные передаются обработчику инициализации просмотра.
+    /// Свойство может устанавливаться только до вызова события Created, то есть сразу после вызова конструктора
     /// </summary>
-    public object UserInitData { get { return _UserInitData; } }
+    public object UserInitData
+    {
+      get { return _UserInitData; }
+      set
+      {
+        CheckHasNotBeenCreated();
+        _UserInitData = value;
+      }
+    }
     private object _UserInitData;
 
     /// <summary>

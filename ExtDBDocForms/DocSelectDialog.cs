@@ -65,6 +65,9 @@ namespace FreeLibSet.Forms.Docs
       _DocIds = DataTools.EmptyIds;
       _CanBeEmpty = false;
       _DialogPosition = new EFPDialogPosition();
+
+      //_DefaultGridConfigName = String.Empty;
+      //_DefaultTreeConfigName = String.Empty;
     }
 
     #endregion
@@ -228,6 +231,21 @@ namespace FreeLibSet.Forms.Docs
     }
     private EFPDialogPosition _DialogPosition;
 
+    // Пока не уверен, что надо
+    /*
+    /// <summary>
+    /// Имя фиксированной настройки табличного про
+    /// </summary>
+    public string DefaultGridConfigName { get { return _DefaultGridConfigName; } set { _DefaultGridConfigName = value; } }
+    private string _DefaultGridConfigName;
+
+    public string DefaultTreeConfigName { get { return _DefaultTreeConfigName; } set { _DefaultTreeConfigName = value; } }
+    private string _DefaultTreeConfigName;
+
+    public object UserInitData { get { return _UserInitData; } set { _UserInitData = value; } }
+    private object _UserInitData;
+     * */
+
     #endregion
 
     #region Вывод блока диалога
@@ -282,7 +300,18 @@ namespace FreeLibSet.Forms.Docs
         }
         Form.ExternalFilters = Filters;
         Form.ExternalEditorCaller = EditorCaller;
-
+        /*
+        if (Form.ViewProvider.DocGridView != null)
+        {
+          Form.ViewProvider.DocGridView.DefaultConfigName = DefaultGridConfigName;
+          Form.ViewProvider.DocGridView.UserInitData = UserInitData;
+        }
+        if (Form.ViewProvider.DocTreeView != null)
+        {
+          Form.ViewProvider.DocTreeView.DefaultConfigName = DefaultTreeConfigName;
+          Form.ViewProvider.DocTreeView.UserInitData = UserInitData;
+        }
+          */
         switch (EFPApp.ShowDialog(Form, false, DialogPosition))
         {
           case DialogResult.OK:

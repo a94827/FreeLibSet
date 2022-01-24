@@ -315,7 +315,7 @@ namespace FreeLibSet.Forms.Docs
         // других MDI-форм не появляется, поэтому лишней активации не происходит и
         // фокус не прыгает
 
-        ViewProvider.ActiveTab = ActiveTab;
+        ViewProvider.ActiveTab = ViewProvider.ActiveTab;
 
         // 19.05.2021
         // Еще бывает дерево и комбоблок выбора группы.
@@ -434,6 +434,8 @@ namespace FreeLibSet.Forms.Docs
 
       if (!String.IsNullOrEmpty(docTypeUI.DocType.TreeParentColumnName))
       {
+        #region Есть древовидный просмотр
+
         _TheTabControl = new TabControl();
         _TheTabControl.Dock = DockStyle.Fill;
         _TheTabControl.ImageList = EFPApp.MainImages;
@@ -464,9 +466,13 @@ namespace FreeLibSet.Forms.Docs
         _DocGridSpeedPanel = new Panel();
         _DocGridSpeedPanel.Dock = DockStyle.Top;
         tpTable.Controls.Add(_DocGridSpeedPanel);
+
+        #endregion
       }
       else
       {
+        #region Нет древовидного просмотра
+
         _DocGrid = new DataGridView();
         _DocGrid.Dock = DockStyle.Fill;
         _DocGrid.Name = "DocGrid";
@@ -475,6 +481,8 @@ namespace FreeLibSet.Forms.Docs
         _DocGridSpeedPanel = new Panel();
         _DocGridSpeedPanel.Dock = DockStyle.Top;
         form.MainPanel.Controls.Add(_DocGridSpeedPanel);
+
+        #endregion
       }
 
       if (!String.IsNullOrEmpty(docTypeUI.DocType.TreeParentColumnName))
@@ -577,21 +585,7 @@ namespace FreeLibSet.Forms.Docs
       #endregion
 
       _SaveFormConfig = true;
-
-      //Control.GotFocus += Control_GotFocus;
-      //Control.Enter += new EventHandler(Control_Enter);
     }
-
-    //void Control_Enter(object sender, EventArgs e)
-    //{
-    //  FDocGridView.SetFocus(); // 05.12.2018
-    //}
-
-    // так тоже не работает
-    //void Control_GotFocus(object sender, EventArgs e)
-    //{
-    //  FDocGridView.SetFocus(); // 05.12.2018
-    //}
 
     #endregion
 
@@ -1330,8 +1324,17 @@ namespace FreeLibSet.Forms.Docs
       if (frm != null)
       {
         if (WinFormsTools.ContainsControl(Control, frm.ActiveControl))
-          _DocGridView.SetFocus(); // 11.12.2018
-
+        {
+          switch (ActiveTab)
+          {
+            case DocViewFormActiveTab.Tree:
+              _DocTreeView.SetFocus(); // 24.01.2022
+              break;
+            case DocViewFormActiveTab.Grid:
+              _DocGridView.SetFocus(); // 11.12.2018
+              break;
+          }
+        }
       }
 
       InitDelayedProperties(); 
