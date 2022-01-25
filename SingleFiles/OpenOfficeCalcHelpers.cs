@@ -534,6 +534,9 @@ namespace FreeLibSet.OpenOffice.Calc
       //[DebuggerStepThrough] // подавление остановки в отладчике при возникновении исключения
       public Cell GetCellIfExists(string name)
       {
+        if (XNamedRanges == null)
+          throw new NullReferenceException("XNamedRanges==null");
+
         if (XNamedRanges.hasByName(name))
         {
           unoidl.com.sun.star.sheet.XNamedRange nr = XNamedRanges.getByName(name).Value as unoidl.com.sun.star.sheet.XNamedRange;
@@ -548,7 +551,10 @@ namespace FreeLibSet.OpenOffice.Calc
               return new Cell(); // 14.01.2019
             else
             {
-              unoidl.com.sun.star.table.XCell c = crr.getReferredCells().getCellByPosition(0, 0);
+              unoidl.com.sun.star.table.XCellRange cr=crr.getReferredCells();
+              if (cr == null)
+                return new Cell(); // 25.01.2022
+              unoidl.com.sun.star.table.XCell c = cr.getCellByPosition(0, 0);
               return new Cell(c, _Owner.XSpreadsheetDocument);
             }
           }

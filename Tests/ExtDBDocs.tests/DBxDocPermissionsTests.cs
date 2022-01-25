@@ -20,13 +20,92 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId1, docId2;
       Create2Docs(out docId1, out docId2);
 
+      // Первый документ нельзя редактировать, а второй - можно
+
       DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
       DBxDocSet ds = new DBxDocSet(provider);
 
-      Assert.Catch<DBxAccessException>(delegate () { ds["Doc1"].Edit(docId1); });
+      Assert.Catch<DBxAccessException>(delegate() { ds["TestDocs"].Edit(docId1); });
 
-      DBxSingleDoc doc2 = ds["Doc1"].Edit(docId2);
+      DBxSingleDoc doc2 = ds["TestDocs"].Edit(docId2);
       Assert.AreEqual(2, doc2.Values["F2"].AsInteger, "F2 read #2");
+    }
+
+    [Test]
+    public void TestView()
+    {
+      Int32 docId1, docId2;
+      Create2Docs(out docId1, out docId2);
+
+      // Оба документа можно смотреть
+
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
+      DBxDocSet ds = new DBxDocSet(provider);
+
+      DBxSingleDoc doc1 = ds["TestDocs"].View(docId1);
+      Assert.AreEqual(1, doc1.Values["F2"].AsInteger, "F2 read #1");
+
+      DBxSingleDoc doc2 = ds["TestDocs"].Edit(docId2);
+      Assert.AreEqual(2, doc2.Values["F2"].AsInteger, "F2 read #2");
+    }
+
+    [Test]
+    public void TestDelete_ByEdit()
+    {
+      Int32 docId1, docId2;
+      Create2Docs(out docId1, out docId2);
+
+      // Первый документ нельзя удалить, а второй - можно
+
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
+      DBxDocSet ds1 = new DBxDocSet(provider);
+      Assert.Catch<DBxAccessException>(delegate()
+      {
+        DBxSingleDoc doc1 = ds1["TestDocs"].Edit(docId1);
+        doc1.Delete();
+        ds1.ApplyChanges(false);
+      });
+
+      DBxDocSet ds2 = new DBxDocSet(provider);
+      DBxSingleDoc doc2 = ds2["TestDocs"].Edit(docId2);
+      doc2.Delete();
+      ds2.ApplyChanges(false);
+    }
+
+    [Test]
+    public void TestDelete_Directly()
+    {
+      Int32 docId1, docId2;
+      Create2Docs(out docId1, out docId2);
+
+      // Первый документ нельзя удалить, а второй - можно
+
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
+      DBxDocSet ds1 = new DBxDocSet(provider);
+      Assert.Catch<DBxAccessException>(delegate()
+      {
+        ds1["TestDocs"].Delete(docId1);
+        ds1.ApplyChanges(false);
+      });
+
+      DBxDocSet ds2 = new DBxDocSet(provider);
+      ds2["TestDocs"].Delete(docId2);
+      ds2.ApplyChanges(false);
+    }
+
+    [Test]
+    public void TestInsert()
+    {
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
+      DBxDocSet ds1 = new DBxDocSet(provider);
+      DBxSingleDoc doc1 = ds1["TestDocs"].Insert();
+      doc1.Values["F1"].SetBoolean(false);
+      Assert.Catch<DBxAccessException>(delegate() { ds1.ApplyChanges(false); }, "#1");
+
+      DBxDocSet ds2 = new DBxDocSet(provider);
+      DBxSingleDoc doc2 = ds1["TestDocs"].Insert();
+      doc2.Values["F1"].SetBoolean(true);
+      ds2.ApplyChanges(false);
     }
 
     /// <summary>
@@ -39,19 +118,19 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocProvider provider = new DBxRealDocProvider(_SourceAdm, 0, true); // без ограничений
       DBxDocSet ds = new DBxDocSet(provider);
 
-      DBxSingleDoc doc1 = ds["Doc1"].Insert();
+      DBxSingleDoc doc1 = ds["TestDocs"].Insert();
       doc1.Values["F1"].SetBoolean(false);
       doc1.Values["F2"].SetInteger(1);
 
-      DBxSingleDoc doc2 = ds["Doc1"].Insert();
+      DBxSingleDoc doc2 = ds["TestDocs"].Insert();
       doc2.Values["F1"].SetBoolean(true);
       doc2.Values["F2"].SetInteger(2);
 
       ds.ActionInfo = "Create2Docs";
       ds.ApplyChanges(true);
 
-      doc1 = ds["Doc1"][0];
-      doc2 = ds["Doc1"][1];
+      doc1 = ds["TestDocs"][0];
+      doc2 = ds["TestDocs"][1];
 
       Assert.IsTrue(provider.IsRealDocId(doc1.DocId), "IsRealDocId() #1");
       Assert.AreEqual(1, doc1.Values["F2"].AsInteger, "F2 written #1");
@@ -70,48 +149,48 @@ namespace ExtDBDocs_tests.Data_Docs
 
       // 1. Создаем документ с F1=TRUE, который может редактировать "ограниченный пользоватеь"
       DBxDocSet ds1 = new DBxDocSet(providerLim);
-      DBxSingleDoc doc1 = ds1["Doc1"].Insert();
+      DBxSingleDoc doc1 = ds1["TestDocs"].Insert();
       doc1.Values["F1"].SetBoolean(true);
       doc1.Values["F2"].SetInteger(1);
       ds1.ApplyChanges(true);
 
-      Int32 docId = ds1["Doc1"].DocIds[0];
+      Int32 docId = ds1["TestDocs"].DocIds[0];
       ds1 = null;
       Assert.IsTrue(providerLim.IsRealDocId(doc1.DocId), "IsRealDocId()");
-      Assert.AreEqual(1, providerLim.GetValue("Doc1", docId, "F2"), "F2 #1");
+      Assert.AreEqual(1, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #1");
 
       // 2. Открываем документ на редактирование, устанавливаем блокировку. Запись документа возможна.
       DBxDocSet ds2 = new DBxDocSet(providerLim);
       Guid lockGuid2 = ds2.AddLongLock();
-      DBxSingleDoc doc2 = ds2["Doc1"].Edit(docId);
+      DBxSingleDoc doc2 = ds2["TestDocs"].Edit(docId);
       doc2.Values["F2"].SetInteger(2);
       ds2.ApplyChanges(true);
-      Assert.AreEqual(2, providerLim.GetValue("Doc1", docId, "F2"), "F2 #2");
+      Assert.AreEqual(2, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #2");
 
       // 3. Снимаем блокировку от имени пользователя-"администратора"
       providerAdm.RemoveLongLock(lockGuid2); // в реальном коде еще нужно и найти идентификатор блокировки
-      Assert.AreEqual(2, providerLim.GetValue("Doc1", docId, "F2"), "F2 #3");
+      Assert.AreEqual(2, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #3");
 
       // 4. Обычный пользователь ничего не подозревает и продолжает редактирование, еще раз сохраняет документ, хотя блокировка уже утеряна
       doc2.Values["F2"].SetInteger(4);
       ds2.ApplyChanges(true);
-      Assert.AreEqual(4, providerLim.GetValue("Doc1", docId, "F2"), "F2 #4");
+      Assert.AreEqual(4, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #4");
 
 
       // 5. Администратор меняет документ, делая его недоступным для изменения обычным пользователем
       DBxDocSet ds5 = new DBxDocSet(providerAdm);
-      DBxSingleDoc doc5 = ds5["Doc1"].Edit(docId);
+      DBxSingleDoc doc5 = ds5["TestDocs"].Edit(docId);
       doc5.Values["F1"].SetBoolean(false);
       doc5.Values["F2"].SetInteger(5);
       ds5.ApplyChanges(false);
-      Assert.AreEqual(5, providerLim.GetValue("Doc1", docId, "F2"), "F2 #5");
+      Assert.AreEqual(5, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #5");
 
       // 6.Обычный пользователь опять пытается сохранить документ
       doc2.Values["F2"].SetInteger(6);
-      Assert.Catch<DBxAccessException>(delegate () { ds2.ApplyChanges(true); }, "Save #6");
+      Assert.Catch<DBxAccessException>(delegate() { ds2.ApplyChanges(true); }, "Save #6");
 
       // Проверяем, что ничего не испортилось
-      Assert.AreEqual(5, providerLim.GetValue("Doc1", docId, "F2"), "F2 #6");
+      Assert.AreEqual(5, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #6");
     }
 
 
@@ -159,7 +238,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       public const string ErrorMessage = "Cannot change doc with F1=false";
 
-      public string TableNames { get { return "Doc1"; } }
+      public string TableNames { get { return "TestDocs"; } }
 
 
       public void TestDocAllowed(DBxDocPermissionArgs args)
@@ -184,7 +263,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocType dt;
       //DBxSubDocType sdt;
 
-      dt = new DBxDocType("Doc1");
+      dt = new DBxDocType("TestDocs");
       dt.Struct.Columns.AddBoolean("F1", false);
       dt.Struct.Columns.AddInt("F2", false);
       dts.Add(dt);

@@ -155,6 +155,13 @@ namespace FreeLibSet.Forms.FIAS
         return;
       }
 
+      if (!DBSettings.UseHistory)
+      {
+        // 25.01.2022
+        EFPApp.ErrorMessageBox("Используемый классификатор ФИАС не содержит исторических сведений");
+        return;
+      }
+
       DataTable table;
       EFPApp.BeginWait("Получение таблицы истории", "FiasAddress", true);
       try

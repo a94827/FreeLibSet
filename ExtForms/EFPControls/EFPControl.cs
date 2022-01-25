@@ -824,10 +824,20 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка аварийной установки состояния Detached при вызове Control.Disposed");
+        AddExceptionInfo(e);
+        LogoutTools.LogoutException(e, "Ошибка аварийной установки состояния Detached при при обработке события Control.Disposed");
         // Будет и вторая ошибка при установке Disposed
       }
-      InternalSetProviderState(EFPControlProviderState.Disposed);
+
+      try
+      {
+        InternalSetProviderState(EFPControlProviderState.Disposed);
+      }
+      catch (Exception e) // 25.01.2022
+      {
+        AddExceptionInfo(e);
+        LogoutTools.LogoutException(e, "Ошибка установки состояния Disposed при обработке события Control.Disposed");
+      }
     }
 
     #endregion

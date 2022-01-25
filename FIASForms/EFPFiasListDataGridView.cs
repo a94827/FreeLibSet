@@ -173,9 +173,14 @@ namespace FreeLibSet.Forms.FIAS
 
       Control.ReadOnly = true;
       ReadOnly = true;
-      CanView = !isHistView;
-      if (!isHistView)
+
+      if ((!isHistView) && ui.DBSettings.UseHistory /* 25.01.2022 */)
+      {
+        CanView = true;
         EditData += new EventHandler(EFPFiasListDataGridView_EditData);
+      }
+      else
+        CanView = false;
 
       if (UseNextPrev)
       {
