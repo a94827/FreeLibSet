@@ -742,7 +742,7 @@ namespace FreeLibSet.Data.Docs
       bool[] a = new bool[_Table.Columns.Count];
       for (int i = 0; i < _Table.Columns.Count; i++)
         a[i] = DataTools.GetBool(_Table.Columns[i].ExtendedProperties["AllowDBNull"]);
-      _AllowDBNullFlags= a;
+      _AllowDBNullFlags = a;
     }
 
     #endregion
@@ -1669,27 +1669,39 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Перемещает все документы, находящиеся в режиме View, в список на удаление. Наличие документов в режимах,
-    /// отличных от View, не допускается
+    /// Перемещает все документы, находящиеся в режиме View, в список на удаление. 
+    /// Документы, уже находящиеся в состоянии Delete, пропускаются.
+    /// Наличие документов в режимах, отличных от View и Delete, не допускается.
     /// </summary>
     public void Delete()
     {
       CheckCanModify();
 
-      foreach (DataRow Row in Table.Rows)
+      List<DataRow> rowsToDelete = null;
+
+      for (int i = 0; i < DocCount; i++)
       {
-        switch (DBxDocSet.GetDocState(Row))
+        switch (DBxDocSet.GetDocState(_Table.Rows[i]))
         {
           case DBxDocState.Delete:
             break;
           case DBxDocState.View:
-            Row.Delete();
+            DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.BeforeDelete); // 28.01.2022
+            if (rowsToDelete == null)
+              rowsToDelete = new List<DataRow>();
+            rowsToDelete.Add(_Table.Rows[i]);
             break;
           default:
-            throw new InvalidOperationException("Нельзя удалить документ, находящийся в состоянии " + DBxDocSet.GetDocState(Row).ToString());
+            throw new InvalidOperationException("Нельзя удалить документ, находящийся в состоянии " + DBxDocSet.GetDocState(_Table.Rows[i]).ToString());
         }
       }
-      ResetDocIds();
+
+      if (rowsToDelete != null)
+      {
+        foreach (DataRow row in rowsToDelete)
+          row.Delete();
+        ResetDocIds();
+      }
     }
 
     #endregion

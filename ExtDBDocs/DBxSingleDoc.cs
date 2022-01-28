@@ -322,6 +322,9 @@ namespace FreeLibSet.Data.Docs
         case DBxDocState.Edit:
           break; // Ничего не делаем
         case DBxDocState.View:
+          if (this.Deleted)
+            DocProvider.TestDocument(this, DBxDocPermissionReason.BeforeRestore); // 28.01.2022
+          DocProvider.TestDocument(this, DBxDocPermissionReason.BeforeEdit); // 28.01.2022
           Row.SetModified();
           break;
         default:
@@ -357,6 +360,7 @@ namespace FreeLibSet.Data.Docs
     {
       MultiDocs.CheckCanModify();
 
+      DocProvider.TestDocument(this, DBxDocPermissionReason.BeforeDelete); // 28.01.2022
       Row.Delete();
     }
 

@@ -19,8 +19,9 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region View()
 
-    [Test]
-    public void TestDocAllowed_View_ById()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_View_ById(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -30,16 +31,19 @@ namespace ExtDBDocs_tests.Data_Docs
         DBxDocSet ds = new DBxDocSet(provider);
 
         DBxSingleDoc doc = ds["TestDocs"].View(docId);
-        TestWithTrace.AssertValues("View()", 
-          new OneCallInfo(DBxDocPermissionReason.View,  1) );
+        TestWithTrace.AssertValues("View()",
+          new OneCallInfo(DBxDocPermissionReason.View, 1));
+
+        PerformSideChange(docId, sideChange);
 
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()");
       }
     }
 
-    [Test]
-    public void TestDocAllowed_View_FromEdit()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_View_FromEdit(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -53,6 +57,8 @@ namespace ExtDBDocs_tests.Data_Docs
 
         doc.View();
         TestWithTrace.AssertValues("View()");
+
+        PerformSideChange(docId, sideChange);
 
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()");
@@ -76,7 +82,7 @@ namespace ExtDBDocs_tests.Data_Docs
         TestWithTrace.AssertValues("Insert()");
 
         ds.ApplyChanges(false);
-        TestWithTrace.AssertValues("ApplyChanges()", 
+        TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyNew, 1));
       }
     }
@@ -85,8 +91,9 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Edit()
 
-    [Test]
-    public void TestDocAllowed_Edit_ById()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_Edit_ById(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -96,14 +103,16 @@ namespace ExtDBDocs_tests.Data_Docs
         DBxDocSet ds = new DBxDocSet(provider);
 
         DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
-        TestWithTrace.AssertValues("Edit()", 
-          new OneCallInfo(DBxDocPermissionReason.View, 1), 
+        TestWithTrace.AssertValues("Edit()",
+          new OneCallInfo(DBxDocPermissionReason.View, 1),
           new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
+
+        PerformSideChange(docId, sideChange);
 
         doc.Values["F2"].SetInteger(2);
         ds.ApplyChanges(false);
-        TestWithTrace.AssertValues("ApplyChanges()", 
-          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, 1),
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, sideChange ? 99 : 1),
           new OneCallInfo(DBxDocPermissionReason.ApplyEditNew, 2));
       }
     }
@@ -134,8 +143,9 @@ namespace ExtDBDocs_tests.Data_Docs
       }
     }
 
-    [Test]
-    public void TestDocAllowed_Edit_ByView()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_Edit_ByView(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -151,10 +161,12 @@ namespace ExtDBDocs_tests.Data_Docs
         TestWithTrace.AssertValues("Edit()",
           new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
 
+        PerformSideChange(docId, sideChange);
+
         doc.Values["F2"].SetInteger(2);
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
-          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, 1),
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, sideChange ? 99 : 1),
           new OneCallInfo(DBxDocPermissionReason.ApplyEditNew, 2));
       }
     }
@@ -163,6 +175,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void TestDocAllowed_Edit_ByView_Restore()
     {
       Int32 docId = Create1Doc(1);
+      Delete1Doc(docId);
 
       using (new TestWithTrace())
       {
@@ -190,8 +203,9 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Delete()
 
-    [Test]
-    public void TestDocAllowed_Delete_ById()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_Delete_ById(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -205,14 +219,17 @@ namespace ExtDBDocs_tests.Data_Docs
           new OneCallInfo(DBxDocPermissionReason.View, 1),
           new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
 
+        PerformSideChange(docId, sideChange);
+
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
       }
     }
 
-    [Test]
-    public void TestDocAllowed_Delete_ByView()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_Delete_ByView(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -228,13 +245,17 @@ namespace ExtDBDocs_tests.Data_Docs
         TestWithTrace.AssertValues("Delete()",
           new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
 
+        PerformSideChange(docId, sideChange);
+
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
       }
     }
 
-    public void TestDocAllowed_Delete_ByAllView()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_Delete_ByAllView(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -250,14 +271,17 @@ namespace ExtDBDocs_tests.Data_Docs
         TestWithTrace.AssertValues("Delete()",
           new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
 
+        PerformSideChange(docId, sideChange);
+
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
       }
     }
 
-    [Test]
-    public void TestDocAllowed_Delete_ByEdit()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TestDocAllowed_Delete_ByEdit(bool sideChange)
     {
       Int32 docId = Create1Doc(1);
 
@@ -273,6 +297,8 @@ namespace ExtDBDocs_tests.Data_Docs
         doc.Delete();
         TestWithTrace.AssertValues("Delete()",
           new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
+
+        PerformSideChange(docId, sideChange);
 
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
@@ -347,6 +373,24 @@ namespace ExtDBDocs_tests.Data_Docs
       ds.ApplyChanges(false);
     }
 
+    /// <summary>
+    /// Эмуляция стороннего изменения документа.
+    /// Если стороннее изменение тестируется, то в поле "F2" записывается значение 99
+    /// </summary>
+    /// <param name="docId">Идентификатор документа</param>
+    /// <param name="sideChange">Нужно ли выполнить эмуляцию</param>
+    private void PerformSideChange(Int32 docId, bool sideChange)
+    {
+      if (!sideChange)
+        return;
+
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceAdm, 0, true);
+      DBxDocSet ds = new DBxDocSet(provider);
+      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      doc.Values["F2"].SetInteger(99);
+      ds.ApplyChanges(false);
+    }
+
     #endregion
 
     #region Тестирование разрешений
@@ -362,7 +406,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
       DBxDocSet ds = new DBxDocSet(provider);
 
-      Assert.Catch<DBxAccessException>(delegate() { ds["TestDocs"].Edit(docId1); });
+      Assert.Catch<DBxAccessException>(delegate () { ds["TestDocs"].Edit(docId1); });
 
       DBxSingleDoc doc2 = ds["TestDocs"].Edit(docId2);
       Assert.AreEqual(2, doc2.Values["F2"].AsInteger, "F2 read #2");
@@ -396,7 +440,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
       DBxDocSet ds1 = new DBxDocSet(provider);
-      Assert.Catch<DBxAccessException>(delegate()
+      Assert.Catch<DBxAccessException>(delegate ()
       {
         DBxSingleDoc doc1 = ds1["TestDocs"].View(docId1);
         doc1.Delete();
@@ -419,7 +463,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
       DBxDocSet ds1 = new DBxDocSet(provider);
-      Assert.Catch<DBxAccessException>(delegate()
+      Assert.Catch<DBxAccessException>(delegate ()
       {
         DBxSingleDoc doc1 = ds1["TestDocs"].Edit(docId1);
         doc1.Delete();
@@ -442,7 +486,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
       DBxDocSet ds1 = new DBxDocSet(provider);
-      Assert.Catch<DBxAccessException>(delegate()
+      Assert.Catch<DBxAccessException>(delegate ()
       {
         ds1["TestDocs"].Delete(docId1);
         ds1.ApplyChanges(false);
@@ -460,7 +504,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds1 = new DBxDocSet(provider);
       DBxSingleDoc doc1 = ds1["TestDocs"].Insert();
       doc1.Values["F1"].SetBoolean(false);
-      Assert.Catch<DBxAccessException>(delegate() { ds1.ApplyChanges(false); }, "#1");
+      Assert.Catch<DBxAccessException>(delegate () { ds1.ApplyChanges(false); }, "#1");
 
       DBxDocSet ds2 = new DBxDocSet(provider);
       DBxSingleDoc doc2 = ds1["TestDocs"].Insert();
@@ -549,7 +593,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       // 6.Обычный пользователь опять пытается сохранить документ
       doc2.Values["F2"].SetInteger(6);
-      Assert.Catch<DBxAccessException>(delegate() { ds2.ApplyChanges(true); }, "Save #6");
+      Assert.Catch<DBxAccessException>(delegate () { ds2.ApplyChanges(true); }, "Save #6");
 
       // Проверяем, что ничего не испортилось
       Assert.AreEqual(5, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #6");

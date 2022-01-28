@@ -3049,6 +3049,11 @@ namespace FreeLibSet.Forms.Docs
 #endif
       }
 
+      // 28.01.2022
+      controlProvider.SetColumnsReadOnly(true);
+      if (controlProvider.MarkRowsColumn != null)
+        controlProvider.MarkRowsColumn.GridColumn.ReadOnly = false;
+
       if (!reInit)
       {
         controlProvider.Control.VirtualMode = true;
@@ -5187,6 +5192,12 @@ namespace FreeLibSet.Forms.Docs
           controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
         }
       }
+
+
+      // 28.01.2022
+      controlProvider.SetColumnsReadOnly(true);
+      if (controlProvider.MarkRowsColumn != null)
+        controlProvider.MarkRowsColumn.GridColumn.ReadOnly = false;
 
       // 16.06.2021 что за бяка? controlProvider.GetUsedColumns(columns);
 
