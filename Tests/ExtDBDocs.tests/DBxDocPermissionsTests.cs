@@ -6,6 +6,7 @@ using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.IO;
 using NUnit.Framework;
+using FreeLibSet.Core;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
@@ -14,6 +15,342 @@ namespace ExtDBDocs_tests.Data_Docs
   [TestFixture]
   public class DBxDocPermissionsTests
   {
+    #region Тестирование вызовов TestDocAllowed()
+
+    #region View()
+
+    [Test]
+    public void TestDocAllowed_View_ById()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].View(docId);
+        TestWithTrace.AssertValues("View()", 
+          new OneCallInfo(DBxDocPermissionReason.View,  1) );
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()");
+      }
+    }
+
+    [Test]
+    public void TestDocAllowed_View_FromEdit()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+        TestWithTrace.LogValues.Clear(); // вызов Edit здесь не нужно тестировать
+
+        doc.View();
+        TestWithTrace.AssertValues("View()");
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()");
+      }
+    }
+
+    #endregion
+
+    #region Insert()
+
+    [Test]
+    public void TestDocAllowed_Insert()
+    {
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].Insert();
+        doc.Values["F2"].SetInteger(1);
+        TestWithTrace.AssertValues("Insert()");
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()", 
+          new OneCallInfo(DBxDocPermissionReason.ApplyNew, 1));
+      }
+    }
+
+    #endregion
+
+    #region Edit()
+
+    [Test]
+    public void TestDocAllowed_Edit_ById()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+        TestWithTrace.AssertValues("Edit()", 
+          new OneCallInfo(DBxDocPermissionReason.View, 1), 
+          new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
+
+        doc.Values["F2"].SetInteger(2);
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()", 
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, 1),
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditNew, 2));
+      }
+    }
+
+    [Test]
+    public void TestDocAllowed_Edit_ById_Restore()
+    {
+      Int32 docId = Create1Doc(1);
+      Delete1Doc(docId);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+        TestWithTrace.AssertValues("Edit()",
+          new OneCallInfo(DBxDocPermissionReason.View, 1),
+          new OneCallInfo(DBxDocPermissionReason.BeforeRestore, 1),
+          new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
+
+        doc.Values["F2"].SetInteger(2);
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyRestore, 2),
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, 1),
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditNew, 2));
+      }
+    }
+
+    [Test]
+    public void TestDocAllowed_Edit_ByView()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].View(docId);
+        TestWithTrace.LogValues.Clear(); // Метод View() здесь не тестируем
+
+        doc.Edit();
+        TestWithTrace.AssertValues("Edit()",
+          new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
+
+        doc.Values["F2"].SetInteger(2);
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, 1),
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditNew, 2));
+      }
+    }
+
+    [Test]
+    public void TestDocAllowed_Edit_ByView_Restore()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].View(docId);
+        TestWithTrace.LogValues.Clear(); // Метод View() здесь не тестируем
+
+        doc.Edit();
+        TestWithTrace.AssertValues("Edit()",
+          new OneCallInfo(DBxDocPermissionReason.BeforeRestore, 1),
+          new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
+
+        doc.Values["F2"].SetInteger(2);
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyRestore, 2),
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, 1),
+          new OneCallInfo(DBxDocPermissionReason.ApplyEditNew, 2));
+      }
+    }
+
+    #endregion
+
+    #region Delete()
+
+    [Test]
+    public void TestDocAllowed_Delete_ById()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        ds["TestDocs"].Delete(docId);
+        TestWithTrace.AssertValues("Delete()",
+          new OneCallInfo(DBxDocPermissionReason.View, 1),
+          new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+      }
+    }
+
+    [Test]
+    public void TestDocAllowed_Delete_ByView()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].View(docId);
+        TestWithTrace.LogValues.Clear(); // Метод View() здесь не тестируем
+
+        doc.Delete();
+        TestWithTrace.AssertValues("Delete()",
+          new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+      }
+    }
+
+    public void TestDocAllowed_Delete_ByAllView()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        ds["TestDocs"].View(docId);
+        TestWithTrace.LogValues.Clear(); // Метод View() здесь не тестируем
+
+        ds["TestDocs"].Delete();
+        TestWithTrace.AssertValues("Delete()",
+          new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+      }
+    }
+
+    [Test]
+    public void TestDocAllowed_Delete_ByEdit()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+        TestWithTrace.LogValues.Clear(); // Метод Edit() здесь не тестируем
+
+
+        doc.Delete();
+        TestWithTrace.AssertValues("Delete()",
+          new OneCallInfo(DBxDocPermissionReason.BeforeDelete, 1));
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()",
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+      }
+    }
+
+    #endregion
+
+    #region ViewVersion()
+
+    [Test]
+    public void TestDocAllowed_ViewVersion()
+    {
+      Int32 docId = Create1Doc(1);
+      DBxDocProvider provider0 = new DBxRealDocProvider(_SourceAdm, 0, true);
+      DBxDocSet ds0 = new DBxDocSet(provider0);
+      ds0["TestDocs"].Edit(docId).Values["F2"].SetInteger(2);
+      ds0.ApplyChanges(false);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        DBxDocSet ds = new DBxDocSet(provider);
+
+        DBxSingleDoc doc = ds["TestDocs"].ViewVersion(docId, 1);
+        TestWithTrace.AssertValues("ViewVersion()",
+          new OneCallInfo(DBxDocPermissionReason.View, 1));
+
+        ds.ApplyChanges(false);
+        TestWithTrace.AssertValues("ApplyChanges()");
+      }
+    }
+
+    #endregion
+
+    #region GetDocHistTable()
+
+    [Test]
+    public void TestDocAllowed_GetDocHistTable()
+    {
+      Int32 docId = Create1Doc(1);
+
+      using (new TestWithTrace())
+      {
+        DBxDocProvider provider = new DBxRealDocProvider(_SourceWithTrace, 0, true);
+        provider.GetDocHistTable("TestDocs", docId);
+        TestWithTrace.AssertValues("GetDocHistTable()",
+          new OneCallInfo(DBxDocPermissionReason.View, 1),
+          new OneCallInfo(DBxDocPermissionReason.ViewHistory, 1));
+      }
+    }
+
+    #endregion
+
+    private Int32 Create1Doc(int valueF2)
+    {
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceAdm, 0, true); // без ограничений
+      DBxDocSet ds = new DBxDocSet(provider);
+
+      DBxSingleDoc doc = ds["TestDocs"].Insert();
+      doc.Values["F2"].SetInteger(valueF2);
+      ds.ApplyChanges(true);
+      return ds["TestDocs"][0].DocId;
+    }
+
+    private void Delete1Doc(Int32 docId)
+    {
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceAdm, 0, true);
+      DBxDocSet ds = new DBxDocSet(provider);
+      ds["TestDocs"].Delete(docId);
+      ds.ApplyChanges(false);
+    }
+
+    #endregion
+
+    #region Тестирование разрешений
+
     [Test]
     public void TestEdit()
     {
@@ -47,6 +384,29 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxSingleDoc doc2 = ds["TestDocs"].Edit(docId2);
       Assert.AreEqual(2, doc2.Values["F2"].AsInteger, "F2 read #2");
+    }
+
+    [Test]
+    public void TestDelete_ByView()
+    {
+      Int32 docId1, docId2;
+      Create2Docs(out docId1, out docId2);
+
+      // Первый документ нельзя удалить, а второй - можно
+
+      DBxDocProvider provider = new DBxRealDocProvider(_SourceLim, 0, true); // с ограничениями
+      DBxDocSet ds1 = new DBxDocSet(provider);
+      Assert.Catch<DBxAccessException>(delegate()
+      {
+        DBxSingleDoc doc1 = ds1["TestDocs"].View(docId1);
+        doc1.Delete();
+        ds1.ApplyChanges(false);
+      });
+
+      DBxDocSet ds2 = new DBxDocSet(provider);
+      DBxSingleDoc doc2 = ds2["TestDocs"].Edit(docId2);
+      doc2.Delete();
+      ds2.ApplyChanges(false);
     }
 
     [Test]
@@ -141,6 +501,8 @@ namespace ExtDBDocs_tests.Data_Docs
       docId2 = doc2.DocId;
     }
 
+    #endregion
+
     [Test]
     public void Remove_Lock_And_Change_While_Other_Editing()
     {
@@ -209,6 +571,11 @@ namespace ExtDBDocs_tests.Data_Docs
     /// </summary>
     DBxRealDocProviderSource _SourceLim;
 
+    /// <summary>
+    /// Источник с поддержкой трассировки TestUserPermissionWithTrace 
+    /// </summary>
+    DBxRealDocProviderSource _SourceWithTrace;
+
     private class TestUserPermission2 : UserPermission, IDBxDocPermission
     {
       #region Конструктор
@@ -243,6 +610,9 @@ namespace ExtDBDocs_tests.Data_Docs
 
       public void TestDocAllowed(DBxDocPermissionArgs args)
       {
+        object F1 = args.Values["F1"].Value;
+        object F2 = args.Values["F2"].Value;
+
         if (!args.IsReadOnly)
         {
           if (!args.Values["F1"].AsBoolean)
@@ -252,6 +622,148 @@ namespace ExtDBDocs_tests.Data_Docs
 
       #endregion
     }
+
+    /// <summary>
+    /// Псевдоразрешение, которое выполняет трассировку вызова метода TestDocAllowed().
+    /// Для каждого вызова TestDocAllowed() записываются данные в TestWithTrace.LogValues
+    /// </summary>
+    private class TestUserPermissionWithTrace : UserPermission, IDBxDocPermission
+    {
+      #region Конструктор
+
+      public TestUserPermissionWithTrace()
+        : base("TestLog")
+      {
+      }
+
+      #endregion
+
+      #region Переопределенные методы - заглушки
+
+      public override string ValueText { get { return String.Empty; } }
+
+      public override void Read(CfgPart cfg)
+      {
+      }
+
+      public override void Write(CfgPart cfg)
+      {
+      }
+
+      #endregion
+
+      #region Основной метод
+
+      public string TableNames { get { return "TestDocs"; } }
+
+
+      public void TestDocAllowed(DBxDocPermissionArgs args)
+      {
+        if (TestWithTrace.LogValues == null)
+          throw new NullReferenceException("Bug in a test. Log=null.");
+
+        TestWithTrace.LogValues.Add(new OneCallInfo(args.Reason, args.Values["F2"].AsInteger));
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Информация по одному вызову метода TestDocAllowed().
+    /// </summary>
+    public struct OneCallInfo
+    {
+      #region Конструктор
+
+      public OneCallInfo(DBxDocPermissionReason reason, int f2)
+      {
+        _Reason = reason;
+        _F2 = f2;
+      }
+
+      #endregion
+
+      #region Свойства
+
+      /// <summary>
+      /// Режим вызова
+      /// </summary>
+      public DBxDocPermissionReason Reason { get { return _Reason; } }
+      private DBxDocPermissionReason _Reason;
+
+      /// <summary>
+      /// Значение поля "F2" в Values
+      /// </summary>
+      public int F2 { get { return _F2; } }
+      private int _F2;
+
+      #endregion
+    }
+
+    public class TestWithTrace : IDisposable
+    {
+      #region Конструктор и Dispose
+
+      public TestWithTrace()
+      {
+        _LogValues = new List<OneCallInfo>();
+      }
+
+      public void Dispose()
+      {
+        _LogValues = null;
+      }
+
+      #endregion
+
+      #region Трассировка
+
+      /// <summary>
+      /// Словарь для регистрации вызовов метода TestDocAllowed().
+      /// Ключ в словаре - значение Reason, значение - поле "F2"
+      /// </summary>
+      public static IList<OneCallInfo> LogValues { get { return _LogValues; } }
+      [ThreadStatic] // тесты могут выполняться в нескольких потоках
+      private static List<OneCallInfo> _LogValues;
+
+      /// <summary>
+      /// Выполняет проверку значений.
+      /// После этого очищает текущий список LogValues
+      /// </summary>
+      /// <param name="message">Дополнительное сообщение</param>
+      /// <param name="wanted">Ожидавшиеся вызовы</param>
+      public static void AssertValues(string message, params OneCallInfo[] wanted)
+      {
+        if (!String.IsNullOrEmpty(message))
+          message = message + ". ";
+
+        try
+        {
+          DBxDocPermissionReason[] a1 = new DBxDocPermissionReason[wanted.Length];
+          for (int i = 0; i < wanted.Length; i++)
+            a1[i] = wanted[i].Reason;
+
+          DBxDocPermissionReason[] a2 = new DBxDocPermissionReason[LogValues.Count];
+          for (int i = 0; i < LogValues.Count; i++)
+            a2[i] = LogValues[i].Reason;
+
+          Assert.AreEqual(a1, a2, message + "Reasons differ");
+
+          int n = Math.Max(wanted.Length, _LogValues.Count);
+
+          for (int i = 0; i < wanted.Length; i++)
+            Assert.AreEqual(wanted[i].F2, LogValues[i].F2, message + "Value F2 for reason=" + wanted[i].Reason.ToString());
+        }
+        finally
+        {
+          LogValues.Clear();
+        }
+      }
+
+      #endregion
+    }
+
+    #region Setup() / TearDown()
 
     [OneTimeSetUp]
     public void Setup()
@@ -277,12 +789,18 @@ namespace ExtDBDocs_tests.Data_Docs
 
       _SourceAdm = new DBxRealDocProviderSource(_GlobalData);
 
-      UserPermissions ups = new UserPermissions(UserPermissionCreators.Empty);
-      ups.Add(new TestUserPermission2());
+      UserPermissions ups2 = new UserPermissions(UserPermissionCreators.Empty);
+      ups2.Add(new TestUserPermission2());
 
       _SourceLim = new DBxRealDocProviderSource(_GlobalData);
-      _SourceLim.UserPermissions = ups;
+      _SourceLim.UserPermissions = ups2;
 
+
+      UserPermissions upsWT = new UserPermissions(UserPermissionCreators.Empty);
+      upsWT.Add(new TestUserPermissionWithTrace());
+
+      _SourceWithTrace = new DBxRealDocProviderSource(_GlobalData);
+      _SourceWithTrace.UserPermissions = upsWT;
     }
 
     [OneTimeTearDown]
@@ -300,6 +818,8 @@ namespace ExtDBDocs_tests.Data_Docs
         _TempDir = null;
       }
     }
+
+    #endregion
 
     #endregion
   }

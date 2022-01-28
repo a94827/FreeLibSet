@@ -1580,28 +1580,33 @@ namespace FreeLibSet.Data.Docs
 
       if (docIds == null)
         throw new ArgumentNullException("docIds");
-      if (docIds.Length < 1)
-        throw new ArgumentException("Массив идентификаторов нулевой длины", "docIds");
-      for (int i = 0; i < docIds.Length; i++)
-      {
-        if (!DocProvider.IsRealDocId(docIds[i]))
-          throw new ArgumentException("В позиции " + i.ToString() + " задан недопустимый идентификатор документа " + docIds[i].ToString());
-      }
+      //if (docIds.Length < 1)
+      //  throw new ArgumentException("Массив идентификаторов нулевой длины", "docIds");
+      //for (int i = 0; i < docIds.Length; i++)
+      //{
+      //  if (!DocProvider.IsRealDocId(docIds[i]))
+      //    throw new ArgumentException("В позиции " + i.ToString() + " задан недопустимый идентификатор документа " + docIds[i].ToString());
+      //}
 
       CheckNotInTable(docIds);
 
       ResetDocIds();
 
-      for (int i = 0; i < docIds.Length; i++)
-      {
-        DataRow NewRow = _Table.NewRow();
-        for (int j = 0; j < _Table.Columns.Count; j++)
-          NewRow[j] = DataTools.GetEmptyValue(_Table.Columns[j].DataType);
-        NewRow["Id"] = docIds[i];
-        _Table.Rows.Add(NewRow);
-        NewRow.AcceptChanges(); // нужно ли?
-        NewRow.Delete();
-      }
+      int OldDocCount = DocCount;
+
+      DataTable Table2 = DocProvider.LoadDocData(DocType.Name, docIds);
+      if (Table2.Rows.Count != docIds.Length)
+        throw new InvalidOperationException("Не удалось загрузить все требуемые документы");
+      DoView(Table2);
+
+      if (DocCount != OldDocCount + docIds.Length)
+        throw new BugException("Invalid DocCount");
+
+      for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+        DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.BeforeDelete);
+      for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+        _Table.Rows[i].Delete();
+
 
       /*
        * 28.12.2017
@@ -1779,6 +1784,8 @@ namespace FreeLibSet.Data.Docs
 
       CheckNotInTable(docId);
 
+      int OldDocCount = DocCount;
+
       ResetDocIds();
 
       DocSet.VersionView = true;
@@ -1815,6 +1822,26 @@ namespace FreeLibSet.Data.Docs
           _DocValues.ResetBuffer();
         }
       }
+
+      // 28.01.2022 - Как в DoView()
+      try
+      {
+        for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+          DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.View);
+      }
+      catch
+      {
+        // Убираем загруженные данные, иначе от выброса исключения мало толку
+        if (OldDocCount == 0)
+          _Table.Rows.Clear();
+        else
+        {
+          for (int i = _Table.Rows.Count - 1; i >= OldDocCount; i--)
+            _Table.Rows.Remove(_Table.Rows[i]);
+        }
+        throw;
+      }
+
 
       return this[DocCount - 1];
     }

@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
+	<meta name="created" content="2022-01-28T14:13:32.885000000"/>
+	<meta name="changed" content="2022-01-28T16:57:18.390000000"/>
+	<style type="text/css">
+		@page { margin: 2cm }
+		td p { margin-bottom: 0.25cm; line-height: 120% }
+		p { margin-bottom: 0.25cm; line-height: 120% }
+	</style>
+</head>
+<body lang="ru-RU" dir="ltr">
+<p align="left" style="margin-top: 0.42cm; margin-bottom: 0.21cm; line-height: 100%; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>DBxDocPermissions</b></font></font></p>
+<p style="margin-bottom: 0cm; line-height: 100%">Проверка разрешений
+при выполнении действий с документами</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">Вызовы метода
+IDBxDocPermission<span lang="en-US">.TestDocAllowed() </span><span lang="ru-RU">при
+выполнении различных действий с документами</span></p>
+<table width="100%" cellpadding="5" cellspacing="0">
+	<col width="109*">
+	<col width="33*">
+	<col width="114*">
+	<tr valign="top">
+		<td width="43%" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">Действие</p>
+		</td>
+		<td width="13%" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">DBxDocPermissionReason</p>
+		</td>
+		<td width="45%" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Примечания</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.View(id)</p>
+			<p lang="en-US">(<span lang="ru-RU">открытие на просмотр по
+			идентификатору</span>)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">View</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxSingleDoc.View()</p>
+			<p>(перевод редактируемого документа в состояние просмотра)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">-</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="3" width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.Edit(id) 
+			</p>
+			<p lang="en-US">(<span lang="ru-RU">открытие на редактирование по
+			идентификатору</span> - <span lang="ru-RU">обычный документ</span>)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US"><span lang="ru-RU">1. </span>View</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>2. <span lang="en-US">BeforeRestore</span></p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Если документ в базе данных был помечен на удаление</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US"><span lang="ru-RU">3. </span>BeforeEdit</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxSingleDoc.Edit()</p>
+			<p>(открытие на редактирование из режима просмотра)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">1. BeforeRestore</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Если просматриваемый документ на момент выполнения <span lang="en-US">View()
+			</span><span lang="ru-RU">был помечен на удаление</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">2. BeforeEdit</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.Insert()</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US" align="center">-</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.InsertCopy(id)</p>
+			<p lang="en-US">(<span lang="ru-RU">создание нового документа на
+			основании другого по идентификатору</span>)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">View</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.InsertCopy()</p>
+			<p lang="en-US">(<span lang="ru-RU">создание нового документа на
+			основании открытого на просмотре</span>)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">-</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.Delete(id)</p>
+			<p lang="en-US">(<span lang="ru-RU">удаление по идентификатору</span>)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>1. <span lang="en-US">View</span></p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">2. BeforeDelete</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxSingleDoc.Delete()</p>
+			<p lang="en-US">(<span lang="ru-RU">удаление документа, открытого
+			на просмотр или редактирование</span>)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">BeforeDelete</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.Delete()</p>
+			<p lang="en-US">(<span lang="ru-RU">удаление всех документов,
+			открытых на просмотр</span>)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">BeforeDelete</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxMultiDocs.ViewVersion(id)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">View</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxDocProvider.GetDocHistTable()</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">1. View</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><span lang="en-US">DBxDocPermissionArgs.Values </span>содержит
+			значения актуальной версии документа в базе данных</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">2. ViewHistory</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><span lang="en-US">DBxDocPermissionArgs.Values </span>содержит
+			значения актуальной версии документа в базе данных</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">DBxDocSet.ApplyChanges()</p>
+			<p>Зависит от состояния <span lang="en-US">DocState </span>конкретного
+			документа</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US"><br/>
+
+			</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US" style="margin-left: 2cm">View</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US" align="center">-</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p><br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="3" width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US" style="margin-left: 2cm">Edit</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">1. ApplyRestore</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Если документ в БД помечен на удаление.</p>
+			<p>DBxDocPermissionArgs.<span lang="en-US">Values </span><span lang="ru-RU">содержит
+			значения, которые будут записаны</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p>2. ApplyEditOrg</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US"><span lang="ru-RU">Проверяются поля документа,
+			которые записаны в БД на момент вызова </span>ApplyChanges()<span lang="ru-RU">.
+			DBxDocPermissionArgs.</span>Values <span lang="ru-RU">содержит
+			текущие значения из базы данных</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">3.<span lang="ru-RU">ApplyEditOrg</span></p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">DBxDocPermissionArgs.Values <span lang="ru-RU">содержит
+			значения, которые будут записаны</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US" style="margin-left: 2cm">Insert (<span lang="ru-RU">только
+			при первом сохранении документа</span>; <span lang="ru-RU">при
+			повторных вызовах </span>ApplyChanges() <span lang="ru-RU">используется
+			режим </span>Edit)</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ApplyNew</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US">DBxDocPermissionArgs.Values <span lang="ru-RU">содержит
+			значения, которые будут записаны</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="43%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US" style="margin-left: 2cm">Delete</p>
+		</td>
+		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">ApplyDelete</p>
+		</td>
+		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p lang="en-US"><span lang="ru-RU">Проверяются поля документа,
+			которые записаны в БД на момент вызова </span>ApplyChanges()<span lang="ru-RU">.
+			DBxDocPermissionArgs.</span>Values <span lang="ru-RU">содержит
+			текущие значения из базы данных</span></p>
+		</td>
+	</tr>
+</table>
+<p style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+</body>
+</html>

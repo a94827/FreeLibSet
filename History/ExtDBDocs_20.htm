@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-01-19T16:03:33.409000000"/>
+	<meta name="changed" content="2022-01-28T16:57:25.062000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -79,7 +79,7 @@
 			<p lang="en-US" align="center">308</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">14.01.2022-19.01.2022</p>
+			<p lang="en-US" align="center">14.01.2022-<span lang="ru-RU">28</span>.01.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменена
@@ -105,6 +105,16 @@
 			создания ненужной копии таблицы.</span></p>
 			<p lang="en-US">3. <span lang="ru-RU">Вспомогательные методы
 			</span>DBxDocProvider.GetTextValues()</p>
+			<p>4. Исправления при вызове <span lang="en-US">DBxDocPermissions.TestDocument()
+			(<a href="ExtDBDocs_11.htm#v001p5">v.1 </a></span><a href="ExtDBDocs_11.htm#v001p5">п.5</a><span lang="en-US">):</span></p>
+			<p><span lang="en-US">- DBxMultiDocs.ViewVersion() </span><span lang="ru-RU">вызывает
+			проверку с DBxDocPermissionReason.</span><span lang="en-US">View</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Изменена
+			реализация </span><span lang="en-US">DBxMultiDocs.Delete(Int32[]
+			docIds). </span><span lang="ru-RU">Теперь сначала выполняется
+			просмотр документов. Не выполнялась проверка прав на удаление
+			документа (</span><span lang="en-US">View </span><span lang="ru-RU">и
+			</span><span lang="en-US">BeforeDelete</span><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
