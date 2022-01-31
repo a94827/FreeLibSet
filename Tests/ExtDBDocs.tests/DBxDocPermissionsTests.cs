@@ -10,8 +10,9 @@ using FreeLibSet.Core;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
-  // TODO: Нужно больше тестов
-
+  /// <summary>
+  /// Проверка тестирования документов с помощью IDBxDocPermission.TestDocument()
+  /// </summary>
   [TestFixture]
   public class DBxDocPermissionsTests
   {
@@ -223,7 +224,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
-          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, sideChange ? 99 : 1));
       }
     }
 
@@ -249,7 +250,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
-          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, sideChange ? 99 : 1));
       }
     }
 
@@ -275,7 +276,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
-          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, sideChange ? 99 : 1));
       }
     }
 
@@ -302,7 +303,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
-          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, 1));
+          new OneCallInfo(DBxDocPermissionReason.ApplyDelete, sideChange ? 99 : 1));
       }
     }
 
@@ -354,6 +355,8 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #endregion
 
+    #region Вспомогательные методы
+
     private Int32 Create1Doc(int valueF2)
     {
       DBxDocProvider provider = new DBxRealDocProvider(_SourceAdm, 0, true); // без ограничений
@@ -390,6 +393,8 @@ namespace ExtDBDocs_tests.Data_Docs
       doc.Values["F2"].SetInteger(99);
       ds.ApplyChanges(false);
     }
+
+    #endregion
 
     #endregion
 
@@ -547,6 +552,8 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #endregion
 
+    #region Тестирование специальной ошибочной ситуации
+
     [Test]
     public void Remove_Lock_And_Change_While_Other_Editing()
     {
@@ -599,10 +606,11 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(5, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #6");
     }
 
+    #endregion
 
     #region Тестовая база данных
 
-    private TempDirectory _TempDir;
+    //private TempDirectory _TempDir;
     private DBxRealDocProviderGlobal _GlobalData;
 
     /// <summary>
@@ -812,7 +820,7 @@ namespace ExtDBDocs_tests.Data_Docs
     [OneTimeSetUp]
     public void Setup()
     {
-      _TempDir = new TempDirectory();
+      //_TempDir = new TempDirectory();
 
       DBxDocTypes dts = new DBxDocTypes();
       dts.UsersTableName = String.Empty; // без пользователей
@@ -826,7 +834,8 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocDBConnectionHelper conHelper = new DBxDocDBConnectionHelper();
       conHelper.ProviderName = "SQLite";
-      conHelper.ConnectionString = "Data Source=" + new AbsPath(_TempDir.Dir, "db.db").Path;
+      //conHelper.ConnectionString = "Data Source=" + new AbsPath(_TempDir.Dir, "db.db").Path;
+      conHelper.ConnectionString = "Data Source=:memory:";// +new AbsPath(_TempDir.Dir, "db.db").Path;
       conHelper.DocTypes = dts;
 
       _GlobalData = conHelper.CreateRealDocProviderGlobal();
@@ -856,11 +865,12 @@ namespace ExtDBDocs_tests.Data_Docs
         _GlobalData = null;
       }
 
+      /*
       if (_TempDir != null)
       {
         _TempDir.Dispose();
         _TempDir = null;
-      }
+      } */
     }
 
     #endregion

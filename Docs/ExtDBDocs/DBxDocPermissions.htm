@@ -5,18 +5,27 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2022-01-28T14:13:32.885000000"/>
-	<meta name="changed" content="2022-01-28T16:57:18.390000000"/>
+	<meta name="changed" content="2022-01-31T12:39:52.205000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
-		td p { margin-bottom: 0.25cm; line-height: 120% }
 		p { margin-bottom: 0.25cm; line-height: 120% }
+		td p { margin-bottom: 0.25cm; line-height: 120% }
+		h2.western { font-family: "Albany", sans-serif; font-size: 16pt }
+		h2.cjk { font-family: "SimSun"; font-size: 16pt }
+		h2.ctl { font-family: "Mangal"; font-size: 16pt }
 	</style>
 </head>
 <body lang="ru-RU" dir="ltr">
 <p align="left" style="margin-top: 0.42cm; margin-bottom: 0.21cm; line-height: 100%; page-break-after: avoid">
 <font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>DBxDocPermissions</b></font></font></p>
 <p style="margin-bottom: 0cm; line-height: 100%">Проверка разрешений
-при выполнении действий с документами</p>
+при выполнении действий с документами<span lang="en-US">.</span></p>
+<p style="margin-bottom: 0cm; line-height: 100%">Выполняется
+классами, производными от <span lang="en-US">UserPermission, </span>которые
+реализуют интерфейс IDBxDocPermission. Коллекция объектов
+<span lang="en-US">UserPermissions </span>является сериализуемой,
+поэтому проверка может выполняться как на стороне сервера, так и на
+стороне клиента.</p>
 <p style="margin-bottom: 0cm; line-height: 100%"><br/>
 
 </p>
@@ -262,7 +271,7 @@ IDBxDocPermission<span lang="en-US">.TestDocAllowed() </span><span lang="ru-RU">
 			документа</p>
 		</td>
 		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
-			<p lang="en-US"><br/>
+			<p><br/>
 
 			</p>
 		</td>
@@ -311,7 +320,7 @@ IDBxDocPermission<span lang="en-US">.TestDocAllowed() </span><span lang="ru-RU">
 	</tr>
 	<tr valign="top">
 		<td width="13%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
-			<p lang="en-US">3.<span lang="ru-RU">ApplyEditOrg</span></p>
+			<p lang="en-US">3.<span lang="ru-RU">ApplyEdit</span>New</p>
 		</td>
 		<td width="45%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
 			<p lang="en-US">DBxDocPermissionArgs.Values <span lang="ru-RU">содержит
@@ -348,8 +357,106 @@ IDBxDocPermission<span lang="en-US">.TestDocAllowed() </span><span lang="ru-RU">
 		</td>
 	</tr>
 </table>
+<h2 class="western">Безопасность</h2>
+<p style="margin-bottom: 0cm; line-height: 100%">1. Проверки
+&quot;<span lang="en-US">ApplyXXX</span>&quot; выполняются при вызове
+<span lang="en-US">ApplyChanges</span>() всегда на стороне сервера,
+чтобы исключить уязвимость в случае подделки программы клиента. Для
+проверок &quot;<span lang="en-US">ApplyEditOrg</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+</span>и &quot;<span lang="en-US">ApplyDelete</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+</span>выполняется повторное считывание значений полей из базы
+данных, так как они могли измениться с начала редактирования (или
+подделаны клиентом).</p>
 <p style="margin-bottom: 0cm; line-height: 100%"><br/>
 
 </p>
+<p style="margin-bottom: 0cm; line-height: 100%">2. Проверки &quot;<span lang="en-US">View</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+</span>и &quot;<span lang="en-US">BeforeXXX</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+</span>выполняются на стороне клиента<span lang="en-US">. </span>Проверка
+&quot;<span lang="en-US">View</span><span lang="ru-RU">&quot;</span><span lang="en-US">,
+</span>в общем-то, является формальной, т.к. клиент уже выполнил
+загрузку таблицы документов на просмотр. Проверки &quot;<span lang="en-US">BeforeXXX</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+</span>нужны для дружественного пользовательского интерфейса, чтобы
+не дать пользователю внести изменения, которые все равно не будут
+приняты сервером.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">3. Проверка
+&quot;<span lang="en-US">GetDocHistTable</span><span lang="ru-RU">&quot;</span>
+<span lang="ru-RU">выполняется на стороне сервера.</span></p>
+<h2 class="western">Блокировки</h2>
+<p>На время выполнения метода<span lang="en-US">
+DBxRealDocProvider.ApplyChanges() </span><span lang="ru-RU">устанавливается
+кратковременная блокировка изменяемых и удаляемых документов. 
+Загрузка значений для проверок </span><span lang="en-US">ApplyEditOrg
+</span><span lang="ru-RU">и </span><span lang="en-US">ApplyDelete
+</span><span lang="ru-RU">выполняется в пределах этой блокировки.</span></p>
+<p><span lang="ru-RU">Длительные блокировки могут сделать невозможным
+вызов </span><span lang="en-US">DBxRealDocProvider.ApplyChanges()</span><span lang="ru-RU">,
+если не удастся установить кратковременную блокировку. Наличие или
+отсутствие установленной длительной блокировки не влияет на проверки
+</span><span lang="en-US">ApplyEditOrg </span><span lang="ru-RU">и
+</span><span lang="en-US">ApplyDelete</span><span lang="ru-RU">.
+Можно было бы обойтись без перечитывания значений из базы данных при
+наличии длительной блокировки, но тогда осталась бы уязвимость в
+случае подделки клиента.</span></p>
+<h2 class="western"><span lang="ru-RU">Повторный вызов </span><span lang="en-US">ApplyChanges()</span></h2>
+<p>Пользователь может несколько раз нажимать кнопку &quot;Запись&quot;
+в редакторе документа. Соответственно, метод <span lang="en-US">ApplyChanges()
+</span>вызывается многократно.</p>
+<p>- Если был создан новый документ, то повторные вызовы
+<span lang="en-US">ApplyChanges() </span>обрабатываются, как если бы
+документ редактировался. То есть, вместо проверки &quot;<span lang="en-US">ApplyNew</span>&quot;
+выполняются &quot;ApplyRestore&quot; (если вдруг кто-то успел удалить
+документ), &quot;ApplyEditOrg&quot; и &quot;ApplyEditNew&quot;.</p>
+<p>- Если документ был удален, то он убирается из <span lang="en-US">DBxDocSet
+</span>и, следовательно, не будет участвовать в повторном вызове
+<span lang="en-US">ApplyChanges().</span></p>
+<p>С точки зрения выполнения проверок,
+<span lang="en-US">DBxRealDocProvider.ApplyChanges() </span>работает
+одинаково и при первом и при повторных вызовах. В частности, каждый
+раз выполняется считывание значений из базы данных.</p>
+<h2 class="western">Обработчики <span lang="en-US">DBxDocType</span></h2>
+<p>На стороне сервера могут задаваться обработчики событий
+<span lang="en-US">DBxDocType.BeforeInsert, BeforeWrite, AfterWrite </span>и
+<span lang="en-US">BeforeDelete. </span>События <span lang="en-US">BeforeXXX
+</span>вызываются в пределах установленной кратковременной
+блокировки.</p>
+<p>Порядок выполнения действий. Сначала выполняются проверки
+<span lang="en-US">TestDocument(), </span>а затем вызываются
+обработчики события.</p>
+<p>Создание документа при первом вызове <span lang="en-US">ApplyChanges()</span></p>
+<p><span lang="en-US">1</span><span lang="en-US">. </span>Проверка
+<span lang="en-US">'ApplyNew'</span></p>
+<p><span lang="en-US">2</span><span lang="en-US">. </span>Событие
+<span lang="en-US">DBxDocType.BeforeInsert</span></p>
+<p>3. Событие <span lang="en-US">DBxDocType.BeforeWrite</span></p>
+<p><br/>
+<br/>
+
+</p>
+<p>Изменение документа или повторный вызов <span lang="en-US">ApplyChanges()</span>
+для созданного документами</p>
+<p>1. Загрузка актуальных значений из базы данных (включая признак
+<span lang="en-US">Deleted)</span></p>
+<p>2. Проверка <span lang="en-US">'ApplyRestore', </span>если
+документ восстанавливается из удаленных</p>
+<p>3. Проверка <span lang="en-US">'ApplyEditOrg'</span></p>
+<p lang="en-US"><span lang="ru-RU">4</span>. <span lang="ru-RU">Проверка</span>
+'ApplyEditNew'.</p>
+<p><span lang="en-US">5</span><span lang="en-US">. </span>Событие
+<span lang="en-US">DBxDocType.BeforeInsert, </span>если документ
+восстанавливается из удаленных</p>
+<p lang="en-US"><span lang="ru-RU">6</span>. <span lang="ru-RU">Событие
+</span>DBxDocType.BeforeWrite.</p>
+<p lang="en-US"><br/>
+<br/>
+
+</p>
+<p>Удаление документа</p>
+<p>1. Загрузка актуальных значений из базы данных</p>
+<p>2. Проверка <span lang="en-US">'ApplyDelete'</span></p>
+<p><span lang="en-US">3. </span>Событие <span lang="en-US">BeforeDelete</span></p>
 </body>
 </html>

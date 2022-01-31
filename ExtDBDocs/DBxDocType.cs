@@ -1422,7 +1422,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Событие вызывается перед добавлением документа на стороне сервера и
-    /// при воссановлении документа из удаленных.
+    /// при восстановлении документа из удаленных.
     /// После этого события вызывается основное событие BeforeWrite.
     /// </summary>
     public event ServerDocTypeBeforeInsertEventHandler BeforeInsert

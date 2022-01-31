@@ -157,8 +157,14 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docVersion">Вход и выход: Версия документа.</param>
     public Int32 AddDocAction(DBxDocType docType, Int32 docId, UndoAction action, ref Int32 docVersion)
     {
+      // 31.01.2022 Перенесено наверх, до проверки UndoCon=null
+      docVersion++;
+      if (docVersion > Int16.MaxValue)
+        throw new InvalidOperationException("Невозможно задать следующую версию документа " + docType.SingularTitle + " с DocId=" + docId.ToString() + ", т.к. она превышает максимальное значение " + Int32.MaxValue.ToString());
+
       if (UndoCon == null)
-        return 0;
+        //return 0;
+        return -1; // 31.01.202
 
       CheckIsRealDocId(docType, docId);
 
@@ -168,10 +174,6 @@ namespace FreeLibSet.Data.Docs
       //Int32 UndoDocVersion = DataTools.GetInt(UndoCon.GetMaxValue("DocActions", "Version",
       //  new AndFilter(new ValueFilter("DocTableId", docType.TableId), new ValueFilter("DocId", docId))));
       // DoValidateDocVersion(DocType, DocId, UndoDocVersion, ref DocVersion);
-
-      docVersion++;
-      if (docVersion > Int16.MaxValue)
-        throw new InvalidOperationException("Невозможно задать следующую версию документа " + docType.SingularTitle + " с DocId=" + docId.ToString() + ", т.к. она превышает максимальное значение " + Int32.MaxValue.ToString());
 
       Hashtable FieldPairs = new Hashtable();
       FieldPairs.Add("UserActionId", UserActionId);
@@ -395,7 +397,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     private class UndoDocActionsException : Exception
     {
-      #region Конструктор
+    #region Конструктор
 
       public UndoDocActionsException(DBxDocType docType, Int32 docId, int docVersion, int[] docActionDocVersions)
         : base("Расхождение версии документа в таблице DocActions для документа \"" + docType.SingularTitle + "\" c DocId=" + docId.ToString() +
@@ -411,7 +413,7 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region Свойства
+    #region Свойства
 
       public string DocTypeName { get { return _DocTypeName; } }
       private string _DocTypeName;

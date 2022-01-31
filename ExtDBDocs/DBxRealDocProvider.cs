@@ -1230,34 +1230,21 @@ namespace FreeLibSet.Data.Docs
 
 
       // Извлекаем параметры
-      DBxDocSet DocSet = new DBxDocSet(this, ds);
+      DBxDocSet docSet = new DBxDocSet(this, ds);
       if (this.UserId == 0 && DocTypes.UseUsers)
         throw new InvalidOperationException("Не задан идентификатор пользователя, выполняющего запись данных");
 
       RestoreAddedState(ds); // 19.03.2016
 
       // TODO: Когда будет доступ к тексту документа на сервере, перенести этот код после вызова события BeforeWrite
-      if (String.IsNullOrEmpty(DocSet.ActionInfo) && DocSet.UserActionId == 0)
-        DocSet.ActionInfo = MakeActionInfo(DocSet);
+      if (String.IsNullOrEmpty(docSet.ActionInfo) && docSet.UserActionId == 0)
+        docSet.ActionInfo = MakeActionInfo(docSet);
 
       //if (Source.GlobalData.UndoDBEntry == null)
       //  throw new NullReferenceException("Не установлено свойство DBxRealDocProviderGlobal.UndoDBEntry");
 
       //int DocCount = DocSet.GetDocCount(DBxDocState.Insert) +
       //  DocSet.GetDocCount(DBxDocState.Edit) + DocSet.GetDocCount(DBxDocState.Delete);
-
-      // Вызов обработчиков DBxDocType
-      CallDocTypeEvents(DocSet);
-
-      // Удаляем лишние записи из таблиц BinData и FileNames
-      DocSet.InternalDeleteUnusedBinDataAndFiles();
-
-      // Вызываем AppendBinData() и заменяем фиктивные ссылки
-      Dictionary<Int32, Int32> BinDataReplaces = CallAppendBinData(ds);
-      ReplaceAppendBinData(ds, BinDataReplaces);
-      // Вызываем AppendDBFile() и заменяем фиктивные ссылки
-      Dictionary<Int32, Int32> FileNameReplaces = CallAppendDBFiles(ds);
-      ReplaceAppendDBFiles(ds, FileNameReplaces);
 
       #endregion
 
@@ -1269,74 +1256,58 @@ namespace FreeLibSet.Data.Docs
       {
         DBxCon MainConUser = Cons[0];
         DocUndoHelper UndoHelper = new DocUndoHelper(Cons[1], Cons[2],
-        this.UserId, this.SessionId, DocSet.UserActionId, DocSet.ActionInfo, DocTypes, StartTime);
+        this.UserId, this.SessionId, docSet.UserActionId, docSet.ActionInfo, DocTypes, StartTime);
 
         // Установка блокировки на запись документов
-        DBxShortDocsLock DBLock = new DBxShortDocsLock(this, DocSet.IgnoreAllLocks, DocSet.IgnoredLocks);
+        DBxShortDocsLock DBLock = new DBxShortDocsLock(this, docSet.IgnoreAllLocks, docSet.IgnoredLocks);
         DBLock.Data.Init(this, ds);
         using (new ExecProcLockKey(DBLock))
         {
-          #region Проверка неизменности версии документа
-#if XXX
-          if (this.DocTypes.UseVersions)
-          {
-            foreach (DBxMultiDocs MultiDocs in DocSet)
-            {
-              Dictionary<Int32, int> WantedVersions = null;
-              for (int DocIndex = 0; DocIndex < MultiDocs.DocCount; DocIndex++)
-              {
-                DBxSingleDoc Doc = MultiDocs[DocIndex];
+          Source.PerformBeforeApplyChanges(docSet); // 15.11.2016
 
-                switch (Doc.DocState)
-                {
-                  case DBxDocState.Insert:
-                  case DBxDocState.Edit:
-                  case DBxDocState.Delete:
-                    if (Doc.DocId > 0)
-                    {
-                      if (WantedVersions == null)
-                        WantedVersions = new Dictionary<Int32, int>();
-                      WantedVersions.Add(Doc.DocId, Doc.Version);
-                    }
-                    break;
-                }
-              }
-              if (WantedVersions != null)
-              {
-                IdList docIds = new IdList(WantedVersions.Keys);
-                DataTable table = MainConUser.FillSelect(MultiDocs.DocType.Name, new DBxColumns("Id,Version"),
-                  new IdsFilter(docIds)); // без фильтрации удаленных документов
-                foreach (DataRow row in table.Rows)
-                {
-                  Int32 ThisDocId = DataTools.GetInt(row, "Id");
-                  int RealVer = DataTools.GetInt(row, "Version");
-                  int WantedVer = WantedVersions[ThisDocId];
-                  if (WantedVer != RealVer)
-                  {
-                    InvalidOperationException e = new InvalidOperationException("Нельзя изменить документ \"" + MultiDocs.DocType.SingularTitle +
-                      "\" с идентификатором " + ThisDocId.ToString() + ", т.к. в базе данных записана новая версия документа");
-                    e.Data["DocTypeName"] = MultiDocs.DocType.Name;
-                    e.Data["DocId"] = ThisDocId;
-                    e.Data["VersionInDocSet"] = WantedVer;
-                    e.Data["VersionInDB"] = RealVer;
-                    throw e;
-                  }
-                }
-              }
+          // 31.01.2022. Загрузка исходных документов
+          DBxDocSelection docSel = docSet.GetDocSelection(new DBxDocState[] { DBxDocState.Insert, DBxDocState.Edit, DBxDocState.Delete });
+          DBxDocSet orgDocSet = new DBxDocSet(this);
+          orgDocSet.UseTestDocument = false; // иначе будут лишние вызовы тестирования для режима View.
+          orgDocSet.View(docSel);
+
+          // Вызов обработчиков DBxDocType
+          foreach (DBxMultiDocs Docs in docSet)
+          {
+#if DEBUG
+            if (Docs.DocType.TableId == 0)
+              throw new BugException("Для документов " + Docs.DocType.ToString() + " не установлено свойство TableId");
+#endif
+
+            for (int i = 0; i < Docs.DocCount; i++)
+            {
+              DBxSingleDoc Doc = Docs[i];
+              DBxSingleDoc orgDoc = new DBxSingleDoc();
+              if (this.IsRealDocId(Doc.DocId))
+                orgDoc = orgDocSet[Docs.DocType.Name].GetDocById(Doc.DocId);
+              CallDocTypeEventsForDoc(Doc, orgDoc);
             }
           }
-#endif
-          #endregion
+
+          // Удаляем лишние записи из таблиц BinData и FileNames
+          docSet.InternalDeleteUnusedBinDataAndFiles();
+
+          // Вызываем AppendBinData() и заменяем фиктивные ссылки
+          Dictionary<Int32, Int32> BinDataReplaces = CallAppendBinData(ds);
+          ReplaceAppendBinData(ds, BinDataReplaces);
+          // Вызываем AppendDBFile() и заменяем фиктивные ссылки
+          Dictionary<Int32, Int32> FileNameReplaces = CallAppendDBFiles(ds);
+          ReplaceAppendDBFiles(ds, FileNameReplaces);
 
           #region Проверка возможности удаления документов и поддокументов
 
-          foreach (DBxMultiDocs MultiDocs in DocSet)
+          foreach (DBxMultiDocs MultiDocs in docSet)
             ApplyDocDelete1(MainConUser, MultiDocs);
 
           #endregion
 
           // Актуализация undo
-          ActualizeUndo(DocSet, UndoHelper, MainConUser);
+          ActualizeUndo(docSet, UndoHelper, MainConUser);
 
           #region Выполняем реальную запись
 
@@ -1345,21 +1316,21 @@ namespace FreeLibSet.Data.Docs
             #region Замена фиктивных идентификаторов Id для новых документов / поддокументов на реальные, которые будут записаны
 
             DBxDocProviderIdReplacer IdReplacer = new DBxDocProviderIdReplacer(this);
-            IdReplacer.PerformReplace(DocSet, ds);
+            IdReplacer.PerformReplace(docSet, ds);
 
             #endregion
 
-            WriteChanges2(DocSet, MainConUser, UndoHelper, IdReplacer);
+            WriteChanges2(docSet, MainConUser, UndoHelper, IdReplacer);
 
             WriteDelayedColumns(IdReplacer.DelayedList, ds, MainConUser);
 
-            if (DocSet.CheckDocs)
-              DoCheckDocs(DocSet);
+            if (docSet.CheckDocs)
+              DoCheckDocs(docSet);
 
             ta.Commit();
           }
 
-          DocSet.UserActionId = UndoHelper.UserActionId;
+          docSet.UserActionId = UndoHelper.UserActionId;
 
           #region Убираем невозвратные таблицы
 
@@ -1387,7 +1358,7 @@ namespace FreeLibSet.Data.Docs
         }
       }
       // Извещаем о записи документа
-      PerformAfterWrite(DocSet);
+      PerformAfterWrite(docSet);
 
       if (reloadData)
       {
@@ -1619,63 +1590,65 @@ namespace FreeLibSet.Data.Docs
     #region Вызов пользовательский обработчиков в DBxDocType
 
     /// <summary>
-    /// Вызов пользовательский обработчиков в DBxDocType
-    /// На момент вызова соединения с базой данных и блокировки не установлены
+    /// Вызов пользовательских обработчиков DBxDocType.BeforeXXX и метода TestDocument()
     /// </summary>
-    /// <param name="docSet"></param>
-    private void CallDocTypeEvents(DBxDocSet docSet)
+    /// <param name="doc">Записываемый (удаляемый) документ</param>
+    /// <param name="orgDoc">Перечитанный документ из базы данных (в режиме View) или пустышка</param>
+    private void CallDocTypeEventsForDoc(DBxSingleDoc doc, DBxSingleDoc orgDoc)
     {
-      Source.PerformBeforeApplyChanges(docSet); // 15.11.2016
+      DBxDocType docType = doc.DocType;
+      DBxDocState docState = doc.DocState;
 
-      foreach (DBxMultiDocs Docs in docSet)
+      if (docState == DBxDocState.Insert)
+      {
+        bool firstCall = (doc.MultiDocs.GetDocIdActionId(doc.DocId) == 0);
+        if (firstCall)
+        {
+          this.TestDocument(doc, DBxDocPermissionReason.ApplyNew);
+          docType.PerformBeforeInsert(doc, false);
+          docType.PerformBeforeWrite(doc, true, false);
+          return;
+        }
+        docState = DBxDocState.Edit;
+      }
+
+      if (docState == DBxDocState.Edit) // включая повторный вызов для Insert
       {
 #if DEBUG
-        if (Docs.DocType.TableId == 0)
-          throw new BugException("Для документов " + Docs.DocType.ToString() + " не установлено свойство TableId");
+        this.CheckIsRealDocId(doc.DocId);
+        if (orgDoc.MultiDocs == null)
+          throw new NullReferenceException("Неинициализированный orgDoc для DocId=" + doc.DocId.ToString());
 #endif
 
-        for (int i = 0; i < Docs.DocCount; i++)
+        if (DocTypes.UseDeleted)
         {
-          DBxSingleDoc Doc = Docs[i];
-          Doc = CallDocTypeEventsForDoc(Doc);
-        }
-      }
-    }
-
-    private DBxSingleDoc CallDocTypeEventsForDoc(DBxSingleDoc doc)
-    {
-      DBxDocType DocType = doc.DocType;
-
-      switch (doc.DocState)
-      {
-        case DBxDocState.Insert:
-          // Это первый вызов ApplyChanges для этого документа ?
-          // Будет ли выполняться добавление строки в основную таблицу данных ?
-          bool FirstCall = (doc.MultiDocs.GetDocIdActionId(doc.DocId) == 0);
-          if (FirstCall)
-            this.TestDocument(doc, DBxDocPermissionReason.ApplyNew);
-          else
-            this.TestDocument(doc, DBxDocPermissionReason.ApplyEditNew);
-
-          if (FirstCall)
-            DocType.PerformBeforeInsert(doc, false);
-          DocType.PerformBeforeWrite(doc, FirstCall, false);
-          break;
-        case DBxDocState.Edit:
-          if (doc.Deleted)
+          if (orgDoc.Deleted)
             this.TestDocument(doc, DBxDocPermissionReason.ApplyRestore);
-          this.TestDocument(doc, DBxDocPermissionReason.ApplyEditOrg);
-          this.TestDocument(doc, DBxDocPermissionReason.ApplyEditNew);
-          if (doc.Deleted)
-            DocType.PerformBeforeInsert(doc, true); // 24.11.2017
-          DocType.PerformBeforeWrite(doc, false, false);
-          break;
-        case DBxDocState.Delete:
-          this.TestDocument(doc, DBxDocPermissionReason.ApplyDelete);
-          DocType.PerformBeforeDelete(doc);
-          break;
+        }
+        this.TestDocument(orgDoc, DBxDocPermissionReason.ApplyEditOrg);
+        this.TestDocument(doc, DBxDocPermissionReason.ApplyEditNew);
+
+        if (DocTypes.UseDeleted)
+        {
+          if (orgDoc.Deleted)
+            docType.PerformBeforeInsert(doc, true); // 24.11.2017
+        }
+        docType.PerformBeforeWrite(doc, false, false);
+        return;
       }
-      return doc;
+
+      if (docState == DBxDocState.Delete)
+      {
+#if DEBUG
+        this.CheckIsRealDocId(doc.DocId);
+        if (orgDoc.MultiDocs == null)
+          throw new NullReferenceException("Неинициализированный orgDoc для DocId=" + doc.DocId.ToString());
+#endif
+
+        this.TestDocument(orgDoc, DBxDocPermissionReason.ApplyDelete);
+        docType.PerformBeforeDelete(doc);
+        return;
+      }
     }
 
     #endregion
@@ -2018,16 +1991,16 @@ namespace FreeLibSet.Data.Docs
 
       if (usedColumnNames == null)
       {
-        DBxColumnList lst=new DBxColumnList();
+        DBxColumnList lst = new DBxColumnList();
         for (int i = 0; i < row.Table.Columns.Count; i++)
         {
-          string colName=row.Table.Columns[i].ColumnName;
+          string colName = row.Table.Columns[i].ColumnName;
           if (AddUserFieldPairsSysColNames.Contains(colName))
             continue;
 
           if (dbPermissions.ColumnModes[row.Table.TableName, colName] != DBxAccessMode.Full)
             continue; // 17.12.2015, 25.09.2020
-                      // 16.08.2021. Поля, недоступные для записи пропускаем всегда, а не только для пустых значений
+          // 16.08.2021. Поля, недоступные для записи пропускаем всегда, а не только для пустых значений
 
           lst.Add(colName);
         }

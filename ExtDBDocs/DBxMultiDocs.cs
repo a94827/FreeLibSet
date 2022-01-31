@@ -1225,22 +1225,25 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
-      try
+      if (DocSet.UseTestDocument)
       {
-        for (int i = OldDocCount; i < _Table.Rows.Count; i++)
-          DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.View);
-      }
-      catch
-      {
-        // Убираем загруженные данные, иначе от выброса исключения мало толку
-        if (OldDocCount == 0)
-          _Table.Rows.Clear();
-        else
+        try
         {
-          for (int i = _Table.Rows.Count - 1; i >= OldDocCount; i--)
-            _Table.Rows.Remove(_Table.Rows[i]);
+          for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+            DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.View);
         }
-        throw;
+        catch
+        {
+          // Убираем загруженные данные, иначе от выброса исключения мало толку
+          if (OldDocCount == 0)
+            _Table.Rows.Clear();
+          else
+          {
+            for (int i = _Table.Rows.Count - 1; i >= OldDocCount; i--)
+              _Table.Rows.Remove(_Table.Rows[i]);
+          }
+          throw;
+        }
       }
 
 #if XXX
@@ -1324,9 +1327,12 @@ namespace FreeLibSet.Data.Docs
           case DataRowState.Unchanged:
             int RowIndex = _Table.Rows.IndexOf(Row);
             DBxSingleDoc Doc = new DBxSingleDoc(this, RowIndex);
-            if (Doc.Deleted)
-              DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeRestore);
-            DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeEdit);
+            if (DocSet.UseTestDocument)
+            {
+              if (Doc.Deleted)
+                DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeRestore);
+              DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeEdit);
+            }
             Row.SetModified();
             break;
           default:
@@ -1407,9 +1413,12 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < _Table.Rows.Count; i++)
       {
         DBxSingleDoc Doc = new DBxSingleDoc(this, i);
-        if (Doc.Deleted)
-          DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeRestore);
-        DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeEdit);
+        if (DocSet.UseTestDocument)
+        {
+          if (Doc.Deleted)
+            DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeRestore);
+          DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeEdit);
+        }
         _Table.Rows[i].SetModified();
       }
     }
@@ -1602,8 +1611,11 @@ namespace FreeLibSet.Data.Docs
       if (DocCount != OldDocCount + docIds.Length)
         throw new BugException("Invalid DocCount");
 
-      for (int i = OldDocCount; i < _Table.Rows.Count; i++)
-        DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.BeforeDelete);
+      if (DocSet.UseTestDocument)
+      {
+        for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+          DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.BeforeDelete);
+      }
       for (int i = OldDocCount; i < _Table.Rows.Count; i++)
         _Table.Rows[i].Delete();
 
@@ -1686,7 +1698,8 @@ namespace FreeLibSet.Data.Docs
           case DBxDocState.Delete:
             break;
           case DBxDocState.View:
-            DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.BeforeDelete); // 28.01.2022
+            if (DocSet.UseTestDocument)
+              DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.BeforeDelete); // 28.01.2022
             if (rowsToDelete == null)
               rowsToDelete = new List<DataRow>();
             rowsToDelete.Add(_Table.Rows[i]);
@@ -1836,24 +1849,26 @@ namespace FreeLibSet.Data.Docs
       }
 
       // 28.01.2022 - Как в DoView()
-      try
+      if (DocSet.UseTestDocument)
       {
-        for (int i = OldDocCount; i < _Table.Rows.Count; i++)
-          DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.View);
-      }
-      catch
-      {
-        // Убираем загруженные данные, иначе от выброса исключения мало толку
-        if (OldDocCount == 0)
-          _Table.Rows.Clear();
-        else
+        try
         {
-          for (int i = _Table.Rows.Count - 1; i >= OldDocCount; i--)
-            _Table.Rows.Remove(_Table.Rows[i]);
+          for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+            DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.View);
         }
-        throw;
+        catch
+        {
+          // Убираем загруженные данные, иначе от выброса исключения мало толку
+          if (OldDocCount == 0)
+            _Table.Rows.Clear();
+          else
+          {
+            for (int i = _Table.Rows.Count - 1; i >= OldDocCount; i--)
+              _Table.Rows.Remove(_Table.Rows[i]);
+          }
+          throw;
+        }
       }
-
 
       return this[DocCount - 1];
     }

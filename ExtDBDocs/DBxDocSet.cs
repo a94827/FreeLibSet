@@ -162,7 +162,7 @@ namespace FreeLibSet.Data.Docs
       _IgnoredLocks = new GuidList();
       string strIgnoredLocks = dataSet.ExtendedProperties["IgnoredLocks"] as string;
       Guid[] aIgnoredLocks = StdConvert.ToGuidArray(strIgnoredLocks);
-      if (aIgnoredLocks.Length>0)
+      if (aIgnoredLocks.Length > 0)
         _IgnoredLocks.AddRange(aIgnoredLocks);
       _IgnoredLocks.SetReadOnly();
       _StartTime = DateTime.Now;
@@ -523,6 +523,14 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
+    /// <summary>
+    /// Должно ли выполняться тестирование документов.
+    /// По умолчанию - true.
+    /// Внутреннее свойство, используемое только на стороне сервера.
+    /// </summary>
+    internal bool UseTestDocument { get { return !_DontUseTestDocument; } set { _DontUseTestDocument = !value; } }
+    private bool _DontUseTestDocument;
+
     #endregion
 
     #region InsertCopy
@@ -803,6 +811,37 @@ namespace FreeLibSet.Data.Docs
       foreach (DBxMultiDocs MultiDocs in this)
         cnt += MultiDocs.ChangeDocState(oldState, newState);
       return cnt;
+    }
+
+
+    /// <summary>
+    /// Открывает на просмотр указанные документы
+    /// </summary>
+    /// <param name="docSel">Выборка документов</param>
+    public void View(DBxDocSelection docSel)
+    {
+      foreach (string tableName in docSel.TableNames)
+        this[tableName].View(docSel[tableName]);
+    }
+
+    /// <summary>
+    /// Открывает на просмотр указанные документы
+    /// </summary>
+    /// <param name="docSel">Выборка документов</param>
+    public void Edit(DBxDocSelection docSel)
+    {
+      foreach (string tableName in docSel.TableNames)
+        this[tableName].Edit(docSel[tableName]);
+    }
+
+    /// <summary>
+    /// Открывает на просмотр указанные документы
+    /// </summary>
+    /// <param name="docSel">Выборка документов</param>
+    public void Delete(DBxDocSelection docSel)
+    {
+      foreach (string tableName in docSel.TableNames)
+        this[tableName].Delete(docSel[tableName]);
     }
 
     #endregion

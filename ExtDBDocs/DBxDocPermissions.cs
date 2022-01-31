@@ -366,6 +366,8 @@ namespace FreeLibSet.Data.Docs
       _Args.Doc = doc;
       _Args.SubDoc = new DBxSubDoc(); // заглушка
       _Args.Reason = reason;
+
+      /*
       switch (reason)
       {
         case DBxDocPermissionReason.ApplyEditOrg:
@@ -378,6 +380,11 @@ namespace FreeLibSet.Data.Docs
           _Args.Values = _Args.Doc.Values;
           break;
       }
+       * */
+      // 31.01.2022 Теперь не надо использовать OriginalValues, т.к. документ перечитывается из базы данных
+      _Args.Values = _Args.Doc.Values;
+
+
 #if DEBUG
       if (_Args.Values == null)
         throw new BugException("Args.Values=null");
