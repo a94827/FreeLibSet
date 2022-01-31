@@ -1281,11 +1281,11 @@ namespace FreeLibSet.Data.Docs
 
             for (int i = 0; i < Docs.DocCount; i++)
             {
-              DBxSingleDoc Doc = Docs[i];
+              DBxSingleDoc doc = Docs[i];
               DBxSingleDoc orgDoc = new DBxSingleDoc();
-              if (this.IsRealDocId(Doc.DocId))
-                orgDoc = orgDocSet[Docs.DocType.Name].GetDocById(Doc.DocId);
-              CallDocTypeEventsForDoc(Doc, orgDoc);
+              if (this.IsRealDocId(doc.DocId) && doc.DocState!=DBxDocState.View)
+                orgDoc = orgDocSet[Docs.DocType.Name].GetDocById(doc.DocId);
+              CallDocTypeEventsForDoc(doc, orgDoc);
             }
           }
 

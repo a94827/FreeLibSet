@@ -94,7 +94,28 @@ namespace ExtDBDocs_tests.Data_Docs
     #endregion
 
     [Test]
-    public void Insert([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    public void Constructor([Values(false, true)] bool useHistory)
+    {
+      TestDBInfo info = this[useHistory, useHistory, useHistory];
+      DBxDocSet sut = new DBxDocSet(info.Provider);
+      Assert.AreEqual(0, sut.Count, "Count");
+      Assert.AreEqual(0, sut.DocCount, "DocCount");
+      Assert.AreSame(info.Provider, sut.DocProvider, "DocProvider");
+      Assert.IsTrue(sut.DocSelection.IsEmpty, "DocSelection");
+      Assert.AreEqual(DBxDocState.None, sut.DocState, "DocState");
+      Assert.AreEqual(DBxDocState.None, sut.DocStateNoView, "DocStateNoNew");
+      Assert.IsFalse(sut.EditIfNotChanged, "EditIfNotChanged");
+      Assert.IsFalse(sut.IgnoreAllLocks, "IgnoreAllLocks");
+      Assert.AreEqual(0, sut.IgnoredLocks.Count, "IgnoredLocks");
+      Assert.IsFalse(sut.IsDataModified, "IsDataModified");
+      Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
+      Assert.AreEqual(0, sut.UserActionId, "UserActionId");
+      Assert.IsFalse(sut.VersionView, "VersionView");
+    }
+
+#if XXX
+    [Test]
+    public void Insert_SimpleTest([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
       Int32 docId = CreateTestDoc(info);
@@ -110,9 +131,10 @@ namespace ExtDBDocs_tests.Data_Docs
         Assert.AreEqual("ABC", tbl.Rows[0]["F3"], "F3");
       }
     }
+#endif
 
     [Test]
-    public void Insert_And_Edit([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    public void Insert([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
 
@@ -122,15 +144,35 @@ namespace ExtDBDocs_tests.Data_Docs
       doc.Values["F2"].SetInteger(2);
       DBxSubDoc sd = doc.SubDocs["TestS1"].Insert();
       sd.Values["F3"].SetString("ABC");
+
+      Assert.AreEqual(DBxDocState.Insert, doc.DocState, "DBxSingleDoc.DocState #1");
+      Assert.AreEqual(DBxDocState.Insert, ds.DocState, "DBxDocSet.DocState #1");
+      Assert.IsFalse(doc.Deleted, "Deleted");
+      Assert.AreEqual(1, ds.DocCount, "DBxDocSet.DocCount #1");
+      Assert.Less(doc.DocId, 0, "DocId #1");
+
       ds.ApplyChanges(true);
+
+      Assert.AreEqual(1, ds.DocCount, "DBxDocSet.DocCount #3");
 
       doc = ds[0][0];
       Int32 docId = ds[0][0].DocId;
+      Assert.Greater(doc.DocId, 0, "DocId #2");
+      if (useVersions)
+        Assert.AreEqual(1, doc.Version, "DBxSingleDoc.Version #2");
+      Assert.AreEqual(DBxDocState.Insert, doc.DocState, "DBxSingleDoc.DocState #2");
+      Assert.AreEqual(DBxDocState.Insert, ds.DocState, "DBxDocSet.DocState #2");
 
       doc.Values["F1"].SetBoolean(false);
       doc.Values["F2"].SetInteger(3);
       doc.SubDocs["TestS1"][0].Values["F3"].SetString("DEF");
-      ds.ApplyChanges(false);
+
+      ds.ApplyChanges(true);
+      doc = ds[0][0];
+      Assert.AreEqual(DBxDocState.Insert, doc.DocState, "DBxSingleDoc.DocState #4");
+      Assert.AreEqual(DBxDocState.Insert, ds.DocState, "DBxDocSet.DocState #4");
+      if (useVersions)
+        Assert.AreEqual(1, doc.Version, "DBxSingleDoc.Version #4");
 
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
@@ -144,6 +186,154 @@ namespace ExtDBDocs_tests.Data_Docs
       }
     }
 
+
+    [Test]
+    public void Edit_ById([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+
+      Assert.AreEqual(docId, doc.DocId, "DocId #1");
+      Assert.AreEqual(DBxDocState.Edit, doc.DocState, "DBxSingleDoc.DocState");
+      Assert.AreEqual(DBxDocState.Edit, ds.DocState, "DBxSingleDoc.DocState");
+      Assert.IsFalse(doc.Deleted, "Deleted");
+      if (useVersions)
+        Assert.AreEqual(1, doc.Version, "Version #1");
+      Assert.IsFalse(doc.IsDataModified, "IsDataModified after Edit()");
+      Assert.AreEqual(2, doc.Values["F2"].AsInteger, "F2 #1");
+
+      doc.Values["F2"].SetInteger(3);
+      Assert.IsTrue(doc.IsDataModified, "IsDataModified before ApplyChanges()");
+
+      ds.ApplyChanges(true);
+      doc = ds[0][0];
+      Assert.AreEqual(docId, doc.DocId, "DocId #2");
+      Assert.AreEqual(3, doc.Values["F2"].AsInteger, "F2 #2");
+      if (useVersions)
+        Assert.AreEqual(2, doc.Version, "Version #2");
+
+      doc.Values["F2"].SetInteger(4);
+      ds.ApplyChanges(true);
+      doc = ds[0][0];
+      Assert.AreEqual(docId, doc.DocId, "DocId #3");
+      Assert.AreEqual(4, doc.Values["F2"].AsInteger, "F2 #3");
+      if (useVersions)
+        Assert.AreEqual(2, doc.Version, "Version #3");
+    }
+
+
+    [Test]
+    public void Edit_ByView([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["TestDocs"].View(docId);
+
+      doc.Edit();
+
+      Assert.AreEqual(docId, doc.DocId, "DocId #1");
+      Assert.AreEqual(DBxDocState.Edit, doc.DocState, "DBxSingleDoc.DocState");
+      Assert.AreEqual(DBxDocState.Edit, ds.DocState, "DBxSingleDoc.DocState");
+      Assert.IsFalse(doc.Deleted, "Deleted");
+      if (useVersions)
+        Assert.AreEqual(1, doc.Version, "Version #1");
+      Assert.IsFalse(doc.IsDataModified, "IsDataModified after Edit()");
+      Assert.AreEqual(2, doc.Values["F2"].AsInteger, "F2 #1");
+
+      doc.Values["F2"].SetInteger(3);
+      Assert.IsTrue(doc.IsDataModified, "IsDataModified before ApplyChanges()");
+
+      ds.ApplyChanges(true);
+      doc = ds[0][0];
+      Assert.AreEqual(docId, doc.DocId, "DocId #2");
+      Assert.AreEqual(3, doc.Values["F2"].AsInteger, "F2 #2");
+      if (useVersions)
+        Assert.AreEqual(2, doc.Version, "Version #2");
+
+      doc.Values["F2"].SetInteger(4);
+      ds.ApplyChanges(true);
+      doc = ds[0][0];
+      Assert.AreEqual(docId, doc.DocId, "DocId #3");
+      Assert.AreEqual(4, doc.Values["F2"].AsInteger, "F2 #3");
+      if (useVersions)
+        Assert.AreEqual(2, doc.Version, "Version #3");
+    }
+
+    [Test]
+    public void View([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["TestDocs"].View(docId);
+
+      Assert.AreEqual(docId, doc.DocId, "DocId #1");
+      Assert.AreEqual(DBxDocState.View, doc.DocState, "DBxSingleDoc.DocState #1");
+      Assert.AreEqual(DBxDocState.View, ds.DocState, "DBxDocSet.DocState #1");
+      Assert.IsFalse(doc.Deleted, "Deleted");
+      if (useVersions)
+        Assert.AreEqual(1, doc.Version, "Version #1");
+      Assert.IsFalse(doc.IsDataModified, "IsDataModified");
+      Assert.AreEqual(2, doc.Values["F2"].AsInteger, "F2 #1");
+
+      ds.ApplyChanges(true);
+      doc = ds[0][0];
+      Assert.AreEqual(docId, doc.DocId, "DocId #2");
+      Assert.AreEqual(DBxDocState.View, doc.DocState, "DBxSingleDoc.DocState #2");
+      Assert.AreEqual(DBxDocState.View, ds.DocState, "DBxDocSet.DocState #2");
+    }
+
+    [Test]
+    public void Delete_ById([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["TestDocs"].Delete(docId);
+
+      Assert.AreEqual(DBxDocState.Delete, ds.DocState, "DBxDocSet.DocState");
+      Assert.AreEqual(1, ds.DocCount, "DocCount #1");
+      ds.ApplyChanges(true);
+    }
+
+    [Test]
+    public void Delete_ByView([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["TestDocs"].View(docId);
+
+      doc.Delete();
+      Assert.AreEqual(DBxDocState.Delete, doc.DocState, "DBxSingleDoc.DocState");
+      Assert.AreEqual(DBxDocState.Delete, ds.DocState, "DBxDocSet.DocState");
+      Assert.AreEqual(1, ds.DocCount, "DocCount #1");
+      ds.ApplyChanges(true);
+    }
+
+    [Test]
+    public void Delete_ByEdit([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+
+      doc.Delete();
+      Assert.AreEqual(DBxDocState.Delete, doc.DocState, "DBxSingleDoc.DocState");
+      Assert.AreEqual(DBxDocState.Delete, ds.DocState, "DBxDocSet.DocState");
+      Assert.AreEqual(1, ds.DocCount, "DocCount #1");
+      ds.ApplyChanges(true);
+    }
 
     private Int32 CreateTestDoc(TestDBInfo info)
     {
