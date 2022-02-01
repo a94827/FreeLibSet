@@ -1283,7 +1283,7 @@ namespace FreeLibSet.Data.Docs
             {
               DBxSingleDoc doc = Docs[i];
               DBxSingleDoc orgDoc = new DBxSingleDoc();
-              if (this.IsRealDocId(doc.DocId) && doc.DocState!=DBxDocState.View)
+              if (this.IsRealDocId(doc.DocId) && doc.DocState != DBxDocState.View)
                 orgDoc = orgDocSet[Docs.DocType.Name].GetDocById(doc.DocId);
               CallDocTypeEventsForDoc(doc, orgDoc);
             }
@@ -1851,18 +1851,18 @@ namespace FreeLibSet.Data.Docs
 
 
       // Формируем поля для основной записи
-      Hashtable FieldPairs = new Hashtable();
+      Hashtable fieldPairs = new Hashtable();
 
-      bool HasPairs = AddUserFieldPairs(FieldPairs, Doc.Row, DocRealAdded, DBPermissions, mainConUser, ref UsedColumnNames1, Doc.DocType.Struct);
+      bool hasPairs = AddUserFieldPairs(fieldPairs, Doc.Row, DocRealAdded, DBPermissions, mainConUser, ref UsedColumnNames1, Doc.DocType.Struct);
 
       // Добавляем значения служебных полей
       if (Doc.DocState == DBxDocState.Insert && FirstCall)
       {
         // Первое действие для данного документа
         if (DocTypes.UseUsers)
-          FieldPairs.Add("CreateUserId", undoHelper.UserId);
+          fieldPairs.Add("CreateUserId", undoHelper.UserId);
         if (DocTypes.UseTime)
-          FieldPairs.Add("CreateTime", undoHelper.ActionTime);
+          fieldPairs.Add("CreateTime", undoHelper.ActionTime);
         // TODO: int ImportId = DataTools.GetInt(row, "ImportId");
         // TODO: if (ImportId != 0)
         // TODO: FieldPairs.Add("ImportId", ImportId);
@@ -1870,13 +1870,13 @@ namespace FreeLibSet.Data.Docs
       else // Edit
       {
         if (DocTypes.UseUsers)
-          FieldPairs.Add("ChangeUserId", undoHelper.UserId);
+          fieldPairs.Add("ChangeUserId", undoHelper.UserId);
         if (DocTypes.UseTime)
-          FieldPairs.Add("ChangeTime", undoHelper.ActionTime); // пусть запишет также при повторном вызове записи для Insert
+          fieldPairs.Add("ChangeTime", undoHelper.ActionTime); // пусть запишет также при повторном вызове записи для Insert
       }
       if (DocTypes.UseVersions)
       {
-        FieldPairs.Add("Version", CurrVersion);
+        fieldPairs.Add("Version", CurrVersion);
         Doc.Row["Version"] = CurrVersion;
       }
       if (DocTypes.UseDeleted)
@@ -1891,7 +1891,7 @@ namespace FreeLibSet.Data.Docs
         // - Пользователь 2 снимает блокировку документа
         // - Пользователь 2 удаляет документ
         // - Пользователь 1 сохраняет документ еще раз. При этом поле "Deleted" явно нуждается в установке в FALSE
-        FieldPairs.Add("Deleted", false); // Отменяем удаление
+        fieldPairs.Add("Deleted", false); // Отменяем удаление
         Doc.Row["Deleted"] = false;
       }
 
@@ -1906,8 +1906,8 @@ namespace FreeLibSet.Data.Docs
         }
 #endif
 
-        if (Doc.DocState == DBxDocState.Insert || HasPairs)
-          FieldPairs.Add("Version2", CurrVersion);
+        if (Doc.DocState == DBxDocState.Insert || hasPairs)
+          fieldPairs.Add("Version2", CurrVersion);
       }
 
       // TODO: FieldPairs.Add("CheckState", DocumentCheckState.Unchecked); // Отменяем результаты проверки
@@ -1920,14 +1920,16 @@ namespace FreeLibSet.Data.Docs
       // Выполняем добавление записи или обновление
       if (DocRealAdded)
       {
-        FieldPairs.Add("Id", DocId);
-        mainConUser.AddRecord(docType.Name, FieldPairs);
+        fieldPairs.Add("Id", DocId);
+        mainConUser.AddRecord(docType.Name, fieldPairs);
       }
       else
       {
         // TODO: if (DocType.Buffering != null)
         // TODO:   DocType.Buffering.ClearSinceId(Caller, DocId);
-        mainConUser.SetValues(docType.Name, DocId, FieldPairs);
+
+        if (fieldPairs.Count > 0) // 01.02.2022
+          mainConUser.SetValues(docType.Name, DocId, fieldPairs);
       }
 
       // Записываем поддокументы
@@ -2139,14 +2141,17 @@ namespace FreeLibSet.Data.Docs
         mainConUser.SetValues(tableDef.TableName, subDoc.SubDocId, FieldPairs);
     }
 
-    private static readonly DBxColumns SubApplyDelete1Columns = new DBxColumns("Deleted,Version2");
-
     private void SubApplyDelete1(DBxSubDoc subDoc, DBxCon mainConUser, int docVersion)
     {
       Int32 SubDocId = (Int32)(subDoc.Row["Id", DataRowVersion.Original]);
       if (DocTypes.UseDeleted)
-        mainConUser.SetValues(subDoc.SubDocType.Name, SubDocId, SubApplyDelete1Columns,
-          new object[] { true, docVersion });
+      {
+        if (DocTypes.UseVersions)
+          mainConUser.SetValues(subDoc.SubDocType.Name, SubDocId, new DBxColumns("Deleted,Version2"),
+            new object[] { true, docVersion });
+        else
+          mainConUser.SetValue(subDoc.SubDocType.Name, SubDocId, "Deleted", true); // 01.02.2022
+      }
       else
         mainConUser.Delete(subDoc.SubDocType.Name, SubDocId);
     }
@@ -2643,12 +2648,20 @@ namespace FreeLibSet.Data.Docs
           FieldPairs.Add("Version", CurrVersion);
         if (DocTypes.UseUsers) // 16.08.2018
           FieldPairs.Add("ChangeUserId", undoHelper.UserId);
-        FieldPairs.Add("ChangeTime", undoHelper.ActionTime);
+        if (DocTypes.UseTime) // 01.02.2022
+          FieldPairs.Add("ChangeTime", undoHelper.ActionTime);
         FieldPairs.Add("Deleted", true);
         mainConUser.SetValues(multiDocs.DocType.Name, docId, FieldPairs);
       }
       else
+      {
+        // 01.02.2022
+        // Удаляем все поддокументы
+        foreach (DBxSubDocType sdt in multiDocs.DocType.SubDocs)
+          mainConUser.Delete(sdt.Name, new ValueFilter("DocId", docId));
+
         mainConUser.Delete(multiDocs.DocType.Name, docId);
+      }
 
       DataRow Row = multiDocs.GetDocById(docId).Row;
 

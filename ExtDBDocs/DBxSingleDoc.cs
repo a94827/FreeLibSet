@@ -393,6 +393,10 @@ namespace FreeLibSet.Data.Docs
         switch (DocState)
         {
           case DBxDocState.Insert:
+            // Можно было бы возвращать наличие реальных изменений, как для Edit, если для документа уже вызывался метод ApplyChanges().
+            // Но строка документа находится в режиме Added, в котором нет оригинальных значений полей. 
+            // Метод DBxDocSet.GetIsModified(DataRow) работать не будет.
+            return true;
           case DBxDocState.Delete:
             return true;
           case DBxDocState.Edit:
@@ -425,6 +429,8 @@ namespace FreeLibSet.Data.Docs
         switch (DocState)
         {
           case DBxDocState.Insert:
+            // См. замечание в свойстве IsDataModified.
+            return true;
           case DBxDocState.Delete:
             return true;
           case DBxDocState.Edit:

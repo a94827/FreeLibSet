@@ -5,7 +5,7 @@
 	<title>»зменени€ в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-01-31T23:17:21.130000000"/>
+	<meta name="changed" content="2022-02-01T09:08:02.860000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -38,12 +38,12 @@
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
 		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		h1 { margin-bottom: 0.21cm; background: transparent; orphans: 2; widows: 2 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -79,7 +79,7 @@
 			<p lang="en-US" align="center">308</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">14.01.2022-31.01.2022</p>
+			<p lang="en-US" align="center">14.01.2022-01.02.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">»зменена
@@ -135,15 +135,18 @@
 			дыре в безопасности. ≈сли другой пользователь снимал блокировку и
 			записывал документ, то пользователь, выполн€ющий редактирование,
 			мог перезаписать документ, даже если он потер€л права на изменение
-			документа.</p>
+			документа.<span lang="en-US"> </span>
+			</p>
 			<p lang="en-US">7. DocUndoAction.AddDocAction() <span lang="ru-RU">не
 			выполн€л инкремент пол€ </span>docVersion<span lang="ru-RU">, если
 			нет базы данных </span>Undo, <span lang="ru-RU">но
 			</span>DBxDocTypes.UseVersions=true. <span lang="ru-RU">¬
 			результате возникало исключение при создании документа.</span>
 			<span lang="ru-RU">“акже возвращаетс€ </span>DocActionId=-1 <span lang="ru-RU">а
-			не 0, чтобы обнаруживать повторный вызов </span>ApplyChanges() <span lang="ru-RU">дл€
-			документа.</span></p>
+			не 0, чтобы обнаруживать повторный вызов
+			</span>DBxRealDocProvider.ApplyChanges() <span lang="ru-RU">дл€
+			документа.</span> <span lang="ru-RU">ƒругие исправлени€ в методах,
+			вызываемых из </span>ApplyChanges().</p>
 		</td>
 	</tr>
 	<tr valign="top">
