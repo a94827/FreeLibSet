@@ -19,6 +19,32 @@ namespace ExtDBDocs_tests.Data_Docs
   {
     #region Доступ к базе данных
 
+    /*
+     * Структура тестовой базы данных
+     * Документ "D1"
+     *   Поля: "F101" - логическое Not Null
+     *         "F102" - Числовое Not Null
+     *         "F103" - Числовое Nullable
+     *         "F104" - Ссылочное поле на "D1" (для организации деревьев). Nullable
+     *         "F105" - Ссылочное поле на "D2" Nullable
+     *         "F106" - Ссылочное поле на "SD21" Nullable
+     *   Поддокумент "SD11"      
+     *      Поля:
+     *         "F111" - CHAR(30) Not Null
+     *         "F112" - CHAR(10) Nullable
+     *         "F113" - Ссылочное поле на "SD11" (дерево поддокументов)
+     *         "F114" - Ссылочное поле на "D2"  Nullable
+     *         "F115" - Ссылочное поле на "SD21" Nullable
+     * Документ "D2"        
+     *   Поля: "F201" CHAR(10) Not Null
+     *         "F202" - Ссылочное поле на "D1" Not Null
+     *   Поддокумент "SD21"
+     *      Поля: "F211" Date Nullable
+     */
+
+    /// <summary>
+    /// Описание для одной тестовой базы данных
+    /// </summary>
     public class TestDBInfo
     {
       #region Поля
@@ -32,8 +58,18 @@ namespace ExtDBDocs_tests.Data_Docs
       #endregion
     }
 
+    /// <summary>
+    /// Тестовые базы данных с разными комбинациями параметров UseXXX
+    /// </summary>
     private TestDBInfo[] _TestDBs;
 
+    /// <summary>
+    /// Получить доступ к базе данных с заданной комбинацией управляющих
+    /// </summary>
+    /// <param name="useDeleted"></param>
+    /// <param name="useVersions"></param>
+    /// <param name="useTime"></param>
+    /// <returns></returns>
     public TestDBInfo this[bool useDeleted, bool useVersions, bool useTime]
     {
       get
@@ -53,13 +89,30 @@ namespace ExtDBDocs_tests.Data_Docs
           DBxDocType dt;
           DBxSubDocType sdt;
 
-          dt = new DBxDocType("TestDocs");
-          dt.Struct.Columns.AddBoolean("F1", false);
-          dt.Struct.Columns.AddInt("F2", false);
+          dt = new DBxDocType("D1");
+          dt.Struct.Columns.AddBoolean("F101", false);
+          dt.Struct.Columns.AddInt("F102", false);
+          dt.Struct.Columns.AddInt("F103", true);
+          dt.Struct.Columns.AddReference("F104", "D1", true);
+          dt.Struct.Columns.AddReference("F105", "D2", true);
+          dt.Struct.Columns.AddReference("F106", "SD21", true);
           dts.Add(dt);
 
-          sdt = new DBxSubDocType("TestS1");
-          sdt.Struct.Columns.AddString("F3", 10, true);
+          sdt = new DBxSubDocType("SD11");
+          sdt.Struct.Columns.AddString("F111", 3, false);
+          sdt.Struct.Columns.AddString("F112", 10, true);
+          sdt.Struct.Columns.AddReference("F113", "SD11", true);
+          sdt.Struct.Columns.AddReference("F114", "D2", true);
+          sdt.Struct.Columns.AddReference("F115", "SD21", true);
+          dt.SubDocs.Add(sdt);
+
+          dt = new DBxDocType("D2");
+          dt.Struct.Columns.AddString("F201", 10, false);
+          dt.Struct.Columns.AddReference("F202", "D1", true);
+          dts.Add(dt);
+
+          sdt = new DBxSubDocType("SD21");
+          sdt.Struct.Columns.AddDate("F211", true);
           dt.SubDocs.Add(sdt);
 
           DBxDocDBConnectionHelper conHelper = new DBxDocDBConnectionHelper();
@@ -125,11 +178,11 @@ namespace ExtDBDocs_tests.Data_Docs
       TestDBInfo info = this[useDeleted, useVersions, useTime];
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Insert();
-      doc.Values["F1"].SetBoolean(true);
-      doc.Values["F2"].SetInteger(2);
-      DBxSubDoc sd = doc.SubDocs["TestS1"].Insert();
-      sd.Values["F3"].SetString("ABC");
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(true);
+      doc.Values["F102"].SetInteger(2);
+      DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+      sd.Values["F111"].SetString("ABC");
 
       Assert.AreEqual(DBxDocState.Insert, doc.DocState, "DBxSingleDoc.DocState #1");
       Assert.AreEqual(DBxDocState.Insert, ds.DocState, "DBxDocSet.DocState #1");
@@ -150,9 +203,9 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(DBxDocState.Insert, ds.DocState, "DBxDocSet.DocState #2");
       AssertTestDoc(info, docId, "Version #2", true, 2, "ABC");
 
-      doc.Values["F1"].SetBoolean(false);
-      doc.Values["F2"].SetInteger(3);
-      doc.SubDocs["TestS1"][0].Values["F3"].SetString("DEF");
+      doc.Values["F101"].SetBoolean(false);
+      doc.Values["F102"].SetInteger(3);
+      doc.SubDocs["SD11"][0].Values["F111"].SetString("DEF");
 
       ds.ApplyChanges(true);
       doc = ds[0][0];
@@ -171,7 +224,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
 
       Assert.AreEqual(docId, doc.DocId, "DocId #1");
       Assert.AreEqual(DBxDocState.Edit, doc.DocState, "DBxSingleDoc.DocState");
@@ -180,24 +233,24 @@ namespace ExtDBDocs_tests.Data_Docs
       if (useVersions)
         Assert.AreEqual(1, doc.Version, "Version #1");
       Assert.IsFalse(doc.IsDataModified, "IsDataModified after Edit()");
-      Assert.AreEqual(2, doc.Values["F2"].AsInteger, "F2 #1");
+      Assert.AreEqual(2, doc.Values["F102"].AsInteger, "F102 #1");
 
-      doc.Values["F2"].SetInteger(3);
+      doc.Values["F102"].SetInteger(3);
       Assert.IsTrue(doc.IsDataModified, "IsDataModified before ApplyChanges()");
 
       ds.ApplyChanges(true);
       doc = ds[0][0];
       Assert.AreEqual(docId, doc.DocId, "DocId #2");
-      Assert.AreEqual(3, doc.Values["F2"].AsInteger, "F2 #2");
+      Assert.AreEqual(3, doc.Values["F102"].AsInteger, "F102 #2");
       if (useVersions)
         Assert.AreEqual(2, doc.Version, "Version #2");
       AssertTestDoc(info, docId, "Version #2", true, 3, "ABC");
 
-      doc.Values["F2"].SetInteger(4);
+      doc.Values["F102"].SetInteger(4);
       ds.ApplyChanges(true);
       doc = ds[0][0];
       Assert.AreEqual(docId, doc.DocId, "DocId #3");
-      Assert.AreEqual(4, doc.Values["F2"].AsInteger, "F2 #3");
+      Assert.AreEqual(4, doc.Values["F102"].AsInteger, "F102 #3");
       if (useVersions)
         Assert.AreEqual(2, doc.Version, "Version #3");
       AssertTestDoc(info, docId, "Version #3", true, 4, "ABC");
@@ -211,7 +264,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].View(docId);
+      DBxSingleDoc doc = ds["D1"].View(docId);
 
       doc.Edit();
 
@@ -222,24 +275,24 @@ namespace ExtDBDocs_tests.Data_Docs
       if (useVersions)
         Assert.AreEqual(1, doc.Version, "Version #1");
       Assert.IsFalse(doc.IsDataModified, "IsDataModified after Edit()");
-      Assert.AreEqual(2, doc.Values["F2"].AsInteger, "F2 #1");
+      Assert.AreEqual(2, doc.Values["F102"].AsInteger, "F102 #1");
 
-      doc.Values["F2"].SetInteger(3);
+      doc.Values["F102"].SetInteger(3);
       Assert.IsTrue(doc.IsDataModified, "IsDataModified before ApplyChanges()");
 
       ds.ApplyChanges(true);
       doc = ds[0][0];
       Assert.AreEqual(docId, doc.DocId, "DocId #2");
-      Assert.AreEqual(3, doc.Values["F2"].AsInteger, "F2 #2");
+      Assert.AreEqual(3, doc.Values["F102"].AsInteger, "F102 #2");
       if (useVersions)
         Assert.AreEqual(2, doc.Version, "Version #2");
       AssertTestDoc(info, docId, "Version #2", true, 3, "ABC");
 
-      doc.Values["F2"].SetInteger(4);
+      doc.Values["F102"].SetInteger(4);
       ds.ApplyChanges(true);
       doc = ds[0][0];
       Assert.AreEqual(docId, doc.DocId, "DocId #3");
-      Assert.AreEqual(4, doc.Values["F2"].AsInteger, "F2 #3");
+      Assert.AreEqual(4, doc.Values["F102"].AsInteger, "F102 #3");
       if (useVersions)
         Assert.AreEqual(2, doc.Version, "Version #3");
       AssertTestDoc(info, docId, "Version #3", true, 4, "ABC");
@@ -252,7 +305,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].View(docId);
+      DBxSingleDoc doc = ds["D1"].View(docId);
 
       Assert.AreEqual(docId, doc.DocId, "DocId #1");
       Assert.AreEqual(DBxDocState.View, doc.DocState, "DBxSingleDoc.DocState #1");
@@ -261,7 +314,7 @@ namespace ExtDBDocs_tests.Data_Docs
       if (useVersions)
         Assert.AreEqual(1, doc.Version, "Version #1");
       Assert.IsFalse(doc.IsDataModified, "IsDataModified");
-      Assert.AreEqual(2, doc.Values["F2"].AsInteger, "F2 #1");
+      Assert.AreEqual(2, doc.Values["F102"].AsInteger, "F102 #1");
 
       ds.ApplyChanges(true);
       doc = ds[0][0];
@@ -279,7 +332,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].Delete(docId);
+      ds["D1"].Delete(docId);
 
       Assert.AreEqual(DBxDocState.Delete, ds.DocState, "DBxDocSet.DocState");
       Assert.AreEqual(1, ds.DocCount, "DocCount #1");
@@ -293,7 +346,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].View(docId);
+      DBxSingleDoc doc = ds["D1"].View(docId);
 
       doc.Delete();
       Assert.AreEqual(DBxDocState.Delete, doc.DocState, "DBxSingleDoc.DocState");
@@ -309,7 +362,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
 
       doc.Delete();
       Assert.AreEqual(DBxDocState.Delete, doc.DocState, "DBxSingleDoc.DocState");
@@ -326,13 +379,13 @@ namespace ExtDBDocs_tests.Data_Docs
       TestDBInfo info = this[false, useVersions, useTime];
       Int32 docId = CreateTestDoc(info);
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].Delete(docId);
+      ds["D1"].Delete(docId);
       ds.ApplyChanges(false);
 
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
-        Assert.AreEqual(0, con.FillSelect("TestDocs", null, new ValueFilter("Id", docId)).Rows.Count, "doc table");
-        Assert.AreEqual(0, con.FillSelect("TestS1", null, new ValueFilter("DocId", docId)).Rows.Count, "subdoc table");
+        Assert.AreEqual(0, con.FillSelect("D1", null, new ValueFilter("Id", docId)).Rows.Count, "doc table");
+        Assert.AreEqual(0, con.FillSelect("SD11", null, new ValueFilter("DocId", docId)).Rows.Count, "subdoc table");
       }
     }
 
@@ -347,10 +400,10 @@ namespace ExtDBDocs_tests.Data_Docs
 
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
-        DataTable tblDoc = con.FillSelect("TestDocs", null, new ValueFilter("Id", docId));
+        DataTable tblDoc = con.FillSelect("D1", null, new ValueFilter("Id", docId));
         Assert.AreEqual(1, tblDoc.Rows.Count, "doc table");
         Assert.IsTrue(DataTools.GetBool(tblDoc.Rows[0], "Deleted"), "Deleted");
-        Assert.AreEqual(1, con.FillSelect("TestS1", null, new ValueFilter("DocId", docId)).Rows.Count, "subdoc table");
+        Assert.AreEqual(1, con.FillSelect("SD11", null, new ValueFilter("DocId", docId)).Rows.Count, "subdoc table");
         // У поддокументов поле Deleted не устанавливается в True.
       }
     }
@@ -363,7 +416,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DeleteDoc(info, docId);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
       Assert.IsTrue(doc.Deleted, "Deleted");
 
       ds.ApplyChanges(false);
@@ -383,31 +436,31 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId3 = CreateTestDoc(info, false, 3);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].View(new Int32[] { docId1, docId2 });
+      ds["D1"].View(new Int32[] { docId1, docId2 });
 
-      Assert.AreEqual(docId1, ds["TestDocs"][0].DocId, "DocId #1");
-      Assert.AreEqual(docId2, ds["TestDocs"][1].DocId, "DocId #2");
+      Assert.AreEqual(docId1, ds["D1"][0].DocId, "DocId #1");
+      Assert.AreEqual(docId2, ds["D1"][1].DocId, "DocId #2");
 
-      IDBxDocValues grpVals = ds["TestDocs"].Values;
+      IDBxDocValues grpVals = ds["D1"].Values;
       Assert.AreEqual(2, grpVals.DocCount, "DocCount #1,2");
       Assert.IsTrue(grpVals.IsReadOnly, "IsReadOnly #1,2");
-      Assert.IsFalse(grpVals["F1"].Grayed, "Grayed[F1] #1,2");
-      Assert.IsTrue(grpVals["F1"].AsBoolean, "Value[F1] #1,2");
-      Assert.IsTrue(grpVals["F2"].Grayed, "Grayed[F2] #1,2");
+      Assert.IsFalse(grpVals["F101"].Grayed, "Grayed[F101] #1,2");
+      Assert.IsTrue(grpVals["F101"].AsBoolean, "Value[F101] #1,2");
+      Assert.IsTrue(grpVals["F102"].Grayed, "Grayed[F102] #1,2");
 
       // Открываем третий документ
-      ds["TestDocs"].View(docId3);
-      grpVals = ds["TestDocs"].Values;
+      ds["D1"].View(docId3);
+      grpVals = ds["D1"].Values;
       Assert.AreEqual(3, grpVals.DocCount, "DocCount #1,2,3");
-      Assert.AreEqual(docId3, ds["TestDocs"][2].DocId, "DocId #2");
+      Assert.AreEqual(docId3, ds["D1"][2].DocId, "DocId #2");
 
       Assert.IsTrue(grpVals.IsReadOnly, "IsReadOnly #1,2,3");
-      Assert.IsTrue(grpVals["F1"].Grayed, "Grayed[F1] #1,2,3");
-      Assert.IsTrue(grpVals["F2"].Grayed, "Grayed[F2] #1,2,3");
+      Assert.IsTrue(grpVals["F101"].Grayed, "Grayed[F101] #1,2,3");
+      Assert.IsTrue(grpVals["F102"].Grayed, "Grayed[F102] #1,2,3");
 
-      Assert.AreEqual(1, ds["TestDocs"][0].Values["F2"].AsInteger, "Value[F2] #1");
-      Assert.AreEqual(2, ds["TestDocs"][1].Values["F2"].AsInteger, "Value[F2] #2");
-      Assert.AreEqual(3, ds["TestDocs"][2].Values["F2"].AsInteger, "Value[F2] #3");
+      Assert.AreEqual(1, ds["D1"][0].Values["F102"].AsInteger, "Value[F102] #1");
+      Assert.AreEqual(2, ds["D1"][1].Values["F102"].AsInteger, "Value[F102] #2");
+      Assert.AreEqual(3, ds["D1"][2].Values["F102"].AsInteger, "Value[F102] #3");
     }
 
     [Test]
@@ -417,18 +470,18 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId1 = CreateTestDoc(info, true, 1, "ABC");
       Int32 docId2 = CreateTestDoc(info, false, 2, "DEF");
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].Edit(new Int32[] { docId1, docId2 });
-      IDBxDocValues grpVals = ds["TestDocs"].Values;
+      ds["D1"].Edit(new Int32[] { docId1, docId2 });
+      IDBxDocValues grpVals = ds["D1"].Values;
       Assert.AreEqual(2, grpVals.DocCount, "DocCount #1,2");
       Assert.IsFalse(grpVals.IsReadOnly, "IsReadOnly #1,2");
 
-      grpVals["F1"].SetBoolean(false);
-      ds["TestDocs"][0].Values["F2"].SetInteger(3);
-      ds["TestDocs"][1].Values["F2"].SetInteger(4);
+      grpVals["F101"].SetBoolean(false);
+      ds["D1"][0].Values["F102"].SetInteger(3);
+      ds["D1"][1].Values["F102"].SetInteger(4);
 
 
-      Assert.IsFalse(grpVals["F1"].Grayed, "Grayed[F1] #1,2");
-      Assert.IsTrue(grpVals["F2"].Grayed, "Grayed[F2] #1,2");
+      Assert.IsFalse(grpVals["F101"].Grayed, "Grayed[F101] #1,2");
+      Assert.IsTrue(grpVals["F102"].Grayed, "Grayed[F102] #1,2");
       ds.ApplyChanges(false);
 
       AssertTestDoc(info, docId1, "Doc #1", false, 3, "ABC");
@@ -447,9 +500,9 @@ namespace ExtDBDocs_tests.Data_Docs
       TestDBInfo info = this[useDeleted, useVersions, useTime];
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Insert();
-      DBxSubDoc sd = doc.SubDocs["TestS1"].Insert();
-      sd.Values["F3"].SetString("ABC");
+      DBxSingleDoc doc = ds["D1"].Insert();
+      DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+      sd.Values["F111"].SetString("ABC");
       sd.Delete();
       ds.ApplyChanges(true);
       doc = ds[0][0];
@@ -465,10 +518,10 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info, true, 1, "ABC");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
 
-      DBxSubDoc sd = doc.SubDocs["TestS1"].Insert();
-      sd.Values["F3"].SetString("DEF");
+      DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+      sd.Values["F111"].SetString("DEF");
       sd.Delete();
 
       ds.ApplyChanges(false);
@@ -486,10 +539,10 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info, true, 1, "ABC");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
 
-      DBxSubDoc sd = doc.SubDocs["TestS1"].Insert();
-      sd.Values["F3"].SetString("DEF");
+      DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+      sd.Values["F111"].SetString("DEF");
 
       ds.ApplyChanges(false);
       AssertTestDoc(info, docId, "", true, 1, "ABC", "DEF");
@@ -502,9 +555,9 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info, true, 1, "ABC");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
 
-      doc.SubDocs["TestS1"][0].Delete();
+      doc.SubDocs["SD11"][0].Delete();
 
       ds.ApplyChanges(false);
       AssertTestDoc(info, docId, "", true, 1);
@@ -518,9 +571,9 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info, true, 1, "ABC");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
 
-      doc.SubDocs["TestS1"][0].Values["F3"].SetString("DEF");
+      doc.SubDocs["SD11"][0].Values["F111"].SetString("DEF");
 
       ds.ApplyChanges(false);
       AssertTestDoc(info, docId, "", true, 1, "DEF");
@@ -538,18 +591,18 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, true, 2, "GHI");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc1= ds["TestDocs"].View(docId1);
-      Assert.AreEqual(2, doc1.SubDocs["TestS1"].SubDocCount, "SubDocCount #1");
-      IDBxDocValues grpVals = ds["TestDocs"].SubDocs["TestS1"].Values;
+      DBxSingleDoc doc1 = ds["D1"].View(docId1);
+      Assert.AreEqual(2, doc1.SubDocs["SD11"].SubDocCount, "SubDocCount #1");
+      IDBxDocValues grpVals = ds["D1"].SubDocs["SD11"].Values;
       Assert.AreEqual(2, grpVals.DocCount, "Values.DocCount #1");
-      Assert.IsTrue(grpVals["F3"].Grayed, "Grayed #1");
+      Assert.IsTrue(grpVals["F111"].Grayed, "Grayed #1");
 
       // Открываем еще один документ
-      DBxSingleDoc doc2 = ds["TestDocs"].View(docId2);
-      Assert.AreEqual(1, doc2.SubDocs["TestS1"].SubDocCount, "SubDocCount #2");
-      grpVals = ds["TestDocs"].SubDocs["TestS1"].Values;
+      DBxSingleDoc doc2 = ds["D1"].View(docId2);
+      Assert.AreEqual(1, doc2.SubDocs["SD11"].SubDocCount, "SubDocCount #2");
+      grpVals = ds["D1"].SubDocs["SD11"].Values;
       Assert.AreEqual(3, grpVals.DocCount, "Values.DocCount #1,2");
-      Assert.IsTrue(grpVals["F3"].Grayed, "Grayed #1,2");
+      Assert.IsTrue(grpVals["F111"].Grayed, "Grayed #1,2");
     }
 
     [Test]
@@ -560,14 +613,14 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, true, 2, "GHI");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc1 = ds["TestDocs"].Edit(docId1);
-      DBxSingleDoc doc2 = ds["TestDocs"].Edit(docId2);
-      IDBxDocValues grpVals = ds["TestDocs"].SubDocs["TestS1"].Values;
-      grpVals["F3"].SetString("XXX");
-      Assert.IsFalse(grpVals["F3"].Grayed, "Grayed #1");
+      DBxSingleDoc doc1 = ds["D1"].Edit(docId1);
+      DBxSingleDoc doc2 = ds["D1"].Edit(docId2);
+      IDBxDocValues grpVals = ds["D1"].SubDocs["SD11"].Values;
+      grpVals["F111"].SetString("XXX");
+      Assert.IsFalse(grpVals["F111"].Grayed, "Grayed #1");
 
-      doc1.SubDocs["TestS1"][1].Values["F3"].SetString("YYY");
-      Assert.IsTrue(grpVals["F3"].Grayed, "Grayed #2");
+      doc1.SubDocs["SD11"][1].Values["F111"].SetString("YYY");
+      Assert.IsTrue(grpVals["F111"].Grayed, "Grayed #2");
       ds.ApplyChanges(false);
 
       AssertTestDoc(info, docId1, "Doc #1", true, 1, "XXX", "YYY");
@@ -582,8 +635,8 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, true, 2, "GHI");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].Edit(new Int32[] { docId1, docId2 });
-      DBxMultiSubDocs sds=ds[0].SubDocs["TestS1"];
+      ds["D1"].Edit(new Int32[] { docId1, docId2 });
+      DBxMultiSubDocs sds = ds[0].SubDocs["SD11"];
       Assert.AreEqual(3, sds.SubDocCount, "SubDocCount #1");
 
       sds.Delete();
@@ -606,23 +659,23 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = CreateTestDoc(info, true, 1, "ABC");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
-      doc.Values["F2"].SetInteger(2);
-      DBxSubDoc sd = doc.SubDocs["TestS1"].Insert();
-      sd.Values["F3"].SetString("DEF");
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
+      doc.Values["F102"].SetInteger(2);
+      DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+      sd.Values["F111"].SetString("DEF");
       ds.ApplyChanges(false);
 
       // Убрать в DBxDocProviderTests
-      //DataTable tbl=ds.DocProvider.GetDocHistTable("TestDocs", docId);
+      //DataTable tbl=ds.DocProvider.GetDocHistTable("D1", docId);
 
       ds = new DBxDocSet(info.Provider);
-      doc = ds["TestDocs"].ViewVersion(docId, 1);
+      doc = ds["D1"].ViewVersion(docId, 1);
       Assert.IsTrue(ds.VersionView, "VersionView #1");
       Assert.AreEqual(1, doc.Version, "Version #1");
       AssertTestDoc(doc, "#1", true, 1, "ABC");
 
       ds = new DBxDocSet(info.Provider);
-      doc = ds["TestDocs"].ViewVersion(docId, 2);
+      doc = ds["D1"].ViewVersion(docId, 2);
       Assert.IsTrue(ds.VersionView, "VersionView #2");
       Assert.AreEqual(2, doc.Version, "Version #2");
       AssertTestDoc(doc, "#2", true, 2, "ABC", "DEF");
@@ -637,9 +690,9 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, true, 2);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].View(docId1);
+      ds["D1"].View(docId1);
 
-      Assert.Catch(delegate() { ds["TestDocs"].ViewVersion(docId2, 1); });
+      Assert.Catch(delegate() { ds["D1"].ViewVersion(docId2, 1); });
     }
 #endif
 
@@ -647,6 +700,8 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Тестирование прочих свойств
 
+    // TODO: EditIfNotChanged
+#if XXX
     [Test]
     public void EditIfNotChanged([Values(false, true)] bool useDeleted, [Values(false, true)] bool useTime,
       [Values(false, true)] bool propValue)
@@ -656,15 +711,16 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
       ds.EditIfNotChanged = propValue;
-      DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
       Assert.IsFalse(doc.IsDataModified, "IsDataModified");
 
       ds.ApplyChanges(false);
 
       ds = new DBxDocSet(info.Provider);
-      doc = ds["TestDocs"].View(docId);
+      doc = ds["D1"].View(docId);
       Assert.AreEqual(propValue ? 2 : 1, doc.Version, "Version");
     }
+#endif
 
     [Test]
     public void DocCount_and_DocState()
@@ -674,8 +730,8 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, true, 2);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].View(docId1);
-      ds["TestDocs"].Edit(docId2);
+      ds["D1"].View(docId1);
+      ds["D1"].Edit(docId2);
 
       Assert.AreEqual(2, ds.DocCount, "DocCount #1");
       Assert.AreEqual(DBxDocState.Mixed, ds.DocState, "DocState #1");
@@ -686,12 +742,12 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(0, ds.GetDocCount(DBxDocState.Insert), "GetDocCount(Insert) #1");
       Assert.AreEqual(0, ds.GetDocCount(DBxDocState.Delete), "GetDocCount(Delete) #1");
 
-      ds["TestDocs"].Insert();
+      ds["D1"].Insert();
       Assert.AreEqual(3, ds.DocCount, "DocCount #2");
       Assert.AreEqual(DBxDocState.Mixed, ds.DocStateNoView, "DocStateNoView #2");
       Assert.AreEqual(1, ds.GetDocCount(DBxDocState.Insert), "GetDocCount(Insert) #2");
 
-      ds["TestDocs"][1].Delete();
+      ds["D1"][1].Delete();
       Assert.AreEqual(3, ds.DocCount, "DocCount #3");
       Assert.AreEqual(0, ds.GetDocCount(DBxDocState.Edit), "GetDocCount(Edit) #3");
       Assert.AreEqual(1, ds.GetDocCount(DBxDocState.Delete), "GetDocCount(Delete) #3");
@@ -705,21 +761,21 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, true, 2);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].View(docId1);
-      ds["TestDocs"].Edit(docId2);
-      ds["TestDocs"].Insert();
+      ds["D1"].View(docId1);
+      ds["D1"].Edit(docId2);
+      ds["D1"].Insert();
 
       DBxDocSelection docSel = ds.DocSelection;
       Assert.AreEqual(2, docSel.TotalCount, "TotalCount #1");
-      Assert.IsTrue(docSel.ContainsAll("TestDocs", new Int32[]{docId1, docId2}), "DocIds #1");
+      Assert.IsTrue(docSel.ContainsAll("D1", new Int32[] { docId1, docId2 }), "DocIds #1");
 
       docSel = ds.GetDocSelection(DBxDocState.View);
       Assert.AreEqual(1, docSel.TotalCount, "TotalCount #2");
-      Assert.AreEqual(docId1, docSel["TestDocs"][0], "DocIds #2");
+      Assert.AreEqual(docId1, docSel["D1"][0], "DocIds #2");
 
       docSel = ds.GetDocSelection(DBxDocState.Edit);
       Assert.AreEqual(1, docSel.TotalCount, "TotalCount #2");
-      Assert.AreEqual(docId2, docSel["TestDocs"][0], "DocIds #2");
+      Assert.AreEqual(docId2, docSel["D1"][0], "DocIds #2");
 
       docSel = ds.GetDocSelection(DBxDocState.Insert);
       Assert.AreEqual(0, docSel.TotalCount, "TotalCount #3");
@@ -727,15 +783,434 @@ namespace ExtDBDocs_tests.Data_Docs
       docSel = ds.GetDocSelection(DBxDocState.Delete);
       Assert.AreEqual(0, docSel.TotalCount, "TotalCount #4");
 
-      ds["TestDocs"][1].Delete();
+      ds["D1"][1].Delete();
 
       docSel = ds.GetDocSelection(DBxDocState.Edit);
       Assert.AreEqual(0, docSel.TotalCount, "TotalCount #5");
 
       docSel = ds.GetDocSelection(DBxDocState.Delete);
       Assert.AreEqual(1, docSel.TotalCount, "TotalCount #6");
-      Assert.AreEqual(docId2, docSel["TestDocs"][0], "DocIds #6");
+      Assert.AreEqual(docId2, docSel["D1"][0], "DocIds #6");
     }
+
+    [Test]
+    public void AllowDBNull()
+    {
+      TestDBInfo info = this[false, false, false];
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+
+      // В DBxDocSet имеется 4 класса реализующих доступ к значениям
+      IDBxDocValues docVals1 = ds["D1"].Values;
+      IDBxDocValues docVals2 = doc.Values;
+      IDBxDocValues sdVals1 = ds["D1"].SubDocs["SD11"].Values;
+      IDBxDocValues sdVals2 = sd.Values;
+
+      Assert.IsFalse(docVals1["F102"].AllowDBNull, "F102 AllowDBNull #1");
+      Assert.IsFalse(docVals2["F102"].AllowDBNull, "F102 AllowDBNull #2");
+      Assert.IsTrue(docVals1["F103"].AllowDBNull, "F103 AllowDBNull #1");
+      Assert.IsTrue(docVals2["F103"].AllowDBNull, "F103 AllowDBNull #2");
+
+      Assert.IsFalse(sdVals1["F111"].AllowDBNull, "F111 AllowDBNull #1");
+      Assert.IsFalse(sdVals2["F111"].AllowDBNull, "F111 AllowDBNull #2");
+      Assert.IsTrue(sdVals1["F112"].AllowDBNull, "F112 AllowDBNull #1");
+      Assert.IsTrue(sdVals2["F112"].AllowDBNull, "F112 AllowDBNull #2");
+    }
+
+    [Test]
+    public void MaxLength()
+    {
+      TestDBInfo info = this[false, false, false];
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+
+      IDBxDocValues sdVals1 = ds["D1"].SubDocs["SD11"].Values;
+      IDBxDocValues sdVals2 = sd.Values;
+
+
+      Assert.AreEqual(3, sdVals1["F111"].MaxLength, "F111 MaxLength #1");
+      Assert.AreEqual(3, sdVals2["F111"].MaxLength, "F111 MaxLength #2");
+      Assert.AreEqual(10, sdVals1["F112"].MaxLength, "F111 MaxLength #1");
+      Assert.AreEqual(10, sdVals2["F112"].MaxLength, "F111 MaxLength #2");
+    }
+
+    #endregion
+
+    #region Ссылки между документами
+
+    #region Дерево документов
+
+    [Test]
+    public void DocTree_Insert_Simple([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info, true, 1);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc2 = ds["D1"].Insert();
+      doc2.Values["F101"].SetBoolean(false);
+      doc2.Values["F102"].SetInteger(0);
+      doc2.Values["F104"].SetInteger(docId1);
+      ds.ApplyChanges(true);
+      doc2 = ds["D1"][0];
+
+      Assert.AreEqual(docId1, doc2.Values["F104"].AsInteger, "Doc2");
+    }
+
+    [Test]
+    public void DocTree_Insert_TwoDocs([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Insert();
+      doc1.Values["F101"].SetBoolean(false);
+      doc1.Values["F102"].SetInteger(0);
+
+      DBxSingleDoc doc2 = ds["D1"].Insert();
+      doc2.Values["F101"].SetBoolean(false);
+      doc2.Values["F102"].SetInteger(0);
+      doc2.Values["F104"].SetInteger(doc1.DocId); // фиктивный идентификатор
+
+      ds.ApplyChanges(true);
+      doc1 = ds["D1"][0];
+      doc2 = ds["D1"][1];
+
+      Assert.AreEqual(doc1.DocId, doc2.Values["F104"].AsInteger);
+    }
+
+    [Test]
+    public void DocTree_Delete_Success_leaves([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1, docId2, docId3;
+      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docId2);
+      ds["D1"].Delete(docId3);
+      ds.ApplyChanges(false);
+    }
+
+    [Test]
+    public void DocTree_Delete_Success_wholetree([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1, docId2, docId3;
+      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      // Удаляем документы в правильном порядке
+      ds["D1"].Delete(docId2);
+      ds["D1"].Delete(docId3);
+      ds["D1"].Delete(docId1);
+      ds.ApplyChanges(false);
+    }
+
+    [Test]
+    public void DocTree_Delete_Fail_1([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1, docId2, docId3;
+      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docId1);
+      // Нельзя удалить узел 1, но оставить узлы 2 и 3
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void DocTree_Delete_Fail_2([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1, docId2, docId3;
+      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docId2);
+      ds["D1"].Delete(docId1);
+      // Нельзя удалить узел 1, но оставить узел 3
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+#if XXX
+
+    [Test]
+    public void SimpleDelTest()
+    {
+      // Предельно упрощенный тест
+
+      DBxDocTypes dts = new DBxDocTypes();
+      dts.UsersTableName = String.Empty; // без пользователей
+      dts.UseDeleted = false;
+      dts.UseVersions = false;
+      dts.UseTime = false;
+      DBxDocType dt;
+
+      dt = new DBxDocType("D1");
+      dt.Struct.Columns.AddReference("F104", "D1", true);
+      dts.Add(dt);
+
+      DBxDocDBConnectionHelper conHelper = new DBxDocDBConnectionHelper();
+      conHelper.ProviderName = "SQLite";
+      conHelper.ConnectionString = "Data Source=:memory:";
+      conHelper.DocTypes = dts;
+
+      DBxRealDocProviderGlobal GlobalData = conHelper.CreateRealDocProviderGlobal();
+      try
+      {
+        DBxRealDocProviderSource Source = new DBxRealDocProviderSource(GlobalData);
+        DBxRealDocProvider Provider = new DBxRealDocProvider(Source, 0, false);
+
+        DBxDocSet ds = new DBxDocSet(Provider);
+        DBxSingleDoc doc1 = ds["D1"].Insert();
+        DBxSingleDoc doc2 = ds["D1"].Insert();
+        doc2.Values["F104"].SetInteger(doc1.DocId);
+        ds.ApplyChanges(true);
+        Int32 docId1 = ds["D1"][0].DocId;
+        Int32 docId2 = ds["D1"][1].DocId;
+        Assert.AreEqual(ds["D1"][0].DocId, ds["D1"][1].Values["F104"].AsInteger);
+
+        ds = new DBxDocSet(Provider);
+        ds["D1"].Delete(docId1);
+
+        //ds.ApplyChanges(false);
+        Assert.Catch(delegate() { ds.ApplyChanges(false); });
+      }
+      finally
+      {
+        GlobalData.DisposeDBs();
+      }
+    }
+#endif
+
+
+    /// <summary>
+    /// Создает тестовое дерево документов "D1". Первый документ является корнем, а остальные два - дочерними для него
+    /// </summary>
+    /// <param name="info">Тестовая база данных</param>
+    /// <param name="docId1"></param>
+    /// <param name="docId2"></param>
+    /// <param name="docId3"></param>
+    private void CreateTestDocTree(TestDBInfo info, out int docId1, out int docId2, out int docId3)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Insert();
+      doc1.Values["F101"].SetBoolean(false);
+      doc1.Values["F102"].SetInteger(1);
+
+      DBxSingleDoc doc2 = ds["D1"].Insert();
+      doc2.Values["F101"].SetBoolean(false);
+      doc2.Values["F102"].SetInteger(2);
+      doc2.Values["F104"].SetInteger(doc1.DocId);
+
+      DBxSingleDoc doc3 = ds["D1"].Insert();
+      doc3.Values["F101"].SetBoolean(false);
+      doc3.Values["F102"].SetInteger(3);
+      doc3.Values["F104"].SetInteger(doc1.DocId);
+
+      ds.ApplyChanges(true);
+
+      docId1 = ds["D1"][0].DocId;
+      docId2 = ds["D1"][1].DocId;
+      docId3 = ds["D1"][2].DocId;
+    }
+
+    #endregion
+
+    #region Дерево поддокументов
+
+    [Test]
+    public void SubDocTree_Insert([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(false);
+      doc.Values["F102"].SetInteger(0);
+
+      DBxSubDoc sdoc1 = doc.SubDocs["SD11"].Insert();
+      sdoc1.Values["F111"].SetString("A");
+
+      DBxSubDoc sdoc2 = doc.SubDocs["SD11"].Insert();
+      sdoc2.Values["F111"].SetString("B");
+      sdoc2.Values["F113"].SetInteger(sdoc1.SubDocId);
+
+      DBxSubDoc sdoc3 = doc.SubDocs["SD11"].Insert();
+      sdoc3.Values["F111"].SetString("C");
+      sdoc3.Values["F113"].SetInteger(sdoc1.SubDocId);
+
+      ds.ApplyChanges(true);
+      doc = ds["D1"][0];
+      Assert.AreEqual(3, doc.SubDocs["SD11"].SubDocCount, "SubDocCount");
+      sdoc1 = doc.SubDocs["SD11"][0];
+      sdoc2 = doc.SubDocs["SD11"][1];
+      sdoc3 = doc.SubDocs["SD11"][2];
+
+      Assert.AreEqual(0, sdoc1.Values["F113"].AsInteger, "SubDoc1");
+      Assert.AreEqual(sdoc1.SubDocId, sdoc2.Values["F113"].AsInteger, "SubDoc2");
+      Assert.AreEqual(sdoc1.SubDocId, sdoc3.Values["F113"].AsInteger, "SubDoc3");
+    }
+
+    [Test]
+    public void SubDocTree_Delete_Success_leaves([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId = CreateTestSubDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
+
+      doc.SubDocs["SD11"][1].Delete();
+      doc.SubDocs["SD11"][2].Delete();
+
+      ds.ApplyChanges(false);
+
+      ds = new DBxDocSet(info.Provider);
+      doc = ds["D1"].View(docId);
+      Assert.AreEqual(1, doc.SubDocs["SD11"].SubDocCount);
+    }
+
+
+    // TODO: Этот тест не работает для useDeleted=false, так как порядок удаления поддокументов не гарантируется
+#if XXX
+    [Test]
+    public void SubDocTree_Delete_Success_wholetree([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId = CreateTestSubDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
+
+      doc.SubDocs["SD11"][2].Delete();
+      doc.SubDocs["SD11"][1].Delete();
+      doc.SubDocs["SD11"][0].Delete();
+
+      ds.ApplyChanges(false);
+
+      ds = new DBxDocSet(info.Provider);
+      doc = ds["D1"].View(docId);
+      Assert.AreEqual(0, doc.SubDocs["SD11"].SubDocCount);
+    }
+#endif
+
+
+    [Test]
+    public void SubDocTree_Delete_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId = CreateTestSubDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
+
+      // Нельзя удалить корень дерева, оставив листья
+      doc.SubDocs["SD11"][0].Delete();
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    /// <summary>
+    /// Создает тестовый документ "D1" с тремя документами "SD11", образующих простое дерево.
+    /// Первый поддокумент является корнем, второй и третий - дочерними от первого
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
+    private Int32 CreateTestSubDocTree(TestDBInfo info)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(false);
+      doc.Values["F102"].SetInteger(0);
+
+      DBxSubDoc sdoc1 = doc.SubDocs["SD11"].Insert();
+      sdoc1.Values["F111"].SetString("A");
+
+      DBxSubDoc sdoc2 = doc.SubDocs["SD11"].Insert();
+      sdoc2.Values["F111"].SetString("B");
+      sdoc2.Values["F113"].SetInteger(sdoc1.SubDocId);
+
+      DBxSubDoc sdoc3 = doc.SubDocs["SD11"].Insert();
+      sdoc3.Values["F111"].SetString("C");
+      sdoc3.Values["F113"].SetInteger(sdoc1.SubDocId);
+
+      ds.ApplyChanges(true);
+      doc = ds["D1"][0];
+
+      return doc.DocId;
+    }
+
+    #endregion
+
+    #region Взаимные ссылки между документами
+
+    [Test]
+    public void DocCrossRef_Insert([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId1, docId2;
+      CreateTestCrossRefDoc(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].View(docId1);
+      DBxSingleDoc doc2 = ds["D2"].View(docId2);
+
+      Assert.AreEqual(doc2.DocId, doc1.Values["F105"].AsInteger, "#1");
+      Assert.AreEqual(doc1.DocId, doc2.Values["F202"].AsInteger, "#2");
+    }
+
+
+    [Test]
+    public void DocCrossRef_Delete_Success([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId1, docId2;
+      CreateTestCrossRefDoc(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docId1);
+      ds["D2"].Delete(docId2);
+
+      ds.ApplyChanges(false);
+    }
+
+    private void CreateTestCrossRefDoc(TestDBInfo info, out int docId1, out int docId2)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Insert();
+      doc1.Values["F101"].SetBoolean(false);
+      doc1.Values["F102"].SetInteger(0);
+
+      DBxSingleDoc doc2 = ds["D2"].Insert();
+      doc2.Values["F201"].SetString("B");
+
+      doc1.Values["F105"].SetInteger(doc2.DocId); // фиктивный идентификатор
+      doc2.Values["F202"].SetInteger(doc1.DocId); // фиктивный идентификатор
+
+      ds.ApplyChanges(true);
+      doc1 = ds["D1"][0];
+      doc2 = ds["D2"][0];
+
+      Assert.AreEqual(doc2.DocId, doc1.Values["F105"].AsInteger, "CrossRef #1");
+      Assert.AreEqual(doc1.DocId, doc2.Values["F202"].AsInteger, "CrossRef #2");
+
+      docId1 = doc1.DocId;
+      docId2 = doc2.DocId;
+    }
+
+
+
+    #endregion
 
     #endregion
 
@@ -746,16 +1221,16 @@ namespace ExtDBDocs_tests.Data_Docs
       return CreateTestDoc(info, true, 2, "ABC");
     }
 
-    private Int32 CreateTestDoc(TestDBInfo info, bool F1, int F2, params string[] F3)
+    private Int32 CreateTestDoc(TestDBInfo info, bool F101, int F102, params string[] F111)
     {
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["TestDocs"].Insert();
-      doc.Values["F1"].SetBoolean(F1);
-      doc.Values["F2"].SetInteger(F2);
-      for (int i = 0; i < F3.Length; i++)
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(F101);
+      doc.Values["F102"].SetInteger(F102);
+      for (int i = 0; i < F111.Length; i++)
       {
-        DBxSubDoc sd = doc.SubDocs["TestS1"].Insert();
-        sd.Values["F3"].SetString(F3[i]);
+        DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+        sd.Values["F111"].SetString(F111[i]);
       }
       ds.ApplyChanges(true);
       Int32 docId = ds[0][0].DocId;
@@ -766,7 +1241,7 @@ namespace ExtDBDocs_tests.Data_Docs
     private static void DeleteDoc(TestDBInfo info, Int32 docId)
     {
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["TestDocs"].Delete(docId);
+      ds["D1"].Delete(docId);
       ds.ApplyChanges(true);
     }
 
@@ -776,33 +1251,33 @@ namespace ExtDBDocs_tests.Data_Docs
     /// <param name="info"></param>
     /// <param name="docId"></param>
     /// <param name="message"></param>
-    /// <param name="F1"></param>
-    /// <param name="F2"></param>
-    /// <param name="F3"></param>
-    private void AssertTestDoc(TestDBInfo info, Int32 docId, string message, bool F1, int F2, params string[] F3)
+    /// <param name="F101"></param>
+    /// <param name="F102"></param>
+    /// <param name="F111"></param>
+    private void AssertTestDoc(TestDBInfo info, Int32 docId, string message, bool F101, int F102, params string[] F111)
     {
       if (!String.IsNullOrEmpty(message))
         message += ". ";
 
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
-        DataTable tblDoc = con.FillSelect("TestDocs", null, new ValueFilter("Id", docId));
+        DataTable tblDoc = con.FillSelect("D1", null, new ValueFilter("Id", docId));
         Assert.AreEqual(1, tblDoc.Rows.Count, message + "doc table count");
         if (info.GlobalData.DocTypes.UseDeleted)
           Assert.IsFalse(DataTools.GetBool(tblDoc.Rows[0], "Deleted"), message + "Deleted");
-        Assert.AreEqual(F1, DataTools.GetBool(tblDoc.Rows[0], "F1"), message + "F1");
-        Assert.AreEqual(F2, DataTools.GetInt(tblDoc.Rows[0], "F2"), message + "F2");
+        Assert.AreEqual(F101, DataTools.GetBool(tblDoc.Rows[0], "F101"), message + "F101");
+        Assert.AreEqual(F102, DataTools.GetInt(tblDoc.Rows[0], "F102"), message + "F102");
 
-        Array.Sort<string>(F3);
+        Array.Sort<string>(F111);
         DBxFilter filter = new ValueFilter("DocId", docId);
         if (info.GlobalData.DocTypes.UseDeleted)
           filter = new AndFilter(filter, new ValueFilter("Deleted", false));
-        DataTable tblSubDoc = con.FillSelect("TestS1", null, filter);
+        DataTable tblSubDoc = con.FillSelect("SD11", null, filter);
         string[] a = new string[tblSubDoc.Rows.Count];
         for (int i = 0; i < a.Length; i++)
-          a[i] = DataTools.GetString(tblSubDoc.Rows[i], "F3");
+          a[i] = DataTools.GetString(tblSubDoc.Rows[i], "F111");
         Array.Sort<string>(a);
-        Assert.AreEqual(F3, a, message + "F3");
+        Assert.AreEqual(F111, a, message + "F111");
         // У поддокументов поле Deleted не устанавливается в True.
       }
     }
@@ -812,26 +1287,26 @@ namespace ExtDBDocs_tests.Data_Docs
     /// </summary>
     /// <param name="doc"></param>
     /// <param name="message"></param>
-    /// <param name="F1"></param>
-    /// <param name="F2"></param>
-    /// <param name="F3"></param>
-    private void AssertTestDoc(DBxSingleDoc doc, string message, bool F1, int F2, params string[] F3)
+    /// <param name="F101"></param>
+    /// <param name="F102"></param>
+    /// <param name="F111"></param>
+    private void AssertTestDoc(DBxSingleDoc doc, string message, bool F101, int F102, params string[] F111)
     {
       if (!String.IsNullOrEmpty(message))
         message += ". ";
 
-      Assert.AreEqual(F1, doc.Values["F1"].AsBoolean, message + "F1");
-      Assert.AreEqual(F2, doc.Values["F2"].AsInteger, message + "F2");
+      Assert.AreEqual(F101, doc.Values["F101"].AsBoolean, message + "F101");
+      Assert.AreEqual(F102, doc.Values["F102"].AsInteger, message + "F102");
 
-      Array.Sort<string>(F3);
-      string[] a = new string[doc.SubDocs["TestS1"].SubDocCount];
+      Array.Sort<string>(F111);
+      string[] a = new string[doc.SubDocs["SD11"].SubDocCount];
       for (int i = 0; i < a.Length; i++)
       {
-        DBxSubDoc sd = doc.SubDocs["TestS1"][i];
-        a[i] = sd.Values["F3"].AsString;
+        DBxSubDoc sd = doc.SubDocs["SD11"][i];
+        a[i] = sd.Values["F111"].AsString;
       }
       Array.Sort<string>(a);
-      Assert.AreEqual(F3, a, message + "F3");
+      Assert.AreEqual(F111, a, message + "F111");
     }
 
     #endregion

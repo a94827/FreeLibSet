@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
+using System.Data.Common;
 
 namespace FreeLibSet.Data.Docs
 {
@@ -71,7 +72,7 @@ namespace FreeLibSet.Data.Docs
   /// </summary>
   /// <param name="sender">Объект DBxDocDBConnectionHelper</param>
   /// <param name="args">Аргументы события</param>
-  public delegate void DBxDocDBConnectionHelperInitDBxEventHandler(object sender, 
+  public delegate void DBxDocDBConnectionHelperInitDBxEventHandler(object sender,
     DBxDocDBConnectionHelperInitDBxEventArgs args);
 
   #endregion
@@ -279,6 +280,14 @@ namespace FreeLibSet.Data.Docs
                 String.Join(", ", DBxManager.Managers.GetCodes()));
           }
           string ConStr = dbMan.ReplaceDBName(ConnectionString, "db", dbName);
+
+          if (ProviderName == DBxProviderNames.SQLite && (!DocTypes.UseDeleted)) // 02.02.2022
+          {
+            DbConnectionStringBuilder csb = dbMan.CreateConnectionStringBuilder(ConStr);
+            csb["foreign keys"] = true;
+            ConStr = csb.ConnectionString;
+          }
+
           DB = dbMan.CreateDBObject(ConStr);
         }
 

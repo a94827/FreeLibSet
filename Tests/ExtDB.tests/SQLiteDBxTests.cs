@@ -96,7 +96,29 @@ namespace ExtDB_tests.Data_SQLite
       ts.Columns.AddId();
       ts.Columns.AddString("F1", 20, false);
       ts.Columns.AddInt("F2");
+      ts.Columns.AddReference("F3", "Table1", true); // для проверки дерева
       return dbs;
+    }
+
+    [Test]
+    public void RefsIntegrity()
+    {
+      AbsPath path = new AbsPath(_TempDir.Dir, "test.db");
+      _DB = new SQLiteDBx(path, false);
+
+      _DB.CreateIfRequired();
+
+      DBxStruct dbs = CreateDBStruct();
+      _DB.Struct = dbs;
+      _DB.UpdateStruct();
+
+      using (DBxCon con = new DBxCon(_DB.MainEntry))
+      {
+        Int32 id1 = con.AddRecordWithIdResult("Table1", new DBxColumns("F1,F2"), new object[] { "AAA", 1 });
+        Int32 id2 = con.AddRecordWithIdResult("Table1", new DBxColumns("F1,F2,F3"), new object[] { "BBB", 2, id1 });
+
+        Assert.Catch(delegate() { con.Delete("Table1", id1); });
+      }
     }
   }
 }

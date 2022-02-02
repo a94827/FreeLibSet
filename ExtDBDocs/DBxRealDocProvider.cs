@@ -2293,8 +2293,11 @@ namespace FreeLibSet.Data.Docs
             for (int i = 0; i < multiDocs.SubDocs.Count; i++)
             {
               DBxSubDocType SubDocType = multiDocs.SubDocs[i].SubDocType;
-              IdList SubDocIds = mainCon.GetIds(SubDocType.Name,
-                new AndFilter(DocFltGen[j], DBSSubDocType.DeletedFalseFilter));
+
+              DBxFilter filter = DocFltGen[j];
+              if (DocTypes.UseDeleted) // 02.02.2022
+                filter = new AndFilter(filter, DBSSubDocType.DeletedFalseFilter);
+              IdList SubDocIds = mainCon.GetIds(SubDocType.Name, filter);
 
               IdsFilterGenerator SubDocFltGen = new IdsFilterGenerator(SubDocIds);
               ApplyDocsDelete1Table(mainCon, multiDocs.DocSet, SubDocType, SubDocFltGen);

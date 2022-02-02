@@ -53,6 +53,7 @@ namespace ExtDB_tests.Data_SQLite
       DBxTableStruct ts = dbs.Tables.Add("FirstTable");
       ts.Columns.AddId();
       ts.Columns.AddInt("Col1");
+      ts.Columns.AddReference("Col2", "FirstTable", true);
 
       SQLiteDBx db = new SQLiteDBx();
       db.Struct = dbs;
@@ -81,6 +82,21 @@ namespace ExtDB_tests.Data_SQLite
         sum = DataTools.GetInt(con.GetSumValue("FirstTable", "Col1", null));
       }
       return sum;
+    }
+
+    [Test]
+    public void RefsIntegrity()
+    {
+      using (SQLiteDBx db = CreateSampleDB())
+      {
+        using (DBxCon con = new DBxCon(db.MainEntry))
+        {
+          con.AddRecord("FirstTable", new DBxColumns("Id,Col1"), new object[] { 1, 1 });
+          con.AddRecord("FirstTable", new DBxColumns("Id,Col1,Col2"), new object[] { 2, 2, 1 });
+
+          Assert.Catch(delegate() { con.Delete("FirstTable", 1); });
+        }
+      }
     }
   }
 }

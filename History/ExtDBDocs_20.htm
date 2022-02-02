@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-02-01T09:08:02.860000000"/>
+	<meta name="changed" content="2022-02-02T14:47:38.909000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -76,6 +76,26 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">309</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">02.02<span lang="ru-RU">.2022</span></p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>1. <span lang="ru-RU">Исправлены еще ошибки в
+			</span><span lang="en-US">DBxRealDocProvider </span><span lang="ru-RU">для
+			конфигурации с </span><span lang="en-US">DBxDocTypes.UseDeleted=false
+			(<a href="ExtDBDocs_11.htm#v054p2">v.54 </a></span><a href="ExtDBDocs_11.htm#v054p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
+			<p>2. DBxDocDBConnectionHelper.CreateRealDocProviderGlobal() для
+			провайдера <span lang="en-US">SQLite</span> (<a href="ExtDBDocs_11.htm#v039p1"><span lang="en-US">v.39
+			</span>п.1</a>), при <span lang="en-US">DBxDocTypes.UseDeleted=false</span>,<span lang="en-US">
+			</span>включает проверку ссылочной целостности, добавляя к строке
+			подключения параметр &quot;<span lang="en-US">foreign keys=true</span>&quot;<span lang="en-US">
+			(<a href="ExtDB_20.htm">ExtDB, v.309 </a></span><a href="ExtDB_20.htm">п.1</a><span lang="en-US">).</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">308</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -135,7 +155,7 @@
 			дыре в безопасности. Если другой пользователь снимал блокировку и
 			записывал документ, то пользователь, выполняющий редактирование,
 			мог перезаписать документ, даже если он потерял права на изменение
-			документа.<span lang="en-US"> </span>
+			документа. 
 			</p>
 			<p lang="en-US">7. DocUndoAction.AddDocAction() <span lang="ru-RU">не
 			выполнял инкремент поля </span>docVersion<span lang="ru-RU">, если

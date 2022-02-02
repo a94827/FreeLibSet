@@ -79,7 +79,8 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// ќткрывает базу данных по указанному пути
+    /// ќткрывает базу данных по указанному пути.
+    /// ”станавливает в строке подключени€ атрибут "foreign keys=true".
     /// </summary>
     /// <param name="path">ѕуть к базе данных. ƒолжен быть задан</param>
     /// <param name="readOnly">True - открыть базу только дл€ просмотра, false - дл€ записи</param>
@@ -95,6 +96,7 @@ namespace FreeLibSet.Data.SQLite
       SQLiteConnectionStringBuilder b = new SQLiteConnectionStringBuilder();
       b.DataSource = path.Path;
       b.ReadOnly = readOnly;
+      b.ForeignKeys = true; // 02.02.2022
       return b;
     }
 
@@ -102,7 +104,8 @@ namespace FreeLibSet.Data.SQLite
     /// Ёта верси€ конструктора предназначена дл€ создани€ базы данных в пам€ти
     /// </summary>
     public SQLiteDBx()
-      : this("Data Source=" + MemoryFileName)
+      : this("Data Source=" + MemoryFileName + 
+      ";foreign keys=true") // 02.02.2022
     {
     }
 
