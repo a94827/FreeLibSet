@@ -53,9 +53,15 @@ namespace FreeLibSet.Data.Docs
 
       #region Свойства
 
+      /// <summary>
+      /// Описание вида документа, в котором расположено ссылочное под\ле
+      /// </summary>
       public DBxDocType DetailsDocType { get { return _DetailsDocType; } }
       private DBxDocType _DetailsDocType;
 
+      /// <summary>
+      /// Описание вида поддокумента, в котором расположено ссылочное поле, или null
+      /// </summary>
       public DBxSubDocType DetailsSubDocType { get { return _DetailsSubDocType; } }
       private DBxSubDocType _DetailsSubDocType;
 
@@ -72,6 +78,9 @@ namespace FreeLibSet.Data.Docs
 
       public bool IsSubDocType { get { return DetailsSubDocType != null; } }
 
+      /// <summary>
+      /// Имя таблицы, в которой располагается ссылочное поле
+      /// </summary>
       public string DetailsTableName
       {
         get
@@ -102,8 +111,20 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
+      /// <summary>
+      /// Описание ссылочного столбца
+      /// </summary>
       public DBxColumnStruct ColumnDef { get { return _ColumnDef; } }
       private DBxColumnStruct _ColumnDef;
+
+      /// <summary>
+      /// Текстовое представление для отладки
+      /// </summary>
+      /// <returns></returns>
+      public override string ToString()
+      {
+        return "Table \"" + DetailsTableName + "\", RefColumn \"" + _ColumnDef.ColumnName + "\" -> " + _ColumnDef.MasterTableName;
+      }
 
       #endregion
     }
@@ -137,9 +158,15 @@ namespace FreeLibSet.Data.Docs
 
       #region Свойства
 
+      /// <summary>
+      /// Описание вида документа, в котором объявлена ссылка
+      /// </summary>
       public DBxDocType DetailsDocType { get { return _DetailsDocType; } }
       private DBxDocType _DetailsDocType;
 
+      /// <summary>
+      /// Описание вида поддокумента, в котором объявлена ссылка, или null.
+      /// </summary>
       public DBxSubDocType DetailsSubDocType { get { return _DetailsSubDocType; } }
       private DBxSubDocType _DetailsSubDocType;
 
@@ -156,6 +183,9 @@ namespace FreeLibSet.Data.Docs
 
       public bool IsSubDocType { get { return DetailsSubDocType != null; } }
 
+      /// <summary>
+      /// Имя таблицы, которая содержит ссылочные поля
+      /// </summary>
       public string DetailsTableName
       {
         get
@@ -186,8 +216,20 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
+      /// <summary>
+      /// Объявление переменной ссылки
+      /// </summary>
       public DBxVTReference VTRef { get { return _VTRef; } }
       private DBxVTReference _VTRef;
+
+      /// <summary>
+      /// Текстовое представление для отдадки
+      /// </summary>
+      /// <returns></returns>
+      public override string ToString()
+      {
+        return "Table \"" + DetailsTableName + "\", RefColumns \"" + _VTRef.TableColumn.ColumnName + "\"," + _VTRef.IdColumn.ColumnName;
+      }
 
       #endregion
     }
@@ -267,19 +309,20 @@ namespace FreeLibSet.Data.Docs
 
     private void AddRefs(DBxDocTypes dts, DBxBinDataHandler binDataHandler, DBxDocType detailDocType, DBxSubDocType detailSubDocType)
     {
-      DBxDocTypeBase DetailBase;
+      DBxDocTypeBase detailBase;
       if (detailSubDocType == null)
-        DetailBase = detailDocType;
+        detailBase = detailDocType;
       else
-        DetailBase = detailSubDocType;
+        detailBase = detailSubDocType;
 
-      // 1. Ссылочные поля
-      for (int i = 0; i < DetailBase.Struct.Columns.Count; i++)
+      #region 1. Ссылочные поля
+
+      for (int i = 0; i < detailBase.Struct.Columns.Count; i++)
       {
-        DBxColumnStruct ColumnDef = DetailBase.Struct.Columns[i];
-        if (!String.IsNullOrEmpty(ColumnDef.MasterTableName))
+        DBxColumnStruct columnDef = detailBase.Struct.Columns[i];
+        if (!String.IsNullOrEmpty(columnDef.MasterTableName))
         {
-          switch (ColumnDef.MasterTableName)
+          switch (columnDef.MasterTableName)
           {
             case "DocTables":
               continue;
@@ -292,39 +335,43 @@ namespace FreeLibSet.Data.Docs
           }
           DBxDocType dt1;
           DBxSubDocType sdt1;
-          if (!(ColumnDef.MasterTableName == "BinData" || ColumnDef.MasterTableName == "FileNames"))
+          if (!(columnDef.MasterTableName == "BinData" || columnDef.MasterTableName == "FileNames"))
           {
-            if (!dts.FindByTableName(ColumnDef.MasterTableName, out dt1, out sdt1))
-              throw new BugException("Объявление таблицы \"" + DetailBase.Name +
-                "\" содержит описание ссылочного поля \"" + ColumnDef.ColumnName +
-                "\", которое ссылается на неизвестную таблицу \"" + ColumnDef.MasterTableName + "\"");
+            if (!dts.FindByTableName(columnDef.MasterTableName, out dt1, out sdt1))
+              throw new BugException("Объявление таблицы \"" + detailBase.Name +
+                "\" содержит описание ссылочного поля \"" + columnDef.ColumnName +
+                "\", которое ссылается на неизвестную таблицу \"" + columnDef.MasterTableName + "\"");
           }
 
-          TableRefList List = InternalGetList(ColumnDef.MasterTableName);
+          TableRefList list = InternalGetList(columnDef.MasterTableName);
 
-          List.RefColumns.Add(new RefColumnInfo(detailDocType, detailSubDocType, ColumnDef));
+          list.RefColumns.Add(new RefColumnInfo(detailDocType, detailSubDocType, columnDef));
         }
       }
 
-      // 2. Переменные ссылки
-      for (int i = 0; i < DetailBase.VTRefs.Count; i++)
+      #endregion
+
+      #region 2. Переменные ссылки
+
+      for (int i = 0; i < detailBase.VTRefs.Count; i++)
       {
-        DBxVTReference VTRef = DetailBase.VTRefs[i];
-        for (int j = 0; j < VTRef.MasterTableNames.Length; j++)
+        DBxVTReference vtRef = detailBase.VTRefs[i];
+        for (int j = 0; j < vtRef.MasterTableNames.Length; j++)
         {
           DBxDocType dt1;
           DBxSubDocType sdt1;
-          if (!dts.FindByTableName(VTRef.MasterTableNames[j], out dt1, out sdt1))
-            throw new BugException("Объявление таблицы \"" + DetailBase.Name +
-              "\" содержит описание полей переменной ссылки \"" + VTRef.Name +
-              "\", которое ссылается на неизвестнкю таблицу \"" + VTRef.MasterTableNames[j] + "\"");
+          if (!dts.FindByTableName(vtRef.MasterTableNames[j], out dt1, out sdt1))
+            throw new BugException("Объявление таблицы \"" + detailBase.Name +
+              "\" содержит описание полей переменной ссылки \"" + vtRef.Name +
+              "\", которое ссылается на неизвестную таблицу \"" + vtRef.MasterTableNames[j] + "\"");
 
 
-          TableRefList List = InternalGetList(VTRef.MasterTableNames[j]);
-          List.VTRefs.Add(new VTRefInfo(detailDocType, detailSubDocType, VTRef));
+          TableRefList list = InternalGetList(vtRef.MasterTableNames[j]);
+          list.VTRefs.Add(new VTRefInfo(detailDocType, detailSubDocType, vtRef));
         }
       }
 
+      #endregion
     }
 
     #endregion

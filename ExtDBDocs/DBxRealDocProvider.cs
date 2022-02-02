@@ -1742,27 +1742,23 @@ namespace FreeLibSet.Data.Docs
     private void WriteChanges2(DBxDocSet docSet, DBxCon mainConUser, DocUndoHelper undoHelper,
       DBxDocProviderIdReplacer idReplacer)
     {
-      // Общее число документов
-      int TypeIndex;
-      int DocIndex;
-
       // Прерывать процесс записи, начиная с этой стадии, нельзя
-      for (TypeIndex = 0; TypeIndex < docSet.Count; TypeIndex++)
+      for (int typeIndex = 0; typeIndex < docSet.Count; typeIndex++)
       {
-        DBxMultiDocs MultiDocs = docSet[TypeIndex];
-        DBxColumns UsedColumnNames = null;
-        for (DocIndex = 0; DocIndex < MultiDocs.DocCount; DocIndex++)
+        DBxMultiDocs multiDocs = docSet[typeIndex];
+        DBxColumns usedColumnNames = null;
+        for (int docIndex = 0; docIndex < multiDocs.DocCount; docIndex++)
         {
-          DBxSingleDoc Doc = MultiDocs[DocIndex];
+          DBxSingleDoc Doc = multiDocs[docIndex];
 
           switch (Doc.DocState)
           {
             case DBxDocState.Insert:
             case DBxDocState.Edit:
-              ApplyDocChanges2(MultiDocs.DocType, mainConUser, undoHelper, Doc, idReplacer, ref UsedColumnNames);
+              ApplyDocChanges2(multiDocs.DocType, mainConUser, undoHelper, Doc, idReplacer, ref usedColumnNames);
               break;
             case DBxDocState.Delete:
-              ApplyDocDelete2(MultiDocs, mainConUser, undoHelper, Doc.DocId);
+              ApplyDocDelete2(multiDocs, mainConUser, undoHelper, Doc.DocId);
               break;
           }
         }
@@ -2263,88 +2259,96 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
-      Int32[] DeletedDocIds = multiDocs.GetDocIds(DBxDocState.Delete);
-      if (DeletedDocIds.Length > 0)
+      #region 1. Удаляемые документы
+
+      Int32[] deletedDocIds = multiDocs.GetDocIds(DBxDocState.Delete);
+      if (deletedDocIds.Length > 0)
       {
         if (_ExtRefs == null)
           _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
 
 
         // Проверка удаления документа
-        IdsFilterGenerator DocFltGen = new IdsFilterGenerator(DeletedDocIds);
+        IdsFilterGenerator docFltGen = new IdsFilterGenerator(deletedDocIds);
 
-        ApplyDocsDelete1Table(mainCon, multiDocs.DocSet, multiDocs.DocType, DocFltGen);
+        ApplyDocsDelete1Table(mainCon, multiDocs.DocSet, multiDocs.DocType, docFltGen);
         // Проверка удаления всех поддокументов
         // Проверяем наличие непустых ExtRefs
-        bool HasSubDocsExtRefs = false;
+        bool hasSubDocsExtRefs = false;
         for (int i = 0; i < multiDocs.SubDocs.Count; i++)
         {
           if (!_ExtRefs[multiDocs.SubDocs[i].SubDocType.Name].IsEmpty)
           {
-            HasSubDocsExtRefs = true;
+            hasSubDocsExtRefs = true;
             break;
           }
         }
-        if (HasSubDocsExtRefs)
+        if (hasSubDocsExtRefs)
         {
-          DocFltGen.CreateFilters("DocId");
-          for (int j = 0; j < DocFltGen.Count; j++)
+          docFltGen.CreateFilters("DocId");
+          for (int j = 0; j < docFltGen.Count; j++)
           {
             for (int i = 0; i < multiDocs.SubDocs.Count; i++)
             {
-              DBxSubDocType SubDocType = multiDocs.SubDocs[i].SubDocType;
+              DBxSubDocType subDocType = multiDocs.SubDocs[i].SubDocType;
 
-              DBxFilter filter = DocFltGen[j];
+              DBxFilter filter = docFltGen[j];
               if (DocTypes.UseDeleted) // 02.02.2022
                 filter = new AndFilter(filter, DBSSubDocType.DeletedFalseFilter);
-              IdList SubDocIds = mainCon.GetIds(SubDocType.Name, filter);
+              IdList subDocIds = mainCon.GetIds(subDocType.Name, filter);
 
-              IdsFilterGenerator SubDocFltGen = new IdsFilterGenerator(SubDocIds);
-              ApplyDocsDelete1Table(mainCon, multiDocs.DocSet, SubDocType, SubDocFltGen);
+              IdsFilterGenerator subDocFltGen = new IdsFilterGenerator(subDocIds);
+              ApplyDocsDelete1Table(mainCon, multiDocs.DocSet, subDocType, subDocFltGen);
             }
           }
         }
       }
 
-      Int32[] EditDocIds = multiDocs.GetDocIds(DBxDocState.Edit);
-      if (EditDocIds.Length > 0)
+      #endregion
+
+      #region 2. Редактируемые документы, в которых могут удаляться поддокументы
+
+      Int32[] editDocIds = multiDocs.GetDocIds(DBxDocState.Edit);
+      if (editDocIds.Length > 0)
       {
         if (_ExtRefs == null)
           _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
         // Проверяем удаляемые поддокументы в редактируемом документе
         // Проверяем наличие непустых ExtRefs
-        bool HasSubDocsExtRefs = false;
+        bool hasSubDocsExtRefs = false;
         for (int i = 0; i < multiDocs.SubDocs.Count; i++)
         {
           if (!_ExtRefs[multiDocs.SubDocs[i].SubDocType.Name].IsEmpty)
           {
-            HasSubDocsExtRefs = true;
+            hasSubDocsExtRefs = true;
             break;
           }
         }
-        if (HasSubDocsExtRefs)
+        if (hasSubDocsExtRefs)
         {
-          IdsFilterGenerator DocFltGen = new IdsFilterGenerator(EditDocIds);
-          DocFltGen.CreateFilters("DocId");
-          for (int j = 0; j < DocFltGen.Count; j++)
+          IdsFilterGenerator docFltGen = new IdsFilterGenerator(editDocIds);
+          docFltGen.CreateFilters("DocId");
+          for (int j = 0; j < docFltGen.Count; j++)
           {
             for (int i = 0; i < multiDocs.SubDocs.Count; i++)
             {
-              DBxMultiSubDocs SubDocs = multiDocs.SubDocs[i];
-              DataRow[] Rows = SubDocs.Table.Select(DocFltGen[j].ToString(), string.Empty, DataViewRowState.Deleted);
+              DBxMultiSubDocs subDocs = multiDocs.SubDocs[i];
+              DataRow[] rows = subDocs.Table.Select(docFltGen[j].ToString(), string.Empty, DataViewRowState.Deleted);
               // Так нельзя, т.к. строки помечены Deleted
-              //Int32[] SubDocIds = DataTools.GetIds(Rows);
-              Int32[] SubDocIds = new Int32[Rows.Length];
-              for (int k = 0; k < Rows.Length; k++)
-                SubDocIds[k] = DataTools.GetInt(Rows[k]["Id", DataRowVersion.Original]);
+              //Int32[] subDocIds = DataTools.GetIds(Rows);
+              Int32[] subDocIds = new Int32[rows.Length];
+              for (int k = 0; k < rows.Length; k++)
+                subDocIds[k] = DataTools.GetInt(rows[k]["Id", DataRowVersion.Original]);
 
-              IdsFilterGenerator SubDocFltGen = new IdsFilterGenerator(SubDocIds);
+              IdsFilterGenerator subDocFltGen = new IdsFilterGenerator(subDocIds);
 
-              ApplyDocsDelete1Table(mainCon, multiDocs.DocSet, SubDocs.SubDocType, SubDocFltGen);
+              ApplyDocsDelete1Table(mainCon, multiDocs.DocSet, subDocs.SubDocType, subDocFltGen);
             }
           }
         }
       }
+
+      #endregion
     }
 
     /// <summary>
@@ -2359,45 +2363,59 @@ namespace FreeLibSet.Data.Docs
       if (_ExtRefs == null)
         _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
 
-      DBxExtRefs.TableRefList ExtRefList = _ExtRefs[delType.Name];
+      DBxExtRefs.TableRefList extRefList = _ExtRefs[delType.Name];
 
-      // 1. Проверяем ссылочные поля
-      for (int i = 0; i < ExtRefList.RefColumns.Count; i++)
+      #region 1. Проверяем ссылочные поля
+
+      for (int i = 0; i < extRefList.RefColumns.Count; i++)
       {
-        DBxExtRefs.RefColumnInfo Ref = ExtRefList.RefColumns[i];
-        ApplyDocsDelete1CheckRef(mainCon, docSet, delType, delFltGen, Ref);
+        DBxExtRefs.RefColumnInfo refInfo = extRefList.RefColumns[i];
+        ApplyDocsDelete1CheckRef(mainCon, docSet, delType, delFltGen, refInfo);
       }
 
-      // 2. Проверяем VTReferences
-      for (int i = 0; i < ExtRefList.VTRefs.Count; i++)
+      #endregion
+
+      #region 2. Проверяем VTReferences
+
+      for (int i = 0; i < extRefList.VTRefs.Count; i++)
       {
-        DBxExtRefs.VTRefInfo Ref = ExtRefList.VTRefs[i];
+        DBxExtRefs.VTRefInfo refInfo = extRefList.VTRefs[i];
         if (delType.IsSubDoc)
           throw new BugException("Не может быть VTReference на поддокумент");
-        ApplyDocsDelete1CheckVTRef(mainCon, docSet, (DBxDocType)delType, delFltGen, Ref);
+        ApplyDocsDelete1CheckVTRef(mainCon, docSet, (DBxDocType)delType, delFltGen, refInfo);
       }
+
+      #endregion
     }
 
+    /// <summary>
+    /// Проверка для одного ссылочного поля
+    /// </summary>
+    /// <param name="mainCon"></param>
+    /// <param name="docSet"></param>
+    /// <param name="delType">Документы/поддокументы, которые предполагается удалять</param>
+    /// <param name="delFltGen"></param>
+    /// <param name="refInfo">Буферизованное описание ссылки</param>
     private void ApplyDocsDelete1CheckRef(DBxCon mainCon, DBxDocSet docSet, DBxDocTypeBase delType, IdsFilterGenerator delFltGen, DBxExtRefs.RefColumnInfo refInfo)
     {
-      Int32[] AllDelIds = delFltGen.GetAllIds(); // все идентификаторы удаляемых документов и поддокументов
+      Int32[] allDelIds = delFltGen.GetAllIds(); // все идентификаторы удаляемых документов и поддокументов
 
       delFltGen.CreateFilters(refInfo.ColumnDef.ColumnName);
-      DBxColumns Columns = refInfo.IsSubDocType ? _FieldsCheckDelForSubDoc : _FieldsCheckDelForDoc;
+      DBxColumns checkDelColumns = refInfo.IsSubDocType ? _FieldsCheckDelForSubDoc : _FieldsCheckDelForDoc;
 
-      DataTable DetailsTable2 = docSet.DataSet.Tables[refInfo.DetailsTableName];
+      DataTable detailsTable2 = docSet.DataSet.Tables[refInfo.DetailsTableName];
       //IdList DetailIds2 = new IdList();
 
       #region Первый проход - по записям в базе данных
 
       for (int j = 0; j < delFltGen.Count; j++)
       {
-        DataTable DetailsTable;
+        DataTable detailsTable;
         try
         {
           DBxFilter Filter = delFltGen[j];
           AddDeletedFilters(ref Filter, refInfo.DetailsType.IsSubDoc);
-          DetailsTable = mainCon.FillSelect(refInfo.DetailsTableName, Columns, Filter);
+          detailsTable = mainCon.FillSelect(refInfo.DetailsTableName, checkDelColumns, Filter);
         }
         catch (Exception e)
         {
@@ -2410,18 +2428,18 @@ namespace FreeLibSet.Data.Docs
           throw;
         }
 
-        for (int k = 0; k < DetailsTable.Rows.Count; k++)
+        for (int k = 0; k < detailsTable.Rows.Count; k++)
         {
-          if (DetailsTable2 != null)
+          if (detailsTable2 != null)
           {
-            Int32 DetailId = (Int32)(DetailsTable.Rows[k]["Id"]);
-            if (DetailsTable2.Rows.Find(DetailId) != null)
+            Int32 detailId = (Int32)(detailsTable.Rows[k]["Id"]);
+            if (detailsTable2.Rows.Find(detailId) != null)
             {
-              // DetailIds2.Add(DetailId); // проверим  на втором заходе
+              // detailIds2.Add(DetailId); // проверим  на втором заходе
               continue;
             }
           }
-          ApplyDocDelete1CheckOne(mainCon, docSet, delType, AllDelIds, refInfo.DetailsType, DetailsTable.Rows[k]);
+          ApplyDocDelete1CheckOne(mainCon, docSet, delType, allDelIds, refInfo.DetailsType, detailsTable.Rows[k]);
         }
       }
 
@@ -2429,12 +2447,12 @@ namespace FreeLibSet.Data.Docs
 
       #region Второй проход - по записям в DBxDocSet
 
-      if (DetailsTable2 != null)
+      if (detailsTable2 != null)
       {
         // Проверять надо все записи
-        IdList AllDelIdList = new IdList(AllDelIds);
+        IdList AllDelIdList = new IdList(allDelIds);
 
-        foreach (DataRow CheckRow in DetailsTable2.Rows)
+        foreach (DataRow CheckRow in detailsTable2.Rows)
         {
           if (CheckRow.RowState == DataRowState.Deleted)
             continue;
@@ -2442,7 +2460,7 @@ namespace FreeLibSet.Data.Docs
           //Int32 CheckedId = (Int32)(CheckRow["Id"]);
           Int32 RefId = DataTools.GetInt(CheckRow, refInfo.ColumnDef.ColumnName);
           if (AllDelIdList.Contains(RefId))
-            ApplyDocDelete1CheckOne(mainCon, docSet, delType, AllDelIds, refInfo.DetailsType, CheckRow);
+            ApplyDocDelete1CheckOne(mainCon, docSet, delType, allDelIds, refInfo.DetailsType, CheckRow);
         }
       }
 
@@ -2470,30 +2488,30 @@ namespace FreeLibSet.Data.Docs
     private void ApplyDocsDelete1CheckVTRef(DBxCon mainCon, DBxDocSet docSet, DBxDocType delDocType, IdsFilterGenerator delFltGen, DBxExtRefs.VTRefInfo refInfo)
     {
       delFltGen.CreateFilters(refInfo.VTRef.IdColumn.ColumnName);
-      DBxColumns Columns = refInfo.IsSubDocType ? _FieldsCheckDelForSubDoc : _FieldsCheckDelForDoc;
+      DBxColumns checkDelColumns = refInfo.IsSubDocType ? _FieldsCheckDelForSubDoc : _FieldsCheckDelForDoc;
 
-      DataTable CheckTable2 = docSet.DataSet.Tables[refInfo.DetailsTableName];
-      IdList CheckTable2UsedIds = new IdList(); // допускает и фиктивные идентификаторы
+      DataTable checkTable2 = docSet.DataSet.Tables[refInfo.DetailsTableName];
+      IdList checkTable2UsedIds = new IdList(); // допускает и фиктивные идентификаторы
 
       for (int j = 0; j < delFltGen.Count; j++)
       {
-        DataTable CheckTable = mainCon.FillSelect(refInfo.DetailsTableName,
-            Columns,
+        DataTable checkTable = mainCon.FillSelect(refInfo.DetailsTableName,
+            checkDelColumns,
             new AndFilter(new ValueFilter(refInfo.VTRef.TableColumn.ColumnName, delDocType.TableId),
             delFltGen[j]));
 
-        for (int k = 0; k < CheckTable.Rows.Count; k++)
+        for (int k = 0; k < checkTable.Rows.Count; k++)
         {
-          if (CheckTable2 != null)
+          if (checkTable2 != null)
           {
-            Int32 CheckedId = (Int32)(CheckTable.Rows[k]["Id"]);
-            if (CheckTable2.Rows.Find(CheckedId) != null)
+            Int32 CheckedId = (Int32)(checkTable.Rows[k]["Id"]);
+            if (checkTable2.Rows.Find(CheckedId) != null)
             {
-              CheckTable2UsedIds.Add(CheckedId);
+              checkTable2UsedIds.Add(CheckedId);
               continue; // проверим  на втором заходе
             }
           }
-          ApplyDocDelete1CheckOne(mainCon, docSet, delDocType, delFltGen.GetIds(j), refInfo.DetailsType, CheckTable2.Rows[k]);
+          ApplyDocDelete1CheckOne(mainCon, docSet, delDocType, delFltGen.GetIds(j), refInfo.DetailsType, checkTable2.Rows[k]);
         }
       }
     }
@@ -2503,10 +2521,10 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="mainCon">Соединение для основной базы данных</param>
     /// <param name="docSet">Записываемый набор данных</param>
-    /// <param name="delType">Описание удаляемого документа или поддокумента</param>
+    /// <param name="delType">Описание удаляемого документа или поддокумента (master)</param>
     /// <param name="delIds">Массив идентификаторов удаляемых документов или поддокументов</param>
     /// <param name="chkType">Описание документа или поддокумента, на который выполняется ссылка</param>
-    /// <param name="chkRow">Строка в детальной таблице, на которую проверяется ссылка</param>
+    /// <param name="chkRow">Строка в детальной таблице, на которую проверяется ссылка (detail)</param>
     private void ApplyDocDelete1CheckOne(DBxCon mainCon, DBxDocSet docSet, DBxDocTypeBase delType, Int32[] delIds, DBxDocTypeBase chkType, DataRow chkRow)
     {
       //// Удаленные документы / поддокументы пропускаем
@@ -2521,32 +2539,32 @@ namespace FreeLibSet.Data.Docs
       //    return;
       //}
 
-      Int32 CheckDocId = DataTools.GetInt(chkRow, chkType.IsSubDoc ? "DocId" : "Id");
+      Int32 chkDocId = DataTools.GetInt(chkRow, chkType.IsSubDoc ? "DocId" : "Id");
 
       // Проверяем, нет ли ссылающегося документа в списке удаляемых сейчас
-      DBxDocType ChkDocType = chkType.IsSubDoc ? ((DBxSubDocType)chkType).DocType : (DBxDocType)chkType;
+      DBxDocType chkDocType = chkType.IsSubDoc ? ((DBxSubDocType)chkType).DocType : (DBxDocType)chkType;
 
-      if (docSet.ContainsDocs(ChkDocType.Name)) // без этой проверки в DocSet будет добавлен новый вид документов
+      if (docSet.ContainsDocs(chkDocType.Name)) // без этой проверки в DocSet будет добавлен новый вид документов
       {
-        DBxMultiDocs MultiDocs = docSet[ChkDocType.Name];
+        DBxMultiDocs multiDocs = docSet[chkDocType.Name];
 
-        if (MultiDocs.IndexOfDocId(CheckDocId) >= 0)
+        if (multiDocs.IndexOfDocId(chkDocId) >= 0)
         {
-          DBxSingleDoc CheckDoc = MultiDocs.GetDocById(CheckDocId);
+          DBxSingleDoc chkDoc = multiDocs.GetDocById(chkDocId);
 
-          if (CheckDoc.DocState == DBxDocState.Delete)
+          if (chkDoc.DocState == DBxDocState.Delete)
             return; // документ удаляется
 
-          if (chkType.IsSubDoc && CheckDoc.DocState == DBxDocState.Edit)
+          if (chkType.IsSubDoc && chkDoc.DocState == DBxDocState.Edit)
           {
-            Int32 CheckSubDocId = DataTools.GetInt(chkRow, "Id");
-            if (MultiDocs.SubDocs.ContainsSubDocs(chkType.Name))
+            Int32 chkSubDocId = DataTools.GetInt(chkRow, "Id");
+            if (multiDocs.SubDocs.ContainsSubDocs(chkType.Name))
             {
-              DBxMultiSubDocs SubDocs = MultiDocs.SubDocs[chkType.Name];
+              DBxMultiSubDocs subDocs = multiDocs.SubDocs[chkType.Name];
 
-              DataRow[] Rows = SubDocs.Table.Select("Id=" + CheckSubDocId.ToString(),
+              DataRow[] rows = subDocs.Table.Select("Id=" + chkSubDocId.ToString(),
                 String.Empty, DataViewRowState.Deleted);
-              if (Rows.Length > 0)
+              if (rows.Length > 0)
                 return;
             }
           }
@@ -2554,6 +2572,9 @@ namespace FreeLibSet.Data.Docs
       }
 
       // Нельзя удалять документ или поддокумент, т.к. на него имеются ссылки
+
+      #region Выбрасывание DBxDocCannotDeleteException
+
       StringBuilder sb = new StringBuilder();
       if (delIds.Length == 1)
       {
@@ -2568,7 +2589,6 @@ namespace FreeLibSet.Data.Docs
         }
         else
         {
-
           sb.Append("Нельзя удалить документ \"");
           AddDocOrSubDocText(sb, delType, delIds[0]);
         }
@@ -2583,11 +2603,9 @@ namespace FreeLibSet.Data.Docs
           sb.Append("\" документа \"");
           sb.Append(delType.SingularTitle);
           sb.Append("\"");
-
         }
         else
         {
-
           sb.Append("Нельзя удалить документы \"");
           sb.Append(delType.PluralTitle);
           sb.Append("\"");
@@ -2600,14 +2618,16 @@ namespace FreeLibSet.Data.Docs
       else
         sb.Append("на один из них");
       sb.Append(" есть ссылка в документе ");
-      AddDocOrSubDocText(sb, ChkDocType, CheckDocId);
+      AddDocOrSubDocText(sb, chkDocType, chkDocId);
       if (chkType.IsSubDoc)
       {
-        Int32 CheckSubDocId = DataTools.GetInt(chkRow, "Id");
+        Int32 chkSubDocId = DataTools.GetInt(chkRow, "Id");
         sb.Append(", поддокумент ");
-        AddDocOrSubDocText(sb, chkType, CheckSubDocId);
+        AddDocOrSubDocText(sb, chkType, chkSubDocId);
       }
       throw new DBxDocCannotDeleteException(sb.ToString());
+
+      #endregion
     }
 
     private void AddDocOrSubDocText(StringBuilder sb, DBxDocTypeBase dtb, Int32 id)
@@ -2637,24 +2657,24 @@ namespace FreeLibSet.Data.Docs
 
     private void ApplyDocDelete2(DBxMultiDocs multiDocs, DBxCon mainConUser, DocUndoHelper undoHelper, Int32 docId)
     {
-      int CurrVersion = 0;
+      int currVersion = 0;
       if (DocTypes.UseVersions)
-        CurrVersion = DataTools.GetInt(mainConUser.GetValue(multiDocs.DocType.Name, docId, "Version"));
+        currVersion = DataTools.GetInt(mainConUser.GetValue(multiDocs.DocType.Name, docId, "Version"));
 
       if (DocTypes.UseDeleted)
       {
         /*Int32 DocActionId = */
-        undoHelper.AddDocAction(multiDocs.DocType, docId, UndoAction.Delete, ref CurrVersion);
-        Hashtable FieldPairs = new Hashtable();
+        undoHelper.AddDocAction(multiDocs.DocType, docId, UndoAction.Delete, ref currVersion);
+        Hashtable fieldPairs = new Hashtable();
         // Добавляем значения изменяемых полей
         if (DocTypes.UseVersions)
-          FieldPairs.Add("Version", CurrVersion);
+          fieldPairs.Add("Version", currVersion);
         if (DocTypes.UseUsers) // 16.08.2018
-          FieldPairs.Add("ChangeUserId", undoHelper.UserId);
+          fieldPairs.Add("ChangeUserId", undoHelper.UserId);
         if (DocTypes.UseTime) // 01.02.2022
-          FieldPairs.Add("ChangeTime", undoHelper.ActionTime);
-        FieldPairs.Add("Deleted", true);
-        mainConUser.SetValues(multiDocs.DocType.Name, docId, FieldPairs);
+          fieldPairs.Add("ChangeTime", undoHelper.ActionTime);
+        fieldPairs.Add("Deleted", true);
+        mainConUser.SetValues(multiDocs.DocType.Name, docId, fieldPairs);
       }
       else
       {
@@ -2666,13 +2686,13 @@ namespace FreeLibSet.Data.Docs
         mainConUser.Delete(multiDocs.DocType.Name, docId);
       }
 
-      DataRow Row = multiDocs.GetDocById(docId).Row;
+      DataRow row = multiDocs.GetDocById(docId).Row;
 
       // Нельзя устанавливать значения для удаленной строки напрямую
-      Row.RejectChanges();
+      row.RejectChanges();
       if (DocTypes.UseVersions)
-        Row["Version"] = CurrVersion;
-      Row.Delete();
+        row["Version"] = currVersion;
+      row.Delete();
 
       // Удаляем буферизованные остатки
       // TODO: if (DocType.Buffering != null)
