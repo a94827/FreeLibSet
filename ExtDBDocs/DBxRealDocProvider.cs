@@ -2782,6 +2782,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Выполнение реального удаления документов и поддокументов при UseDeleted=false
     /// </summary>
+    /// <param name="mainConUser"></param>
     /// <param name="realDel"></param>
     private void ApplyRealDelete(DBxCon mainConUser, RealDelList realDel)
     {

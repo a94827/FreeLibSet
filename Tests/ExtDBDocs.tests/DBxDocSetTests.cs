@@ -428,6 +428,31 @@ namespace ExtDBDocs_tests.Data_Docs
       AssertTestDoc(info, docId, "", true, 2, "ABC");
     }
 
+    [Test]
+    public void InsertCopy([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].View(docId1);
+
+      ds.InsertCopy();
+      Assert.AreEqual(DBxDocState.Insert, ds.DocState, "DocState");
+      Assert.AreEqual(1, ds.DocCount, "DocCount");
+
+      doc.Values["F102"].SetInteger(10);
+
+      ds.ApplyChanges(true);
+      doc = ds["D1"][0];
+      Int32 docId2 = doc.DocId;
+      Assert.AreNotEqual(docId1, docId2, "DocId");
+
+      AssertTestDoc(info, docId1, "#1", true, 2, "ABC");
+      AssertTestDoc(info, docId2, "#2", true, 10, "ABC");
+    }
+
+
     #endregion
 
     #region Групповое редактирование документов
@@ -718,7 +743,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #endregion
 
-    #region Тестирование прочих свойств
+    #region Тестирование прочих свойств и методов
 
 #if XXX // Свойство убрано
     [Test]
@@ -741,7 +766,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(propValue ? 2 : 1, doc.Version, "Version");
     }
 #endif
-    
+
     [Test]
     public void DocCount_and_DocState()
     {
@@ -854,6 +879,55 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(3, sdVals2["F111"].MaxLength, "F111 MaxLength #2");
       Assert.AreEqual(10, sdVals1["F112"].MaxLength, "F111 MaxLength #1");
       Assert.AreEqual(10, sdVals2["F112"].MaxLength, "F111 MaxLength #2");
+    }
+
+    [Test]
+    public void Clear()
+    {
+      TestDBInfo info = this[true, true, true];
+      Int32 docId1 = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId1);
+      doc.Values["F102"].SetInteger(10);
+      ds.Clear();
+      ds.ApplyChanges(false);
+
+      AssertTestDoc(info, docId1, "Changes must be rejected", true, 2, "ABC"); 
+    }
+
+    [Test]
+    public void ClearView()
+    {
+      TestDBInfo info = this[true, true, true];
+      Int32 docId1 = CreateTestDoc(info, false, 1);
+      Int32 docId2 = CreateTestDoc(info, false, 2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Edit(docId1);
+      doc1.Values["F102"].SetInteger(10);
+      DBxSingleDoc doc2 = ds["D1"].View(docId2);
+      ds.ClearView();
+      ds.ApplyChanges(false);
+
+      AssertTestDoc(info, docId1, "#1", false, 10);
+      AssertTestDoc(info, docId2, "#2", false, 2);
+    }
+
+
+    [Test]
+    public void ChangeDocState()
+    {
+      TestDBInfo info = this[true, true, true];
+      Int32 docId1 = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId1);
+      doc.Values["F102"].SetInteger(10);
+      ds.ChangeDocState(DBxDocState.Edit, DBxDocState.Delete);
+      ds.ApplyChanges(false);
+
+      AssertTestDocDeleted(info, docId1, "");
     }
 
     #endregion
@@ -1308,6 +1382,98 @@ namespace ExtDBDocs_tests.Data_Docs
     }
 
     #endregion
+
+    #endregion
+
+    #region Длительные блокировки
+
+    [Test]
+    public void AddLongLock_whole([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1, docId2;
+      CreateTestCrossRefDoc(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Edit(docId1);
+      ds["D2"].View(docId2);
+      Guid g = ds.AddLongLock();
+      Assert.AreNotEqual(Guid.Empty, g, "Guid");
+
+      DBxDocSelection docSel1 = new DBxDocSelection(info.Provider.DBIdentity, "D1", docId1);
+      DBxDocSelection docSel2 = new DBxDocSelection(info.Provider.DBIdentity, "D2", docId2);
+
+      Assert.Catch(delegate() { TestEditLockedDoc(info, docSel1); }, "locked doc #1");
+      TestEditLockedDoc(info, docSel2);
+
+      ds.ApplyChanges(true);
+
+      // Блокировка не должна была исчезнуть
+      Assert.Catch(delegate() { TestEditLockedDoc(info, docSel1); }, "locked doc #2");
+
+      ds.RemoveLongLock(g);
+
+      TestEditLockedDoc(info, docSel1);
+    }
+
+    [Test]
+    public void AddLongLock_docsel([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1, docId2;
+      CreateTestCrossRefDoc(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+
+      ds["D1"].View(docId1);
+      ds["D2"].View(docId2);
+      DBxDocSelection docSel = ds.GetDocSelection(DBxDocState.View); // 2 документа
+      Guid g = ds.AddLongLock(docSel);
+      Assert.AreNotEqual(Guid.Empty, g, "Guid");
+
+      DBxDocSelection docSel1 = new DBxDocSelection(info.Provider.DBIdentity, "D1", docId1);
+      DBxDocSelection docSel2 = new DBxDocSelection(info.Provider.DBIdentity, "D2", docId2);
+
+      Assert.Catch(delegate() { TestEditLockedDoc(info, docSel1); }, "locked doc #1");
+      Assert.Catch(delegate() { TestEditLockedDoc(info, docSel2); }, "locked doc #2");
+
+      ds.RemoveLongLock(g);
+
+      TestEditLockedDoc(info, docSel1);
+      TestEditLockedDoc(info, docSel2);
+    }
+
+    [Test]
+    public void AddLongLock_secondtry([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1, docId2;
+      CreateTestCrossRefDoc(info, out docId1, out docId2);
+
+      DBxDocSet ds1 = new DBxDocSet(info.Provider);
+      ds1["D1"].Edit(docId1);
+      ds1["D2"].View(docId2);
+      Guid g = ds1.AddLongLock();
+      Assert.AreNotEqual(Guid.Empty, g, "Guid");
+
+      DBxDocSet ds2 = new DBxDocSet(info.Provider);
+      ds2["D1"].Edit(docId1); // это должно работать
+      Assert.Catch(delegate() { ds2.AddLongLock(); });
+    }
+
+
+
+    /// <summary>
+    /// Открываем на редактирование и сохраняем документы без изменения
+    /// </summary>
+    /// <param name="info"></param>
+    /// <param name="docSel"></param>
+    private void TestEditLockedDoc(TestDBInfo info, DBxDocSelection docSel)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds.Edit(docSel);
+      ds.ApplyChanges(false);
+    }
 
     #endregion
 
