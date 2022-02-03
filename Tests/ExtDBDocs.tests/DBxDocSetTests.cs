@@ -159,7 +159,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.IsTrue(sut.DocSelection.IsEmpty, "DocSelection");
       Assert.AreEqual(DBxDocState.None, sut.DocState, "DocState");
       Assert.AreEqual(DBxDocState.None, sut.DocStateNoView, "DocStateNoNew");
-      Assert.IsFalse(sut.EditIfNotChanged, "EditIfNotChanged");
+      //Assert.IsFalse(sut.EditIfNotChanged, "EditIfNotChanged");
       Assert.IsFalse(sut.IgnoreAllLocks, "IgnoreAllLocks");
       Assert.AreEqual(0, sut.IgnoredLocks.Count, "IgnoredLocks");
       Assert.IsFalse(sut.IsDataModified, "IsDataModified");
@@ -720,6 +720,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Тестирование прочих свойств
 
+#if XXX // Свойство убрано
     [Test]
     [Ignore("EditIfNotChanged does not work")]
     public void EditIfNotChanged([Values(false, true)] bool useDeleted, [Values(false, true)] bool useTime,
@@ -739,7 +740,8 @@ namespace ExtDBDocs_tests.Data_Docs
       doc = ds["D1"].View(docId);
       Assert.AreEqual(propValue ? 2 : 1, doc.Version, "Version");
     }
-
+#endif
+    
     [Test]
     public void DocCount_and_DocState()
     {
