@@ -124,6 +124,7 @@ namespace FreeLibSet.Data.Docs
     public void Delete()
     {
       CheckNotReadOnly();
+      Doc.CheckCanDeleteSubDocs(); // 03.02.2022
 
       // Требуется получение списка
       DataRow[] SubDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);

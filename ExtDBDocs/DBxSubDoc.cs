@@ -219,6 +219,7 @@ namespace FreeLibSet.Data.Docs
     public void Delete()
     {
       MultiSubDocs.CheckCanModify();
+      Doc.CheckCanDeleteSubDocs(); // 03.02.2022
 
       MultiSubDocs.ResetRowsForDocRow(Doc.Row);
 

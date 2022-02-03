@@ -506,6 +506,19 @@ namespace FreeLibSet.Data.Docs
     //  DocProvider.TestDocument(this, reason);
     //}
 
+    internal void CheckCanDeleteSubDocs()
+    {
+      switch (DocState)
+      {
+        case DBxDocState.Edit:
+        case DBxDocState.Insert:
+          break;
+        default:
+          throw new InvalidOperationException("Нельзя удалять поддокумент, относящийся к документу " +
+            this.ToString() + ". Документ должен быть в состоянии Edit или Insert");
+      }
+    }
+
     #endregion
 
     #region Копирование

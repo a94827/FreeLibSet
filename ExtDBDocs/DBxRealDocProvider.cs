@@ -12,6 +12,7 @@ using FreeLibSet.Config;
 using System.Diagnostics;
 using FreeLibSet.Logging;
 using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.Data.Docs
 {
@@ -1742,6 +1743,14 @@ namespace FreeLibSet.Data.Docs
     private void WriteChanges2(DBxDocSet docSet, DBxCon mainConUser, DocUndoHelper undoHelper,
       DBxDocProviderIdReplacer idReplacer)
     {
+      // 03.02.2022
+      // Собираем идентификаторы, которые нужно реально удалять.
+      // Ключ - имя таблицы документа или поддокумента
+      // Значение - удаляемые идентификаторы
+      RealDelList realDel = null;
+      if (!DocTypes.UseDeleted)
+        realDel = new RealDelList();
+
       // Прерывать процесс записи, начиная с этой стадии, нельзя
       for (int typeIndex = 0; typeIndex < docSet.Count; typeIndex++)
       {
@@ -1755,90 +1764,94 @@ namespace FreeLibSet.Data.Docs
           {
             case DBxDocState.Insert:
             case DBxDocState.Edit:
-              ApplyDocChanges2(multiDocs.DocType, mainConUser, undoHelper, Doc, idReplacer, ref usedColumnNames);
+              ApplyDocChanges2(multiDocs.DocType, mainConUser, undoHelper, Doc, idReplacer, ref usedColumnNames, realDel);
               break;
             case DBxDocState.Delete:
-              ApplyDocDelete2(multiDocs, mainConUser, undoHelper, Doc.DocId);
+              ApplyDocDelete2(multiDocs, mainConUser, undoHelper, Doc.DocId, realDel);
               break;
           }
         }
       }
+
+      if (!DocTypes.UseDeleted)
+        ApplyRealDelete(mainConUser, realDel);
     }
 
     /// <summary>
     /// Второй проход - Обработка записи для одного документа в режимах Insert и Edit
     /// </summary>
     private void ApplyDocChanges2(DBxDocType docType, DBxCon mainConUser, DocUndoHelper undoHelper,
-      DBxSingleDoc Doc,
-      DBxDocProviderIdReplacer IdReplacer, ref DBxColumns UsedColumnNames1)
+      DBxSingleDoc doc,
+      DBxDocProviderIdReplacer IdReplacer, ref DBxColumns UsedColumnNames1,
+      RealDelList realDel)
     {
       //  SingleDocChangesInfo SingleChanges=MultiChanges.Docs[DocIndex];
-      Int32 DocId = Doc.DocId; // идентификатор документа
+      Int32 docId = doc.DocId; // идентификатор документа
 
       // Это первый вызов ApplyChanges для этого документа ?
-      bool FirstCall = (Doc.MultiDocs.GetDocIdActionId(Doc.DocId) == 0);
+      bool firstCall = (doc.MultiDocs.GetDocIdActionId(doc.DocId) == 0);
       // Будет ли выполняться добавление строки в основную таблицу данных ?
-      bool DocRealAdded = Doc.DocState == DBxDocState.Insert && FirstCall;
+      bool docRealAdded = doc.DocState == DBxDocState.Insert && firstCall;
 
-      bool IsModified = Doc.IsDataModified;
+      bool isModified = doc.IsDataModified;
 
       // Определяем, есть ли какие-нибудь изменения
       // В режиме вставки изменения не имеют значения
       // Должно идти после обработчиков DocType, т.к. они могут вносить 
       // дополнительные изменения
-      if ((!DocRealAdded) && (!IsModified) && (!Doc.Deleted))
+      if ((!docRealAdded) && (!isModified) && (!doc.Deleted))
         return;
 
       // Текущая версия документа
-      int CurrVersion = 0;
+      int currVersion = 0;
       if (DocTypes.UseVersions)
       {
-        if (!DocRealAdded)
-          CurrVersion = DataTools.GetInt(mainConUser.GetValue(docType.Name, DocId, "Version"));
+        if (!docRealAdded)
+          currVersion = DataTools.GetInt(mainConUser.GetValue(docType.Name, docId, "Version"));
       }
 
-      if (FirstCall)
+      if (firstCall)
       {
-        UndoAction Action;
-        if (Doc.DocState == DBxDocState.Edit)
-          Action = UndoAction.Edit;
+        UndoAction action;
+        if (doc.DocState == DBxDocState.Edit)
+          action = UndoAction.Edit;
         else
-          Action = UndoAction.Insert;
-        Int32 DocActionId = undoHelper.AddDocAction(docType, DocId, Action, ref CurrVersion);
+          action = UndoAction.Insert;
+        Int32 docActionId = undoHelper.AddDocAction(docType, docId, action, ref currVersion);
         // Сообщаем о действии
-        Doc.MultiDocs.SetDocIdActionId(DocId, DocActionId);
+        doc.MultiDocs.SetDocIdActionId(docId, docActionId);
       }
 
 #if DEBUG
       if (DocTypes.UseVersions)
       {
-        if (Doc.DocState == DBxDocState.Insert)
+        if (doc.DocState == DBxDocState.Insert)
         {
-          if (FirstCall)
+          if (firstCall)
           {
             // 05.02.2018
             // При повторных вызовах сохранения созданного документа, версия не обязана сохраняться.
             // Она сохраняется, только если пользователь держит длительную блокировку.
             // Однако, это не является обязательным, и другой пользователь может переписать документ
 
-            if (CurrVersion != 1)
+            if (currVersion != 1)
             {
-              Exception e = new BugException("При создании документа должна быть версия 1, а не " + CurrVersion.ToString());
-              e.Data["FirstCall"] = FirstCall;
-              e.Data["DocRealAdded"] = DocRealAdded;
-              AddExceptionInfo(e, Doc);
+              Exception e = new BugException("При создании документа должна быть версия 1, а не " + currVersion.ToString());
+              e.Data["FirstCall"] = firstCall;
+              e.Data["DocRealAdded"] = docRealAdded;
+              AddExceptionInfo(e, doc);
               throw e;
             }
           }
         }
         else
         {
-          if (CurrVersion < 2)
+          if (currVersion < 2)
           {
-            Exception e = new BugException("При изменении/удалении документа должна быть версия, больше 1, а не " + CurrVersion.ToString());
-            AddExceptionInfo(e, Doc);
-            e.Data["FirstCall"] = FirstCall;
-            e.Data["DocRealAdded"] = DocRealAdded;
+            Exception e = new BugException("При изменении/удалении документа должна быть версия, больше 1, а не " + currVersion.ToString());
+            AddExceptionInfo(e, doc);
+            e.Data["FirstCall"] = firstCall;
+            e.Data["DocRealAdded"] = docRealAdded;
             throw e;
           }
         }
@@ -1849,10 +1862,10 @@ namespace FreeLibSet.Data.Docs
       // Формируем поля для основной записи
       Hashtable fieldPairs = new Hashtable();
 
-      bool hasPairs = AddUserFieldPairs(fieldPairs, Doc.Row, DocRealAdded, DBPermissions, mainConUser, ref UsedColumnNames1, Doc.DocType.Struct);
+      bool hasPairs = AddUserFieldPairs(fieldPairs, doc.Row, docRealAdded, DBPermissions, mainConUser, ref UsedColumnNames1, doc.DocType.Struct);
 
       // Добавляем значения служебных полей
-      if (Doc.DocState == DBxDocState.Insert && FirstCall)
+      if (doc.DocState == DBxDocState.Insert && firstCall)
       {
         // Первое действие для данного документа
         if (DocTypes.UseUsers)
@@ -1872,8 +1885,8 @@ namespace FreeLibSet.Data.Docs
       }
       if (DocTypes.UseVersions)
       {
-        fieldPairs.Add("Version", CurrVersion);
-        Doc.Row["Version"] = CurrVersion;
+        fieldPairs.Add("Version", currVersion);
+        doc.Row["Version"] = currVersion;
       }
       if (DocTypes.UseDeleted)
       {
@@ -1888,22 +1901,22 @@ namespace FreeLibSet.Data.Docs
         // - Пользователь 2 удаляет документ
         // - Пользователь 1 сохраняет документ еще раз. При этом поле "Deleted" явно нуждается в установке в FALSE
         fieldPairs.Add("Deleted", false); // Отменяем удаление
-        Doc.Row["Deleted"] = false;
+        doc.Row["Deleted"] = false;
       }
 
       if (DocTypes.UseVersions)
       {
 #if DEBUG
-        if (CurrVersion < 1)
+        if (currVersion < 1)
         {
           Exception e = new BugException("CurrVersion=0");
-          AddExceptionInfo(e, Doc);
+          AddExceptionInfo(e, doc);
           throw e;
         }
 #endif
 
-        if (Doc.DocState == DBxDocState.Insert || hasPairs)
-          fieldPairs.Add("Version2", CurrVersion);
+        if (doc.DocState == DBxDocState.Insert || hasPairs)
+          fieldPairs.Add("Version2", currVersion);
       }
 
       // TODO: FieldPairs.Add("CheckState", DocumentCheckState.Unchecked); // Отменяем результаты проверки
@@ -1914,9 +1927,9 @@ namespace FreeLibSet.Data.Docs
 
 
       // Выполняем добавление записи или обновление
-      if (DocRealAdded)
+      if (docRealAdded)
       {
-        fieldPairs.Add("Id", DocId);
+        fieldPairs.Add("Id", docId);
         mainConUser.AddRecord(docType.Name, fieldPairs);
       }
       else
@@ -1925,39 +1938,39 @@ namespace FreeLibSet.Data.Docs
         // TODO:   DocType.Buffering.ClearSinceId(Caller, DocId);
 
         if (fieldPairs.Count > 0) // 01.02.2022
-          mainConUser.SetValues(docType.Name, DocId, fieldPairs);
+          mainConUser.SetValues(docType.Name, docId, fieldPairs);
       }
 
       // Записываем поддокументы
-      for (int i = 0; i < Doc.DocType.SubDocs.Count; i++)
+      for (int i = 0; i < doc.DocType.SubDocs.Count; i++)
       {
-        string SubDocTypeName = Doc.DocType.SubDocs[i].Name;
-        if (!Doc.MultiDocs.SubDocs.ContainsModified(SubDocTypeName))
+        string SubDocTypeName = doc.DocType.SubDocs[i].Name;
+        if (!doc.MultiDocs.SubDocs.ContainsModified(SubDocTypeName))
           continue;
 
-        DBxSingleSubDocs sds = Doc.SubDocs[SubDocTypeName];
+        DBxSingleSubDocs sds = doc.SubDocs[SubDocTypeName];
         if (sds.SubDocCount == 0)
           continue;
 
         DBxTableStruct ts = sds.SubDocs.SubDocType.Struct;
 
-        DBxColumns UsedColumnNames2 = null;
+        DBxColumns usedColumnNames2 = null;
 
-        foreach (DBxSubDoc SubDoc in sds)
+        foreach (DBxSubDoc subDoc in sds)
         {
-          switch (SubDoc.SubDocState)
+          switch (subDoc.SubDocState)
           {
             case DBxDocState.Insert:
-              bool SubDocRealAdded = IdReplacer.IsAdded(SubDocTypeName, SubDoc.SubDocId);
-              SubApplyChange1(SubDoc, mainConUser, ts, SubDocRealAdded, CurrVersion, ref UsedColumnNames2);
+              bool SubDocRealAdded = IdReplacer.IsAdded(SubDocTypeName, subDoc.SubDocId);
+              SubApplyChange1(subDoc, mainConUser, ts, SubDocRealAdded, currVersion, ref usedColumnNames2);
               break;
             case DBxDocState.Edit:
-              if (!SubDoc.IsDataModified)
+              if (!subDoc.IsDataModified)
                 continue; // ничего не поменялось
-              SubApplyChange1(SubDoc, mainConUser, ts, false, CurrVersion, ref UsedColumnNames2);
+              SubApplyChange1(subDoc, mainConUser, ts, false, currVersion, ref usedColumnNames2);
               break;
             case DBxDocState.Delete:
-              SubApplyDelete1(SubDoc, mainConUser, CurrVersion);
+              SubApplyDelete1(subDoc, mainConUser, currVersion, realDel);
               break;
           }
         }
@@ -2137,19 +2150,25 @@ namespace FreeLibSet.Data.Docs
         mainConUser.SetValues(tableDef.TableName, subDoc.SubDocId, FieldPairs);
     }
 
-    private void SubApplyDelete1(DBxSubDoc subDoc, DBxCon mainConUser, int docVersion)
+    private void SubApplyDelete1(DBxSubDoc subDoc, DBxCon mainConUser, int docVersion,
+      RealDelList realDel)
     {
-      Int32 SubDocId = (Int32)(subDoc.Row["Id", DataRowVersion.Original]);
+      Int32 subDocId = (Int32)(subDoc.Row["Id", DataRowVersion.Original]);
+#if DEBUG
+      CheckIsRealDocId(subDocId);
+#endif
       if (DocTypes.UseDeleted)
       {
         if (DocTypes.UseVersions)
-          mainConUser.SetValues(subDoc.SubDocType.Name, SubDocId, new DBxColumns("Deleted,Version2"),
+          mainConUser.SetValues(subDoc.SubDocType.Name, subDocId, new DBxColumns("Deleted,Version2"),
             new object[] { true, docVersion });
         else
-          mainConUser.SetValue(subDoc.SubDocType.Name, SubDocId, "Deleted", true); // 01.02.2022
+          mainConUser.SetValue(subDoc.SubDocType.Name, subDocId, "Deleted", true); // 01.02.2022
       }
       else
-        mainConUser.Delete(subDoc.SubDocType.Name, SubDocId);
+      {
+        realDel[subDoc.SubDocType.Name, false].Add(subDocId);
+      }
     }
 
     #endregion
@@ -2653,9 +2672,70 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
+    /// <summary>
+    /// Хранение идентификаторов документов и поддокументов для реального удаления
+    /// </summary>
+    private class RealDelList
+    {
+      #region Конструктор
+
+      public RealDelList()
+      {
+        _Dict = new Dictionary<string, TableInfo>();
+      }
+
+      #endregion
+
+      #region Словарь
+
+      /// <summary>
+      /// Информация по одной таблице
+      /// </summary>
+      public struct TableInfo
+      {
+        #region Поля
+
+        /// <summary>
+        /// Идентификаторы документов и поддокументов, которые надо удалять по полю "Id"
+        /// </summary>
+        public IdList DelById;
+
+        /// <summary>
+        /// Идентификаторы поддокументов, которые надо удалять по полю "DocId"
+        /// </summary>
+        public IdList DelByDocId;
+
+        #endregion
+      }
+
+      public IdList this[string tableName, bool byDocId]
+      {
+        get
+        {
+          TableInfo ti;
+          if (!_Dict.TryGetValue(tableName, out ti))
+          {
+            ti = new TableInfo();
+            ti.DelById = new IdList();
+            ti.DelByDocId = new IdList();
+            _Dict.Add(tableName, ti);
+          }
+          if (byDocId)
+            return ti.DelByDocId;
+          else
+            return ti.DelById;
+        }
+      }
+
+      public Dictionary<string, TableInfo> Dict { get { return _Dict; } }
+      private Dictionary<string, TableInfo> _Dict;
+
+      #endregion
+    }
+
     #region Выполнение удаления
 
-    private void ApplyDocDelete2(DBxMultiDocs multiDocs, DBxCon mainConUser, DocUndoHelper undoHelper, Int32 docId)
+    private void ApplyDocDelete2(DBxMultiDocs multiDocs, DBxCon mainConUser, DocUndoHelper undoHelper, Int32 docId, RealDelList realDel)
     {
       int currVersion = 0;
       if (DocTypes.UseVersions)
@@ -2681,9 +2761,9 @@ namespace FreeLibSet.Data.Docs
         // 01.02.2022
         // Удаляем все поддокументы
         foreach (DBxSubDocType sdt in multiDocs.DocType.SubDocs)
-          mainConUser.Delete(sdt.Name, new ValueFilter("DocId", docId));
+          realDel[sdt.Name, true].Add(docId);
 
-        mainConUser.Delete(multiDocs.DocType.Name, docId);
+        realDel[multiDocs.DocType.Name, false].Add(docId);
       }
 
       DataRow row = multiDocs.GetDocById(docId).Row;
@@ -2697,6 +2777,83 @@ namespace FreeLibSet.Data.Docs
       // Удаляем буферизованные остатки
       // TODO: if (DocType.Buffering != null)
       // TODO:   DocType.Buffering.ClearSinceId(Caller, DocId);
+    }
+
+    /// <summary>
+    /// Выполнение реального удаления документов и поддокументов при UseDeleted=false
+    /// </summary>
+    /// <param name="realDel"></param>
+    private void ApplyRealDelete(DBxCon mainConUser, RealDelList realDel)
+    {
+      if (realDel.Dict.Count == 0)
+        return;
+
+      // Имена таблиц документов/поддокументов, которые надо удалять в первую очередь
+      SingleScopeList<string> firstPriorityTableNames = new SingleScopeList<string>();
+
+      foreach (KeyValuePair<string, RealDelList.TableInfo> pair in realDel.Dict)
+      {
+        #region Обнуление ссылок
+
+        // Ссылки VTRef игнорируются, т.к. это не настоящие ссылки с точки зрения БД, их не надо обнулять
+        // Нельзя использовать DBxExtRefs (поле _ExtRefs), т.к. там идет группировка по мастер-таблице, а
+        // не по документу/поддокументу, содержащему ссылку
+        DBxTableStruct str = DocTypes.FindByTableName(pair.Key).Struct;
+        List<String> nullableCols = null;
+        foreach (DBxColumnStruct columnDef in str.Columns)
+        {
+          if (String.IsNullOrEmpty(columnDef.MasterTableName))
+            continue;
+
+          // Обнуление имеет смысл только для ссылок на таблицы, которые есть среди удаляемых
+          if (!realDel.Dict.ContainsKey(columnDef.MasterTableName))
+            continue; // в большинстве случае будут ссылки, которые никому не мешают
+
+          if (columnDef.Nullable)
+          {
+            if (nullableCols == null)
+              nullableCols = new List<string>();
+            nullableCols.Add(columnDef.ColumnName);
+          }
+          else
+            firstPriorityTableNames.Add(pair.Key); // нужно удалять в первую очередь
+        }
+
+        if (nullableCols != null)
+        {
+          Hashtable fieldPairs = new Hashtable();
+          foreach (string colName in nullableCols)
+            fieldPairs.Add(colName, null);
+
+          if (pair.Value.DelById.Count > 0)
+            mainConUser.SetValues(pair.Key, new IdsFilter("Id", pair.Value.DelById), fieldPairs);
+          if (pair.Value.DelByDocId.Count > 0)
+            mainConUser.SetValues(pair.Key, new IdsFilter("DocId", pair.Value.DelByDocId), fieldPairs);
+        }
+
+        #endregion
+      }
+
+      #region Вызов DELETE
+
+      foreach (string tableName in firstPriorityTableNames)
+        ApplyRealDeleteOneTable(mainConUser, tableName, realDel.Dict[tableName]);
+
+      foreach (KeyValuePair<string, RealDelList.TableInfo> pair in realDel.Dict)
+      {
+        if (!firstPriorityTableNames.Contains(pair.Key))
+          ApplyRealDeleteOneTable(mainConUser, pair.Key, pair.Value);
+      }
+
+      #endregion
+    }
+
+    private void ApplyRealDeleteOneTable(DBxCon mainConUser, string tableName, RealDelList.TableInfo tableInfo)
+    {
+      if (tableInfo.DelById.Count > 0)
+        mainConUser.Delete(tableName, new IdsFilter("Id", tableInfo.DelById));
+      if (tableInfo.DelByDocId.Count > 0)
+        mainConUser.Delete(tableName, new IdsFilter("DocId", tableInfo.DelByDocId));
     }
 
     #endregion

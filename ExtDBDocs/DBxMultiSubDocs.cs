@@ -1566,9 +1566,13 @@ namespace FreeLibSet.Data.Docs
 
 
       // При удалении нужно сбрасывать списки поддокументов, т.к. строки в состоянии Added удаляются из списка
-      Int32[] DocIds = DataTools.GetIdsFromColumn(_Table, "DocId");
-      for (int i = 0; i < DocIds.Length; i++)
-        ResetRowsForDocId(DocIds[i]);
+      Int32[] docIds = DataTools.GetIdsFromColumn(_Table, "DocId");
+      for (int i = 0; i < docIds.Length; i++)
+      {
+        ResetRowsForDocId(docIds[i]);
+        DBxSingleDoc doc = Owner.GetDocById(docIds[i]);
+        doc.CheckCanDeleteSubDocs(); // 03.02.2022
+      }
 
       for (int i = 0; i < _Table.Rows.Count; i++)
         _Table.Rows[i].Delete();
@@ -1590,6 +1594,7 @@ namespace FreeLibSet.Data.Docs
       {
         DBxSubDoc SubDoc = GetSubDocById(subDocIds[i]);
         DocIds.Add(SubDoc.DocId);
+        SubDoc.Doc.CheckCanDeleteSubDocs(); // 03.02.2022
         SubDoc.Delete();
       }
 

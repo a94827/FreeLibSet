@@ -533,6 +533,21 @@ namespace ExtDBDocs_tests.Data_Docs
       AssertTestDoc(info, docId, "", true, 1, "ABC");
     }
 
+    [TestCase(DBxDocState.View)]
+    [TestCase(DBxDocState.Delete)]
+    public void DeleteSubDoc_FailByDocState(DBxDocState docState)
+    {
+      TestDBInfo info = this[false, false, false];
+      Int32 docId = CreateTestDoc(info, true, 1, "ABC");
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].View(docId);
+      if (docState == DBxDocState.Delete)
+        doc.Delete();
+
+      Assert.Catch(delegate() { doc.SubDocs["SD11"].Delete(); });
+    }
+
     #endregion
 
     #region Редактирование поддокументов
@@ -705,9 +720,8 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Тестирование прочих свойств
 
-    // TODO: EditIfNotChanged
-#if XXX
     [Test]
+    [Ignore("EditIfNotChanged does not work")]
     public void EditIfNotChanged([Values(false, true)] bool useDeleted, [Values(false, true)] bool useTime,
       [Values(false, true)] bool propValue)
     {
@@ -725,7 +739,6 @@ namespace ExtDBDocs_tests.Data_Docs
       doc = ds["D1"].View(docId);
       Assert.AreEqual(propValue ? 2 : 1, doc.Version, "Version");
     }
-#endif
 
     [Test]
     public void DocCount_and_DocState()
@@ -862,6 +875,7 @@ namespace ExtDBDocs_tests.Data_Docs
       doc2 = ds["D1"][0];
 
       Assert.AreEqual(docId1, doc2.Values["F104"].AsInteger, "Doc2");
+      AssertTestDoc(info, doc2.DocId, "Doc #2", false, 0);
     }
 
     [Test]
@@ -872,11 +886,11 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc1 = ds["D1"].Insert();
       doc1.Values["F101"].SetBoolean(false);
-      doc1.Values["F102"].SetInteger(0);
+      doc1.Values["F102"].SetInteger(1);
 
       DBxSingleDoc doc2 = ds["D1"].Insert();
       doc2.Values["F101"].SetBoolean(false);
-      doc2.Values["F102"].SetInteger(0);
+      doc2.Values["F102"].SetInteger(2);
       doc2.Values["F104"].SetInteger(doc1.DocId); // фиктивный идентификатор
 
       ds.ApplyChanges(true);
@@ -884,128 +898,85 @@ namespace ExtDBDocs_tests.Data_Docs
       doc2 = ds["D1"][1];
 
       Assert.AreEqual(doc1.DocId, doc2.Values["F104"].AsInteger);
+      AssertTestDoc(info, doc1.DocId, "Doc #1", false, 1);
+      AssertTestDoc(info, doc2.DocId, "Doc #2", false, 2);
     }
 
     [Test]
     public void DocTree_Delete_Success_leaves([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
-      Int32 docId1, docId2, docId3;
-      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+      Int32[] docIds = CreateTestDocTree(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["D1"].Delete(docId2);
-      ds["D1"].Delete(docId3);
+      ds["D1"].Delete(docIds[1]);
+      ds["D1"].Delete(docIds[2]);
       ds.ApplyChanges(false);
-      AssertTestDocDeleted(info, docId1, "#1");
-      AssertTestDocDeleted(info, docId2, "#2");
+      AssertTestDocDeleted(info, docIds[1], "#1");
+      AssertTestDocDeleted(info, docIds[2], "#2");
     }
 
     [Test]
-    public void DocTree_Delete_Success_wholetree([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    public void DocTree_Delete_Success_wholetree([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime,
+      [Values(false, true)] bool reverseOrder)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
-      Int32 docId1, docId2, docId3;
-      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+      Int32[] docIds = CreateTestDocTree(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      // Удаляем документы в правильном порядке
-      ds["D1"].Delete(docId2);
-      ds["D1"].Delete(docId3);
-      ds["D1"].Delete(docId1);
+
+      // Удаляем документы в произвольном порядке
+      if (reverseOrder)
+        Array.Reverse(docIds);
+      for (int i = 0; i < docIds.Length; i++)
+        ds["D1"].Delete(docIds[i]);
+
       ds.ApplyChanges(false);
-      AssertTestDocDeleted(info, docId1, "#1");
-      AssertTestDocDeleted(info, docId2, "#2");
-      AssertTestDocDeleted(info, docId3, "#3");
+      AssertTestDocDeleted(info, docIds[0], "#1");
+      AssertTestDocDeleted(info, docIds[1], "#2");
+      AssertTestDocDeleted(info, docIds[2], "#3");
     }
 
     [Test]
     public void DocTree_Delete_Fail_1([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
-      Int32 docId1, docId2, docId3;
-      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+      Int32[] docIds = CreateTestDocTree(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["D1"].Delete(docId1);
+      ds["D1"].Delete(docIds[0]);
       // Нельзя удалить узел 1, но оставить узлы 2 и 3
       Assert.Catch(delegate() { ds.ApplyChanges(false); });
     }
 
     [Test]
-    public void DocTree_Delete_Fail_2([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    public void DocTree_Delete_Fail_2([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime,
+      [Values(false, true)] bool reverseOrder)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
-      Int32 docId1, docId2, docId3;
-      CreateTestDocTree(info, out docId1, out docId2, out docId3);
+      Int32[] docIds = CreateTestDocTree(info);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["D1"].Delete(docId2);
-      ds["D1"].Delete(docId1);
+
+      Int32[] docIds2 = new Int32[2];
+      docIds2[0] = docIds[0];
+      docIds2[1] = docIds[1];
+      if (reverseOrder)
+        Array.Reverse(docIds2);
+
+      for (int i = 0; i < docIds2.Length; i++)
+        ds["D1"].Delete(docIds[i]);
+
       // Нельзя удалить узел 1, но оставить узел 3
       Assert.Catch(delegate() { ds.ApplyChanges(false); });
     }
-
-#if XXX
-
-    [Test]
-    public void SimpleDelTest()
-    {
-      // Предельно упрощенный тест
-
-      DBxDocTypes dts = new DBxDocTypes();
-      dts.UsersTableName = String.Empty; // без пользователей
-      dts.UseDeleted = false;
-      dts.UseVersions = false;
-      dts.UseTime = false;
-      DBxDocType dt;
-
-      dt = new DBxDocType("D1");
-      dt.Struct.Columns.AddReference("F104", "D1", true);
-      dts.Add(dt);
-
-      DBxDocDBConnectionHelper conHelper = new DBxDocDBConnectionHelper();
-      conHelper.ProviderName = "SQLite";
-      conHelper.ConnectionString = "Data Source=:memory:";
-      conHelper.DocTypes = dts;
-
-      DBxRealDocProviderGlobal GlobalData = conHelper.CreateRealDocProviderGlobal();
-      try
-      {
-        DBxRealDocProviderSource Source = new DBxRealDocProviderSource(GlobalData);
-        DBxRealDocProvider Provider = new DBxRealDocProvider(Source, 0, false);
-
-        DBxDocSet ds = new DBxDocSet(Provider);
-        DBxSingleDoc doc1 = ds["D1"].Insert();
-        DBxSingleDoc doc2 = ds["D1"].Insert();
-        doc2.Values["F104"].SetInteger(doc1.DocId);
-        ds.ApplyChanges(true);
-        Int32 docId1 = ds["D1"][0].DocId;
-        Int32 docId2 = ds["D1"][1].DocId;
-        Assert.AreEqual(ds["D1"][0].DocId, ds["D1"][1].Values["F104"].AsInteger);
-
-        ds = new DBxDocSet(Provider);
-        ds["D1"].Delete(docId1);
-
-        //ds.ApplyChanges(false);
-        Assert.Catch(delegate() { ds.ApplyChanges(false); });
-      }
-      finally
-      {
-        GlobalData.DisposeDBs();
-      }
-    }
-#endif
-
 
     /// <summary>
     /// Создает тестовое дерево документов "D1". Первый документ является корнем, а остальные два - дочерними для него
     /// </summary>
     /// <param name="info">Тестовая база данных</param>
-    /// <param name="docId1"></param>
-    /// <param name="docId2"></param>
-    /// <param name="docId3"></param>
-    private void CreateTestDocTree(TestDBInfo info, out int docId1, out int docId2, out int docId3)
+    /// <returns>Массив из трех идентификаторов документов</returns>
+    private Int32[] CreateTestDocTree(TestDBInfo info)
     {
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc1 = ds["D1"].Insert();
@@ -1024,9 +995,11 @@ namespace ExtDBDocs_tests.Data_Docs
 
       ds.ApplyChanges(true);
 
-      docId1 = ds["D1"][0].DocId;
-      docId2 = ds["D1"][1].DocId;
-      docId3 = ds["D1"][2].DocId;
+      Int32[] docIds = new Int32[3];
+      docIds[0] = ds["D1"][0].DocId;
+      docIds[1] = ds["D1"][1].DocId;
+      docIds[2] = ds["D1"][2].DocId;
+      return docIds;
     }
 
     #endregion
@@ -1087,8 +1060,6 @@ namespace ExtDBDocs_tests.Data_Docs
     }
 
 
-    // TODO: Этот тест не работает для useDeleted=false, так как порядок удаления поддокументов не гарантируется
-#if XXX
     [Test]
     public void SubDocTree_Delete_Success_wholetree([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
     {
@@ -1099,9 +1070,11 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Edit(docId);
 
-      doc.SubDocs["SD11"][2].Delete();
-      doc.SubDocs["SD11"][1].Delete();
+      // Тут бесполезно тестировать reverseOrder, т.к. порядок документов в таблице от этого не поменяется
+
       doc.SubDocs["SD11"][0].Delete();
+      doc.SubDocs["SD11"][1].Delete();
+      doc.SubDocs["SD11"][2].Delete();
 
       ds.ApplyChanges(false);
 
@@ -1109,7 +1082,6 @@ namespace ExtDBDocs_tests.Data_Docs
       doc = ds["D1"].View(docId);
       Assert.AreEqual(0, doc.SubDocs["SD11"].SubDocCount);
     }
-#endif
 
 
     [Test]
@@ -1219,6 +1191,119 @@ namespace ExtDBDocs_tests.Data_Docs
     }
 
 
+
+    #endregion
+
+    #region Ссылки на поддокументы
+
+    [Test]
+    public void SubDocRef_Insert([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId1, docId2;
+      CreateSubDocRefTest(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].View(docId1);
+      DBxSingleDoc doc2 = ds["D2"].View(docId2);
+      DBxSubDoc sdoc21 = doc2.SubDocs["SD21"][0];
+
+      Assert.AreEqual(docId2, doc1.Values["F105"].AsInteger, "F105");
+      Assert.AreEqual(sdoc21.SubDocId, doc1.Values["F106"].AsInteger, "F106");
+    }
+
+    [Test]
+    public void SubDocRef_DeleteSubDoc_Success([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId1, docId2;
+      CreateSubDocRefTest(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Edit(docId1);
+      DBxSingleDoc doc2 = ds["D2"].Edit(docId2);
+      DBxSubDoc sdoc21 = doc2.SubDocs["SD21"][0];
+
+      doc1.Values["F106"].SetNull();
+      sdoc21.Delete();
+
+      ds.ApplyChanges(false);
+    }
+
+    [Test]
+    public void SubDocRef_DeleteSubDoc_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId1, docId2;
+      CreateSubDocRefTest(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc2 = ds["D2"].Edit(docId2);
+      DBxSubDoc sdoc21 = doc2.SubDocs["SD21"][0];
+
+      sdoc21.Delete();
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void SubDocRef_DeleteWholeDoc_Success([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId1, docId2;
+      CreateSubDocRefTest(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Edit(docId1);
+
+      doc1.Values["F105"].SetNull();
+      doc1.Values["F106"].SetNull();
+      ds["D2"].Delete(docId2);
+
+      ds.ApplyChanges(false);
+    }
+
+
+    [Test]
+    public void SubDocRef_DeleteWholeDoc_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId1, docId2;
+      CreateSubDocRefTest(info, out docId1, out docId2);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Edit(docId1);
+
+      doc1.Values["F105"].SetNull();
+      // Ссылка F106 на поддокумент осталась
+      ds["D2"].Delete(docId2);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    private void CreateSubDocRefTest(TestDBInfo info, out int docId1, out int docId2)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Insert();
+      doc1.Values["F101"].SetBoolean(false);
+      doc1.Values["F102"].SetInteger(0);
+
+      DBxSingleDoc doc2 = ds["D2"].Insert();
+      doc2.Values["F201"].SetString("AAA");
+      DBxSubDoc sdoc21 = doc2.SubDocs["SD21"].Insert();
+
+      doc1.Values["F105"].SetInteger(doc2.DocId);
+      doc1.Values["F106"].SetInteger(sdoc21.SubDocId);
+
+      ds.ApplyChanges(true);
+      docId1 = ds["D1"][0].DocId;
+      docId2 = ds["D2"][0].DocId;
+    }
 
     #endregion
 
