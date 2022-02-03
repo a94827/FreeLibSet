@@ -17,8 +17,6 @@ namespace ExtDBDocs_tests.Data_Docs
   [TestFixture]
   public class DBxDocSetTests
   {
-    #region Доступ к базе данных
-
     /*
      * Структура тестовой базы данных
      * Документ "D1"
@@ -41,6 +39,8 @@ namespace ExtDBDocs_tests.Data_Docs
      *   Поддокумент "SD21"
      *      Поля: "F211" Date Nullable
      */
+
+    #region Доступ к базе данных
 
     /// <summary>
     /// Описание для одной тестовой базы данных
@@ -337,6 +337,8 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(DBxDocState.Delete, ds.DocState, "DBxDocSet.DocState");
       Assert.AreEqual(1, ds.DocCount, "DocCount #1");
       ds.ApplyChanges(true);
+
+      AssertTestDocDeleted(info, docId, "");
     }
 
     [Test]
@@ -353,6 +355,8 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(DBxDocState.Delete, ds.DocState, "DBxDocSet.DocState");
       Assert.AreEqual(1, ds.DocCount, "DocCount #1");
       ds.ApplyChanges(true);
+
+      AssertTestDocDeleted(info, docId, "");
     }
 
     [Test]
@@ -369,6 +373,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(DBxDocState.Delete, ds.DocState, "DBxDocSet.DocState");
       Assert.AreEqual(1, ds.DocCount, "DocCount #1");
       ds.ApplyChanges(true);
+      AssertTestDocDeleted(info, docId, "");
     }
 
     [Test]
@@ -396,7 +401,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       TestDBInfo info = this[true, useVersions, useTime];
       Int32 docId = CreateTestDoc(info);
-      DeleteDoc(info, docId);
+      DeleteTestDoc(info, docId);
 
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
@@ -413,7 +418,7 @@ namespace ExtDBDocs_tests.Data_Docs
     {
       TestDBInfo info = this[true, useVersions, useTime];
       Int32 docId = CreateTestDoc(info);
-      DeleteDoc(info, docId);
+      DeleteTestDoc(info, docId);
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Edit(docId);
@@ -892,6 +897,8 @@ namespace ExtDBDocs_tests.Data_Docs
       ds["D1"].Delete(docId2);
       ds["D1"].Delete(docId3);
       ds.ApplyChanges(false);
+      AssertTestDocDeleted(info, docId1, "#1");
+      AssertTestDocDeleted(info, docId2, "#2");
     }
 
     [Test]
@@ -907,6 +914,9 @@ namespace ExtDBDocs_tests.Data_Docs
       ds["D1"].Delete(docId3);
       ds["D1"].Delete(docId1);
       ds.ApplyChanges(false);
+      AssertTestDocDeleted(info, docId1, "#1");
+      AssertTestDocDeleted(info, docId2, "#2");
+      AssertTestDocDeleted(info, docId3, "#3");
     }
 
     [Test]
@@ -1238,7 +1248,7 @@ namespace ExtDBDocs_tests.Data_Docs
       return docId;
     }
 
-    private static void DeleteDoc(TestDBInfo info, Int32 docId)
+    private static void DeleteTestDoc(TestDBInfo info, Int32 docId)
     {
       DBxDocSet ds = new DBxDocSet(info.Provider);
       ds["D1"].Delete(docId);
@@ -1256,6 +1266,8 @@ namespace ExtDBDocs_tests.Data_Docs
     /// <param name="F111"></param>
     private void AssertTestDoc(TestDBInfo info, Int32 docId, string message, bool F101, int F102, params string[] F111)
     {
+      info.Provider.CheckIsRealDocId(docId);
+
       if (!String.IsNullOrEmpty(message))
         message += ". ";
 
@@ -1307,6 +1319,33 @@ namespace ExtDBDocs_tests.Data_Docs
       }
       Array.Sort<string>(a);
       Assert.AreEqual(F111, a, message + "F111");
+    }
+
+    private void AssertTestDocDeleted(TestDBInfo info, Int32 docId, string message)
+    {
+      info.Provider.CheckIsRealDocId(docId);
+
+      if (!String.IsNullOrEmpty(message))
+        message += ". ";
+
+      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
+      {
+        DataTable tblDoc = con.FillSelect("D1", null, new ValueFilter("Id", docId));
+        if (info.GlobalData.DocTypes.UseDeleted)
+        {
+          Assert.AreEqual(1, tblDoc.Rows.Count, message + "doc table count must be 1");
+          if (DataTools.GetInt(tblDoc.Rows[0], "Id") != docId)
+            throw new BugException("Ошибка SELECT");
+
+          Assert.IsTrue(DataTools.GetBool(tblDoc.Rows[0], "Deleted"), message + "Field \"Deleted\" has not been set to true");
+        }
+        else
+        {
+          Assert.AreEqual(0, tblDoc.Rows.Count, message + "doc table count must be 0");
+          DataTable tblSubDoc = con.FillSelect("SD11", null, new ValueFilter("DocId", docId));
+          Assert.AreEqual(0, tblSubDoc.Rows.Count, message + "subdoc table count must be 0");
+        }
+      }
     }
 
     #endregion
