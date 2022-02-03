@@ -437,6 +437,7 @@ namespace FreeLibSet.Forms.Docs
             EFPApp.ShowException(e, "Ошибка обновления просмотра после записи изменений для документов \"" + DocTypeUI.DocType.PluralTitle+"\"");
           }
         }
+        DocTypeUI.RefreshBufferedData(); // 03.02.2022
       }
       //DebugTools.DebugDataSet(DataSet, "Обновленный");
     }

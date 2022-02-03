@@ -1370,6 +1370,7 @@ namespace FreeLibSet.Forms.Docs
       {
         DocTypeUI dtui = DocTypes[docSet[i].DocType.Name];
         dtui.Browsers.UpdateDBCacheAndRows(docSet);
+        dtui.RefreshBufferedData(); // 03.02.2022
 
         Int32[] DocIds = docSet[i].DocIds;
         if (DocIds.Length > 0)

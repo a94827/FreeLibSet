@@ -199,6 +199,7 @@ namespace FreeLibSet.Forms.Docs
       Int32[] DocIds = documents[_DocTypeUI.DocType.Name].DocIds;
       if (DocIds.Length > 0)
         UpdateRowsForIds(DocIds);
+      _DocTypeUI.RefreshBufferedData(); // 03.02.2022
     }
 
     #endregion
