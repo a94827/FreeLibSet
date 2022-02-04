@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2022-02-03T21:41:30.977000000"/>
+	<meta name="changed" content="2022-02-04T14:43:49.043000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -87,12 +87,12 @@
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
 		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -129,20 +129,38 @@ Forms</span>)</h1>
 			<p lang="en-US" align="center">310</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">03.02.2022</p>
+			<p lang="en-US" align="center">03.02.2022 (<span lang="ru-RU">вечер)
+			- 04.02.2022</span></p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Методы
-			</span>DBUI.UpdateDBCacheAndRows(),
-			<span lang="ru-RU">DocumentViewHandlerList</span>.UpdateDBCacheAndRows()<span lang="ru-RU">
-			и DocProviderUI.AfterApplyChanges</span>()<span lang="ru-RU">
-			вызывают </span>DocTypeUI.RefreshBufferedData(). <span lang="ru-RU">Для
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">DBUI.UpdateDBCacheAndRows(),
+			</span><span lang="ru-RU">DocumentViewHandlerList</span><span lang="en-US">.UpdateDBCacheAndRows()
+			</span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v106p1"><span lang="en-US">v.106
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) и
+			DocProviderUI.AfterApplyChanges</span><span lang="en-US">()
+			</span><span lang="ru-RU">вызывают
+			</span><span lang="en-US">DocTypeUI.RefreshBufferedData(). </span><span lang="ru-RU">Для
 			справочников, с установленным свойством
-			</span>DocTypeUI.DataBuffering=true <span lang="ru-RU">не
+			</span><span lang="en-US">DocTypeUI.DataBuffering=true </span><span lang="ru-RU">не
 			выполнялось обновление буфера справочника при добавлении элементов
 			(и других действиях). При следующем открытии справочника новый
 			элемент не отображался в просмотре до выполнения команды
 			&quot;Обновить&quot;.</span></p>
+			<p><span lang="ru-RU">2. EFPGroupDocTreeView обрабатывает
+			</span><span lang="en-US">OnAttached(), </span><span lang="ru-RU">где
+			заново инициализирует текст для корневого узла дерева. Создание
+			модели</span><span lang="en-US"> </span><span lang="ru-RU">и
+			корневого узла </span><span lang="en-US">(<a href="ExtDBDocForms_11.htm#v101p4">v.101
+			</a></span><a href="ExtDBDocForms_11.htm#v101p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">может выполняться до инициализации
+			списка столбцов, когда нельзя установить текст.</span></p>
+			<p lang="en-US">3. EFPDocGridView, EFPDocTreeView.OnCreated()
+			<span lang="ru-RU">перехватывают ошибки при вызове
+			</span>PerformRefresh(). <span lang="ru-RU">Если исключение
+			&quot;выпустить&quot; наружу, то метод </span>OnCreated() <span lang="ru-RU">мог
+			быть вызван еще раз, что приводило к ошибке повторной
+			инициализации меню.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

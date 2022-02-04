@@ -998,14 +998,14 @@ namespace FreeLibSet.Forms
     /// Значение подсказки для строки не копируется в это поле. Можно использовать
     /// значение RowToolTipText
     /// </summary>
-    public string ToolTipText 
-    { 
-      get { return _ToolTipText; } 
-      set 
-      { 
+    public string ToolTipText
+    {
+      get { return _ToolTipText; }
+      set
+      {
         _ToolTipText = value;
         _ToolTipTextHasBeenSet = true;
-      } 
+      }
     }
     private string _ToolTipText;
 
@@ -6723,7 +6723,7 @@ namespace FreeLibSet.Forms
       else
       {
         Rect = new Rectangle(Rect.Location, new Size(nX1, nY1));
-        if (((Rect.Bottom - 1) >= Control.RowCount && (!AutoAddRowsAllowed)) || (Rect.Right - 1) >= Control.ColumnCount)
+        if (((Rect.Bottom - 1) >= Control.RowCount && (!Control.AllowUserToAddRows)) || (Rect.Right - 1) >= Control.ColumnCount)
         {
           /*
           EFPApp.ShowTempMessage("Текст в буфере обмена содержит " +
@@ -6744,7 +6744,7 @@ namespace FreeLibSet.Forms
           if (addCount <= 0)
             throw new BugException("addCount=" + addCount.ToString());
 #endif
-          AddInsuficientRows(addCount);
+          //AddInsuficientRows(addCount);
         }
       }
 
@@ -6756,7 +6756,7 @@ namespace FreeLibSet.Forms
 
       for (int i = Rect.Top; i < Rect.Bottom; i++)
       {
-        if (testOnly && i >= Control.RowCount)
+        if (/*testOnly && */i >= Control.RowCount)
           break;
 
         for (int j = Rect.Left; j < Rect.Right; j++)
@@ -6785,14 +6785,29 @@ namespace FreeLibSet.Forms
 
       if (!testOnly)
       {
+        IBindingList bl = ListBindingHelper.GetList(Control.DataSource, Control.DataMember) as IBindingList;
+
         DataGridViewCell oldCell = Control.CurrentCell;
+        bool oldCellInNewRow = Control.AllowUserToAddRows && Control.CurrentCellAddress.Y == (Control.RowCount - 1); // курсор на строке со звездочкой?
 
         for (int i = Rect.Top; i < Rect.Bottom; i++)
         {
+          int i1 = (i - Rect.Top) % nY1;
+
+          if (bl == null)
+          {
+            if (i >= Control.RowCount)
+              Control.RowCount++;
+          }
+          else
+          {
+            if (i >= bl.Count)
+              bl.AddNew();
+          }
+
           for (int j = Rect.Left; j < Rect.Right; j++)
           {
             DataGridViewCell Cell = Control[j, i];
-            int i1 = (i - Rect.Top) % nY1;
             int j1 = (j - Rect.Left) % nX1;
 
             SetTextValue(Cell, textArray[i1, j1], EFPDataGridViewCellFinishedReason.Paste);
@@ -6805,33 +6820,19 @@ namespace FreeLibSet.Forms
         // Надо сразу обновить текущую строку, как будто пользователь перешел на другую строку, а потом вернулся обратно.
         // Иначе текущая строка оказывается некомплектной и для нее могут возникать ошибки контроля в EFPInputDataGridView.
         Control.CurrentCell = null;
-        Control.CurrentCell = oldCell;
+        if (oldCell != null)
+        {
+          if (oldCellInNewRow)
+            Control.CurrentCell = Control[oldCell.ColumnIndex, Control.RowCount - 1];
+          else
+            Control.CurrentCell = oldCell;
+        }
       }
 
       #endregion
 
       errorText = null;
       return true;
-    }
-
-    /// <summary>
-    /// Свойство должно возвращать true, если разрешается автоматическое добавление недостающих строк при вставке текста
-    /// из буфера обмена. При этом должен также быть переопределен метод AddInsuficientRows().
-    /// Реализовано в классе EFPInputGridView.
-    /// По умолчанию - false - строки не добавляются.
-    /// </summary>
-    protected virtual bool AutoAddRowsAllowed { get { return false; } }
-
-    /// <summary>
-    /// Метод должен добавлять указанное число строк в конец просмотра при вставке текста из буфера обмена.
-    /// Метод должен быть переопределен, если AutoAddRowsAllowed возвращает true.
-    /// Реализовано в классе EFPInputGridView.
-    /// Непереопределенный метод выбрасывает исключение.
-    /// </summary>
-    /// <param name="addCount"></param>
-    protected virtual void AddInsuficientRows(int addCount)
-    {
-      throw new NotImplementedException();
     }
 
     #endregion
@@ -7493,7 +7494,7 @@ namespace FreeLibSet.Forms
         {
           DataGridViewPaintParts pp = args.PaintParts;
           if (args.CellStyle.ForeColor == Color.Transparent)
-            pp &= ~(DataGridViewPaintParts.ContentForeground|DataGridViewPaintParts.ContentBackground);
+            pp &= ~(DataGridViewPaintParts.ContentForeground | DataGridViewPaintParts.ContentBackground);
           args.Paint(args.ClipBounds, pp);
 
           if (_GetCellAttributesArgs.DiagonalUpBorder >= EFPDataGridViewBorderStyle.Thin)
@@ -7503,7 +7504,7 @@ namespace FreeLibSet.Forms
             args.Graphics.DrawLine(CreateBorderPen(args.CellStyle.ForeColor, _GetCellAttributesArgs.DiagonalDownBorder),
               args.CellBounds.Left, args.CellBounds.Top, args.CellBounds.Right - 1, args.CellBounds.Bottom - 1);
 
-          args.Handled = true; 
+          args.Handled = true;
         }
       }
       catch (Exception e)

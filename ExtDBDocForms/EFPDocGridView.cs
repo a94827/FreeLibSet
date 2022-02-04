@@ -1255,9 +1255,16 @@ namespace FreeLibSet.Forms.Docs
 
       if (SourceAsDataTable == null)
       {
-        Int32 OldId = CurrentId;
-        PerformRefresh(); // обязательно после вызова OnShown(), иначе UsedColumnNames будет равен null
-        CurrentId = OldId; // 23.11.2017
+        try
+        {
+          Int32 OldId = CurrentId;
+          PerformRefresh(); // обязательно после вызова OnShown(), иначе UsedColumnNames будет равен null
+          CurrentId = OldId; // 23.11.2017
+        }
+        catch (Exception e)
+        {
+          EFPApp.ShowException(e, DisplayName + " - ошибка загрузки данных");
+        }
       }
     }
 

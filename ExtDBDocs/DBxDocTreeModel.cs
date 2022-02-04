@@ -61,83 +61,87 @@ namespace FreeLibSet.Data.Docs
     {
       #region Обязательные столбцы
 
-      DBxColumnList RequiredColumns = new DBxColumnList();
-      RequiredColumns.Add(docType.TreeParentColumnName);
-      docType.DefaultOrder.GetColumnNames(RequiredColumns);
-      columns += new DBxColumns(RequiredColumns);
+      if (columns == null)
+        columns = new DBxColumns(docType.Struct.AllColumnNames); // 04.02.2022
+
+      DBxColumnList requiredColumns = new DBxColumnList();
+      requiredColumns.Add("Id"); // 04.02.2022
+      requiredColumns.Add(docType.TreeParentColumnName);
+      docType.DefaultOrder.GetColumnNames(requiredColumns); // Тут могут быть столбцы с точками
+      columns += new DBxColumns(requiredColumns);
 
       #endregion
 
-      DataTable Table = docProvider.FillSelect(docType.Name,
+      DataTable table = docProvider.FillSelect(docType.Name,
         columns,
         filters, null /*23.11.2018 DocType.DefaultOrder*/);
 
-      DataTools.SetPrimaryKey(Table, "Id");
+      DataTools.SetPrimaryKey(table, "Id");
 
       // 14.11.2017
       // В фильтр могут попасть дочерние документы, родительские документы для которых не попадут
       // в фильтр. Требуется рекурсивно добавить недостающие документы, чтобы обеспечить целостность
       // модели
 
-      int pParentId = Table.Columns.IndexOf(docType.TreeParentColumnName);
+      int pParentId = table.Columns.IndexOf(docType.TreeParentColumnName);
       if (pParentId < 0)
-        throw new BugException("Таблица \"" + Table.TableName + "\" не содержит столбца \"" + docType.TreeParentColumnName + "\"");
+        throw new BugException("Таблица \"" + table.TableName + "\" не содержит столбца \"" + docType.TreeParentColumnName + "\"");
 
-      bool NeedsResort = false;
+      bool needsResort = false;
 
       while (true)
       {
-        IdList MissingIds = new IdList();
-        foreach (DataRow Row in Table.Rows)
+        IdList missingIds = new IdList();
+        foreach (DataRow Row in table.Rows)
         {
-          Int32 ParentId = DataTools.GetInt(Row[pParentId]);
-          if (ParentId == 0)
+          Int32 parentId = DataTools.GetInt(Row[pParentId]);
+          if (parentId == 0)
             continue;
-          if (Table.Rows.Find(ParentId) == null)
-            MissingIds.Add(ParentId);
+          if (table.Rows.Find(parentId) == null)
+            missingIds.Add(parentId);
         }
 
-        if (MissingIds.Count == 0)
+        if (missingIds.Count == 0)
           break;
 
         // Требуется догрузить недостающие строки
-        DataTable Table2 = docProvider.FillSelect(docType.Name,
+        DataTable table2 = docProvider.FillSelect(docType.Name,
           columns,
-          new IdsFilter(MissingIds), docType.DefaultOrder);
+          new IdsFilter(missingIds), docType.DefaultOrder);
 
-        if (Table2.Rows.Count != MissingIds.Count)
-          throw new BugException("При попытке загрузить строки таблицы \"" + docType.Name + "\" для Id=" + MissingIds.ToString() + ", получено строк: " + Table2.Rows.Count.ToString());
+        if (table2.Rows.Count != missingIds.Count)
+          throw new BugException("При попытке загрузить строки таблицы \"" + docType.Name + "\" для Id=" + missingIds.ToString() + ", получено строк: " + table2.Rows.Count.ToString());
 
-        if (!NeedsResort)
+        if (!needsResort)
         {
           // Требуется добавить в таблицу поле флага
-          DataTable Table3 = Table.Clone();
-          Table3.Columns.Add(DefIntegrityFlagColumnName, typeof(bool));
-          foreach (DataRow Row1 in Table.Rows)
-            Table3.Rows.Add(Row1.ItemArray);
-          Table = Table3;
-          DataTools.SetPrimaryKey(Table, "Id");
+          DataTable table3 = table.Clone();
+          table3.Columns.Add(DefIntegrityFlagColumnName, typeof(bool));
+          foreach (DataRow Row1 in table.Rows)
+            table3.Rows.Add(Row1.ItemArray);
+          table = table3;
+          DataTools.SetPrimaryKey(table, "Id");
         }
 
         // Добавляем строки, устанавливая флаг
-        foreach (DataRow Row2 in Table2.Rows)
+        foreach (DataRow row2 in table2.Rows)
         {
-          DataRow Row1 = Table.Rows.Add(Row2.ItemArray);
-          Row1[DefIntegrityFlagColumnName] = true;
+          DataRow row1 = table.Rows.Add(row2.ItemArray);
+          row1[DefIntegrityFlagColumnName] = true;
         }
 
-        NeedsResort = true;
+        needsResort = true;
       }
 
-      if (NeedsResort)
+      if (needsResort)
       {
-        Table.DefaultView.Sort = docType.DefaultOrder.ToString();
-        Table = Table.DefaultView.ToTable();
-        DataTools.SetPrimaryKey(Table, "Id");
-        Table.AcceptChanges();
+        table.DefaultView.Sort = docType.DefaultOrder.ToString();
+        table = table.DefaultView.ToTable();
+        DataTools.SetPrimaryKey(table, "Id");
+        table.AcceptChanges();
       }
 
-      return Table;
+      return table;
     }
 
     #endregion
@@ -217,12 +221,12 @@ namespace FreeLibSet.Data.Docs
         return DataTools.EmptyIds;
       else
       {
-        DataRow Row = SubDocs.SubDocsView.Table.Rows.Find(id);
-        if (Row == null)
+        DataRow row = SubDocs.SubDocsView.Table.Rows.Find(id);
+        if (row == null)
           return DataTools.EmptyIds;
 
-        DataRow[] Rows = base.GetRowsWithChildren((object)Row);
-        return DataTools.GetIds(Rows);
+        DataRow[] rows = base.GetRowsWithChildren((object)row);
+        return DataTools.GetIds(rows);
       }
     }
 
@@ -273,27 +277,27 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("sourceModel");
 #endif
 
-      string PK = DataTools.GetPrimaryKey(sourceModel.Table);
+      string pk = DataTools.GetPrimaryKey(sourceModel.Table);
 
-      DataTable ResTable = sourceModel.Table.Clone();
-      string IntegrityFlagColumnName;
+      DataTable resTable = sourceModel.Table.Clone();
+      string integrityFlagColumnName;
       if (String.IsNullOrEmpty(sourceIntegrityFlagColumnName))
       {
-        IntegrityFlagColumnName = DefIntegrityFlagColumnName;
-        ResTable.Columns.Add(IntegrityFlagColumnName, typeof(bool));
+        integrityFlagColumnName = DefIntegrityFlagColumnName;
+        resTable.Columns.Add(integrityFlagColumnName, typeof(bool));
       }
       else
       {
         if (!sourceModel.Table.Columns.Contains(sourceIntegrityFlagColumnName))
           throw new ArgumentException("Таблица \"" + sourceModel.Table.TableName + "\" не содержит столбца \"" + sourceIntegrityFlagColumnName + "\"", "sourceIntegrityFlagColumnName");
-        DataTools.SetPrimaryKey(ResTable, PK);
+        DataTools.SetPrimaryKey(resTable, pk);
 
-        IntegrityFlagColumnName = sourceIntegrityFlagColumnName;
-        ValueFilter Filter2 = new ValueFilter(sourceIntegrityFlagColumnName, false);
+        integrityFlagColumnName = sourceIntegrityFlagColumnName;
+        ValueFilter filter2 = new ValueFilter(sourceIntegrityFlagColumnName, false);
         if (filter == null)
-          filter = Filter2;
+          filter = filter2;
         else
-          filter = AndFilter.FromArray(new DBxFilter[2] { filter, Filter2 });
+          filter = AndFilter.FromArray(new DBxFilter[2] { filter, filter2 });
       }
 
       // Лучше сделать отдельный DataView, а не использовать DefaultView. 
@@ -308,60 +312,60 @@ namespace FreeLibSet.Data.Docs
         //Int32 [] aaa=DataTools.GetIdsFromField(SourceModel.Table, "GroupId");
 
         foreach (DataRowView drv in dv)
-          ResTable.Rows.Add(drv.Row.ItemArray);
+          resTable.Rows.Add(drv.Row.ItemArray);
       }
 
       #region Добавление недостающих строк
 
-      int pParentId = ResTable.Columns.IndexOf(sourceModel.ParentColumnName);
+      int pParentId = resTable.Columns.IndexOf(sourceModel.ParentColumnName);
       if (pParentId < 0)
-        throw new BugException("Таблица \"" + ResTable.TableName + "\" не содержит столбца \"" + sourceModel.ParentColumnName + "\"");
+        throw new BugException("Таблица \"" + resTable.TableName + "\" не содержит столбца \"" + sourceModel.ParentColumnName + "\"");
 
-      bool NeedsResort = false;
+      bool needsResort = false;
 
       while (true)
       {
-        IdList MissingIds = new IdList();
-        foreach (DataRow Row in ResTable.Rows)
+        IdList missingIds = new IdList();
+        foreach (DataRow Row in resTable.Rows)
         {
-          Int32 ParentId = DataTools.GetInt(Row[pParentId]);
-          if (ParentId == 0)
+          Int32 parentId = DataTools.GetInt(Row[pParentId]);
+          if (parentId == 0)
             continue;
-          if (ResTable.Rows.Find(ParentId) == null)
-            MissingIds.Add(ParentId);
+          if (resTable.Rows.Find(parentId) == null)
+            missingIds.Add(parentId);
         }
 
-        if (MissingIds.Count == 0)
+        if (missingIds.Count == 0)
           break;
 
         // Требуется догрузить недостающие строки
-        foreach (Int32 Id in MissingIds)
+        foreach (Int32 id in missingIds)
         {
-          DataRow SrcRow = sourceModel.Table.Rows.Find(Id);
-          if (SrcRow == null)
-            throw new ArgumentException("Таблица исходной модели не содержит строки с ключом " + Id.ToString() + ". Целостность дерева нарушена", "sourceModel");
-          DataRow ResRow = ResTable.Rows.Add(SrcRow.ItemArray);
-          ResRow[IntegrityFlagColumnName] = true;
+          DataRow srcRow = sourceModel.Table.Rows.Find(id);
+          if (srcRow == null)
+            throw new ArgumentException("Таблица исходной модели не содержит строки с ключом " + id.ToString() + ". Целостность дерева нарушена", "sourceModel");
+          DataRow resRow = resTable.Rows.Add(srcRow.ItemArray);
+          resRow[integrityFlagColumnName] = true;
         }
 
-        NeedsResort = true;
+        needsResort = true;
       }
 
       #endregion
 
       #region Пересортировка
 
-      if (NeedsResort)
+      if (needsResort)
       {
-        ResTable.DefaultView.Sort = sourceModel.Table.DefaultView.Sort;
-        ResTable = ResTable.DefaultView.ToTable();
-        DataTools.SetPrimaryKey(ResTable, PK);
-        ResTable.AcceptChanges();
+        resTable.DefaultView.Sort = sourceModel.Table.DefaultView.Sort;
+        resTable = resTable.DefaultView.ToTable();
+        DataTools.SetPrimaryKey(resTable, pk);
+        resTable.AcceptChanges();
       }
 
       #endregion
 
-      return ResTable;
+      return resTable;
     }
 
     #endregion

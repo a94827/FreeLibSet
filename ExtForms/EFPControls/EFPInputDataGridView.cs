@@ -216,29 +216,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Вставка текста из буфера обмена
-
-    /// <summary>
-    /// Можно добавлять строки при вставке, если FixedRows=false.
-    /// </summary>
-    protected override bool AutoAddRowsAllowed { get { return !FixedRows; } }
-
-    /// <summary>
-    /// Добавляет недостающие строки при вставке из буфера обмена
-    /// </summary>
-    /// <param name="addCount">Количество строк, которые нужно добавить</param>
-    protected override void AddInsuficientRows(int addCount)
-    {
-      if (FixedRows)
-        throw new InvalidOperationException("FixedRows=true");
-
-      DataTable tbl = SourceAsDataTable;
-      for (int i = 0; i < addCount; i++)
-        tbl.Rows.Add();
-    }
-
-    #endregion
-
     #region Сжатие и проверка таблицы при закрытии формы
 
     /// <summary>

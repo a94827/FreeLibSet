@@ -165,6 +165,26 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
+    /// Повторная инициализация текста корневого узла
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      // 04.02.2022
+      // Модель может быть инициализирована до показа дерева на экране, когда столбцы просмотра еще созданы.
+      // Обновляем текст корневого узла
+
+      if (_RootNodeDataRow != null)
+      {
+        if (FirstTextControl != null)
+          _RootNodeDataRow[FirstTextControl.DataPropertyName] = this.RootNodeTextValue;
+        DBxDocTreeModel Model = (DBxDocTreeModel)(Control.Model);
+        Model.RefreshNode(Model.TreePathFromDataRow(_RootNodeDataRow));
+      }
+    }
+
+    /// <summary>
     /// Вызывает DocTypeUI.PerformEditing() для выбранных узлов
     /// </summary>
     /// <param name="args">Не используется</param>
