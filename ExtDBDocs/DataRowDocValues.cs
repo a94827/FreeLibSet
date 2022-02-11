@@ -163,7 +163,7 @@ namespace FreeLibSet.Data.Docs
       get { return _Row.Table.Columns.Count; }
     }
 
-    int IDBxDocValues.DocCount
+    int IDBxDocValues.RowCount
     {
       get { return 1; }
     }
@@ -564,7 +564,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает количество строк в таблице
     /// </summary>
-    public int DocCount
+    public int RowCount
     {
       get { return _Table.Rows.Count; }
     }

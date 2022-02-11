@@ -228,7 +228,7 @@ namespace FreeLibSet.Data.Docs
       /// <returns></returns>
       public override string ToString()
       {
-        return "Table \"" + DetailsTableName + "\", RefColumns \"" + _VTRef.TableColumn.ColumnName + "\"," + _VTRef.IdColumn.ColumnName;
+        return "Table \"" + DetailsTableName + "\", RefColumns \"" + _VTRef.TableIdColumn.ColumnName + "\"," + _VTRef.DocIdColumn.ColumnName;
       }
 
       #endregion
@@ -356,7 +356,7 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < detailBase.VTRefs.Count; i++)
       {
         DBxVTReference vtRef = detailBase.VTRefs[i];
-        for (int j = 0; j < vtRef.MasterTableNames.Length; j++)
+        for (int j = 0; j < vtRef.MasterTableNames.Count; j++)
         {
           DBxDocType dt1;
           DBxSubDocType sdt1;
@@ -421,5 +421,4 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
   }
-
 }

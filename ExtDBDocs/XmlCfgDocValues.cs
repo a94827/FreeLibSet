@@ -155,7 +155,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     int IDBxDocValues.Count { get { return _Items.Count; } }
 
-    int IDBxDocValues.DocCount { get { return 1; } }
+    int IDBxDocValues.RowCount { get { return 1; } }
 
     object IDBxDocValues.GetValue(int Index, DBxDocValuePreferredType preferredType)
     {

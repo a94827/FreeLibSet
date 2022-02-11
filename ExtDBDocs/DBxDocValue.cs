@@ -126,7 +126,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Число одновременно редактируемых строк для обработки "серых" значений
     /// </summary>
-    int DocCount { get;}
+    int RowCount { get;}
 
     // Объявлено в IReadOnlyObject
     ///// <summary>
@@ -277,10 +277,9 @@ namespace FreeLibSet.Data.Docs
   /// Доступ к одному полю документа.
   /// Поддерживает "серые" значения.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DBxDocValue : IReadOnlyObject, IObjectWithCode
   {
-    #region Конструкторы
+    #region Конструктор
 
     /// <summary>
     /// Инициализация структуры.
@@ -401,7 +400,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Количество документов в объекте-владельце
     /// </summary>
-    public int DocCount { get { return DocValues.DocCount; } }
+    public int RowCount { get { return DocValues.RowCount; } }
 
     /// <summary>
     /// Является ли текущее значение пустым ?
@@ -1025,7 +1024,6 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Перечислитель для реализации IDBxDocValues
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DBxDocValueEnumerator : IEnumerator<DBxDocValue> 
   {
     #region Конструктор
@@ -1277,7 +1275,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public int Count { get { return _Names.Length; } }
 
-    int IDBxDocValues.DocCount { get { return 1; } }
+    int IDBxDocValues.RowCount { get { return 1; } }
 
     /// <summary>
     /// Получить значение поля
@@ -1403,5 +1401,4 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
   }
-
 }

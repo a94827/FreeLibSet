@@ -322,11 +322,11 @@ namespace FreeLibSet.Data.Docs
       List<DBxCacheLoadResponse> resps = new List<DBxCacheLoadResponse>();
       foreach (KeyValuePair<DBxEntry, List<DBxCacheLoadRequest>> pair2 in dict2)
       {
-        using (DBxCon Con = new DBxCon(pair2.Key))
+        using (DBxCon con = new DBxCon(pair2.Key))
         {
           for (int i = 0; i < pair2.Value.Count; i++)
           {
-            DBxCacheLoadResponse r = Con.LoadCachePages(pair2.Value[i]);
+            DBxCacheLoadResponse r = con.LoadCachePages(pair2.Value[i]);
             resps.Add(r);
           }
         }
@@ -340,9 +340,9 @@ namespace FreeLibSet.Data.Docs
       // Ничего не делаем
     }
 
-    private DBxEntry GetEntry(string TableName)
+    private DBxEntry GetEntry(string tableName)
     {
-      if (TableName == "BinData" || TableName == "FileNames")
+      if (tableName == "BinData" || tableName == "FileNames")
         return GlobalData.BinDataHandler.MainEntry;
       else
         return MainDBEntry;
@@ -444,8 +444,8 @@ namespace FreeLibSet.Data.Docs
     {
       if (BeforeApplyChanges != null)
       {
-        DBxBeforeApplyChangesEventArgs Args = new DBxBeforeApplyChangesEventArgs(docSet);
-        BeforeApplyChanges(this, Args);
+        DBxBeforeApplyChangesEventArgs args = new DBxBeforeApplyChangesEventArgs(docSet);
+        BeforeApplyChanges(this, args);
       }
     }
 
@@ -591,16 +591,16 @@ namespace FreeLibSet.Data.Docs
           if (_AllTableNames == null)
           {
             List<string> lst = new List<string>();
-            foreach (DBxDocType DocType in _DocTypes)
+            foreach (DBxDocType docType in _DocTypes)
             {
-              if (_DBPermissions.TableModes[DocType.Name] == DBxAccessMode.None)
+              if (_DBPermissions.TableModes[docType.Name] == DBxAccessMode.None)
                 continue;
-              lst.Add(DocType.Name);
-              foreach (DBxSubDocType SubDocType in DocType.SubDocs)
+              lst.Add(docType.Name);
+              foreach (DBxSubDocType subDocType in docType.SubDocs)
               {
-                if (_DBPermissions.TableModes[SubDocType.Name] == DBxAccessMode.None)
+                if (_DBPermissions.TableModes[subDocType.Name] == DBxAccessMode.None)
                   continue;
-                lst.Add(SubDocType.Name);
+                lst.Add(subDocType.Name);
               }
             }
 
@@ -670,23 +670,23 @@ namespace FreeLibSet.Data.Docs
       if (ts != null)
         return ts;
 
-      DBxTableStruct Struct1 = MainDBstruct.Tables[tableName];
-      if (Struct1 == null)
+      DBxTableStruct ts1 = MainDBstruct.Tables[tableName];
+      if (ts1 == null)
         throw new ArgumentException("Неизвестная таблица \"" + tableName + "\"", "tableName");
 
       if (_DBPermissions.TableModes[tableName] == DBxAccessMode.None)
         throw new DBxAccessException("Доступ к таблице \"" + tableName + "\" запрещен");
 
       // Создаем "урезанную" копию, проверяя права пользователя.
-      DBxTableStruct Struct2 = new DBxTableStruct(tableName);
-      for (int i = 0; i < Struct1.Columns.Count; i++)
+      DBxTableStruct ts2 = new DBxTableStruct(tableName);
+      for (int i = 0; i < ts1.Columns.Count; i++)
       {
-        if (_DBPermissions.ColumnModes[tableName, Struct1.Columns[i].ColumnName] == DBxAccessMode.None)
+        if (_DBPermissions.ColumnModes[tableName, ts1.Columns[i].ColumnName] == DBxAccessMode.None)
           continue;
-        Struct2.Columns.Add(Struct1.Columns[i]);
+        ts2.Columns.Add(ts1.Columns[i]);
       }
-      Struct2.SetReadOnly();
-      return Struct2;
+      ts2.SetReadOnly();
+      return ts2;
     }
 
     #endregion
@@ -700,38 +700,38 @@ namespace FreeLibSet.Data.Docs
 
     public DBxTableCacheInfo GetTableCacheInfo(string tableName)
     {
-      DBxTableCacheInfo Info;
+      DBxTableCacheInfo info;
       lock (SyncRoot)
       {
         if (_TableCacheInfos == null)
           _TableCacheInfos = new Dictionary<string, DBxTableCacheInfo>();
 
-        if (!_TableCacheInfos.TryGetValue(tableName, out Info))
+        if (!_TableCacheInfos.TryGetValue(tableName, out info))
         {
           DBxTableStruct ts = GetTableStruct(tableName);
           if (ts == null)
             throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
-          Info = new DBxTableCacheInfo(ts);
+          info = new DBxTableCacheInfo(ts);
 
-          DBxDocTypeBase DocTypeBase;
-          if (_DocTypes.FindByTableName(tableName, out DocTypeBase))
+          DBxDocTypeBase docTypeBase;
+          if (_DocTypes.FindByTableName(tableName, out docTypeBase))
           {
-            if (!DocTypeBase.IndividualCacheColumns.AreAllDefaults)
+            if (!docTypeBase.IndividualCacheColumns.AreAllDefaults)
             {
-              for (int i = 0; i < Info.TableStruct.Columns.Count; i++)
+              for (int i = 0; i < info.TableStruct.Columns.Count; i++)
               {
-                string ColumnName = Info.TableStruct.Columns[i].ColumnName;
-                if (DocTypeBase.Struct.Columns.Contains(ColumnName))
-                  Info.IndividualColumnFlags[i] = DocTypeBase.IndividualCacheColumns[ColumnName];
+                string ColumnName = info.TableStruct.Columns[i].ColumnName;
+                if (docTypeBase.Struct.Columns.Contains(ColumnName))
+                  info.IndividualColumnFlags[i] = docTypeBase.IndividualCacheColumns[ColumnName];
                 // Для полей типа "Id" нет соответствующего описания в структуре полей DBxDocTypeBase.Struct
               }
             }
           }
-          Info.SetReadOnly();
-          _TableCacheInfos.Add(tableName, Info);
+          info.SetReadOnly();
+          _TableCacheInfos.Add(tableName, info);
         }
       }
-      return Info;
+      return info;
     }
   }
 }

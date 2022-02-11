@@ -38,6 +38,8 @@ namespace ExtDBDocs_tests.Data_Docs
      *         "F202" - Ссылочное поле на "D1" Not Null
      *   Поддокумент "SD21"
      *      Поля: "F211" Date Nullable
+     * Документ "D3"
+     *   Поля: "F301TableId", "F301DocId" - переменная ссылка. Допускаются ссылки на документы "D1" и "D2"
      */
 
     #region Доступ к базе данных
@@ -114,6 +116,12 @@ namespace ExtDBDocs_tests.Data_Docs
           sdt = new DBxSubDocType("SD21");
           sdt.Struct.Columns.AddDate("F211", true);
           dt.SubDocs.Add(sdt);
+
+          dt = new DBxDocType("D3");
+          DBxVTReference vtr = dt.VTRefs.Add("F301");
+          vtr.MasterTableNames.Add("D1");
+          vtr.MasterTableNames.Add("D2");
+          dts.Add(dt);
 
           DBxDocDBConnectionHelper conHelper = new DBxDocDBConnectionHelper();
           conHelper.ProviderName = "SQLite";
@@ -472,7 +480,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(docId2, ds["D1"][1].DocId, "DocId #2");
 
       IDBxDocValues grpVals = ds["D1"].Values;
-      Assert.AreEqual(2, grpVals.DocCount, "DocCount #1,2");
+      Assert.AreEqual(2, grpVals.RowCount, "RowCount #1,2");
       Assert.IsTrue(grpVals.IsReadOnly, "IsReadOnly #1,2");
       Assert.IsFalse(grpVals["F101"].Grayed, "Grayed[F101] #1,2");
       Assert.IsTrue(grpVals["F101"].AsBoolean, "Value[F101] #1,2");
@@ -481,7 +489,7 @@ namespace ExtDBDocs_tests.Data_Docs
       // Открываем третий документ
       ds["D1"].View(docId3);
       grpVals = ds["D1"].Values;
-      Assert.AreEqual(3, grpVals.DocCount, "DocCount #1,2,3");
+      Assert.AreEqual(3, grpVals.RowCount, "RowCount #1,2,3");
       Assert.AreEqual(docId3, ds["D1"][2].DocId, "DocId #2");
 
       Assert.IsTrue(grpVals.IsReadOnly, "IsReadOnly #1,2,3");
@@ -502,7 +510,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       ds["D1"].Edit(new Int32[] { docId1, docId2 });
       IDBxDocValues grpVals = ds["D1"].Values;
-      Assert.AreEqual(2, grpVals.DocCount, "DocCount #1,2");
+      Assert.AreEqual(2, grpVals.RowCount, "RowCount #1,2");
       Assert.IsFalse(grpVals.IsReadOnly, "IsReadOnly #1,2");
 
       grpVals["F101"].SetBoolean(false);
@@ -639,14 +647,14 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxSingleDoc doc1 = ds["D1"].View(docId1);
       Assert.AreEqual(2, doc1.SubDocs["SD11"].SubDocCount, "SubDocCount #1");
       IDBxDocValues grpVals = ds["D1"].SubDocs["SD11"].Values;
-      Assert.AreEqual(2, grpVals.DocCount, "Values.DocCount #1");
+      Assert.AreEqual(2, grpVals.RowCount, "Values.RowCount #1");
       Assert.IsTrue(grpVals["F111"].Grayed, "Grayed #1");
 
       // Открываем еще один документ
       DBxSingleDoc doc2 = ds["D1"].View(docId2);
       Assert.AreEqual(1, doc2.SubDocs["SD11"].SubDocCount, "SubDocCount #2");
       grpVals = ds["D1"].SubDocs["SD11"].Values;
-      Assert.AreEqual(3, grpVals.DocCount, "Values.DocCount #1,2");
+      Assert.AreEqual(3, grpVals.RowCount, "Values.RowCount #1,2");
       Assert.IsTrue(grpVals["F111"].Grayed, "Grayed #1,2");
     }
 
@@ -893,7 +901,7 @@ namespace ExtDBDocs_tests.Data_Docs
       ds.Clear();
       ds.ApplyChanges(false);
 
-      AssertTestDoc(info, docId1, "Changes must be rejected", true, 2, "ABC"); 
+      AssertTestDoc(info, docId1, "Changes must be rejected", true, 2, "ABC");
     }
 
     [Test]
@@ -1382,6 +1390,135 @@ namespace ExtDBDocs_tests.Data_Docs
     }
 
     #endregion
+
+    #endregion
+
+    #region Переменные ссылки
+
+#if !XXX // Пока не работает
+
+    [Test]
+    public void VTRef_Insert_ExistRef([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info, false, 1);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301TableId"].SetInteger(info.Provider.DocTypes["D1"].TableId);
+      doc3.Values["F301DocId"].SetInteger(docId1);
+      ds.ApplyChanges(true);
+      Int32 docId3 = ds["D3"][0].DocId;
+
+      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
+      {
+        object[] a = con.GetValues("D3", docId3, new DBxColumns("F301TableId,F301DocId"));
+        Assert.AreEqual(info.Provider.DocTypes["D1"].TableId, a[0], "TableId");
+        Assert.AreEqual(docId1, a[1], "DocId");
+      }
+    }
+
+    [Test]
+    public void VTRef_Insert_NewRef([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Insert();
+      doc1.Values["F101"].SetBoolean(false);
+      doc1.Values["F102"].SetInteger(1);
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301TableId"].SetInteger(info.Provider.DocTypes["D1"].TableId);
+      doc3.Values["F301DocId"].SetInteger(doc1.DocId);
+      ds.ApplyChanges(true);
+      Int32 docId1 = ds["D1"][0].DocId;
+      Int32 docId3 = ds["D3"][0].DocId;
+      info.Provider.CheckIsRealDocId(docId1);
+      info.Provider.CheckIsRealDocId(docId3);
+
+      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
+      {
+        object[] a = con.GetValues("D3", docId3, new DBxColumns("F301TableId,F301DocId"));
+        Assert.AreEqual(info.Provider.DocTypes["D1"].TableId, a[0], "TableId");
+        Assert.AreEqual(docId1, a[1], "DocId");
+      }
+    }
+
+    [Test]
+    public void VTRef_Insert_Null([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info, false, 1);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301TableId"].SetNull();
+      doc3.Values["F301DocId"].SetNull();
+      ds.ApplyChanges(true);
+      Int32 docId3 = ds["D3"][0].DocId;
+
+      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
+      {
+        object[] a = con.GetValues("D3", docId3, new DBxColumns("F301TableId,F301DocId"));
+        Assert.AreEqual(0, DataTools.GetInt(a[0]), "TableId");
+        Assert.AreEqual(0, DataTools.GetInt(a[1]), "DocId");
+      }
+    }
+
+    [Test]
+    public void VTRef_Insert_Fail_Incomplete1([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info, false, 1);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301TableId"].SetInteger(info.Provider.DocTypes["D1"].TableId);
+      // Не присвоили "F301DocId"
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void VTRef_Insert_Fail_Incomplete2([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info, false, 1);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301DocId"].SetInteger(docId1);
+      // Не присвоили "F301TableId"
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void VTRef_Insert_Fail_Invalid_TableId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info, false, 1);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301TableId"].SetInteger(1000000); // неправильный идентификатор таблицы
+      doc3.Values["F301DocId"].SetInteger(1);
+      // Не присвоили "F301DocId"
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void VTRef_Insert_Fail_Unappliable_TableId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info, false, 1);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301TableId"].SetInteger(info.Provider.DocTypes["D3"].TableId); // нет в списке разрешенных таблиц
+      doc3.Values["F301DocId"].SetInteger(doc3.DocId);
+      // Не присвоили "F301DocId"
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+#endif
 
     #endregion
 

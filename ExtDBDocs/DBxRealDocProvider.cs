@@ -75,28 +75,28 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("source");
       source.SetReadOnly();
 
-      NamedValues FixedInfo = new NamedValues();
+      NamedValues fixedInfo = new NamedValues();
 
-      FixedInfo["DocTypes"] = source.GlobalData.DocTypes;
+      fixedInfo["DocTypes"] = source.GlobalData.DocTypes;
 
-      FixedInfo["UserId"] = userId;
-      FixedInfo["SessionId"] = sessionId;
+      fixedInfo["UserId"] = userId;
+      fixedInfo["SessionId"] = sessionId;
 
-      FixedInfo["DBIdentity"] = source.GlobalData.DBIdentity;
+      fixedInfo["DBIdentity"] = source.GlobalData.DBIdentity;
 
-      FixedInfo["BinDataInfo"] = new DBxBinDataHandlerInfo(source.GlobalData.BinDataHandler);
+      fixedInfo["BinDataInfo"] = new DBxBinDataHandlerInfo(source.GlobalData.BinDataHandler);
 
-      FixedInfo["UseDocHist"] = source.GlobalData.UndoDBEntry != null;
+      fixedInfo["UseDocHist"] = source.GlobalData.UndoDBEntry != null;
 
-      FixedInfo["MainDocTableServiceColumns"] = source.GlobalData.MainDocTableServiceColumns;
-      FixedInfo["SubDocTableServiceColumns"] = source.GlobalData.SubDocTableServiceColumns;
-      FixedInfo["AllDocServiceColumns"] = source.GlobalData.AllDocServiceColumns;
-      FixedInfo["AllSubDocServiceColumns"] = source.GlobalData.AllSubDocServiceColumns;
-      FixedInfo["DBPermissions"] = source.MainDBEntry.Permissions;
-      FixedInfo["UserPermissions"] = source.UserPermissions.AsXmlText;
+      fixedInfo["MainDocTableServiceColumns"] = source.GlobalData.MainDocTableServiceColumns;
+      fixedInfo["SubDocTableServiceColumns"] = source.GlobalData.SubDocTableServiceColumns;
+      fixedInfo["AllDocServiceColumns"] = source.GlobalData.AllDocServiceColumns;
+      fixedInfo["AllSubDocServiceColumns"] = source.GlobalData.AllSubDocServiceColumns;
+      fixedInfo["DBPermissions"] = source.MainDBEntry.Permissions;
+      fixedInfo["UserPermissions"] = source.UserPermissions.AsXmlText;
 
-      FixedInfo.SetReadOnly();
-      return FixedInfo;
+      fixedInfo.SetReadOnly();
+      return fixedInfo;
     }
 
 #if DEBUG
@@ -195,13 +195,13 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      DBxTableStruct Struct = DocTypes[docTypeName].Struct;
+      DBxTableStruct tblStruct = DocTypes[docTypeName].Struct;
       using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
       {
-        DataTable Table = Con.FillSelect(docTypeName, GetColumns(docTypeName, null), filter);
-        Struct.InitDataRowLimits(Table);
-        Table.AcceptChanges(); // 06.08.2018
-        return Table;
+        DataTable tbl = Con.FillSelect(docTypeName, GetColumns(docTypeName, null), filter);
+        tblStruct.InitDataRowLimits(tbl);
+        tbl.AcceptChanges(); // 06.08.2018
+        return tbl;
       }
     }
 
@@ -217,18 +217,18 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      DBxTableStruct Struct = DocTypes[docTypeName].SubDocs[subDocTypeName].Struct;
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      DBxTableStruct tblStruct = DocTypes[docTypeName].SubDocs[subDocTypeName].Struct;
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        DBxFilter Filter = new IdsFilter("DocId", docIds);
+        DBxFilter filter = new IdsFilter("DocId", docIds);
         if (DocTypes.UseDeleted) // 06.08.2018
-          Filter = new AndFilter(Filter, DBSSubDocType.DeletedFalseFilter);
+          filter = new AndFilter(filter, DBSSubDocType.DeletedFalseFilter);
 
-        DataTable Table = Con.FillSelect(subDocTypeName, GetColumns(docTypeName, subDocTypeName),
-          Filter);
-        Struct.InitDataRowLimits(Table);
-        Table.AcceptChanges(); // 06.08.2018
-        return Table;
+        DataTable tbl = con.FillSelect(subDocTypeName, GetColumns(docTypeName, subDocTypeName),
+          filter);
+        tblStruct.InitDataRowLimits(tbl);
+        tbl.AcceptChanges(); // 06.08.2018
+        return tbl;
       }
     }
 
@@ -242,9 +242,9 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
       // System.Threading.Thread.Sleep(100000);
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.FillSelect(info);
+        return con.FillSelect(info);
       }
 
     }
@@ -261,9 +261,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.FillUniqueColumnValues(tableName, columnName, where);
+        return con.FillUniqueColumnValues(tableName, columnName, where);
       }
     }
 
@@ -280,9 +280,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueStringValues(tableName, columnName, where);
+        return con.GetUniqueStringValues(tableName, columnName, where);
       }
     }
 
@@ -299,9 +299,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueIntValues(tableName, columnName, where);
+        return con.GetUniqueIntValues(tableName, columnName, where);
       }
     }
 
@@ -319,9 +319,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueInt64Values(tableName, columnName, where);
+        return con.GetUniqueInt64Values(tableName, columnName, where);
       }
     }
 
@@ -338,9 +338,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueSingleValues(tableName, columnName, where);
+        return con.GetUniqueSingleValues(tableName, columnName, where);
       }
     }
 
@@ -357,9 +357,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueDoubleValues(tableName, columnName, where);
+        return con.GetUniqueDoubleValues(tableName, columnName, where);
       }
     }
 
@@ -376,9 +376,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueDecimalValues(tableName, columnName, where);
+        return con.GetUniqueDecimalValues(tableName, columnName, where);
       }
     }
 
@@ -395,9 +395,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueDateTimeValues(tableName, columnName, where);
+        return con.GetUniqueDateTimeValues(tableName, columnName, where);
       }
     }
 
@@ -414,9 +414,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetUniqueGuidValues(tableName, columnName, where);
+        return con.GetUniqueGuidValues(tableName, columnName, where);
       }
     }
 
@@ -431,9 +431,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetRecordCount(tableName);
+        return con.GetRecordCount(tableName);
       }
     }
 
@@ -447,9 +447,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetRecordCount(tableName, where);
+        return con.GetRecordCount(tableName, where);
       }
     }
 
@@ -463,9 +463,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.IsTableEmpty(tableName);
+        return con.IsTableEmpty(tableName);
       }
     }
 
@@ -509,9 +509,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.FindRecord(tableName, where, orderBy);
+        return con.FindRecord(tableName, where, orderBy);
       }
     }
 
@@ -527,9 +527,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.FindRecord(tableName, where, singleOnly);
+        return con.FindRecord(tableName, where, singleOnly);
       }
     }
 
@@ -548,9 +548,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetValue(tableName, id, columnName, out value);
+        return con.GetValue(tableName, id, columnName, out value);
       }
     }
 
@@ -567,9 +567,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetValues(tableName, id, columnNames);
+        return con.GetValues(tableName, id, columnNames);
       }
     }
 
@@ -584,9 +584,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetIds(tableName, where);
+        return con.GetIds(tableName, where);
       }
     }
 
@@ -603,9 +603,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetMinValue(tableName, columnName, where);
+        return con.GetMinValue(tableName, columnName, where);
       }
     }
 
@@ -622,9 +622,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetMaxValue(tableName, columnName, where);
+        return con.GetMaxValue(tableName, columnName, where);
       }
     }
 
@@ -646,9 +646,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetValuesForMax(tableName, columnNames, maxColumnName, where);
+        return con.GetValuesForMax(tableName, columnNames, maxColumnName, where);
       }
     }
 
@@ -670,9 +670,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetValuesForMin(tableName, columnNames, minColumnName, where);
+        return con.GetValuesForMin(tableName, columnNames, minColumnName, where);
       }
     }
 
@@ -689,9 +689,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetSumValue(tableName, columnName, where);
+        return con.GetSumValue(tableName, columnName, where);
       }
     }
 
@@ -715,9 +715,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        return Con.GetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
+        return con.GetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
       }
     }
 
@@ -971,36 +971,36 @@ namespace FreeLibSet.Data.Docs
       //}
 
       // Открываем документ на просмотр, чтобы убедиться в наличии прав доступа
-      DBxDocSet DocSet = new DBxDocSet(this);
-      DBxSingleDoc Doc;
+      DBxDocSet docSet = new DBxDocSet(this);
+      DBxSingleDoc doc;
       if (docId < 0)
-        Doc = DocSet[dt.Name].Insert();
+        doc = docSet[dt.Name].Insert();
       else
       {
         if (docVersion == 0)
-          Doc = DocSet[dt.Name].View(docId); // тут может быть DBxAccessException
+          doc = docSet[dt.Name].View(docId); // тут может быть DBxAccessException
         else
-          Doc = DocSet[dt.Name].ViewVersion(docId, docVersion); // 26.04.2017
+          doc = docSet[dt.Name].ViewVersion(docId, docVersion); // 26.04.2017
       }
 
       if (sdt == null)
       {
         // Само значение идентификатора нам не нужно. Все равно оно могло уже устареть.
         // Главное, что у нас есть право на получение этого значения
-        object DummyValue = Doc.Values[columnName].Value;
+        object dummyValue = doc.Values[columnName].Value;
       }
       else
       {
-        DBxSubDoc SubDoc;
+        DBxSubDoc subDoc;
         if (subDocId < 0)
         {
           if (docId > 0 && docVersion == 0) // 02.09.2018
-            Doc.Edit(); // переключаемся на редактирование
-          SubDoc = Doc.SubDocs[sdt.Name].Insert();
+            doc.Edit(); // переключаемся на редактирование
+          subDoc = doc.SubDocs[sdt.Name].Insert();
         }
         else
-          SubDoc = Doc.SubDocs[sdt.Name].GetSubDocById(subDocId);
-        object DummyValue = SubDoc.Values[columnName].Value;
+          subDoc = doc.SubDocs[sdt.Name].GetSubDocById(subDocId);
+        object dummyValue = subDoc.Values[columnName].Value;
       }
     }
 
@@ -1023,6 +1023,8 @@ namespace FreeLibSet.Data.Docs
     #endregion
 
     #region Запись изменений
+
+    #region Процедура ExecProc
 
     /// <summary>
     /// Не используется в пользовательском коде
@@ -1055,16 +1057,16 @@ namespace FreeLibSet.Data.Docs
 
       protected override NamedValues OnExecute(NamedValues args)
       {
-        NamedValues DispRes = new NamedValues();
-        string Action = args.GetString("Action");
-        switch (Action)
+        NamedValues dispRes = new NamedValues();
+        string action = args.GetString("Action");
+        switch (action)
         {
           case "FillSelect": // 19.08.2020
-            DispRes["Table"] = _DocProvider.FillSelect((DBxSelectInfo)(args["SelectInfo"]));
+            dispRes["Table"] = _DocProvider.FillSelect((DBxSelectInfo)(args["SelectInfo"]));
             break;
 
           case "ApplyChanges":
-            DispRes["DataSet"] = _DocProvider.ApplyChangesInternal(/*this,*/ (DataSet)(args["DataSet"]), args.GetBool("ReloadData"));
+            dispRes["DataSet"] = _DocProvider.ApplyChangesInternal(/*this,*/ (DataSet)(args["DataSet"]), args.GetBool("ReloadData"));
             break;
 
           case "RecalcColumns":
@@ -1072,14 +1074,14 @@ namespace FreeLibSet.Data.Docs
             break;
 
           case "InternalGetBinData2": // 14.10.2020
-            DispRes["Data"] = _DocProvider.InternalGetBinData2(args.GetString("TableName"),
+            dispRes["Data"] = _DocProvider.InternalGetBinData2(args.GetString("TableName"),
               args.GetString("ColumnName"),
               (DocSubDocDataId)(args["WantedId"]),
               args.GetInt("DocVersion"),
               (List<DocSubDocDataId>)(args["PreloadIds"]));
             break;
           case "InternalGetDBFile2": // 14.10.2020
-            DispRes["Data"] = _DocProvider.InternalGetDBFile2(args.GetString("TableName"),
+            dispRes["Data"] = _DocProvider.InternalGetDBFile2(args.GetString("TableName"),
               args.GetString("ColumnName"),
               (DocSubDocDataId)(args["WantedId"]),
               args.GetInt("DocVersion"),
@@ -1087,13 +1089,15 @@ namespace FreeLibSet.Data.Docs
             break;
 
           default:
-            throw new ArgumentException("Неизвестный Action=" + Action.ToString(), "args");
+            throw new ArgumentException("Неизвестный Action=" + action.ToString(), "args");
         }
-        return DispRes;
+        return dispRes;
       }
 
       #endregion
     }
+
+    #endregion
 
     #region Основные методы
 
@@ -1114,16 +1118,16 @@ namespace FreeLibSet.Data.Docs
 
       // Нам нужно использовать блокировки
       // Если метод вызван не из процедуры ExecProc, создаем временную процедуру
-      ExecProc CurrProc = ExecProc.CurrentProc;
-      if (CurrProc == null)
+      ExecProc currProc = ExecProc.CurrentProc;
+      if (currProc == null)
       {
-        using (RealDocProviderExecProc Proc2 = new RealDocProviderExecProc(this))
+        using (RealDocProviderExecProc proc2 = new RealDocProviderExecProc(this))
         {
-          NamedValues DispArgs = new NamedValues();
-          DispArgs["Action"] = "ApplyChanges";
-          DispArgs["DataSet"] = dataSet;
-          DispArgs["ReloadData"] = reloadData;
-          NamedValues DispRes = Proc2.Execute(DispArgs);
+          NamedValues dispArgs = new NamedValues();
+          dispArgs["Action"] = "ApplyChanges";
+          dispArgs["DataSet"] = dataSet;
+          dispArgs["ReloadData"] = reloadData;
+          NamedValues DispRes = proc2.Execute(dispArgs);
           return (DataSet)(DispRes["DataSet"]);
         }
       }
@@ -1199,7 +1203,7 @@ namespace FreeLibSet.Data.Docs
 
     private DataSet ApplyChangesInternal(/*ExecProc caller, */DataSet ds, bool reloadData)
     {
-      ExtendedPropertiesSaver OldProps = new ExtendedPropertiesSaver(ds);
+      ExtendedPropertiesSaver oldProps = new ExtendedPropertiesSaver(ds);
       try
       {
         return ApplyChangesInternal2(/*caller, */ds, reloadData);
@@ -1208,7 +1212,7 @@ namespace FreeLibSet.Data.Docs
       {
         try
         {
-          OldProps.Restore(ds); // 24.11.2019
+          oldProps.Restore(ds); // 24.11.2019
         }
         catch (Exception e2) // 20.06.2021
         {
@@ -1226,8 +1230,8 @@ namespace FreeLibSet.Data.Docs
       // Если сначала выполнить другие действия, то набежит задержка.
       // Делать это в OnApplyChanges() нет особого смысла, т.к. ApplyChangesInternal() вызывается
       // синхронно, то есть без задержки.
-      TimeSpan EditTime = TimeSpan.Parse(ds.ExtendedProperties["EditTime"].ToString());
-      DateTime StartTime = DateTime.Now - EditTime;
+      TimeSpan editTime = TimeSpan.Parse(ds.ExtendedProperties["EditTime"].ToString());
+      DateTime startTime = DateTime.Now - editTime;
 
 
       // Извлекаем параметры
@@ -1250,19 +1254,19 @@ namespace FreeLibSet.Data.Docs
       #endregion
 
       // Установка соединений
-      using (DBxConArray Cons = new DBxConArray(
+      using (DBxConArray cons = new DBxConArray(
         Source.MainDBEntry, // с правами текущего пользователя
         Source.GlobalData.MainDBEntry, // с полными правами
         Source.GlobalData.UndoDBEntry))
       {
-        DBxCon MainConUser = Cons[0];
-        DocUndoHelper UndoHelper = new DocUndoHelper(Cons[1], Cons[2],
-        this.UserId, this.SessionId, docSet.UserActionId, docSet.ActionInfo, DocTypes, StartTime);
+        DBxCon mainConUser = cons[0];
+        DocUndoHelper undoHelper = new DocUndoHelper(cons[1], cons[2],
+        this.UserId, this.SessionId, docSet.UserActionId, docSet.ActionInfo, DocTypes, startTime);
 
         // Установка блокировки на запись документов
-        DBxShortDocsLock DBLock = new DBxShortDocsLock(this, docSet.IgnoreAllLocks, docSet.IgnoredLocks);
-        DBLock.Data.Init(this, ds);
-        using (new ExecProcLockKey(DBLock))
+        DBxShortDocsLock dbLock = new DBxShortDocsLock(this, docSet.IgnoreAllLocks, docSet.IgnoredLocks);
+        dbLock.Data.Init(this, ds);
+        using (new ExecProcLockKey(dbLock))
         {
           Source.PerformBeforeApplyChanges(docSet); // 15.11.2016
 
@@ -1273,19 +1277,19 @@ namespace FreeLibSet.Data.Docs
           orgDocSet.View(docSel);
 
           // Вызов обработчиков DBxDocType
-          foreach (DBxMultiDocs Docs in docSet)
+          foreach (DBxMultiDocs docs in docSet)
           {
 #if DEBUG
-            if (Docs.DocType.TableId == 0)
-              throw new BugException("Для документов " + Docs.DocType.ToString() + " не установлено свойство TableId");
+            if (docs.DocType.TableId == 0)
+              throw new BugException("Для документов " + docs.DocType.ToString() + " не установлено свойство TableId");
 #endif
 
-            for (int i = 0; i < Docs.DocCount; i++)
+            for (int i = 0; i < docs.DocCount; i++)
             {
-              DBxSingleDoc doc = Docs[i];
+              DBxSingleDoc doc = docs[i];
               DBxSingleDoc orgDoc = new DBxSingleDoc();
               if (this.IsRealDocId(doc.DocId) && doc.DocState != DBxDocState.View)
-                orgDoc = orgDocSet[Docs.DocType.Name].GetDocById(doc.DocId);
+                orgDoc = orgDocSet[docs.DocType.Name].GetDocById(doc.DocId);
               CallDocTypeEventsForDoc(doc, orgDoc);
             }
           }
@@ -1294,36 +1298,36 @@ namespace FreeLibSet.Data.Docs
           docSet.InternalDeleteUnusedBinDataAndFiles();
 
           // Вызываем AppendBinData() и заменяем фиктивные ссылки
-          Dictionary<Int32, Int32> BinDataReplaces = CallAppendBinData(ds);
-          ReplaceAppendBinData(ds, BinDataReplaces);
+          Dictionary<Int32, Int32> binDataReplaces = CallAppendBinData(ds);
+          ReplaceAppendBinData(ds, binDataReplaces);
           // Вызываем AppendDBFile() и заменяем фиктивные ссылки
-          Dictionary<Int32, Int32> FileNameReplaces = CallAppendDBFiles(ds);
-          ReplaceAppendDBFiles(ds, FileNameReplaces);
+          Dictionary<Int32, Int32> fileNameReplaces = CallAppendDBFiles(ds);
+          ReplaceAppendDBFiles(ds, fileNameReplaces);
 
           #region Проверка возможности удаления документов и поддокументов
 
-          foreach (DBxMultiDocs MultiDocs in docSet)
-            ApplyDocDelete1(MainConUser, MultiDocs);
+          foreach (DBxMultiDocs multiDocs in docSet)
+            ApplyDocDelete1(mainConUser, multiDocs);
 
           #endregion
 
           // Актуализация undo
-          ActualizeUndo(docSet, UndoHelper, MainConUser);
+          ActualizeUndo(docSet, undoHelper, mainConUser);
 
           #region Выполняем реальную запись
 
-          using (DBxTransactionArray ta = new DBxTransactionArray(Cons[2], Cons[0]))
+          using (DBxTransactionArray ta = new DBxTransactionArray(cons[2], cons[0]))
           {
             #region Замена фиктивных идентификаторов Id для новых документов / поддокументов на реальные, которые будут записаны
 
-            DBxDocProviderIdReplacer IdReplacer = new DBxDocProviderIdReplacer(this);
-            IdReplacer.PerformReplace(docSet, ds);
+            DBxDocProviderIdReplacer idReplacer = new DBxDocProviderIdReplacer(this);
+            idReplacer.PerformReplace(docSet, ds);
 
             #endregion
 
-            WriteChanges2(docSet, MainConUser, UndoHelper, IdReplacer);
+            WriteChanges2(docSet, mainConUser, undoHelper, idReplacer);
 
-            WriteDelayedColumns(IdReplacer.DelayedList, ds, MainConUser);
+            WriteDelayedColumns(idReplacer.DelayedList, ds, mainConUser);
 
             if (docSet.CheckDocs)
               DoCheckDocs(docSet);
@@ -1331,7 +1335,7 @@ namespace FreeLibSet.Data.Docs
             ta.Commit();
           }
 
-          docSet.UserActionId = UndoHelper.UserActionId;
+          docSet.UserActionId = undoHelper.UserActionId;
 
           #region Убираем невозвратные таблицы
 
@@ -1359,7 +1363,7 @@ namespace FreeLibSet.Data.Docs
         }
       }
       // Извещаем о записи документа
-      PerformAfterWrite(docSet);
+      PerformAfterChange(docSet);
 
       if (reloadData)
       {
@@ -1376,7 +1380,7 @@ namespace FreeLibSet.Data.Docs
     private string MakeActionInfo(DBxDocSet docSet)
     {
       StringBuilder sb = new StringBuilder();
-      foreach (DBxMultiDocs Docs in docSet)
+      foreach (DBxMultiDocs docs in docSet)
       {
         int pos = sb.Length;
         switch (docSet.DocStateNoView)
@@ -1400,18 +1404,18 @@ namespace FreeLibSet.Data.Docs
         if (pos > 0)
           sb.Insert(pos, ", ");
 
-        if (Docs.DocCount == 1)
+        if (docs.DocCount == 1)
         {
           sb.Append(" д-та \"");
-          sb.Append(Docs.DocType.SingularTitle);
+          sb.Append(docs.DocType.SingularTitle);
           sb.Append("\"");
         }
         else
         {
           sb.Append(" д-тов \"");
-          sb.Append(Docs.DocType.PluralTitle);
+          sb.Append(docs.DocType.PluralTitle);
           sb.Append("\" (");
-          sb.Append(Docs.DocCount.ToString());
+          sb.Append(docs.DocCount.ToString());
           sb.Append(")");
         }
       }
@@ -1428,14 +1432,14 @@ namespace FreeLibSet.Data.Docs
     /// <param name="ds"></param>
     private static void RestoreAddedState(DataSet ds)
     {
-      foreach (DataTable Table in ds.Tables)
+      foreach (DataTable table in ds.Tables)
       {
-        foreach (DataRow Row in Table.Rows)
+        foreach (DataRow row in table.Rows)
         {
-          if (Row.RowState == DataRowState.Modified)
+          if (row.RowState == DataRowState.Modified)
           {
-            if (DataTools.GetInt(Row, "Id") < 0)
-              DataTools.SetRowState(Row, DataRowState.Added);
+            if (DataTools.GetInt(row, "Id") < 0)
+              DataTools.SetRowState(row, DataRowState.Added);
           }
         }
       }
@@ -1456,20 +1460,20 @@ namespace FreeLibSet.Data.Docs
         throw new NullReferenceException("Обработчик BinDataHandler не присоединен");
 #endif
 
-      Dictionary<Int32, Int32> Dict = new Dictionary<Int32, Int32>();
-      foreach (DataRow Row in tblBinData.Rows)
+      Dictionary<Int32, Int32> dict = new Dictionary<Int32, Int32>();
+      foreach (DataRow row in tblBinData.Rows)
       {
-        Int32 OldId = (Int32)(Row["Id"]);
+        Int32 oldId = (Int32)(row["Id"]);
 #if DEBUG
-        if (OldId >= 0)
-          throw new BugException("В таблице BinData присутствует строка с Id=" + OldId.ToString() + ". Ожидался отрицательный идентификатор");
+        if (oldId >= 0)
+          throw new BugException("В таблице BinData присутствует строка с Id=" + oldId.ToString() + ". Ожидался отрицательный идентификатор");
 #endif
-        byte[] Data = (byte[])(Row["Contents"]);
-        Int32 NewId = _Source.GlobalData.BinDataHandler.AppendBinData(Data);
-        Dict.Add(OldId, NewId);
+        byte[] binData = (byte[])(row["Contents"]);
+        Int32 newId = _Source.GlobalData.BinDataHandler.AppendBinData(binData);
+        dict.Add(oldId, newId);
       }
 
-      return Dict;
+      return dict;
     }
 
     private void ReplaceAppendBinData(DataSet ds, Dictionary<Int32, Int32> binDataReplaces)
@@ -1477,27 +1481,27 @@ namespace FreeLibSet.Data.Docs
       if (binDataReplaces == null)
         return;
 
-      foreach (DataTable Table in ds.Tables)
+      foreach (DataTable table in ds.Tables)
       {
-        if (Table.Rows.Count == 0)
+        if (table.Rows.Count == 0)
           continue;
 
-        DBxDocTypeBase dt = DocTypes.FindByTableName(Table.TableName);
+        DBxDocTypeBase dt = DocTypes.FindByTableName(table.TableName);
         if (dt == null)
           continue;
 
         for (int i = 0; i < dt.BinDataRefs.Count; i++)
         {
-          int p = Table.Columns.IndexOf(dt.BinDataRefs[i].Column.ColumnName);
+          int p = table.Columns.IndexOf(dt.BinDataRefs[i].Column.ColumnName);
 
-          for (int j = 0; j < Table.Rows.Count; j++)
+          for (int j = 0; j < table.Rows.Count; j++)
           {
-            if (Table.Rows[j].RowState == DataRowState.Deleted)
+            if (table.Rows[j].RowState == DataRowState.Deleted)
               continue;
-            Int32 Id = DataTools.GetInt(Table.Rows[j][p]);
-            Int32 NewId;
-            if (binDataReplaces.TryGetValue(Id, out NewId))
-              Table.Rows[j][p] = NewId;
+            Int32 id = DataTools.GetInt(table.Rows[j][p]);
+            Int32 newId;
+            if (binDataReplaces.TryGetValue(id, out newId))
+              table.Rows[j][p] = newId;
           }
         }
       }
@@ -1507,12 +1511,12 @@ namespace FreeLibSet.Data.Docs
       DataTable tblFileNames = ds.Tables["FileNames"];
       if (tblFileNames != null)
       {
-        foreach (DataRow Row in tblFileNames.Rows)
+        foreach (DataRow row in tblFileNames.Rows)
         {
-          Int32 OldDataId = DataTools.GetInt(Row, "Data");
-          Int32 NewDataId;
-          if (binDataReplaces.TryGetValue(OldDataId, out NewDataId))
-            Row["Data"] = NewDataId;
+          Int32 oldDataId = DataTools.GetInt(row, "Data");
+          Int32 newDataId;
+          if (binDataReplaces.TryGetValue(oldDataId, out newDataId))
+            row["Data"] = newDataId;
         }
       }
 
@@ -1530,28 +1534,28 @@ namespace FreeLibSet.Data.Docs
         throw new NullReferenceException("Обработчик BinDataHandler не присоединен");
 #endif
 
-      Dictionary<Int32, Int32> Dict = new Dictionary<Int32, Int32>();
-      foreach (DataRow Row in tblFileNames.Rows)
+      Dictionary<Int32, Int32> dict = new Dictionary<Int32, Int32>();
+      foreach (DataRow row in tblFileNames.Rows)
       {
-        Int32 OldId = (Int32)(Row["Id"]);
+        Int32 oldId = (Int32)(row["Id"]);
 #if DEBUG
-        if (OldId >= 0)
-          throw new BugException("В таблице FileNames присутствует строка с Id=" + OldId.ToString() + ". Ожидался отрицательный идентификатор");
+        if (oldId >= 0)
+          throw new BugException("В таблице FileNames присутствует строка с Id=" + oldId.ToString() + ". Ожидался отрицательный идентификатор");
 #endif
-        Int32 DataId = DataTools.GetInt(Row, "Data");
-        if (DataId <= 0)
-          throw new BugException("В таблице FileNames присутствует строка, в которой Data=" + DataId.ToString());
+        Int32 dataId = DataTools.GetInt(row, "Data");
+        if (dataId <= 0)
+          throw new BugException("В таблице FileNames присутствует строка, в которой Data=" + dataId.ToString());
 
-        StoredFileInfo FileInfo = new StoredFileInfo(DataTools.GetString(Row, "Name"),
-          DataTools.GetInt(Row, "Length"),
-          DataTools.GetNullableDateTime(Row, "CreationTime"),
-          DataTools.GetNullableDateTime(Row, "LastWriteTime"));
+        StoredFileInfo fileInfo = new StoredFileInfo(DataTools.GetString(row, "Name"),
+          DataTools.GetInt(row, "Length"),
+          DataTools.GetNullableDateTime(row, "CreationTime"),
+          DataTools.GetNullableDateTime(row, "LastWriteTime"));
 
-        Int32 NewId = _Source.GlobalData.BinDataHandler.AppendDBFile(FileInfo, DataId);
-        Dict.Add(OldId, NewId);
+        Int32 newId = _Source.GlobalData.BinDataHandler.AppendDBFile(fileInfo, dataId);
+        dict.Add(oldId, newId);
       }
 
-      return Dict;
+      return dict;
     }
 
     private void ReplaceAppendDBFiles(DataSet ds, Dictionary<Int32, Int32> fileNameReplaces)
@@ -1559,31 +1563,30 @@ namespace FreeLibSet.Data.Docs
       if (fileNameReplaces == null)
         return;
 
-      foreach (DataTable Table in ds.Tables)
+      foreach (DataTable table in ds.Tables)
       {
-        if (Table.Rows.Count == 0)
+        if (table.Rows.Count == 0)
           continue;
 
-        DBxDocTypeBase dt = DocTypes.FindByTableName(Table.TableName);
+        DBxDocTypeBase dt = DocTypes.FindByTableName(table.TableName);
         if (dt == null)
           continue;
 
         for (int i = 0; i < dt.FileRefs.Count; i++)
         {
-          int p = Table.Columns.IndexOf(dt.FileRefs[i].Column.ColumnName);
+          int p = table.Columns.IndexOf(dt.FileRefs[i].Column.ColumnName);
 
-          for (int j = 0; j < Table.Rows.Count; j++)
+          for (int j = 0; j < table.Rows.Count; j++)
           {
-            if (Table.Rows[j].RowState == DataRowState.Deleted)
+            if (table.Rows[j].RowState == DataRowState.Deleted)
               continue;
-            Int32 Id = DataTools.GetInt(Table.Rows[j][p]);
-            Int32 NewId;
-            if (fileNameReplaces.TryGetValue(Id, out NewId))
-              Table.Rows[j][p] = NewId;
+            Int32 id = DataTools.GetInt(table.Rows[j][p]);
+            Int32 newId;
+            if (fileNameReplaces.TryGetValue(id, out newId))
+              table.Rows[j][p] = newId;
           }
         }
       }
-
     }
 
     #endregion
@@ -1679,43 +1682,43 @@ namespace FreeLibSet.Data.Docs
 
       undoHelper.InitUserAction();
 
-      foreach (DBxMultiDocs MultiDocs in docSet)
+      foreach (DBxMultiDocs multiDocs in docSet)
       {
-        for (int i = 0; i < MultiDocs.DocCount; i++)
+        for (int i = 0; i < multiDocs.DocCount; i++)
         {
-          DBxSingleDoc Doc = MultiDocs[i];
-          switch (Doc.DocState)
+          DBxSingleDoc doc = multiDocs[i];
+          switch (doc.DocState)
           {
             case DBxDocState.Edit:
             case DBxDocState.Delete:
-              if (MultiDocs.GetDocIdActionId(Doc.DocId) == 0)
+              if (multiDocs.GetDocIdActionId(doc.DocId) == 0)
               {
                 // Первое обращение к документу - требуется проверка таблицы DocActions
-                undoHelper.ValidateDocVersion(MultiDocs.DocType, Doc.DocId);
-                if (Doc.DocState == DBxDocState.Edit && Doc.IsDataModified)
+                undoHelper.ValidateDocVersion(multiDocs.DocType, doc.DocId);
+                if (doc.DocState == DBxDocState.Edit && doc.IsDataModified)
                 {
-                  int DocVersion = DataTools.GetInt(mainConUser.GetValue(MultiDocs.DocType.Name, Doc.DocId, "Version"));
-                  if (DocVersion == 0) // Исправляем ошибку
-                    DocVersion = 1;
-                  if (Doc.IsMainDocModified)
-                    undoHelper.ActualizeMainDoc(MultiDocs.DocType, Doc.DocId, DocVersion);
-                  for (int j = 0; j < Doc.SubDocs.Count; j++)
+                  int docVersion = DataTools.GetInt(mainConUser.GetValue(multiDocs.DocType.Name, doc.DocId, "Version"));
+                  if (docVersion == 0) // Исправляем ошибку
+                    docVersion = 1;
+                  if (doc.IsMainDocModified)
+                    undoHelper.ActualizeMainDoc(multiDocs.DocType, doc.DocId, docVersion);
+                  for (int j = 0; j < doc.SubDocs.Count; j++)
                   {
-                    foreach (DBxSubDoc SubDoc in Doc.SubDocs[j])
+                    foreach (DBxSubDoc subDoc in doc.SubDocs[j])
                     {
                       // 19.03.2016
-                      if (SubDoc.SubDocId < 0)
+                      if (subDoc.SubDocId < 0)
                         continue; // сначала поддокумент добавили, затем сразу удалили или изменили
 
-                      switch (SubDoc.SubDocState)
+                      switch (subDoc.SubDocState)
                       {
                         case DBxDocState.Edit:
-                          if (SubDoc.IsDataModified)
-                            undoHelper.ActualizeSubDoc(SubDoc.SubDocType, SubDoc.SubDocId, DocVersion);
+                          if (subDoc.IsDataModified)
+                            undoHelper.ActualizeSubDoc(subDoc.SubDocType, subDoc.SubDocId, docVersion);
                           break;
                         case DBxDocState.Delete:
                           // при удалении тоже актуализация
-                          undoHelper.ActualizeSubDoc(SubDoc.SubDocType, SubDoc.SubDocId, DocVersion);
+                          undoHelper.ActualizeSubDoc(subDoc.SubDocType, subDoc.SubDocId, docVersion);
                           break;
                       }
                     }
@@ -1758,16 +1761,16 @@ namespace FreeLibSet.Data.Docs
         DBxColumns usedColumnNames = null;
         for (int docIndex = 0; docIndex < multiDocs.DocCount; docIndex++)
         {
-          DBxSingleDoc Doc = multiDocs[docIndex];
+          DBxSingleDoc doc = multiDocs[docIndex];
 
-          switch (Doc.DocState)
+          switch (doc.DocState)
           {
             case DBxDocState.Insert:
             case DBxDocState.Edit:
-              ApplyDocChanges2(multiDocs.DocType, mainConUser, undoHelper, Doc, idReplacer, ref usedColumnNames, realDel);
+              ApplyDocChanges2(multiDocs.DocType, mainConUser, undoHelper, doc, idReplacer, ref usedColumnNames, realDel);
               break;
             case DBxDocState.Delete:
-              ApplyDocDelete2(multiDocs, mainConUser, undoHelper, Doc.DocId, realDel);
+              ApplyDocDelete2(multiDocs, mainConUser, undoHelper, doc.DocId, realDel);
               break;
           }
         }
@@ -1782,7 +1785,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     private void ApplyDocChanges2(DBxDocType docType, DBxCon mainConUser, DocUndoHelper undoHelper,
       DBxSingleDoc doc,
-      DBxDocProviderIdReplacer IdReplacer, ref DBxColumns UsedColumnNames1,
+      DBxDocProviderIdReplacer idReplacer, ref DBxColumns usedColumnNames1,
       RealDelList realDel)
     {
       //  SingleDocChangesInfo SingleChanges=MultiChanges.Docs[DocIndex];
@@ -1862,7 +1865,7 @@ namespace FreeLibSet.Data.Docs
       // Формируем поля для основной записи
       Hashtable fieldPairs = new Hashtable();
 
-      bool hasPairs = AddUserFieldPairs(fieldPairs, doc.Row, docRealAdded, DBPermissions, mainConUser, ref UsedColumnNames1, doc.DocType.Struct);
+      bool hasPairs = AddUserFieldPairs(fieldPairs, doc.Row, docRealAdded, DBPermissions, mainConUser, ref usedColumnNames1, doc.DocType.Struct);
 
       // Добавляем значения служебных полей
       if (doc.DocState == DBxDocState.Insert && firstCall)
@@ -1961,8 +1964,8 @@ namespace FreeLibSet.Data.Docs
           switch (subDoc.SubDocState)
           {
             case DBxDocState.Insert:
-              bool SubDocRealAdded = IdReplacer.IsAdded(SubDocTypeName, subDoc.SubDocId);
-              SubApplyChange1(subDoc, mainConUser, ts, SubDocRealAdded, currVersion, ref usedColumnNames2);
+              bool subDocRealAdded = idReplacer.IsAdded(SubDocTypeName, subDoc.SubDocId);
+              SubApplyChange1(subDoc, mainConUser, ts, subDocRealAdded, currVersion, ref usedColumnNames2);
               break;
             case DBxDocState.Edit:
               if (!subDoc.IsDataModified)
@@ -2020,8 +2023,7 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-
-      bool Res = false;
+      bool res = false;
 
       if (row.RowState == DataRowState.Added)
       {
@@ -2029,8 +2031,8 @@ namespace FreeLibSet.Data.Docs
 
         for (int i = 0; i < usedColumnNames.Count; i++)
         {
-          object NewValue = row[usedColumnNames[i]];
-          DBxColumnStruct ColDef = tableStruct.Columns[usedColumnNames[i]];
+          object newValue = row[usedColumnNames[i]];
+          DBxColumnStruct colDef = tableStruct.Columns[usedColumnNames[i]];
 
           // 09.12.2015: Добавление всех полей при повторном вызове для добавляемой записи
           //             У нас нет оригинальной версии строки для DataRowState.Added
@@ -2039,27 +2041,27 @@ namespace FreeLibSet.Data.Docs
 
           if (realAdd)
           {
-            if (ColDef.Nullable)
+            if (colDef.Nullable)
             {
-              if (DataTools.IsEmptyValue(NewValue))
+              if (DataTools.IsEmptyValue(newValue))
                 continue; // 07.08.2018
             }
-            else if (!Object.ReferenceEquals(ColDef.DefaultValue, null)) // дополнительное условие добавлено 19.09.2021
+            else if (!Object.ReferenceEquals(colDef.DefaultValue, null)) // дополнительное условие добавлено 19.09.2021
             {
-              if (NewValue is DBNull)
+              if (newValue is DBNull)
                 continue; // 16.08.2021
             }
           }
-          if (NewValue is DBNull && (!ColDef.Nullable))
+          if (newValue is DBNull && (!colDef.Nullable))
           {
-            if (ColDef.DefaultValue == null)
-              NewValue = DataTools.GetEmptyValue(ColDef.DataType); // 07.08.2018
+            if (colDef.DefaultValue == null)
+              newValue = DataTools.GetEmptyValue(colDef.DataType); // 07.08.2018
             else
-              NewValue = ColDef.DefaultValue; // 16.08.2021
+              newValue = colDef.DefaultValue; // 16.08.2021
           }
 
-          fieldPairs.Add(usedColumnNames[i], NewValue);
-          Res = true;
+          fieldPairs.Add(usedColumnNames[i], newValue);
+          res = true;
         }
 
         #endregion
@@ -2071,24 +2073,24 @@ namespace FreeLibSet.Data.Docs
         // 14.07.2016
         // Исходные значения берем не из версии строки Original, переданной снаружи,
         // а запрашиваем данные из базы данных
-        Int32 Id = (Int32)(row["Id"]);
+        Int32 id = (Int32)(row["Id"]);
 #if DEBUG
-        if (Id <= 0)
-          throw new BugException("Неправильное значение идентификатора Id=" + Id.ToString());
+        if (id <= 0)
+          throw new BugException("Неправильное значение идентификатора Id=" + id.ToString());
 #endif
-        object[] OrgValues = mainConUser.GetValues(row.Table.TableName, Id, usedColumnNames);
+        object[] orgValues = mainConUser.GetValues(row.Table.TableName, id, usedColumnNames);
 
         for (int i = 0; i < usedColumnNames.Count; i++)
         {
-          DBxColumnStruct ColDef = tableStruct.Columns[usedColumnNames[i]];
+          DBxColumnStruct colDef = tableStruct.Columns[usedColumnNames[i]];
 
-          object NewValue = row[usedColumnNames[i], DataRowVersion.Current];
-          if (NewValue is DBNull && (!ColDef.Nullable))
-            NewValue = DataTools.GetEmptyValue(ColDef.DataType); // 01.09.2018
+          object newValue = row[usedColumnNames[i], DataRowVersion.Current];
+          if (newValue is DBNull && (!colDef.Nullable))
+            newValue = DataTools.GetEmptyValue(colDef.DataType); // 01.09.2018
           // object OrgValue = Row[i, DataRowVersion.Original];
-          object OrgValue = OrgValues[i];
+          object orgValue = orgValues[i];
 
-          if (!DataTools.AreValuesEqual(OrgValue, NewValue))
+          if (!DataTools.AreValuesEqual(orgValue, newValue))
           {
             if (dbPermissions.ColumnModes[row.Table.TableName, usedColumnNames[i]] != DBxAccessMode.Full)
             {
@@ -2097,57 +2099,57 @@ namespace FreeLibSet.Data.Docs
               e.Data["TableName"] = row.Table.TableName;
               e.Data["Id"] = row["Id"];
               e.Data["ColumnnNane"] = usedColumnNames[i];
-              if (OrgValue is DBNull)
+              if (orgValue is DBNull)
                 e.Data["OrgValue"] = "NULL";
               else
-                e.Data["OrgValue"] = OrgValue;
-              if (NewValue is DBNull)
+                e.Data["OrgValue"] = orgValue;
+              if (newValue is DBNull)
                 e.Data["NewValue"] = "NULL";
               else
-                e.Data["NewValue"] = NewValue;
+                e.Data["NewValue"] = newValue;
               throw e;
             }
 
-            fieldPairs.Add(usedColumnNames[i], NewValue);
-            Res = true;
+            fieldPairs.Add(usedColumnNames[i], newValue);
+            res = true;
           }
         }
 
         #endregion
       }
 
-      return Res;
+      return res;
     }
 
     private void SubApplyChange1(DBxSubDoc subDoc, DBxCon mainConUser, DBxTableStruct tableDef, bool added, int docVersion, ref DBxColumns usedColumnNames)
     {
-      Hashtable FieldPairs = new Hashtable();
+      Hashtable fieldPairs = new Hashtable();
       // Служебные поля
       if (added)
       {
-        FieldPairs.Add("DocId", subDoc.Doc.DocId);
+        fieldPairs.Add("DocId", subDoc.Doc.DocId);
         if (DocTypes.UseVersions)
-          FieldPairs.Add("StartVersion", docVersion);
+          fieldPairs.Add("StartVersion", docVersion);
       }
 
       if (DocTypes.UseDeleted)
-        FieldPairs.Add("Deleted", false);
+        fieldPairs.Add("Deleted", false);
       // Основные поля
-      bool HasPairs = AddUserFieldPairs(FieldPairs, subDoc.Row, added, DBPermissions, mainConUser, ref usedColumnNames, subDoc.SubDocType.Struct);
+      bool hasPairs = AddUserFieldPairs(fieldPairs, subDoc.Row, added, DBPermissions, mainConUser, ref usedColumnNames, subDoc.SubDocType.Struct);
 
-      if (added || HasPairs)
+      if (added || hasPairs)
       {
         if (DocTypes.UseVersions)
-          FieldPairs.Add("Version2", docVersion);
+          fieldPairs.Add("Version2", docVersion);
       }
 
       if (added)
       {
-        FieldPairs.Add("Id", subDoc.SubDocId);
-        mainConUser.AddRecord(tableDef.TableName, FieldPairs);
+        fieldPairs.Add("Id", subDoc.SubDocId);
+        mainConUser.AddRecord(tableDef.TableName, fieldPairs);
       }
       else
-        mainConUser.SetValues(tableDef.TableName, subDoc.SubDocId, FieldPairs);
+        mainConUser.SetValues(tableDef.TableName, subDoc.SubDocId, fieldPairs);
     }
 
     private void SubApplyDelete1(DBxSubDoc subDoc, DBxCon mainConUser, int docVersion,
@@ -2191,11 +2193,11 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < delayedList.Count; i++)
       {
         mainConUser.SetValue(delayedList[i].TableName, delayedList[i].Id,
-          delayedList[i].FieldName, delayedList[i].FieldValue);
+          delayedList[i].ColumnName, delayedList[i].Value);
 
-        DataTable Table = ds.Tables[delayedList[i].TableName];
-        DataRow Row = Table.Rows.Find(delayedList[i].Id);
-        Row[delayedList[i].FieldName] = delayedList[i].FieldValue;
+        DataTable table = ds.Tables[delayedList[i].TableName];
+        DataRow row = table.Rows.Find(delayedList[i].Id);
+        row[delayedList[i].ColumnName] = delayedList[i].Value;
       }
     }
 
@@ -2469,17 +2471,17 @@ namespace FreeLibSet.Data.Docs
       if (detailsTable2 != null)
       {
         // Проверять надо все записи
-        IdList AllDelIdList = new IdList(allDelIds);
+        IdList allDelIdList = new IdList(allDelIds);
 
-        foreach (DataRow CheckRow in detailsTable2.Rows)
+        foreach (DataRow checkRow in detailsTable2.Rows)
         {
-          if (CheckRow.RowState == DataRowState.Deleted)
+          if (checkRow.RowState == DataRowState.Deleted)
             continue;
 
           //Int32 CheckedId = (Int32)(CheckRow["Id"]);
-          Int32 RefId = DataTools.GetInt(CheckRow, refInfo.ColumnDef.ColumnName);
-          if (AllDelIdList.Contains(RefId))
-            ApplyDocDelete1CheckOne(mainCon, docSet, delType, allDelIds, refInfo.DetailsType, CheckRow);
+          Int32 refId = DataTools.GetInt(checkRow, refInfo.ColumnDef.ColumnName);
+          if (allDelIdList.Contains(refId))
+            ApplyDocDelete1CheckOne(mainCon, docSet, delType, allDelIds, refInfo.DetailsType, checkRow);
         }
       }
 
@@ -2506,7 +2508,7 @@ namespace FreeLibSet.Data.Docs
 
     private void ApplyDocsDelete1CheckVTRef(DBxCon mainCon, DBxDocSet docSet, DBxDocType delDocType, IdsFilterGenerator delFltGen, DBxExtRefs.VTRefInfo refInfo)
     {
-      delFltGen.CreateFilters(refInfo.VTRef.IdColumn.ColumnName);
+      delFltGen.CreateFilters(refInfo.VTRef.DocIdColumn.ColumnName);
       DBxColumns checkDelColumns = refInfo.IsSubDocType ? _FieldsCheckDelForSubDoc : _FieldsCheckDelForDoc;
 
       DataTable checkTable2 = docSet.DataSet.Tables[refInfo.DetailsTableName];
@@ -2516,17 +2518,17 @@ namespace FreeLibSet.Data.Docs
       {
         DataTable checkTable = mainCon.FillSelect(refInfo.DetailsTableName,
             checkDelColumns,
-            new AndFilter(new ValueFilter(refInfo.VTRef.TableColumn.ColumnName, delDocType.TableId),
+            new AndFilter(new ValueFilter(refInfo.VTRef.TableIdColumn.ColumnName, delDocType.TableId),
             delFltGen[j]));
 
         for (int k = 0; k < checkTable.Rows.Count; k++)
         {
           if (checkTable2 != null)
           {
-            Int32 CheckedId = (Int32)(checkTable.Rows[k]["Id"]);
-            if (checkTable2.Rows.Find(CheckedId) != null)
+            Int32 checkedId = (Int32)(checkTable.Rows[k]["Id"]);
+            if (checkTable2.Rows.Find(checkedId) != null)
             {
-              checkTable2UsedIds.Add(CheckedId);
+              checkTable2UsedIds.Add(checkedId);
               continue; // проверим  на втором заходе
             }
           }
@@ -2599,12 +2601,12 @@ namespace FreeLibSet.Data.Docs
       {
         if (delType.IsSubDoc)
         {
-          DBxDocType DelDocType = ((DBxSubDocType)delType).DocType;
-          Int32 DelDocId = DataTools.GetInt(mainCon.GetValue(delType.Name, delIds[0], "DocId"));
+          DBxDocType delDocType = ((DBxSubDocType)delType).DocType;
+          Int32 delDocId = DataTools.GetInt(mainCon.GetValue(delType.Name, delIds[0], "DocId"));
           sb.Append("Нельзя удалить поддокумент ");
           AddDocOrSubDocText(sb, delType, delIds[0]);
           sb.Append(" документа ");
-          AddDocOrSubDocText(sb, DelDocType, DelDocId);
+          AddDocOrSubDocText(sb, delDocType, delDocId);
         }
         else
         {
@@ -2861,19 +2863,19 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Вызов события DBxDocSet.AfterWrite
+    #region Вызов события DBxDocType.AfterChange
 
     /// <summary>
-    /// Вызов события ServerDocType.AfterWrite для каждого документа
+    /// Вызов события DBxDocType.AfterChange для каждого документа
     /// </summary>
     /// <param name="docSet"></param>
-    private void PerformAfterWrite(DBxDocSet docSet)
+    private void PerformAfterChange(DBxDocSet docSet)
     {
-      for (int TypeIndex = 0; TypeIndex < docSet.Count; TypeIndex++)
+      for (int typeIndex = 0; typeIndex < docSet.Count; typeIndex++)
       {
-        DBxMultiDocs MultiDocs = docSet[TypeIndex];
-        for (int DocIndex = 0; DocIndex < MultiDocs.DocCount; DocIndex++)
-          MultiDocs.DocType.PerformAfterWrite(MultiDocs[DocIndex]);
+        DBxMultiDocs multiDocs = docSet[typeIndex];
+        for (int docIndex = 0; docIndex < multiDocs.DocCount; docIndex++)
+          multiDocs.DocType.PerformAfterChange(multiDocs[docIndex]);
       }
     }
 
@@ -2895,8 +2897,8 @@ namespace FreeLibSet.Data.Docs
 
       if (String.IsNullOrEmpty(docTypeName))
         throw new ArgumentNullException("docTypeName");
-      DBxDocType DocType = DocTypes[docTypeName];
-      if (DocType == null)
+      DBxDocType docType = DocTypes[docTypeName];
+      if (docType == null)
         throw new ArgumentException("Неизвестный тип документов \"" + docTypeName + "\"", "docTypeName");
       CheckIsRealDocId(docId);
 
@@ -2914,36 +2916,36 @@ namespace FreeLibSet.Data.Docs
         throw new DBxAccessException("Нет доступа на просмотр истории документов \"" + DocTypes[docTypeName].PluralTitle + "\"");
 
       // 3. Проверяем право на просмотр конкретного документа
-      DBxDocSet DocSet = new DBxDocSet(this);
-      DBxSingleDoc Doc = DocSet[docTypeName].View(docId);
+      DBxDocSet docSet = new DBxDocSet(this);
+      DBxSingleDoc doc = docSet[docTypeName].View(docId);
 
       // 4. Проверяем право на просмотр истории конкретно этого документа
-      this.TestDocument(Doc, DBxDocPermissionReason.ViewHistory);
+      this.TestDocument(doc, DBxDocPermissionReason.ViewHistory);
 
       #endregion
 
-      using (DBxCon MainCon = new DBxCon(Source.MainDBEntry))
+      using (DBxCon mainCon = new DBxCon(Source.MainDBEntry))
       {
-        using (DBxCon UndoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
+        using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
         {
           // Актуальная строка данных
-          if (MainCon.FindRecord(docTypeName, "Id", docId) == 0)
+          if (mainCon.FindRecord(docTypeName, "Id", docId) == 0)
             throw new BugException("Не нашли строку документа DocId=" + docId.ToString());
 
-          DBxColumns Columns = new DBxColumns(
+          DBxColumns columns = new DBxColumns(
             "Id,UserActionId,Version,Action,UserActionId.StartTime,UserActionId.ActionTime,UserActionId.ActionInfo,UserActionId.ApplyChangesTime,UserActionId.ApplyChangesCount");
           if (DocTypes.UseUsers)
-            Columns += "UserActionId.UserId";
+            columns += "UserActionId.UserId";
           if (DocTypes.UseSessionId)
-            Columns += "UserActionId.SessionId";
+            columns += "UserActionId.SessionId";
 
-          DataTable tblDocActions = UndoCon.FillSelect("DocActions", Columns,
-            new AndFilter(new ValueFilter("DocTableId", DocType.TableId), new ValueFilter("DocId", docId)));
+          DataTable tblDocActions = undoCon.FillSelect("DocActions", columns,
+            new AndFilter(new ValueFilter("DocTableId", docType.TableId), new ValueFilter("DocId", docId)));
 
           // Добавляем текст
-          DataRow[] BaseRows = tblDocActions.Select("Action=" + ((int)(UndoAction.Base)));
-          for (int i = 0; i < BaseRows.Length; i++)
-            BaseRows[i]["UserActionId.ActionInfo"] = "Исходное состояние документа";
+          DataRow[] baseRows = tblDocActions.Select("Action=" + ((int)(UndoAction.Base)));
+          for (int i = 0; i < baseRows.Length; i++)
+            baseRows[i]["UserActionId.ActionInfo"] = "Исходное состояние документа";
 
           return tblDocActions;
 
@@ -3051,59 +3053,57 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
-      DataTable ResTable;
+      DataTable resTable;
 
-      using (DBxCon UndoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
+      using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
       {
-        DBxFilter Filter = null;
+        DBxFilter filter = null;
 
         if (userId != 0)
-          Filter = new ValueFilter("UserId", userId);
+          filter = new ValueFilter("UserId", userId);
 
         if (firstDate.HasValue || lastDate.HasValue)
-          Filter = Filter & new DateRangeFilter("ActionTime", firstDate, lastDate);
+          filter = filter & new DateRangeFilter("ActionTime", firstDate, lastDate);
 
-        DBxColumns Columns = new DBxColumns("Id,StartTime,ActionTime,ActionInfo,ApplyChangesTime,ApplyChangesCount");
+        DBxColumns columns = new DBxColumns("Id,StartTime,ActionTime,ActionInfo,ApplyChangesTime,ApplyChangesCount");
         if (DocTypes.UseUsers) // 21.05.2019
-          Columns += "UserId";
+          columns += "UserId";
         if (DocTypes.UseSessionId)
-          Columns += "SessionId";
+          columns += "SessionId";
 
-        ResTable = UndoCon.FillSelect("UserActions", Columns,
-          Filter, DBxOrder.ById);
-        DataTools.SetPrimaryKey(ResTable, "Id");
+        resTable = undoCon.FillSelect("UserActions", columns,
+          filter, DBxOrder.ById);
+        DataTools.SetPrimaryKey(resTable, "Id");
 
         if (!String.IsNullOrEmpty(singleDocTypeName))
         {
-          Int32 SingleDocTableId = DocTypes[singleDocTypeName].TableId;
+          Int32 singleDocTableId = DocTypes[singleDocTypeName].TableId;
 
-          Int32[][] ActionIds = DataTools.GetBlockedIds(ResTable, 100);
-          for (int i = 0; i < ActionIds.Length; i++)
+          Int32[][] actionIds = DataTools.GetBlockedIds(resTable, 100);
+          for (int i = 0; i < actionIds.Length; i++)
           {
-            DataTable TableDocs = UndoCon.FillUniqueColumnValues("DocActions", "UserActionId",
-              new AndFilter(new ValueFilter("DocTableId", SingleDocTableId),
-              new IdsFilter("UserActionId", ActionIds[i])));
-            DataTools.SetPrimaryKey(TableDocs, "UserActionId");
-            for (int j = 0; j < ActionIds[i].Length; j++)
+            DataTable tableDocs = undoCon.FillUniqueColumnValues("DocActions", "UserActionId",
+              new AndFilter(new ValueFilter("DocTableId", singleDocTableId),
+              new IdsFilter("UserActionId", actionIds[i])));
+            DataTools.SetPrimaryKey(tableDocs, "UserActionId");
+            for (int j = 0; j < actionIds[i].Length; j++)
             {
-              Int32 Id = ActionIds[i][j];
-              if (TableDocs.Rows.Find(Id) == null)
+              Int32 id = actionIds[i][j];
+              if (tableDocs.Rows.Find(id) == null)
               {
-                DataRow Row1 = ResTable.Rows.Find(Id);
-                Row1.Delete();
+                DataRow row1 = resTable.Rows.Find(id);
+                row1.Delete();
               }
             }
-
           }
-
         }
       }
 
       // При передаче клиенту предотвращаем преобразование времени из-за разных часовых поясов
-      SerializationTools.SetUnspecifiedDateTimeMode(ResTable);
-      ResTable.AcceptChanges();
+      SerializationTools.SetUnspecifiedDateTimeMode(resTable);
+      resTable.AcceptChanges();
 
-      return ResTable;
+      return resTable;
     }
 
     /// <summary>
@@ -3118,20 +3118,19 @@ namespace FreeLibSet.Data.Docs
       if (actionId <= 0)
         throw new ArgumentException("Недопустимый идентификатор действия пользователя " + actionId.ToString());
 
-      DataTable ResTable;
-      using (DBxCon UndoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
+      DataTable resTable;
+      using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
       {
-
-        DBxFilter Filter = new ValueFilter("UserActionId", actionId);
-        ResTable = UndoCon.FillSelect("DocActions", new DBxColumns("Id,DocTableId,DocId,Version,Action"),
-          Filter, DBxOrder.ById);
+        DBxFilter filter = new ValueFilter("UserActionId", actionId);
+        resTable = undoCon.FillSelect("DocActions", new DBxColumns("Id,DocTableId,DocId,Version,Action"),
+          filter, DBxOrder.ById);
       }
 
       // При передаче клиенту предотвращаем преобразование времени из-за разных часовых поясов
-      SerializationTools.SetUnspecifiedDateTimeMode(ResTable);
-      ResTable.AcceptChanges();
+      SerializationTools.SetUnspecifiedDateTimeMode(resTable);
+      resTable.AcceptChanges();
 
-      return ResTable;
+      return resTable;
     }
 
     /// <summary>
@@ -3161,11 +3160,11 @@ namespace FreeLibSet.Data.Docs
 
       object v;
 
-      DBxFilter Filter = new ValueFilter("UserId", userId);
+      DBxFilter filter = new ValueFilter("UserId", userId);
 
-      using (DBxCon UndoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
+      using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
       {
-        v = UndoCon.GetMaxValue("UserActions", "ActionTime", Filter);
+        v = undoCon.GetMaxValue("UserActions", "ActionTime", filter);
       }
 
       DateTime? dt = DataTools.GetNullableDateTime(v);
@@ -3201,52 +3200,52 @@ namespace FreeLibSet.Data.Docs
       if (wantedDocVersion < 1 || wantedDocVersion >= short.MaxValue)
         throw new ArgumentOutOfRangeException("wantedDocVersion", wantedDocVersion, "Недопустимый номер версии документа");
 
-      using (DBxCon UndoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
+      using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
       {
         #region Поиск в таблице DocActions
 
-        UndoAction CurrAction = InternalGetDocAction(docTypeName, docId, wantedDocVersion, UndoCon);
+        UndoAction currAction = InternalGetDocAction(docTypeName, docId, wantedDocVersion, undoCon);
 
         #endregion
 
-        DataTable Table;
+        DataTable table;
 
         using (DBxCon MainCon = new DBxCon(Source.MainDBEntry))
         {
-          int Version2 = DataTools.GetInt(MainCon.GetValue(docTypeName, docId, "Version2"));
-          if (Version2 <= wantedDocVersion)
+          int version2 = DataTools.GetInt(MainCon.GetValue(docTypeName, docId, "Version2"));
+          if (version2 <= wantedDocVersion)
           {
             // Берем данные из основной таблицы
-            Table = MainCon.FillSelect(docTypeName, GetColumns(docTypeName, null), new IdsFilter(docId));
+            table = MainCon.FillSelect(docTypeName, GetColumns(docTypeName, null), new IdsFilter(docId));
           }
           else
           {
             // Берем данные из БД undo
 
             // В таблице данных undo нет столбцов Deleted и Version
-            DBxColumns Columns1 = GetColumns(docTypeName, null);
-            DBxColumns Columns2 = Columns1 - "DocId,Version,Deleted";
+            DBxColumns columns1 = GetColumns(docTypeName, null);
+            DBxColumns columns2 = columns1 - "DocId,Version,Deleted";
 
             // Находим в копии таблицы документов строку с последним значением Vesion2, меньшим или равным запрошенному
-            Int32 LastCopyId = DataTools.GetInt(UndoCon.GetValuesForMax(docTypeName,
+            Int32 lastCopyId = DataTools.GetInt(undoCon.GetValuesForMax(docTypeName,
               DBxColumns.Id, "Version2", new AndFilter(
               new ValueFilter("DocId", docId), new ValueFilter("Version2", wantedDocVersion, CompareKind.LessOrEqualThan)))[0]);
-            if (LastCopyId == 0)
-              throw new BugException("В базе данных Undo в таблице \"" + docTypeName + "\" не найдена запись для DocId=" + docId.ToString() + " и Version2=" + Version2.ToString());
+            if (lastCopyId == 0)
+              throw new BugException("В базе данных Undo в таблице \"" + docTypeName + "\" не найдена запись для DocId=" + docId.ToString() + " и Version2=" + version2.ToString());
 
-            DataTable Table1 = UndoCon.FillSelect(docTypeName, Columns2, new IdsFilter(LastCopyId));
-            if (Table1.Rows.Count != 1)
-              throw new BugException("В базе данных Undo в таблице \"" + docTypeName + "\" для ключевого поля Id=" + LastCopyId.ToString() + " возвращено неправильное число строк данных (" + Table1.Rows.Count.ToString() + ")");
+            DataTable table1 = undoCon.FillSelect(docTypeName, columns2, new IdsFilter(lastCopyId));
+            if (table1.Rows.Count != 1)
+              throw new BugException("В базе данных Undo в таблице \"" + docTypeName + "\" для ключевого поля Id=" + lastCopyId.ToString() + " возвращено неправильное число строк данных (" + table1.Rows.Count.ToString() + ")");
 
-            Table = GetTemplate(docTypeName, null);
-            DataTools.CopyRowsToRows(Table1, Table, true, true);
-            Table.Rows[0]["Id"] = docId;
-            Table.Rows[0]["Deleted"] = (CurrAction == UndoAction.Delete);
+            table = GetTemplate(docTypeName, null);
+            DataTools.CopyRowsToRows(table1, table, true, true);
+            table.Rows[0]["Id"] = docId;
+            table.Rows[0]["Deleted"] = (currAction == UndoAction.Delete);
           }
 
-          Table.Rows[0]["Version"] = wantedDocVersion;
-          Table.AcceptChanges();
-          return Table;
+          table.Rows[0]["Version"] = wantedDocVersion;
+          table.AcceptChanges();
+          return table;
         }
       }
     }
@@ -3275,97 +3274,97 @@ namespace FreeLibSet.Data.Docs
       if (wantedDocVersion < 1 || wantedDocVersion >= short.MaxValue)
         throw new ArgumentOutOfRangeException("wantedDocVersion", wantedDocVersion, "Недопустимый номер версии документа");
 
-      DataTable Table;
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      DataTable table;
+      using (DBxCon mainCon = new DBxCon(_Source.MainDBEntry))
       {
-        DBxColumns Columns1 = GetColumns(docTypeName, subDocTypeName);
-        Columns1 += "Deleted,Version2";
-        Table = Con.FillSelect(subDocTypeName, Columns1,
+        DBxColumns columns1 = GetColumns(docTypeName, subDocTypeName);
+        columns1 += "Deleted,Version2";
+        table = mainCon.FillSelect(subDocTypeName, columns1,
           new AndFilter(new IdsFilter("DocId", docId), // включая помеченные на удаление
           new ValueFilter("StartVersion", wantedDocVersion, CompareKind.LessOrEqualThan))); // пропуская более новые документы
       }
 
-      if (Table.Rows.Count == 0)
-        return Table; // нет поддокументов
+      if (table.Rows.Count == 0)
+        return table; // нет поддокументов
 
-      using (DBxCon UndoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
+      using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
       {
-        DBxColumns Columns2 = GetColumns(docTypeName, subDocTypeName);
-        Columns2 -= "DocId";
-        Columns2 += "Deleted";
+        DBxColumns columns2 = GetColumns(docTypeName, subDocTypeName);
+        columns2 -= "DocId";
+        columns2 += "Deleted";
 
 
-        foreach (DataRow Row in Table.Rows)
+        foreach (DataRow row in table.Rows)
         {
-          int Version2 = DataTools.GetInt(Row, "Version2");
-          if (Version2 <= wantedDocVersion)
+          int version2 = DataTools.GetInt(row, "Version2");
+          if (version2 <= wantedDocVersion)
             continue; // актуальная версия
 
-          Int32 SubDocId = DataTools.GetInt(Row, "Id");
+          Int32 subDocId = DataTools.GetInt(row, "Id");
 
 
           // Ищем последнюю версию в таблице Undo
-          Int32 LastCopyId = DataTools.GetInt(UndoCon.GetValuesForMax(subDocTypeName,
+          Int32 lastCopyId = DataTools.GetInt(undoCon.GetValuesForMax(subDocTypeName,
             DBxColumns.Id,
             "Version2",
             new AndFilter(
-              new ValueFilter("SubDocId", SubDocId),
+              new ValueFilter("SubDocId", subDocId),
               new ValueFilter("Version2", wantedDocVersion, CompareKind.LessOrEqualThan)))[0]);
-          if (LastCopyId == 0)
+          if (lastCopyId == 0)
           {
-            if (DataTools.GetBool(Row, "Deleted"))
+            if (DataTools.GetBool(row, "Deleted"))
             {
               // 15.12.2017
               // Поддокумент был удален после запрошенной версии, но в истории нет записи.
               // Значит удаленная версия является действующей для запрошенной версии документа
-              Row["Deleted"] = false;
+              row["Deleted"] = false;
               continue;
             }
 
-            throw new DBxConsistencyException("В базе данных Undo в таблице \"" + subDocTypeName + "\" не найдена запись для SubDocId = " + SubDocId.ToString() + " и Version2 <= " + Version2.ToString());
+            throw new DBxConsistencyException("В базе данных Undo в таблице \"" + subDocTypeName + "\" не найдена запись для SubDocId = " + subDocId.ToString() + " и Version2 <= " + version2.ToString());
           }
 
-          DataTable Table1 = UndoCon.FillSelect(subDocTypeName, Columns2, new IdsFilter(LastCopyId));
-          if (Table1.Rows.Count != 1)
-            throw new BugException("В базе данных Undo в таблице \"" + subDocTypeName + "\" для ключевого поля Id=" + LastCopyId.ToString() + " возвращено неправильное число строк данных (" + Table1.Rows.Count.ToString() + ")");
+          DataTable table1 = undoCon.FillSelect(subDocTypeName, columns2, new IdsFilter(lastCopyId));
+          if (table1.Rows.Count != 1)
+            throw new BugException("В базе данных Undo в таблице \"" + subDocTypeName + "\" для ключевого поля Id=" + lastCopyId.ToString() + " возвращено неправильное число строк данных (" + table1.Rows.Count.ToString() + ")");
 
-          DataTools.CopyRowValues(Table1.Rows[0], Row, true);
-          Table.Rows[0]["DocId"] = docId;
+          DataTools.CopyRowValues(table1.Rows[0], row, true);
+          table.Rows[0]["DocId"] = docId;
         }
       }
 
       // Убираем поддокументы, помеченные на удаление
-      for (int i = Table.Rows.Count - 1; i >= 0; i--)
+      for (int i = table.Rows.Count - 1; i >= 0; i--)
       {
-        if (DataTools.GetBool(Table.Rows[i], "Deleted"))
-          Table.Rows.RemoveAt(i);
+        if (DataTools.GetBool(table.Rows[i], "Deleted"))
+          table.Rows.RemoveAt(i);
       }
 
-      Table.AcceptChanges();
-      return Table;
+      table.AcceptChanges();
+      return table;
     }
 
     private UndoAction InternalGetDocAction(string docTypeName, Int32 docId, int docVersion, DBxCon undoCon)
     {
-      DBxDocType DocType = DocTypes[docTypeName];
-      if (DocType == null)
+      DBxDocType docType = DocTypes[docTypeName];
+      if (docType == null)
         throw new ArgumentException("Неизвестный тип документов \"" + docTypeName + "\"");
 
       CheckIsRealDocId(docId);
 
-      DBxFilter[] Filters = new DBxFilter[3];
-      Filters[0] = new ValueFilter("DocTableId", DocType.TableId);
-      Filters[1] = new ValueFilter("DocId", docId);
-      Filters[2] = new ValueFilter("Version", docVersion);
+      DBxFilter[] filters = new DBxFilter[3];
+      filters[0] = new ValueFilter("DocTableId", docType.TableId);
+      filters[1] = new ValueFilter("DocId", docId);
+      filters[2] = new ValueFilter("Version", docVersion);
 
 
-      Int32 DocActionId = undoCon.FindRecord("DocActions", new AndFilter(Filters));
-      if (DocActionId == 0)
-        throw new BugException("В таблице DocActions не найдена запись для документа \"" + DocType.SingularTitle +
+      Int32 docActionId = undoCon.FindRecord("DocActions", new AndFilter(filters));
+      if (docActionId == 0)
+        throw new BugException("В таблице DocActions не найдена запись для документа \"" + docType.SingularTitle +
           "\" с DocId=" + docId.ToString() + " для версии " + docVersion.ToString());
 
-      UndoAction CurrAction = (UndoAction)DataTools.GetInt(undoCon.GetValue("DocActions", DocActionId, "Action"));
-      return CurrAction;
+      UndoAction currAction = (UndoAction)DataTools.GetInt(undoCon.GetValue("DocActions", docActionId, "Action"));
+      return currAction;
     }
 
     /// <summary>
@@ -3384,8 +3383,8 @@ namespace FreeLibSet.Data.Docs
 
       if (String.IsNullOrEmpty(docTypeName))
         throw new ArgumentNullException("docTypeName");
-      DBxDocType DocType = DocTypes[docTypeName];
-      if (DocType == null)
+      DBxDocType docType = DocTypes[docTypeName];
+      if (docType == null)
         throw new ArgumentException("Неизвестный вид документа \"" + docTypeName + "\"", "docTypeName");
 
       CheckIsRealDocId(docId);
@@ -3395,53 +3394,53 @@ namespace FreeLibSet.Data.Docs
 
       #region Основная база данных
 
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon mainCon = new DBxCon(_Source.MainDBEntry))
       {
-        ds.Tables.Add(Con.FillSelect(docTypeName, null, new ValueFilter("Id", docId)));
-        foreach (DBxSubDocType SubDocType in DocType.SubDocs)
-          ds.Tables.Add(Con.FillSelect(SubDocType.Name, null, new ValueFilter("DocId", docId)));
+        ds.Tables.Add(mainCon.FillSelect(docTypeName, null, new ValueFilter("Id", docId)));
+        foreach (DBxSubDocType sdt in docType.SubDocs)
+          ds.Tables.Add(mainCon.FillSelect(sdt.Name, null, new ValueFilter("DocId", docId)));
       }
 
       #endregion
 
       if (Source.GlobalData.UndoDBEntry != null)
       {
-        using (DBxCon Con = new DBxCon(_Source.GlobalData.UndoDBEntry))
+        using (DBxCon undoCon = new DBxCon(_Source.GlobalData.UndoDBEntry))
         {
           #region UserActions и DocActions
 
-          DataTable TableDocActions = Con.FillSelect("DocActions", null,
-            new AndFilter(new ValueFilter("DocTableId", DocType.TableId),
+          DataTable tableDocActions = undoCon.FillSelect("DocActions", null,
+            new AndFilter(new ValueFilter("DocTableId", docType.TableId),
             new ValueFilter("DocId", docId)));
-          Int32[] UserActionIds = DataTools.GetIdsFromColumn(TableDocActions, "UserActionId");
-          if (UserActionIds.Length > 0)
-            ds.Tables.Add(Con.FillSelect("UserActions", null, new IdsFilter("Id", UserActionIds)));
+          Int32[] userActionIds = DataTools.GetIdsFromColumn(tableDocActions, "UserActionId");
+          if (userActionIds.Length > 0)
+            ds.Tables.Add(undoCon.FillSelect("UserActions", null, new IdsFilter("Id", userActionIds)));
           else
-            ds.Tables.Add(Con.CreateEmptyTable("UserActions", null));
-          ds.Tables.Add(TableDocActions); // После UserActions
+            ds.Tables.Add(undoCon.CreateEmptyTable("UserActions", null));
+          ds.Tables.Add(tableDocActions); // После UserActions
 
           #endregion
 
           #region Таблицы истории
 
-          DataTable Table = Con.FillSelect(docTypeName, null, new ValueFilter("DocId", docId));
-          Table.TableName = "Undo_" + Table.TableName;
-          ds.Tables.Add(Table);
-          foreach (DBxSubDocType SubDocType in DocType.SubDocs)
+          DataTable table = undoCon.FillSelect(docTypeName, null, new ValueFilter("DocId", docId));
+          table.TableName = "Undo_" + table.TableName;
+          ds.Tables.Add(table);
+          foreach (DBxSubDocType sdt in docType.SubDocs)
           {
             // В undo нет поля DocId.
             // Надо использовать идентификаторы поддокументов из основной таблицы
-            Int32[] SubDocIds = DataTools.GetIds(ds.Tables[SubDocType.Name]);
-            if (SubDocIds.Length > 0)
-              Table = Con.FillSelect(SubDocType.Name, null, new IdsFilter("SubDocId", SubDocIds));
+            Int32[] subDocIds = DataTools.GetIds(ds.Tables[sdt.Name]);
+            if (subDocIds.Length > 0)
+              table = undoCon.FillSelect(sdt.Name, null, new IdsFilter("SubDocId", subDocIds));
             else
-              Table = Con.CreateEmptyTable(SubDocType.Name, null);
-            Table.TableName = "Undo_" + Table.TableName;
-            ds.Tables.Add(Table);
+              table = undoCon.CreateEmptyTable(sdt.Name, null);
+            table.TableName = "Undo_" + table.TableName;
+            ds.Tables.Add(table);
           }
-        }
 
           #endregion
+        }
       }
 
       return ds;
@@ -3461,10 +3460,10 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      DBxLongDocsLock Lock = new DBxLongDocsLock(this);
-      Lock.Data.Init(docSel);
-      Source.GlobalData.LongLocks.Add(Lock);
-      return Lock.Guid;
+      DBxLongDocsLock longLock = new DBxLongDocsLock(this);
+      longLock.Data.Init(docSel);
+      Source.GlobalData.LongLocks.Add(longLock);
+      return longLock.Guid;
     }
 
     /// <summary>
@@ -3522,14 +3521,14 @@ namespace FreeLibSet.Data.Docs
 
     private void RecalcColumns2(string docTypeName, Int32[] docIds)
     {
-      DBxDocType DocType = DocTypes[docTypeName];
-      if (DocType == null)
+      DBxDocType docType = DocTypes[docTypeName];
+      if (docType == null)
         throw new ArgumentException("Неизвестный вид документов \"" + docTypeName + "\"", "docTypeName");
 
-      RecalcColumnsPermission Perm = Source.UserPermissions.GetLast<RecalcColumnsPermission>();
-      if (Perm != null)
+      RecalcColumnsPermission perm = Source.UserPermissions.GetLast<RecalcColumnsPermission>();
+      if (perm != null)
       {
-        switch (Perm.Mode)
+        switch (perm.Mode)
         {
           case RecalcColumnsPermissionMode.Disabled:
             throw new DBxAccessException("Запрещен пересчет вычисляемых полей");
@@ -3540,44 +3539,43 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
-
-      if (!DocType.HasCalculatedColumns)
+      if (!docType.HasCalculatedColumns)
         return; // нет вычисляемых полей
 
       // Выполняем пересчет блоками по 100 документов
 
       if (docIds == null)
       {
-        Int32 LastId;
-        using (DBxCon Con = new DBxCon(Source.MainDBEntry))
+        Int32 lastId;
+        using (DBxCon mainCon = new DBxCon(Source.MainDBEntry))
         {
-          LastId = DataTools.GetInt(Con.GetMaxValue(DocType.Name, "Id", null));
+          lastId = DataTools.GetInt(mainCon.GetMaxValue(docType.Name, "Id", null));
         }
 
-        ISplash spl = ExecProc.CurrentProc.BeginSplash("Пересчет документов \"" + DocType.PluralTitle + "\" (" + LastId.ToString() + " шт.)");
-        spl.PercentMax = LastId;
+        ISplash spl = ExecProc.CurrentProc.BeginSplash("Пересчет документов \"" + docType.PluralTitle + "\" (" + lastId.ToString() + " шт.)");
+        spl.PercentMax = lastId;
         spl.AllowCancel = true;
-        for (Int32 FirstId = 1; FirstId <= LastId; FirstId += 100)
+        for (Int32 firstId = 1; firstId <= lastId; firstId += 100)
         {
-          spl.Percent = FirstId - 1;
-          Int32 LastId2 = Math.Min(LastId, FirstId + 99);
-          Int32[] Ids = new Int32[LastId2 - FirstId + 1];
-          for (int i = 0; i < Ids.Length; i++)
-            Ids[i] = FirstId + i;
-          RecalcColumns3(DocType, Ids);
+          spl.Percent = firstId - 1;
+          Int32 lastId2 = Math.Min(lastId, firstId + 99);
+          Int32[] ids = new Int32[lastId2 - firstId + 1];
+          for (int i = 0; i < ids.Length; i++)
+            ids[i] = firstId + i;
+          RecalcColumns3(docType, ids);
         }
         ExecProc.CurrentProc.EndSplash();
       }
       else
       {
-        ISplash spl = ExecProc.CurrentProc.BeginSplash("Пересчет документов \"" + DocType.PluralTitle + "\" (" + docIds.Length.ToString() + " шт.)");
+        ISplash spl = ExecProc.CurrentProc.BeginSplash("Пересчет документов \"" + docType.PluralTitle + "\" (" + docIds.Length.ToString() + " шт.)");
         spl.PercentMax = docIds.Length;
         spl.AllowCancel = true;
-        Int32[][] Ids2 = DataTools.GetBlockedArray<Int32>(docIds, 100);
-        for (int i = 0; i < Ids2.Length; i++)
+        Int32[][] ids2 = DataTools.GetBlockedArray<Int32>(docIds, 100);
+        for (int i = 0; i < ids2.Length; i++)
         {
-          RecalcColumns3(DocType, Ids2[i]);
-          spl.Percent += Ids2.Length;
+          RecalcColumns3(docType, ids2[i]);
+          spl.Percent += ids2.Length;
         }
         ExecProc.CurrentProc.EndSplash();
       }
@@ -3595,53 +3593,53 @@ namespace FreeLibSet.Data.Docs
         throw new DBxAccessException("Нет прав на запись документов \"" + docType.PluralTitle + "\"");
 
       // Загружаем существующие данные
-      DBxDocSet DocSet = new DBxDocSet(this);
-      DocSet[docType.Name].View(ids);
-      DocSet.IgnoreAllLocks = true;
+      DBxDocSet docSet = new DBxDocSet(this);
+      docSet[docType.Name].View(ids);
+      docSet.IgnoreAllLocks = true;
 
       // Права на запись для отдельных документов не проверяем
       // Вызываем обработчик BeforeWrite
-      foreach (DBxSingleDoc Doc in DocSet[0])
-        docType.PerformBeforeWrite(Doc, false, true);
+      foreach (DBxSingleDoc doc in docSet[0])
+        docType.PerformBeforeWrite(doc, false, true);
 
-      using (DBxCon Con = new DBxCon(Source.MainDBEntry))
+      using (DBxCon mainCon = new DBxCon(Source.MainDBEntry))
       {
         // Установка блокировки на запись документов
-        DBxShortDocsLock DBLock = new DBxShortDocsLock(this, DocSet.IgnoreAllLocks, DocSet.IgnoredLocks);
-        DBLock.Data.Init(this, DocSet.DataSet);
-        using (new ExecProcLockKey(DBLock))
+        DBxShortDocsLock dbLock = new DBxShortDocsLock(this, docSet.IgnoreAllLocks, docSet.IgnoredLocks);
+        dbLock.Data.Init(this, docSet.DataSet);
+        using (new ExecProcLockKey(dbLock))
         {
-          foreach (DBxSingleDoc Doc in DocSet[0])
+          foreach (DBxSingleDoc doc in docSet[0])
           {
             // Записываем основной документ
-            Hashtable FieldPairs = new Hashtable();
-            DBxColumns UsedColumnNames1 = null;
-            bool HasPairs = AddUserFieldPairs(FieldPairs, Doc.Row, false, DBPermissions, Con, ref UsedColumnNames1, Doc.DocType.Struct);
-            if (HasPairs)
-              Con.SetValues(docType.Name, Doc.DocId, FieldPairs);
+            Hashtable fieldPairs = new Hashtable();
+            DBxColumns usedColumnNames1 = null;
+            bool hasPairs = AddUserFieldPairs(fieldPairs, doc.Row, false, DBPermissions, mainCon, ref usedColumnNames1, doc.DocType.Struct);
+            if (hasPairs)
+              mainCon.SetValues(docType.Name, doc.DocId, fieldPairs);
 
             // Записываем поддокументы
-            for (int i = 0; i < Doc.DocType.SubDocs.Count; i++)
+            for (int i = 0; i < doc.DocType.SubDocs.Count; i++)
             {
-              string SubDocTypeName = Doc.DocType.SubDocs[i].Name;
-              if (!Doc.MultiDocs.SubDocs.ContainsModified(SubDocTypeName))
+              string subDocTypeName = doc.DocType.SubDocs[i].Name;
+              if (!doc.MultiDocs.SubDocs.ContainsModified(subDocTypeName))
                 continue;
-              DBxSingleSubDocs sds = Doc.SubDocs[SubDocTypeName];
+              DBxSingleSubDocs sds = doc.SubDocs[subDocTypeName];
               if (sds.SubDocCount == 0)
                 continue;
 
               DBxTableStruct ts = sds.SubDocs.SubDocType.Struct;
 
-              DBxColumns UsedColumnNames2 = null;
+              DBxColumns usedColumnNames2 = null;
 
-              foreach (DBxSubDoc SubDoc in sds)
+              foreach (DBxSubDoc subDoc in sds)
               {
-                if (!SubDoc.IsDataModified)
+                if (!subDoc.IsDataModified)
                   continue; // ничего не поменялось
-                FieldPairs = new Hashtable();
-                HasPairs = AddUserFieldPairs(FieldPairs, SubDoc.Row, false, DBPermissions, Con, ref UsedColumnNames2, SubDoc.SubDocType.Struct);
-                if (HasPairs)
-                  Con.SetValues(sds.SubDocs.SubDocType.Name, SubDoc.SubDocId, FieldPairs);
+                fieldPairs = new Hashtable();
+                hasPairs = AddUserFieldPairs(fieldPairs, subDoc.Row, false, DBPermissions, mainCon, ref usedColumnNames2, subDoc.SubDocType.Struct);
+                if (hasPairs)
+                  mainCon.SetValues(sds.SubDocs.SubDocType.Name, subDoc.SubDocId, fieldPairs);
               }
             }
           }
@@ -3668,36 +3666,36 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Таблица ссылок</returns>
     public override DataTable GetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId)
     {
-      DBxDocType ToDT = DocTypes[docTypeName];
-      if (ToDT == null)
+      DBxDocType toDT = DocTypes[docTypeName];
+      if (toDT == null)
         throw new ArgumentException("Неизвестный вид документа \"" + docTypeName + "\", на ссылки на который должны быть найдены", "docTypeName");
 
-      DBxDocType FromSingleDT = null;
+      DBxDocType fromSingleDT = null;
       if (!String.IsNullOrEmpty(fromSingleDocTypeName))
       {
-        FromSingleDT = DocTypes[fromSingleDocTypeName];
-        if (FromSingleDT == null)
+        fromSingleDT = DocTypes[fromSingleDocTypeName];
+        if (fromSingleDT == null)
           throw new ArgumentException("Неизвестный вид документа \"" + fromSingleDocTypeName + "\", на ссылки c которых должны быть найдены", "fromSingleDocTypeName");
       }
 
       CheckIsRealDocId(docId);
       if (fromSingleDocId != 0)
       {
-        if (FromSingleDT == null)
+        if (fromSingleDT == null)
           throw new ArgumentException("Идентификатор единственного документа, ссылки в котором ищутся, не может задаваться без вида документов", "fromSingleDocId");
         CheckIsRealDocId(fromSingleDocId);
       }
 
-      DataTable ResTable;
+      DataTable resTable;
 
-      using (DBxCon Con = new DBxCon(Source.MainDBEntry))
+      using (DBxCon mainCon = new DBxCon(Source.MainDBEntry))
       {
-        DocRefTableHelper Helper = new DocRefTableHelper(this, ToDT, docId, showDeleted, unique, FromSingleDT, fromSingleDocId, Con);
-        Helper.Run();
-        ResTable = Helper.ResTable;
+        DocRefTableHelper refHelper = new DocRefTableHelper(this, toDT, docId, showDeleted, unique, fromSingleDT, fromSingleDocId, mainCon);
+        refHelper.Run();
+        resTable = refHelper.ResTable;
       }
 
-      return ResTable;
+      return resTable;
 
       // Возвращается только одна таблица ссылок.
       // В окне информации о документе, на вкладке просмотра ссылок используется двухтабличный просмотр.
@@ -3790,50 +3788,50 @@ namespace FreeLibSet.Data.Docs
 
       public void Run()
       {
-        DBxDocTypeRefInfo[] Infos = _Owner.DocTypes.GetToDocTypeRefs(_ToDT.Name);
-        for (int i = 0; i < Infos.Length; i++)
+        DBxDocTypeRefInfo[] refInfos = _Owner.DocTypes.GetToDocTypeRefs(_ToDT.Name);
+        for (int i = 0; i < refInfos.Length; i++)
         {
-          if (FromSingleDT != null && Infos[i].FromDocType != FromSingleDT)
+          if (FromSingleDT != null && refInfos[i].FromDocType != FromSingleDT)
             continue;
 
-          Int32[] ToIds;
-          if (Infos[i].ToSubDocType == null)
-            ToIds = new Int32[1] { DocId };
+          Int32[] toIds;
+          if (refInfos[i].ToSubDocType == null)
+            toIds = new Int32[1] { DocId };
           else
           {
-            List<DBxFilter> Filters = new List<DBxFilter>();
-            Filters.Add(new ValueFilter("DocId", DocId));
+            List<DBxFilter> filters = new List<DBxFilter>();
+            filters.Add(new ValueFilter("DocId", DocId));
             if (!ShowDeleted)
-              Filters.Add(DBSSubDocType.DeletedFalseFilter);
-            DBxFilter SubDocFilter = AndFilter.FromList(Filters);
-            ToIds = Con.GetIds(Infos[i].ToSubDocType.Name, SubDocFilter).ToArray();
+              filters.Add(DBSSubDocType.DeletedFalseFilter);
+            DBxFilter SubDocFilter = AndFilter.FromList(filters);
+            toIds = Con.GetIds(refInfos[i].ToSubDocType.Name, SubDocFilter).ToArray();
 
-            if (ToIds.Length == 0)
+            if (toIds.Length == 0)
               continue; // 16.08.2017
           }
 
-          switch (Infos[i].RefType)
+          switch (refInfos[i].RefType)
           {
             case DBxDocTypeRefType.Column:
-              AddForColumn(Infos[i], ToIds);
+              AddForColumn(refInfos[i], toIds);
               break;
             case DBxDocTypeRefType.VTRefernce:
-              AddForVTRef(Infos[i], ToIds);
+              AddForVTRef(refInfos[i], toIds);
               break;
             default:
-              throw new NotImplementedException("Неизвестный тип ссылки: " + Infos[i].RefType);
+              throw new NotImplementedException("Неизвестный тип ссылки: " + refInfos[i].RefType);
           }
         }
 
         int cnt = 0;
-        foreach (DataRow Row in ResTable.Rows)
+        foreach (DataRow row in ResTable.Rows)
         {
           cnt++;
-          Row["_InternalCount"] = cnt;
-          Row["FromDeleted"] = DataTools.GetBool(Row, "FromDocDeleted") || DataTools.GetBool(Row, "FromSubDocDeleted");
-          Int32 ThisFromDocTableId = DataTools.GetInt(Row, "FromDocTableId");
-          Int32 ThisFromDocId = DataTools.GetInt(Row, "FromDocId");
-          Row["IsSameDoc"] = (ThisFromDocTableId == ToDT.TableId && ThisFromDocId == DocId);
+          row["_InternalCount"] = cnt;
+          row["FromDeleted"] = DataTools.GetBool(row, "FromDocDeleted") || DataTools.GetBool(row, "FromSubDocDeleted");
+          Int32 ThisFromDocTableId = DataTools.GetInt(row, "FromDocTableId");
+          Int32 ThisFromDocId = DataTools.GetInt(row, "FromDocId");
+          row["IsSameDoc"] = (ThisFromDocTableId == ToDT.TableId && ThisFromDocId == DocId);
         }
 
         if (Unique)
@@ -3846,87 +3844,87 @@ namespace FreeLibSet.Data.Docs
 
       private void AddForColumn(DBxDocTypeRefInfo refInfo, Int32[] toIds)
       {
-        DBxColumns FromColumns;
+        DBxColumns fromColumns;
         if (refInfo.FromSubDocType == null)
         {
-          FromColumns = new DBxColumns("Id");
+          fromColumns = new DBxColumns("Id");
           if (refInfo.ToSubDocType != null)
-            FromColumns += refInfo.FromColumn.ColumnName; // 16.09.2018
+            fromColumns += refInfo.FromColumn.ColumnName; // 16.09.2018
           if (Owner.DocTypes.UseDeleted)
           {
-            FromColumns += "Deleted";
+            fromColumns += "Deleted";
             if (refInfo.ToSubDocType != null)
-              FromColumns += (refInfo.FromColumn.ColumnName + ".Deleted"); // 16.09.2018
+              fromColumns += (refInfo.FromColumn.ColumnName + ".Deleted"); // 16.09.2018
           }
         }
         else
         {
-          FromColumns = new DBxColumns("Id,DocId");
-          FromColumns += refInfo.FromColumn.ColumnName;
+          fromColumns = new DBxColumns("Id,DocId");
+          fromColumns += refInfo.FromColumn.ColumnName;
           if (Owner.DocTypes.UseDeleted)
           {
-            FromColumns += "Deleted";
-            FromColumns += "DocId.Deleted";
-            FromColumns += (refInfo.FromColumn.ColumnName + ".Deleted");
+            fromColumns += "Deleted";
+            fromColumns += "DocId.Deleted";
+            fromColumns += (refInfo.FromColumn.ColumnName + ".Deleted");
           }
         }
 
-        List<DBxFilter> Filters = new List<DBxFilter>();
-        Filters.Add(new IdsFilter(refInfo.FromColumn.ColumnName, toIds));
+        List<DBxFilter> filters = new List<DBxFilter>();
+        filters.Add(new IdsFilter(refInfo.FromColumn.ColumnName, toIds));
         if ((!ShowDeleted) && Owner.DocTypes.UseDeleted)
         {
           if (refInfo.FromSubDocType == null)
           {
-            Filters.Add(DBSDocType.DeletedFalseFilter);
+            filters.Add(DBSDocType.DeletedFalseFilter);
           }
           else
           {
-            Filters.Add(DBSSubDocType.DeletedFalseFilter);
-            Filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
+            filters.Add(DBSSubDocType.DeletedFalseFilter);
+            filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
           }
         }
         if (FromSingleDocId != 0)
         {
           if (refInfo.FromSubDocType == null)
-            Filters.Add(new ValueFilter(DBSDocType.Id, FromSingleDocId));
+            filters.Add(new ValueFilter(DBSDocType.Id, FromSingleDocId));
           else
-            Filters.Add(new ValueFilter(DBSSubDocType.DocId, FromSingleDocId));
+            filters.Add(new ValueFilter(DBSSubDocType.DocId, FromSingleDocId));
         }
 
-        DataTable SrcTable = Con.FillSelect(refInfo.FromDocTypeBase.Name, FromColumns, AndFilter.FromList(Filters));
+        DataTable srcTable = Con.FillSelect(refInfo.FromDocTypeBase.Name, fromColumns, AndFilter.FromList(filters));
 
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
-          DataRow ResRow = ResTable.NewRow();
-          ResRow["FromDocTableId"] = refInfo.FromDocType.TableId;
+          DataRow resRow = ResTable.NewRow();
+          resRow["FromDocTableId"] = refInfo.FromDocType.TableId;
           if (refInfo.FromSubDocType == null)
           {
-            ResRow["FromDocId"] = SrcRow["Id"];
+            resRow["FromDocId"] = srcRow["Id"];
             if (Owner.DocTypes.UseDeleted)
-              ResRow["FromDocDeleted"] = SrcRow["Deleted"];
+              resRow["FromDocDeleted"] = srcRow["Deleted"];
           }
           else
           {
-            ResRow["FromDocId"] = SrcRow["DocId"];
-            ResRow["FromSubDocId"] = SrcRow["Id"];
+            resRow["FromDocId"] = srcRow["DocId"];
+            resRow["FromSubDocId"] = srcRow["Id"];
             if (Owner.DocTypes.UseDeleted)
             {
-              ResRow["FromDocDeleted"] = SrcRow["DocId.Deleted"];
-              ResRow["FromSubDocDeleted"] = SrcRow["Deleted"];
+              resRow["FromDocDeleted"] = srcRow["DocId.Deleted"];
+              resRow["FromSubDocDeleted"] = srcRow["Deleted"];
             }
-            ResRow["FromSubDocName"] = refInfo.FromSubDocType.Name;
+            resRow["FromSubDocName"] = refInfo.FromSubDocType.Name;
           }
 
-          ResRow["FromColumnName"] = refInfo.FromColumn.ColumnName;
+          resRow["FromColumnName"] = refInfo.FromColumn.ColumnName;
 
           if (refInfo.ToSubDocType != null)
           {
-            ResRow["ToSubDocName"] = refInfo.ToSubDocType.Name;
-            ResRow["ToSubDocId"] = SrcRow[refInfo.FromColumn.ColumnName];
+            resRow["ToSubDocName"] = refInfo.ToSubDocType.Name;
+            resRow["ToSubDocId"] = srcRow[refInfo.FromColumn.ColumnName];
             if (Owner.DocTypes.UseDeleted)
-              ResRow["ToSubDocDeleted"] = SrcRow[refInfo.FromColumn.ColumnName + ".Deleted"];
+              resRow["ToSubDocDeleted"] = srcRow[refInfo.FromColumn.ColumnName + ".Deleted"];
           }
-          ResTable.Rows.Add(ResRow);
+          ResTable.Rows.Add(resRow);
         }
       }
 
@@ -3937,7 +3935,6 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
     }
-
 
     #endregion
   }

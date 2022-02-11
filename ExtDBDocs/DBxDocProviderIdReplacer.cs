@@ -44,7 +44,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Словари замены идентификаторов для каждой таблицы
+    /// Словари замены идентификаторов для каждой таблицы.
+    /// Ключ - имя таблицы документа или поддокумента, на которую выполняется ссылка
+    /// Значение - список пар "СтарыйId:НовыйId"
     /// </summary>
     private Dictionary<String, TableIdPairs> _SubstIds;
 
@@ -55,18 +57,36 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Информация об отложенной записи значения поля
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     internal struct DelayedFieldInfo
     {
+      #region Поля
+
+      /// <summary>
+      /// Таблица, в которой выполняется замена
+      /// </summary>
       public string TableName;
+
+      /// <summary>
+      /// Идентификатор документа или поддокумента
+      /// </summary>
       public Int32 Id;
-      public string FieldName;
-      public object FieldValue;
+
+      /// <summary>
+      /// Имя поля, в которое требуется записать
+      /// </summary>
+      public string ColumnName;
+
+      /// <summary>
+      /// Записываемое значение
+      /// </summary>
+      public object Value;
+
+      #endregion
     }
 
     #endregion
 
-    #region Метод, вызываемый из ServerDocProvider.ApplyChanges
+    #region Метод, вызываемый из ServerDocProvider.ApplyChanges()
 
 
     public List<DelayedFieldInfo> DelayedList { get { return _DelayedList; } }
@@ -104,28 +124,28 @@ namespace FreeLibSet.Data.Docs
       // заменить ссылки
       if (_SubstIds != null)
       {
-        SingleScopeList<string> ProceedTableNames = new SingleScopeList<string>();
+        SingleScopeList<string> proceedTableNames = new SingleScopeList<string>();
 
         //Changes.Caller.Splash.PhaseText = "Замена идентификаторов";
-        foreach (DBxMultiDocs MultiDocs in docSet)
+        foreach (DBxMultiDocs multiDocs in docSet)
         {
           // Основная таблица
-          ApplyTableSubstIds(ds.Tables[MultiDocs.DocType.Name],
-            MultiDocs.DocType.Struct,
-            ProceedTableNames);
+          ApplyTableSubstIds(ds.Tables[multiDocs.DocType.Name],
+            multiDocs.DocType,
+            proceedTableNames);
 
           // Поддокументы
-          for (int i = 0; i < MultiDocs.DocType.SubDocs.Count; i++)
+          for (int i = 0; i < multiDocs.DocType.SubDocs.Count; i++)
           {
-            DBxSubDocType sdt = MultiDocs.DocType.SubDocs[i];
-            if (MultiDocs.SubDocs.ContainsModified(sdt.Name))
+            DBxSubDocType sdt = multiDocs.DocType.SubDocs[i];
+            if (multiDocs.SubDocs.ContainsModified(sdt.Name))
             {
               ApplyDocId(ds.Tables[sdt.Name],
-                MultiDocs.DocType);
+                multiDocs.DocType);
 
               ApplyTableSubstIds(ds.Tables[sdt.Name],
-                sdt.Struct,
-                ProceedTableNames);
+                sdt,
+                proceedTableNames);
             }
           }
         }
@@ -134,8 +154,8 @@ namespace FreeLibSet.Data.Docs
       // 17.11.2016
       // Надо сбросить буферизацию идентификаторов, иначе не работает копирование документов,
       // содержащих поддокументы
-      foreach (DBxMultiDocs MultiDocs in docSet)
-        MultiDocs.ResetDocIds();
+      foreach (DBxMultiDocs multiDocs in docSet)
+        multiDocs.ResetDocIds();
     }
 
     #endregion
@@ -148,35 +168,35 @@ namespace FreeLibSet.Data.Docs
     /// <param name="table">Таблица, в которой выполняется замена</param>
     private void MakeTableSubstIds(DataTable table)
     {
-      TableIdPairs Pairs = null;
+      TableIdPairs pairs = null;
 
       DataTools.SetPrimaryKey(table, (string)null);
       table.Columns["Id"].Unique = false;
 
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Added)
+        if (row.RowState == DataRowState.Added)
         {
-          Int32 OrgId = (Int32)Row["Id"];
-          if (OrgId < 0)
+          Int32 orgId = (Int32)row["Id"];
+          if (orgId < 0)
           {
-            if (Pairs == null)
+            if (pairs == null)
             {
               if (_SubstIds == null)
                 _SubstIds = new Dictionary<string, TableIdPairs>();
 
-              if (!_SubstIds.TryGetValue(table.TableName, out Pairs))
+              if (!_SubstIds.TryGetValue(table.TableName, out pairs))
               {
                 // По идее - будет вызываться всегда
-                Pairs = new TableIdPairs();
-                _SubstIds.Add(table.TableName, Pairs);
+                pairs = new TableIdPairs();
+                _SubstIds.Add(table.TableName, pairs);
               }
             }
 
 
-            Int32 NewId = _Caller.Source.GlobalData.GetNextId(table.TableName, _Caller.Source.MainDBEntry);
-            Pairs.Add(OrgId, NewId);
-            Row["Id"] = NewId;
+            Int32 newId = _Caller.Source.GlobalData.GetNextId(table.TableName, _Caller.Source.MainDBEntry);
+            pairs.Add(orgId, newId);
+            row["Id"] = newId;
           }
         }
       }
@@ -192,16 +212,16 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docType"></param>
     private void ApplyDocId(DataTable table, DBxDocType docType)
     {
-      TableIdPairs Pairs;
-      if (!_SubstIds.TryGetValue(docType.Name, out Pairs))
+      TableIdPairs pairs;
+      if (!_SubstIds.TryGetValue(docType.Name, out pairs))
         return;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted) // 03.11.2015
+        if (row.RowState == DataRowState.Deleted) // 03.11.2015
           continue;
-        int NewDocId;
-        if (Pairs.TryGetValue((int)Row["DocId"], out NewDocId))
-          Row["DocId"] = NewDocId;
+        Int32 newDocId;
+        if (pairs.TryGetValue((int)row["DocId"], out newDocId))
+          row["DocId"] = newDocId;
       }
     }
 
@@ -212,120 +232,132 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableDef"></param>
     /// <param name="proceedTableNames"></param>
     private void ApplyTableSubstIds(DataTable table,
-      DBxTableStruct tableDef,
+      DBxDocTypeBase dtb,
       SingleScopeList<string> proceedTableNames)
     {
       int i;
-      for (i = 0; i < tableDef.Columns.Count; i++)
+      for (i = 0; i < dtb.Struct.Columns.Count; i++)
       {
-        DBxColumnStruct ColDef = tableDef.Columns[i];
-        int ColumnPos = table.Columns.IndexOf(ColDef.ColumnName);
-        if (ColumnPos < 0)
+        DBxColumnStruct colDef = dtb.Struct.Columns[i];
+        int colPos = table.Columns.IndexOf(colDef.ColumnName);
+        if (colPos < 0)
           continue;
-        if (!String.IsNullOrEmpty(ColDef.MasterTableName))
-          ApplyColumnSubstIds(table, ColumnPos, ColDef.MasterTableName,
+        if (!String.IsNullOrEmpty(colDef.MasterTableName))
+          ApplyColumnSubstIds(table, colPos, colDef.MasterTableName,
             proceedTableNames);
       }
 
 
-      proceedTableNames.Add(tableDef.TableName);
+      proceedTableNames.Add(dtb.Name);
 
-#if XXXX
-      // 30.05.2007 
       // Замена переменных ссылочных полей
-      if (TableDef.VTReferencesCount > 0)
+      if (dtb.VTRefs.Count > 0)
       {
-        foreach (DataRow Row in Table.Rows)
+        for (i = 0; i < dtb.VTRefs.Count; i++)
         {
-          if (Row.RowState == DataRowState.Deleted)
+          DBxVTReference vtr = dtb.VTRefs[i];
+          int docIdColumnPos = table.Columns.IndexOf(vtr.DocIdColumn.ColumnName);
+          if (docIdColumnPos < 0)
             continue;
-          for (i = 0; i < TableDef.VTReferencesCount; i++)
+          int tableIdColumnPos = table.Columns.IndexOf(vtr.TableIdColumn.ColumnName);
+          if (tableIdColumnPos < 0)
+            throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
+              "\" задано переменное ссылочное поле \"" + vtr.DocIdColumn.ColumnName +
+              "\", содержащее идентификатор документа, но не задано поле \"" + vtr.TableIdColumn.ColumnName +
+              "\" содержащее идентификатор таблицы");
+
+          foreach (DataRow row in table.Rows)
           {
-            DBStruct.VTReference vtr = TableDef.VTReferences[i];
-            int IdColumnPos = Table.Columns.IndexOf(vtr.IdField.FieldName);
-            if (IdColumnPos < 0)
+            if (row.RowState == DataRowState.Deleted)
               continue;
-            int TableColumnPos = Table.Columns.IndexOf(vtr.TableField.FieldName);
-            if (TableColumnPos < 0)
-              throw new InvalidOperationException("При создании строки в таблице \"" + Table.TableName +
-                "\" задано переменное ссылочное поле \"" + vtr.IdField.FieldName +
-                "\", содержащее идентификатор, но не задано поле \"" + vtr.TableField.FieldName +
-                "\" содержащее номер таблицы");
+            Int32 oldRefId = DataTools.GetInt(row[docIdColumnPos]);
+            Int32 tableId = DataTools.GetInt(row[tableIdColumnPos]);
 
-            int OldRefId = DataTools.GetInt(Row[IdColumnPos]);
-            if (OldRefId == 0)
+            if (oldRefId == 0 && tableId==0)
               continue;
 
-            int TableId = DataTools.GetInt(Row[TableColumnPos]);
-            if (TableId == 0)
-              throw new InavlidOperationException("При создании строки в таблице \"" + Table.TableName +
-                "\" задано значение для переменного ссылочного поля \"" + vtr.IdField.FieldName +
-                "\"-идентификатора, но не задан идентификатор таблицы в поле \"" + vtr.TableField.FieldName +
-                "\"");
+            if (tableId == 0)
+              throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
+                "\" задано значение для переменного ссылочного поля \"" + vtr.DocIdColumn.ColumnName +
+                "\" - идентификатора документа, но не задан идентификатор таблицы в поле \"" + vtr.TableIdColumn.ColumnName +
+                "\" - идентификатора таблицы");
+            if (oldRefId == 0)
+              throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
+                "\" не задано значение для переменного ссылочного поля \"" + vtr.DocIdColumn.ColumnName +
+                "\" - идентификатора документа, но задан идентификатор таблицы в поле \"" + vtr.TableIdColumn.ColumnName +
+                "\" - идентификатора таблицы");
 
-            string MasterTableName = FCaller.DocTypes.FindTableNameByTableId(TableId);
-            if (string.IsNullOrEmpty(MasterTableName))
-              throw new InavlidOperationException("При создании строки в таблице \"" + Table.TableName +
-                "\" задан идентификатор мастер-таблицы \"" + TableId + "\" в поле \"" +
-                vtr.TableField.FieldName + "\", которому не соответствует никакая таблица");
+            DBxDocType masterDT = _Caller.DocTypes.FindByTableId(tableId);
+            if (masterDT == null)
+              throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
+                "\" задан идентификатор " + tableId + " мастер-таблицы в поле " +
+                vtr.TableIdColumn.ColumnName + "\", которому не соответствует никакая таблица");
 
-            TableIdPairs Pairs;
-            if (!SubstIds.TryGetValue(MasterTableName, out Pairs))
+            if (vtr.MasterTableNames.Count > 0)
+            {
+              if (!vtr.MasterTableNames.Contains(masterDT.Name))
+                throw new InvalidOperationException("В таблице \"" + table.TableName +
+                "\" задан идентификатор мастер-таблицы \"" + masterDT + "\" в поле \"" +
+                vtr.TableIdColumn.ColumnName + "\", которую нельзя использовать. Для ссылки \""+vtr.Name+"\" допускаются только таблицы: "+
+              DataTools.JoinNotEmptyStrings(", ",  vtr.MasterTableNames ));
+            }
+
+            TableIdPairs pairs;
+            if (!_SubstIds.TryGetValue(masterDT.Name, out pairs))
               return;
 
-            int NewRefId;
-            if (Pairs.TryGetValue(OldRefId, out NewRefId))
+            Int32 newRefId;
+            if (pairs.TryGetValue(oldRefId, out newRefId))
             {
               // Запись значения поля откладывается на будущее
-              if (DelayedValues == null)
-                DelayedValues = new List<DelayedFieldInfo>();
-              DelayedFieldInfo Info = new DelayedFieldInfo();
-              Info.TableName = Table.TableName;
-              Info.Id = DataTools.GetInt(Row, "Id");
-              Info.FieldName = vtr.IdField.FieldName;
-              Info.FieldValue = NewRefId;
-              DelayedValues.Add(Info);
-              Row[IdColumnPos] = DBNull.Value;
+              if (_DelayedList == null)
+                _DelayedList = new List<DelayedFieldInfo>();
+              DelayedFieldInfo info = new DelayedFieldInfo();
+              info.TableName = table.TableName;
+              info.Id = DataTools.GetInt(row, "Id");
+              info.ColumnName = vtr.DocIdColumn.ColumnName;
+              info.Value = newRefId;
+              _DelayedList.Add(info);
+              row[docIdColumnPos] = DBNull.Value;
             }
           }
         }
       }
-#endif
     }
 
     private void ApplyColumnSubstIds(DataTable table, int columnPos, string masterTableName,
       SingleScopeList<string> proceedTableNames)
     {
-      TableIdPairs Pairs;
-      if (!_SubstIds.TryGetValue(masterTableName, out Pairs))
+      TableIdPairs pairs;
+      if (!_SubstIds.TryGetValue(masterTableName, out pairs))
         return;
 
       int pIdColumn = table.Columns.IndexOf("Id");
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        int OldRefId = DataTools.GetInt(DBxDocSet.GetValue(Row, columnPos));
-        if (OldRefId == 0)
+        int oldRefId = DataTools.GetInt(DBxDocSet.GetValue(row, columnPos));
+        if (oldRefId == 0)
           continue;
-        int NewRefId;
-        if (Pairs.TryGetValue(OldRefId, out NewRefId))
+        int newRefId;
+        if (pairs.TryGetValue(oldRefId, out newRefId))
         {
           if (proceedTableNames.Contains(masterTableName))
           {
             // Можно просто заменять ссылку, без использования списка отложенных
-            Row[columnPos] = NewRefId;
+            row[columnPos] = newRefId;
           }
           else
           {
             if (_DelayedList == null)
               _DelayedList = new List<DelayedFieldInfo>();
-            DelayedFieldInfo Info = new DelayedFieldInfo();
-            Info.TableName = table.TableName;
-            Info.Id = DataTools.GetInt(Row[pIdColumn]);
-            Info.FieldName = table.Columns[columnPos].ColumnName;
-            Info.FieldValue = NewRefId;
-            _DelayedList.Add(Info);
-            if (Row.Table.Columns[columnPos].AllowDBNull) // 15.01.2018. 
-              Row[columnPos] = DBNull.Value;
+            DelayedFieldInfo info = new DelayedFieldInfo();
+            info.TableName = table.TableName;
+            info.Id = DataTools.GetInt(row[pIdColumn]);
+            info.ColumnName = table.Columns[columnPos].ColumnName;
+            info.Value = newRefId;
+            _DelayedList.Add(info);
+            if (row.Table.Columns[columnPos].AllowDBNull) // 15.01.2018. 
+              row[columnPos] = DBNull.Value;
             // Интересно, а как быть с проверкой ссылочной целостности базы данных?
           }
         }
@@ -349,11 +381,11 @@ namespace FreeLibSet.Data.Docs
       if (_SubstIds == null)
         return false;
 
-      TableIdPairs Pairs;
-      if (!_SubstIds.TryGetValue(tableName, out Pairs))
+      TableIdPairs pairs;
+      if (!_SubstIds.TryGetValue(tableName, out pairs))
         return false;
 
-      return Pairs.ContainsValue(id);
+      return pairs.ContainsValue(id);
     }
 
     #endregion

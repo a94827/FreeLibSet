@@ -21,11 +21,23 @@ namespace FreeLibSet.Controls
   /// <summary>
   /// Компонент для выбора элементов из списка доступных с возможностью сортировки
   /// </summary>
-  public partial class TwoListSelector : UserControl
+  public partial class TwoListSelector : UserControl, ISupportInitialize
   {
     public TwoListSelector()
     {
       InitializeComponent();
+    }
+
+    public void BeginInit()
+    {
+      ((System.ComponentModel.ISupportInitialize)(this.AvailableGrid)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.SelectedGrid)).BeginInit();
+    }
+
+    public void EndInit()
+    {
+      ((System.ComponentModel.ISupportInitialize)(this.SelectedGrid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.AvailableGrid)).EndInit();
     }
   }
 }

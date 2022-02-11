@@ -1030,6 +1030,8 @@ namespace FreeLibSet.OpenOffice.Calc
       get
       {
         unoidl.com.sun.star.sheet.XSheetCellRange scr = _XSpreadsheet as unoidl.com.sun.star.sheet.XSheetCellRange;
+        if (scr == null)
+          throw new NullReferenceException("XSheetCellRange==null");
         unoidl.com.sun.star.table.XCell c = scr.getCellByPosition(columnIndex, rowIndex);
         return new Cell(c, _XSpreadsheetDocument);
       }

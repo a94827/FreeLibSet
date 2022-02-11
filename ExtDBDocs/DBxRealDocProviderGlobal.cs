@@ -87,7 +87,7 @@ namespace FreeLibSet.Data.Docs
       _LongLocks = new LongTermLockList(this.TextHandlers);
 
       _ClearCacheBuffer = new DBxClearCacheBuffer(DefaultClearCacheBuffer);
-      TableCacheInfos = new Dictionary<string, DBxTableCacheInfo>();
+      _TableCacheInfos = new Dictionary<string, DBxTableCacheInfo>();
       _StructSource = new InternalStructSource(this);
       _DBCache = new DBxCache(this, false);
 
@@ -96,62 +96,62 @@ namespace FreeLibSet.Data.Docs
 
       #region MainDocTableServiceColumns и SubDocTableServiceColumns
 
-      DBxColumnList Cols;
+      DBxColumnList cols;
 
-      Cols = new DBxColumnList();
-      Cols.Add("Id");
+      cols = new DBxColumnList();
+      cols.Add("Id");
       if (docTypes.UseDeleted)
-        Cols.Add("Deleted");
+        cols.Add("Deleted");
       if (docTypes.UseVersions)
-        Cols.Add("Version");
-      _MainDocTableServiceColumns = new DBxColumns(Cols);
+        cols.Add("Version");
+      _MainDocTableServiceColumns = new DBxColumns(cols);
 
-      Cols = new DBxColumnList();
-      Cols.Add("Id");
-      Cols.Add("DocId");
+      cols = new DBxColumnList();
+      cols.Add("Id");
+      cols.Add("DocId");
       if (docTypes.UseDeleted)
-        Cols.Add("Deleted");
+        cols.Add("Deleted");
 
-      _SubDocTableServiceColumns = new DBxColumns(Cols);
+      _SubDocTableServiceColumns = new DBxColumns(cols);
 
       #endregion
 
       #region AllDocServiceColumns и AllSubDocServiceColumns
 
-      Cols = new DBxColumnList();
-      Cols.Add("Id");
+      cols = new DBxColumnList();
+      cols.Add("Id");
       if (docTypes.UseDeleted)
-        Cols.Add("Deleted");
+        cols.Add("Deleted");
       if (docTypes.UseVersions)
       {
-        Cols.Add("Version");
-        Cols.Add("Version2");
+        cols.Add("Version");
+        cols.Add("Version2");
       }
       if (docTypes.UseUsers)
       {
-        Cols.Add("CreateUserId");
-        Cols.Add("ChangeUserId");
+        cols.Add("CreateUserId");
+        cols.Add("ChangeUserId");
       }
       if (docTypes.UseTime)
       {
-        Cols.Add("CreateTime");
-        Cols.Add("ChangeTime");
+        cols.Add("CreateTime");
+        cols.Add("ChangeTime");
       }
-      _AllDocServiceColumns = new DBxColumns(Cols);
+      _AllDocServiceColumns = new DBxColumns(cols);
 
 
-      Cols = new DBxColumnList();
-      Cols.Add("Id");
-      Cols.Add("DocId");
+      cols = new DBxColumnList();
+      cols.Add("Id");
+      cols.Add("DocId");
       if (docTypes.UseDeleted)
-        Cols.Add("Deleted");
+        cols.Add("Deleted");
       if (docTypes.UseVersions)
       {
-        Cols.Add("StartVersion");
-        Cols.Add("Version2");
+        cols.Add("StartVersion");
+        cols.Add("Version2");
       }
 
-      _AllSubDocServiceColumns = new DBxColumns(Cols);
+      _AllSubDocServiceColumns = new DBxColumns(cols);
 
       #endregion
 
@@ -260,7 +260,6 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     private Dictionary<string, Int32> _LastUsedTableIds;
 
-
     /// <summary>
     /// Получить следующий свободный идентификатор для нового документа или поддокумента
     /// </summary>
@@ -269,23 +268,23 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     internal Int32 GetNextId(string tableName, DBxEntry mainDBEntry)
     {
-      Int32 NextId;
+      Int32 nextId;
 
       lock (_LastUsedTableIds)
       {
-        Int32 LastId;
-        if (!_LastUsedTableIds.TryGetValue(tableName, out LastId))
+        Int32 lastId;
+        if (!_LastUsedTableIds.TryGetValue(tableName, out lastId))
         {
           using (DBxCon Con = new DBxCon(mainDBEntry))
           {
-            LastId = DataTools.GetInt(Con.GetMaxValue(tableName, "Id", null));
+            lastId = DataTools.GetInt(Con.GetMaxValue(tableName, "Id", null));
           }
-          _LastUsedTableIds.Add(tableName, LastId);
+          _LastUsedTableIds.Add(tableName, lastId);
         }
-        NextId = LastId + 1;
-        _LastUsedTableIds[tableName] = NextId;
+        nextId = lastId + 1;
+        _LastUsedTableIds[tableName] = nextId;
       }
-      return NextId;
+      return nextId;
     }
 
     #endregion
@@ -349,10 +348,10 @@ namespace FreeLibSet.Data.Docs
 
         lock (base.SyncRoot)
         {
-          foreach (DBxLongDocsLock OldItem in base.Source)
+          foreach (DBxLongDocsLock oldItem in base.Source)
           {
-            if (item.Data.TestConflict(OldItem.Data))
-              throw new DBxDocsLockException(item, OldItem, _TextHandlers);
+            if (item.Data.TestConflict(oldItem.Data))
+              throw new DBxDocsLockException(item, oldItem, _TextHandlers);
           }
 
           base.Add(item);
@@ -372,8 +371,8 @@ namespace FreeLibSet.Data.Docs
         if (Object.ReferenceEquals(collection, this))
           throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
 
-        foreach (DBxLongDocsLock Item in collection)
-          Add(Item);
+        foreach (DBxLongDocsLock item in collection)
+          Add(item);
       }
 
       /// <summary>
@@ -472,34 +471,34 @@ namespace FreeLibSet.Data.Docs
     /// DataRowState.Added, Modified и Deleted</param>
     public void ClearCache(DataSet ds)
     {
-      foreach (DataTable Table in ds.Tables)
+      foreach (DataTable table in ds.Tables)
       {
-        if (Table.Rows.Count == 0)
+        if (table.Rows.Count == 0)
           continue;
 
-        IdList Ids = new IdList();
-        foreach (DataRow Row in Table.Rows)
+        IdList ids = new IdList();
+        foreach (DataRow row in table.Rows)
         {
-          switch (Row.RowState)
+          switch (row.RowState)
           {
             case DataRowState.Added:
-              Int32 NewId = (Int32)(Row["Id"]);
-              if (NewId > 0)
-                Ids.Add(NewId);
+              Int32 newId = (Int32)(row["Id"]);
+              if (newId > 0)
+                ids.Add(newId);
               break;
             case DataRowState.Modified:
-              Ids.Add((Int32)(Row["Id"]));
+              ids.Add((Int32)(row["Id"]));
               break;
             case DataRowState.Deleted:
-              Int32 OldId = (Int32)(Row["Id", DataRowVersion.Original]);
-              if (OldId > 0)
-                Ids.Add(OldId);
+              Int32 oldId = (Int32)(row["Id", DataRowVersion.Original]);
+              if (oldId > 0)
+                ids.Add(oldId);
               break;
           }
         }
 
-        DBCache.Clear(Table.TableName, Ids);
-        ClearCacheBuffer.Holder.Add(Table.TableName, Ids.ToArray());
+        DBCache.Clear(table.TableName, ids);
+        ClearCacheBuffer.Holder.Add(table.TableName, ids.ToArray());
       }
     }
 
@@ -535,9 +534,9 @@ namespace FreeLibSet.Data.Docs
         return _Owner.MainDBEntry.DB.Struct.AllTableNames;
       }
 
-      public DBxTableStruct GetTableStruct(string TableName)
+      public DBxTableStruct GetTableStruct(string tableName)
       {
-        return _Owner.MainDBEntry.DB.Struct.Tables[TableName];
+        return _Owner.MainDBEntry.DB.Struct.Tables[tableName];
       }
 
       #endregion
@@ -553,44 +552,44 @@ namespace FreeLibSet.Data.Docs
     /// Ключ - имя таблицы.
     /// На момент обращения коллекция блокируется для обеспечения потокобезопасности
     /// </summary>
-    private Dictionary<string, DBxTableCacheInfo> TableCacheInfos;
+    private Dictionary<string, DBxTableCacheInfo> _TableCacheInfos;
 
     DBxTableCacheInfo IDBxCacheSource.GetTableCacheInfo(string tableName)
     {
-      DBxTableCacheInfo Info;
-      lock (TableCacheInfos)
+      DBxTableCacheInfo info;
+      lock (_TableCacheInfos)
       {
-        if (!TableCacheInfos.TryGetValue(tableName, out Info))
+        if (!_TableCacheInfos.TryGetValue(tableName, out info))
         {
-          DBxDocTypeBase DocTypeBase;
-          if (!DocTypes.FindByTableName(tableName, out DocTypeBase))
+          DBxDocTypeBase docTypeBase;
+          if (!DocTypes.FindByTableName(tableName, out docTypeBase))
             throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
 
-          if (DocTypeBase.IndividualCacheColumns.AreAllDefaults)
-            Info = null;
+          if (docTypeBase.IndividualCacheColumns.AreAllDefaults)
+            info = null;
           else
           {
-            Info = new DBxTableCacheInfo(_StructSource.GetTableStruct(tableName));
-            for (int i = 0; i < Info.TableStruct.Columns.Count; i++)
+            info = new DBxTableCacheInfo(_StructSource.GetTableStruct(tableName));
+            for (int i = 0; i < info.TableStruct.Columns.Count; i++)
             {
-              string ColumnName = Info.TableStruct.Columns[i].ColumnName;
-              if (DocTypeBase.Struct.Columns.Contains(ColumnName))
-                Info.IndividualColumnFlags[i] = DocTypeBase.IndividualCacheColumns[ColumnName];
+              string columnName = info.TableStruct.Columns[i].ColumnName;
+              if (docTypeBase.Struct.Columns.Contains(columnName))
+                info.IndividualColumnFlags[i] = docTypeBase.IndividualCacheColumns[columnName];
               // Для полей типа "Id" нет соответствующего описания в структуре полей DBxDocTypeBase.Struct
             }
-            Info.SetReadOnly();
+            info.SetReadOnly();
           }
-          TableCacheInfos.Add(tableName, Info);
+          _TableCacheInfos.Add(tableName, info);
         }
       }
-      return Info;
+      return info;
     }
 
     DBxCacheLoadResponse IDBxCacheSource.LoadCachePages(DBxCacheLoadRequest request)
     {
-      using (DBxCon Con = new DBxCon(MainDBEntry))
+      using (DBxCon mainCon = new DBxCon(MainDBEntry))
       {
-        return Con.LoadCachePages(request);
+        return mainCon.LoadCachePages(request);
       }
     }
 
@@ -649,20 +648,20 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     public DBx[] GetDBs()
     {
-      SingleScopeList<DBx> DBs = new SingleScopeList<DBx>();
+      SingleScopeList<DBx> dbs = new SingleScopeList<DBx>();
 
-      DBs.Add(MainDBEntry.DB);
+      dbs.Add(MainDBEntry.DB);
       if (UndoDBEntry != null)
-        DBs.Add(UndoDBEntry.DB);
+        dbs.Add(UndoDBEntry.DB);
       if (BinDataHandler != null)
       {
-        DBs.Add(BinDataHandler.MainEntry.DB);
+        dbs.Add(BinDataHandler.MainEntry.DB);
         DBxEntry[] entrs = BinDataHandler.GetSectionEntries();
         for (int i = 0; i < entrs.Length; i++)
-          DBs.Add(entrs[i].DB);
+          dbs.Add(entrs[i].DB);
       }
 
-      return DBs.ToArray();
+      return dbs.ToArray();
     }
 
 
@@ -672,11 +671,11 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public void DisposeDBs()
     {
-      DBx[] DBs = GetDBs();
-      for (int i = 0; i < DBs.Length; i++)
+      DBx[] dbs = GetDBs();
+      for (int i = 0; i < dbs.Length; i++)
       {
-        if (!DBs[i].IsDisposed)
-          DBs[i].Dispose();
+        if (!dbs[i].IsDisposed)
+          dbs[i].Dispose();
       }
     }
 

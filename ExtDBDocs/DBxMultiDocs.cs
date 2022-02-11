@@ -836,7 +836,7 @@ namespace FreeLibSet.Data.Docs
         get { return _MultiDocs.Table.Columns.Count; }
       }
 
-      public int DocCount { get { return 1; } }
+      public int RowCount { get { return 1; } }
 
       public bool IsReadOnly
       {

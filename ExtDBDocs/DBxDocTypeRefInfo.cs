@@ -174,7 +174,7 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < fromDTB.VTRefs.Count; i++)
       {
         DBxVTReference vtr = fromDTB.VTRefs[i];
-        if (Array.IndexOf<string>(vtr.MasterTableNames, toDocType.Name) >= 0)
+        if (vtr.MasterTableNames.Contains(toDocType.Name))
         {
           DBxDocTypeRefInfo Info = new DBxDocTypeRefInfo();
           Info.FromDocType = fromDocType;

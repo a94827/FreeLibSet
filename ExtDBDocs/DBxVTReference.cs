@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using System.Runtime.InteropServices;
+using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Data.Docs
 {
@@ -29,20 +31,58 @@ namespace FreeLibSet.Data.Docs
 
 
   /// <summary>
-  /// Ссылка на одну из нескольких таблиц.
+  /// Описание переменной ссылки.
+  /// Переменная ссылка - это два числовых поля, первое из которых задает идентификатор таблицы документа, 
+  /// а второе - идентификатор документа.
+  /// Числовые поля сами по себе не являются ссылочными. СУБД не поддерживают ссылки на разные таблицы из одного поля.
+  /// Функционал переменной ссылки, включая обеспечение целостности, реализуется на уровне DBxRealDocProvider.
   /// </summary>
   [Serializable]
-  public class DBxVTReference
+  public sealed class DBxVTReference:ObjectWithCode, IReadOnlyObject
   {
-    #region Защищенный конструктор
+    #region Конструктор
 
-    internal DBxVTReference(string name, DBxTableStruct table, DBxColumnStruct tableColumn, DBxColumnStruct idColumn)
+    /// <summary>
+    /// Создает описание ссылки.
+    /// В структуре таблицы <paramref name="table"/> должны быть созданы описания двух числовых полей <paramref name="tableIdColumn"/> и <paramref name="docIdColumn"/>.
+    /// </summary>
+    /// <param name="vtName">Условное имя ссылки в списке</param>
+    /// <param name="table">Описание структуры таблицы, в которой находятся ссылочные поля</param>
+    /// <param name="tableIdColumn">Описание числового поля, который содержит идентификатор таблицы</param>
+    /// <param name="docIdColumn">Описание числового поля, который содержит идентификатор документа</param>
+    public DBxVTReference(string vtName, DBxTableStruct table, DBxColumnStruct tableIdColumn, DBxColumnStruct docIdColumn)
+      :base(vtName)
     {
-      _Name = name;
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (tableIdColumn == null)
+        throw new ArgumentNullException("tableIdColumn");
+      if (docIdColumn == null)
+        throw new ArgumentNullException("tableIdColumn");
+#endif
+      if (!table.Columns.Contains(tableIdColumn))
+        throw new ArgumentException("Таблица не содержит столбца идентификатора таблицы", "tableIdColumn");
+      if (!table.Columns.Contains(docIdColumn))
+        throw new ArgumentException("Таблица не содержит столбца идентификатора документа", "docIdColumn");
+      if (Object.ReferenceEquals(tableIdColumn, docIdColumn))
+        throw new ArgumentException("Не может задаваться один и тот же столбец");
+
+      if (tableIdColumn.ColumnType != DBxColumnType.Int)
+        throw new ArgumentException("Столбец должен быть целочисленным", "tableIdColumn");
+      if (docIdColumn.ColumnType != DBxColumnType.Int)
+        throw new ArgumentException("Столбец должен быть целочисленным", "docIdColumn");
+      if (tableIdColumn.Nullable != docIdColumn.Nullable)
+        throw new ArgumentException("Признак Nullable у столбцов должен быть одинаковым");
+      if (!String.IsNullOrEmpty(tableIdColumn.MasterTableName))
+        throw new ArgumentException("Столбец не должен быть ссылочным", "tableIdColumn");
+      if (!String.IsNullOrEmpty(docIdColumn.MasterTableName))
+        throw new ArgumentException("Столбец не должен быть ссылочным", "docIdColumn");
+
       _Table = table;
-      _TableColumn = tableColumn;
-      _IdColumn = idColumn;
-      _MasterTableNamesArray = new List<string>();
+      _TableIdColumn = tableIdColumn;
+      _DocIdColumn = docIdColumn;
+      _MasterTableNames=new MasterTableNameList();
     }
 
     #endregion
@@ -50,10 +90,9 @@ namespace FreeLibSet.Data.Docs
     #region Свойства
 
     /// <summary>
-    /// Имя ссылки
+    /// Условное имя ссылки
     /// </summary>
-    public string Name { get { return _Name; } }
-    private string _Name;
+    public string Name { get { return base.Code; } }
 
     /// <summary>
     /// Таблица, в которой объявлена переменная ссылка
@@ -64,80 +103,56 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Числовое поле, содержащее идентификатор таблицы
     /// </summary>
-    public DBxColumnStruct TableColumn { get { return _TableColumn; } }
-    private DBxColumnStruct _TableColumn;
+    public DBxColumnStruct TableIdColumn { get { return _TableIdColumn; } }
+    private DBxColumnStruct _TableIdColumn;
 
     /// <summary>
     /// Числовое поле, содержащее идентификатор строки в таблице, на которую
     /// выполняется ссылка
     /// </summary>
-    public DBxColumnStruct IdColumn { get { return _IdColumn; } }
-    private DBxColumnStruct _IdColumn;
+    public DBxColumnStruct DocIdColumn { get { return _DocIdColumn; } }
+    private DBxColumnStruct _DocIdColumn;
+
+    private class MasterTableNameList : SingleScopeList<string>
+    {
+      internal new void SetReadOnly()
+      {
+        base.SetReadOnly();
+      }
+    }
 
     /// <summary>
-    /// Имена таблиц, на которые возможна ссылка. Свойство становиться доступно
-    /// после инициализации БД
+    /// Имена таблиц документов, на которые возможна ссылка.
+    /// Добавлять имена можно только до инициализации базы данных.
+    /// Список основан на SingleScopeList. Повторное добавление имени таблицы отбрасывается.
+    /// Поддерживаются только ссылки на документы, а не поддокументы
     /// </summary>
-    public string[] MasterTableNames { get { return _MasterTableNames; } }
-    private string[] _MasterTableNames;
+    public IList<string> MasterTableNames { get { return _MasterTableNames; } }
+    private MasterTableNameList _MasterTableNames;
 
     /// <summary>
     /// Идентификаторы таблиц, на которые возможна ссылка, то есть список возможных
-    /// значений для поля TableColumn. Свойство становиться доступно
+    /// значений для поля TableColumn. Свойство становится доступно
     /// после инициализации БД
     /// </summary>
-    public Int32[] MasterTableIds { get { return _MasterTableIds; } }
+    internal Int32[] MasterTableIds { get { return _MasterTableIds; } /*internal*/ set { _MasterTableIds = value; } }
     private Int32[] _MasterTableIds;
-
-    /// <summary>
-    /// Добавление таблицы, на которую возможна ссылка. Метод доступен, пока не
-    /// выполнена инициализация БД.
-    /// Возможен повторный вызов метода для той же мастер-таблицы, таблица 
-    /// добавляется однократно.
-    /// </summary>
-    /// <param name="masterTableName">Имя мастер-таблицы</param>
-    public void AddMasterTableName(string masterTableName)
-    {
-#if DEBUG
-      Table.CheckNotReadOnly();
-      if (_MasterTableNamesArray == null)
-        throw new InvalidOperationException("Нельзя добавлять Master-таблицу после инициализации БД");
-      if (string.IsNullOrEmpty(masterTableName))
-        throw new ArgumentNullException("masterTableName");
-#endif
-      if (!_MasterTableNamesArray.Contains(masterTableName))
-        _MasterTableNamesArray.Add(masterTableName);
-    }
-
-    /// <summary>
-    /// Внутренний список, куда добавляются имена таблиц до инициализации
-    /// </summary>
-    private List<string> _MasterTableNamesArray;
 
     #endregion
 
-    #region Методы инициализации
+    #region IReadOnlyObject
 
-    /// <summary>
-    /// Преобразование списка в массив
-    /// </summary>
-    internal void InternalInitPhase1()
+    bool IReadOnlyObject.IsReadOnly { get { return _MasterTableNames.IsReadOnly; } }
+
+    void IReadOnlyObject.CheckNotReadOnly()
     {
-      _MasterTableNames = _MasterTableNamesArray.ToArray();
-      _MasterTableNamesArray = null;
+      if (_MasterTableNames.IsReadOnly)
+        throw new ObjectReadOnlyException();
     }
 
-    /// <summary>
-    /// Присоединение массива идентификаторов таблиц
-    /// </summary>
-    /// <param name="masterTableIds"></param>
-    internal void InternalInitPhase2(Int32[] masterTableIds)
+    internal void SetReadOnly()
     {
-#if DEBUG
-      if (masterTableIds.Length != MasterTableNames.Length)
-        throw new ArgumentException("Неправильная длина массива", "masterTableIds");
-#endif
-      _MasterTableIds = masterTableIds;
+      _MasterTableNames.SetReadOnly();
     }
 
     #endregion
@@ -147,7 +162,7 @@ namespace FreeLibSet.Data.Docs
   /// Реализация свойства Table.VTReferenceCollection
   /// </summary>
   [Serializable]
-  public class DBxVTReferenceList : IEnumerable<DBxVTReference>
+  public sealed class DBxVTReferenceList : NamedList<DBxVTReference>
   {
     #region Защищенный конструктор
 
@@ -166,127 +181,46 @@ namespace FreeLibSet.Data.Docs
     public DBxDocTypeBase Owner { get { return _Owner; } }
     private DBxDocTypeBase _Owner;
 
-    /// <summary>
-    /// Возвращает количество ссылок в списке
-    /// </summary>
-    public int Count
-    {
-      get
-      {
-        if (_Items == null)
-          return 0;
-        else
-          return _Items.Count;
-      }
-    }
-
-    /// <summary>
-    /// Доступ к ссылке по индексу
-    /// </summary>
-    /// <param name="Index">Индекс от 0 до (Count-1)</param>
-    /// <returns>Описание ссылки</returns>
-    public DBxVTReference this[int Index]
-    {
-      get { return _Items[Index]; }
-    }
-
-    /// <summary>
-    /// Доступ к ссылке по имени.
-    /// Если нет ссылки с таким именем, возвращает null
-    /// </summary>
-    /// <param name="name">Имя ссылки</param>
-    /// <returns>Описание ссылки или null</returns>
-    public DBxVTReference this[string name]
-    {
-      get
-      {
-        int p = IndexOf(name);
-        if (p < 0)
-          return null;
-        else
-          return _Items[p];
-      }
-    }
-
-    private List<DBxVTReference> _Items;
-
     #endregion
 
     #region Методы
 
     /// <summary>
-    /// Добавить ссылку. Создается два числовых поля к описанию полей
+    /// Добавить ссылку. В структуре таблицы создается два числовых поля с именами <paramref name="vtName"/>TableId и <paramref name="vtName"/>.DocId.
     /// </summary>
-    /// <param name="name">Имя ссылки</param>
+    /// <param name="vtName">Имя ссылки</param>
     /// <returns>Созданный объект ссылки</returns>
-    public DBxVTReference Add(string name)
+    public DBxVTReference Add(string vtName)
+    {
+      return Add(vtName, vtName + "TableId", vtName + "DocId");
+    }
+
+    /// <summary>
+    /// Добавить ссылку. В структуре таблицы создается два числовых поля с именами.
+    /// </summary>
+    /// <param name="vtName">Имя ссылки</param>
+    /// <param name="tableIdColumnName">Имя поля, содержащего идентификатор таблицы</param>
+    /// <param name="docIdColumnName">Имя поля, содержащего идентификатор</param>
+    /// <returns>Созданный объект ссылки</returns>
+    public DBxVTReference Add(string vtName, string tableIdColumnName, string docIdColumnName)
     {
 #if DEBUG
-      Owner.CheckNotReadOnly();
-      if (String.IsNullOrEmpty(name))
+      if (String.IsNullOrEmpty(vtName))
         throw new ArgumentNullException("name");
+      Owner.CheckNotReadOnly();
 #endif
-      DBxColumnStruct TableColumn = Owner.Struct.Columns.AddInt(name + "Таблица"); // TODO: Имена суффиксов
-      DBxColumnStruct IdColumn = Owner.Struct.Columns.AddInt(name + "Идентификатор");
-      DBxVTReference Item = new DBxVTReference(name, Owner.Struct, TableColumn, IdColumn);
-      if (_Items == null)
-        _Items = new List<DBxVTReference>();
-      _Items.Add(Item);
-      return Item;
+      DBxColumnStruct tableIdColumn = Owner.Struct.Columns.AddInt(tableIdColumnName); 
+      DBxColumnStruct idColumn = Owner.Struct.Columns.AddInt(docIdColumnName);
+      DBxVTReference item = new DBxVTReference(vtName, Owner.Struct, tableIdColumn, idColumn);
+      base.Add(item);
+      return item;
     }
 
-    /// <summary>
-    /// Возвращает индекс ссылки с заданным именем
-    /// </summary>
-    /// <param name="name">Имя ссылки</param>
-    /// <returns>Индекс или (-1)</returns>
-    public int IndexOf(string name)
+    internal new void SetReadOnly()
     {
-      if (String.IsNullOrEmpty(name))
-        return -1;
-      if (_Items == null)
-        return -1;
-      for (int i = 0; i < _Items.Count; i++)
-      {
-        if (_Items[i].Name == name)
-          return i;
-      }
-      return -1;
-    }
-
-    #endregion
-
-    #region IEnumerable Members
-
-    /// <summary>
-    /// Используется для создания фиктивного перечислителя
-    /// </summary>
-    private static readonly List<DBxVTReference> _DummyItems = new List<DBxVTReference>();
-
-    /// <summary>
-    /// Возвращает перечислитель по DBxVTReference.
-    /// 
-    /// Тип возвращаемого значения может измениться в будущем, 
-    /// гарантируется только реализация интерфейса перечислителя.
-    /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
-    /// </summary>
-    /// <returns>Перечислитель</returns>
-    public List<DBxVTReference>.Enumerator GetEnumerator()
-    {
-      if (_Items == null)
-        return _DummyItems.GetEnumerator();
-      else
-        return _Items.GetEnumerator();
-    }
-
-    IEnumerator<DBxVTReference> IEnumerable<DBxVTReference>.GetEnumerator()
-    {
-      return GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return GetEnumerator();
+      base.SetReadOnly();
+      for (int i = 0; i < Count; i++)
+        this[i].SetReadOnly();
     }
 
     #endregion
@@ -297,7 +231,6 @@ namespace FreeLibSet.Data.Docs
   /// Удобно использовать в качестве поля ErrorMessageItem.Tag для перехода к ошибочному документу
   /// </summary>
   [Serializable]
-  [StructLayout(LayoutKind.Auto)]
   public struct DBxVTValue : IEquatable<DBxVTValue>
   {
     #region Конструктор

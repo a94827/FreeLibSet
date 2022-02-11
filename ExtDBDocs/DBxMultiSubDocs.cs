@@ -1015,7 +1015,7 @@ namespace FreeLibSet.Data.Docs
         get { return _MultiSubDocs.Table.Columns.Count; }
       }
 
-      int IDBxDocValues.DocCount { get { return 1; } }
+      int IDBxDocValues.RowCount { get { return 1; } }
 
       public bool IsReadOnly
       {

@@ -348,13 +348,13 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирование (разрешаются "серые" значения)</param>
     public DocValueControlBase2(DBxDocValue docValue, IEFPControl controlProvider, bool useGrayCheckBox, bool canMultiEdit)
       : base(controlProvider, docValue.IsReadOnly,
-      useGrayCheckBox && docValue.Grayed && (canMultiEdit || docValue.DocCount <= 1))
+      useGrayCheckBox && docValue.Grayed && (canMultiEdit || docValue.RowCount <= 1))
     {
       _DocValue = docValue;
       if (canMultiEdit)
         _MultiEditDisabled = false;
       else
-        _MultiEditDisabled = docValue.DocCount > 1;
+        _MultiEditDisabled = docValue.RowCount > 1;
 
       if (_MultiEditDisabled)
         controlProvider.Visible = false;
@@ -676,7 +676,7 @@ namespace FreeLibSet.Forms.Docs
       if (canMultiEdit)
         _MultiEditDisabled = false;
       else
-        _MultiEditDisabled = docValue1.DocCount > 1;
+        _MultiEditDisabled = docValue1.RowCount > 1;
 
       if (_MultiEditDisabled)
         controlProvider.Visible = false;
@@ -688,7 +688,7 @@ namespace FreeLibSet.Forms.Docs
 
     private static bool GetCanGrayed(DBxDocValue docValue1, DBxDocValue docValue2, bool canMultiEdit)
     {
-      if (canMultiEdit || docValue1.DocCount <= 1)
+      if (canMultiEdit || docValue1.RowCount <= 1)
         return docValue1.Grayed || docValue2.Grayed;
       else
         return false;

@@ -108,7 +108,6 @@ namespace FreeLibSet.Data.Docs
       _RestoreDeleted = restoreDeleted;
     }
 
-
     #endregion
 
     #region Свойства
@@ -191,7 +190,7 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Аргументы события DBxDocType.AfterWrite
   /// </summary>
-  public class ServerDocTypeAfterWriteEventArgs : ServerDocTypeDocEventArgs
+  public class ServerDocTypeAfterChangeEventArgs : ServerDocTypeDocEventArgs
   {
     #region Конструктор
 
@@ -199,7 +198,7 @@ namespace FreeLibSet.Data.Docs
     /// Аргументы создаются в DBxDocType, а не в пользовательском коде
     /// </summary>
     /// <param name="doc">Обрабатываемый документ</param>
-    public ServerDocTypeAfterWriteEventArgs(DBxSingleDoc doc)
+    public ServerDocTypeAfterChangeEventArgs(DBxSingleDoc doc)
       : base(doc)
     {
     }
@@ -214,8 +213,8 @@ namespace FreeLibSet.Data.Docs
   /// </summary>
   /// <param name="sender">Объект DBxDocType</param>
   /// <param name="args">Аргументы события</param>
-  public delegate void ServerDocTypeAfterWriteEventHandler(object sender,
-    ServerDocTypeAfterWriteEventArgs args);
+  public delegate void ServerDocTypeAfterChangeEventHandler(object sender,
+    ServerDocTypeAfterChangeEventArgs args);
 
   #endregion
 
@@ -1035,20 +1034,20 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        bool Res;
-        if (_Items.TryGetValue(columnName, out Res))
-          return Res;
+        bool res;
+        if (_Items.TryGetValue(columnName, out res))
+          return res;
         else
         {
-          DBxColumnStruct Col = _Owner.Struct.Columns[columnName];
-          if (Col == null)
+          DBxColumnStruct col = _Owner.Struct.Columns[columnName];
+          if (col == null)
           {
             if (String.IsNullOrEmpty(columnName))
               throw new ArgumentNullException("columnName");
             else
               throw new ArgumentException("Структура таблицы не содержит объявления поля \"" + columnName + "\"", "columnName");
           }
-          return DBxTableCacheInfo.IsIndividualByDefault(Col);
+          return DBxTableCacheInfo.IsIndividualByDefault(col);
         }
       }
       set
@@ -1275,7 +1274,9 @@ namespace FreeLibSet.Data.Docs
     internal void SetReadOnly()
     {
       _Struct.SetReadOnly();
+      _BinDataRefs.SetReadOnly(); // 11.02.2022
       _FileRefs.SetReadOnly();
+      _VTRefs.SetReadOnly();
       _CalculatedColumns.SetReadOnly();
     }
 
@@ -1283,19 +1284,19 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверка структуры
 
-    internal void CheckStructAux(DBxTableStruct RealStruct)
+    internal void CheckStructAux(DBxTableStruct realStruct)
     {
       // Проверяем структуру объявления таблицы
       // Вызывается в DBxDocTypes Struct.CheckStruct();
-      string PK = RealStruct.CheckTablePrimaryKeyInt32();
-      if (PK != "Id")
-        throw new DBxDocTypeStructException("Описание таблицы \"" + RealStruct.TableName + "\" имеет неправильный первичный ключ по полю \"" + PK + "\", а не \"Id\"");
+      string pk = realStruct.CheckTablePrimaryKeyInt32();
+      if (pk != "Id")
+        throw new DBxDocTypeStructException("Описание таблицы \"" + realStruct.TableName + "\" имеет неправильный первичный ключ по полю \"" + pk + "\", а не \"Id\"");
 
       // Проверяем список CalculatedColumns
       for (int i = 0; i < CalculatedColumns.Count; i++)
       {
-        if (!RealStruct.Columns.Contains(CalculatedColumns[i]))
-          throw new DBxDocTypeStructException("Описание таблицы \"" + RealStruct.TableName + "\" не содержит описания вычисляемого поля \"" + CalculatedColumns[i] + "\"");
+        if (!realStruct.Columns.Contains(CalculatedColumns[i]))
+          throw new DBxDocTypeStructException("Описание таблицы \"" + realStruct.TableName + "\" не содержит описания вычисляемого поля \"" + CalculatedColumns[i] + "\"");
       }
     }
 
@@ -1421,9 +1422,12 @@ namespace FreeLibSet.Data.Docs
     #region BeforeInsert
 
     /// <summary>
-    /// Событие вызывается перед добавлением документа на стороне сервера и
-    /// при восстановлении документа из удаленных.
+    /// Событие вызывается на стороне сервера перед добавлением документа (Insert) и
+    /// при восстановлении документа из удаленных (Edit).
     /// После этого события вызывается основное событие BeforeWrite.
+    /// При повторном вызове ApplyChanges() для этого документа событие не вызывается.
+    /// Обработчик может, например, заполнить недостающие поля. 
+    /// Для этого следует изменить текущие значения, которые доступны через аргументы события (свойство ServerDocTypeBeforeWriteEventArgs.Doc.Values).
     /// </summary>
     public event ServerDocTypeBeforeInsertEventHandler BeforeInsert
     {
@@ -1446,8 +1450,8 @@ namespace FreeLibSet.Data.Docs
       if (_BeforeInsert == null)
         return;
 
-      ServerDocTypeBeforeInsertEventArgs Args = new ServerDocTypeBeforeInsertEventArgs(doc, restoreDeleted);
-      _BeforeInsert(this, Args);
+      ServerDocTypeBeforeInsertEventArgs args = new ServerDocTypeBeforeInsertEventArgs(doc, restoreDeleted);
+      _BeforeInsert(this, args);
     }
 
     #endregion
@@ -1455,11 +1459,11 @@ namespace FreeLibSet.Data.Docs
     #region BeforeWrite
 
     /// <summary>
-    /// Вызывается непосредственно перед записью документа в базу данных
-    /// Обработчик может, например, сгенерировать номер документа, или заполнить
-    /// вычисляемые поля. Для этого следует изменить текущие значения, которые
-    /// доступны через Args.Doc.Values
+    /// Вызывается на стороне сервера непосредственно перед записью документа в базу данных в режимах Insert и Edit.
+    /// Обработчик может, например, заполнить вычисляемые поля. 
+    /// Для этого следует изменить текущие значения, которые доступны через аргументы события (свойство ServerDocTypeBeforeWriteEventArgs.Doc.Values).
     /// Не вызывается перед удалением документа.
+    /// Для нового или восстанавливаемого документа сначала вызывается событие BeforeInsert.
     /// </summary>
     public event ServerDocTypeBeforeWriteEventHandler BeforeWrite
     {
@@ -1484,8 +1488,8 @@ namespace FreeLibSet.Data.Docs
 
       try
       {
-        ServerDocTypeBeforeWriteEventArgs Args = new ServerDocTypeBeforeWriteEventArgs(doc, append, recalcColumnsOnly);
-        _BeforeWrite(this, Args);
+        ServerDocTypeBeforeWriteEventArgs args = new ServerDocTypeBeforeWriteEventArgs(doc, append, recalcColumnsOnly);
+        _BeforeWrite(this, args);
       }
       catch (Exception e)
       {
@@ -1500,81 +1504,11 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region AfterWrite
-
-    /// <summary>
-    /// Вызывается, после того как документ был сохранен.
-    /// Событие может использоваться для проверки связанных документов. При необходимости
-    /// может быть выполнена установка обратных связей.
-    /// В обработчике нельзя изменять значения полей этого документа
-    /// 08.12.2014
-    /// Событие вызывается после выхода из транзакции и снятия блокировки записи. Возможен асинхронный вызов события из разных процедур
-    /// </summary>
-    public event ServerDocTypeAfterWriteEventHandler AfterWrite
-    {
-      add
-      {
-        CheckNotReadOnly();
-        _AfterWrite += value;
-      }
-      remove
-      {
-        CheckNotReadOnly();
-        _AfterWrite -= value;
-      }
-    }
-    [field: NonSerialized]
-    private event ServerDocTypeAfterWriteEventHandler _AfterWrite;
-
-    internal void PerformAfterWrite(DBxSingleDoc doc)
-    {
-      if (_AfterWrite == null)
-        return;
-
-      ServerDocTypeAfterWriteEventArgs Args = new ServerDocTypeAfterWriteEventArgs(doc);
-      _AfterWrite(this, Args);
-    }
-
-    #endregion
-
-#if XXX
-    /// <summary>
-    /// Вызывается для автоматического исправления ошибок в основной строке 
-    /// DataRow документа
-    /// Не имеет доступа к поддокументам
-    /// </summary>
-    public event ServerDocTypeAutoCorrectEventHandler AutoCorrect;
-
-    public bool PerformAutoCorrect(AccDepServerExec Caller, DataRow Row)
-    {
-      if (AutoCorrect == null)
-        return false;
-      ServerDocTypeAutoCorrectEventArgs Args = new ServerDocTypeAutoCorrectEventArgs(Caller, Row);
-      Args.Changed = false;
-      AutoCorrect(this, Args);
-      return Args.Changed;
-    }
-
-    /// <summary>
-    /// Вызывается перед удалением документа. Может выполнить проверку допустимости
-    /// удаления и выкинуть исключение, если удалять нельзя
-    /// </summary>
-    public event ServerDocTypeBeforeDeleteEventHandler BeforeDelete;
-
-    internal void PerformBeforeDelete(MultiDocsChangesInfo DocsChanges, int DocIndex)
-    {
-      if (BeforeDelete == null)
-        return;
-
-      ServerDocTypeBeforeDeleteEventArgs Args = new ServerDocTypeBeforeDeleteEventArgs(DocsChanges, DocIndex);
-      BeforeDelete(this, Args);
-    }
-#endif
-
     #region BeforeDelete
 
     /// <summary>
-    /// Событие вызывается перед удалением документа на стороне сервера
+    /// Событие вызывается на стороне сервера перед удалением документа (Delete).
+    /// Обработчик не может менять значения полей документа.
     /// </summary>
     public event ServerDocTypeBeforeDeleteEventHandler BeforeDelete
     {
@@ -1597,8 +1531,43 @@ namespace FreeLibSet.Data.Docs
       if (_BeforeDelete == null)
         return;
 
-      ServerDocTypeBeforeDeleteEventArgs Args = new ServerDocTypeBeforeDeleteEventArgs(doc);
-      _BeforeDelete(this, Args);
+      ServerDocTypeBeforeDeleteEventArgs args = new ServerDocTypeBeforeDeleteEventArgs(doc);
+      _BeforeDelete(this, args);
+    }
+
+    #endregion
+
+    #region AfterChange
+
+    /// <summary>
+    /// Вызывается, после того как документ был сохранен или удален (режимы Insert, Edit и Delete).
+    /// Событие может использоваться для проверки связанных документов.
+    /// В обработчике нельзя изменять значения полей этого документа.
+    /// Событие вызывается после выхода из транзакции и снятия блокировки записи. Возможен асинхронный вызов события из разных процедур.
+    /// </summary>
+    public event ServerDocTypeAfterChangeEventHandler AfterChange
+    {
+      add
+      {
+        CheckNotReadOnly();
+        _AfterChange += value;
+      }
+      remove
+      {
+        CheckNotReadOnly();
+        _AfterChange -= value;
+      }
+    }
+    [field: NonSerialized]
+    private event ServerDocTypeAfterChangeEventHandler _AfterChange;
+
+    internal void PerformAfterChange(DBxSingleDoc doc)
+    {
+      if (_AfterChange == null)
+        return;
+
+      ServerDocTypeAfterChangeEventArgs args = new ServerDocTypeAfterChangeEventArgs(doc);
+      _AfterChange(this, args);
     }
 
     #endregion
@@ -1762,15 +1731,15 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Массив описаний документов</returns>
     public DBxDocType[] GetGroupDocTypes()
     {
-      SingleScopeList<DBxDocType> List = new SingleScopeList<DBxDocType>();
+      SingleScopeList<DBxDocType> list = new SingleScopeList<DBxDocType>();
       foreach (DBxDocType dt in this)
       {
         DBxDocType dt2 = GetGroupDocType(dt);
         if (dt2 != null)
-          List.Add(dt2);
+          list.Add(dt2);
       }
 
-      return List.ToArray();
+      return list.ToArray();
     }
 
     /// <summary>
@@ -1781,15 +1750,15 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Массив имен видов документов</returns>
     public string[] GetGroupDocTypeNames()
     {
-      SingleScopeList<string> List = new SingleScopeList<string>();
+      SingleScopeList<string> list = new SingleScopeList<string>();
       foreach (DBxDocType dt in this)
       {
         DBxDocType dt2 = GetGroupDocType(dt);
         if (dt2 != null)
-          List.Add(dt2.Name);
+          list.Add(dt2.Name);
       }
 
-      return List.ToArray();
+      return list.ToArray();
     }
 
     /// <summary>
@@ -1805,17 +1774,16 @@ namespace FreeLibSet.Data.Docs
       if (String.IsNullOrEmpty(docType.GroupRefColumnName))
         return null;
 
-      DBxColumnStruct ColDef = docType.Struct.Columns[docType.GroupRefColumnName];
-      if (ColDef == null)
+      DBxColumnStruct colDef = docType.Struct.Columns[docType.GroupRefColumnName];
+      if (colDef == null)
         throw new BugException("Неизвестное имя столбца \"" + docType.GroupRefColumnName + "\" в документе \"" + docType.Name + "\", которое задается свойством GroupRefColumnName");
-      if (String.IsNullOrEmpty(ColDef.MasterTableName))
+      if (String.IsNullOrEmpty(colDef.MasterTableName))
         throw new BugException("Столбец \"" + docType.GroupRefColumnName + "\" документа \"" + docType.Name + " не является ссылочным");
-      DBxDocType dt2 = this[ColDef.MasterTableName];
+      DBxDocType dt2 = this[colDef.MasterTableName];
       if (dt2 == null)
-        throw new BugException("Неизвестный вид документов \"" + ColDef.MasterTableName + "\" в документе \"" + docType.Name + "\" для группировки");
+        throw new BugException("Неизвестный вид документов \"" + colDef.MasterTableName + "\" в документе \"" + docType.Name + "\" для группировки");
       return dt2;
     }
-
 
     #endregion
 
@@ -2010,9 +1978,9 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     private static DBxColumnStruct CloneWithoutRef(DBxColumnStruct cs)
     {
-      DBxColumnStruct Res = cs.Clone();
-      Res.MasterTableName = String.Empty;
-      return Res;
+      DBxColumnStruct res = cs.Clone();
+      res.MasterTableName = String.Empty;
+      return res;
     }
 
     private void GetReadySystemDocTypes()
@@ -2074,10 +2042,10 @@ namespace FreeLibSet.Data.Docs
 
       if (IsReadOnly)
       {
-        Dictionary<Int32, DBxDocType> Dict = GetTableIdDict();
-        DBxDocType DocType;
-        if (Dict.TryGetValue(tableId, out DocType))
-          return DocType;
+        Dictionary<Int32, DBxDocType> dict = GetTableIdDict();
+        DBxDocType dt;
+        if (dict.TryGetValue(tableId, out dt))
+          return dt;
         else
           return null;
       }
@@ -2123,13 +2091,13 @@ namespace FreeLibSet.Data.Docs
         if (_TableIdDict == null)
         {
           // Присвоим в самом конце
-          Dictionary<Int32, DBxDocType> Dict = new Dictionary<Int32, DBxDocType>();
+          Dictionary<Int32, DBxDocType> dict = new Dictionary<Int32, DBxDocType>();
 
           for (int i = 0; i < Count; i++)
-            Dict.Add(this[i].TableId, this[i]);
+            dict.Add(this[i].TableId, this[i]);
 
           //Interlocked.Exchange(ref _TableIdDict, Dict);
-          _TableIdDict = Dict; // 05.01.2021
+          _TableIdDict = dict; // 05.01.2021
         }
       }
 
@@ -2160,9 +2128,9 @@ namespace FreeLibSet.Data.Docs
 
       if (IsReadOnly)
       {
-        Dictionary<string, DBxDocTypeBase> Dict = GetTableNameDict();
+        Dictionary<string, DBxDocTypeBase> dict = GetTableNameDict();
         DBxDocTypeBase dtb;
-        if (Dict.TryGetValue(tableName, out dtb))
+        if (dict.TryGetValue(tableName, out dtb))
         {
           if (dtb.IsSubDoc)
           {
@@ -2234,18 +2202,18 @@ namespace FreeLibSet.Data.Docs
         if (_TableNameDict == null)
         {
           // Присвоим в самом конце
-          Dictionary<string, DBxDocTypeBase> Dict = new Dictionary<string, DBxDocTypeBase>();
+          Dictionary<string, DBxDocTypeBase> dict = new Dictionary<string, DBxDocTypeBase>();
 
           for (int i = 0; i < Count; i++)
           {
-            Dict.Add(this[i].Name, this[i]);
+            dict.Add(this[i].Name, this[i]);
 
             for (int j = 0; j < this[i].SubDocs.Count; j++)
-              Dict.Add(this[i].SubDocs[j].Name, this[i].SubDocs[j]);
+              dict.Add(this[i].SubDocs[j].Name, this[i].SubDocs[j]);
           }
 
           //Interlocked.Exchange(ref _TableNameDict, Dict);
-          _TableNameDict = Dict; // 05.01.2021
+          _TableNameDict = dict; // 05.01.2021
         }
       }
 
@@ -2264,22 +2232,22 @@ namespace FreeLibSet.Data.Docs
 
       if (IsReadOnly)
       {
-        Dictionary<string, DBxDocTypeBase> Dict = GetTableNameDict();
-        return Dict.TryGetValue(tableName, out docTypeBase);
+        Dictionary<string, DBxDocTypeBase> dict = GetTableNameDict();
+        return dict.TryGetValue(tableName, out docTypeBase);
       }
 
       #endregion
 
       #region Без использования буферизации
 
-      DBxDocType DocType;
-      DBxSubDocType SubDocType;
-      if (FindByTableName(tableName, out DocType, out SubDocType))
+      DBxDocType dt;
+      DBxSubDocType sdt;
+      if (FindByTableName(tableName, out dt, out sdt))
       {
-        if (SubDocType == null)
-          docTypeBase = DocType;
+        if (sdt == null)
+          docTypeBase = dt;
         else
-          docTypeBase = SubDocType;
+          docTypeBase = sdt;
         return true;
       }
       else
@@ -2299,9 +2267,9 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Описание или null</returns>
     public DBxDocTypeBase FindByTableName(string tableName)
     {
-      DBxDocTypeBase DocTypeBase;
-      if (FindByTableName(tableName, out DocTypeBase))
-        return DocTypeBase;
+      DBxDocTypeBase dtb;
+      if (FindByTableName(tableName, out dtb))
+        return dtb;
       else
         return null;
     }
@@ -2415,23 +2383,23 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("mainEntry");
 #endif
 
-      using (DBxCon Con = new DBxCon(mainEntry))
+      using (DBxCon mainCon = new DBxCon(mainEntry))
       {
         #region 1. Загружаем существующие номера
 
-        DataTable SrcTable = Con.FillSelect("DocTables");
+        DataTable srcTable = mainCon.FillSelect("DocTables");
 
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
           // Int32 Id = (int)SrcRow["Id"];
-          Int32 Id = DataTools.GetInt(SrcRow, "Id"); // 06.12.2017
-          string TableName = DataTools.GetString(SrcRow, "DocTableName");
-          if (this.Contains(TableName))
+          Int32 tableId = DataTools.GetInt(srcRow, "Id"); // 06.12.2017
+          string tableName = DataTools.GetString(srcRow, "DocTableName");
+          if (this.Contains(tableName))
           {
-            DBxDocType dt = this[TableName];
+            DBxDocType dt = this[tableName];
             if (dt.TableId != 0)
-              throw new BugException("Ошибка в таблице DocTables. Повторное вхождение документа \"" + TableName + "\"");
-            dt.TableId = Id;
+              throw new BugException("Ошибка в таблице DocTables. Повторное вхождение документа \"" + tableName + "\"");
+            dt.TableId = tableId;
           }
         }
 
@@ -2443,25 +2411,38 @@ namespace FreeLibSet.Data.Docs
         {
           if (dt.TableId == 0)
           {
-            dt.TableId = Con.AddRecordWithIdResult("DocTables", "DocTableName", dt.Name);
+            dt.TableId = mainCon.AddRecordWithIdResult("DocTables", "DocTableName", dt.Name);
           }
         }
 
         #endregion
 
         #region VTReferences
-        // TODO:
-        /*
-// Инициализация ссылочных полей на переменные таблицы. Добавляем массивы
-// идентификаторов таблиц для каждого имени master-таблицы
-foreach (ServerDocType dt in dts)
-{
-InitTableVTRefs(dt.TableDef, dts);
-foreach (ServerSubDocType sdt in dt.SubDocs)
-  InitTableVTRefs(sdt.TableDef, dts);
-}
-          */
+
+        // Инициализация ссылочных полей на переменные таблицы. Добавляем массивы
+        // идентификаторов таблиц для каждого имени master-таблицы
+        foreach (DBxDocType dt in this)
+        {
+          InitTableVTRefs(dt);
+          foreach (DBxSubDocType sdt in dt.SubDocs)
+            InitTableVTRefs(sdt);
+        }
+
         #endregion
+      }
+    }
+
+    private void InitTableVTRefs(DBxDocTypeBase dt)
+    {
+      foreach (DBxVTReference vtr in dt.VTRefs)
+      {
+        Int32[] tableIds = new Int32[vtr.MasterTableNames.Count];
+        for (int i = 0; i < tableIds.Length; i++)
+        {
+          DBxDocType refDT = this.GetRequired(vtr.MasterTableNames[i]);
+          tableIds[i] = refDT.TableId;
+        }
+        vtr.MasterTableIds = tableIds;
       }
     }
 
