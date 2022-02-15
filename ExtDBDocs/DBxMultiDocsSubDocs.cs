@@ -25,8 +25,8 @@ namespace FreeLibSet.Data.Docs
     {
       if (_Items == null)
         return;
-      foreach (KeyValuePair<string, DBxMultiSubDocs> Pair in _Items)
-        Pair.Value.InitTables();
+      foreach (KeyValuePair<string, DBxMultiSubDocs> pair in _Items)
+        pair.Value.InitTables();
     }
 
     #endregion
@@ -64,8 +64,8 @@ namespace FreeLibSet.Data.Docs
       {
         if (_Items == null)
           _Items = new Dictionary<string, DBxMultiSubDocs>();
-        DBxMultiSubDocs Res;
-        if (!_Items.TryGetValue(subDocTypeName, out Res))
+        DBxMultiSubDocs res;
+        if (!_Items.TryGetValue(subDocTypeName, out res))
         {
           DBxSubDocType sdt = _Owner.DocType.SubDocs[subDocTypeName];
           if (sdt == null)
@@ -75,15 +75,15 @@ namespace FreeLibSet.Data.Docs
             else
               throw new ArgumentException("Неизвестный вид поддокумента \"" + subDocTypeName + "\"", "subDocTypeName");
           }
-          DBxMultiSubDocs Res2 = new DBxMultiSubDocs(_Owner, sdt);
+          DBxMultiSubDocs res2 = new DBxMultiSubDocs(_Owner, sdt);
 
-          if (!_Items.TryGetValue(subDocTypeName, out Res)) // 22.01.2019
+          if (!_Items.TryGetValue(subDocTypeName, out res)) // 22.01.2019
           {
-            Res = Res2;
-            _Items.Add(subDocTypeName, Res);
+            res = res2;
+            _Items.Add(subDocTypeName, res);
           }
         }
-        return Res;
+        return res;
       }
     }
 
@@ -93,16 +93,16 @@ namespace FreeLibSet.Data.Docs
     {
       if (_Items == null)
         return;
-      foreach (KeyValuePair<string, DBxMultiSubDocs> Pair in _Items)
-        Pair.Value.ClearList();
+      foreach (KeyValuePair<string, DBxMultiSubDocs> pair in _Items)
+        pair.Value.ClearList();
     }
 
     internal void ResetTables()
     {
       if (_Items == null)
         return;
-      foreach (KeyValuePair<string, DBxMultiSubDocs> Pair in _Items)
-        Pair.Value.ResetTable();
+      foreach (KeyValuePair<string, DBxMultiSubDocs> pair in _Items)
+        pair.Value.ResetTable();
     }
 
     /// <summary>
@@ -142,7 +142,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public void LoadAll()
     {
-      int dummy=0;
+      int dummy = 0;
       for (int i = 0; i < Count; i++)
         dummy += this[i].SubDocCount;
     }
@@ -151,10 +151,9 @@ namespace FreeLibSet.Data.Docs
 
     #region Состояние поддокументов
 
-
     /// <summary>
-    /// Возвращает true, если для указанного вида поддокументов есть изменнные, созданные или удаленные строки
-    /// Вызов этого метода предпочтительнее, чем DBxMultiSubDocs.ContainsChanged
+    /// Возвращает true, если для указанного вида поддокументов есть изменные, созданные или удаленные строки.
+    /// Вызов этого метода предпочтительнее, чем обращение к свойству DBxMultiSubDocs.ContainsChanged
     /// </summary>
     /// <param name="subDocTypeName">Имя поддокумента</param>
     /// <returns></returns>
@@ -162,10 +161,10 @@ namespace FreeLibSet.Data.Docs
     {
       if (_Items == null)
         return false;
-      DBxMultiSubDocs Res;
-      if (!_Items.TryGetValue(subDocTypeName, out Res))
+      DBxMultiSubDocs res;
+      if (!_Items.TryGetValue(subDocTypeName, out res))
         return false;
-      return Res.ContainsModified;
+      return res.ContainsModified;
     }
 
 
@@ -180,12 +179,11 @@ namespace FreeLibSet.Data.Docs
     {
       if (_Items == null)
         return 0;
-      DBxMultiSubDocs Res;
-      if (!_Items.TryGetValue(subDocTypeName, out Res))
+      DBxMultiSubDocs res;
+      if (!_Items.TryGetValue(subDocTypeName, out res))
         return 0;
-      return Res.GetSubDocCount(state);
+      return res.GetSubDocCount(state);
     }
-
 
     #endregion
   }

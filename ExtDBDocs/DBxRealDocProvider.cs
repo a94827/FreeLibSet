@@ -1329,6 +1329,8 @@ namespace FreeLibSet.Data.Docs
 
             WriteDelayedColumns(idReplacer.DelayedList, ds, mainConUser);
 
+            ValidateRefs(docSet, mainConUser); // должно быть после WriteDelayedColumns()
+
             if (docSet.CheckDocs)
               DoCheckDocs(docSet);
 
@@ -2203,6 +2205,205 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
+    #region Проверка корректности ссылок
+
+    private void ValidateRefs(DBxDocSet docSet, DBxCon mainConUser)
+    {
+      #region 1. Поиск неправильных идентификаторов и сбор правильных
+
+      // Ключ - имя мастер-таблицы
+      // Значение - идентификаторы в мастер таблице
+      Dictionary<string, IdList> refDict = new Dictionary<string, IdList>();
+
+      foreach (DBxMultiDocs multiDocs in docSet)
+      {
+        ValidateTableRefsInternal(multiDocs.Table, multiDocs.DocType, refDict);
+        foreach (DBxSubDocType sdt in multiDocs.DocType.SubDocs)
+        {
+          if (multiDocs.SubDocs.ContainsSubDocs(sdt.Name))
+            ValidateTableRefsInternal(multiDocs.SubDocs[sdt.Name].Table, sdt, refDict);
+        }
+      }
+
+      #endregion
+
+      #region Проверка всех идентификаторов
+
+      // 15.02.2022
+      // По идее, можно не проверять идентификаторы для обычных ссылочных полей, т.к.
+      // СУБД должна проверять целостность ссылок.
+      // Для SQLite проверка почему-то работает только при DBxDocType.UseDeleted=false.
+      // Для VTRef надо проверять в любом случае
+
+      // Эти ссылки проверять не надо
+      if (Source.GlobalData.BinDataHandler != null)
+      {
+        refDict.Remove("BinData");
+        refDict.Remove("FileNames");
+      }
+
+      foreach (KeyValuePair<string, IdList> pair in refDict)
+      {
+        IdList ids = pair.Value;
+
+        #region Удаляем ссылки, которые есть в нашем наборе
+
+        if (docSet.DataSet.Tables.Contains(pair.Key))
+        {
+          DataTable tbl = docSet.DataSet.Tables[pair.Key];
+          foreach (DataRow row in tbl.Rows)
+          {
+            switch (row.RowState)
+            {
+              case DataRowState.Added:
+              case DataRowState.Modified:
+                Int32 id = (Int32)(row["Id"]);
+#if DEBUG
+                CheckIsRealDocId(id);
+#endif
+                ids.Remove(id);
+                break;
+            }
+          }
+        }
+
+        #endregion
+
+        #region Выполняем запрос
+
+        if (ids.Count > 0)
+        {
+            DBxDocTypeBase dtb=DocTypes.FindByTableName(pair.Key);
+          IdsFilterGenerator idsGen = new IdsFilterGenerator(ids);
+          idsGen.CreateFilters();
+          for (int i = 0; i < idsGen.Count; i++)
+          {
+            Int32[] wantedIds = idsGen.GetIds(i);
+
+            DBxFilter where = idsGen[i];
+            if (dtb!=null) // может быть, ссылка на таблицу BinData
+              AddDeletedFilters(ref where, dtb.IsSubDoc);
+            IdList realIds = mainConUser.GetIds(pair.Key, where);
+            if (realIds.Count < wantedIds.Length)
+            { 
+              // Не хватает
+              realIds.Remove(wantedIds);
+              throw new InvalidOperationException("Имеются ссылки на таблицу \"" + pair.Key + "\" для идентификаторов " +
+                DataTools.ToStringJoin<Int32>(", ", realIds.ToArray()) + ", которых нет в базе данных");
+            }
+          }
+        }
+
+        #endregion
+      }
+
+      #endregion
+    }
+
+    private void ValidateTableRefsInternal(DataTable table, DBxDocTypeBase dtb, Dictionary<string, IdList> refDict)
+    {
+      #region Обычные ссылки
+
+      for (int i = 0; i < dtb.Struct.Columns.Count; i++)
+      {
+        DBxColumnStruct col = dtb.Struct.Columns[i];
+        if (!String.IsNullOrEmpty(col.MasterTableName))
+        {
+          int pCol = table.Columns.IndexOf(col.ColumnName);
+          if (pCol < 0)
+            continue;
+
+          foreach (DataRow row in table.Rows)
+          {
+            switch (row.RowState)
+            {
+              case DataRowState.Added:
+              case DataRowState.Modified:
+                Int32 refId = DataTools.GetInt(row[pCol]);
+                if (refId < 0)
+                  throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для ссылочного поля \"" + col.ColumnName + "\" задан фиктивный идентификатор " + refId.ToString() + ", для которого не была найдена запись в наборе данных");
+                if (refId > 0)
+                {
+                  IdList ids;
+                  if (!refDict.TryGetValue(col.MasterTableName, out ids))
+                  {
+                    ids = new IdList();
+                    refDict.Add(col.MasterTableName, ids);
+                  }
+                  ids.Add(refId);
+                }
+                break;
+            }
+          }
+        }
+      }
+
+      #endregion
+
+      #region Переменные ссылки
+
+      for (int i = 0; i < dtb.VTRefs.Count; i++)
+      {
+        DBxVTReference vtr = dtb.VTRefs[i];
+        int pTableIdCol = table.Columns.IndexOf(vtr.TableIdColumn.ColumnName);
+        int pDocIdCol = table.Columns.IndexOf(vtr.DocIdColumn.ColumnName);
+        if (pTableIdCol < 0 && pDocIdCol < 0)
+          continue;
+        if (pTableIdCol < 0 || pDocIdCol < 0)
+          throw new InvalidOperationException("В таблице \"" + table.TableName + "\" присутствуют некомплектные поля для переменной ссылки \"" + vtr.Name + "\"");
+
+        foreach (DataRow row in table.Rows)
+        {
+          switch (row.RowState)
+          {
+            case DataRowState.Added:
+            case DataRowState.Modified:
+              Int32 refDocId = DataTools.GetInt(row[pDocIdCol]);
+              Int32 refTableId = DataTools.GetInt(row[pTableIdCol]);
+              if (refTableId == 0 && refDocId == 0)
+                continue;
+              if (refTableId == 0 || refDocId == 0)
+                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
+                  "\" заданы некомплектные идентификаторы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString() + ", а \"" + vtr.DocIdColumn.ColumnName + "\"=" + refDocId.ToString());
+
+              if (refTableId < 0)
+                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
+                  "\" задан фиктивный идентификатор таблицы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString());
+
+              DBxDocType masterDT = DocTypes.FindByTableId(refTableId);
+              if (masterDT == null)
+                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
+                  "\" задан фиктивный идентификатор таблицы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString() + ", которому не соответствует никакой вид документа");
+
+              if (!vtr.MasterTableNames.Contains(masterDT.Name))
+                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
+                  "\" задан фиктивный идентификатор таблицы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString() + ". Ему соответствует вид документа \"" + masterDT.PluralTitle +
+                  "\", который нельзя использовать в этой ссылке. Допускаются только таблицы: " +
+                  DataTools.JoinNotEmptyStrings(", ", vtr.MasterTableNames));
+
+              if (refDocId < 0)
+                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
+                  "\" задан фиктивный идентификатор документа. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refDocId.ToString() +
+                  ", для которого не была найдена запись в наборе данных");
+
+              IdList ids;
+              if (!refDict.TryGetValue(masterDT.Name, out ids))
+              {
+                ids = new IdList();
+                refDict.Add(masterDT.Name, ids);
+              }
+              ids.Add(refDocId);
+
+              break;
+          }
+        }
+      }
+
+      #endregion
+    }
+
+    #endregion
+
     #region Проверка записанных документов
 
     private void DoCheckDocs(DBxDocSet docSet)
@@ -2246,12 +2447,6 @@ namespace FreeLibSet.Data.Docs
 
     #region Удаление документов
 
-    /// <summary>
-    /// Список перекрестных ссылок
-    /// Загружается при первом выполнении удаления
-    /// </summary>
-    private DBxExtRefs _ExtRefs;
-
     #region Проверка возможности удаления
 
     private DBxColumns _FieldsCheckDelForDoc; // new DBxColumns("Id,Deleted");
@@ -2285,10 +2480,6 @@ namespace FreeLibSet.Data.Docs
       Int32[] deletedDocIds = multiDocs.GetDocIds(DBxDocState.Delete);
       if (deletedDocIds.Length > 0)
       {
-        if (_ExtRefs == null)
-          _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
-
-
         // Проверка удаления документа
         IdsFilterGenerator docFltGen = new IdsFilterGenerator(deletedDocIds);
 
@@ -2298,7 +2489,7 @@ namespace FreeLibSet.Data.Docs
         bool hasSubDocsExtRefs = false;
         for (int i = 0; i < multiDocs.SubDocs.Count; i++)
         {
-          if (!_ExtRefs[multiDocs.SubDocs[i].SubDocType.Name].IsEmpty)
+          if (!Source.GlobalData.MasterRefs[multiDocs.SubDocs[i].SubDocType.Name].IsEmpty)
           {
             hasSubDocsExtRefs = true;
             break;
@@ -2332,14 +2523,12 @@ namespace FreeLibSet.Data.Docs
       Int32[] editDocIds = multiDocs.GetDocIds(DBxDocState.Edit);
       if (editDocIds.Length > 0)
       {
-        if (_ExtRefs == null)
-          _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
         // Проверяем удаляемые поддокументы в редактируемом документе
         // Проверяем наличие непустых ExtRefs
         bool hasSubDocsExtRefs = false;
         for (int i = 0; i < multiDocs.SubDocs.Count; i++)
         {
-          if (!_ExtRefs[multiDocs.SubDocs[i].SubDocType.Name].IsEmpty)
+          if (!Source.GlobalData.MasterRefs[multiDocs.SubDocs[i].SubDocType.Name].IsEmpty)
           {
             hasSubDocsExtRefs = true;
             break;
@@ -2381,10 +2570,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="delFltGen">Идентификаторы удаляемых документов/поддокументов</param>
     private void ApplyDocsDelete1Table(DBxCon mainCon, DBxDocSet docSet, DBxDocTypeBase delType, IdsFilterGenerator delFltGen)
     {
-      if (_ExtRefs == null)
-        _ExtRefs = new DBxExtRefs(DocTypes, Source.GlobalData.BinDataHandler);
-
-      DBxExtRefs.TableRefList extRefList = _ExtRefs[delType.Name];
+      DBxExtRefs.TableRefList extRefList = Source.GlobalData.MasterRefs[delType.Name];
 
       #region 1. Проверяем ссылочные поля
 
@@ -2419,7 +2605,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="refInfo">Буферизованное описание ссылки</param>
     private void ApplyDocsDelete1CheckRef(DBxCon mainCon, DBxDocSet docSet, DBxDocTypeBase delType, IdsFilterGenerator delFltGen, DBxExtRefs.RefColumnInfo refInfo)
     {
-      Int32[] allDelIds = delFltGen.GetAllIds(); // все идентификаторы удаляемых документов и поддокументов
+      Int32[] allDelIds = delFltGen.GetAllIds(); // все идентификаторы удаляемых документов/поддокументов
 
       delFltGen.CreateFilters(refInfo.ColumnDef.ColumnName);
       DBxColumns checkDelColumns = refInfo.IsSubDocType ? _FieldsCheckDelForSubDoc : _FieldsCheckDelForDoc;
@@ -2512,14 +2698,17 @@ namespace FreeLibSet.Data.Docs
       DBxColumns checkDelColumns = refInfo.IsSubDocType ? _FieldsCheckDelForSubDoc : _FieldsCheckDelForDoc;
 
       DataTable checkTable2 = docSet.DataSet.Tables[refInfo.DetailsTableName];
-      IdList checkTable2UsedIds = new IdList(); // допускает и фиктивные идентификаторы
+      // IdList checkTable2UsedIds = new IdList(); // допускает и фиктивные идентификаторы
+
+      #region Первый проход - по записям в базе данных
 
       for (int j = 0; j < delFltGen.Count; j++)
       {
+        DBxFilter where = new AndFilter(new ValueFilter(refInfo.VTRef.TableIdColumn.ColumnName, delDocType.TableId),
+            delFltGen[j]);
+        AddDeletedFilters(ref where, refInfo.IsSubDocType); // 14.02.2022
         DataTable checkTable = mainCon.FillSelect(refInfo.DetailsTableName,
-            checkDelColumns,
-            new AndFilter(new ValueFilter(refInfo.VTRef.TableIdColumn.ColumnName, delDocType.TableId),
-            delFltGen[j]));
+            checkDelColumns, where);
 
         for (int k = 0; k < checkTable.Rows.Count; k++)
         {
@@ -2528,13 +2717,45 @@ namespace FreeLibSet.Data.Docs
             Int32 checkedId = (Int32)(checkTable.Rows[k]["Id"]);
             if (checkTable2.Rows.Find(checkedId) != null)
             {
-              checkTable2UsedIds.Add(checkedId);
+              // checkTable2UsedIds.Add(checkedId);
               continue; // проверим  на втором заходе
             }
           }
-          ApplyDocDelete1CheckOne(mainCon, docSet, delDocType, delFltGen.GetIds(j), refInfo.DetailsType, checkTable2.Rows[k]);
+          ApplyDocDelete1CheckOne(mainCon, docSet, delDocType, delFltGen.GetIds(j), refInfo.DetailsType, checkTable.Rows[k]); // испр. 14.02.2022
         }
       }
+
+      #endregion
+
+      #region Второй проход - по записям в DBxDocSet
+
+      // Проверка в DBxDocSet добавлена 14.02.2022
+
+      DataTable detailsTable2 = docSet.DataSet.Tables[refInfo.DetailsTableName];
+      if (detailsTable2 != null)
+      {
+        Int32[] allDelIds = delFltGen.GetAllIds(); // все идентификаторы удаляемых документов
+
+        // Проверять надо все записи
+        IdList allDelIdList = new IdList(allDelIds);
+
+        foreach (DataRow checkRow in detailsTable2.Rows)
+        {
+          if (checkRow.RowState == DataRowState.Deleted)
+            continue;
+
+          //Int32 CheckedId = (Int32)(CheckRow["Id"]);
+          Int32 tableId = DataTools.GetInt(checkRow, refInfo.VTRef.TableIdColumn.ColumnName);
+          if (tableId == delDocType.TableId)
+          {
+            Int32 refId = DataTools.GetInt(checkRow, refInfo.VTRef.DocIdColumn.ColumnName);
+            if (allDelIdList.Contains(refId))
+              ApplyDocDelete1CheckOne(mainCon, docSet, delDocType, allDelIds, refInfo.DetailsType, checkRow);
+          }
+        }
+      }
+
+      #endregion
     }
 
     /// <summary>
@@ -2548,17 +2769,17 @@ namespace FreeLibSet.Data.Docs
     /// <param name="chkRow">Строка в детальной таблице, на которую проверяется ссылка (detail)</param>
     private void ApplyDocDelete1CheckOne(DBxCon mainCon, DBxDocSet docSet, DBxDocTypeBase delType, Int32[] delIds, DBxDocTypeBase chkType, DataRow chkRow)
     {
-      //// Удаленные документы / поддокументы пропускаем
-      //if (DocTypes.UseDeleted)
-      //{
-      //  if (DataTools.GetBool(ChkRow, "Deleted"))
-      //    return;
-      //}
-      //if (ChkType.IsSubDoc)
-      //{
-      //  if (DataTools.GetBool(ChkRow, "DocId.Deleted"))
-      //    return;
-      //}
+      // Удаленные документы / поддокументы пропускаем
+      if (DocTypes.UseDeleted)
+      {
+        if (DataTools.GetBool(chkRow, "Deleted"))
+          return;
+        if (chkType.IsSubDoc)
+        {
+          if (DataTools.GetBool(chkRow, "DocId.Deleted"))
+            return;
+        }
+      }
 
       Int32 chkDocId = DataTools.GetInt(chkRow, chkType.IsSubDoc ? "DocId" : "Id");
 

@@ -408,7 +408,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxRealDocProviderGlobal globalData = conHelper.CreateRealDocProviderGlobal();
       try
       {
-        DBxDocType dt=sut.FindByTableId(1);
+        DBxDocType dt = sut.FindByTableId(1);
         Assert.AreSame(sut["D1"], dt, "After DB created");
 
         Assert.IsNull(sut.FindByTableId(0), "TableId=0");
@@ -504,7 +504,7 @@ namespace ExtDBDocs_tests.Data_Docs
       sut.SetReadOnly();
       Assert.IsTrue(sut.IsReadOnly, "IsReadOnly after");
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.CheckNotReadOnly(); }, "CheckNotReadOnly()");
-      Assert.Catch<ObjectReadOnlyException>(delegate() { sut.UseDeleted=false; }, "UseDeleted");
+      Assert.Catch<ObjectReadOnlyException>(delegate() { sut.UseDeleted = false; }, "UseDeleted");
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.UseVersions = false; }, "UseVersions");
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.UseTime = false; }, "UseTime");
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.UsersTableName = "D1"; }, "UsersTableName");
@@ -512,17 +512,17 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.ActionInfoMaxLength = 50; }, "ActionInfoMaxLength");
 
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.Add(new DBxDocType("DDummy")); }, "Add(DBxDocType)");
-      DBxDocType dt=sut["D1"];
+      DBxDocType dt = sut["D1"];
       Assert.IsTrue(dt.Struct.IsReadOnly, "DBxDocType.Struct.IsReadOnly");
       Assert.IsTrue(dt.BinDataRefs.IsReadOnly, "DBxDocType.BinDataRefs.IsReadOnly");
       Assert.IsTrue(dt.FileRefs.IsReadOnly, "DBxDocType.FileRefs.IsReadOnly");
       Assert.IsTrue(dt.VTRefs.IsReadOnly, "DBxDocType.VTRefs.IsReadOnly");
       Assert.IsTrue(dt.CalculatedColumns.IsReadOnly, "DBxDocType.CalculatedColumns.IsReadOnly");
-      Assert.Catch<ObjectReadOnlyException>(delegate() { dt.DefaultOrder=DBxOrder.FromDataViewSort("F102"); }, "DBxDocType.DefaultOrder");
+      Assert.Catch<ObjectReadOnlyException>(delegate() { dt.DefaultOrder = DBxOrder.FromDataViewSort("F102"); }, "DBxDocType.DefaultOrder");
       Assert.Catch<ObjectReadOnlyException>(delegate() { dt.GroupRefColumnName = "F102"; }, "DBxDocType.GroupRefColumnName");
 
       Assert.Catch<ObjectReadOnlyException>(delegate() { dt.SubDocs.Add(new DBxSubDocType("SDDummy")); }, "Add(DBxSubDocType)");
-      DBxSubDocType sdt=sut["D1"].SubDocs["SD11"];
+      DBxSubDocType sdt = sut["D1"].SubDocs["SD11"];
       Assert.IsTrue(sdt.Struct.IsReadOnly, "DBxSubDocType.Struct.IsReadOnly");
       Assert.IsTrue(sdt.BinDataRefs.IsReadOnly, "DBxSubDocType.BinDataRefs.IsReadOnly");
       Assert.IsTrue(sdt.FileRefs.IsReadOnly, "DBSubxDocType.FileRefs.IsReadOnly");
@@ -533,7 +533,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #endregion
 
-    #region HasBinDataRefs и HasFileRefs
+    #region HasBinDataRefs, HasFileRefs и HasVTRefs
 
     [Test]
     public void HasBinDataRefs()
@@ -561,6 +561,26 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.IsTrue(sut.HasFileRefs, "in DBxSubDocType");
     }
 
+
+    [Test]
+    public void HasVTRefs()
+    {
+      DBxDocTypes sut = CreateTestSimpleDocTypes();
+      Assert.IsFalse(sut.HasVTRefs, "before");
+
+      DBxDocType dt = sut["D1"];
+      dt.VTRefs.Add("V1");
+      Assert.IsTrue(dt.Struct.Columns.Contains("V1TableId"));
+      Assert.IsTrue(dt.Struct.Columns.Contains("V1DocId"));
+      Assert.AreEqual(DBxColumnType.Int, dt.Struct.Columns["V1TableId"].ColumnType, "V1TableId ColumnType");
+      Assert.AreEqual(DBxColumnType.Int, dt.Struct.Columns["V1DocId"].ColumnType, "V1DocId ColumnType");
+      Assert.IsTrue(sut.HasVTRefs, "in DBxDocType");
+
+      sut = CreateTestSimpleDocTypes();
+      sut["D1"].SubDocs["SD11"].VTRefs.Add("V2");
+      Assert.IsTrue(sut.HasVTRefs, "in DBxSubDocType");
+    }
+
     #endregion
 
     #region InitDocTableIds()
@@ -586,6 +606,142 @@ namespace ExtDBDocs_tests.Data_Docs
         string s1 = sut.GetTableNameById(1);
         Assert.AreEqual("D1", s1, "After DB created");
       }
+    }
+
+    #endregion
+
+    #region GetToDocTypeRefs()
+
+    [Test]
+    public void GetToDocTypeRefs()
+    {
+      DBxDocTypes sut = CreateTestSimpleDocTypes();
+      sut["D1"].Struct.Columns.AddReference("R1", "D1", true); // ссылка на самого себя (дерево документов)
+      DBxDocType dt2 = new DBxDocType("D2");
+      dt2.Struct.Columns.AddReference("R2", "D1", false); // обычная ссылка
+      dt2.Struct.Columns.AddReference("R3", "SD11", false); // ссылка на поддокумент
+      DBxVTReference vtr4 = dt2.VTRefs.Add("R4");
+      vtr4.MasterTableNames.Add("D1");
+      sut.Add(dt2);
+
+      DBxSubDocType sd21 = new DBxSubDocType("SD21");
+      sd21.Struct.Columns.AddReference("R5", "D1", false); // ссылка на документ
+      sd21.Struct.Columns.AddReference("R6", "SD11", false); // ссылка на поддокумент
+      DBxVTReference vtr7 = sd21.VTRefs.Add("R7");
+      vtr7.MasterTableNames.Add("D1");
+      DBxVTReference vtr8 = sd21.VTRefs.Add("R8");
+      vtr8.MasterTableNames.Add("D3"); // не ссылаемся на D1
+      dt2.SubDocs.Add(sd21);
+
+      DBxDocType dt3 = new DBxDocType("D3"); // на этот документ есть переменная ссылка
+      sut.Add(dt3);
+
+      Assert.AreEqual(0, sut.GetToDocTypeRefs("D2").Length, "No refs to D2");
+
+      DBxDocTypeRefInfo[] a1 = sut.GetToDocTypeRefs("D1");
+      // Порядок элементов в массиве не определен
+      string[] a1str = new string[a1.Length];
+      for (int i = 0; i < a1.Length; i++)
+        a1str[i] = DBxDocTypeRefInfo_ToString(a1[i]);
+      Array.Sort<string>(a1str);
+
+      string[] aWanted = new string[7];
+      aWanted[0] = "R1,Col,D1,D1";
+      aWanted[1] = "R2,Col,D2,D1";
+      aWanted[2] = "R3,Col,D2,SD11";
+      aWanted[3] = "R4,VT,D2,D1";
+      aWanted[4] = "R5,Col,SD21,D1";
+      aWanted[5] = "R6,Col,SD21,SD11";
+      aWanted[6] = "R7,VT,SD21,D1";
+      Array.Sort<string>(aWanted);
+
+      Assert.AreEqual(aWanted, a1str, "Refs to D1");
+
+      sut.SetReadOnly();
+      a1 = sut.GetToDocTypeRefs("D1");
+      // Порядок элементов в массиве не определен
+      a1str = new string[a1.Length];
+      for (int i = 0; i < a1.Length; i++)
+        a1str[i] = DBxDocTypeRefInfo_ToString(a1[i]);
+      Array.Sort<string>(a1str);
+      Assert.AreEqual(aWanted, a1str, "Refs to D1 after SetReadOnly()");
+    }
+
+    private static string DBxDocTypeRefInfo_ToString(DBxDocTypeRefInfo obj)
+    {
+      StringBuilder sb = new StringBuilder();
+      if (obj.RefType == DBxDocTypeRefType.Column)
+        sb.Append(obj.FromColumn.ColumnName);
+      else
+        sb.Append(obj.FromVTReference.Name);
+      sb.Append(',');
+      if (obj.RefType == DBxDocTypeRefType.Column)
+        sb.Append("Col");
+      else
+        sb.Append("VT");
+      sb.Append(',');
+      sb.Append(obj.FromDocTypeBase.Name);
+      sb.Append(',');
+      sb.Append(obj.ToDocTypeBase.Name);
+      return sb.ToString();
+    }
+
+    #endregion
+
+    #region CheckStruct()
+
+    [Test]
+    public void CheckStruct_Ok()
+    {
+      DBxDocTypes sut = CreateTestSimpleDocTypes();
+      sut.CheckStruct(null);
+    }
+
+    // Если установить DBxDocTypes.UsersTableName на несуществующую таблицу, то будет автоматически создан новый вид документа.
+    //[Test]
+    //public void CheckStruct_UsersTableName()
+    //{
+    //  DBxDocTypes sut = CreateTestSimpleDocTypes();
+    //  sut.UsersTableName = "DUnknown";
+    //  Assert.IsTrue(sut.UseUsers, "UseUsers");
+    //  Assert.Catch(delegate() { sut.CheckStruct(null); });
+    //}
+
+    [Test]
+    public void CheckStruct_CalculatedColumns()
+    {
+      DBxDocTypes sut = CreateTestSimpleDocTypes();
+      sut["D1"].CalculatedColumns.Add("FUnknown");
+      Assert.Catch(delegate() { sut.CheckStruct(null); });
+    }
+
+    [Test]
+    public void CheckStruct_VTRefs_SameTableIdColumn()
+    {
+      // Для этого теста нельзя использовать перегрузки DBxVTReferenceList.Add(), принимающие имена столбцов.
+      // Возникнет исключение при попытке повторно добавить столбец в структуру таблицы.
+      // Нужно создать столбцы вручную.
+
+      DBxDocTypes sut = CreateTestSimpleDocTypes();
+      DBxColumnStruct colTableId = sut["D1"].Struct.Columns.AddInt("TableId", true);
+      DBxColumnStruct colDocId1 = sut["D1"].Struct.Columns.AddInt("DocId1", true);
+      DBxColumnStruct colDocId2 = sut["D1"].Struct.Columns.AddInt("DocId2", true);
+
+      sut["D1"].VTRefs.Add(new DBxVTReference("VTR1", sut["D1"].Struct, colTableId, colDocId1));
+      sut["D1"].VTRefs.Add(new DBxVTReference("VTR2", sut["D1"].Struct, colTableId, colDocId2));
+      Assert.Catch(delegate() { sut.CheckStruct(null); });
+    }
+
+    [Test]
+    public void CheckStruct_VTRefs_SameDocIdColumn()
+    {
+      DBxDocTypes sut = CreateTestSimpleDocTypes();
+      DBxColumnStruct colTableId1 = sut["D1"].Struct.Columns.AddInt("TableId1", true);
+      DBxColumnStruct colTableId2 = sut["D1"].Struct.Columns.AddInt("TableId2", true);
+      DBxColumnStruct colDocId = sut["D1"].Struct.Columns.AddInt("DocId", true);
+      sut["D1"].VTRefs.Add(new DBxVTReference("VTR1", sut["D1"].Struct, colTableId1, colDocId));
+      sut["D1"].VTRefs.Add(new DBxVTReference("VTR2", sut["D1"].Struct, colTableId2, colDocId));
+      Assert.Catch(delegate() { sut.CheckStruct(null); });
     }
 
     #endregion

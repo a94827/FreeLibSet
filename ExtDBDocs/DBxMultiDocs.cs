@@ -207,30 +207,30 @@ namespace FreeLibSet.Data.Docs
       switch (state)
       {
         case DBxDocState.Insert:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Added)
+            if (row.RowState == DataRowState.Added)
               cnt++;
           }
           break;
         case DBxDocState.Edit:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Modified)
+            if (row.RowState == DataRowState.Modified)
               cnt++;
           }
           break;
         case DBxDocState.View:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Unchanged)
+            if (row.RowState == DataRowState.Unchanged)
               cnt++;
           }
           break;
         case DBxDocState.Delete:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Deleted)
+            if (row.RowState == DataRowState.Deleted)
               cnt++;
           }
           break;
@@ -250,14 +250,14 @@ namespace FreeLibSet.Data.Docs
         if (_Table.Rows.Count == 0)
           return DBxDocState.None;
 
-        DBxDocState Res1 = DBxDocSet.GetDocState(_Table.Rows[0]);
+        DBxDocState res1 = DBxDocSet.GetDocState(_Table.Rows[0]);
         for (int i = 0; i < _Table.Rows.Count; i++)
         {
-          DBxDocState Res2 = DBxDocSet.GetDocState(_Table.Rows[i]);
-          if (Res2 != Res1)
+          DBxDocState res2 = DBxDocSet.GetDocState(_Table.Rows[i]);
+          if (res2 != res1)
             return DBxDocState.Mixed;
         }
-        return Res1;
+        return res1;
       }
     }
 
@@ -269,21 +269,21 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DBxDocState Res1 = DBxDocState.None;
+        DBxDocState res1 = DBxDocState.None;
         for (int i = 0; i < _Table.Rows.Count; i++)
         {
-          DBxDocState Res2 = DBxDocSet.GetDocState(_Table.Rows[i]);
-          if (Res2 == DBxDocState.View)
+          DBxDocState res2 = DBxDocSet.GetDocState(_Table.Rows[i]);
+          if (res2 == DBxDocState.View)
             continue;
-          if (Res1 == DBxDocState.None)
-            Res1 = Res2;
+          if (res1 == DBxDocState.None)
+            res1 = res2;
           else
           {
-            if (Res2 != Res1)
+            if (res2 != res1)
               return DBxDocState.Mixed;
           }
         }
-        return Res1;
+        return res1;
       }
     }
 
@@ -327,20 +327,20 @@ namespace FreeLibSet.Data.Docs
         return 0;
 
       int cnt = 0;
-      foreach (DBxSingleDoc Doc in this)
+      foreach (DBxSingleDoc doc in this)
       {
-        if (Doc.DocState == oldState)
+        if (doc.DocState == oldState)
         {
           switch (newState)
           {
             case DBxDocState.View:
-              Doc.View();
+              doc.View();
               break;
             case DBxDocState.Edit:
-              Doc.Edit();
+              doc.Edit();
               break;
             case DBxDocState.Delete:
-              Doc.Delete();
+              doc.Delete();
               break;
             default:
               throw new ArgumentException("Нельзя переводить документы в состояние " + newState.ToString());
@@ -366,21 +366,21 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DBxDocSelection DocSel = new DBxDocSelection(DocSet.DocProvider.DBIdentity);
-        AddToDocSel(DocSel);
-        return DocSel;
+        DBxDocSelection docSel = new DBxDocSelection(DocSet.DocProvider.DBIdentity);
+        AddToDocSel(docSel);
+        return docSel;
       }
     }
 
     internal void AddToDocSel(DBxDocSelection docSel)
     {
-      foreach (DataRow Row in _Table.Rows)
+      foreach (DataRow row in _Table.Rows)
       {
-        switch (Row.RowState)
+        switch (row.RowState)
         {
           case DataRowState.Modified:
           case DataRowState.Unchanged:
-            Int32 DocId = DataTools.GetInt(Row, "Id");
+            Int32 DocId = DataTools.GetInt(row, "Id");
             docSel.Add(DocType.Name, DocId);
             break;
         }
@@ -557,14 +557,14 @@ namespace FreeLibSet.Data.Docs
     public Int32[] GetDocIds(DBxDocState docState)
     {
       List<Int32> lst = null;
-      foreach (DataRow Row in Table.Rows)
+      foreach (DataRow row in Table.Rows)
       {
-        if (DBxDocSet.GetDocState(Row) == docState)
+        if (DBxDocSet.GetDocState(row) == docState)
         {
           if (lst == null)
             lst = new List<Int32>();
 
-          lst.Add((Int32)DBxDocSet.GetValue(Row, "Id"));
+          lst.Add((Int32)DBxDocSet.GetValue(row, "Id"));
         }
       }
 
@@ -616,9 +616,9 @@ namespace FreeLibSet.Data.Docs
           if (_MultiDocs._Table.Rows.Count == 0)
             return false;
 
-          foreach (DataRow Row in _MultiDocs._Table.Rows)
+          foreach (DataRow row in _MultiDocs._Table.Rows)
           {
-            switch (Row.RowState)
+            switch (row.RowState)
             {
               case DataRowState.Unchanged:
               case DataRowState.Deleted:
@@ -800,10 +800,10 @@ namespace FreeLibSet.Data.Docs
       {
         get
         {
-          int Index = _MultiDocs.ColumnNameIndexer.IndexOf(name);
-          if (Index < 0)
+          int colIndex = _MultiDocs.ColumnNameIndexer.IndexOf(name);
+          if (colIndex < 0)
             throw new ArgumentException("Поле \"" + name + "\" не принадлежит документу \"" + _MultiDocs.DocType.SingularTitle + "\"", "name");
-          return new DBxDocValue(this, Index);
+          return new DBxDocValue(this, colIndex);
         }
       }
 
@@ -814,11 +814,11 @@ namespace FreeLibSet.Data.Docs
 
       public string GetDisplayName(int index)
       {
-        string DisplayName = _MultiDocs.Table.Columns[index].Caption;
-        if (String.IsNullOrEmpty(DisplayName))
+        string displayName = _MultiDocs.Table.Columns[index].Caption;
+        if (String.IsNullOrEmpty(displayName))
           return GetName(index);
         else
-          return DisplayName;
+          return displayName;
       }
 
       public int IndexOf(string name)
@@ -845,10 +845,14 @@ namespace FreeLibSet.Data.Docs
           if (_RowVersion == DataRowVersion.Original)
             return true;
 
-
-          // TODO:
-
-          return false;
+          switch (this.Row.RowState)
+          {
+            case DataRowState.Unchanged:
+            case DataRowState.Deleted:
+              return true; // 15.02.2022
+            default:
+              return false;
+          }
         }
       }
 
@@ -969,10 +973,10 @@ namespace FreeLibSet.Data.Docs
         SetValue(index, _MultiDocs.DocSet.InternalSetBinData(data));
       }
 
-      public FreeLibSet.IO.FileContainer GetDBFile(int Index)
+      public FreeLibSet.IO.FileContainer GetDBFile(int index)
       {
-        return _MultiDocs.DocSet.InternalGetDBFile(GetValue(Index, DBxDocValuePreferredType.Int32),
-          _MultiDocs.DocType.Name, GetId(), null, 0, GetName(Index));
+        return _MultiDocs.DocSet.InternalGetDBFile(GetValue(index, DBxDocValuePreferredType.Int32),
+          _MultiDocs.DocType.Name, GetId(), null, 0, GetName(index));
       }
 
       public FreeLibSet.IO.StoredFileInfo GetDBFileInfo(int index)
@@ -1007,13 +1011,13 @@ namespace FreeLibSet.Data.Docs
       if (_SingleDocValues == null)
         _SingleDocValues = new Dictionary<int, SingleDocValues>();
 
-      SingleDocValues Values;
-      if (!_SingleDocValues.TryGetValue(rowIndex, out Values))
+      SingleDocValues docValues;
+      if (!_SingleDocValues.TryGetValue(rowIndex, out docValues))
       {
-        Values = new SingleDocValues(this, rowIndex, DataRowVersion.Current);
-        _SingleDocValues.Add(rowIndex, Values);
+        docValues = new SingleDocValues(this, rowIndex, DataRowVersion.Current);
+        _SingleDocValues.Add(rowIndex, docValues);
       }
-      return Values;
+      return docValues;
     }
 
     /// <summary>
@@ -1033,13 +1037,13 @@ namespace FreeLibSet.Data.Docs
       if (_SingleDocOriginalValues == null)
         _SingleDocOriginalValues = new Dictionary<int, SingleDocValues>();
 
-      SingleDocValues Values;
-      if (!_SingleDocOriginalValues.TryGetValue(rowIndex, out Values))
+      SingleDocValues docValues;
+      if (!_SingleDocOriginalValues.TryGetValue(rowIndex, out docValues))
       {
-        Values = new SingleDocValues(this, rowIndex, DataRowVersion.Original);
-        _SingleDocOriginalValues.Add(rowIndex, Values);
+        docValues = new SingleDocValues(this, rowIndex, DataRowVersion.Original);
+        _SingleDocOriginalValues.Add(rowIndex, docValues);
       }
-      return Values;
+      return docValues;
     }
 
     private Dictionary<int, SingleDocValues> _SingleDocOriginalValues;
@@ -1134,8 +1138,8 @@ namespace FreeLibSet.Data.Docs
 
       ResetDocIds();
 
-      DataTable Table2 = DocProvider.LoadDocData(DocType.Name, docIds);
-      DoView(Table2);
+      DataTable table2 = DocProvider.LoadDocData(DocType.Name, docIds);
+      DoView(table2);
     }
 
     /// <summary>
@@ -1156,10 +1160,10 @@ namespace FreeLibSet.Data.Docs
     /// <param name="filter">Фильтр по таблице документов</param>
     public void View(DBxFilter filter)
     {
-      DataTable Table2 = DocProvider.LoadDocData(DocType.Name, filter);
+      DataTable table2 = DocProvider.LoadDocData(DocType.Name, filter);
       // 15.10.2015 CheckNotInTable(DataTools.GetIds(Table2));
 
-      DoView(Table2);
+      DoView(table2);
     }
 
     /// <summary>
@@ -1170,27 +1174,27 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docIds">Массив добавленных документов</param>
     public void View(DBxFilter filter, out Int32[] docIds)
     {
-      DataTable Table2 = DocProvider.LoadDocData(DocType.Name, filter);
-      docIds = DataTools.GetIds(Table2);
+      DataTable table2 = DocProvider.LoadDocData(DocType.Name, filter);
+      docIds = DataTools.GetIds(table2);
 
-      DoView(Table2);
+      DoView(table2);
     }
 
-    private void DoView(DataTable Table2)
+    private void DoView(DataTable table2)
     {
       if (Permissions == DBxAccessMode.None)
         throw new DBxAccessException("У пользователя нет прав на просмотр документов \"" + DocType.PluralTitle + "\"");
 
-      int OldDocCount = DocCount;
+      int oldDocCount = DocCount;
 
       if (_Table.Rows.Count == 0)
       {
         // Заменяем старую таблицу на новую
         DataSet ds = _Table.DataSet;
         ds.Tables.Remove(_Table);
-        ds.Tables.Add(Table2);
-        DataTools.SetPrimaryKey(Table2, "Id");
-        _Table = Table2; // 
+        ds.Tables.Add(table2);
+        DataTools.SetPrimaryKey(table2, "Id");
+        _Table = table2; // 
         _Table.AcceptChanges(); // переход в режим View
         _DocValues.Table = _Table;
 
@@ -1206,15 +1210,15 @@ namespace FreeLibSet.Data.Docs
         _Table.BeginLoadData();
         try
         {
-          for (int i = 0; i < Table2.Rows.Count; i++)
+          for (int i = 0; i < table2.Rows.Count; i++)
           {
-            Int32 DocId = (Int32)(Table2.Rows[i]["Id"]);
+            Int32 DocId = (Int32)(table2.Rows[i]["Id"]);
             if (_Table.Rows.Find(DocId) == null)
             {
-              DataRow DstRow = _Table.NewRow();
-              DataTools.CopyRowValues(Table2.Rows[i], DstRow, false);
-              _Table.Rows.Add(DstRow);
-              DstRow.AcceptChanges();
+              DataRow dstRow = _Table.NewRow();
+              DataTools.CopyRowValues(table2.Rows[i], dstRow, false);
+              _Table.Rows.Add(dstRow);
+              dstRow.AcceptChanges();
             }
           }
         }
@@ -1229,17 +1233,17 @@ namespace FreeLibSet.Data.Docs
       {
         try
         {
-          for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+          for (int i = oldDocCount; i < _Table.Rows.Count; i++)
             DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.View);
         }
         catch
         {
           // Убираем загруженные данные, иначе от выброса исключения мало толку
-          if (OldDocCount == 0)
+          if (oldDocCount == 0)
             _Table.Rows.Clear();
           else
           {
-            for (int i = _Table.Rows.Count - 1; i >= OldDocCount; i--)
+            for (int i = _Table.Rows.Count - 1; i >= oldDocCount; i--)
               _Table.Rows.Remove(_Table.Rows[i]);
           }
           throw;
@@ -1270,7 +1274,6 @@ namespace FreeLibSet.Data.Docs
 #endif
 #endif
     }
-
 
     #endregion
 
@@ -1317,27 +1320,27 @@ namespace FreeLibSet.Data.Docs
     {
       for (int i = 0; i < docIds.Length; i++)
       {
-        DataRow Row = _Table.Rows.Find(docIds[i]);
-        if (Row == null)
+        DataRow row = _Table.Rows.Find(docIds[i]);
+        if (row == null)
           throw new BugException("Потеряна строка документа с DocId=" + docIds[i].ToString());
-        switch (Row.RowState)
+        switch (row.RowState)
         {
           case DataRowState.Modified:
             break; // ничего не надо проверять
           case DataRowState.Unchanged:
-            int RowIndex = _Table.Rows.IndexOf(Row);
-            DBxSingleDoc Doc = new DBxSingleDoc(this, RowIndex);
+            int rowIndex = _Table.Rows.IndexOf(row);
+            DBxSingleDoc doc = new DBxSingleDoc(this, rowIndex);
             if (DocSet.UseTestDocument)
             {
-              if (Doc.Deleted)
-                DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeRestore);
-              DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeEdit);
+              if (doc.Deleted)
+                DocProvider.TestDocument(doc, DBxDocPermissionReason.BeforeRestore);
+              DocProvider.TestDocument(doc, DBxDocPermissionReason.BeforeEdit);
             }
-            Row.SetModified();
+            row.SetModified();
             break;
           default:
             throw new InvalidOperationException("Нельзя перевести документ \"" + DocType.SingularTitle + "\" с DocId=" +
-              docIds[i].ToString() + " в режим редактирования, так как строка находится в состоянии " + Row.RowState.ToString());
+              docIds[i].ToString() + " в режим редактирования, так как строка находится в состоянии " + row.RowState.ToString());
         }
       }
     }
@@ -1412,12 +1415,12 @@ namespace FreeLibSet.Data.Docs
 
       for (int i = 0; i < _Table.Rows.Count; i++)
       {
-        DBxSingleDoc Doc = new DBxSingleDoc(this, i);
+        DBxSingleDoc doc = new DBxSingleDoc(this, i);
         if (DocSet.UseTestDocument)
         {
-          if (Doc.Deleted)
-            DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeRestore);
-          DocProvider.TestDocument(Doc, DBxDocPermissionReason.BeforeEdit);
+          if (doc.Deleted)
+            DocProvider.TestDocument(doc, DBxDocPermissionReason.BeforeRestore);
+          DocProvider.TestDocument(doc, DBxDocPermissionReason.BeforeEdit);
         }
         _Table.Rows[i].SetModified();
       }
@@ -1447,9 +1450,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckCanModify();
 
-      DataRow Row = _Table.NewRow();
-      Row["Id"] = NextFictiveId();
-      _Table.Rows.Add(Row);
+      DataRow row = _Table.NewRow();
+      row["Id"] = NextFictiveId();
+      _Table.Rows.Add(row);
       ResetDocIds(); // 08.07.2016
       return new DBxSingleDoc(this, _Table.Rows.Count - 1);
     }
@@ -1470,12 +1473,12 @@ namespace FreeLibSet.Data.Docs
       //int OldDocCount = DocCount;
       View(docIds);
 
-      DataSet TempDS = new DataSet();
+      DataSet tempDS = new DataSet();
 
       for (int i = 0; i < docIds.Length; i++)
-        DoInsertCopy1(TempDS, docIds[i]);
+        DoInsertCopy1(tempDS, docIds[i]);
 
-      DBxDocSet.DoInsertCopy2(TempDS, Table.DataSet, DocSet.DocProvider);
+      DBxDocSet.DoInsertCopy2(tempDS, Table.DataSet, DocSet.DocProvider);
 
       ResetDocIds();
 
@@ -1529,12 +1532,12 @@ namespace FreeLibSet.Data.Docs
 
       CheckCanModify();
 
-      DataSet TempDS = new DataSet();
-      Int32[] DocIds = GetDocIds(DBxDocState.View);
-      for (int i = 0; i < DocIds.Length; i++)
-        DoInsertCopy1(TempDS, DocIds[i]);
+      DataSet tempDS = new DataSet();
+      Int32[] viewDocIds = GetDocIds(DBxDocState.View);
+      for (int i = 0; i < viewDocIds.Length; i++)
+        DoInsertCopy1(tempDS, viewDocIds[i]);
 
-      DBxDocSet.DoInsertCopy2(TempDS, Table.DataSet, DocSet.DocProvider);
+      DBxDocSet.DoInsertCopy2(tempDS, Table.DataSet, DocSet.DocProvider);
 
       ResetDocIds();
 
@@ -1553,23 +1556,23 @@ namespace FreeLibSet.Data.Docs
       if (docId <= 0)
         throw new ArgumentException("Недопустимый DocId=" + docId.ToString(), "docId");
 
-      DBxSingleDoc Doc = GetDocById(docId);
+      DBxSingleDoc doc = GetDocById(docId);
 
-      if (Doc.DocState != DBxDocState.View)
+      if (doc.DocState != DBxDocState.View)
         throw new InvalidOperationException("Документ \"" + DocType.SingularTitle + "\" с DocId=" + docId.ToString() +
           " не может быть переведен в режим создания копии, т.к. он находится в состоянии " +
-          Doc.DocState.ToString() + ", а не View");
+          doc.DocState.ToString() + ", а не View");
 
       DBxDocSet.DoInsertCopy1(tempDS, DocType.Name, docId, NextFictiveId());
 
       // Перебираем для замены все поддокументы.
       // При необходимости, они подгружаются
-      for (int i = 0; i < Doc.SubDocs.Count; i++)
+      for (int i = 0; i < doc.SubDocs.Count; i++)
       {
-        DBxSingleSubDocs SubDocs1 = Doc.SubDocs[i];
-        foreach (DBxSubDoc SubDoc in SubDocs1)
+        DBxSingleSubDocs subDocs1 = doc.SubDocs[i];
+        foreach (DBxSubDoc subDoc in subDocs1)
         {
-          DBxDocSet.DoInsertCopy1(tempDS, SubDocs1.SubDocs.SubDocType.Name, SubDoc.SubDocId, Doc.SubDocs[i].SubDocs.NextFictiveId());
+          DBxDocSet.DoInsertCopy1(tempDS, subDocs1.SubDocs.SubDocType.Name, subDoc.SubDocId, doc.SubDocs[i].SubDocs.NextFictiveId());
         }
       }
 
@@ -1601,22 +1604,22 @@ namespace FreeLibSet.Data.Docs
 
       ResetDocIds();
 
-      int OldDocCount = DocCount;
+      int oldDocCount = DocCount;
 
-      DataTable Table2 = DocProvider.LoadDocData(DocType.Name, docIds);
-      if (Table2.Rows.Count != docIds.Length)
+      DataTable table2 = DocProvider.LoadDocData(DocType.Name, docIds);
+      if (table2.Rows.Count != docIds.Length)
         throw new InvalidOperationException("Не удалось загрузить все требуемые документы");
-      DoView(Table2);
+      DoView(table2);
 
-      if (DocCount != OldDocCount + docIds.Length)
+      if (DocCount != oldDocCount + docIds.Length)
         throw new BugException("Invalid DocCount");
 
       if (DocSet.UseTestDocument)
       {
-        for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+        for (int i = oldDocCount; i < _Table.Rows.Count; i++)
           DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.BeforeDelete);
       }
-      for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+      for (int i = oldDocCount; i < _Table.Rows.Count; i++)
         _Table.Rows[i].Delete();
 
 
@@ -1809,21 +1812,21 @@ namespace FreeLibSet.Data.Docs
 
       CheckNotInTable(docId);
 
-      int OldDocCount = DocCount;
+      int oldDocCount = DocCount;
 
       ResetDocIds();
 
       DocSet.VersionView = true;
 
-      DataTable Table2 = DocProvider.LoadDocDataVersion(DocType.Name, docId, version);
+      DataTable table2 = DocProvider.LoadDocDataVersion(DocType.Name, docId, version);
       if (_Table.Rows.Count == 0)
       {
         // Заменяем старую таблицу на новую
         DataSet ds = _Table.DataSet;
         ds.Tables.Remove(_Table);
-        ds.Tables.Add(Table2);
-        DataTools.SetPrimaryKey(Table2, "Id");
-        _Table = Table2;
+        ds.Tables.Add(table2);
+        DataTools.SetPrimaryKey(table2, "Id");
+        _Table = table2;
         _Table.AcceptChanges();
         _DocValues.Table = _Table;
       }
@@ -1833,12 +1836,12 @@ namespace FreeLibSet.Data.Docs
         _Table.BeginLoadData();
         try
         {
-          for (int i = 0; i < Table2.Rows.Count; i++)
+          for (int i = 0; i < table2.Rows.Count; i++)
           {
-            DataRow DstRow = _Table.NewRow();
-            DataTools.CopyRowValues(Table2.Rows[i], DstRow, false);
-            _Table.Rows.Add(DstRow);
-            DstRow.AcceptChanges();
+            DataRow dstRow = _Table.NewRow();
+            DataTools.CopyRowValues(table2.Rows[i], dstRow, false);
+            _Table.Rows.Add(dstRow);
+            dstRow.AcceptChanges();
           }
         }
         finally
@@ -1853,17 +1856,17 @@ namespace FreeLibSet.Data.Docs
       {
         try
         {
-          for (int i = OldDocCount; i < _Table.Rows.Count; i++)
+          for (int i = oldDocCount; i < _Table.Rows.Count; i++)
             DocProvider.TestDocument(new DBxSingleDoc(this, i), DBxDocPermissionReason.View);
         }
         catch
         {
           // Убираем загруженные данные, иначе от выброса исключения мало толку
-          if (OldDocCount == 0)
+          if (oldDocCount == 0)
             _Table.Rows.Clear();
           else
           {
-            for (int i = _Table.Rows.Count - 1; i >= OldDocCount; i--)
+            for (int i = _Table.Rows.Count - 1; i >= oldDocCount; i--)
               _Table.Rows.Remove(_Table.Rows[i]);
           }
           throw;
@@ -1880,7 +1883,6 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Перечислитель однотипных документов
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<DBxSingleDoc>
     {
       #region Конструктор

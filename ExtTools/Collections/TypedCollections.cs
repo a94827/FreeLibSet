@@ -966,7 +966,7 @@ namespace FreeLibSet.Collections
   /// Потокобезопасная коллекция объектов, реализующая перечислитель по копии списка.
   /// Этот класс не является сериализуемым.
   /// </summary>
-  /// <typeparam name="T">Тип даннных в коллекции</typeparam>
+  /// <typeparam name="T">Тип данных в коллекции</typeparam>
   public class SyncCollection<T> : ICollection<T>, ICollection, IEnumerable<T>
   {
     #region Конструкторы

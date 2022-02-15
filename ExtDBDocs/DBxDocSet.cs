@@ -430,7 +430,7 @@ namespace FreeLibSet.Data.Docs
     /// Возвращает true, если в наборе есть документы заданного типа (в любом состоянии).
     /// В отличие от вызова MultiDocs.Contains() проверяет наличие ненулевого количества документов.
     /// </summary>
-    /// <param name="docTypeName">Имя вида документа (совпадает с именем таблицы в базе даннных)</param>
+    /// <param name="docTypeName">Имя вида документа (совпадает с именем таблицы в базе данных)</param>
     /// <returns>Признак наличия документов</returns>
     public bool ContainsDocs(string docTypeName)
     {
@@ -1295,7 +1295,7 @@ namespace FreeLibSet.Data.Docs
     /// Блокируются только документы в режимах Edit и Delete, а также Insert, если документы уже получили идентификаторы.
     /// В случае невозможности установки блокировки генерируется DBxDocsLockException.
     /// Основная работа выполняется одноименным методом в DBxDocProvider.
-    /// Добавляет полученнную блокировку в список IgnoredLocks
+    /// Добавляет полученную блокировку в список IgnoredLocks
     /// </summary>
     /// <returns>Идентификатор блокировки</returns>
     public Guid AddLongLock()

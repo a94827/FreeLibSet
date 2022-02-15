@@ -987,6 +987,92 @@ namespace ExtDBDocs_tests.Data_Docs
     }
 
     [Test]
+    public void DocTree_Insert_Fail_FictiveDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc2 = ds["D1"].Insert();
+      doc2.Values["F101"].SetBoolean(false);
+      doc2.Values["F102"].SetInteger(0);
+      doc2.Values["F104"].SetInteger(-2);
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void DocTree_Insert_Fail_UnknownDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc2 = ds["D1"].Insert();
+      doc2.Values["F101"].SetBoolean(false);
+      doc2.Values["F102"].SetInteger(0);
+      doc2.Values["F104"].SetInteger(100000);
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void DocTree_Insert_TwoDocs_And_Delete_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+
+      // Создаем первый документ
+      DBxSingleDoc doc1 = ds["D1"].Insert();
+      doc1.Values["F101"].SetBoolean(false);
+      doc1.Values["F102"].SetInteger(0);
+
+      // Создаем второй документ со ссылкой на первый
+      DBxSingleDoc doc2 = ds["D1"].Insert();
+      doc2.Values["F101"].SetBoolean(false);
+      doc2.Values["F102"].SetInteger(0);
+      doc2.Values["F104"].SetInteger(doc1.DocId);
+
+      // Удаляем первый документ
+      doc1.Delete();
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void DocTree_Edit_Success([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Edit(docIds[2]);
+      ds["D1"].Values["F104"].SetInteger(docIds[1]); 
+      Assert.DoesNotThrow(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void DocTree_Edit_Fail_FictiveDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Edit(docIds[2]);
+      ds["D1"].Values["F104"].SetInteger(-1);
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void DocTree_Edit_Fail_UnknownDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Edit(docIds[2]);
+      ds["D1"].Values["F104"].SetInteger(100000);
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
     public void DocTree_Delete_Success_leaves([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
@@ -1055,6 +1141,35 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.Catch(delegate() { ds.ApplyChanges(false); });
     }
 
+
+    [Test]
+    public void DocTree_Edit_And_Delete_Success([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Edit(new Int32[2] { docIds[1], docIds[2] });
+      ds["D1"].Values["F104"].SetNull(); // очистили все ссылки
+      ds["D1"].Delete(docIds[0]); // На корневой документ больше нет ссылок
+      Assert.DoesNotThrow(delegate() { ds.ApplyChanges(false); });
+    }
+
+
+    [Test]
+    public void DocTree_Edit_And_Delete_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Edit(docIds[2]);
+      ds["D1"].Values["F104"].SetInteger(docIds[1]); // Переключили ссылку. Теперь дерево: 1 <- 2 <- 3
+      ds["D1"].Delete(docIds[1]); // Теперь на этот документ есть ссылка
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+
     /// <summary>
     /// Создает тестовое дерево документов "D1". Первый документ является корнем, а остальные два - дочерними для него
     /// </summary>
@@ -1091,7 +1206,7 @@ namespace ExtDBDocs_tests.Data_Docs
     #region Дерево поддокументов
 
     [Test]
-    public void SubDocTree_Insert([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    public void SubDocTree_Insert_Simple([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
     {
       TestDBInfo info = this[useDeleted, useVersions, useTime];
 
@@ -1121,6 +1236,115 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(0, sdoc1.Values["F113"].AsInteger, "SubDoc1");
       Assert.AreEqual(sdoc1.SubDocId, sdoc2.Values["F113"].AsInteger, "SubDoc2");
       Assert.AreEqual(sdoc1.SubDocId, sdoc3.Values["F113"].AsInteger, "SubDoc3");
+    }
+
+
+    [Test]
+    public void SubDocTree_Insert_FictiveSubDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(false);
+      doc.Values["F102"].SetInteger(0);
+
+      DBxSubDoc sdoc = doc.SubDocs["SD11"].Insert();
+      sdoc.Values["F111"].SetString("A");
+      sdoc.Values["F113"].SetInteger(-2);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(true); });
+    }
+
+    [Test]
+    public void SubDocTree_Insert_UnknownSubDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(false);
+      doc.Values["F102"].SetInteger(0);
+
+      DBxSubDoc sdoc = doc.SubDocs["SD11"].Insert();
+      sdoc.Values["F111"].SetString("A");
+      sdoc.Values["F113"].SetInteger(100000);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(true); });
+    }
+
+    [Test]
+    public void SubDocTree_Insert_TwoSubDocs_And_Delete_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(false);
+      doc.Values["F102"].SetInteger(0);
+
+      // Создаем первый поддокумент
+      DBxSubDoc sdoc1 = doc.SubDocs["SD11"].Insert();
+      sdoc1.Values["F111"].SetString("A");
+
+      // Создаем второй поддокумент
+      DBxSubDoc sdoc2 = doc.SubDocs["SD11"].Insert();
+      sdoc2.Values["F111"].SetString("B");
+      sdoc2.Values["F113"].SetInteger(sdoc1.SubDocId);
+
+      // Удаляем первый поддокумент
+      sdoc1.Delete();
+
+      Assert.Catch(delegate() { ds.ApplyChanges(true); });
+    }
+
+
+    [Test]
+    public void SubDocTree_Edit_Success([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId = CreateTestSubDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
+
+      doc.SubDocs["SD11"][1].Values["F113"].SetNull();
+      doc.SubDocs["SD11"][2].Values["F113"].SetInteger(doc.SubDocs["SD11"][1].SubDocId);
+
+      ds.ApplyChanges(false);
+    }
+
+
+    [Test]
+    public void SubDocTree_Edit_Fail_FictiveSubDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId = CreateTestSubDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
+
+      doc.SubDocs["SD11"][1].Values["F113"].SetInteger(-1);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+
+    [Test]
+    public void SubDocTree_Edit_Fail_UnknownSubDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+
+      Int32 docId = CreateTestSubDocTree(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Edit(docId);
+
+      doc.SubDocs["SD11"][1].Values["F113"].SetInteger(100000);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
     }
 
     [Test]
@@ -1395,7 +1619,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Переменные ссылки
 
-#if !XXX // Пока не работает
+    #region Insert
 
     [Test]
     public void VTRef_Insert_ExistRef([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
@@ -1518,7 +1742,231 @@ namespace ExtDBDocs_tests.Data_Docs
       // Не присвоили "F301DocId"
       Assert.Catch(delegate() { ds.ApplyChanges(false); });
     }
-#endif
+
+    #endregion
+
+    /// <summary>
+    /// Создает документы D1, D2 и D3, в котором переменная ссылка F301 ссылается на документ D1
+    /// </summary>
+    /// <returns></returns>
+    private Int32[] CreateTestDocsWithVTRefs(TestDBInfo info)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc1 = ds["D1"].Insert();
+      doc1.Values["F101"].SetBoolean(false);
+      doc1.Values["F102"].SetInteger(1);
+
+      DBxSingleDoc doc11 = ds["D1"].Insert(); // этот документ нужен только для обычной ссылки на него из D3
+      doc11.Values["F101"].SetBoolean(true);
+      doc11.Values["F102"].SetInteger(2);
+
+      DBxSingleDoc doc2 = ds["D2"].Insert();
+      doc2.Values["F201"].SetString("ABC");
+      doc2.Values["F202"].SetInteger(doc11.DocId); // обычная ссылка. Нужна, т.к. поле обязательное
+
+      DBxSingleDoc doc3 = ds["D3"].Insert();
+      doc3.Values["F301TableId"].SetInteger(doc1.DocType.TableId);
+      doc3.Values["F301DocId"].SetInteger(doc1.DocId);
+
+      ds.ApplyChanges(true);
+
+      Int32[] docIds = new Int32[3];
+      docIds[0] = ds["D1"][0].DocId;
+      docIds[1] = ds["D2"][0].DocId;
+      docIds[2] = ds["D3"][0].DocId;
+
+      info.Provider.CheckIsRealDocId(docIds[0]);
+      info.Provider.CheckIsRealDocId(docIds[1]);
+      info.Provider.CheckIsRealDocId(docIds[2]);
+
+      return docIds;
+    }
+
+    #region Edit
+
+    [Test]
+    public void VTRef_Edit_ChangeRef([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      Assert.AreEqual(info.Provider.DocTypes["D1"].TableId, doc3.Values["F301TableId"].AsInteger, "TableId before");
+      Assert.AreEqual(docIds[0], doc3.Values["F301DocId"].AsInteger, "DocId before");
+
+      doc3.Values["F301TableId"].SetInteger(info.Provider.DocTypes["D2"].TableId);
+      doc3.Values["F301DocId"].SetInteger(docIds[1]);
+
+      ds.ApplyChanges(false);
+
+      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
+      {
+        object[] a = con.GetValues("D3", docIds[2], new DBxColumns("F301TableId,F301DocId"));
+        Assert.AreEqual(info.Provider.DocTypes["D2"].TableId, a[0], "TableId");
+        Assert.AreEqual(docIds[1], a[1], "DocId");
+      }
+    }
+
+    [Test]
+    public void VTRef_Edit_SetNull([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      doc3.Values["F301TableId"].SetNull();
+      doc3.Values["F301DocId"].SetNull();
+
+      ds.ApplyChanges(false);
+    }
+
+    [Test]
+    public void VTRef_Edit_Fail_Incomplete1([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      Assert.AreEqual(info.Provider.DocTypes["D1"].TableId, doc3.Values["F301TableId"].AsInteger, "old TableId");
+      Assert.AreEqual(docIds[0], doc3.Values["F301DocId"].AsInteger, "old DocId");
+
+      doc3.Values["F301TableId"].SetNull();
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); }, "ApplyChanges() must throw an exception because VTRef is half-initialized");
+    }
+
+    [Test]
+    public void VTRef_Edit_Fail_Incomplete2([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      doc3.Values["F301DocId"].SetNull();
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void VTRef_Edit_Fail_UnappliableTableId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+
+      doc3.Values["F301TableId"].SetInteger(info.Provider.DocTypes["D3"].TableId);
+      doc3.Values["F301DocId"].SetInteger(docIds[2]);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void VTRef_Edit_Fail_FictiveDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      doc3.Values["F301DocId"].SetInteger(-1);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void VTRef_Edit_Fail_UnknownDocId([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      doc3.Values["F301DocId"].SetInteger(1000000);
+
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    #endregion
+
+    #region Delete
+
+    [Test]
+    public void VTRef_Delete_Ok([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D2"].Delete(docIds[1]); // на этот документ нет ссылки
+      Assert.DoesNotThrow(delegate() { ds.ApplyChanges(false); }, "D2");
+
+      ds = new DBxDocSet(info.Provider);
+      ds["D3"].Delete(docIds[2]); // документ, содержащий ссылку
+      Assert.DoesNotThrow(delegate() { ds.ApplyChanges(false); }, "D3");
+
+      ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docIds[0]); // теперь можно и этот документ удалить
+      Assert.DoesNotThrow(delegate() { ds.ApplyChanges(false); }, "D1");
+    }
+
+    [Test]
+    public void VTRef_Delete_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docIds[0]);
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    [Test]
+    public void VTRef_Delete_Pair([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docIds[0]);
+      ds["D3"].Delete(docIds[2]);
+      ds.ApplyChanges(false);
+    }
+
+    [Test]
+    public void VTRef_Edit_And_Delete_Ok([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docIds[0]);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      doc3.Values["F301TableId"].SetNull();
+      doc3.Values["F301DocId"].SetNull();
+      ds.ApplyChanges(false);
+    }
+
+    [Test]
+    public void VTRef_Edit_And_Delete_Fail([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32[] docIds = CreateTestDocsWithVTRefs(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D2"].Delete(docIds[1]);
+      DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
+      doc3.Values["F301TableId"].SetInteger(info.Provider.DocTypes["D2"].TableId);
+      doc3.Values["F301DocId"].SetInteger(docIds[1]);
+      Assert.Catch(delegate() { ds.ApplyChanges(false); });
+    }
+
+    #endregion
 
     #endregion
 

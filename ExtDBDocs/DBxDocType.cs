@@ -1298,6 +1298,23 @@ namespace FreeLibSet.Data.Docs
         if (!realStruct.Columns.Contains(CalculatedColumns[i]))
           throw new DBxDocTypeStructException("Описание таблицы \"" + realStruct.TableName + "\" не содержит описания вычисляемого поля \"" + CalculatedColumns[i] + "\"");
       }
+
+      // 14.02.2022
+      if (VTRefs.Count > 0)
+      {
+        SingleScopeList<DBxColumnStruct> usedCols = new SingleScopeList<DBxColumnStruct>();
+        for (int i = 0; i < VTRefs.Count; i++)
+        {
+          DBxVTReference vtr = VTRefs[i];
+          // Основная часть проверок выполнена конструктором VTReference.
+          if (usedCols.Contains(vtr.TableIdColumn))
+            throw new DBxDocTypeStructException("Для таблицы \"" + Name + "\" в переменной ссылке \"" + vtr.Name + "\" используется поле \"" + vtr.TableIdColumn.ColumnName + "\", которое уже используется в другой ссылке");
+          if (usedCols.Contains(vtr.DocIdColumn))
+            throw new DBxDocTypeStructException("Для таблицы \"" + Name + "\" в переменной ссылке \"" + vtr.Name + "\" используется поле \"" + vtr.DocIdColumn.ColumnName + "\", которое уже используется в другой ссылке");
+          usedCols.Add(vtr.TableIdColumn);
+          usedCols.Add(vtr.DocIdColumn);
+        }
+      }
     }
 
     #endregion
@@ -2367,6 +2384,29 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если хотя бы для одного документа или поддокумента есть переменные ссылки VTRefs
+    /// </summary>
+    /// <remarks>Получение значения свойства выполняет перебор всех документов</remarks>
+    public bool HasVTRefs
+    {
+      get
+      {
+        for (int i = 0; i < Count; i++)
+        {
+          if (this[i].VTRefs.Count > 0)
+            return true;
+          DBxSubDocTypes sdts = this[i].SubDocs;
+          for (int j = 0; j < sdts.Count; j++)
+          {
+            if (sdts[j].VTRefs.Count > 0)
+              return true;
+          }
+        }
+        return false;
+      }
+    }
+
     #endregion
 
     #region InitDocTableIds
@@ -2497,7 +2537,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="binDataHandler">Обработчик двоичных данных или null, если не используется</param>
     public void CheckStruct(DBxBinDataHandler binDataHandler)
     {
-      // Собираем пседвоструктуру базы данных для проверки
+      // Собираем псевдоструктуру базы данных для проверки
       DBxStruct dbs = this.GetMainDBStruct();
       if (binDataHandler != null)
         binDataHandler.AddMainTableStructs(dbs); // 19.07.2021

@@ -125,7 +125,8 @@ namespace FreeLibSet.Data.Docs
     /// Имена таблиц документов, на которые возможна ссылка.
     /// Добавлять имена можно только до инициализации базы данных.
     /// Список основан на SingleScopeList. Повторное добавление имени таблицы отбрасывается.
-    /// Поддерживаются только ссылки на документы, а не поддокументы
+    /// Поддерживаются только ссылки на документы, а не поддокументы.
+    /// Если список таблиц пустой, то поля добавляются в базу данных, но их нельзя будет использовать. Они всегда будут содержать значения NULL.
     /// </summary>
     public IList<string> MasterTableNames { get { return _MasterTableNames; } }
     private MasterTableNameList _MasterTableNames;
@@ -186,7 +187,7 @@ namespace FreeLibSet.Data.Docs
     #region Методы
 
     /// <summary>
-    /// Добавить ссылку. В структуре таблицы создается два числовых поля с именами <paramref name="vtName"/>TableId и <paramref name="vtName"/>.DocId.
+    /// Добавить ссылку. В структуре таблицы создается два числовых поля с именами <paramref name="vtName"/>TableId и <paramref name="vtName"/>DocId.
     /// </summary>
     /// <param name="vtName">Имя ссылки</param>
     /// <returns>Созданный объект ссылки</returns>

@@ -102,6 +102,8 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public void PerformReplace(DBxDocSet docSet, DataSet ds)
     {
+      #region Поиск
+
       _DelayedList = null;
 
       //Changes.Caller.Splash.PhaseText = "Поиск новых документов и поддокументов";
@@ -110,15 +112,19 @@ namespace FreeLibSet.Data.Docs
       foreach (DBxMultiDocs MultiDocs in docSet)
       {
         // Основная таблица
-        MakeTableSubstIds(ds.Tables[MultiDocs.DocType.Name]);
+        FindTableSubstIds(ds.Tables[MultiDocs.DocType.Name]);
         // Поддокументы
         for (int i = 0; i < MultiDocs.DocType.SubDocs.Count; i++)
         {
           DBxSubDocType sdt = MultiDocs.DocType.SubDocs[i];
           if (MultiDocs.SubDocs.ContainsModified(sdt.Name))
-            MakeTableSubstIds(ds.Tables[sdt.Name]);
+            FindTableSubstIds(ds.Tables[sdt.Name]);
         }
       }
+
+      #endregion
+
+      #region Замена
 
       // 2. Если есть новые документы / поддокументы, перебираем все, чтобы 
       // заменить ссылки
@@ -151,6 +157,8 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
+      #endregion
+
       // 17.11.2016
       // Надо сбросить буферизацию идентификаторов, иначе не работает копирование документов,
       // содержащих поддокументы
@@ -166,7 +174,7 @@ namespace FreeLibSet.Data.Docs
     /// Замена фиктивных идентификаторов Id на реальные для всех новых строк таблицы
     /// </summary>
     /// <param name="table">Таблица, в которой выполняется замена</param>
-    private void MakeTableSubstIds(DataTable table)
+    private void FindTableSubstIds(DataTable table)
     {
       TableIdPairs pairs = null;
 
@@ -229,14 +237,15 @@ namespace FreeLibSet.Data.Docs
     /// Замена ссылочных полей
     /// </summary>
     /// <param name="table"></param>
-    /// <param name="tableDef"></param>
+    /// <param name="dtb"></param>
     /// <param name="proceedTableNames"></param>
     private void ApplyTableSubstIds(DataTable table,
       DBxDocTypeBase dtb,
       SingleScopeList<string> proceedTableNames)
     {
-      int i;
-      for (i = 0; i < dtb.Struct.Columns.Count; i++)
+      #region Обычные ссылки
+
+      for (int i = 0; i < dtb.Struct.Columns.Count; i++)
       {
         DBxColumnStruct colDef = dtb.Struct.Columns[i];
         int colPos = table.Columns.IndexOf(colDef.ColumnName);
@@ -250,64 +259,72 @@ namespace FreeLibSet.Data.Docs
 
       proceedTableNames.Add(dtb.Name);
 
-      // Замена переменных ссылочных полей
+      #endregion
+
+      #region Замена переменных ссылочных полей
+
       if (dtb.VTRefs.Count > 0)
       {
-        for (i = 0; i < dtb.VTRefs.Count; i++)
+        for (int i = 0; i < dtb.VTRefs.Count; i++)
         {
           DBxVTReference vtr = dtb.VTRefs[i];
-          int docIdColumnPos = table.Columns.IndexOf(vtr.DocIdColumn.ColumnName);
-          if (docIdColumnPos < 0)
-            continue;
           int tableIdColumnPos = table.Columns.IndexOf(vtr.TableIdColumn.ColumnName);
+          int docIdColumnPos = table.Columns.IndexOf(vtr.DocIdColumn.ColumnName);
+          if (tableIdColumnPos <0 && docIdColumnPos < 0)
+            continue;
           if (tableIdColumnPos < 0)
-            throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
-              "\" задано переменное ссылочное поле \"" + vtr.DocIdColumn.ColumnName +
-              "\", содержащее идентификатор документа, но не задано поле \"" + vtr.TableIdColumn.ColumnName +
-              "\" содержащее идентификатор таблицы");
+            throw new InvalidOperationException("Неправильный набор данных. В таблице \"" + table.TableName +
+              "\" существует переменное ссылочное поле \"" + vtr.DocIdColumn.ColumnName +
+              "\", содержащее идентификатор документа, но нет поля \"" + vtr.TableIdColumn.ColumnName +
+              "\" содержащего идентификатор таблицы");
+          if (docIdColumnPos < 0)
+            throw new InvalidOperationException("Неправильный набор данных. При создании строки в таблице \"" + table.TableName +
+              "\" сущействует переменное ссылочное поле \"" + vtr.TableIdColumn.ColumnName +
+              "\", содержащее идентификатор таблицы, но нет поля \"" + vtr.TableIdColumn.ColumnName +
+              "\" содержащего идентификатор документа");
 
           foreach (DataRow row in table.Rows)
           {
             if (row.RowState == DataRowState.Deleted)
               continue;
-            Int32 oldRefId = DataTools.GetInt(row[docIdColumnPos]);
+            Int32 refDocId = DataTools.GetInt(row[docIdColumnPos]);
             Int32 tableId = DataTools.GetInt(row[tableIdColumnPos]);
 
-            if (oldRefId == 0 && tableId==0)
+            if (refDocId == 0 && tableId == 0)
               continue;
-
+#if XXX // проверки в DBxRealDocProvider.ValidateRefs()
             if (tableId == 0)
               throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
                 "\" задано значение для переменного ссылочного поля \"" + vtr.DocIdColumn.ColumnName +
                 "\" - идентификатора документа, но не задан идентификатор таблицы в поле \"" + vtr.TableIdColumn.ColumnName +
                 "\" - идентификатора таблицы");
-            if (oldRefId == 0)
+            if (refDocId == 0)
               throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
                 "\" не задано значение для переменного ссылочного поля \"" + vtr.DocIdColumn.ColumnName +
                 "\" - идентификатора документа, но задан идентификатор таблицы в поле \"" + vtr.TableIdColumn.ColumnName +
                 "\" - идентификатора таблицы");
 
+#endif
             DBxDocType masterDT = _Caller.DocTypes.FindByTableId(tableId);
             if (masterDT == null)
               throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
                 "\" задан идентификатор " + tableId + " мастер-таблицы в поле " +
                 vtr.TableIdColumn.ColumnName + "\", которому не соответствует никакая таблица");
+#if XXX
 
-            if (vtr.MasterTableNames.Count > 0)
-            {
-              if (!vtr.MasterTableNames.Contains(masterDT.Name))
-                throw new InvalidOperationException("В таблице \"" + table.TableName +
-                "\" задан идентификатор мастер-таблицы \"" + masterDT + "\" в поле \"" +
-                vtr.TableIdColumn.ColumnName + "\", которую нельзя использовать. Для ссылки \""+vtr.Name+"\" допускаются только таблицы: "+
-              DataTools.JoinNotEmptyStrings(", ",  vtr.MasterTableNames ));
-            }
+            if (!vtr.MasterTableNames.Contains(masterDT.Name))
+              throw new InvalidOperationException("В таблице \"" + table.TableName +
+              "\" задан идентификатор мастер-таблицы \"" + masterDT + "\" в поле \"" +
+              vtr.TableIdColumn.ColumnName + "\", которую нельзя использовать. Для ссылки \"" + vtr.Name + "\" допускаются только таблицы: " +
+            DataTools.JoinNotEmptyStrings(", ", vtr.MasterTableNames));
+#endif
 
             TableIdPairs pairs;
             if (!_SubstIds.TryGetValue(masterDT.Name, out pairs))
-              return;
+              continue;
 
             Int32 newRefId;
-            if (pairs.TryGetValue(oldRefId, out newRefId))
+            if (pairs.TryGetValue(refDocId, out newRefId))
             {
               // Запись значения поля откладывается на будущее
               if (_DelayedList == null)
@@ -323,6 +340,8 @@ namespace FreeLibSet.Data.Docs
           }
         }
       }
+
+      #endregion
     }
 
     private void ApplyColumnSubstIds(DataTable table, int columnPos, string masterTableName,

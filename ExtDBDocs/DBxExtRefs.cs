@@ -15,17 +15,17 @@ namespace FreeLibSet.Data.Docs
   /// Используется при проверке возможности удаления. Чтобы не перебирать
   /// описания всех таблиц, используются списки, содержащие возможные ссылочные
   /// поля и переменные ссылки, допускающие хранение документов данного вида
-  /// Экземпляр класса содержит коллекцию списков для всех документов / поддокументов и создается
-  /// DBxRealDocProvider при первом выполнении удаления
+  /// Экземпляр класса содержит коллекцию списков для всех документов/поддокументов в DBxDocTypes,
+  /// включая те, к которым у пользователя может не быть доступа.
+  /// Создается в конструкторе DBxRealDocProviderGlobal
   /// </summary>
   internal class DBxExtRefs
   {
     #region Вложенные классы и структуры
 
     /// <summary>
-    /// Описание одного поля
+    /// Описание одного обычного ссылочного поля
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct RefColumnInfo
     {
       #region Конструктор
@@ -132,7 +132,6 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Описание одной переменной ссылки
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct VTRefInfo
     {
       #region Конструктор
@@ -252,7 +251,7 @@ namespace FreeLibSet.Data.Docs
       #region Списки
 
       /// <summary>
-      /// Список ссылочных полей
+      /// Список обычных ссылочных полей
       /// </summary>
       public List<RefColumnInfo> RefColumns { get { return _RefColumns; } }
       private List<RefColumnInfo> _RefColumns;
@@ -297,7 +296,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="binDataHandler">Обработчик двоичных данных. Может быть null</param>
     public DBxExtRefs(DBxDocTypes dts, DBxBinDataHandler binDataHandler)
     {
-      _Items = new Dictionary<string, TableRefList>();
+      _MasterTableDict = new Dictionary<string, TableRefList>();
       // Перебираем описания
       for (int i = 0; i < dts.Count; i++)
       {
@@ -382,26 +381,26 @@ namespace FreeLibSet.Data.Docs
     /// Возвращает списки ссылок по имени таблицы документа или поддокумента.
     /// Возвращает пустой список, если в таблице нет ссылочных полей.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="masterTableName">Имя мастер-таблицы, на которую выполняются ссылки</param>
     /// <returns>Список ссылок</returns>
-    public TableRefList this[string tableName]
+    public TableRefList this[string masterTableName]
     {
       get
       {
-        TableRefList Res;
-        if (_Items.TryGetValue(tableName, out Res))
-          return Res;
+        TableRefList res;
+        if (_MasterTableDict.TryGetValue(masterTableName, out res))
+          return res;
         else
-          return EmptyRefList;
+          return _EmptyRefList;
       }
     }
 
     /// <summary>
     /// Этот список может содержать не все виды документов и поддокументов
     /// </summary>
-    private Dictionary<string, TableRefList> _Items;
+    private Dictionary<string, TableRefList> _MasterTableDict;
 
-    private static readonly TableRefList EmptyRefList = new TableRefList();
+    private static readonly TableRefList _EmptyRefList = new TableRefList();
 
     private TableRefList InternalGetList(string tableName)
     {
@@ -410,13 +409,13 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("tableName");
 #endif
 
-      TableRefList Res;
-      if (!_Items.TryGetValue(tableName, out Res))
+      TableRefList res;
+      if (!_MasterTableDict.TryGetValue(tableName, out res))
       {
-        Res = new TableRefList();
-        _Items.Add(tableName, Res);
+        res = new TableRefList();
+        _MasterTableDict.Add(tableName, res);
       }
-      return Res;
+      return res;
     }
 
     #endregion

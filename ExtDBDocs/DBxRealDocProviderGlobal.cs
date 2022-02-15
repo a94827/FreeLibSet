@@ -93,7 +93,6 @@ namespace FreeLibSet.Data.Docs
 
       _TextHandlers = new DBxDocTextHandlers(docTypes, DBCache);
 
-
       #region MainDocTableServiceColumns и SubDocTableServiceColumns
 
       DBxColumnList cols;
@@ -155,6 +154,8 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
+      _MasterRefs = new DBxExtRefs(docTypes, binDataHandler);
+
       DBxDocDebugTools.InitLogout();
     }
 
@@ -205,7 +206,7 @@ namespace FreeLibSet.Data.Docs
     private DBxEntry _UndoDBEntry;
 
     /// <summary>
-    /// Обработчик двоичных данных (таблиц BinData и Filenames)
+    /// Обработчик двоичных данных (таблиц BinData и FileNames)
     /// Может быть null, если хранение таких данных не предусмотрено
     /// </summary>
     public DBxBinDataHandler BinDataHandler { get { return _BinDataHandler; } }
@@ -249,6 +250,12 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     internal DBxColumns AllSubDocServiceColumns { get { return _AllSubDocServiceColumns; } }
     private DBxColumns _AllSubDocServiceColumns;
+
+    /// <summary>
+    /// Описание межтабличных ссылок с возможностью быстрого поиска для мастер-таблицы
+    /// </summary>
+    internal DBxExtRefs MasterRefs { get { return _MasterRefs; } }
+    private DBxExtRefs _MasterRefs;
 
     #endregion
 
