@@ -2207,8 +2207,24 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверка корректности ссылок
 
+    /// <summary>
+    /// Проверка ссылочных полей, которые есть в наборе <paramref name="docSet"/>.
+    /// В случае некорректных ссылок выбрасывается исключение.
+    /// Проверяются, в том числе, ссылки на документы, внешние по отношению к набору. Для этого посылаются запросы в базу данных.
+    /// Проверяются обычные ссылочные поля и "переменные ссылки".
+    /// На момент вызова уже определены идентификаторы новых строк в наборе. Фиктивные идентификаторы заменены на настоящие (которых еще нет, однако, в базе данных).
+    /// Выполняется внутри транзакции записи документов.
+    /// </summary>
+    /// <param name="docSet">Набор данных для записи</param>
+    /// <param name="mainConUser">Соединение с основной базой данных</param>
     private void ValidateRefs(DBxDocSet docSet, DBxCon mainConUser)
     {
+      // При UseDeleted=false можно не проверять идентификаторы для обычных ссылочных полей, т.к.
+      // СУБД проверяет целостность ссылок.
+      // При DBxDocType.UseDeleted=true проверка нужна, чтобы не ссылаться на документы, помеченные на удаление.
+      // Для VTRef надо проверять в любом случае.
+
+
       #region 1. Поиск неправильных идентификаторов и сбор правильных
 
       // Ключ - имя мастер-таблицы
@@ -2228,12 +2244,6 @@ namespace FreeLibSet.Data.Docs
       #endregion
 
       #region Проверка всех идентификаторов
-
-      // 15.02.2022
-      // По идее, можно не проверять идентификаторы для обычных ссылочных полей, т.к.
-      // СУБД должна проверять целостность ссылок.
-      // Для SQLite проверка почему-то работает только при DBxDocType.UseDeleted=false.
-      // Для VTRef надо проверять в любом случае
 
       // Эти ссылки проверять не надо
       if (Source.GlobalData.BinDataHandler != null)
@@ -2273,7 +2283,7 @@ namespace FreeLibSet.Data.Docs
 
         if (ids.Count > 0)
         {
-            DBxDocTypeBase dtb=DocTypes.FindByTableName(pair.Key);
+          DBxDocTypeBase dtb = DocTypes.FindByTableName(pair.Key);
           IdsFilterGenerator idsGen = new IdsFilterGenerator(ids);
           idsGen.CreateFilters();
           for (int i = 0; i < idsGen.Count; i++)
@@ -2281,11 +2291,11 @@ namespace FreeLibSet.Data.Docs
             Int32[] wantedIds = idsGen.GetIds(i);
 
             DBxFilter where = idsGen[i];
-            if (dtb!=null) // может быть, ссылка на таблицу BinData
+            if (dtb != null) // может быть, ссылка на таблицу BinData
               AddDeletedFilters(ref where, dtb.IsSubDoc);
             IdList realIds = mainConUser.GetIds(pair.Key, where);
             if (realIds.Count < wantedIds.Length)
-            { 
+            {
               // Не хватает
               realIds.Remove(wantedIds);
               throw new InvalidOperationException("Имеются ссылки на таблицу \"" + pair.Key + "\" для идентификаторов " +
@@ -2304,35 +2314,38 @@ namespace FreeLibSet.Data.Docs
     {
       #region Обычные ссылки
 
-      for (int i = 0; i < dtb.Struct.Columns.Count; i++)
+      if (DocTypes.UseDeleted)
       {
-        DBxColumnStruct col = dtb.Struct.Columns[i];
-        if (!String.IsNullOrEmpty(col.MasterTableName))
+        for (int i = 0; i < dtb.Struct.Columns.Count; i++)
         {
-          int pCol = table.Columns.IndexOf(col.ColumnName);
-          if (pCol < 0)
-            continue;
-
-          foreach (DataRow row in table.Rows)
+          DBxColumnStruct col = dtb.Struct.Columns[i];
+          if (!String.IsNullOrEmpty(col.MasterTableName))
           {
-            switch (row.RowState)
+            int pCol = table.Columns.IndexOf(col.ColumnName);
+            if (pCol < 0)
+              continue;
+
+            foreach (DataRow row in table.Rows)
             {
-              case DataRowState.Added:
-              case DataRowState.Modified:
-                Int32 refId = DataTools.GetInt(row[pCol]);
-                if (refId < 0)
-                  throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для ссылочного поля \"" + col.ColumnName + "\" задан фиктивный идентификатор " + refId.ToString() + ", для которого не была найдена запись в наборе данных");
-                if (refId > 0)
-                {
-                  IdList ids;
-                  if (!refDict.TryGetValue(col.MasterTableName, out ids))
+              switch (row.RowState)
+              {
+                case DataRowState.Added:
+                case DataRowState.Modified:
+                  Int32 refId = DataTools.GetInt(row[pCol]);
+                  if (refId < 0)
+                    throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для ссылочного поля \"" + col.ColumnName + "\" задан фиктивный идентификатор " + refId.ToString() + ", для которого не была найдена запись в наборе данных");
+                  if (refId > 0)
                   {
-                    ids = new IdList();
-                    refDict.Add(col.MasterTableName, ids);
+                    IdList ids;
+                    if (!refDict.TryGetValue(col.MasterTableName, out ids))
+                    {
+                      ids = new IdList();
+                      refDict.Add(col.MasterTableName, ids);
+                    }
+                    ids.Add(refId);
                   }
-                  ids.Add(refId);
-                }
-                break;
+                  break;
+              }
             }
           }
         }

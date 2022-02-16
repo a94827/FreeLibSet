@@ -278,4 +278,35 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
+
+#if XXX
+
+  /// <summary>
+  /// Провайдер комбоблока для одиночного фильтра табличного просмотра
+  /// </summary>
+  public class EFPGridFilterComboBox : EFPUserSelComboBox
+  {
+    #region Конструктор
+
+    public EFPGridFilterComboBox(EFPBaseProvider baseProvider, FreeLibSet.Controls.UserSelComboBox control, IEFPGridFilter gridFilter)
+      :base(baseProvider, control)
+    {
+      if (gridFilter == null)
+        throw new ArgumentNullException("gridFilter");
+      _GridFilter = gridFilter;
+    }
+
+    #endregion
+
+    #region Фильтр
+
+    public IEFPGridFilter GridFilter { get { return _GridFilter; } }
+    private IEFPGridFilter _GridFilter;
+
+    private DBxCommonFilter CommonFilter { }
+
+    #endregion
+  }
+
+#endif
 }
