@@ -79,8 +79,7 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Вспомогательный класс для создания объектов DBx для поддержки работы с документами.
-  /// В текущей реализации поддерживается только Microsoft SQL Server Express Edition.
-  /// В дальнейшем будет добавлена поддержка других баз данных и использование файла .config
+  /// После создания экземпляра и настройки управляющих свойств, следует вызвать метод CreateRealDocProviderGlobal().
   /// </summary>
   public class DBxDocDBConnectionHelper
   {
