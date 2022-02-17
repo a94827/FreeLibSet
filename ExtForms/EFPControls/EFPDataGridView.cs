@@ -8925,6 +8925,7 @@ namespace FreeLibSet.Forms
               GridProducer.InitGridView(this, CurrentConfigHasBeenSet);
               //int nCols2 = Control.Columns.Count;
               PerformGridProducerPostInit();
+
             }
           }
           finally
@@ -8953,7 +8954,7 @@ namespace FreeLibSet.Forms
     /// Если аргумент Cancel обработчиком установлен в true, то предполагается,
     /// что инициализация просмотра выполнена в обработчике. В противном случае
     /// (по умолчанию Cancel=false или при отстутствии обработчика) будет вызван
-    /// метод GridProducer.InitGrid()
+    /// метод EFPGridProducer.InitGridView()
     /// </summary>
     public event CancelEventHandler CurrentConfigChanged;
 
@@ -8969,7 +8970,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Это событие вызывается после того, как конфигурация табличного просмотра инициализирована
-    /// с помощью GridProducer.InitGrid()
+    /// с помощью EFPGridProducer.InitGridView()
     /// </summary>
     public event EventHandler GridProducerPostInit;
 
@@ -8986,6 +8987,10 @@ namespace FreeLibSet.Forms
       //        throw new InvalidOperationException("Этот метод не может быть вызван, если свойство GridProducer не установлено");
       //#endif
       OnGridProducerPostInit();
+
+      // Добавлено 17.02.2022
+      InitColumnSortMode();
+      InternalSetCurrentOrder();
     }
 
     /// <summary>

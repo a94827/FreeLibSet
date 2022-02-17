@@ -500,6 +500,8 @@ namespace FreeLibSet.Forms
         _StartBounds = new EFPFormBounds();
         _StartBounds.FromControl(Form);
       }
+
+      _FormActivatedSetFocusFlag = true;
     }
 
     private void OnSetFormHidden()
@@ -564,16 +566,37 @@ namespace FreeLibSet.Forms
       }
     }
 
+    private bool _FormActivatedSetFocusFlag; // 17.02.2022
+
     void Form_Activated(object sender, EventArgs args)
     {
-      Control StartActiveControl = Form.ActiveControl;
-      if (StartActiveControl == null)
-        StartActiveControl = Form.GetNextControl(null, true); // 24.08.2016
-      if (StartActiveControl is TabControl)
-        WinFormsTools.CorrectTabControlActivation((TabControl)(StartActiveControl));
+      try
+      {
+        if (_FormActivatedSetFocusFlag)
+        {
+          _FormActivatedSetFocusFlag = false;
+          Control startActiveControl = Form.ActiveControl; 
 
-      // Перенесено сюда 21.05.2011
-      CallUpdateByTime(); // сразу выполняем обновление
+          //if (startActiveControl is ToolStripContainer)
+          //{
+          //  ((ToolStripContainer)startActiveControl).ContentPanel.SelectNextControl(startActiveControl, true, true, true, false);
+          //  startActiveControl = Form.ActiveControl; 
+          //}
+
+          if (startActiveControl == null)
+            startActiveControl = Form.GetNextControl(null, true); // 24.08.2016
+          if (startActiveControl is TabControl)
+            WinFormsTools.CorrectTabControlActivation((TabControl)(startActiveControl));
+        }
+
+        // Перенесено сюда 21.05.2011
+        CallUpdateByTime(); // сразу выполняем обновление
+      }
+      catch (Exception e)
+      {
+        // Нельзя вызывать ShowException() - будут непрерывно выводиться сообщение
+        LogoutTools.LogoutException(e, "Form.Activated handler error");
+      }
     }
 
     void Form_Deactivate(object sender, EventArgs args)
