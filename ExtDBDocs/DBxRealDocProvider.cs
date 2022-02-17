@@ -1245,12 +1245,6 @@ namespace FreeLibSet.Data.Docs
       if (String.IsNullOrEmpty(docSet.ActionInfo) && docSet.UserActionId == 0)
         docSet.ActionInfo = MakeActionInfo(docSet);
 
-      //if (Source.GlobalData.UndoDBEntry == null)
-      //  throw new NullReferenceException("Не установлено свойство DBxRealDocProviderGlobal.UndoDBEntry");
-
-      //int DocCount = DocSet.GetDocCount(DBxDocState.Insert) +
-      //  DocSet.GetDocCount(DBxDocState.Edit) + DocSet.GetDocCount(DBxDocState.Delete);
-
       #endregion
 
       // Установка соединений
@@ -1697,7 +1691,7 @@ namespace FreeLibSet.Data.Docs
               {
                 // Первое обращение к документу - требуется проверка таблицы DocActions
                 undoHelper.ValidateDocVersion(multiDocs.DocType, doc.DocId);
-                if (doc.DocState == DBxDocState.Edit && doc.IsDataModified)
+                if (doc.DocState == DBxDocState.Edit && (doc.IsDataModified || docSet.WriteIfNotChanged))
                 {
                   int docVersion = DataTools.GetInt(mainConUser.GetValue(multiDocs.DocType.Name, doc.DocId, "Version"));
                   if (docVersion == 0) // Исправляем ошибку
@@ -1798,7 +1792,11 @@ namespace FreeLibSet.Data.Docs
       // Будет ли выполняться добавление строки в основную таблицу данных ?
       bool docRealAdded = doc.DocState == DBxDocState.Insert && firstCall;
 
-      bool isModified = doc.IsDataModified;
+      bool isModified;
+      if (doc.DocState == DBxDocState.Edit && doc.DocSet.WriteIfNotChanged)
+        isModified = true; // 17.02.2022
+      else
+        isModified = doc.IsDataModified;
 
       // Определяем, есть ли какие-нибудь изменения
       // В режиме вставки изменения не имеют значения
@@ -3444,13 +3442,13 @@ namespace FreeLibSet.Data.Docs
 
         DataTable table;
 
-        using (DBxCon MainCon = new DBxCon(Source.MainDBEntry))
+        using (DBxCon mainCon = new DBxCon(Source.MainDBEntry))
         {
-          int version2 = DataTools.GetInt(MainCon.GetValue(docTypeName, docId, "Version2"));
+          int version2 = DataTools.GetInt(mainCon.GetValue(docTypeName, docId, "Version2"));
           if (version2 <= wantedDocVersion)
           {
             // Берем данные из основной таблицы
-            table = MainCon.FillSelect(docTypeName, GetColumns(docTypeName, null), new IdsFilter(docId));
+            table = mainCon.FillSelect(docTypeName, GetColumns(docTypeName, null), new IdsFilter(docId));
           }
           else
           {

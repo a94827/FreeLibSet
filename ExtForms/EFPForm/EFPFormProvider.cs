@@ -493,7 +493,7 @@ namespace FreeLibSet.Forms
       }
       EFPApp.IdleHandlers.Add(this);
 
-      DelayedSetFocus();
+      DelayedSetFocus(); // Этот вызов не является лишним. Предпочтительнее установить фокус до прорисовки формы, чем в обработчике Idle
 
       if (EFPApp.SaveFormBounds)
       {
@@ -639,23 +639,23 @@ namespace FreeLibSet.Forms
     #region Событие Shown
 
     /// <summary>
-    /// Свойство возвращает true, если управляющий элемент был выведен на экран
+    /// Свойство возвращает true, если форма был выведена на экран.
     /// Свойство однократно переходит из false в true. Перед этим вызывается событие Shown
-    /// Свойство Control.Visible может многократно изменяться еще до вывода элемента на экран
+    /// Свойство Form.Visible может многократно изменяться еще до вывода формы на экран.
     /// </summary>
     public bool HasBeenShown { get { return _HasBeenShown; } }
     private bool _HasBeenShown;
 
     /// <summary>
-    /// Событие вызывается при первом появлении элемента на экране
+    /// Событие вызывается при первом появлении формы на экране.
     /// </summary>
     public event EventHandler Shown;
 
     /// <summary>
-    /// Метод вызывается при первом появлении элемента на экране
-    /// Вызывает событие Shown и подготавливает команды локального меню
+    /// Метод вызывается при первом появлении формы на экране.
+    /// Вызывает событие Shown и подготавливает команды локального меню.
     /// Переопределенный метод обязательно должен вызывать базовый метод.
-    /// На момент вызова, свойство HasBeenShown еще не установлено
+    /// На момент вызова свойство HasBeenShown еще не установлено.
     /// </summary>
     protected virtual void OnShown()
     {
@@ -1085,6 +1085,8 @@ namespace FreeLibSet.Forms
 
         }
       }
+
+      DelayedSetFocus(); // 17.02.2022
     }
 
     /// <summary>
@@ -2542,12 +2544,22 @@ namespace FreeLibSet.Forms
 
     private void DelayedSetFocus()
     {
+      // Исправлено 17.02.2022
       if (DelayedSetFocusControlProvider != null)
       {
-        if (DelayedSetFocusControlProvider.HasBeenCreated)
+        switch (DelayedSetFocusControlProvider.ProviderState)
         {
-          WinFormsTools.FocusToControl(DelayedSetFocusControlProvider.Control);
-          DelayedSetFocusControlProvider = null;
+          case EFPControlProviderState.Attached:
+            WinFormsTools.FocusToControl(DelayedSetFocusControlProvider.Control);
+            DelayedSetFocusControlProvider = null;
+            break;
+          case EFPControlProviderState.Disposed:
+            DelayedSetFocusControlProvider = null;
+            break;
+
+          default:
+            // Иначе подождем еще
+            break;
         }
       }
     }

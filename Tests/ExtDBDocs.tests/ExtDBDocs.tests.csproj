@@ -46,6 +46,7 @@
     <Compile Include="DBxDocSetTests.cs" />
     <Compile Include="DBxDocTypesTests.cs" />
     <Compile Include="DBxRealDocProviderGlobalTests.cs" />
+    <Compile Include="DBxDocProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtDBDocs\ExtDBDocs.csproj">

@@ -138,17 +138,17 @@ namespace FreeLibSet.Forms.Docs
       if (!DataRows[0].Table.Columns.Contains(columnName))
         return;
 
-      Int32[] Ids = DataTools.GetIdsFromColumn(DataRows, columnName);
+      Int32[] ids = DataTools.GetIdsFromColumn(DataRows, columnName);
       if (useHandler)
       {
         DocTypeUIBase dtb = ControlProvider.UI.DocTypes.FindByTableName(tableName);
         if (dtb == null)
           throw new ArgumentException("Неизвестный вид документа или поддокумента \"" + tableName + "\"", "tableName");
 
-        dtb.PerformGetDocSel(DocSel, Ids, Reason);
+        dtb.PerformGetDocSel(DocSel, ids, Reason);
       }
       else
-        DocSel.Add(tableName, Ids);
+        DocSel.Add(tableName, ids);
     }
 
 
@@ -181,17 +181,17 @@ namespace FreeLibSet.Forms.Docs
 
       for (int i = 0; i < DataRows.Length; i++)
       {
-        Int32 TableId = DataTools.GetInt(DataRows[i][pTable]);
-        Int32 DocId = DataTools.GetInt(DataRows[i][pId]);
-        if (TableId != 0 && DocId != 0)
+        Int32 tableId = DataTools.GetInt(DataRows[i][pTable]);
+        Int32 docId = DataTools.GetInt(DataRows[i][pId]);
+        if (tableId != 0 && docId != 0)
         {
-          DocTypeUI dtui = ControlProvider.UI.DocTypes.FindByTableId(TableId);
+          DocTypeUI dtui = ControlProvider.UI.DocTypes.FindByTableId(tableId);
           if (dtui != null)
           {
             if (useHandler)
-              dtui.PerformGetDocSel(DocSel, DocId, Reason);
+              dtui.PerformGetDocSel(DocSel, docId, Reason);
             else
-              DocSel.Add(dtui.DocType.Name, DocId);
+              DocSel.Add(dtui.DocType.Name, docId);
           }
         }
       }
@@ -249,7 +249,7 @@ namespace FreeLibSet.Forms.Docs
 
       Control.SelectionMode = TreeViewAdvSelectionMode.Multi;
       Control.FullRowSelect = false;
-      Control.SelectionChanged+=new EventHandler(Control_SelectionChanged);
+      Control.SelectionChanged += new EventHandler(Control_SelectionChanged);
 
       _SaveCurrentId = true;
 
@@ -269,11 +269,11 @@ namespace FreeLibSet.Forms.Docs
       if (Control.Model == null)
         throw new NullReferenceException("Свойство TreeViewAdv.Model не установлено");
 
-      ITreeModelWithIds Model = Control.Model as ITreeModelWithIds;
-      if (Model == null)
+      ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+      if (model == null)
         throw new NullReferenceException("Присоединенная модель не реализует ITreeModelWithIds");
 
-      return Model;
+      return model;
     }
 
     /// <summary>
@@ -288,20 +288,20 @@ namespace FreeLibSet.Forms.Docs
 
         // Может быть и другая модель. Плохо, если чтение свойства будет приводить к исключению
         // ITreeModelWithIds Model = GetModelWithIdsWithCheck();
-        ITreeModelWithIds Model = Control.Model as ITreeModelWithIds;
-        if (Model == null)
+        ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+        if (model == null)
           return null;
 
 
         // TODO: Неэффективно
 
-        Int32[] Ids = new Int32[Control.SelectedNodes.Count];
-        for (int i = 0; i < Ids.Length; i++)
+        Int32[] ids = new Int32[Control.SelectedNodes.Count];
+        for (int i = 0; i < ids.Length; i++)
         {
-          TreePath Path = Control.GetPath(Control.SelectedNodes[i]);
-          Ids[i] = Model.TreePathToId(Path);
+          TreePath path = Control.GetPath(Control.SelectedNodes[i]);
+          ids[i] = model.TreePathToId(path);
         }
-        return Ids;
+        return ids;
       }
       set
       {
@@ -316,17 +316,17 @@ namespace FreeLibSet.Forms.Docs
           _DelayedSelectedIds = value;
         else
         {
-          ITreeModelWithIds Model = GetModelWithIdsWithCheck();
+          ITreeModelWithIds model = GetModelWithIdsWithCheck();
           Control.BeginUpdate();
           try
           {
             Control.ClearSelection();
             for (int i = 0; i < value.Length; i++)
             {
-              TreePath Path = Model.TreePathFromId(value[i]);
-              TreeNodeAdv Node = Control.FindNode(Path);
-              if (Node != null)
-                Node.IsSelected = true;
+              TreePath path = model.TreePathFromId(value[i]);
+              TreeNodeAdv node = Control.FindNode(path);
+              if (node != null)
+                node.IsSelected = true;
             }
 
             EnsureSelectionVisible();
@@ -353,16 +353,16 @@ namespace FreeLibSet.Forms.Docs
 
         // Может быть и другая модель. Плохо, если чтение свойства будет приводить к исключению
         // ITreeModelWithIds Model = GetModelWithIdsWithCheck();
-        ITreeModelWithIds Model = Control.Model as ITreeModelWithIds;
-        if (Model == null)
+        ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+        if (model == null)
           return 0;
 
 
         if (Control.CurrentNode == null)
           return 0;
 
-        TreePath Path = Control.GetPath(Control.CurrentNode);
-        return Model.TreePathToId(Path);
+        TreePath path = Control.GetPath(Control.CurrentNode);
+        return model.TreePathToId(path);
       }
       set
       {
@@ -374,11 +374,11 @@ namespace FreeLibSet.Forms.Docs
           _DelayedCurrentId = value;
         else
         {
-          ITreeModelWithIds Model = GetModelWithIdsWithCheck();
+          ITreeModelWithIds model = GetModelWithIdsWithCheck();
 
-          TreePath Path = Model.TreePathFromId(value);
-          TreeNodeAdv Node = Control.FindNode(Path);
-          Control.SelectedNode = Node;
+          TreePath path = model.TreePathFromId(value);
+          TreeNodeAdv node = Control.FindNode(path);
+          Control.SelectedNode = node;
 
           EnsureSelectionVisible();
         }
@@ -386,6 +386,25 @@ namespace FreeLibSet.Forms.Docs
     }
 
     private Int32 _DelayedCurrentId;
+
+    /// <summary>
+    /// Возвращает идентификаторы выбранных узлов вместе со всеми их дочерними узлами
+    /// </summary>
+    public Int32[] SelectedIdsWithChildren
+    {
+      get
+      {
+        Int32[] ids = SelectedIds;
+        ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+        if (model == null || ids.Length==0)
+          return ids;
+
+        IdList idList = new IdList();
+        for (int i = 0; i < ids.Length; i++)
+          idList.Add(model.GetIdWithChildren(ids[i]));
+        return idList.ToArray();
+      }
+    }
 
     #endregion
 
@@ -534,14 +553,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public new GridFilters Filters
     {
-      get
-      {
-        return (GridFilters)(base.Filters);
-      }
-      set
-      {
-        base.Filters = value;
-      }
+      get { return (GridFilters)(base.Filters); }
+      set { base.Filters = value; }
     }
 
     /// <summary>
@@ -557,17 +570,17 @@ namespace FreeLibSet.Forms.Docs
     /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров
     /// Переопределеннный метод может, например, инициализировать дополнительные команды меню
     /// </summary>
-    /// <param name="FilterGridProvider">Обработчик таблицы фильтров</param>
-    public override void InitGridFilterEditorGridView(EFPGridFilterEditorGridView FilterGridProvider)
+    /// <param name="filterGridProvider">Обработчик таблицы фильтров</param>
+    public override void InitGridFilterEditorGridView(EFPGridFilterEditorGridView filterGridProvider)
     {
-      base.InitGridFilterEditorGridView(FilterGridProvider);
+      base.InitGridFilterEditorGridView(filterGridProvider);
 
-      FilterGridProvider.CommandItems.AddCopyFormats += new DataObjectEventHandler(FilterGridProvider_AddCopyFormats);
+      filterGridProvider.CommandItems.AddCopyFormats += new DataObjectEventHandler(FilterGridProvider_AddCopyFormats);
 
       DBxDocSelectionPasteFormat fmtDocSel = new DBxDocSelectionPasteFormat(UI);
-      fmtDocSel.Tag = FilterGridProvider;
+      fmtDocSel.Tag = filterGridProvider;
       fmtDocSel.Paste += new EFPPasteDataObjectEventHandler(fmtDocSel_Paste);
-      FilterGridProvider.CommandItems.PasteHandler.Add(fmtDocSel);
+      filterGridProvider.CommandItems.PasteHandler.Add(fmtDocSel);
     }
 
 
@@ -578,20 +591,20 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args"></param>
     void FilterGridProvider_AddCopyFormats(object sender, DataObjectEventArgs args)
     {
-      EFPDataGridViewCommandItems CommandItems = (EFPDataGridViewCommandItems)sender;
-      int[] FilterIndices = CommandItems.Owner.SelectedRowIndices;
+      EFPDataGridViewCommandItems commandItems = (EFPDataGridViewCommandItems)sender;
+      int[] filterIndices = commandItems.Owner.SelectedRowIndices;
 
-      DBxDocSelection DocSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
-      for (int i = 0; i < FilterIndices.Length; i++)
+      DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
+      for (int i = 0; i < filterIndices.Length; i++)
       {
-        IDBxDocSelectionFilter Item2 = Filters[FilterIndices[i]] as IDBxDocSelectionFilter;
-        if (Item2 != null)
-          Item2.GetDocSel(DocSel);
+        IDBxDocSelectionFilter item2 = Filters[filterIndices[i]] as IDBxDocSelectionFilter;
+        if (item2 != null)
+          item2.GetDocSel(docSel);
       }
-      if (!DocSel.IsEmpty)
+      if (!docSel.IsEmpty)
       {
-        args.DataObject.SetData(DocSel);
-        UI.OnAddCopyFormats(args.DataObject, DocSel); // 06.02.2021
+        args.DataObject.SetData(docSel);
+        UI.OnAddCopyFormats(args.DataObject, docSel); // 06.02.2021
       }
     }
 
@@ -603,18 +616,18 @@ namespace FreeLibSet.Forms.Docs
       if (!efpFilterGrid.CheckSingleRow())
         return;
 
-      DBxCommonFilter Item = Filters[efpFilterGrid.CurrentRowIndex];
-      IDBxDocSelectionFilter Item2 = Item as IDBxDocSelectionFilter;
-      if (Item2 == null)
+      DBxCommonFilter item = Filters[efpFilterGrid.CurrentRowIndex];
+      IDBxDocSelectionFilter item2 = item as IDBxDocSelectionFilter;
+      if (item2 == null)
       {
-        EFPApp.ShowTempMessage("Фильтр \"" + Item.DisplayName + "\" не поддерживает вставку выборки документов");
+        EFPApp.ShowTempMessage("Фильтр \"" + item.DisplayName + "\" не поддерживает вставку выборки документов");
         return;
       }
 
-      if (Item2.ApplyDocSel(fmtDocSel.DocSel))
+      if (item2.ApplyDocSel(fmtDocSel.DocSel))
         efpFilterGrid.PerformRefresh();
       else
-        EFPApp.ShowTempMessage("Выборка документов в буфере обмена не подходит фильтру \"" + Item.DisplayName + "\"");
+        EFPApp.ShowTempMessage("Выборка документов в буфере обмена не подходит фильтру \"" + item.DisplayName + "\"");
     }
 
     #endregion
@@ -628,10 +641,7 @@ namespace FreeLibSet.Forms.Docs
     public new EFPGridProducer GridProducer
     {
       get { return (EFPGridProducer)(base.GridProducer); }
-      set
-      {
-        base.GridProducer = value;
-      }
+      set { base.GridProducer = value; }
     }
 
     #endregion
@@ -993,16 +1003,16 @@ namespace FreeLibSet.Forms.Docs
       //if (GetDocSel == null)
       if (!HasGetDocSelHandler) // 22.02.2018
         return null;
-      DBxDocSelection DocSel = null;
+      DBxDocSelection docSel = null;
       try
       {
         EFPApp.BeginWait("Создание выборки документов", "Выборка");
         try
         {
-          EFPDBxTreeViewDocSelEventArgs Args = new EFPDBxTreeViewDocSelEventArgs(this, reason, nodes);
-          OnGetDocSel(Args);
-          if (!Args.DocSel.IsEmpty)
-            DocSel = Args.DocSel;
+          EFPDBxTreeViewDocSelEventArgs args = new EFPDBxTreeViewDocSelEventArgs(this, reason, nodes);
+          OnGetDocSel(args);
+          if (!args.DocSel.IsEmpty)
+            docSel = args.DocSel;
         }
         finally
         {
@@ -1013,7 +1023,7 @@ namespace FreeLibSet.Forms.Docs
       {
         EFPApp.ShowException(e, "Ошибка создания выборки документов для иерархического просмотра");
       }
-      return DocSel;
+      return docSel;
     }
 
     #endregion
@@ -1052,8 +1062,8 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="ids">Массив идентификаторов документов</param>
     public void UpdateRowsForIds(Int32[] ids)
     {
-      IdList IdList = new IdList(ids);
-      UpdateRowsForIds(IdList);
+      IdList idList = new IdList(ids);
+      UpdateRowsForIds(idList);
     }
 
     /// <summary>
@@ -1107,11 +1117,11 @@ namespace FreeLibSet.Forms.Docs
     {
       // TODO: 31.10.2017 Затычка. Нужно сделать сохранение / восстановление текущей позиции через свойство Selection
 
-      Int32 OldId = this.CurrentId;
+      Int32 oldId = this.CurrentId;
 
       base.PerformRefresh();
 
-      this.CurrentId = OldId;
+      this.CurrentId = oldId;
     }
 
     #endregion
@@ -1129,9 +1139,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args"></param>
     public void NodeStateIconValueNeeded(object sender, NodeControlValueEventArgs args)
     {
-      string ImageKey = GetNodeImageKey(args.Node);
-      if (!String.IsNullOrEmpty(ImageKey))
-        args.Value = EFPApp.MainImages.Images[ImageKey];
+      string imageKey = GetNodeImageKey(args.Node);
+      if (!String.IsNullOrEmpty(imageKey))
+        args.Value = EFPApp.MainImages.Images[imageKey];
     }
 
     /// <summary>
@@ -1220,17 +1230,17 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args">Аргументы события</param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
-      if (DocSel != null)
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      if (docSel != null)
       {
-        args.DataObject.SetData(DocSel);
-        Owner.UI.OnAddCopyFormats(args.DataObject, DocSel);
+        args.DataObject.SetData(docSel);
+        Owner.UI.OnAddCopyFormats(args.DataObject, docSel);
       }
 
       base.OnAddCopyFormats(args);
     }
 
-    #endregion                           
+    #endregion
 
     #region Отправить
 
@@ -1238,13 +1248,13 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
-      if (DocSel == null || DocSel.IsEmpty)
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");
         return;
       }
-      Owner.UI.ShowDocSel(DocSel);
+      Owner.UI.ShowDocSel(docSel);
     }
 
     #endregion

@@ -9,13 +9,7 @@ using FreeLibSet.Core;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
-  /// <summary>
-  /// Проверка основных возможностей по работе с документами.
-  /// Используется несколько вариантов конфигурации DBxDocTypes с использованием флагов
-  /// UseDeleted, UseVersions, UseTime. Для каждой комбинации создается собственная тестовая база данных
-  /// </summary>
-  [TestFixture]
-  public class DBxDocSetTests
+  public class DBxDocSetTestsBase
   {
     /*
      * Структура тестовой базы данных
@@ -26,6 +20,7 @@ namespace ExtDBDocs_tests.Data_Docs
      *         "F104" - Ссылочное поле на "D1" (для организации деревьев). Nullable
      *         "F105" - Ссылочное поле на "D2" Nullable
      *         "F106" - Ссылочное поле на "SD21" Nullable
+     *         "F107" - Числовое Nullable. Вычисляемое поле, равно "F102" * 2
      *   Поддокумент "SD11"      
      *      Поля:
      *         "F111" - CHAR(30) Not Null
@@ -40,6 +35,8 @@ namespace ExtDBDocs_tests.Data_Docs
      *      Поля: "F211" Date Nullable
      * Документ "D3"
      *   Поля: "F301TableId", "F301DocId" - переменная ссылка. Допускаются ссылки на документы "D1" и "D2"
+     * Документ "Users" - только при UseUsers=true
+     *   Поля:  "Name" CHAR(?) Not Null
      */
 
     #region Доступ к базе данных
@@ -66,7 +63,7 @@ namespace ExtDBDocs_tests.Data_Docs
     private TestDBInfo[] _TestDBs;
 
     /// <summary>
-    /// Получить доступ к базе данных с заданной комбинацией управляющих
+    /// Получить доступ к базе данных с заданной комбинацией управляющих параметров
     /// </summary>
     /// <param name="useDeleted"></param>
     /// <param name="useVersions"></param>
@@ -76,15 +73,31 @@ namespace ExtDBDocs_tests.Data_Docs
     {
       get
       {
+        return this[useDeleted, useVersions, useTime, false];
+      }
+    }
+    /// <summary>
+    /// Получить доступ к базе данных с заданной комбинацией управляющих параметров
+    /// </summary>
+    /// <param name="useDeleted"></param>
+    /// <param name="useVersions"></param>
+    /// <param name="useTime"></param>
+    /// <returns></returns>
+    public TestDBInfo this[bool useDeleted, bool useVersions, bool useTime, bool useUsers]
+    {
+      get
+      {
         if (_TestDBs == null)
-          _TestDBs = new TestDBInfo[8];
+          _TestDBs = new TestDBInfo[16];
 
-        int index = (useDeleted ? 4 : 0) + (useVersions ? 2 : 0) + (useTime ? 1 : 0);
+        int index = (useDeleted ? 8 : 0) + (useVersions ? 4 : 0) + (useTime ? 2 : 0) + (useUsers ? 1 : 0);
         if (_TestDBs[index] == null)
         {
           TestDBInfo info = new TestDBInfo();
           DBxDocTypes dts = new DBxDocTypes();
-          dts.UsersTableName = String.Empty; // без пользователей
+          if (!useUsers)
+            dts.UsersTableName = String.Empty; // без пользователей
+          Assert.AreEqual(useUsers, dts.UseUsers, "DBxDocProvider.UseUsers set");
           dts.UseDeleted = useDeleted;
           dts.UseVersions = useVersions;
           dts.UseTime = useTime;
@@ -98,6 +111,9 @@ namespace ExtDBDocs_tests.Data_Docs
           dt.Struct.Columns.AddReference("F104", "D1", true);
           dt.Struct.Columns.AddReference("F105", "D2", true);
           dt.Struct.Columns.AddReference("F106", "SD21", true);
+          dt.Struct.Columns.AddInt("F107", true);
+          dt.CalculatedColumns.Add("F107");
+          dt.BeforeWrite += dt1_BeforeWrite;
           dts.Add(dt);
 
           sdt = new DBxSubDocType("SD11");
@@ -131,12 +147,26 @@ namespace ExtDBDocs_tests.Data_Docs
           info.GlobalData = conHelper.CreateRealDocProviderGlobal();
 
           info.Source = new DBxRealDocProviderSource(info.GlobalData);
-          info.Provider = new DBxRealDocProvider(info.Source, 0, false);
+          info.Provider = new DBxRealDocProvider(info.Source, useUsers ? 1 : 0, false);
+
+          // Создаем пользователя
+          if (useUsers)
+          {
+            DBxDocSet ds = new DBxDocSet(info.Provider);
+            DBxSingleDoc doc = ds["Users"].Insert();
+            doc.Values["Name"].SetString("Test user");
+            ds.ApplyChanges(false);
+          }
 
           _TestDBs[index] = info;
         }
         return _TestDBs[index];
       }
+    }
+
+    private static void dt1_BeforeWrite(object sender, ServerDocTypeBeforeWriteEventArgs args)
+    {
+      args.Doc.Values["F107"].SetInteger(args.Doc.Values["F102"].AsInteger * 2);
     }
 
     [OneTimeTearDown]
@@ -154,6 +184,142 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #endregion
 
+    #region Вспомогательные методы
+
+    protected static Int32 CreateTestDoc(TestDBInfo info)
+    {
+      return CreateTestDoc(info, true, 2, "ABC");
+    }
+
+    protected static Int32 CreateTestDoc(TestDBInfo info, bool F101, int F102, params string[] F111)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxSingleDoc doc = ds["D1"].Insert();
+      doc.Values["F101"].SetBoolean(F101);
+      doc.Values["F102"].SetInteger(F102);
+      for (int i = 0; i < F111.Length; i++)
+      {
+        DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
+        sd.Values["F111"].SetString(F111[i]);
+      }
+      ds.ApplyChanges(true);
+      Int32 docId = ds[0][0].DocId;
+      Assert.Greater(docId, 0, "DocId");
+      return docId;
+    }
+
+    protected static void DeleteTestDoc(TestDBInfo info, Int32 docId)
+    {
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      ds["D1"].Delete(docId);
+      ds.ApplyChanges(true);
+    }
+
+    /// <summary>
+    /// Тестирование документа в базе данных
+    /// </summary>
+    /// <param name="info"></param>
+    /// <param name="docId"></param>
+    /// <param name="message"></param>
+    /// <param name="F101"></param>
+    /// <param name="F102"></param>
+    /// <param name="F111"></param>
+    protected static void AssertTestDoc(TestDBInfo info, Int32 docId, string message, bool F101, int F102, params string[] F111)
+    {
+      info.Provider.CheckIsRealDocId(docId);
+
+      if (!String.IsNullOrEmpty(message))
+        message += ". ";
+
+      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
+      {
+        DataTable tblDoc = con.FillSelect("D1", null, new ValueFilter("Id", docId));
+        Assert.AreEqual(1, tblDoc.Rows.Count, message + "doc table count");
+        if (info.GlobalData.DocTypes.UseDeleted)
+          Assert.IsFalse(DataTools.GetBool(tblDoc.Rows[0], "Deleted"), message + "Deleted");
+        Assert.AreEqual(F101, DataTools.GetBool(tblDoc.Rows[0], "F101"), message + "F101");
+        Assert.AreEqual(F102, DataTools.GetInt(tblDoc.Rows[0], "F102"), message + "F102");
+
+        Array.Sort<string>(F111);
+        DBxFilter filter = new ValueFilter("DocId", docId);
+        if (info.GlobalData.DocTypes.UseDeleted)
+          filter = new AndFilter(filter, new ValueFilter("Deleted", false));
+        DataTable tblSubDoc = con.FillSelect("SD11", null, filter);
+        string[] a = new string[tblSubDoc.Rows.Count];
+        for (int i = 0; i < a.Length; i++)
+          a[i] = DataTools.GetString(tblSubDoc.Rows[i], "F111");
+        Array.Sort<string>(a);
+        Assert.AreEqual(F111, a, message + "F111");
+        // У поддокументов поле Deleted не устанавливается в True.
+      }
+    }
+
+    /// <summary>
+    /// Тестирование загруженного документа
+    /// </summary>
+    /// <param name="doc"></param>
+    /// <param name="message"></param>
+    /// <param name="F101"></param>
+    /// <param name="F102"></param>
+    /// <param name="F111"></param>
+    protected static void AssertTestDoc(DBxSingleDoc doc, string message, bool F101, int F102, params string[] F111)
+    {
+      if (!String.IsNullOrEmpty(message))
+        message += ". ";
+
+      Assert.AreEqual(F101, doc.Values["F101"].AsBoolean, message + "F101");
+      Assert.AreEqual(F102, doc.Values["F102"].AsInteger, message + "F102");
+
+      Array.Sort<string>(F111);
+      string[] a = new string[doc.SubDocs["SD11"].SubDocCount];
+      for (int i = 0; i < a.Length; i++)
+      {
+        DBxSubDoc sd = doc.SubDocs["SD11"][i];
+        a[i] = sd.Values["F111"].AsString;
+      }
+      Array.Sort<string>(a);
+      Assert.AreEqual(F111, a, message + "F111");
+    }
+
+    protected static void AssertTestDocDeleted(TestDBInfo info, Int32 docId, string message)
+    {
+      info.Provider.CheckIsRealDocId(docId);
+
+      if (!String.IsNullOrEmpty(message))
+        message += ". ";
+
+      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
+      {
+        DataTable tblDoc = con.FillSelect("D1", null, new ValueFilter("Id", docId));
+        if (info.GlobalData.DocTypes.UseDeleted)
+        {
+          Assert.AreEqual(1, tblDoc.Rows.Count, message + "doc table count must be 1");
+          if (DataTools.GetInt(tblDoc.Rows[0], "Id") != docId)
+            throw new BugException("Ошибка SELECT");
+
+          Assert.IsTrue(DataTools.GetBool(tblDoc.Rows[0], "Deleted"), message + "Field \"Deleted\" has not been set to true");
+        }
+        else
+        {
+          Assert.AreEqual(0, tblDoc.Rows.Count, message + "doc table count must be 0");
+          DataTable tblSubDoc = con.FillSelect("SD11", null, new ValueFilter("DocId", docId));
+          Assert.AreEqual(0, tblSubDoc.Rows.Count, message + "subdoc table count must be 0");
+        }
+      }
+    }
+
+    #endregion
+
+  }
+
+  /// <summary>
+  /// Проверка основных возможностей по работе с документами.
+  /// Используется несколько вариантов конфигурации DBxDocTypes с использованием флагов
+  /// UseDeleted, UseVersions, UseTime. Для каждой комбинации создается собственная тестовая база данных
+  /// </summary>
+  [TestFixture]
+  public class DBxDocSetTests : DBxDocSetTestsBase
+  {
     #region Конструктор
 
     [Test]
@@ -753,17 +919,15 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Тестирование прочих свойств и методов
 
-#if XXX // Свойство убрано
     [Test]
-    [Ignore("EditIfNotChanged does not work")]
-    public void EditIfNotChanged([Values(false, true)] bool useDeleted, [Values(false, true)] bool useTime,
+    public void WriteIfNotChanged([Values(false, true)] bool useDeleted, [Values(false, true)] bool useTime,
       [Values(false, true)] bool propValue)
     {
       TestDBInfo info = this[useDeleted, true, useTime]; // версии нужно сохранять, иначе не проверить
       Int32 docId = CreateTestDoc(info, true, 1, "ABC", "DEF");
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds.EditIfNotChanged = propValue;
+      ds.WriteIfNotChanged = propValue;
       DBxSingleDoc doc = ds["D1"].Edit(docId);
       Assert.IsFalse(doc.IsDataModified, "IsDataModified");
 
@@ -773,7 +937,6 @@ namespace ExtDBDocs_tests.Data_Docs
       doc = ds["D1"].View(docId);
       Assert.AreEqual(propValue ? 2 : 1, doc.Version, "Version");
     }
-#endif
 
     [Test]
     public void DocCount_and_DocState()
@@ -1044,7 +1207,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
       ds["D1"].Edit(docIds[2]);
-      ds["D1"].Values["F104"].SetInteger(docIds[1]); 
+      ds["D1"].Values["F104"].SetInteger(docIds[1]);
       Assert.DoesNotThrow(delegate() { ds.ApplyChanges(false); });
     }
 
@@ -2058,132 +2221,6 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       ds.Edit(docSel);
       ds.ApplyChanges(false);
-    }
-
-    #endregion
-
-    #region Вспомогательные методы
-
-    private Int32 CreateTestDoc(TestDBInfo info)
-    {
-      return CreateTestDoc(info, true, 2, "ABC");
-    }
-
-    private Int32 CreateTestDoc(TestDBInfo info, bool F101, int F102, params string[] F111)
-    {
-      DBxDocSet ds = new DBxDocSet(info.Provider);
-      DBxSingleDoc doc = ds["D1"].Insert();
-      doc.Values["F101"].SetBoolean(F101);
-      doc.Values["F102"].SetInteger(F102);
-      for (int i = 0; i < F111.Length; i++)
-      {
-        DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
-        sd.Values["F111"].SetString(F111[i]);
-      }
-      ds.ApplyChanges(true);
-      Int32 docId = ds[0][0].DocId;
-      Assert.Greater(docId, 0, "DocId");
-      return docId;
-    }
-
-    private static void DeleteTestDoc(TestDBInfo info, Int32 docId)
-    {
-      DBxDocSet ds = new DBxDocSet(info.Provider);
-      ds["D1"].Delete(docId);
-      ds.ApplyChanges(true);
-    }
-
-    /// <summary>
-    /// Тестирование документа в базе данных
-    /// </summary>
-    /// <param name="info"></param>
-    /// <param name="docId"></param>
-    /// <param name="message"></param>
-    /// <param name="F101"></param>
-    /// <param name="F102"></param>
-    /// <param name="F111"></param>
-    private void AssertTestDoc(TestDBInfo info, Int32 docId, string message, bool F101, int F102, params string[] F111)
-    {
-      info.Provider.CheckIsRealDocId(docId);
-
-      if (!String.IsNullOrEmpty(message))
-        message += ". ";
-
-      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
-      {
-        DataTable tblDoc = con.FillSelect("D1", null, new ValueFilter("Id", docId));
-        Assert.AreEqual(1, tblDoc.Rows.Count, message + "doc table count");
-        if (info.GlobalData.DocTypes.UseDeleted)
-          Assert.IsFalse(DataTools.GetBool(tblDoc.Rows[0], "Deleted"), message + "Deleted");
-        Assert.AreEqual(F101, DataTools.GetBool(tblDoc.Rows[0], "F101"), message + "F101");
-        Assert.AreEqual(F102, DataTools.GetInt(tblDoc.Rows[0], "F102"), message + "F102");
-
-        Array.Sort<string>(F111);
-        DBxFilter filter = new ValueFilter("DocId", docId);
-        if (info.GlobalData.DocTypes.UseDeleted)
-          filter = new AndFilter(filter, new ValueFilter("Deleted", false));
-        DataTable tblSubDoc = con.FillSelect("SD11", null, filter);
-        string[] a = new string[tblSubDoc.Rows.Count];
-        for (int i = 0; i < a.Length; i++)
-          a[i] = DataTools.GetString(tblSubDoc.Rows[i], "F111");
-        Array.Sort<string>(a);
-        Assert.AreEqual(F111, a, message + "F111");
-        // У поддокументов поле Deleted не устанавливается в True.
-      }
-    }
-
-    /// <summary>
-    /// Тестирование загруженного документа
-    /// </summary>
-    /// <param name="doc"></param>
-    /// <param name="message"></param>
-    /// <param name="F101"></param>
-    /// <param name="F102"></param>
-    /// <param name="F111"></param>
-    private void AssertTestDoc(DBxSingleDoc doc, string message, bool F101, int F102, params string[] F111)
-    {
-      if (!String.IsNullOrEmpty(message))
-        message += ". ";
-
-      Assert.AreEqual(F101, doc.Values["F101"].AsBoolean, message + "F101");
-      Assert.AreEqual(F102, doc.Values["F102"].AsInteger, message + "F102");
-
-      Array.Sort<string>(F111);
-      string[] a = new string[doc.SubDocs["SD11"].SubDocCount];
-      for (int i = 0; i < a.Length; i++)
-      {
-        DBxSubDoc sd = doc.SubDocs["SD11"][i];
-        a[i] = sd.Values["F111"].AsString;
-      }
-      Array.Sort<string>(a);
-      Assert.AreEqual(F111, a, message + "F111");
-    }
-
-    private void AssertTestDocDeleted(TestDBInfo info, Int32 docId, string message)
-    {
-      info.Provider.CheckIsRealDocId(docId);
-
-      if (!String.IsNullOrEmpty(message))
-        message += ". ";
-
-      using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
-      {
-        DataTable tblDoc = con.FillSelect("D1", null, new ValueFilter("Id", docId));
-        if (info.GlobalData.DocTypes.UseDeleted)
-        {
-          Assert.AreEqual(1, tblDoc.Rows.Count, message + "doc table count must be 1");
-          if (DataTools.GetInt(tblDoc.Rows[0], "Id") != docId)
-            throw new BugException("Ошибка SELECT");
-
-          Assert.IsTrue(DataTools.GetBool(tblDoc.Rows[0], "Deleted"), message + "Field \"Deleted\" has not been set to true");
-        }
-        else
-        {
-          Assert.AreEqual(0, tblDoc.Rows.Count, message + "doc table count must be 0");
-          DataTable tblSubDoc = con.FillSelect("SD11", null, new ValueFilter("DocId", docId));
-          Assert.AreEqual(0, tblSubDoc.Rows.Count, message + "subdoc table count must be 0");
-        }
-      }
     }
 
     #endregion

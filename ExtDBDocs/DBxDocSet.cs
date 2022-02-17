@@ -292,20 +292,20 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-#if XXX // все равно не работает
+#if !XXX // все равно не работает
     /// <summary>
     /// Надо ли записывать документы в режиме Edit, если в них не было никаких изменений.
     /// По умолчанию - false. При этом документу не присваивается новый номер версии.
     /// На документы в других состояниях не влияет
     /// </summary>
-    public bool EditIfNotChanged
+    public bool WriteIfNotChanged
     {
-      get { return DataTools.GetBool(_DataSet.ExtendedProperties["EditIfNotChanged"]); }
+      get { return DataTools.GetBool(_DataSet.ExtendedProperties["WriteIfNotChanged"]); }
       set
       {
         if (UserActionId != 0)
           throw new InvalidOperationException("Нельзя устанавливать свойство EditIfNotChanged после применения изменений");
-        _DataSet.ExtendedProperties["EditIfNotChanged"] = value ? "1" : "0";
+        _DataSet.ExtendedProperties["WriteIfNotChanged"] = value ? "1" : "0";
       }
     }
 #endif

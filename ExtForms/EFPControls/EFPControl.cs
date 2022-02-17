@@ -1897,7 +1897,7 @@ namespace FreeLibSet.Forms
 
       if (_ValidateState != PrevState ||
         _ValidateErrorMessage != PrevMessage ||
-        _ValueToolTipText != PrevValueToolTipText ) 
+        _ValueToolTipText != PrevValueToolTipText)
       {
         // Состояние ошибки изменилось
         if (BaseProvider != null)
@@ -2226,10 +2226,23 @@ namespace FreeLibSet.Forms
     /// <param name="errorMessage">Строка сообщения</param>
     public void SetFocus(string errorMessage)
     {
-      if (HasBeenCreated)
-        WinFormsTools.FocusToControl(Control);
-      else if (BaseProvider.FormProvider != null)
-        BaseProvider.FormProvider.DelayedSetFocusControlProvider = this;
+      //if (HasBeenCreated)
+      // Исправлено 17.02.2022
+
+      switch (ProviderState)
+      {
+        case EFPControlProviderState.Attached:
+          // Немедленная установка
+          WinFormsTools.FocusToControl(Control);
+          break;
+        case EFPControlProviderState.Disposed:
+          break;
+        default:
+          // Отложенная установка
+          if (BaseProvider.FormProvider != null)
+            BaseProvider.FormProvider.DelayedSetFocusControlProvider = this;
+          break;
+      }
       if (!String.IsNullOrEmpty(errorMessage))
         EFPApp.ShowTempMessage(errorMessage);
     }

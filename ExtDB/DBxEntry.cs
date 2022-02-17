@@ -15,12 +15,11 @@ namespace FreeLibSet.Data
     #region Конструктор
 
     /// <summary>
-    /// Инициализация объека
+    /// Инициализация объекта
     /// </summary>
     /// <param name="db">База данных</param>
     /// <param name="permissions">Разрешения на доступ к базе данных</param>
-    /// <param name="isMainEntry">Если true, то свойство DBx.MainEntry будет ссылаться на
-    /// этот объект.</param>
+    /// <param name="isMainEntry">Если true, то свойство DBx.MainEntry будет ссылаться на этот объект.</param>
     public DBxEntry(DBx db, DBxPermissions permissions, bool isMainEntry)
     {
       if (db == null)

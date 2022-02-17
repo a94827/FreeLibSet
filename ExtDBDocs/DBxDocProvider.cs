@@ -257,7 +257,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Пересчитать вычисляемые поля в документах.
     /// </summary>
-    /// <param name="docTypeName">Имя вида документв</param>
+    /// <param name="docTypeName">Имя вида документов</param>
     /// <param name="docIds">Массив идентификаторов.
     /// null означает пересчет всех документов. Пересчету подлежат в том числе и удаленные документы</param>
     public abstract void RecalcColumns(string docTypeName, Int32[] docIds);

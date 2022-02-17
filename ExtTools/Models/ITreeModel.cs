@@ -89,7 +89,7 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     public TreePath()
     {
-      _path = new object[0];
+      _FullPath = new object[0];
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ namespace FreeLibSet.Models.Tree
     /// <param name="node">Объект узла. Тип объекта определяется моделью</param>
     public TreePath(object node)
     {
-      _path = new object[] { node };
+      _FullPath = new object[] { node };
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ namespace FreeLibSet.Models.Tree
     /// <param name="path">Объекты узлов. Тип объектов определяется моделью</param>
     public TreePath(object[] path)
     {
-      _path = path;
+      _FullPath = path;
     }
 
     /// <summary>
@@ -117,10 +117,10 @@ namespace FreeLibSet.Models.Tree
     /// <param name="node">Добавляемый узел. Тип объектов определяется моделью</param>
     public TreePath(TreePath parent, object node)
     {
-      _path = new object[parent.FullPath.Length + 1];
-      for (int i = 0; i < _path.Length - 1; i++)
-        _path[i] = parent.FullPath[i];
-      _path[_path.Length - 1] = node;
+      _FullPath = new object[parent.FullPath.Length + 1];
+      for (int i = 0; i < _FullPath.Length - 1; i++)
+        _FullPath[i] = parent.FullPath[i];
+      _FullPath[_FullPath.Length - 1] = node;
     }
 
     #endregion
@@ -131,8 +131,8 @@ namespace FreeLibSet.Models.Tree
     /// Возвращает путь в виде массива объектов.
     /// Тип объектов зависит от модели.
     /// </summary>
-    public object[] FullPath { get { return _path; } }
-    private readonly object[] _path;
+    public object[] FullPath { get { return _FullPath; } }
+    private readonly object[] _FullPath;
 
     /// <summary>
     /// Возвращает первый узел пути (объект верхнего уровня)
@@ -143,8 +143,8 @@ namespace FreeLibSet.Models.Tree
     {
       get
       {
-        if (_path.Length > 0)
-          return _path[0];
+        if (_FullPath.Length > 0)
+          return _FullPath[0];
         else
           return null;
       }
@@ -159,8 +159,8 @@ namespace FreeLibSet.Models.Tree
     {
       get
       {
-        if (_path.Length > 0)
-          return _path[_path.Length - 1];
+        if (_FullPath.Length > 0)
+          return _FullPath[_FullPath.Length - 1];
         else
           return null;
       }
@@ -177,12 +177,12 @@ namespace FreeLibSet.Models.Tree
 
       get
       {
-        if (_path.Length < 2)
+        if (_FullPath.Length < 2)
           return Empty;
         else
         {
-          object[] a = new object[_path.Length - 1];
-          Array.Copy(_path, a, a.Length);
+          object[] a = new object[_FullPath.Length - 1];
+          Array.Copy(_FullPath, a, a.Length);
           return new TreePath(a);
         }
       }
@@ -194,7 +194,7 @@ namespace FreeLibSet.Models.Tree
     /// <returns>FullPath.Length=0</returns>
     public bool IsEmpty()
     {
-      return (_path.Length == 0);
+      return (_FullPath.Length == 0);
     }
 
     #endregion
@@ -223,7 +223,7 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     public TreePathEventArgs()
     {
-      _path = new TreePath();
+      _Path = new TreePath();
     }
 
     /// <summary>
@@ -235,7 +235,7 @@ namespace FreeLibSet.Models.Tree
       if (path == null)
         throw new ArgumentNullException("path");
 
-      _path = path;
+      _Path = path;
     }
 
     #endregion
@@ -249,8 +249,8 @@ namespace FreeLibSet.Models.Tree
     /// Для событий NodesChanged, NodesInserted и NodesRemoved задает корневой узел, дочерние узлы
     /// которого поменялись. Пустой путь означает изменение узлов верхнего уровня
     /// </summary>
-    public TreePath Path { get { return _path; } }
-    private TreePath _path;
+    public TreePath Path { get { return _Path; } }
+    private TreePath _Path;
 
     /// <summary>
     /// Статический экземпляр объекта с пустым TreePath
@@ -294,7 +294,7 @@ namespace FreeLibSet.Models.Tree
         throw new ArgumentException("indices and children arrays must have the same length");
 
       _Indices = indices;
-      _children = children;
+      _Children = children;
     }
 
     #endregion
@@ -306,8 +306,8 @@ namespace FreeLibSet.Models.Tree
     /// Тип объектов зависит от модели.
     /// Дочерние узлы задаются относительно родительского узла, задаваемого свойством TreePathEventArgs.Path
     /// </summary>
-    public object[] Children { get { return _children; } }
-    private object[] _children;
+    public object[] Children { get { return _Children; } }
+    private object[] _Children;
 
     /// <summary>
     /// Индексы дочерних узлов в дереве.
@@ -425,8 +425,8 @@ namespace FreeLibSet.Models.Tree
         throw new ArgumentNullException("path");
       if (path.IsEmpty())
         throw new ArgumentException("Узел должен быть задан", "path");
-      TreeModelEventArgs Args = new TreeModelEventArgs(path.Parent, new object[] { path.LastNode });
-      OnNodesChanged(Args);
+      TreeModelEventArgs args = new TreeModelEventArgs(path.Parent, new object[] { path.LastNode });
+      OnNodesChanged(args);
     }
 
     #endregion
@@ -544,11 +544,11 @@ namespace FreeLibSet.Models.Tree
     /// <param name="innerModel">Базовая модель, которой переадресуются все вызовы</param>
     public SortedTreeModel(ITreeModel innerModel)
     {
-      _innerModel = innerModel;
-      _innerModel.NodesChanged += new EventHandler<TreeModelEventArgs>(_innerModel_NodesChanged);
-      _innerModel.NodesInserted += new EventHandler<TreeModelEventArgs>(_innerModel_NodesInserted);
-      _innerModel.NodesRemoved += new EventHandler<TreeModelEventArgs>(_innerModel_NodesRemoved);
-      _innerModel.StructureChanged += new EventHandler<TreePathEventArgs>(_innerModel_StructureChanged);
+      _InnerModel = innerModel;
+      _InnerModel.NodesChanged += new EventHandler<TreeModelEventArgs>(_innerModel_NodesChanged);
+      _InnerModel.NodesInserted += new EventHandler<TreeModelEventArgs>(_innerModel_NodesInserted);
+      _InnerModel.NodesRemoved += new EventHandler<TreeModelEventArgs>(_innerModel_NodesRemoved);
+      _InnerModel.StructureChanged += new EventHandler<TreePathEventArgs>(_innerModel_StructureChanged);
     }
 
     #endregion
@@ -559,8 +559,8 @@ namespace FreeLibSet.Models.Tree
     /// Базовая модель, которой переадресуются все вызовы.
     /// Задается в конструкторе.
     /// </summary>
-    public ITreeModel InnerModel { get { return _innerModel; } }
-    private ITreeModel _innerModel;
+    public ITreeModel InnerModel { get { return _InnerModel; } }
+    private ITreeModel _InnerModel;
 
     /// <summary>
     /// Интерфейс сортировки узлов.
@@ -570,14 +570,14 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     public IComparer Comparer
     {
-      get { return _comparer; }
+      get { return _Comparer; }
       set
       {
-        _comparer = value;
+        _Comparer = value;
         OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
       }
     }
-    private IComparer _comparer;
+    private IComparer _Comparer;
 
     #endregion
 
@@ -713,6 +713,16 @@ namespace FreeLibSet.Models.Tree
     /// <param name="id">Идентификатор строки</param>
     /// <returns>Путь в дереве</returns>
     TreePath TreePathFromId(Int32 id);
+
+    /// <summary>
+    /// Возвращает массив идентификаторов (значений поля IdColumnName), для заданного родительского идентификатора
+    /// и всем его вложенным узлам рекурсивно.
+    /// Этот метод можно применять только для числовых идентификаторов.
+    /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
+    /// </summary>
+    /// <param name="id">Идентификатор корневого узла. Если 0, возвращаются все идентификаторы в таблице</param>
+    /// <returns>Массив идентификаторов</returns>
+    Int32[] GetIdWithChildren(Int32 id);  // 17.02.2022. Не уверен, что этот метод - хорошая идея
   }
 
   /// <summary>
@@ -767,18 +777,18 @@ namespace FreeLibSet.Models.Tree
       _IdColumnName = idColumnName;
       _ParentColumnName = parentColumnName;
 
-      Type typ = _Table.Columns[idColumnName].DataType;
-      if (typ == typeof(Int32) || typ == typeof(UInt32) ||
-        typ == typeof(Int64) || typ == typeof(UInt64) ||
-        typ == typeof(Int16) || typ == typeof(UInt16))
-        FKeyType = KeyDataType.Int;
-      else if (typ == typeof(String))
-        FKeyType = KeyDataType.String;
+      Type colDataType = _Table.Columns[idColumnName].DataType;
+      if (colDataType == typeof(Int32) || colDataType == typeof(UInt32) ||
+        colDataType == typeof(Int64) || colDataType == typeof(UInt64) ||
+        colDataType == typeof(Int16) || colDataType == typeof(UInt16))
+        _KeyType = KeyDataType.Int;
+      else if (colDataType == typeof(String))
+        _KeyType = KeyDataType.String;
       else
-        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет неподходящий тип данных " + typ.ToString(), "idColumnName");
+        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет неподходящий тип данных " + colDataType.ToString(), "idColumnName");
 
-      if (_Table.Columns[parentColumnName].DataType != typ)
-        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет тип данных " + typ.ToString() + ", а \"" + parentColumnName + "\" - " +
+      if (_Table.Columns[parentColumnName].DataType != colDataType)
+        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет тип данных " + colDataType.ToString() + ", а \"" + parentColumnName + "\" - " +
           _Table.Columns[parentColumnName].DataType.ToString(), "parentColumnName");
 
       if (sort == null)
@@ -787,12 +797,12 @@ namespace FreeLibSet.Models.Tree
         _Sort = sort;
 
       // 30.11.2015
-      _Table.TableNewRow += new DataTableNewRowEventHandler(FTable_TableNewRow);
-      _Table.RowChanged += new DataRowChangeEventHandler(FTable_RowChanged);
-      // 09.12.2015 FTable.RowDeleted += new DataRowChangeEventHandler(FTable_RowDeleted);
-      _Table.RowDeleting += new DataRowChangeEventHandler(FTable_RowDeleting);
-      _Table.Initialized += new EventHandler(FTable_Initialized);
-      _Table.TableCleared += new DataTableClearEventHandler(FTable_TableCleared);
+      _Table.TableNewRow += new DataTableNewRowEventHandler(Table_TableNewRow);
+      _Table.RowChanged += new DataRowChangeEventHandler(Table_RowChanged);
+      // 09.12.2015 FTable.RowDeleted += new DataRowChangeEventHandler(Table_RowDeleted);
+      _Table.RowDeleting += new DataRowChangeEventHandler(Table_RowDeleting);
+      _Table.Initialized += new EventHandler(Table_Initialized);
+      _Table.TableCleared += new DataTableClearEventHandler(Table_TableCleared);
     }
 
     #endregion
@@ -840,8 +850,8 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Тип ключевого поля (определяется в конструкторе)
     /// </summary>
-    protected KeyDataType KeyType { get { return FKeyType; } }
-    private KeyDataType FKeyType;
+    protected KeyDataType KeyType { get { return _KeyType; } }
+    private KeyDataType _KeyType;
 
     /// <summary>
     /// Порядок сортировки строк (в формате аргумента sort метода DataTable.Select())
@@ -862,17 +872,17 @@ namespace FreeLibSet.Models.Tree
     {
       if (treePath.IsEmpty())
       {
-        DataRow[] Rows = _Table.Select(GetIsNullExpression(ParentColumnName), Sort);
-        return Rows;
+        DataRow[] rows = _Table.Select(GetIsNullExpression(ParentColumnName), Sort);
+        return rows;
       }
       else
       {
-        DataRow ParentRow = TreePathToDataRow(treePath);
-        if (ParentRow == null)
+        DataRow parentRow = TreePathToDataRow(treePath);
+        if (parentRow == null)
           return new DataRow[0]; // 27.12.2020
-        object ParentValue = ParentRow[IdColumnName];
-        DataRow[] Rows = _Table.Select(GetEqExpression(ParentColumnName, ParentValue), Sort);
-        return Rows;
+        object parentValue = parentRow[IdColumnName];
+        DataRow[] rows = _Table.Select(GetEqExpression(ParentColumnName, parentValue), Sort);
+        return rows;
       }
     }
 
@@ -907,17 +917,17 @@ namespace FreeLibSet.Models.Tree
 
     private DataRow GetDataRowWithCheck(object tag)
     {
-      DataRow Row = tag as DataRow;
-      if (Row == null)
+      DataRow row = tag as DataRow;
+      if (row == null)
       {
         if (tag == null)
           throw new ArgumentNullException("tag");
         else
           throw new ArgumentException("Аргумент tag не является DataRow", "tag");
       }
-      if (Row.Table != _Table)
+      if (row.Table != _Table)
         throw new ArgumentException("Строка относится к другой таблице", "tag");
-      return Row;
+      return row;
     }
 
     /// <summary>
@@ -929,55 +939,57 @@ namespace FreeLibSet.Models.Tree
     {
       // TODO: Будет медленно работать
       // Надо бы загружать полный список дочерних элементов второго уровня и запоминать флажки в словаре
-      DataRow Row = TreePathToDataRow(treePath);
-      if (Row == null)
+      DataRow row = TreePathToDataRow(treePath);
+      if (row == null)
         return true; // 27.12.2020
-      object Value = Row[IdColumnName];
-      DataRow[] Rows = _Table.Select(GetEqExpression(ParentColumnName, Value));
-      return Rows.Length == 0;
+      object value = row[IdColumnName];
+      DataRow[] rows = _Table.Select(GetEqExpression(ParentColumnName, value));
+      return rows.Length == 0;
     }
 
     #endregion
 
     #region Обработка событий DataTable
 
-    void FTable_TableCleared(object sender, DataTableClearEventArgs args)
+    void Table_TableCleared(object sender, DataTableClearEventArgs args)
     {
       base.OnStructureChanged(TreePathEventArgs.Empty);
     }
 
-    void FTable_Initialized(object Sender, EventArgs Args)
+    void Table_Initialized(object sender, EventArgs args)
     {
       base.OnStructureChanged(TreePathEventArgs.Empty);
     }
 
-    void FTable_RowDeleting(object sender, DataRowChangeEventArgs args)
+    void Table_RowDeleting(object sender, DataRowChangeEventArgs args)
     {
-      int ParentId = DataTools.GetInt(args.Row, ParentColumnName);
-      TreeModelEventArgs Args2 = new TreeModelEventArgs(TreePathFromId(ParentId), new object[] { args.Row });
-      base.OnNodesRemoved(Args2);
+      // TODO: 17.02.2022 - Не будет работать со строковым первичным ключом
+
+      int parentId = DataTools.GetInt(args.Row, ParentColumnName);
+      TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromId(parentId), new object[] { args.Row });
+      base.OnNodesRemoved(args2);
     }
 
-    void FTable_RowChanged(object sender, DataRowChangeEventArgs args)
+    void Table_RowChanged(object sender, DataRowChangeEventArgs args)
     {
-      int ParentId = DataTools.GetInt(args.Row[ParentColumnName]);
+      int parentId = DataTools.GetInt(args.Row[ParentColumnName]);
       switch (args.Action)
       {
         case DataRowAction.Change:
-          ParentId = DataTools.GetInt(args.Row[ParentColumnName]);
-          TreeModelEventArgs Args2 = new TreeModelEventArgs(TreePathFromId(ParentId), new object[] { args.Row });
-          base.OnNodesChanged(Args2);
+          parentId = DataTools.GetInt(args.Row[ParentColumnName]);
+          TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromId(parentId), new object[] { args.Row });
+          base.OnNodesChanged(args2);
           break;
         case DataRowAction.Add:
-          ParentId = DataTools.GetInt(args.Row[ParentColumnName]);
+          parentId = DataTools.GetInt(args.Row[ParentColumnName]);
           int[] indices = new int[1] { 0 }; // !!!!
-          TreeModelEventArgs Args3 = new TreeModelEventArgs(TreePathFromId(ParentId), indices, new object[] { args.Row });
-          base.OnNodesInserted(Args3);
+          TreeModelEventArgs args3 = new TreeModelEventArgs(TreePathFromId(parentId), indices, new object[] { args.Row });
+          base.OnNodesInserted(args3);
           break;
       }
     }
 
-    void FTable_TableNewRow(object sender, DataTableNewRowEventArgs args)
+    void Table_TableNewRow(object sender, DataTableNewRowEventArgs args)
     {
     }
 
@@ -994,14 +1006,14 @@ namespace FreeLibSet.Models.Tree
     {
       if (path.LastNode == null)
         return null;
-      DataRow Row = path.LastNode as DataRow;
-      if (Row == null)
+      DataRow row = path.LastNode as DataRow;
+      if (row == null)
       {
         throw new InvalidCastException("Аргумент treePath.LastNode не является DataRow");
       }
-      if (Row.Table != _Table)
+      if (row.Table != _Table)
         throw new ArgumentException("Строка относится к другой таблице");
-      return Row;
+      return row;
     }
 
     /// <summary>
@@ -1019,8 +1031,8 @@ namespace FreeLibSet.Models.Tree
       if (row.RowState == DataRowState.Detached)
         throw new ArgumentException("Строка отсоединена от таблицы данных" + Table.TableName, "row");
 
-      object ParentId = row[ParentColumnName];
-      if (ParentId is DBNull)
+      object parentId = row[ParentColumnName];
+      if (parentId is DBNull)
         // строка верхнего уровня
         return new TreePath(new object[] { row });
       ArrayList lst = new ArrayList();
@@ -1028,12 +1040,12 @@ namespace FreeLibSet.Models.Tree
 
       if (UsePrimaryKey)
       {
-        while (!(ParentId is DBNull))
+        while (!(parentId is DBNull))
         {
-          row = _Table.Rows.Find(ParentId);
+          row = _Table.Rows.Find(parentId);
           if (row == null)
-            throw new InvalidOperationException("В таблице " + _Table.TableName + " не найдена строка с идентификатором " + DataTools.GetString(ParentId));
-          ParentId = row[ParentColumnName];
+            throw new InvalidOperationException("В таблице " + _Table.TableName + " не найдена строка с идентификатором " + DataTools.GetString(parentId));
+          parentId = row[ParentColumnName];
 
           if (lst.Contains(row))
             throw new InvalidOperationException("Дерево зациклено для строки с идентификатором " + row[IdColumnName].ToString());
@@ -1045,13 +1057,13 @@ namespace FreeLibSet.Models.Tree
         using (DataView dv = new DataView(_Table))
         {
           dv.Sort = IdColumnName;
-          while (!(ParentId is DBNull))
+          while (!(parentId is DBNull))
           {
-            int p = dv.Find(ParentId);
+            int p = dv.Find(parentId);
             if (p < 0)
-              throw new InvalidOperationException("В таблице " + _Table.TableName + " не найдена строка с идентификатором " + DataTools.GetString(ParentId));
+              throw new InvalidOperationException("В таблице " + _Table.TableName + " не найдена строка с идентификатором " + DataTools.GetString(parentId));
             row = dv[p].Row;
-            ParentId = row[ParentColumnName];
+            parentId = row[ParentColumnName];
 
             if (lst.Contains(row))
               throw new InvalidOperationException("Дерево зациклено для строки с идентификатором " + row[IdColumnName].ToString());
@@ -1071,14 +1083,14 @@ namespace FreeLibSet.Models.Tree
     {
       if (parentRow == null)
       {
-        DataRow[] Rows = _Table.Select(GetIsNullExpression(ParentColumnName), Sort);
-        return Rows;
+        DataRow[] rows = _Table.Select(GetIsNullExpression(ParentColumnName), Sort);
+        return rows;
       }
       else
       {
-        object ParentValue = parentRow[IdColumnName];
-        DataRow[] Rows = _Table.Select(GetEqExpression(ParentColumnName, ParentValue), Sort);
-        return Rows;
+        object parentValue = parentRow[IdColumnName];
+        DataRow[] rows = _Table.Select(GetEqExpression(ParentColumnName, parentValue), Sort);
+        return rows;
       }
     }
 
@@ -1095,11 +1107,11 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Идентификатор в строке таблицы данных</returns>
     public Int32 TreePathToId(TreePath path)
     {
-      DataRow Row = TreePathToDataRow(path);
-      if (Row == null)
+      DataRow row = TreePathToDataRow(path);
+      if (row == null)
         return 0;
       else
-        return DataTools.GetInt(Row, IdColumnName);
+        return DataTools.GetInt(row, IdColumnName);
     }
 
     /// <summary>
@@ -1113,9 +1125,9 @@ namespace FreeLibSet.Models.Tree
       if (id == 0)
         return TreePath.Empty;
 
-      DataRow Row;
+      DataRow row;
       if (UsePrimaryKey)
-        Row = _Table.Rows.Find(id);
+        row = _Table.Rows.Find(id);
       else
       {
         using (DataView dv = new DataView(_Table))
@@ -1123,13 +1135,13 @@ namespace FreeLibSet.Models.Tree
           dv.Sort = IdColumnName;
           int p = dv.Find(id);
           if (p >= 0)
-            Row = dv[p].Row;
+            row = dv[p].Row;
           else
-            Row = null;
+            row = null;
         }
       }
 
-      return TreePathFromDataRow(Row);
+      return TreePathFromDataRow(row);
     }
 
     /// <summary>
@@ -1190,11 +1202,11 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Массив идентификаторов</returns>
     public Int32[] GetChildIds(Int32 id)
     {
-      DataRow[] Rows = GetChildRows(DataRowFromId(id));
-      Int32[] Ids = new Int32[Rows.Length];
-      for (int i = 0; i < Rows.Length; i++)
-        Ids[i] = DataRowToId(Rows[i]);
-      return Ids;
+      DataRow[] rows = GetChildRows(DataRowFromId(id));
+      Int32[] ids = new Int32[rows.Length];
+      for (int i = 0; i < rows.Length; i++)
+        ids[i] = DataRowToId(rows[i]);
+      return ids;
     }
 
     /// <summary>
@@ -1212,11 +1224,11 @@ namespace FreeLibSet.Models.Tree
         return DataRowToIdWithChildren(null);
       else
       {
-        DataRow Row = DataRowFromId(id);
-        if (Row == null)
+        DataRow row = DataRowFromId(id);
+        if (row == null)
           return new Int32[1] { id }; // 10.06.2019
         else
-          return DataRowToIdWithChildren(Row);
+          return DataRowToIdWithChildren(row);
       }
     }
 
@@ -1231,10 +1243,10 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Массив идентификаторов</returns>
     public Int32[] TreePathToIdWithChildren(TreePath path)
     {
-      SingleScopeList<Int32> Ids = new SingleScopeList<Int32>();
-      DataRow Row = TreePathToDataRow(path);
-      DoAddIdWithChildren(Ids, Row);
-      return Ids.ToArray();
+      SingleScopeList<Int32> ids = new SingleScopeList<Int32>();
+      DataRow row = TreePathToDataRow(path);
+      DoAddIdWithChildren(ids, row);
+      return ids.ToArray();
     }
 
     /// <summary>
@@ -1247,24 +1259,24 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Массив идентификаторов</returns>
     public Int32[] DataRowToIdWithChildren(DataRow row)
     {
-      SingleScopeList<Int32> Ids = new SingleScopeList<Int32>();
-      DoAddIdWithChildren(Ids, row);
-      return Ids.ToArray();
+      SingleScopeList<Int32> ids = new SingleScopeList<Int32>();
+      DoAddIdWithChildren(ids, row);
+      return ids.ToArray();
     }
 
     private void DoAddIdWithChildren(SingleScopeList<Int32> ids, DataRow row)
     {
       if (row != null)
       {
-        Int32 Id = DataTools.GetInt(row, IdColumnName);
-        if (ids.Contains(Id))
+        Int32 id = DataTools.GetInt(row, IdColumnName);
+        if (ids.Contains(id))
           return; // Ошибка - дерево зациклено
-        ids.Add(Id);
+        ids.Add(id);
       }
 
-      DataRow[] ChildRows = GetChildRows(row);
-      for (int i = 0; i < ChildRows.Length; i++)
-        DoAddIdWithChildren(ids, ChildRows[i]);
+      DataRow[] childRows = GetChildRows(row);
+      for (int i = 0; i < childRows.Length; i++)
+        DoAddIdWithChildren(ids, childRows[i]);
     }
 
     #endregion
@@ -1280,11 +1292,11 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Идентификатор в строке таблицы данных</returns>
     public object TreePathToKey(TreePath path)
     {
-      DataRow Row = TreePathToDataRow(path);
-      if (Row == null)
+      DataRow row = TreePathToDataRow(path);
+      if (row == null)
         return DBNull.Value;
       else
-        return Row[IdColumnName];
+        return row[IdColumnName];
     }
 
     /// <summary>
@@ -1298,9 +1310,9 @@ namespace FreeLibSet.Models.Tree
       if (key == null || key is DBNull)
         return TreePath.Empty;
 
-      DataRow Row;
+      DataRow row;
       if (UsePrimaryKey)
-        Row = _Table.Rows.Find(key);
+        row = _Table.Rows.Find(key);
       else
       {
         using (DataView dv = new DataView(_Table))
@@ -1308,13 +1320,13 @@ namespace FreeLibSet.Models.Tree
           dv.Sort = IdColumnName;
           int p = dv.Find(key);
           if (p >= 0)
-            Row = dv[p].Row;
+            row = dv[p].Row;
           else
-            Row = null;
+            row = null;
         }
       }
 
-      return TreePathFromDataRow(Row);
+      return TreePathFromDataRow(row);
     }
 
     #endregion
@@ -1357,12 +1369,12 @@ namespace FreeLibSet.Models.Tree
     /// <param name="parentRow"></param>
     private void DoAddChildRows(List<DataRow> lst, DataRow parentRow)
     {
-      object ParentValue = parentRow[IdColumnName];
-      DataRow[] Rows = _Table.Select(GetEqExpression(ParentColumnName, ParentValue));
-      for (int i = 0; i < Rows.Length; i++)
+      object parentValue = parentRow[IdColumnName];
+      DataRow[] rows = _Table.Select(GetEqExpression(ParentColumnName, parentValue));
+      for (int i = 0; i < rows.Length; i++)
       {
-        lst.Add(Rows[i]);
-        DoAddChildRows(lst, Rows[i]);
+        lst.Add(rows[i]);
+        DoAddChildRows(lst, rows[i]);
       }
     }
 

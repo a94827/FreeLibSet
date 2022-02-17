@@ -387,7 +387,8 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Игнорируется</returns>
     protected override bool OnEditData(EventArgs args)
     {
-      DocTypeUI.PerformEditing(SelectedIds, State, Control.FindForm().Modal, ViewHandler);
+      Int32[] ids = State == EFPDataGridViewState.Delete ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
+      DocTypeUI.PerformEditing(ids, State, Control.FindForm().Modal, ViewHandler);
       return true;
     }
 

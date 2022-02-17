@@ -40,10 +40,8 @@ namespace FreeLibSet.Data
   /// Класс является потокобезопасным после перевода в режим "только чтение"
   /// </summary>
   [Serializable]
-  public sealed class DBxPermissions : IReadOnlyObject
+  public sealed class DBxPermissions : IReadOnlyObject, ICloneable
   {
-    // TODO: Если в DBxPermissions не будет обработчиков, то надо сделать Serializable, а не MarshalByRefObject
-
     #region Конструкторы
 
     /// <summary>
@@ -56,28 +54,6 @@ namespace FreeLibSet.Data
 
       _DBMode = DBxAccessMode.Full;
     }
-
-
-    // Так не работает из-за доступа к закрытым полям
-#if XXX
-    private DBxPermissions(DBxPermissions Src)
-      :this()
-    {
-      FDBMode = Src.DBMode;
-      if (Src.FTableDefs != null)
-      {
-        FTableDefs = new Dictionary<string, TableDef>(Src.FTableDefs.Count);
-        foreach (KeyValuePair<string, TableDef> Pair in Src.FTableDefs)
-        {
-          TableDef ResDef = new TableDef();
-          ResDef.TableMode = Pair.Value.TableMode;
-          if (Pair.Value.ColumnModes != null)
-            ResDef.ColumnModes = new Dictionary<string, DBxAccessMode>(Pair.Value.ColumnModes);
-          FTableDefs.Add(Pair.Key, ResDef);
-        }
-      }
-    }
-#endif
 
     #endregion
 
@@ -161,7 +137,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public TableList TableModes { get { return _TableModes; } }
     /// <summary>
-    /// Этот список не содержит реальных данных. Данные хранятся в FTableDefs
+    /// Этот список не содержит реальных данных. Данные хранятся в поле _TableDefs
     /// </summary>
     private TableList _TableModes;
 
@@ -546,6 +522,38 @@ namespace FreeLibSet.Data
       return new DBxPermissions(Src);
     }
 #endif
+
+    #endregion
+
+    #region Клонирование разрешений
+
+    /// <summary>
+    /// Создает копию текущего набора разрешений, которую можно менять
+    /// </summary>
+    /// <returns></returns>
+    public DBxPermissions Clone()
+    {
+      DBxPermissions res = new DBxPermissions();
+      res._DBMode = this._DBMode;
+      if (this._TableDefs != null)
+      {
+        res._TableDefs = new Dictionary<string, TableDef>(this._TableDefs.Count);
+        foreach (KeyValuePair<string, TableDef> pair in (this._TableDefs))
+        {
+          TableDef tdres = new TableDef();
+          tdres.TableMode = pair.Value.TableMode;
+          if (pair.Value.ColumnModes != null)
+            tdres.ColumnModes = new Dictionary<string, DBxAccessMode>(pair.Value.ColumnModes); // создает копию
+          res._TableDefs.Add(pair.Key, tdres);
+        }
+      }
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
+    }
 
     #endregion
   }

@@ -104,7 +104,8 @@ namespace FreeLibSet.Data.Docs
     /// Настраиваемые разрешения, назначенные пользователю
     /// Если свойство не установлено в явном виде, возвращается пустой список UserPermissions.Empty.
     /// Для установки разрешений требуется создать новый объект UserPermissions, заполнить его, 
-    /// а затем - установить это свойство. При этом объект UserPermissions переводится в состояние ReadOnly
+    /// а затем - установить это свойство. При этом объект UserPermissions переводится в состояние ReadOnly.
+    /// Модифицирует значение, возвращаемое MainDBEntry. 
     /// </summary>
     public UserPermissions UserPermissions
     {
@@ -114,32 +115,69 @@ namespace FreeLibSet.Data.Docs
         CheckNotReadOnly();
         _UserPermissions = value;
         _UserPermissions.SetReadOnly();
+        if (!_MainDBEntryHasBeenSet)
+          _MainDBEntry = null;
       }
     }
     private UserPermissions _UserPermissions;
 
     /// <summary>
     /// Подключение к основной базе данных.
-    /// Из нее извлекаются права пользователя на объекты базы данных
-    /// Свойство должно быть установлено обязательно, иначе пользователь получит неограниченные права
+    /// Из нее извлекаются права пользователя на объекты базы данных.
+    /// Свойство не обязательно устанавливать в явном виде. Обычно оно инициализируется при установке свойства UserPermissions.
     /// </summary>
     public DBxEntry MainDBEntry
     {
-      get { return _MainDBEntry; }
+      get 
+      {
+        if (_MainDBEntry == null)
+        {
+          if (UserPermissions.Count == 0)
+            return GlobalData.MainDBEntry;
+          else
+          {
+            InitMainDBEntry();
+#if DEBUG
+            if (_MainDBEntry == null)
+              throw new NullReferenceException("_MainDBEntry==null");
+#endif
+          }
+        }
+        return _MainDBEntry; 
+      }
       set
       {
         CheckNotReadOnly();
         if (value == null)
           throw new ArgumentNullException();
         _MainDBEntry = value;
+        _MainDBEntryHasBeenSet = true;
       }
     }
     private DBxEntry _MainDBEntry;
 
     /// <summary>
+    /// Было ли установлено свойство MainDBEntry в явном виде?
+    /// Используется при установке свойства UserPermissions
+    /// </summary>
+    private bool _MainDBEntryHasBeenSet;
+
+    private void InitMainDBEntry()
+    {
+      if (!_MainDBEntryHasBeenSet)
+      {
+        DBxPermissions newPerms = GlobalData.MainDBEntry.Permissions.Clone();
+        UserPermissions.ApplyDbPermissions(newPerms);
+        _MainDBEntry = GlobalData.MainDBEntry.Clone(newPerms);
+      }
+    }
+
+
+
+    /// <summary>
     /// Идентификатор базы данных. Используется для работы буфера обмена.
     /// </summary>
-    public string DBIdentity { get { return MainDBEntry.DB.DBIdentity; } }
+    public string DBIdentity { get { return GlobalData.MainDBEntry.DB.DBIdentity; } }
 
     /// <summary>
     /// Отображаемое имя
@@ -414,13 +452,10 @@ namespace FreeLibSet.Data.Docs
       if (_IsReadOnly)
         return;
 
-      //if (FDocTypes == null)
-      //  throw new NullReferenceException("Не установлено свойство DocTypes");
-      if (_MainDBEntry == null)
-        throw new NullReferenceException("Не установлено свойство MainDBEntry");
+      InitMainDBEntry();
 
       _StructSource = new DBxDocStructSource(_GlobalData.DocTypes,
-        _MainDBEntry.Permissions, new DBxBinDataHandlerInfo(_GlobalData.BinDataHandler));
+         MainDBEntry.Permissions, new DBxBinDataHandlerInfo(_GlobalData.BinDataHandler));
 
       _IsReadOnly = true;
     }

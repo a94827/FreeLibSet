@@ -294,6 +294,24 @@ namespace FreeLibSet.Forms.Docs
     #region Обработчики формы
 
     /// <summary>
+    /// Устанавливает фокус на таблицу или дерево документов при показе формы
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected override void OnVisibleChanged(EventArgs args)
+    {
+      base.OnVisibleChanged(args);
+      if (Visible)
+      {
+        // 19.05.2021, 17.02.2022
+        // Еще бывает дерево и комбоблок выбора группы.
+        // Активировать надо таблицу
+        if (ActiveTab == DocViewFormActiveTab.Grid)
+          ViewProvider.DocGridView.SetFocus();
+        else
+          ViewProvider.DocTreeView.SetFocus();
+      }
+    }
+    /// <summary>
     /// Вызывается при активации формы
     /// </summary>
     /// <param name="args"></param>
@@ -305,7 +323,7 @@ namespace FreeLibSet.Forms.Docs
       {
         // Тут у меня несчастье. Если засунуть вызовы ActiveControl и Select() в
         // другое место, то появляются глюки. Например, если сделать в VisibleChanged
-        // (при VisibleEx=true), то первый раз нормально, а после повторной активации
+        // (при Visible=true), то первый раз нормально, а после повторной активации
         // формы фокус сбрасывается на дерево иерархии.
         // Если сделать в конструкторе (как было бы логично), то еще хуже: при активации
         // формы после закрытия другой, она "пружинит" и делает активной другую форму
@@ -317,13 +335,6 @@ namespace FreeLibSet.Forms.Docs
 
         ViewProvider.ActiveTab = ViewProvider.ActiveTab;
 
-        // 19.05.2021
-        // Еще бывает дерево и комбоблок выбора группы.
-        // Активировать надо таблицу
-        if (ActiveTab == DocViewFormActiveTab.Grid)
-          ViewProvider.DocGridView.SetFocus();
-        else
-          ViewProvider.DocTreeView.SetFocus();
       }
       catch (Exception e)
       {
@@ -511,7 +522,7 @@ namespace FreeLibSet.Forms.Docs
       {
         _DocGridView.MarkRowIds = IdList.Empty; // 13.01.2022
         //if (_DocTreeView!=null)
-          // TODO: _DocTreeView.MarkRowIds = IdList.Empty; 
+        // TODO: _DocTreeView.MarkRowIds = IdList.Empty; 
       }
 
 
@@ -804,12 +815,12 @@ namespace FreeLibSet.Forms.Docs
         {
           switch (ActiveTab)
           {
-            case DocViewFormActiveTab.Grid: 
-              if (Mode==DocTableViewMode.SelectMultiWithFlags)
+            case DocViewFormActiveTab.Grid:
+              if (Mode == DocTableViewMode.SelectMultiWithFlags)
                 return DocGridView.MarkRowIds.ToArray();
               else
                 return DocGridView.SelectedIds;
-            case DocViewFormActiveTab.Tree: 
+            case DocViewFormActiveTab.Tree:
               return DocTreeView.SelectedIds;
             default:
               throw new BugException();
@@ -844,10 +855,10 @@ namespace FreeLibSet.Forms.Docs
             value = DataTools.EmptyIds;
           if (Mode == DocTableViewMode.SelectMultiWithFlags)
             DocGridView.MarkRowIds = new IdList(value);
-          DocGridView.SelectedIds = value; 
+          DocGridView.SelectedIds = value;
           break;
-        case DocViewFormActiveTab.Tree: 
-          DocTreeView.SelectedIds = value; 
+        case DocViewFormActiveTab.Tree:
+          DocTreeView.SelectedIds = value;
           break;
       }
     }
@@ -1337,7 +1348,7 @@ namespace FreeLibSet.Forms.Docs
         }
       }
 
-      InitDelayedProperties(); 
+      InitDelayedProperties();
     }
 
     /// <summary>

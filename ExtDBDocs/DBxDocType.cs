@@ -1932,7 +1932,7 @@ namespace FreeLibSet.Data.Docs
         ts.Columns.AddInt("DocTableId"); // псевдоссылочное поле на таблицу "DocTables"
         ts.Columns.AddInt("DocId"); // псевдоссылочное поле на прикладную таблицу в db.mdb
         ts.Columns.AddInt("Version", 0, short.MaxValue);
-        ts.Columns.AddInt("Action", 0, 127);
+        ts.Columns.AddInt("Action", DataTools.GetEnumRange(typeof(UndoAction)));
         ts.Indexes.Add("DocTableId,DocId,UserActionId");
         dbs.Tables.Add(ts);
 

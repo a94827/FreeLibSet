@@ -421,7 +421,7 @@ namespace FreeLibSet.Data.Docs
     /// Создает корневой объект для доступа к документам.
     /// Предварительно создаются объекты:
     /// - BinDataHandler, если есть двоичные данные и/или хранимые файлы
-    /// - Базы данных DBx "db", "undo" и "files" (при необходимости)
+    /// - Базы данных DBx "db", "undo" (при UseUndo=true) и "files" (при необходимости)
     /// </summary>
     /// <returns>Новый DBxRealDocProviderGlobal</returns>
     public DBxRealDocProviderGlobal CreateRealDocProviderGlobal()
