@@ -4162,7 +4162,81 @@ namespace FreeLibSet.Data.Docs
 
       private void AddForVTRef(DBxDocTypeRefInfo refInfo, Int32[] toIds)
       {
-        throw new NotImplementedException();
+#if DEBUG
+        if (refInfo.ToSubDocType != null)
+          throw new BugException("ToSubDocType!=null");
+#endif
+
+        DBxColumns fromColumns;
+        if (refInfo.FromSubDocType == null)
+        {
+          fromColumns = new DBxColumns("Id");
+          if (Owner.DocTypes.UseDeleted)
+            fromColumns += "Deleted";
+        }
+        else
+        {
+          fromColumns = new DBxColumns("Id,DocId");
+          fromColumns += refInfo.FromVTReference.DocIdColumn.ColumnName;
+          if (Owner.DocTypes.UseDeleted)
+          {
+            fromColumns += "Deleted";
+            fromColumns += "DocId.Deleted";
+            //???fromColumns += (refInfo.FromColumn.ColumnName + ".Deleted");
+          }
+        }
+
+        List<DBxFilter> filters = new List<DBxFilter>();
+        filters.Add(new ValueFilter(refInfo.FromVTReference.TableIdColumn.ColumnName, refInfo.ToDocType.TableId));
+        filters.Add(new IdsFilter(refInfo.FromVTReference.DocIdColumn.ColumnName, toIds));
+        if ((!ShowDeleted) && Owner.DocTypes.UseDeleted)
+        {
+          if (refInfo.FromSubDocType == null)
+          {
+            filters.Add(DBSDocType.DeletedFalseFilter);
+          }
+          else
+          {
+            filters.Add(DBSSubDocType.DeletedFalseFilter);
+            filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
+          }
+        }
+        if (FromSingleDocId != 0)
+        {
+          if (refInfo.FromSubDocType == null)
+            filters.Add(new ValueFilter(DBSDocType.Id, FromSingleDocId));
+          else
+            filters.Add(new ValueFilter(DBSSubDocType.DocId, FromSingleDocId));
+        }
+
+        DataTable srcTable = Con.FillSelect(refInfo.FromDocTypeBase.Name, fromColumns, AndFilter.FromList(filters));
+
+        foreach (DataRow srcRow in srcTable.Rows)
+        {
+          DataRow resRow = ResTable.NewRow();
+          resRow["FromDocTableId"] = refInfo.FromDocType.TableId;
+          if (refInfo.FromSubDocType == null)
+          {
+            resRow["FromDocId"] = srcRow["Id"];
+            if (Owner.DocTypes.UseDeleted)
+              resRow["FromDocDeleted"] = srcRow["Deleted"];
+          }
+          else
+          {
+            resRow["FromDocId"] = srcRow["DocId"];
+            resRow["FromSubDocId"] = srcRow["Id"];
+            if (Owner.DocTypes.UseDeleted)
+            {
+              resRow["FromDocDeleted"] = srcRow["DocId.Deleted"];
+              resRow["FromSubDocDeleted"] = srcRow["Deleted"];
+            }
+            resRow["FromSubDocName"] = refInfo.FromSubDocType.Name;
+          }
+
+          resRow["FromColumnName"] = refInfo.FromVTReference.DocIdColumn.ColumnName;
+
+          ResTable.Rows.Add(resRow);
+        }
       }
 
       #endregion

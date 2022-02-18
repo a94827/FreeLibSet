@@ -570,33 +570,8 @@ namespace FreeLibSet.Forms
 
     void Form_Activated(object sender, EventArgs args)
     {
-      try
-      {
-        if (_FormActivatedSetFocusFlag)
-        {
-          _FormActivatedSetFocusFlag = false;
-          Control startActiveControl = Form.ActiveControl; 
-
-          //if (startActiveControl is ToolStripContainer)
-          //{
-          //  ((ToolStripContainer)startActiveControl).ContentPanel.SelectNextControl(startActiveControl, true, true, true, false);
-          //  startActiveControl = Form.ActiveControl; 
-          //}
-
-          if (startActiveControl == null)
-            startActiveControl = Form.GetNextControl(null, true); // 24.08.2016
-          if (startActiveControl is TabControl)
-            WinFormsTools.CorrectTabControlActivation((TabControl)(startActiveControl));
-        }
-
-        // Перенесено сюда 21.05.2011
-        CallUpdateByTime(); // сразу выполняем обновление
-      }
-      catch (Exception e)
-      {
-        // Нельзя вызывать ShowException() - будут непрерывно выводиться сообщение
-        LogoutTools.LogoutException(e, "Form.Activated handler error");
-      }
+      // Перенесено сюда 21.05.2021
+      CallUpdateByTime(); // сразу выполняем обновление
     }
 
     void Form_Deactivate(object sender, EventArgs args)
@@ -1081,31 +1056,30 @@ namespace FreeLibSet.Forms
         // Нужно ли выводить подсказку нестандартным образом?
         TestIsManualToolTipNeeded(ref wantedControl);
 
-        if (Object.ReferenceEquals(wantedControl, _PrevControlWithToolTip))
-          return; // ничего не изменилось
-
-        if (_ToolTipDelayTimer != null)
-          _ToolTipDelayTimer.Enabled = false; // вдруг еще ожидается подсказка
-
-        // Прячем старую подсказку
-        if (_PrevControlWithToolTip != null)
+        if (!Object.ReferenceEquals(wantedControl, _PrevControlWithToolTip))
         {
-          if (_PrevControlWithToolTip.IsHandleCreated) // не был ли элемент отсоединен и разрушен?
-            _TheToolTip.Hide(_PrevControlWithToolTip);
-        }
-        _PrevControlWithToolTip = wantedControl;
-        if (wantedControl != null)
-        {
-          // Запускаем таймер для организации задержки
-          if (_ToolTipDelayTimer == null)
+          if (_ToolTipDelayTimer != null)
+            _ToolTipDelayTimer.Enabled = false; // вдруг еще ожидается подсказка
+
+          // Прячем старую подсказку
+          if (_PrevControlWithToolTip != null)
           {
-            _ToolTipDelayTimer = new Timer();
-            _ToolTipDelayTimer.Enabled = false;
-            _ToolTipDelayTimer.Interval = _TheToolTip.AutomaticDelay;
-            _ToolTipDelayTimer.Tick += new EventHandler(ToolTipDelayTimer_Tick);
+            if (_PrevControlWithToolTip.IsHandleCreated) // не был ли элемент отсоединен и разрушен?
+              _TheToolTip.Hide(_PrevControlWithToolTip);
           }
-          _ToolTipDelayTimer.Start(); // Запускаем
-
+          _PrevControlWithToolTip = wantedControl;
+          if (wantedControl != null)
+          {
+            // Запускаем таймер для организации задержки
+            if (_ToolTipDelayTimer == null)
+            {
+              _ToolTipDelayTimer = new Timer();
+              _ToolTipDelayTimer.Enabled = false;
+              _ToolTipDelayTimer.Interval = _TheToolTip.AutomaticDelay;
+              _ToolTipDelayTimer.Tick += new EventHandler(ToolTipDelayTimer_Tick);
+            }
+            _ToolTipDelayTimer.Start(); // Запускаем
+          }
         }
       }
 
@@ -2565,24 +2539,54 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal EFPControlBase DelayedSetFocusControlProvider;
 
+    /// <summary>
+    /// Предотвращение переполнения вывода в log-файлы
+    /// </summary>
+    private bool _DelayedSetFocusExceptionLogged;
+
     private void DelayedSetFocus()
     {
-      // Исправлено 17.02.2022
-      if (DelayedSetFocusControlProvider != null)
-      {
-        switch (DelayedSetFocusControlProvider.ProviderState)
-        {
-          case EFPControlProviderState.Attached:
-            WinFormsTools.FocusToControl(DelayedSetFocusControlProvider.Control);
-            DelayedSetFocusControlProvider = null;
-            break;
-          case EFPControlProviderState.Disposed:
-            DelayedSetFocusControlProvider = null;
-            break;
+      if (!Form.Visible)
+        return; // 18.02.2022
 
-          default:
-            // Иначе подождем еще
-            break;
+      try
+      {
+        if (_FormActivatedSetFocusFlag)
+        {
+          _FormActivatedSetFocusFlag = false;
+          Control startControl = Form.ActiveControl;
+          if (startControl == null)
+            startControl = Form.GetNextControl(null, true); // 24.08.2016
+          startControl = WinFormsTools.FocusToControl(startControl); // 18.02.2022
+          if (startControl is TabControl)
+            WinFormsTools.CorrectTabControlActivation((TabControl)(startControl));
+        }
+
+        // Исправлено 17.02.2022
+        if (DelayedSetFocusControlProvider != null)
+        {
+          switch (DelayedSetFocusControlProvider.ProviderState)
+          {
+            case EFPControlProviderState.Attached:
+              WinFormsTools.FocusToControl(DelayedSetFocusControlProvider.Control);
+              DelayedSetFocusControlProvider = null;
+              break;
+            case EFPControlProviderState.Disposed:
+              DelayedSetFocusControlProvider = null;
+              break;
+
+            default:
+              // Иначе подождем еще
+              break;
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        if (!_DelayedSetFocusExceptionLogged)
+        {
+          _DelayedSetFocusExceptionLogged = true;
+          EFPApp.ShowException(e, "Ошибка установки фокуса ввода");
         }
       }
     }

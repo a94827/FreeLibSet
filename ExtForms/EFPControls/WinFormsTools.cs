@@ -355,22 +355,36 @@ namespace FreeLibSet.Forms
     /// Установка фокуса ввода на управляющий элемент с обработкой закладок TabControl
     /// </summary>
     /// <param name="control">Элемент, который получит фокус</param>
-    /// <returns>True, если удалось установить управляющий элемент</returns>
-    public static bool FocusToControl(Control control)
+    /// <returns>Возвращает управляющий элемент, которому передан фокус ввода (это может быть <paramref name="control"/> или один из его вложенных элементов).
+    /// Если фокус не был установлен, возвращается null</returns>
+    public static Control FocusToControl(Control control)
     {
       if (control == null)
-        return false;
+        return null;
+
+      while (true)
+      {
+        Control control2 = null;
+        if (control is ToolStripContainer)
+          control2 = ((ToolStripContainer)control).ContentPanel.GetNextControl(null, true);
+        else if ((control is ContainerControl || control is Panel|| control is GroupBox))
+          control2 = control.GetNextControl(null, true);
+        if (control2 == null || control2 == control)
+          break;
+
+        control = control2;
+      }
 
       //FocusToControl(Control.Parent); // 11.12.2018
       //if (Control.Parent is ContainerControl)
       //  ((ContainerControl)(Control.Parent)).ActiveControl = Control;
 
-      if (!DoSetControlPage(control)) // Рекурсивная функция
-        return false;
+      DoSetControlPage(control); // Рекурсивная функция
+
       if (!control.Enabled)
-        return false;
+        return null;
       if (!control.CanSelect)
-        return false;
+        return null;
       if (control is RadioButton)
       {
         // Для радиокнопки установка методом Select приводит к появлению точки
@@ -382,22 +396,20 @@ namespace FreeLibSet.Forms
       }
       else
         control.Select();
-      return true;
+      return control;
     }
 
-    private static bool DoSetControlPage(Control control)
+    private static void DoSetControlPage(Control control)
     {
       if (control == null)
-        return true;
-      if (!DoSetControlPage(control.Parent))
-        return false;
+        return;
+      DoSetControlPage(control.Parent); // рекурсия
 
       if (control is TabPage)
       {
         TabControl tc = (TabControl)(((TabPage)control).Parent);
         tc.SelectedTab = (TabPage)control;
       }
-      return true;
     }
 
     /// <summary>
