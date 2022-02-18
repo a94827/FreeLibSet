@@ -2747,7 +2747,7 @@ namespace FreeLibSet.Core
     public static void AddTableToDataSet(DataSet ds, DataTable table)
     {
       if (ds == null) // эта проверка обязательно нужна
-        throw new ArgumentNullException("ds"); 
+        throw new ArgumentNullException("ds");
 #if DEBUG
       if (table == null)
         throw new ArgumentNullException("table");
@@ -4763,7 +4763,7 @@ namespace FreeLibSet.Core
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как значение default</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static T[] GetUniqueEnums<T>(DataView dv, string columnName, bool skipNulls)
-      where T:struct
+      where T : struct
     {
       if (dv == null)
         return new T[0];
@@ -5232,7 +5232,7 @@ namespace FreeLibSet.Core
 #endif
       if (table.PrimaryKey.Length != 1)
         throw new ArgumentException("Таблица должна иметь первичный ключ по одному полю");
-      if (table.PrimaryKey[0].DataType!=typeof(Int32))
+      if (table.PrimaryKey[0].DataType != typeof(Int32))
         throw new ArgumentException("Таблица должна иметь первичный ключ по числовому полю");
 
       lock (_TheRandom)
@@ -6051,6 +6051,101 @@ namespace FreeLibSet.Core
 
       // Лучше замену массива выполнить в самом конце, тут меньше вероятность исключения
       rows2.CopyTo(rows, 0);
+    }
+
+    #endregion
+
+    #region FormatDataValue()
+
+    /// <summary>
+    /// Форматирование константного значения для DataColumn.Expression, метода DataTable.Select().
+    /// Строки заключаются в апострофы и т.п. См. справку по свойству DataColumn.Expression.
+    /// Идентичные действия выполняются методом BaseDBxSqlFormatter.OnFormatValue() в ExtDB.dll.
+    /// </summary>
+    /// <param name="value">Значение</param>
+    /// <returns>Текстовое представление</returns>
+    public static string FormatDataValue(object value)
+    {
+      if (value == null || value is DBNull)
+        return "NULL";
+      if (value is String)
+        return FormatDataString((string)value);
+      if (value is Guid)
+        return FormatDataString(((Guid)value).ToString("D"));
+      if (value is Boolean)
+        return (bool)value ? "TRUE" : "FALSE";
+      if (value is DateTime)
+        return FormatDataDateTime((DateTime)value);
+      if (value is TimeSpan)
+      {
+        // Изучил стек вызовов при ошибке
+        // Преобразование работает правильно.
+        // К сожалению (?), нельзя использовать TimeSpan в выражении Select, так как операции сравнения (в частности, "=") не поддерживаются вычислителем выражений
+
+        string s = System.Xml.XmlConvert.ToString((TimeSpan)value); // весьма странное представление
+        // Так нельзя: return s;
+        return "CONVERT(" + FormatDataString(s) + ",\'System.TimeSpan\')";
+      }
+      if (value is char)
+        return FormatDataString(new string((char)value, 1));
+
+      IFormattable fv = value as IFormattable;
+      if (fv != null)
+        return fv.ToString(String.Empty, StdConvert.NumberFormat);
+      else if (value.GetType().IsArray)
+        throw new ArgumentException("Массивы не поддерживаются", "value");
+      else
+        return value.ToString();
+    }
+
+    private static string FormatDataString(string value)
+    {
+      int p = value.IndexOf('\'');
+      if (p >= 0)
+      {
+        // Требуется экранирование
+        StringBuilder sb = new StringBuilder(value.Length + 3);
+        sb.Append(@"'");
+        for (int i = 0; i < value.Length; i++)
+        {
+          if (value[i] == '\'')
+            sb.Append(@"''");
+          else
+            sb.Append(value[i]);
+        }
+        sb.Append(@"'");
+        return sb.ToString();
+      }
+      else
+        return @"'" + value + @"'";
+    }
+
+    private static string FormatDataDateTime(DateTime value)
+    {
+      bool useTime = value.TimeOfDay.Ticks != 0L;
+
+      StringBuilder sb = new StringBuilder();
+      sb.Append('#');
+
+      sb.Append(StdConvert.ToString(value.Month));
+      sb.Append('/');
+      sb.Append(StdConvert.ToString(value.Day));
+      sb.Append('/');
+      sb.Append(StdConvert.ToString(value.Year));
+
+      if (useTime)
+      {
+        sb.Append(' ');
+        sb.Append(StdConvert.ToString(value.Hour));
+        sb.Append(':');
+        sb.Append(StdConvert.ToString(value.Minute));
+        sb.Append(':');
+        sb.Append(StdConvert.ToString(value.Second));
+      }
+
+      sb.Append('#');
+
+      return sb.ToString();
     }
 
     #endregion

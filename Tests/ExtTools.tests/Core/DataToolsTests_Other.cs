@@ -2215,6 +2215,97 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region FormatDataValue()
+
+    [TestCase(null, "NULL")]
+    [TestCase("", "\'\'")]
+    [TestCase("ABC", "\'ABC\'")]
+    [TestCase("A'BC", "\'A\'\'BC\'")]
+    [TestCase(123, "123")]
+    [TestCase(1.23, "1.23")]
+    [TestCase(1.23f, "1.23")]
+    [TestCase(true, "TRUE")]
+    [TestCase(false, "FALSE")]
+    [TestCase('a', "\'a\'")]
+    [TestCase(' ', "\' \'")]
+    [TestCase('\'', "\'\'\'\'")]
+    public void FormatDataValue_baseTypes(object value, string wanted)
+    {
+      Assert.AreEqual(wanted, DataTools.FormatDataValue(value));
+    }
+
+    [Test]
+    public void FormatDataValue_DateTime()
+    {
+      DateTime dt1 = new DateTime(2022, 2, 18);
+      Assert.AreEqual("#2/18/2022#", DataTools.FormatDataValue(dt1), "Date only");
+
+      DateTime dt2 = new DateTime(2022, 2, 18, 19, 50, 21);
+      Assert.AreEqual("#2/18/2022 19:50:21#", DataTools.FormatDataValue(dt2), "Date and time");
+    }
+
+    [Test]
+    public void FormatDataValue_Guid()
+    {
+      Guid g = new Guid("2c0dfea6-8326-44e4-ba55-a994e0bedd10");
+      Assert.AreEqual("\'2c0dfea6-8326-44e4-ba55-a994e0bedd10\'", DataTools.FormatDataValue(g));
+    }
+
+    /// <summary>
+    /// Тестируем практическое применение метода для построения выражений
+    /// </summary>
+    [Test]
+    public void FormatDataValue_Select()
+    {
+      // Перебираем все возможные типы. См. справку для свойства DataColumn.DataType
+      DoFormatDataValue_Select<Boolean>(new Boolean[] { true, false });
+      DoFormatDataValue_Select<Byte>(new Byte[] { 1, 10, 0 });
+      DoFormatDataValue_Select<Char>(new Char[] { ' ', '1', 'x' });
+      DoFormatDataValue_Select<DateTime>(new DateTime[] { new DateTime(2021, 2, 18), new DateTime(2020, 2, 29) });
+      DoFormatDataValue_Select<Decimal>(new Decimal[] { 1m, -10.5m, 0m });
+      DoFormatDataValue_Select<Double>(new Double[] { 1.0, -10.5, 0.0 });
+      DoFormatDataValue_Select<Int16>(new Int16[] { 1, -10, 0 });
+      DoFormatDataValue_Select<Int32>(new Int32[] { 1, -10, 0 });
+      DoFormatDataValue_Select<Int64>(new Int64[] { 1L, 10L, 0L });
+      DoFormatDataValue_Select<SByte>(new SByte[] { -11, 10, 0 });
+      DoFormatDataValue_Select<Single>(new Single[] { 1f, -10.5f, 0f });
+      DoFormatDataValue_Select<String>(new String[] { "ABC", "" });
+
+      // Для TimeSpan не поддерживаются операции сравнения. Select() не работает.
+      // DoFormatDataValue_Select<TimeSpan>(new TimeSpan[] { TimeSpan.Zero, new TimeSpan(1,2,3), new TimeSpan(-5,2,6,1,456)});
+
+      DoFormatDataValue_Select<UInt16>(new UInt16[] { 1, 10, 0 });
+      DoFormatDataValue_Select<UInt32>(new UInt32[] { 1, 10, 0 });
+      DoFormatDataValue_Select<UInt64>(new UInt64[] { 1, 10, 0 });
+
+      // Тоже не работает
+      //DoFormatDataValue_Select<byte[]>(new byte[][] { new byte[] { 1, 10, 0 }, DataTools.EmptyBytes });
+
+      // Для этого типа нет стандартной поддержки в DataTable
+      DoFormatDataValue_Select<Guid>(new Guid[] { Guid.Empty, new Guid("2c0dfea6-8326-44e4-ba55-a994e0bedd10") });
+    }
+
+    private static void DoFormatDataValue_Select<T>(T[] a)
+    {
+      DataTable table = new DataTable();
+      table.Columns.Add("F1", typeof(T));
+      table.Rows.Add(); // F1=null
+      for (int i = 0; i < a.Length; i++)
+        table.Rows.Add(a[i]);
+      table.Rows.Add(); // F1=null
+
+      for (int i = 0; i < a.Length; i++)
+      {
+        string expr = "F1=" + DataTools.FormatDataValue(a[i]);
+        DataRow[] rows = table.Select(expr);
+        Assert.AreEqual(1, rows.Length, "Select for value " + a[i].ToString() + " (" + typeof(T).ToString() + ")");
+        int pRow = table.Rows.IndexOf(rows[0]);
+        Assert.AreEqual(i + 1, pRow, "Row position for value " + a[i].ToString() + " (" + typeof(T).ToString() + ")");
+      }
+    }
+
+    #endregion
+
     #region MD5
 
     [TestCase("", "d41d8cd98f00b204e9800998ecf8427e")] // https://ru.wikipedia.org/wiki/MD5

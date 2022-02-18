@@ -1000,7 +1000,7 @@ namespace FreeLibSet.Controls
 
     public TreeNodeAdv FindNode(TreePath path, bool readChilds)
     {
-      if (path.IsEmpty())
+      if (path.IsEmpty)
         return _root;
       else
         return FindNode(_root, path, 0, readChilds);

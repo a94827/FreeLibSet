@@ -29,7 +29,7 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает перечислитель для узлов, являющихся дочерними для заданного родителького узла.
-    /// Если treePath.IsEmpty=true, возвращает список узлов верхнего уровня.
+    /// Если <paramref name="treePath"/>.IsEmpty=true, возвращает список узлов верхнего уровня.
     /// Перечислимыми объектами являются теги узлов (TreeNodeAdv.Tag), а не объекты TreePath.
     /// Для получения дочерних объектов TreePath используйте конструктор TreePath, принимающий родительский узел и дочерний Tag.
     /// </summary>
@@ -76,7 +76,7 @@ namespace FreeLibSet.Models.Tree
   /// Путь в модели дерева.
   /// Содержит массив объектов, образующих иерархию.
   /// Тип объектов определяется моделью.
-  /// Ссылки на саму модель ITreeModel в объект TreePath нет.
+  /// Ссылки на саму модель ITreeModel в объекте TreePath нет.
   /// Является объектом "однократной записи"
   /// </summary>
   public class TreePath
@@ -114,7 +114,7 @@ namespace FreeLibSet.Models.Tree
     /// Создает путь, расширяющий существующий на один уровень
     /// </summary>
     /// <param name="parent">Родительский путь</param>
-    /// <param name="node">Добавляемый узел. Тип объектов определяется моделью</param>
+    /// <param name="node">Добавляемый узел. Тип объектов определяется моделью. Этот узел будет возвращаться свойством LastNode</param>
     public TreePath(TreePath parent, object node)
     {
       _FullPath = new object[parent.FullPath.Length + 1];
@@ -169,7 +169,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает путь, содержащий на один уровень меньше, чем текущий.
     /// Если текущий путь пустой, то также возвращается пустой путь, 
-    /// чтобы не генерировать исключение
+    /// чтобы не генерировать исключение.
     /// </summary>
     public TreePath Parent
     {
@@ -192,9 +192,21 @@ namespace FreeLibSet.Models.Tree
     /// Возвращает true, если путь пустой (не содержит объектов)
     /// </summary>
     /// <returns>FullPath.Length=0</returns>
-    public bool IsEmpty()
+    public bool IsEmpty
     {
-      return (_FullPath.Length == 0);
+      get { return (_FullPath.Length == 0); }
+    }
+
+    /// <summary>
+    /// Для отладки
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      if (IsEmpty)
+        return "Empty";
+      else
+        return "Level=" + _FullPath.Length.ToString() + ", " + LastNode.ToString();
     }
 
     #endregion
@@ -423,7 +435,7 @@ namespace FreeLibSet.Models.Tree
     {
       if (path == null)
         throw new ArgumentNullException("path");
-      if (path.IsEmpty())
+      if (path.IsEmpty)
         throw new ArgumentException("Узел должен быть задан", "path");
       TreeModelEventArgs args = new TreeModelEventArgs(path.Parent, new object[] { path.LastNode });
       OnNodesChanged(args);
@@ -545,10 +557,10 @@ namespace FreeLibSet.Models.Tree
     public SortedTreeModel(ITreeModel innerModel)
     {
       _InnerModel = innerModel;
-      _InnerModel.NodesChanged += new EventHandler<TreeModelEventArgs>(_innerModel_NodesChanged);
-      _InnerModel.NodesInserted += new EventHandler<TreeModelEventArgs>(_innerModel_NodesInserted);
-      _InnerModel.NodesRemoved += new EventHandler<TreeModelEventArgs>(_innerModel_NodesRemoved);
-      _InnerModel.StructureChanged += new EventHandler<TreePathEventArgs>(_innerModel_StructureChanged);
+      _InnerModel.NodesChanged += new EventHandler<TreeModelEventArgs>(InnerModel_NodesChanged);
+      _InnerModel.NodesInserted += new EventHandler<TreeModelEventArgs>(InnerModel_NodesInserted);
+      _InnerModel.NodesRemoved += new EventHandler<TreeModelEventArgs>(InnerModel_NodesRemoved);
+      _InnerModel.StructureChanged += new EventHandler<TreePathEventArgs>(InnerModel_StructureChanged);
     }
 
     #endregion
@@ -625,22 +637,22 @@ namespace FreeLibSet.Models.Tree
 
     #region Передача событий от базовой модели
 
-    void _innerModel_StructureChanged(object sender, TreePathEventArgs args)
+    void InnerModel_StructureChanged(object sender, TreePathEventArgs args)
     {
       OnStructureChanged(args);
     }
 
-    void _innerModel_NodesRemoved(object sender, TreeModelEventArgs args)
+    void InnerModel_NodesRemoved(object sender, TreeModelEventArgs args)
     {
       OnStructureChanged(new TreePathEventArgs(args.Path));
     }
 
-    void _innerModel_NodesInserted(object sender, TreeModelEventArgs args)
+    void InnerModel_NodesInserted(object sender, TreeModelEventArgs args)
     {
       OnStructureChanged(new TreePathEventArgs(args.Path));
     }
 
-    void _innerModel_NodesChanged(object sender, TreeModelEventArgs args)
+    void InnerModel_NodesChanged(object sender, TreeModelEventArgs args)
     {
       OnStructureChanged(new TreePathEventArgs(args.Path));
     }
@@ -651,12 +663,13 @@ namespace FreeLibSet.Models.Tree
   #endregion
 
   /// <summary>
-  /// Расширение интерфейса ITreeModel, связанного с DataTable или DataView
+  /// Расширение интерфейса ITreeModel, связанного с DataTable или DataView.
+  /// Интерфейс не определяет наличие факт наличия первичного ключа в таблице и типы полей, используемых для построения дерева.
   /// </summary>
   public interface IDataTableTreeModel : ITreeModel
   {
     /// <summary>
-    /// Объект DataTable, реализующий момент
+    /// Объект DataTable, реализующий модель
     /// </summary>
     DataTable Table { get; }
 
@@ -695,7 +708,7 @@ namespace FreeLibSet.Models.Tree
   }
 
   /// <summary>
-  /// Модель данных дерева, реализующая доступ по числовым идентификатором
+  /// Модель данных дерева, реализующая доступ по числовым идентификатором.
   /// Нулевое значение идентификатора соответствует пустому узлу
   /// </summary>
   public interface ITreeModelWithIds : ITreeModel
@@ -870,7 +883,7 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Перечислитель</returns>
     public override IEnumerable GetChildren(TreePath treePath)
     {
-      if (treePath.IsEmpty())
+      if (treePath.IsEmpty)
       {
         DataRow[] rows = _Table.Select(GetIsNullExpression(ParentColumnName), Sort);
         return rows;

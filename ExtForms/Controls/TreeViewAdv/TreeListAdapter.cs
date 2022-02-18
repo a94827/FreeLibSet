@@ -32,7 +32,7 @@ namespace FreeLibSet.Controls
 
 		public System.Collections.IEnumerable GetChildren(TreePath treePath)
 		{
-			if (treePath.IsEmpty())
+			if (treePath.IsEmpty)
 				return _list;
 			else
 				return null;

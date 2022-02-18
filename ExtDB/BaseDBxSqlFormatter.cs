@@ -500,6 +500,7 @@ namespace FreeLibSet.Data
     /// возможно, заключенное в апострофы.
     /// Также отвечает за экранирование символов строкового значения, например, удвоение апострофов.
     /// Метод не выполняет форматирование самостоятельно, а вызывает один из методов OnFormatXxxValue() для значения соответствующего типа.
+    /// Идентичные действия выполняются методом DataTools.FormatDataValue() в ExtTools.dll.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="value">Записываемое значение</param>
@@ -724,21 +725,21 @@ namespace FreeLibSet.Data
 
       if (useDate)
       {
-        buffer.SB.Append(value.Month);
+        buffer.SB.Append(StdConvert.ToString(value.Month));
         buffer.SB.Append('/');
-        buffer.SB.Append(value.Day);
+        buffer.SB.Append(StdConvert.ToString(value.Day));
         buffer.SB.Append('/');
-        buffer.SB.Append(value.Year);
+        buffer.SB.Append(StdConvert.ToString(value.Year));
       }
       if (useTime)
       {
         if (useDate)
           buffer.SB.Append(' ');
-        buffer.SB.Append(value.Hour);
+        buffer.SB.Append(StdConvert.ToString(value.Hour));
         buffer.SB.Append(':');
-        buffer.SB.Append(value.Minute);
+        buffer.SB.Append(StdConvert.ToString(value.Minute));
         buffer.SB.Append(':');
-        buffer.SB.Append(value.Second);
+        buffer.SB.Append(StdConvert.ToString(value.Second));
       }
       buffer.SB.Append('#');
     }

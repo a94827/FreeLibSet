@@ -326,7 +326,7 @@ namespace FreeLibSet.Controls
 
     public Node FindNode(TreePath path)
     {
-      if (path.IsEmpty())
+      if (path.IsEmpty)
         return _root;
       else
         return FindNode(_root, path, 0);
