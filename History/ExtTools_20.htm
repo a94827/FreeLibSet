@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-02-18T19:42:32.715000000"/>
+	<meta name="changed" content="2022-02-20T17:41:14.796000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -524,11 +525,34 @@
 			<p lang="en-US" align="center">17.02.2022-18.02.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Метод
-			</span>DataTools.FormatDataValue() (<a href="ExtTools_11.htm#v001p1">v.1
-			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
-			<p lang="en-US">2. <span lang="ru-RU">Метод интерфейса
-			ITreeModelWithIds.GetIdWithChildren()</span></p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
+			</span><span lang="en-US">DataTools.FormatDataValue() (<a href="ExtTools_11.htm#v001p1">v.1
+			</a></span><a href="ExtTools_11.htm#v001p1"><span lang="ru-RU">п.1</a>)</span></p>
+			<p lang="en-US"><a name="v311p2"></a>2. <span lang="ru-RU">Изменения
+			в модели деревьев </span>(<a href="ExtTools_11.htm#v050p5">v.50
+			<span lang="ru-RU">п.5</span></a><span lang="ru-RU">, <a href="ExtTools_11.htm#v050p6">6</a></span>)<span lang="ru-RU">:</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Выделен интерфейс
+			</span>IRefreshableTreeModel. <span lang="ru-RU">Реализуется в
+			</span>TreeModelBase<span lang="ru-RU">.</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Интерфейс ITreeModelWithIds
+			переименован в </span>ITreeModelWithInt32Ids<span lang="ru-RU">.
+			Добавлен метод GetIdWithChildren()</span></p>
+			<p lang="en-US"><span lang="ru-RU">- </span>DataTableTreeModel
+			<span lang="ru-RU">реализует только интерфейс IDataTableTreeModel,
+			но не ITreeModelWithInt32Ids. Убрано защищенное свойство </span>KeyType.
+			<span lang="ru-RU">Используется DataTools.FormatDataValue() для
+			работы со значениями любого типа. </span><span lang="ru-RU">Исправлены
+			методы, работавшие только с числовыми идентификаторами</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Свойство
+			</span>DataTableTreeModel.<span lang="ru-RU">IsNullDefaultValue. </span>
+			</p>
+			<p lang="en-US"><span lang="ru-RU">- Свойство
+			</span>DataTableTreeModel.Sort <span lang="ru-RU">сделано
+			устанавливаемым. Убрана перегрузка конструктора с аргументом </span>sort.</p>
+			<p lang="en-US"><span lang="ru-RU">- Выделен класс
+			</span>DataTableTreeModelWithInt32Ids</p>
+			<p lang="en-US"><span lang="ru-RU">Метод интерфейса
+			ITreeModelWithIds.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

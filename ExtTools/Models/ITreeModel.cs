@@ -73,6 +73,25 @@ namespace FreeLibSet.Models.Tree
   }
 
   /// <summary>
+  /// Расширение базовой модели дерева методами, позволяющими вызвать события обновления
+  /// </summary>
+  public interface IRefreshableTreeModel : ITreeModel
+  {
+    /// <summary>
+    /// Вызывает событие NodesChanged для заданного узла.
+    /// Дочерние узлы не обновляются.
+    /// </summary>
+    /// <param name="path">Путь к узлу, который требуется обновить. Не может быть пустым</param>
+    void RefreshNode(TreePath path);
+
+    /// <summary>
+    /// Обновление всей структуры. Вызывает событие StructureChanged.
+    /// </summary>
+    void Refresh();
+  }
+
+
+  /// <summary>
   /// Путь в модели дерева.
   /// Содержит массив объектов, образующих иерархию.
   /// Тип объектов определяется моделью.
@@ -335,7 +354,7 @@ namespace FreeLibSet.Models.Tree
   /// <summary>
   /// Абстрактный класс, реализующий интерфейс ITreeModel
   /// </summary>
-  public abstract class TreeModelBase : ITreeModel
+  public abstract class TreeModelBase : IRefreshableTreeModel
   {
     #region Методы
 
@@ -674,7 +693,8 @@ namespace FreeLibSet.Models.Tree
     DataTable Table { get; }
 
     /// <summary>
-    /// Объект DataView
+    /// Объект DataView.
+    /// Может возвращать null.
     /// </summary>
     DataView DataView { get; }
 
@@ -691,27 +711,13 @@ namespace FreeLibSet.Models.Tree
     /// <param name="row">Строка присоединенной таблицы данных</param>
     /// <returns>Путь в дереве</returns>
     TreePath TreePathFromDataRow(DataRow row);
-
-    /// <summary>
-    /// Вызывает событие NodesChanged для заданного узла.
-    /// Дочерние узлы не обновляются.
-    /// </summary>
-    /// <param name="path">Путь к узлу, который требуется обновить. Не может быть пустым</param>
-    void RefreshNode(TreePath path);
-    // Может быть, этот метод должен быть в ITreeModel?
-    // Или должен быть какой-нибудь интерфейс IRefreshableTreeModel?
-
-    /// <summary>
-    /// Обновление всей структуры
-    /// </summary>
-    void Refresh();
   }
 
   /// <summary>
-  /// Модель данных дерева, реализующая доступ по числовым идентификатором.
-  /// Нулевое значение идентификатора соответствует пустому узлу
+  /// Модель данных дерева, реализующая доступ по числовым идентификаторам типа Int32.
+  /// Нулевое значение идентификатора соответствует пустому узлу.
   /// </summary>
-  public interface ITreeModelWithIds : ITreeModel
+  public interface IInt32TreeModel : ITreeModel
   {
     /// <summary>
     /// Возвращает идентификатор (значение поля IdColumnNames), соответствующее заданному пути
@@ -740,24 +746,14 @@ namespace FreeLibSet.Models.Tree
 
   /// <summary>
   /// Источник просмотра древовидной структуры из таблицы DataTable.
-  /// Реализация интерфейса ITreeModelWithIds работает правильно, если тип ключевого поля -  Int32.
-  /// DataTableTreeModel поддерживает числовые и строковые ключевые поля (в том числе Guid)
+  /// Предполагается, что имеется поле (IdColumnName), идентифицирующее строки (обычно поле является первичным ключом,
+  /// но это не является обязательным условием). Также имеется ссылочное поле (ParentColumnName), используемое для построения дерева.
+  /// Поле IdColumnName может быть числовым, строковым или иметь тип Guid или DateTime, лишь бы для этого поля можно было вычислить выражение с помощью DataTable.Select().
+  /// Поле ParentColumnName должно иметь тот же тип, но обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
   /// </summary>
-  public class DataTableTreeModel : TreeModelBase, IDataTableTreeModel, ITreeModelWithIds
+  public class DataTableTreeModel : TreeModelBase, IDataTableTreeModel
   {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает модель на основе DataTable.
-    /// Узлы дерева одного уровня идут в порядке следования строк в таблице.
-    /// </summary>
-    /// <param name="table">Таблица данных</param>
-    /// <param name="idColumnName">Имя ключевого столбца, например, "Id"</param>
-    /// <param name="parentColumnName">Имя столбца родительского идентификатора, который образует древовидную структуру, например, "ParentId"</param>
-    public DataTableTreeModel(DataTable table, string idColumnName, string parentColumnName)
-      : this(table, idColumnName, parentColumnName, String.Empty)
-    {
-    }
+    #region Конструкторы
 
     /// <summary>
     /// Создает модель на основе DataTable
@@ -765,8 +761,7 @@ namespace FreeLibSet.Models.Tree
     /// <param name="table">Таблица данных</param>
     /// <param name="idColumnName">Имя ключевого столбца, например, "Id"</param>
     /// <param name="parentColumnName">Имя столбца родительского идентификатора, который образует древовидную структуру, например, "ParentId"</param>
-    /// <param name="sort">Ключ сортировки узлов одного уровня как выражение DataView.Sort</param>
-    public DataTableTreeModel(DataTable table, string idColumnName, string parentColumnName, string sort)
+    public DataTableTreeModel(DataTable table, string idColumnName, string parentColumnName)
     {
 #if DEBUG
       if (table == null)
@@ -790,24 +785,14 @@ namespace FreeLibSet.Models.Tree
       _IdColumnName = idColumnName;
       _ParentColumnName = parentColumnName;
 
-      Type colDataType = _Table.Columns[idColumnName].DataType;
-      if (colDataType == typeof(Int32) || colDataType == typeof(UInt32) ||
-        colDataType == typeof(Int64) || colDataType == typeof(UInt64) ||
-        colDataType == typeof(Int16) || colDataType == typeof(UInt16))
-        _KeyType = KeyDataType.Int;
-      else if (colDataType == typeof(String))
-        _KeyType = KeyDataType.String;
-      else
-        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет неподходящий тип данных " + colDataType.ToString(), "idColumnName");
-
-      if (_Table.Columns[parentColumnName].DataType != colDataType)
-        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет тип данных " + colDataType.ToString() + ", а \"" + parentColumnName + "\" - " +
+      if (_Table.Columns[parentColumnName].DataType != _Table.Columns[idColumnName].DataType)
+        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет тип данных " + _Table.Columns[idColumnName].DataType.ToString() + ", а \"" + parentColumnName + "\" - " +
           _Table.Columns[parentColumnName].DataType.ToString(), "parentColumnName");
+      if (!_Table.Columns[parentColumnName].AllowDBNull)
+        throw new ArgumentNullException("Столбец \"" + parentColumnName + "\" имеет свойство AllowDBNull=false", "parentColumnName");
 
-      if (sort == null)
-        _Sort = String.Empty;
-      else
-        _Sort = sort;
+      _Sort = String.Empty;
+      _IsNullDefaultValue = DataTools.GetEmptyValue(_Table.Columns[idColumnName].DataType);
 
       // 30.11.2015
       _Table.TableNewRow += new DataTableNewRowEventHandler(Table_TableNewRow);
@@ -845,32 +830,40 @@ namespace FreeLibSet.Models.Tree
     private string _ParentColumnName;
 
     /// <summary>
-    /// Тип ключевого поля IdColumnName и ParentColumnName (числовой или строковый)
+    /// Порядок сортировки строк (в формате аргумента sort метода DataTable.Select()).
+    /// По умолчанию узлы дерева одного уровня идут в порядке следования строк в таблице.
     /// </summary>
-    protected enum KeyDataType
-    {
-      /// <summary>
-      /// Числовое ключевое поле
-      /// </summary>
-      Int,
-
-      /// <summary>
-      /// Строковое ключевое поле
-      /// </summary>
-      String
+    public string Sort 
+    { 
+      get { return _Sort; }
+      set
+      {
+        if (value == null)
+          throw new ArgumentNullException();
+        _Sort = value;
+      }
     }
-
-    /// <summary>
-    /// Тип ключевого поля (определяется в конструкторе)
-    /// </summary>
-    protected KeyDataType KeyType { get { return _KeyType; } }
-    private KeyDataType _KeyType;
-
-    /// <summary>
-    /// Порядок сортировки строк (в формате аргумента sort метода DataTable.Select())
-    /// </summary>
-    public string Sort { get { return _Sort; } }
     private string _Sort;
+
+    /// <summary>
+    /// Значение, используемое в качестве второго аргумента при вызове функции ISNULL() (см. справку к свойству DataColumn.Expression).
+    /// Не может быть null, должно иметь тот же тип, что и DataColumn.DataType.
+    /// По умолчанию используется нулевое значение или "" (для строковых полей).
+    /// </summary>
+    public object IsNullDefaultValue
+    {
+      get { return _IsNullDefaultValue; }
+      set
+      { 
+#if DEBUG
+        if (value == null)
+          throw new ArgumentNullException();
+#endif
+        if (value.GetType() != _Table.Columns[_IdColumnName].DataType)
+          throw new ArgumentException("Значение должно иметь тип " + _Table.Columns[_IdColumnName].DataType.ToString());
+      }
+    }
+    private object _IsNullDefaultValue;
 
     #endregion
 
@@ -903,29 +896,13 @@ namespace FreeLibSet.Models.Tree
     {
       if (value == null || value is DBNull)
         return GetIsNullExpression(columnName);
-
-      switch (KeyType)
-      {
-        case KeyDataType.Int:
-          return columnName + "=" + value.ToString();
-        case KeyDataType.String:
-          return columnName + "=\'" + value.ToString() + "\'";
-        default:
-          throw new BugException("Неизвестное значение KeyType=" + KeyType.ToString());
-      }
+      else
+        return columnName + "=" + DataTools.FormatDataValue(value);
     }
 
     private string GetIsNullExpression(string columnName)
     {
-      switch (KeyType)
-      {
-        case KeyDataType.Int:
-          return "ISNULL(" + columnName + ",0)=0";
-        case KeyDataType.String:
-          return "ISNULL(" + columnName + ",\"\")=\"\"";
-        default:
-          throw new BugException("Неизвестное значение KeyType=" + KeyType.ToString());
-      }
+      return "ISNULL(" + columnName + "," + DataTools.FormatDataValue(_IsNullDefaultValue) + ")=" + DataTools.FormatDataValue(_IsNullDefaultValue) + "";
     }
 
     private DataRow GetDataRowWithCheck(object tag)
@@ -976,27 +953,23 @@ namespace FreeLibSet.Models.Tree
 
     void Table_RowDeleting(object sender, DataRowChangeEventArgs args)
     {
-      // TODO: 17.02.2022 - Не будет работать со строковым первичным ключом
-
-      int parentId = DataTools.GetInt(args.Row, ParentColumnName);
-      TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromId(parentId), new object[] { args.Row });
+      object parentKey = args.Row[ParentColumnName];
+      TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromKey(parentKey), new object[] { args.Row });
       base.OnNodesRemoved(args2);
     }
 
     void Table_RowChanged(object sender, DataRowChangeEventArgs args)
     {
-      int parentId = DataTools.GetInt(args.Row[ParentColumnName]);
+      object parentKey = args.Row[ParentColumnName];
       switch (args.Action)
       {
         case DataRowAction.Change:
-          parentId = DataTools.GetInt(args.Row[ParentColumnName]);
-          TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromId(parentId), new object[] { args.Row });
+          TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromKey(parentKey), new object[] { args.Row });
           base.OnNodesChanged(args2);
           break;
         case DataRowAction.Add:
-          parentId = DataTools.GetInt(args.Row[ParentColumnName]);
           int[] indices = new int[1] { 0 }; // !!!!
-          TreeModelEventArgs args3 = new TreeModelEventArgs(TreePathFromId(parentId), indices, new object[] { args.Row });
+          TreeModelEventArgs args3 = new TreeModelEventArgs(TreePathFromKey(parentKey), indices, new object[] { args.Row });
           base.OnNodesInserted(args3);
           break;
       }
@@ -1110,6 +1083,131 @@ namespace FreeLibSet.Models.Tree
 
     #endregion
 
+    #region Доступ к строке по ключевому полю
+
+    /// <summary>
+    /// Возвращает идентификатор (значение поля IdColumnNames), соответствующее заданному пути.
+    /// Возвращает DBNuill, если строка в таблице не найдена
+    /// Этот метод можно применять для любых идентификаторов
+    /// </summary>
+    /// <param name="path">Путь к узлу дерева</param>
+    /// <returns>Идентификатор в строке таблицы данных</returns>
+    public object TreePathToKey(TreePath path)
+    {
+      DataRow row = TreePathToDataRow(path);
+      if (row == null)
+        return DBNull.Value;
+      else
+        return row[IdColumnName];
+    }
+
+    /// <summary>
+    /// Возвращает путь в дереве, соответствующий заданному идентификатору
+    /// Этот метод можно применять для любых идентификаторов
+    /// </summary>
+    /// <param name="key">Идентификатор строки</param>
+    /// <returns>Путь в дереве</returns>
+    public TreePath TreePathFromKey(object key)
+    {
+      if (key == null || key is DBNull)
+        return TreePath.Empty;
+
+      DataRow row;
+      if (UsePrimaryKey)
+        row = _Table.Rows.Find(key);
+      else
+      {
+        using (DataView dv = new DataView(_Table))
+        {
+          dv.Sort = IdColumnName;
+          int p = dv.Find(key);
+          if (p >= 0)
+            row = dv[p].Row;
+          else
+            row = null;
+        }
+      }
+
+      return TreePathFromDataRow(row);
+    }
+
+    #endregion
+
+    #region Вспомогательные методы и свойства
+
+    /// <summary>
+    /// Возвращает true, если в таблице установлен первичный ключ по полю IdColumnName
+    /// </summary>
+    public bool UsePrimaryKey
+    {
+      get
+      {
+        if (_Table.PrimaryKey.Length != 1)
+          return false;
+        return String.Equals(_Table.PrimaryKey[0].ColumnName, IdColumnName, StringComparison.OrdinalIgnoreCase);
+      }
+    }
+
+    /// <summary>
+    /// Возвращает массив строк, являющихся рекурсивно дочерними по отношению к заданному элементу.
+    /// </summary>
+    /// <param name="treeItem"></param>
+    /// <returns></returns>
+    protected DataRow[] GetRowsWithChildren(object treeItem)
+    {
+      if (treeItem == null)
+        return new DataRow[0];
+
+      List<DataRow> lst = new List<DataRow>();
+      lst.Add(GetDataRowWithCheck(treeItem));
+      DoAddChildRows(lst, lst[0]);
+      return lst.ToArray();
+    }
+
+    /// <summary>
+    /// Рекурсивная процедура
+    /// </summary>
+    /// <param name="lst"></param>
+    /// <param name="parentRow"></param>
+    private void DoAddChildRows(List<DataRow> lst, DataRow parentRow)
+    {
+      object parentValue = parentRow[IdColumnName];
+      DataRow[] rows = _Table.Select(GetEqExpression(ParentColumnName, parentValue));
+      for (int i = 0; i < rows.Length; i++)
+      {
+        lst.Add(rows[i]);
+        DoAddChildRows(lst, rows[i]);
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Источник просмотра древовидной структуры из таблицы DataTable.
+  /// Предполагается, что имеется поле (IdColumnName) типа Int32, идентифицирующее строки (обычно поле является первичным ключом,
+  /// но это не является обязательным условием). Также имеется ссылочное поле (ParentColumnName), используемое для построения дерева.
+  /// Поле ParentColumnName должно иметь тип Int32 и обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
+  /// </summary>
+  public class DataTableInt32TreeModel : DataTableTreeModel, IInt32TreeModel
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает модель на основе DataTable
+    /// </summary>
+    /// <param name="table">Таблица данных</param>
+    /// <param name="idColumnName">Имя ключевого столбца, например, "Id"</param>
+    /// <param name="parentColumnName">Имя столбца родительского идентификатора, который образует древовидную структуру, например, "ParentId"</param>
+    public DataTableInt32TreeModel(DataTable table, string idColumnName, string parentColumnName)
+      :base(table,idColumnName,parentColumnName)
+    {
+      if (Table.Columns[idColumnName].DataType != typeof(Int32))
+        throw new ArgumentException("Столбец идентификатора должен иметь тип Int32");
+    }
+
+    #endregion
+
     #region Доступ к строке по идентификатору
 
     /// <summary>
@@ -1140,10 +1238,10 @@ namespace FreeLibSet.Models.Tree
 
       DataRow row;
       if (UsePrimaryKey)
-        row = _Table.Rows.Find(id);
+        row = Table.Rows.Find(id);
       else
       {
-        using (DataView dv = new DataView(_Table))
+        using (DataView dv = new DataView(Table))
         {
           dv.Sort = IdColumnName;
           int p = dv.Find(id);
@@ -1187,10 +1285,10 @@ namespace FreeLibSet.Models.Tree
       {
         DataRow Row;
         if (UsePrimaryKey)
-          Row = _Table.Rows.Find(id);
+          Row = Table.Rows.Find(id);
         else
         {
-          using (DataView dv = new DataView(_Table))
+          using (DataView dv = new DataView(Table))
           {
             dv.Sort = IdColumnName;
             int p = dv.Find(id);
@@ -1290,105 +1388,6 @@ namespace FreeLibSet.Models.Tree
       DataRow[] childRows = GetChildRows(row);
       for (int i = 0; i < childRows.Length; i++)
         DoAddIdWithChildren(ids, childRows[i]);
-    }
-
-    #endregion
-
-    #region Доступ к строке по ключевому полю
-
-    /// <summary>
-    /// Возвращает идентификатор (значение поля IdColumnNames), соответствующее заданному пути.
-    /// Возвращает DBNuill, если строка в таблице не найдена
-    /// Этот метод можно применять для любых идентификаторов
-    /// </summary>
-    /// <param name="path">Путь к узлу дерева</param>
-    /// <returns>Идентификатор в строке таблицы данных</returns>
-    public object TreePathToKey(TreePath path)
-    {
-      DataRow row = TreePathToDataRow(path);
-      if (row == null)
-        return DBNull.Value;
-      else
-        return row[IdColumnName];
-    }
-
-    /// <summary>
-    /// Возвращает путь в дереве, соответствующий заданному идентификатору
-    /// Этот метод можно применять для любых идентификаторов
-    /// </summary>
-    /// <param name="key">Идентификатор строки</param>
-    /// <returns>Путь в дереве</returns>
-    public TreePath TreePathFromKey(object key)
-    {
-      if (key == null || key is DBNull)
-        return TreePath.Empty;
-
-      DataRow row;
-      if (UsePrimaryKey)
-        row = _Table.Rows.Find(key);
-      else
-      {
-        using (DataView dv = new DataView(_Table))
-        {
-          dv.Sort = IdColumnName;
-          int p = dv.Find(key);
-          if (p >= 0)
-            row = dv[p].Row;
-          else
-            row = null;
-        }
-      }
-
-      return TreePathFromDataRow(row);
-    }
-
-    #endregion
-
-    #region Вспомогательные методы и свойства
-
-    /// <summary>
-    /// Возвращает true, если в таблице установлен первичный ключ по полю IdColumnName
-    /// </summary>
-    public bool UsePrimaryKey
-    {
-      get
-      {
-        if (_Table.PrimaryKey.Length != 1)
-          return false;
-        return String.Equals(_Table.PrimaryKey[0].ColumnName, IdColumnName, StringComparison.OrdinalIgnoreCase);
-      }
-    }
-
-    /// <summary>
-    /// Возвращает массив строк, являющихся рекурсивно дочерними по отношению к заданному элементу.
-    /// </summary>
-    /// <param name="treeItem"></param>
-    /// <returns></returns>
-    protected DataRow[] GetRowsWithChildren(object treeItem)
-    {
-      if (treeItem == null)
-        return new DataRow[0];
-
-      List<DataRow> lst = new List<DataRow>();
-      lst.Add(GetDataRowWithCheck(treeItem));
-      DoAddChildRows(lst, lst[0]);
-      return lst.ToArray();
-    }
-
-    /// <summary>
-    /// Рекурсивная процедура
-    /// </summary>
-    /// <param name="lst"></param>
-    /// <param name="parentRow"></param>
-    private void DoAddChildRows(List<DataRow> lst, DataRow parentRow)
-    {
-      object parentValue = parentRow[IdColumnName];
-      DataRow[] rows = _Table.Select(GetEqExpression(ParentColumnName, parentValue));
-      for (int i = 0; i < rows.Length; i++)
-      {
-        lst.Add(rows[i]);
-        DoAddChildRows(lst, rows[i]);
-      }
     }
 
     #endregion

@@ -1315,7 +1315,7 @@ namespace FreeLibSet.Forms
       throw new NotImplementedException();
     }
 
-    bool IEFPGridControl.InitColumnConfig(EFPDataGridViewConfigColumn ConfigColumn)
+    bool IEFPGridControl.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
     {
       throw new NotImplementedException();
     }
@@ -1616,39 +1616,38 @@ namespace FreeLibSet.Forms
     #region Доступ к выбранным ячейкам для источника данных DataView или DataTable
 
     /// <summary>
-    /// Получение MainGrid.DataSource в виде DataTable или null, если другой источник
-    /// (не DataTable или DataView)
+    /// Если модель реализует интерфейс IDataTableTreeModel, то возвращается таблица модели.
+    /// Иначе возвращается null.
     /// </summary>
     public DataTable SourceAsDataTable
     {
       get
       {
-        IDataTableTreeModel TreeModel = Control.Model as IDataTableTreeModel;
-        if (TreeModel == null)
+        IDataTableTreeModel model = Control.Model as IDataTableTreeModel;
+        if (model == null)
           return null;
         else
-          return TreeModel.Table;
+          return model.Table;
       }
     }
 
     /// <summary>
-    /// Получение MainGrid.DataSource в виде DataTable 
-    /// Для источника DataTable возвращает DefaultView
-    /// Возвращает null, если другой источник
+    /// Если модель реализует интерфейс IDataTableTreeModel, то возвращается DataView модели или Table.DefaultView.
+    /// Иначе возвращается null.
     /// </summary>
     public DataView SourceAsDataView
     {
       get
       {
-        IDataTableTreeModel TreeModel = Control.Model as IDataTableTreeModel;
-        if (TreeModel == null)
+        IDataTableTreeModel model = Control.Model as IDataTableTreeModel;
+        if (model == null)
           return null;
         else
         {
-          if (TreeModel.DataView != null)
-            return TreeModel.DataView;
-          if (TreeModel.Table != null)
-            return TreeModel.Table.DefaultView; // 31.10.2017
+          if (model.DataView != null)
+            return model.DataView;
+          if (model.Table != null)
+            return model.Table.DefaultView; // 31.10.2017
           else
             return null;
         }
@@ -1659,16 +1658,16 @@ namespace FreeLibSet.Forms
     /// Возвращает IDataTableTreeModel или выбрасывает исключение
     /// </summary>
     /// <returns></returns>
-    protected IDataTableTreeModel GetTableModelWithCheck()
+    protected IDataTableTreeModel GetDataTableModelWithCheck()
     {
       if (Control.Model == null)
         throw new NullReferenceException("Свойство TreeViewAdv.Model не установлено");
 
-      IDataTableTreeModel Model = Control.Model as IDataTableTreeModel;
-      if (Model == null)
+      IDataTableTreeModel model = Control.Model as IDataTableTreeModel;
+      if (model == null)
         throw new NullReferenceException("Присоединенная модель не реализует IDataTableTreeModel");
 
-      return Model;
+      return model;
     }
 
     /*
@@ -1774,7 +1773,7 @@ namespace FreeLibSet.Forms
         if (value.Length == 0)
           return;
 
-        IDataTableTreeModel Model = GetTableModelWithCheck();
+        IDataTableTreeModel model = GetDataTableModelWithCheck();
 
         Control.BeginUpdate();
         try
@@ -1783,11 +1782,11 @@ namespace FreeLibSet.Forms
 
           for (int i = 0; i < value.Length; i++)
           {
-            TreePath Path = Model.TreePathFromDataRow(value[i]);
+            TreePath treePath = model.TreePathFromDataRow(value[i]);
 
-            TreeNodeAdv Node = Control.FindNode(Path);
-            if (Node != null)
-              Node.IsSelected = true;
+            TreeNodeAdv node = Control.FindNode(treePath);
+            if (node != null)
+              node.IsSelected = true;
           }
 
           EnsureSelectionVisible();
@@ -1810,9 +1809,9 @@ namespace FreeLibSet.Forms
       List<DataRow> lst = new List<DataRow>(tags.Length);
       for (int i = 0; i < tags.Length; i++)
       {
-        DataRow Row = tags[i] as DataRow;
-        if (Row != null)
-          lst.Add(Row);
+        DataRow row = tags[i] as DataRow;
+        if (row != null)
+          lst.Add(row);
       }
 
       return lst.ToArray();
@@ -1838,11 +1837,11 @@ namespace FreeLibSet.Forms
         if (value == null)
           return;
 
-        IDataTableTreeModel Model = GetTableModelWithCheck();
-        TreePath Path = Model.TreePathFromDataRow(value);
-        TreeNodeAdv Node = Control.FindNode(Path);
-        if (Node != null)
-          Control.SelectedNode = Node;
+        IDataTableTreeModel model = GetDataTableModelWithCheck();
+        TreePath treePath = model.TreePathFromDataRow(value);
+        TreeNodeAdv node = Control.FindNode(treePath);
+        if (node != null)
+          Control.SelectedNode = node;
 
         EnsureSelectionVisible();
       }
@@ -1861,14 +1860,14 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        DataRow[] Rows = SelectedDataRows;
-        if (Rows.Length == 0)
+        DataRow[] rows = SelectedDataRows;
+        if (rows.Length == 0)
           return null;
 
-        DataTable Table = Rows[0].Table;
-        if (Table.PrimaryKey == null || Table.PrimaryKey.Length == 0)
+        DataTable table = rows[0].Table;
+        if (table.PrimaryKey == null || table.PrimaryKey.Length == 0)
           return null;
-        return DataTools.GetPrimaryKeyValues(Table, Rows);
+        return DataTools.GetPrimaryKeyValues(table, rows);
       }
       set
       {
@@ -1876,11 +1875,11 @@ namespace FreeLibSet.Forms
           return;
         if (value.GetLength(0) == 0)
           return;
-        DataTable Table = SourceAsDataTable;
-        if (Table == null)
+        DataTable table = SourceAsDataTable;
+        if (table == null)
           throw new InvalidOperationException("Control.Model не реализует интерфейс IDataTableTreeModel");
-        DataRow[] Rows = DataTools.GetPrimaryKeyRows(Table, value);
-        SelectedDataRows = Rows;
+        DataRow[] rows = DataTools.GetPrimaryKeyRows(table, value);
+        SelectedDataRows = rows;
       }
     }
 
@@ -1892,22 +1891,22 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        DataRow Row = CurrentDataRow;
-        if (Row == null)
+        DataRow row = CurrentDataRow;
+        if (row == null)
           return null;
-        return DataTools.GetPrimaryKeyValues(Row);
+        return DataTools.GetPrimaryKeyValues(row);
       }
       set
       {
-        DataTable Table = SourceAsDataTable;
-        if (Table == null)
+        DataTable table = SourceAsDataTable;
+        if (table == null)
           throw new InvalidOperationException("Grid.DataSource не является DataTable");
         if (value == null)
           return;
-        DataRow Row = Table.Rows.Find(value);
-        if (Row == null)
+        DataRow row = table.Rows.Find(value);
+        if (row == null)
           return;
-        CurrentDataRow = Row;
+        CurrentDataRow = row;
       }
     }
 
@@ -2172,7 +2171,7 @@ namespace FreeLibSet.Forms
       Control.BeginUpdate();
       try
       {
-        EFPDataTreeViewSelection OldSel = Selection;
+        EFPDataTreeViewSelection oldSel = Selection;
 
         // Вызов пользовательского события
         OnRefreshData(EventArgs.Empty);
@@ -2181,7 +2180,7 @@ namespace FreeLibSet.Forms
 
         try
         {
-          Selection = OldSel;
+          Selection = oldSel;
         }
         catch (Exception e)
         {
@@ -2434,8 +2433,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Обновить в просмотре все выбранные строки SelectedRows, например, после
-    /// редактирования, если в имеются вычисляемые столбцы
+    /// Обновить в просмотре все строки
     /// </summary>
     public void InvalidateAllRows()
     {
@@ -2448,7 +2446,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void InvalidateSelectedRows()
     {
-      // TODO: Не реалитовано
+      // TODO: Не реализовано
       /*
       if (Control.AreAllCellsSelected(false))
         Control.Invalidate();
@@ -2468,9 +2466,12 @@ namespace FreeLibSet.Forms
     {
       if (row == null)
         return;
-      IDataTableTreeModel Model = GetTableModelWithCheck();
-      TreePath Path = Model.TreePathFromDataRow(row);
-      Model.RefreshNode(Path);
+      IDataTableTreeModel model1 = GetDataTableModelWithCheck();
+      TreePath treePath = model1.TreePathFromDataRow(row);
+      IRefreshableTreeModel model2 = model1 as IRefreshableTreeModel;
+      if (model2 == null)
+        throw new InvalidOperationException("Модель не поддерживает обновление");
+      model2.RefreshNode(treePath);
     }
 
     /// <summary>
@@ -2481,11 +2482,15 @@ namespace FreeLibSet.Forms
     {
       if (rows == null)
         return;
-      IDataTableTreeModel Model = GetTableModelWithCheck();
+      IDataTableTreeModel model1 = GetDataTableModelWithCheck();
+      IRefreshableTreeModel model2 = model1 as IRefreshableTreeModel;
+      if (model2 == null)
+        throw new InvalidOperationException("Модель не поддерживает обновление");
+
       for (int i = 0; i < rows.Length; i++)
       {
-        TreePath Path = Model.TreePathFromDataRow(rows[i]);
-        Model.RefreshNode(Path);
+        TreePath treePath = model1.TreePathFromDataRow(rows[i]);
+        model2.RefreshNode(treePath);
       }
     }
 
@@ -2545,7 +2550,7 @@ namespace FreeLibSet.Forms
           throw new ArgumentOutOfRangeException("value",
             "Индекс сортировки должен быть в диапазоне от 0 до " + (OrderCount - 1).ToString());
 
-        EFPDataTreeViewSelection OldSel = Selection;
+        EFPDataTreeViewSelection oldSel = Selection;
 
         _CurrentOrderIndex = value;
         CommandItems.InitCurentOrder();
@@ -2569,7 +2574,7 @@ namespace FreeLibSet.Forms
           }
         }
 
-        Selection = OldSel;
+        Selection = oldSel;
 
         OnCurrentOrderChanged(EventArgs.Empty);
       }

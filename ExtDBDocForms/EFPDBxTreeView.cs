@@ -264,12 +264,12 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает ITreeModelWithIds  или выбрасывает исключение
     /// </summary>
     /// <returns>Модель</returns>
-    protected ITreeModelWithIds GetModelWithIdsWithCheck()
+    protected IInt32TreeModel GetModelWithIdsWithCheck()
     {
       if (Control.Model == null)
         throw new NullReferenceException("Свойство TreeViewAdv.Model не установлено");
 
-      ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+      IInt32TreeModel model = Control.Model as IInt32TreeModel;
       if (model == null)
         throw new NullReferenceException("Присоединенная модель не реализует ITreeModelWithIds");
 
@@ -288,7 +288,7 @@ namespace FreeLibSet.Forms.Docs
 
         // Может быть и другая модель. Плохо, если чтение свойства будет приводить к исключению
         // ITreeModelWithIds Model = GetModelWithIdsWithCheck();
-        ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+        IInt32TreeModel model = Control.Model as IInt32TreeModel;
         if (model == null)
           return null;
 
@@ -316,7 +316,7 @@ namespace FreeLibSet.Forms.Docs
           _DelayedSelectedIds = value;
         else
         {
-          ITreeModelWithIds model = GetModelWithIdsWithCheck();
+          IInt32TreeModel model = GetModelWithIdsWithCheck();
           Control.BeginUpdate();
           try
           {
@@ -353,7 +353,7 @@ namespace FreeLibSet.Forms.Docs
 
         // Может быть и другая модель. Плохо, если чтение свойства будет приводить к исключению
         // ITreeModelWithIds Model = GetModelWithIdsWithCheck();
-        ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+        IInt32TreeModel model = Control.Model as IInt32TreeModel;
         if (model == null)
           return 0;
 
@@ -374,7 +374,7 @@ namespace FreeLibSet.Forms.Docs
           _DelayedCurrentId = value;
         else
         {
-          ITreeModelWithIds model = GetModelWithIdsWithCheck();
+          IInt32TreeModel model = GetModelWithIdsWithCheck();
 
           TreePath path = model.TreePathFromId(value);
           TreeNodeAdv node = Control.FindNode(path);
@@ -395,7 +395,7 @@ namespace FreeLibSet.Forms.Docs
       get
       {
         Int32[] ids = SelectedIds;
-        ITreeModelWithIds model = Control.Model as ITreeModelWithIds;
+        IInt32TreeModel model = Control.Model as IInt32TreeModel;
         if (model == null || ids.Length==0)
           return ids;
 
