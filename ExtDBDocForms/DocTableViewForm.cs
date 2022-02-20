@@ -1073,15 +1073,15 @@ namespace FreeLibSet.Forms.Docs
         {
           if (IncludeNestedGroups)
           {
-            DataTableTreeModel Model;
+            DataTableTreeModelWithIds<Int32> model;
             if (GroupCBVisible)
-              Model = GroupComboBox.Model;
+              model = GroupComboBox.Model;
             else if (GroupTreeVisible)
             {
               if (GroupTreeView.Control.Model == null)
                 GroupTreeView.PerformRefresh(); // 17.05.2021
-              Model = GroupTreeView.Control.Model as DataTableTreeModel;
-              if (Model == null)
+              model = GroupTreeView.Control.Model as DataTableTreeModelWithIds<Int32>;
+              if (model == null)
               {
                 if (GroupTreeView.Control.Model == null)
                   throw new NullReferenceException("Не установлено свойство GroupTreeView.Control.Model");
@@ -1092,7 +1092,7 @@ namespace FreeLibSet.Forms.Docs
             else
               throw new BugException("CurrentGroupId!=0 при скрытом дереве и комбоблоке выбора группы");
 
-            return Model.GetIdWithChildren(CurrentGroupId);
+            return model.GetIdWithChildren(CurrentGroupId);
           }
           else
             return new Int32[1] { CurrentGroupId };

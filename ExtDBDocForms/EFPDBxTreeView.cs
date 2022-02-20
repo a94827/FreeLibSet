@@ -211,7 +211,7 @@ namespace FreeLibSet.Forms.Docs
   #endregion
 
   /// <summary>
-  /// Провайдер иерархического просмотра табличных данных, в которых есть поле "Id".
+  /// Провайдер иерархического просмотра табличных данных, в которых есть поле "Id" типа Int32.
   /// Поддерживает выборки документов.
   /// </summary>
   public class EFPDBxTreeView : EFPConfigurableDataTreeView, IEFPDBxView
@@ -264,14 +264,14 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает ITreeModelWithIds  или выбрасывает исключение
     /// </summary>
     /// <returns>Модель</returns>
-    protected IInt32TreeModel GetModelWithIdsWithCheck()
+    protected ITreeModelWithIds<Int32> GetModelWithIdsWithCheck()
     {
       if (Control.Model == null)
         throw new NullReferenceException("Свойство TreeViewAdv.Model не установлено");
 
-      IInt32TreeModel model = Control.Model as IInt32TreeModel;
+      ITreeModelWithIds<Int32> model = Control.Model as ITreeModelWithIds<Int32>;
       if (model == null)
-        throw new NullReferenceException("Присоединенная модель не реализует ITreeModelWithIds");
+        throw new NullReferenceException("Присоединенная модель не реализует ITreeModelWithIds<Int32>");
 
       return model;
     }
@@ -288,7 +288,7 @@ namespace FreeLibSet.Forms.Docs
 
         // Может быть и другая модель. Плохо, если чтение свойства будет приводить к исключению
         // ITreeModelWithIds Model = GetModelWithIdsWithCheck();
-        IInt32TreeModel model = Control.Model as IInt32TreeModel;
+        ITreeModelWithIds<Int32> model = Control.Model as ITreeModelWithIds<Int32>;
         if (model == null)
           return null;
 
@@ -316,7 +316,7 @@ namespace FreeLibSet.Forms.Docs
           _DelayedSelectedIds = value;
         else
         {
-          IInt32TreeModel model = GetModelWithIdsWithCheck();
+          ITreeModelWithIds<Int32> model = GetModelWithIdsWithCheck();
           Control.BeginUpdate();
           try
           {
@@ -353,7 +353,7 @@ namespace FreeLibSet.Forms.Docs
 
         // Может быть и другая модель. Плохо, если чтение свойства будет приводить к исключению
         // ITreeModelWithIds Model = GetModelWithIdsWithCheck();
-        IInt32TreeModel model = Control.Model as IInt32TreeModel;
+        ITreeModelWithIds<Int32> model = Control.Model as ITreeModelWithIds<Int32>;
         if (model == null)
           return 0;
 
@@ -374,7 +374,7 @@ namespace FreeLibSet.Forms.Docs
           _DelayedCurrentId = value;
         else
         {
-          IInt32TreeModel model = GetModelWithIdsWithCheck();
+          ITreeModelWithIds<Int32> model = GetModelWithIdsWithCheck();
 
           TreePath path = model.TreePathFromId(value);
           TreeNodeAdv node = Control.FindNode(path);
@@ -395,7 +395,7 @@ namespace FreeLibSet.Forms.Docs
       get
       {
         Int32[] ids = SelectedIds;
-        IInt32TreeModel model = Control.Model as IInt32TreeModel;
+        ITreeModelWithIds<Int32> model = Control.Model as ITreeModelWithIds<Int32>;
         if (model == null || ids.Length==0)
           return ids;
 

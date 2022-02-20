@@ -14,7 +14,7 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Источник данных дерева для просмотра документов
   /// </summary>
-  public class DBxDocTreeModel : DataTableTreeModel
+  public class DBxDocTreeModel : DataTableTreeModelWithIds<Int32>
   {
     #region Конструкторы
 
@@ -48,8 +48,10 @@ namespace FreeLibSet.Data.Docs
     public DBxDocTreeModel(DBxDocProvider docProvider, DBxDocType docType, DBxColumns columns, DBxFilter filters)
       : base(CreateTable(docProvider, docType, columns, filters),
          DBSDocType.Id,
-         docType.TreeParentColumnName, docType.DefaultOrder.ToString() /*23.11.2018 */)
+         docType.TreeParentColumnName)
     {
+      base.Sort = docType.DefaultOrder.ToString(); /*23.11.2018 */
+
       _DocProvider = docProvider;
       _DocType = docType;
 
@@ -176,7 +178,7 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Источник данных дерева для просмотра поддокументов в процессе редактирования одного или нескольких документов
   /// </summary>
-  public class DBxSubDocTreeModel : DataTableTreeModel
+  public class DBxSubDocTreeModel : DataTableTreeModelWithIds<Int32>
   {
     #region Конструктор
 
@@ -188,9 +190,9 @@ namespace FreeLibSet.Data.Docs
     public DBxSubDocTreeModel(DBxMultiSubDocs subDocs, DBxColumns columns)
       : base(subDocs.SubDocsView.Table,
          "Id",
-         subDocs.SubDocType.TreeParentColumnName,
-         subDocs.SubDocsView.Sort)
+         subDocs.SubDocType.TreeParentColumnName)
     {
+      base.Sort = subDocs.SubDocsView.Sort;
       _SubDocs = subDocs;
     }
 
@@ -236,7 +238,8 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Расширение табличной модели установкой дополнительного фильтра
   /// </summary>
-  public class FilteredDataTableTreeModel : DataTableTreeModel
+  public class FilteredDataTableTreeModelWithIds<T> : DataTableTreeModelWithIds<T>
+    where T : IEquatable<T>
   {
     // Кандидат на перенос в ExtTools.dll
 
@@ -247,7 +250,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="sourceModel">Исходная модель</param>
     /// <param name="filter">Накладываемый фильтр на таблицу</param>
-    public FilteredDataTableTreeModel(DataTableTreeModel sourceModel, DBxFilter filter)
+    public FilteredDataTableTreeModelWithIds(DataTableTreeModel sourceModel, DBxFilter filter)
       : this(sourceModel, filter, String.Empty)
     {
     }
@@ -257,11 +260,12 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="sourceModel">Исходная модель</param>
     /// <param name="filter">Накладываемый фильтр на таблицу</param>
-    /// <param name="sourceIntegrityFlagColumnName">Имя логического поля в исходной таблице, которое опредедяет узлы, добавленные исключительно из-за необходимости соблюдения целостности дерева.</param>
-    public FilteredDataTableTreeModel(DataTableTreeModel sourceModel, DBxFilter filter, string sourceIntegrityFlagColumnName)
+    /// <param name="sourceIntegrityFlagColumnName">Имя логического поля в исходной таблице, которое определяет узлы, добавленные исключительно из-за необходимости соблюдения целостности дерева.</param>
+    public FilteredDataTableTreeModelWithIds(DataTableTreeModel sourceModel, DBxFilter filter, string sourceIntegrityFlagColumnName)
       : base(CreateTable(sourceModel, filter, sourceIntegrityFlagColumnName),
-      sourceModel.IdColumnName, sourceModel.ParentColumnName, sourceModel.Sort)
+      sourceModel.IdColumnName, sourceModel.ParentColumnName)
     {
+      base.Sort = sourceModel.Sort;
       _SourceModel = sourceModel;
       _Filter = filter;
       if (String.IsNullOrEmpty(sourceIntegrityFlagColumnName))

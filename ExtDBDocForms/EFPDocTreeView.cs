@@ -314,7 +314,7 @@ namespace FreeLibSet.Forms.Docs
         throw new NullReferenceException("OriginalModel==null");
 #endif
 
-      Int32[] OldIds = SelectedIds;
+      Int32[] oldIds = SelectedIds;
 
       if (AuxFilterGroupIds == null)
         Control.Model = _OriginalModel;
@@ -325,12 +325,12 @@ namespace FreeLibSet.Forms.Docs
           Filter2 = new ValueFilter(DocTypeUI.DocType.GroupRefColumnName, 0);
         else
           Filter2 = new IdsFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
-        Control.Model = new FilteredDataTableTreeModel(_OriginalModel, Filter2, _OriginalModel.IntegrityFlagColumnName);
+        Control.Model = new FilteredDataTableTreeModelWithIds<Int32>(_OriginalModel, Filter2, _OriginalModel.IntegrityFlagColumnName);
       }
 
       try
       {
-        SelectedIds = OldIds;
+        SelectedIds = oldIds;
       }
       catch { }
     }
@@ -351,9 +351,9 @@ namespace FreeLibSet.Forms.Docs
       if (!node.IsLeaf)
         return String.Empty;
 
-      DataRow Row = node.Tag as DataRow;
-      if (Row != null)
-        return DocTypeUI.GetImageKey(Row);
+      DataRow row = node.Tag as DataRow; // По хорошему, надо использовать IDataTableTreeModel.TreePathToDataRow(), но это было бы очень медленно
+      if (row != null)
+        return DocTypeUI.GetImageKey(row);
       else
         return "UnknownState";
     }
@@ -511,10 +511,10 @@ namespace FreeLibSet.Forms.Docs
         if (!dataSet.Tables.Contains(Owner.DocType.Name))
           return; // Нет таблицы
 
-        DataTable SrcTable = dataSet.Tables[Owner.DocType.Name];
-        List<DataRow> NewSelRows = new List<DataRow>();
+        DataTable srcTable = dataSet.Tables[Owner.DocType.Name];
+        List<DataRow> newSelRows = new List<DataRow>();
 
-        DBxColumns FilterColumns = Owner.Filters.GetColumnNames();
+        DBxColumns filterColumns = Owner.Filters.GetColumnNames();
 
         // 08.07.2016
         // Таблица может не содержать первичного ключа
@@ -526,29 +526,29 @@ namespace FreeLibSet.Forms.Docs
         }
         try
         {
-          foreach (DataRow SrcRow in SrcTable.Rows)
+          foreach (DataRow srcRow in srcTable.Rows)
           {
             // 15.07.2020. Алгоритм изменен
 
             #region Определяем необходимость наличия строки в просмотре
 
-            bool Visible;
-            switch (SrcRow.RowState)
+            bool isVisible;
+            switch (srcRow.RowState)
             {
               case DataRowState.Added: // нельзя базироваться только на RowState
                 if (isCaller)
-                  Visible = true; // Не уверен, что надо всегда показывать
+                  isVisible = true; // Не уверен, что надо всегда показывать
                 else
-                  Visible = TestFilters(SrcRow, FilterColumns);
+                  isVisible = TestFilters(srcRow, filterColumns);
                 break;
               case DataRowState.Modified:
-                Visible = TestFilters(SrcRow, FilterColumns);
+                isVisible = TestFilters(srcRow, filterColumns);
                 break;
               case DataRowState.Deleted:
                 if (Owner.ShowDeleted)
-                  Visible = TestFilters(SrcRow, FilterColumns);
+                  isVisible = TestFilters(srcRow, filterColumns);
                 else
-                  Visible = false;
+                  isVisible = false;
                 break;
               default: // Unchanged
                 continue;
@@ -559,31 +559,31 @@ namespace FreeLibSet.Forms.Docs
 
             #region Определяем существование строки в просмотре
 
-            Int32 DocId;
-            if (SrcRow.RowState == DataRowState.Deleted)
-              DocId = (Int32)(SrcRow["Id", DataRowVersion.Original]);
+            Int32 docId;
+            if (srcRow.RowState == DataRowState.Deleted)
+              docId = (Int32)(srcRow["Id", DataRowVersion.Original]);
             else
-              DocId = (Int32)(SrcRow["Id"]);
-            DataRow ResRow = FindDocRow(DocId, dvFind);
+              docId = (Int32)(srcRow["Id"]);
+            DataRow resRow = FindDocRow(docId, dvFind);
 
             #endregion
 
             #region Добавление / обновление / удаление строки в просмотре
 
-            if (Visible)
+            if (isVisible)
             {
-              if (ResRow == null)
+              if (resRow == null)
               {
-                ResRow = Owner.SourceAsDataTable.NewRow();
-                DataTools.CopyRowValues(SrcRow, ResRow, true);
-                UpdateRefValues(SrcRow, ResRow);
-                Owner.SourceAsDataTable.Rows.Add(ResRow);
+                resRow = Owner.SourceAsDataTable.NewRow();
+                DataTools.CopyRowValues(srcRow, resRow, true);
+                UpdateRefValues(srcRow, resRow);
+                Owner.SourceAsDataTable.Rows.Add(resRow);
               }
               else
               {
-                DataTools.CopyRowValues(SrcRow, ResRow, true);
-                UpdateRefValues(SrcRow, ResRow);
-                Owner.InvalidateDataRow(ResRow); // не Update
+                DataTools.CopyRowValues(srcRow, resRow, true);
+                UpdateRefValues(srcRow, resRow);
+                Owner.InvalidateDataRow(resRow); // не Update
               }
 
               // Перенесено сюда 26.05.2021
@@ -591,13 +591,13 @@ namespace FreeLibSet.Forms.Docs
               // В этом случае предыдущее условие "ResRow==null" выполняется для первого просмотра,
               // а второй просмотр не будет добавлять дублирующую строку в таблицу.
               // Но позиционировать на новую строку надо в любом случае, если она видна в просмотре.
-              if (SrcRow.RowState == DataRowState.Added)
-                NewSelRows.Add(ResRow);
+              if (srcRow.RowState == DataRowState.Added)
+                newSelRows.Add(resRow);
             }
             else
             {
-              if (ResRow != null)
-                ResRow.Delete();
+              if (resRow != null)
+                resRow.Delete();
             }
 
             #endregion
@@ -654,9 +654,8 @@ namespace FreeLibSet.Forms.Docs
           if (dvFind != null)
             dvFind.Dispose();
         }
-        if (NewSelRows.Count > 0)
-          Owner.SelectedDataRows = NewSelRows.ToArray();
-
+        if (newSelRows.Count > 0)
+          Owner.SelectedDataRows = newSelRows.ToArray();
       }
 
       /// <summary>
@@ -697,20 +696,20 @@ namespace FreeLibSet.Forms.Docs
 
         for (int i = 0; i < resRow.Table.Columns.Count; i++)
         {
-          string ColName = resRow.Table.Columns[i].ColumnName;
-          int p = ColName.IndexOf('.');
+          string colName = resRow.Table.Columns[i].ColumnName;
+          int p = colName.IndexOf('.');
           if (p >= 0)
           {
-            string MainColName = ColName.Substring(0, p);
-            int pCol = srcRow.Table.Columns.IndexOf(MainColName);
+            string mainColName = colName.Substring(0, p);
+            int pCol = srcRow.Table.Columns.IndexOf(mainColName);
             if (pCol >= 0)
             {
-              Int32 RefId = DataTools.GetInt(srcRow, MainColName); // в ResRow может не быть базового поля
-              object RefValue = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(ColName, RefId);
-              if (RefValue == null)
+              Int32 refId = DataTools.GetInt(srcRow, mainColName); // в ResRow может не быть базового поля
+              object refValue = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
+              if (refValue == null)
                 resRow[i] = DBNull.Value; // 26.10.2016
               else
-                resRow[i] = RefValue;
+                resRow[i] = refValue;
             }
           }
         }
@@ -735,27 +734,27 @@ namespace FreeLibSet.Forms.Docs
         NamedValues pairs = new NamedValues();
         for (int i = 0; i < filterColumns.Count; i++)
         {
-          string ColName = filterColumns[i];
+          string colName = filterColumns[i];
           object value;
-          int pDot = ColName.IndexOf('.');
+          int pDot = colName.IndexOf('.');
           if (pDot >= 0)
           {
-            string MainColName = ColName.Substring(0, pDot);
-            int pCol = srcRow.Table.Columns.IndexOf(MainColName);
+            string mainColName = colName.Substring(0, pDot);
+            int pCol = srcRow.Table.Columns.IndexOf(mainColName);
             if (pCol >= 0)
             {
-              Int32 RefId = DataTools.GetInt(srcRow[MainColName, rowVer]);
-              value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(ColName, RefId);
+              Int32 refId = DataTools.GetInt(srcRow[mainColName, rowVer]);
+              value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
             }
             else
-              throw new BugException("Не найдено поле \"" + MainColName + "\"");
+              throw new BugException("Не найдено поле \"" + mainColName + "\"");
           }
           else
-            value = srcRow[ColName, rowVer];
+            value = srcRow[colName, rowVer];
 
           if (value is DBNull)
             value = null;
-          pairs.Add(ColName, value);
+          pairs.Add(colName, value);
         }
 
         return _Owner.Filters.TestValues(pairs);
@@ -763,7 +762,7 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Прочие определенные методы
+      #region Прочие переопределенные методы
 
       /// <summary>
       /// Вызывает EFPDocTreeView.UpdateRowsForIds()
@@ -889,9 +888,9 @@ namespace FreeLibSet.Forms.Docs
       {
         try
         {
-          Int32 OldId = CurrentId;
+          Int32 oldId = CurrentId;
           PerformRefresh(); // обязательно после вызова OnCreated(), иначе UsedColumnNames будет равен null
-          CurrentId = OldId; // 23.11.2017
+          CurrentId = oldId; // 23.11.2017
         }
         catch (Exception e) // 04.02.2022
         {

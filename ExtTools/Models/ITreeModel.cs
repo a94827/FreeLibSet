@@ -683,7 +683,9 @@ namespace FreeLibSet.Models.Tree
 
   /// <summary>
   /// Расширение интерфейса ITreeModel, связанного с DataTable или DataView.
-  /// Интерфейс не определяет наличие факт наличия первичного ключа в таблице и типы полей, используемых для построения дерева.
+  /// Объявляет методы для преобразования строки таблицы данных DataRow в TreePath и обратно.
+  /// Интерфейс не определяет факт наличия первичного ключа в таблице и типы полей, используемых для построения дерева.
+  /// Также этот интерфейс, как и ITreeModel, не определяет, что используется в качестве частей TreePath.
   /// </summary>
   public interface IDataTableTreeModel : ITreeModel
   {
@@ -714,24 +716,26 @@ namespace FreeLibSet.Models.Tree
   }
 
   /// <summary>
-  /// Модель данных дерева, реализующая доступ по числовым идентификаторам типа Int32.
-  /// Нулевое значение идентификатора соответствует пустому узлу.
+  /// Модель данных дерева, реализующая доступ по идентификаторам произвольного типа (числовым, строкам, Guid, ...).
+  /// Нулевое значение идентификатора (или пустая строка) соответствует пустому узлу.
   /// </summary>
-  public interface IInt32TreeModel : ITreeModel
+  /// <typeparam name="T">Тип идентификатора</typeparam>
+  public interface ITreeModelWithIds<T> : ITreeModel
+    where T : IEquatable<T>
   {
     /// <summary>
     /// Возвращает идентификатор (значение поля IdColumnNames), соответствующее заданному пути
     /// </summary>
     /// <param name="path">Путь к узлу дерева</param>
     /// <returns>Идентификатор в строке таблицы данных</returns>
-    Int32 TreePathToId(TreePath path);
+    T TreePathToId(TreePath path);
 
     /// <summary>
     /// Возвращает путь в дереве, соответствующий заданному идентификатору
     /// </summary>
     /// <param name="id">Идентификатор строки</param>
     /// <returns>Путь в дереве</returns>
-    TreePath TreePathFromId(Int32 id);
+    TreePath TreePathFromId(T id);
 
     /// <summary>
     /// Возвращает массив идентификаторов (значений поля IdColumnName), для заданного родительского идентификатора
@@ -741,7 +745,7 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="id">Идентификатор корневого узла. Если 0, возвращаются все идентификаторы в таблице</param>
     /// <returns>Массив идентификаторов</returns>
-    Int32[] GetIdWithChildren(Int32 id);  // 17.02.2022. Не уверен, что этот метод - хорошая идея
+    T[] GetIdWithChildren(T id); 
   }
 
   /// <summary>
@@ -750,6 +754,8 @@ namespace FreeLibSet.Models.Tree
   /// но это не является обязательным условием). Также имеется ссылочное поле (ParentColumnName), используемое для построения дерева.
   /// Поле IdColumnName может быть числовым, строковым или иметь тип Guid или DateTime, лишь бы для этого поля можно было вычислить выражение с помощью DataTable.Select().
   /// Поле ParentColumnName должно иметь тот же тип, но обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
+  /// 
+  /// В текущей реализации в качестве тегов, входящих в TreePath, используются ссылки на строки таблицы DataRow.
   /// </summary>
   public class DataTableTreeModel : TreeModelBase, IDataTableTreeModel
   {
@@ -994,9 +1000,7 @@ namespace FreeLibSet.Models.Tree
         return null;
       DataRow row = path.LastNode as DataRow;
       if (row == null)
-      {
         throw new InvalidCastException("Аргумент treePath.LastNode не является DataRow");
-      }
       if (row.Table != _Table)
         throw new ArgumentException("Строка относится к другой таблице");
       return row;
@@ -1185,11 +1189,13 @@ namespace FreeLibSet.Models.Tree
 
   /// <summary>
   /// Источник просмотра древовидной структуры из таблицы DataTable.
-  /// Предполагается, что имеется поле (IdColumnName) типа Int32, идентифицирующее строки (обычно поле является первичным ключом,
+  /// Предполагается, что имеется поле (IdColumnName) типа <typeparamref name="T"/>, идентифицирующее строки (обычно поле является первичным ключом,
   /// но это не является обязательным условием). Также имеется ссылочное поле (ParentColumnName), используемое для построения дерева.
-  /// Поле ParentColumnName должно иметь тип Int32 и обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
+  /// Поле ParentColumnName тоже должно иметь тип <typeparamref name="T"/> и обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
   /// </summary>
-  public class DataTableInt32TreeModel : DataTableTreeModel, IInt32TreeModel
+  /// <typeparam name="T">Тип идентификатора (числовой, String, DateTime, Guid)</typeparam>
+  public class DataTableTreeModelWithIds<T> : DataTableTreeModel, ITreeModelWithIds<T>
+    where T : IEquatable<T>
   {
     #region Конструктор
 
@@ -1199,11 +1205,11 @@ namespace FreeLibSet.Models.Tree
     /// <param name="table">Таблица данных</param>
     /// <param name="idColumnName">Имя ключевого столбца, например, "Id"</param>
     /// <param name="parentColumnName">Имя столбца родительского идентификатора, который образует древовидную структуру, например, "ParentId"</param>
-    public DataTableInt32TreeModel(DataTable table, string idColumnName, string parentColumnName)
+    public DataTableTreeModelWithIds(DataTable table, string idColumnName, string parentColumnName)
       :base(table,idColumnName,parentColumnName)
     {
-      if (Table.Columns[idColumnName].DataType != typeof(Int32))
-        throw new ArgumentException("Столбец идентификатора должен иметь тип Int32");
+      if (Table.Columns[idColumnName].DataType != typeof(T))
+        throw new ArgumentException("Столбец идентификатора должен иметь тип "+typeof(T).ToString());
     }
 
     #endregion
@@ -1211,18 +1217,18 @@ namespace FreeLibSet.Models.Tree
     #region Доступ к строке по идентификатору
 
     /// <summary>
-    /// Возвращает идентификатор (значение поля IdColumnName), соответствующее заданному пути
+    /// Возвращает идентификатор (значение поля IdColumnName), соответствующее заданному пути.
     /// Этот метод можно применять только для числовых идентификаторов
     /// </summary>
     /// <param name="path">Путь к узлу дерева</param>
     /// <returns>Идентификатор в строке таблицы данных</returns>
-    public Int32 TreePathToId(TreePath path)
+    public T TreePathToId(TreePath path)
     {
       DataRow row = TreePathToDataRow(path);
       if (row == null)
-        return 0;
+        return (T)IsNullDefaultValue;
       else
-        return DataTools.GetInt(row, IdColumnName);
+        return (T)(row[IdColumnName]);
     }
 
     /// <summary>
@@ -1231,9 +1237,9 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="id">Идентификатор строки</param>
     /// <returns>Путь в дереве</returns>
-    public TreePath TreePathFromId(Int32 id)
+    public TreePath TreePathFromId(T id)
     {
-      if (id == 0)
+      if (id.Equals(IsNullDefaultValue))
         return TreePath.Empty;
 
       DataRow row;
@@ -1262,12 +1268,12 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="row">Строка</param>
     /// <returns>Идентификатор</returns>
-    public Int32 DataRowToId(DataRow row)
+    public T DataRowToId(DataRow row)
     {
       if (row == null)
-        return 0;
+        return (T)IsNullDefaultValue;
       else
-        return DataTools.GetInt(row, IdColumnName);
+        return (T)(row[IdColumnName]);
     }
 
     /// <summary>
@@ -1277,9 +1283,9 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="id">Идентификатор</param>
     /// <returns>Строка в таблице или null</returns>
-    public DataRow DataRowFromId(Int32 id)
+    public DataRow DataRowFromId(T id)
     {
-      if (id == 0)
+      if (id.Equals(IsNullDefaultValue))
         return null;
       else
       {
@@ -1311,10 +1317,10 @@ namespace FreeLibSet.Models.Tree
     /// <param name="id">Идентификатор родительского узла.
     /// Если 0, то будут возвращены идентификаторы строк верхнего уровня</param>
     /// <returns>Массив идентификаторов</returns>
-    public Int32[] GetChildIds(Int32 id)
+    public T[] GetChildIds(T id)
     {
       DataRow[] rows = GetChildRows(DataRowFromId(id));
-      Int32[] ids = new Int32[rows.Length];
+      T[] ids = new T[rows.Length];
       for (int i = 0; i < rows.Length; i++)
         ids[i] = DataRowToId(rows[i]);
       return ids;
@@ -1328,16 +1334,16 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="id">Идентификатор корневого узла. Если 0, возвращаются все идентификаторы в таблице</param>
     /// <returns>Массив идентификаторов</returns>
-    public Int32[] GetIdWithChildren(Int32 id)
+    public T[] GetIdWithChildren(T id)
     {
       //return DataRowToIdWithChildren(DataRowFromId(Id));
-      if (id == 0)
+      if (id.Equals(IsNullDefaultValue))
         return DataRowToIdWithChildren(null);
       else
       {
         DataRow row = DataRowFromId(id);
         if (row == null)
-          return new Int32[1] { id }; // 10.06.2019
+          return new T[1] { id }; // 10.06.2019
         else
           return DataRowToIdWithChildren(row);
       }
@@ -1352,9 +1358,9 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="path">Путь к узлу дерева. Если путь пустой, возвращаются все идентификаторы в таблице</param>
     /// <returns>Массив идентификаторов</returns>
-    public Int32[] TreePathToIdWithChildren(TreePath path)
+    public T[] TreePathToIdWithChildren(TreePath path)
     {
-      SingleScopeList<Int32> ids = new SingleScopeList<Int32>();
+      SingleScopeList<T> ids = new SingleScopeList<T>();
       DataRow row = TreePathToDataRow(path);
       DoAddIdWithChildren(ids, row);
       return ids.ToArray();
@@ -1368,18 +1374,18 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="row">Строка в таблице. Если задана пустая строка, возвращаются все идентификаторы</param>
     /// <returns>Массив идентификаторов</returns>
-    public Int32[] DataRowToIdWithChildren(DataRow row)
+    public T[] DataRowToIdWithChildren(DataRow row)
     {
-      SingleScopeList<Int32> ids = new SingleScopeList<Int32>();
+      SingleScopeList<T> ids = new SingleScopeList<T>();
       DoAddIdWithChildren(ids, row);
       return ids.ToArray();
     }
 
-    private void DoAddIdWithChildren(SingleScopeList<Int32> ids, DataRow row)
+    private void DoAddIdWithChildren(SingleScopeList<T> ids, DataRow row)
     {
       if (row != null)
       {
-        Int32 id = DataTools.GetInt(row, IdColumnName);
+        T id = (T)(row[IdColumnName]);
         if (ids.Contains(id))
           return; // Ошибка - дерево зациклено
         ids.Add(id);

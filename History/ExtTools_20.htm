@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-02-20T17:41:14.796000000"/>
+	<meta name="changed" content="2022-02-20T20:10:50.748000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -481,12 +482,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -527,22 +528,25 @@
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
 			</span><span lang="en-US">DataTools.FormatDataValue() (<a href="ExtTools_11.htm#v001p1">v.1
-			</a></span><a href="ExtTools_11.htm#v001p1"><span lang="ru-RU">п.1</a>)</span></p>
-			<p lang="en-US"><a name="v311p2"></a>2. <span lang="ru-RU">Изменения
-			в модели деревьев </span>(<a href="ExtTools_11.htm#v050p5">v.50
-			<span lang="ru-RU">п.5</span></a><span lang="ru-RU">, <a href="ExtTools_11.htm#v050p6">6</a></span>)<span lang="ru-RU">:</span></p>
+			</a></span><span lang="ru-RU"><a href="ExtTools_11.htm#v001p1">п.1</a>)</span></p>
+			<p><a name="v311p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Изменения
+			в модели деревьев </span><span lang="en-US">(<a href="ExtTools_11.htm#v050p5">v.50
+			</a></span><a href="ExtTools_11.htm#v050p5"><span lang="ru-RU">п.5</a>,
+			<a href="ExtTools_11.htm#v050p6">6</a></span><span lang="en-US">)</span><span lang="ru-RU">:</span></p>
 			<p lang="en-US"><span lang="ru-RU">- Выделен интерфейс
 			</span>IRefreshableTreeModel. <span lang="ru-RU">Реализуется в
 			</span>TreeModelBase<span lang="ru-RU">.</span></p>
 			<p lang="en-US"><span lang="ru-RU">- Интерфейс ITreeModelWithIds
-			переименован в </span>ITreeModelWithInt32Ids<span lang="ru-RU">.
+			</span><span lang="ru-RU">сделан типизированным
+			ITreeModelWithIds</span>&lt;T&gt;, <span lang="ru-RU">чтобы можно
+			было использовать не только идентификаторы типа </span>Int32<span lang="ru-RU">.
 			Добавлен метод GetIdWithChildren()</span></p>
 			<p lang="en-US"><span lang="ru-RU">- </span>DataTableTreeModel
 			<span lang="ru-RU">реализует только интерфейс IDataTableTreeModel,
-			но не ITreeModelWithInt32Ids. Убрано защищенное свойство </span>KeyType.
+			но не ITreeModelWithIds. Убрано защищенное свойство </span>KeyType.
 			<span lang="ru-RU">Используется DataTools.FormatDataValue() для
-			работы со значениями любого типа. </span><span lang="ru-RU">Исправлены
-			методы, работавшие только с числовыми идентификаторами</span></p>
+			работы со значениями любого типа. Исправлены методы, работавшие
+			только с числовыми идентификаторами</span></p>
 			<p lang="en-US"><span lang="ru-RU">- Свойство
 			</span>DataTableTreeModel.<span lang="ru-RU">IsNullDefaultValue. </span>
 			</p>
@@ -550,9 +554,8 @@
 			</span>DataTableTreeModel.Sort <span lang="ru-RU">сделано
 			устанавливаемым. Убрана перегрузка конструктора с аргументом </span>sort.</p>
 			<p lang="en-US"><span lang="ru-RU">- Выделен класс
-			</span>DataTableTreeModelWithInt32Ids</p>
-			<p lang="en-US"><span lang="ru-RU">Метод интерфейса
-			ITreeModelWithIds.</span></p>
+			</span>DataTableTreeModelWithIds&lt;T&gt;, <span lang="ru-RU">реализующий
+			</span>интерфейс ITreeModelWithIds&lt;T&gt;</p>
 		</td>
 	</tr>
 	<tr valign="top">
