@@ -83,6 +83,7 @@
     <Compile Include="Core\Enumertors.cs" />
     <Compile Include="Core\EnvironmentTools.cs" />
     <Compile Include="Core\ErrorMessageList.cs" />
+    <Compile Include="Models\DataTableTreeModel.cs" />
     <Compile Include="Parsing\ExcelFunctions.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Remoting\ExecProc.cs" />
@@ -133,7 +134,7 @@
     <Compile Include="Core\StdConvert.cs" />
     <Compile Include="Text\TextWithRows.cs" />
     <Compile Include="Diagnosics\TimeSpanTracker.cs" />
-    <Compile Include="Models\ITreeModel.cs" />
+    <Compile Include="Models\TreeModelBase.cs" />
     <Compile Include="Collections\TypedCollections.cs" />
     <Compile Include="Win32\WTS.cs" />
     <Compile Include="Calendar\YearMonth.cs" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\DataTools.AggregateFunctions.cs" />
+    <Compile Include="Models\ListTreeModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

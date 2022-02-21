@@ -64,6 +64,7 @@
     <Compile Include="Controls\NumEditBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
     <Compile Include="EFPApp\ApplicationExceptionHandler.cs" />
     <Compile Include="EFPApp\BackgroundPrinting.cs" />
     <Compile Include="Controls\BandPanel.cs">
@@ -406,7 +407,6 @@
     <Compile Include="Controls\TreeViewAdv\Helpers\TextHelper.cs" />
     <Compile Include="Controls\TreeViewAdv\Helpers\AbortableThreadPool.cs" />
     <Compile Include="Drawing\GifDecoder.cs" />
-    <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
     <Compile Include="Controls\TreeViewAdv\NodeControlInfo.cs" />
     <Compile Include="Controls\TreeViewAdv\NodeControls\BaseTextControl.cs">
       <SubType>Component</SubType>
@@ -456,7 +456,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeViewAdv\TreeColumnCollection.cs" />
-    <Compile Include="Controls\TreeViewAdv\TreeListAdapter.cs" />
     <Compile Include="Controls\TreeViewAdv\TreeNodeAdv.cs" />
     <Compile Include="Controls\TreeViewAdv\TreeViewAdv.cs">
       <SubType>Component</SubType>

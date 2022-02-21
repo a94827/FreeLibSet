@@ -10,14 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
-using System.Drawing;
 using FreeLibSet.Models.Tree;
+using System.Windows.Forms;
 #pragma warning disable 1591
 
-namespace FreeLibSet.Controls
+namespace FreeLibSet.Models.Tree
 {
-
   /// <summary>
   /// Provides a simple ready to use implementation of <see cref="ITreeModel"/>. Warning: this class is not optimized 
   /// to work with big amount of data. In this case create you own implementation of <c>ITreeModel</c>, and pay attention

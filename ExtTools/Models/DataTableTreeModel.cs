@@ -1,10 +1,5 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
-//
-// Original TreeViewAdv component from Aga.Controls.dll
-// Copyright (c) 2009, Andrey Gliznetsov (a.gliznetsov@gmail.com)
-// http://www.codeproject.com/Articles/14741/Advanced-TreeView-for-NET
-// http://sourceforge.net/projects/treeviewadv/
 
 using System;
 using System.Collections.Generic;
@@ -17,670 +12,6 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.Models.Tree
 {
-  #region Интерфейс ITreeModel взят из Aga.Controls
-
-  /// <summary>
-  /// Интерфейс модели иерархической структуры для построения деревьев.
-  /// Содержит методы для работы с путем и события, возникающие при изменении стуктуры
-  /// </summary>
-  public interface ITreeModel
-  {
-    #region Методы
-
-    /// <summary>
-    /// Возвращает перечислитель для узлов, являющихся дочерними для заданного родителького узла.
-    /// Если <paramref name="treePath"/>.IsEmpty=true, возвращает список узлов верхнего уровня.
-    /// Перечислимыми объектами являются теги узлов (TreeNodeAdv.Tag), а не объекты TreePath.
-    /// Для получения дочерних объектов TreePath используйте конструктор TreePath, принимающий родительский узел и дочерний Tag.
-    /// </summary>
-    /// <param name="treePath">Путь к родительскому узлу</param>
-    /// <returns>Перечислитель</returns>
-    IEnumerable GetChildren(TreePath treePath);
-
-    /// <summary>
-    /// Возвращает признак, что данный узел дерева является конечным, то есть не может содержать дочерних узлов
-    /// </summary>
-    /// <param name="treePath">Путь к проверяемому узлу</param>
-    /// <returns>true, если узел является "листом"</returns>
-    bool IsLeaf(TreePath treePath);
-
-    #endregion
-
-    #region События
-
-    /// <summary>
-    /// Событие вызывается при изменении узлов
-    /// </summary>
-    event EventHandler<TreeModelEventArgs> NodesChanged;
-
-    /// <summary>
-    /// Событие вызывается при добавлении узлов
-    /// </summary>
-    event EventHandler<TreeModelEventArgs> NodesInserted;
-
-    /// <summary>
-    /// Событие вызывается при удалении узлов
-    /// </summary>
-    event EventHandler<TreeModelEventArgs> NodesRemoved;
-
-    /// <summary>
-    /// Событие вызывается при "глобальном" изменении иерархии, начиная с заданного узла,
-    /// задаваемого свойством TreePathEventArgs.Path. Если задан пустой путь, то дерево изменено полностью.
-    /// </summary>
-    event EventHandler<TreePathEventArgs> StructureChanged;
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Расширение базовой модели дерева методами, позволяющими вызвать события обновления
-  /// </summary>
-  public interface IRefreshableTreeModel : ITreeModel
-  {
-    /// <summary>
-    /// Вызывает событие NodesChanged для заданного узла.
-    /// Дочерние узлы не обновляются.
-    /// </summary>
-    /// <param name="path">Путь к узлу, который требуется обновить. Не может быть пустым</param>
-    void RefreshNode(TreePath path);
-
-    /// <summary>
-    /// Обновление всей структуры. Вызывает событие StructureChanged.
-    /// </summary>
-    void Refresh();
-  }
-
-
-  /// <summary>
-  /// Путь в модели дерева.
-  /// Содержит массив объектов, образующих иерархию.
-  /// Тип объектов определяется моделью.
-  /// Ссылки на саму модель ITreeModel в объекте TreePath нет.
-  /// Является объектом "однократной записи"
-  /// </summary>
-  public class TreePath
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает пустой путь.
-    /// Используйте статическое свойство Empty.
-    /// </summary>
-    public TreePath()
-    {
-      _FullPath = new object[0];
-    }
-
-    /// <summary>
-    /// Создает путь с единственным узлом
-    /// </summary>
-    /// <param name="node">Объект узла. Тип объекта определяется моделью</param>
-    public TreePath(object node)
-    {
-      _FullPath = new object[] { node };
-    }
-
-    /// <summary>
-    /// Создает пусть из массива узлов.
-    /// </summary>
-    /// <param name="path">Объекты узлов. Тип объектов определяется моделью</param>
-    public TreePath(object[] path)
-    {
-      _FullPath = path;
-    }
-
-    /// <summary>
-    /// Создает путь, расширяющий существующий на один уровень
-    /// </summary>
-    /// <param name="parent">Родительский путь</param>
-    /// <param name="node">Добавляемый узел. Тип объектов определяется моделью. Этот узел будет возвращаться свойством LastNode</param>
-    public TreePath(TreePath parent, object node)
-    {
-      _FullPath = new object[parent.FullPath.Length + 1];
-      for (int i = 0; i < _FullPath.Length - 1; i++)
-        _FullPath[i] = parent.FullPath[i];
-      _FullPath[_FullPath.Length - 1] = node;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Возвращает путь в виде массива объектов.
-    /// Тип объектов зависит от модели.
-    /// </summary>
-    public object[] FullPath { get { return _FullPath; } }
-    private readonly object[] _FullPath;
-
-    /// <summary>
-    /// Возвращает первый узел пути (объект верхнего уровня)
-    /// Тип объекта зависит от модели.
-    /// Возвращает null, если путь пустой.
-    /// </summary>
-    public object FirstNode
-    {
-      get
-      {
-        if (_FullPath.Length > 0)
-          return _FullPath[0];
-        else
-          return null;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает последний узел пути (объект нижнего уровня)
-    /// Тип объекта зависит от модели.
-    /// Возвращает null, если путь пустой.
-    /// </summary>
-    public object LastNode
-    {
-      get
-      {
-        if (_FullPath.Length > 0)
-          return _FullPath[_FullPath.Length - 1];
-        else
-          return null;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает путь, содержащий на один уровень меньше, чем текущий.
-    /// Если текущий путь пустой, то также возвращается пустой путь, 
-    /// чтобы не генерировать исключение.
-    /// </summary>
-    public TreePath Parent
-    {
-      // Этого свойства не было в оригинале в TreeViewAdv
-
-      get
-      {
-        if (_FullPath.Length < 2)
-          return Empty;
-        else
-        {
-          object[] a = new object[_FullPath.Length - 1];
-          Array.Copy(_FullPath, a, a.Length);
-          return new TreePath(a);
-        }
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если путь пустой (не содержит объектов)
-    /// </summary>
-    /// <returns>FullPath.Length=0</returns>
-    public bool IsEmpty
-    {
-      get { return (_FullPath.Length == 0); }
-    }
-
-    /// <summary>
-    /// Для отладки
-    /// </summary>
-    /// <returns>Текстовое представление</returns>
-    public override string ToString()
-    {
-      if (IsEmpty)
-        return "Empty";
-      else
-        return "Level=" + _FullPath.Length.ToString() + ", " + LastNode.ToString();
-    }
-
-    #endregion
-
-    #region Статические свойства
-
-    /// <summary>
-    /// Пустой путь.
-    /// </summary>
-    //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-    public static readonly TreePath Empty = new TreePath();
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Аргументы события ITreeModel.StructureChanged.
-  /// Также является базовым классом для TreeModelEventArgs
-  /// </summary>
-  public class TreePathEventArgs : EventArgs
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает объект с пустым путем
-    /// </summary>
-    public TreePathEventArgs()
-    {
-      _Path = new TreePath();
-    }
-
-    /// <summary>
-    /// Создает объект с заданным путем
-    /// </summary>
-    /// <param name="path">Путь</param>
-    public TreePathEventArgs(TreePath path)
-    {
-      if (path == null)
-        throw new ArgumentNullException("path");
-
-      _Path = path;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Путь к узлу дерева.
-    /// Для события ITreeModel.StructureChanged задает узел, дочерние узлы которого полностью изменились.
-    /// Если при этом задан пустой путь, предполагается полное перестроение дерева.
-    /// Для событий NodesChanged, NodesInserted и NodesRemoved задает корневой узел, дочерние узлы
-    /// которого поменялись. Пустой путь означает изменение узлов верхнего уровня
-    /// </summary>
-    public TreePath Path { get { return _Path; } }
-    private TreePath _Path;
-
-    /// <summary>
-    /// Статический экземпляр объекта с пустым TreePath
-    /// </summary>
-    public static readonly new TreePathEventArgs Empty = new TreePathEventArgs();
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Аргумент событий ITreeModel.NodesChanged, NodesInserted и NodesRemoved, 
-  /// генерируемых моделью иерархической структуры, реализующей интерфейс ITreeModel
-  /// </summary>
-  public class TreeModelEventArgs : TreePathEventArgs
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает новый объект без индексов узлов
-    /// </summary>
-    /// <param name="parent">Path to a parent node</param>
-    /// <param name="children">Child nodes</param>
-    public TreeModelEventArgs(TreePath parent, object[] children)
-      : this(parent, null, children)
-    {
-    }
-
-    /// <summary>
-    /// Создает новый объект с индексами узлов
-    /// </summary>
-    /// <param name="parent">Path to a parent node</param>
-    /// <param name="indices">Indices of children in parent nodes collection</param>
-    /// <param name="children">Child nodes</param>
-    public TreeModelEventArgs(TreePath parent, int[] indices, object[] children)
-      : base(parent)
-    {
-      if (children == null)
-        throw new ArgumentNullException("children");
-
-      if (indices != null && indices.Length != children.Length)
-        throw new ArgumentException("indices and children arrays must have the same length");
-
-      _Indices = indices;
-      _Children = children;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Объекты дочерних узлов.
-    /// Тип объектов зависит от модели.
-    /// Дочерние узлы задаются относительно родительского узла, задаваемого свойством TreePathEventArgs.Path
-    /// </summary>
-    public object[] Children { get { return _Children; } }
-    private object[] _Children;
-
-    /// <summary>
-    /// Индексы дочерних узлов в дереве.
-    /// Массив соответствует свойству Children.
-    /// Может быть null, если индексы узлов не определены.
-    /// </summary>
-    public int[] Indices { get { return _Indices; } }
-    private int[] _Indices;
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Абстрактный класс, реализующий интерфейс ITreeModel
-  /// </summary>
-  public abstract class TreeModelBase : IRefreshableTreeModel
-  {
-    #region Методы
-
-    /// <summary>
-    /// Возвращает перечислитель для узлов, являющихся дочерними для заданного родителького узла.
-    /// Если treePath.IsEmpty=true, возвращает список узлов верхнего уровня
-    /// </summary>
-    /// <param name="treePath">Путь к родительскому узлу</param>
-    /// <returns>Перечислитель</returns>
-    public abstract System.Collections.IEnumerable GetChildren(TreePath treePath);
-
-    /// <summary>
-    /// Возвращает признак, что данный узел дерева является конечным, то есть не может содержать дочерних узлов
-    /// </summary>
-    /// <param name="treePath">Путь к проверяемому узлу</param>
-    /// <returns>true, если узел является "листом"</returns>
-    public abstract bool IsLeaf(TreePath treePath);
-
-    #endregion
-
-    #region События
-
-    /// <summary>
-    /// Событие вызывается при изменении узлов
-    /// </summary>
-    public event EventHandler<TreeModelEventArgs> NodesChanged;
-
-    /// <summary>
-    /// Вызов обработчика события NodesChanged
-    /// </summary>
-    /// <param name="args">Аргументы, передаваемыме обработчику</param>
-    protected void OnNodesChanged(TreeModelEventArgs args)
-    {
-      if (NodesChanged != null)
-        NodesChanged(this, args);
-    }
-
-    /// <summary>
-    /// Событие вызывается при "глобальном" изменении дерева, начиная с узла TreePathEventArgs.Path
-    /// </summary>
-    public event EventHandler<TreePathEventArgs> StructureChanged;
-
-    /// <summary>
-    /// Вызов обработчика события StructureChanged
-    /// </summary>
-    /// <param name="args">Аргументы, передаваемыме обработчику</param>
-    protected void OnStructureChanged(TreePathEventArgs args)
-    {
-      if (StructureChanged != null)
-        StructureChanged(this, args);
-    }
-
-    /// <summary>
-    /// Событие вызывается при добавлении узлов
-    /// </summary>
-    public event EventHandler<TreeModelEventArgs> NodesInserted;
-
-    /// <summary>
-    /// Вызов обработчика события NodesInserted
-    /// </summary>
-    /// <param name="args">Аргументы, передаваемыме обработчику</param>
-    protected void OnNodesInserted(TreeModelEventArgs args)
-    {
-      if (NodesInserted != null)
-        NodesInserted(this, args);
-    }
-
-    /// <summary>
-    /// Событие вызывается при удалении узлов
-    /// </summary>
-    public event EventHandler<TreeModelEventArgs> NodesRemoved;
-
-    /// <summary>
-    /// Вызов обработчика события NodesRemoved
-    /// </summary>
-    /// <param name="args">Аргументы, передаваемыме обработчику</param>
-    protected void OnNodesRemoved(TreeModelEventArgs args)
-    {
-      if (NodesRemoved != null)
-        NodesRemoved(this, args);
-    }
-
-    /// <summary>
-    /// Полное обновление модели
-    /// </summary>
-    public virtual void Refresh()
-    {
-      OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
-    }
-
-    /// <summary>
-    /// Вызывает событие NodesChanged для заданного узла.
-    /// Дочерние узлы не обновляются.
-    /// </summary>
-    /// <param name="path">Путь к узлу, который требуется обновить. Не может быть пустым</param>
-    public void RefreshNode(TreePath path)
-    {
-      if (path == null)
-        throw new ArgumentNullException("path");
-      if (path.IsEmpty)
-        throw new ArgumentException("Узел должен быть задан", "path");
-      TreeModelEventArgs args = new TreeModelEventArgs(path.Parent, new object[] { path.LastNode });
-      OnNodesChanged(args);
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Простейшая модель "дерева", содержащая узлы только одного уровня.
-  /// Узлы задаются списком IList.
-  /// Содержит методы для добавления, удаления и изменения узлов
-  /// </summary>
-  public class ListModel : TreeModelBase
-  {
-    #region Конструторы
-
-    /// <summary>
-    /// Создает модель, первоначально не содержащую ни одного узла
-    /// </summary>
-    public ListModel()
-    {
-      _list = new List<object>();
-    }
-
-    /// <summary>
-    /// Создает модель с заданным списком узлов.
-    /// Передаваемый список <paramref name="list"/> является "рабочим".
-    /// Методы изменения узлов в ListModel будут вносить изменения в этот список.
-    /// </summary>
-    /// <param name="list">Список</param>
-    public ListModel(IList list)
-    {
-      _list = list;
-    }
-    private IList _list;
-
-    #endregion
-
-    #region Методы ITreeModel
-
-    /// <summary>
-    /// Возвращает рабочий список в качестве перечислителя
-    /// </summary>
-    /// <param name="treePath">Игнорируется</param>
-    /// <returns>Список</returns>
-    public override IEnumerable GetChildren(TreePath treePath)
-    {
-      return _list;
-    }
-
-    /// <summary>
-    /// Возвращает true, так как "дерево" не содержит узлов, кроме верхнего уровня.
-    /// </summary>
-    /// <param name="treePath">Игнорируется</param>
-    /// <returns>true</returns>
-    public override bool IsLeaf(TreePath treePath)
-    {
-      return true;
-    }
-
-    #endregion
-
-    #region Методы ICollection
-
-    /// <summary>
-    /// Возвращает число узлов в списке
-    /// </summary>
-    public int Count
-    {
-      get { return _list.Count; }
-    }
-
-    /// <summary>
-    /// Добавляет несколько узлов в конец списка
-    /// </summary>
-    /// <param name="items">Добавляемые узлы</param>
-    public void AddRange(IEnumerable items)
-    {
-      foreach (object obj in items)
-        _list.Add(obj);
-      OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
-    }
-
-    /// <summary>
-    /// Возвращает один узел в конец списка
-    /// </summary>
-    /// <param name="item">Добавляемый узел</param>
-    public void Add(object item)
-    {
-      _list.Add(item);
-      OnNodesInserted(new TreeModelEventArgs(TreePath.Empty, new int[] { _list.Count - 1 }, new object[] { item }));
-    }
-
-    /// <summary>
-    /// Очищает список
-    /// </summary>
-    public void Clear()
-    {
-      _list.Clear();
-      OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Добавление сортировки узлов дерева в пределах уровня иерархии для произвольной модели.
-  /// Определяет метод GetChildren(), остальные вызовы переадресуются базовой модели.
-  /// </summary>
-  public class SortedTreeModel : TreeModelBase
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает модель
-    /// </summary>
-    /// <param name="innerModel">Базовая модель, которой переадресуются все вызовы</param>
-    public SortedTreeModel(ITreeModel innerModel)
-    {
-      _InnerModel = innerModel;
-      _InnerModel.NodesChanged += new EventHandler<TreeModelEventArgs>(InnerModel_NodesChanged);
-      _InnerModel.NodesInserted += new EventHandler<TreeModelEventArgs>(InnerModel_NodesInserted);
-      _InnerModel.NodesRemoved += new EventHandler<TreeModelEventArgs>(InnerModel_NodesRemoved);
-      _InnerModel.StructureChanged += new EventHandler<TreePathEventArgs>(InnerModel_StructureChanged);
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Базовая модель, которой переадресуются все вызовы.
-    /// Задается в конструкторе.
-    /// </summary>
-    public ITreeModel InnerModel { get { return _InnerModel; } }
-    private ITreeModel _InnerModel;
-
-    /// <summary>
-    /// Интерфейс сортировки узлов.
-    /// Пока не задан (по умолчанию), узлы не сортируются и возвращаются в том порядке,
-    /// в котором определены в базовой модели.
-    /// Свойство должно быть установлено, иначе использование класса SortedTreeModel не имеет смысла
-    /// </summary>
-    public IComparer Comparer
-    {
-      get { return _Comparer; }
-      set
-      {
-        _Comparer = value;
-        OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
-      }
-    }
-    private IComparer _Comparer;
-
-    #endregion
-
-    #region Методы ITreeModel
-
-    /// <summary>
-    /// Возвращает перечислимый объект для дочерних узлов.
-    /// Если свойство Comparer установлено, список узлов извлекается из базовой модели и сортируются
-    /// с помощью интерфейса IComparer. Отсортированный список возвращается.
-    /// Если свойство Comparer не установлено, то вызов передается базовой модели для получения перечислимого объекта.
-    /// </summary>
-    /// <param name="treePath">Путь к узлу, для которого извлекаются дочерние узлы</param>
-    /// <returns>Перечислимый объект</returns>
-    public override IEnumerable GetChildren(TreePath treePath)
-    {
-      if (Comparer != null)
-      {
-        ArrayList list = new ArrayList();
-        IEnumerable res = InnerModel.GetChildren(treePath);
-        if (res != null)
-        {
-          foreach (object obj in res)
-            list.Add(obj);
-          list.Sort(Comparer);
-          return list;
-        }
-        else
-          return null;
-      }
-      else
-        return InnerModel.GetChildren(treePath);
-    }
-
-    /// <summary>
-    /// Вызов передается базовой модели.
-    /// </summary>
-    /// <param name="treePath">Путь к узлу</param>
-    /// <returns>true, если узел является "листом" и не содержит дочерних узлов</returns>
-    public override bool IsLeaf(TreePath treePath)
-    {
-      return InnerModel.IsLeaf(treePath);
-    }
-
-    #endregion
-
-    #region Передача событий от базовой модели
-
-    void InnerModel_StructureChanged(object sender, TreePathEventArgs args)
-    {
-      OnStructureChanged(args);
-    }
-
-    void InnerModel_NodesRemoved(object sender, TreeModelEventArgs args)
-    {
-      OnStructureChanged(new TreePathEventArgs(args.Path));
-    }
-
-    void InnerModel_NodesInserted(object sender, TreeModelEventArgs args)
-    {
-      OnStructureChanged(new TreePathEventArgs(args.Path));
-    }
-
-    void InnerModel_NodesChanged(object sender, TreeModelEventArgs args)
-    {
-      OnStructureChanged(new TreePathEventArgs(args.Path));
-    }
-
-    #endregion
-  }
-
-  #endregion
-
   /// <summary>
   /// Расширение интерфейса ITreeModel, связанного с DataTable или DataView.
   /// Объявляет методы для преобразования строки таблицы данных DataRow в TreePath и обратно.
@@ -689,6 +20,8 @@ namespace FreeLibSet.Models.Tree
   /// </summary>
   public interface IDataTableTreeModel : ITreeModel
   {
+    #region Свойства
+
     /// <summary>
     /// Объект DataTable, реализующий модель
     /// </summary>
@@ -699,6 +32,10 @@ namespace FreeLibSet.Models.Tree
     /// Может возвращать null.
     /// </summary>
     DataView DataView { get; }
+
+    #endregion
+
+    #region Методы
 
     /// <summary>
     /// Возвращает строку данных, соответствующую заданному пути
@@ -713,6 +50,8 @@ namespace FreeLibSet.Models.Tree
     /// <param name="row">Строка присоединенной таблицы данных</param>
     /// <returns>Путь в дереве</returns>
     TreePath TreePathFromDataRow(DataRow row);
+
+    #endregion
   }
 
   /// <summary>
@@ -723,6 +62,8 @@ namespace FreeLibSet.Models.Tree
   public interface ITreeModelWithIds<T> : ITreeModel
     where T : IEquatable<T>
   {
+    #region Методы
+
     /// <summary>
     /// Возвращает идентификатор (значение поля IdColumnNames), соответствующее заданному пути
     /// </summary>
@@ -745,7 +86,9 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     /// <param name="id">Идентификатор корневого узла. Если 0, возвращаются все идентификаторы в таблице</param>
     /// <returns>Массив идентификаторов</returns>
-    T[] GetIdWithChildren(T id); 
+    T[] GetIdWithChildren(T id);
+
+    #endregion
   }
 
   /// <summary>
@@ -754,6 +97,9 @@ namespace FreeLibSet.Models.Tree
   /// но это не является обязательным условием). Также имеется ссылочное поле (ParentColumnName), используемое для построения дерева.
   /// Поле IdColumnName может быть числовым, строковым или иметь тип Guid или DateTime, лишь бы для этого поля можно было вычислить выражение с помощью DataTable.Select().
   /// Поле ParentColumnName должно иметь тот же тип, но обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
+  /// В процессе работы могут добавляться, изменяться или удаляться строки. 
+  /// Значение поля IdColumnName не должно меняться.
+  /// Значение поля ParentColumnName может меняться, при этом вызывается событие StructureChanged
   /// 
   /// В текущей реализации в качестве тегов, входящих в TreePath, используются ссылки на строки таблицы DataRow.
   /// </summary>
@@ -807,6 +153,20 @@ namespace FreeLibSet.Models.Tree
       _Table.RowDeleting += new DataRowChangeEventHandler(Table_RowDeleting);
       _Table.Initialized += new EventHandler(Table_Initialized);
       _Table.TableCleared += new DataTableClearEventHandler(Table_TableCleared);
+
+      // Для отслеживания изменений в столбце parentColumnName надо запомнить текущие значения, если в таблице есть измененные строки.
+      // Нельзя будет просто использовать RowVersion.Original, т.к. таблица уже может содержать строки в состоянии Modified на момент вызова конструктора.
+      // А для строк с DataRowState=Added нет исходного значения.
+      // Когда будет вызвано событие RowChanged, уже нельзя будет узнать предыдущее значение
+      foreach (DataRow row in table.Rows)
+      {
+        if (row.RowState != DataRowState.Unchanged)
+        {
+          if (_PrevParentKeys == null)
+            _PrevParentKeys = new Hashtable();
+          _PrevParentKeys[row[IdColumnName]] = row[ParentColumnName];
+        }
+      }
     }
 
     #endregion
@@ -839,8 +199,8 @@ namespace FreeLibSet.Models.Tree
     /// Порядок сортировки строк (в формате аргумента sort метода DataTable.Select()).
     /// По умолчанию узлы дерева одного уровня идут в порядке следования строк в таблице.
     /// </summary>
-    public string Sort 
-    { 
+    public string Sort
+    {
       get { return _Sort; }
       set
       {
@@ -860,7 +220,7 @@ namespace FreeLibSet.Models.Tree
     {
       get { return _IsNullDefaultValue; }
       set
-      { 
+      {
 #if DEBUG
         if (value == null)
           throw new ArgumentNullException();
@@ -950,11 +310,13 @@ namespace FreeLibSet.Models.Tree
     void Table_TableCleared(object sender, DataTableClearEventArgs args)
     {
       base.OnStructureChanged(TreePathEventArgs.Empty);
+      _PrevParentKeys = null;
     }
 
     void Table_Initialized(object sender, EventArgs args)
     {
       base.OnStructureChanged(TreePathEventArgs.Empty);
+      _PrevParentKeys = null;
     }
 
     void Table_RowDeleting(object sender, DataRowChangeEventArgs args)
@@ -964,12 +326,58 @@ namespace FreeLibSet.Models.Tree
       base.OnNodesRemoved(args2);
     }
 
+    /// <summary>
+    /// Для одной и той же строки в процессе редактирования может многократно меняться значение поля ParentColumnName.
+    /// Для первого изменения можно использовать начальное значение поля строки. 
+    /// При повторных изменениях уже нельзя узнать, какое значение было до изменения.
+    /// 
+    /// Коллекция хранит предыдущее значение для строки.
+    /// Ключом является IdColumnName строки (которое не может меняться).
+    /// Значением является предыдущее значение ParentColumnName (может быть DBNull)
+    /// </summary>
+    private Hashtable _PrevParentKeys;
+
     void Table_RowChanged(object sender, DataRowChangeEventArgs args)
     {
       object parentKey = args.Row[ParentColumnName];
       switch (args.Action)
       {
         case DataRowAction.Change:
+          if (_PrevParentKeys == null)
+            _PrevParentKeys = new Hashtable();
+          object prevParentKey = parentKey;
+          if (_PrevParentKeys.ContainsKey(args.Row[IdColumnName]))
+            prevParentKey = _PrevParentKeys[args.Row[IdColumnName]];
+          else
+          {
+            switch (args.Row.RowState)
+            {
+              case DataRowState.Modified:
+                prevParentKey = args.Row[IdColumnName, DataRowVersion.Original];
+                break;
+            }
+          }
+          _PrevParentKeys[args.Row[IdColumnName]] = parentKey; // запоминаем до следующего вызова
+
+          if (!parentKey.Equals(prevParentKey))
+          {
+            if ((prevParentKey is DBNull) || (parentKey is DBNull))
+            {
+              // Если узел пришел или ушел из корня дерева, надо выполнить полное обновление
+              OnStructureChanged(TreePathEventArgs.Empty);
+            }
+            else
+            {
+              // По идее, надо бы определить, не является ли один родительский узел дочерним по отношению к другому
+
+              TreePath treePath1 = TreePathFromKey(parentKey);
+              OnStructureChanged(new TreePathEventArgs(treePath1));
+
+              TreePath treePath2 = TreePathFromKey(prevParentKey);
+              OnStructureChanged(new TreePathEventArgs(treePath2));
+            }
+          }
+
           TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromKey(parentKey), new object[] { args.Row });
           base.OnNodesChanged(args2);
           break;
@@ -1091,8 +499,8 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает идентификатор (значение поля IdColumnNames), соответствующее заданному пути.
-    /// Возвращает DBNuill, если строка в таблице не найдена
-    /// Этот метод можно применять для любых идентификаторов
+    /// Возвращает DBNuill, если строка в таблице не найдена, или <paramref name="path"/>.IsEmpty=true.
+    /// Этот метод можно применять для идентификаторов любых типов.
     /// </summary>
     /// <param name="path">Путь к узлу дерева</param>
     /// <returns>Идентификатор в строке таблицы данных</returns>
@@ -1107,7 +515,7 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает путь в дереве, соответствующий заданному идентификатору
-    /// Этот метод можно применять для любых идентификаторов
+    /// Этот метод можно применять для идентификаторов любых типов.
     /// </summary>
     /// <param name="key">Идентификатор строки</param>
     /// <returns>Путь в дереве</returns>
@@ -1206,10 +614,10 @@ namespace FreeLibSet.Models.Tree
     /// <param name="idColumnName">Имя ключевого столбца, например, "Id"</param>
     /// <param name="parentColumnName">Имя столбца родительского идентификатора, который образует древовидную структуру, например, "ParentId"</param>
     public DataTableTreeModelWithIds(DataTable table, string idColumnName, string parentColumnName)
-      :base(table,idColumnName,parentColumnName)
+      : base(table, idColumnName, parentColumnName)
     {
       if (Table.Columns[idColumnName].DataType != typeof(T))
-        throw new ArgumentException("Столбец идентификатора должен иметь тип "+typeof(T).ToString());
+        throw new ArgumentException("Столбец идентификатора должен иметь тип " + typeof(T).ToString());
     }
 
     #endregion
