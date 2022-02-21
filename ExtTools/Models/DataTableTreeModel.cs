@@ -147,9 +147,8 @@ namespace FreeLibSet.Models.Tree
       _IsNullDefaultValue = DataTools.GetEmptyValue(_Table.Columns[idColumnName].DataType);
 
       // 30.11.2015
-      _Table.TableNewRow += new DataTableNewRowEventHandler(Table_TableNewRow);
       _Table.RowChanged += new DataRowChangeEventHandler(Table_RowChanged);
-      // 09.12.2015 FTable.RowDeleted += new DataRowChangeEventHandler(Table_RowDeleted);
+      // 09.12.2015 _Table.RowDeleted += new DataRowChangeEventHandler(Table_RowDeleted);
       _Table.RowDeleting += new DataRowChangeEventHandler(Table_RowDeleting);
       _Table.Initialized += new EventHandler(Table_Initialized);
       _Table.TableCleared += new DataTableClearEventHandler(Table_TableCleared);
@@ -368,29 +367,24 @@ namespace FreeLibSet.Models.Tree
             }
             else
             {
-              // По идее, надо бы определить, не является ли один родительский узел дочерним по отношению к другому
-
               TreePath treePath1 = TreePathFromKey(parentKey);
-              OnStructureChanged(new TreePathEventArgs(treePath1));
-
               TreePath treePath2 = TreePathFromKey(prevParentKey);
-              OnStructureChanged(new TreePathEventArgs(treePath2));
+              // Можно определить, не является ли один родительский узел дочерним по отношению к другому.
+              // В этом случае достаточно одного обновления, а не двух
+              base.CallStructureChanged(treePath1, treePath2);
             }
           }
 
           TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromKey(parentKey), new object[] { args.Row });
           base.OnNodesChanged(args2);
           break;
+
         case DataRowAction.Add:
           int[] indices = new int[1] { 0 }; // !!!!
           TreeModelEventArgs args3 = new TreeModelEventArgs(TreePathFromKey(parentKey), indices, new object[] { args.Row });
           base.OnNodesInserted(args3);
           break;
       }
-    }
-
-    void Table_TableNewRow(object sender, DataTableNewRowEventArgs args)
-    {
     }
 
     #endregion
@@ -626,7 +620,6 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает идентификатор (значение поля IdColumnName), соответствующее заданному пути.
-    /// Этот метод можно применять только для числовых идентификаторов
     /// </summary>
     /// <param name="path">Путь к узлу дерева</param>
     /// <returns>Идентификатор в строке таблицы данных</returns>
@@ -641,7 +634,6 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает путь в дереве, соответствующий заданному идентификатору
-    /// Этот метод можно применять только для числовых идентификаторов
     /// </summary>
     /// <param name="id">Идентификатор строки</param>
     /// <returns>Путь в дереве</returns>
@@ -671,8 +663,7 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает идентификатор для строки.
-    /// Этот метод можно применять только для числовых идентификаторов.
-    /// Возвращает 0, если <paramref name="row"/>==null.
+    /// Возвращает IsNullDefaultValue, если <paramref name="row"/>==null.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <returns>Идентификатор</returns>
@@ -686,8 +677,7 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает строку для заданного идентификатора.
-    /// Этот метод можно применять только для числовых идентификаторов.
-    /// Возвращает null при <paramref name="id"/>==0 или идентификатор не найден.
+    /// Возвращает null при <paramref name="id"/>==IsNullDefaultValue или если идентификатор не найден.
     /// </summary>
     /// <param name="id">Идентификатор</param>
     /// <returns>Строка в таблице или null</returns>
@@ -718,7 +708,6 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает массив идентификаторов (значений поля IdColumnName) дочерних узлов, для заданного родительского идентификатора нерекурсивно.
-    /// Этот метод можно применять только для числовых идентификаторов.
     /// Порядок идентификаторов в массиве соответствует порядку узлов данного уровня.
     /// Используется метод GetChildRows().
     /// </summary>
@@ -737,7 +726,6 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает массив идентификаторов (значений поля IdColumnName), для заданного родительского идентификатора
     /// и всем его вложенным узлам рекурсивно.
-    /// Этот метод можно применять только для числовых идентификаторов.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
     /// </summary>
     /// <param name="id">Идентификатор корневого узла. Если 0, возвращаются все идентификаторы в таблице</param>
@@ -761,7 +749,6 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает массив идентификаторов (значений поля IdColumnName), соответствующее заданному пути
     /// и всем его вложенным узлам рекурсивно.
-    /// Этот метод можно применять только для числовых идентификаторов.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
     /// </summary>
     /// <param name="path">Путь к узлу дерева. Если путь пустой, возвращаются все идентификаторы в таблице</param>
@@ -777,7 +764,6 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает массив идентификаторов (значений поля IdColumnName), соответствующее заданному пути
     /// и всем его вложенным узлам рекурсивно.
-    /// Этот метод можно применять только для числовых идентификаторов.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
     /// </summary>
     /// <param name="row">Строка в таблице. Если задана пустая строка, возвращаются все идентификаторы</param>

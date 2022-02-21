@@ -1673,7 +1673,6 @@ namespace FreeLibSet.Forms
     /*
     /// <summary>
     /// Получить строку DataRow таблицы, связанную с заданным объектом строки
-    /// Строка, соответстенно, является Unsared
     /// </summary>
     /// <param name="Row">Объект строки</param>
     /// <returns>Строка в таблице данных</returns>
@@ -2012,10 +2011,9 @@ namespace FreeLibSet.Forms
     #region Сохранение / восстановление выбранных строк
 
     /// <summary>
-    /// Режим сохранения выбранных строк свойствами SelectedRowsObject и
-    /// CurrentRowObject.
+    /// Режим сохранения выбранных строк свойствами SelectedNodesObject и CurrentNodeObject.
     /// В отличие от EFPDataGridView, значение свойства определяется исключительно присоединенной моделью.
-    /// Свойство нельзя устанавливать
+    /// Свойство нельзя устанавливать.
     /// </summary>
     public EFPDataTreeViewSelectedNodesMode SelectedNodesMode
     {

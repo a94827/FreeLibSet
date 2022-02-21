@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Models.Tree;
 using System.Data;
+using FreeLibSet.Core;
 
 namespace ExtTools_tests.Models.Tree
 {
@@ -28,7 +29,7 @@ namespace ExtTools_tests.Models.Tree
     [Test]
     public void Constructor_array()
     {
-      TreePath sut = new TreePath(new string[]{"AAA", "BBB", "CCC"});
+      TreePath sut = new TreePath(new string[] { "AAA", "BBB", "CCC" });
 
       Assert.AreEqual(3, sut.FullPath.Length, "FullPath.Length");
       Assert.AreEqual("AAA", sut.FullPath[0], "FullPath[0]");
@@ -38,7 +39,7 @@ namespace ExtTools_tests.Models.Tree
       Assert.AreEqual("AAA", sut.FirstNode, "FirstNode");
       Assert.AreEqual("CCC", sut.LastNode, "LastNode");
       Assert.IsFalse(sut.Parent.IsEmpty, "Parent.IsEmpty");
-      Assert.AreEqual(new string[]{"AAA", "BBB"}, sut.Parent.FullPath, "Parent.FullPath");
+      Assert.AreEqual(new string[] { "AAA", "BBB" }, sut.Parent.FullPath, "Parent.FullPath");
     }
 
     [Test]
@@ -87,7 +88,7 @@ namespace ExtTools_tests.Models.Tree
 
       Assert.AreEqual(wanted, path1.Equals(path2), "TreePath.Equals()");
       Assert.AreEqual(wanted, Object.Equals(path1, path2), "Object.Equals()");
-      Assert.AreEqual(wanted, path1==path2, "operator ==");
+      Assert.AreEqual(wanted, path1 == path2, "operator ==");
       Assert.AreEqual(!wanted, path1 != path2, "operator !=");
     }
 
@@ -100,7 +101,7 @@ namespace ExtTools_tests.Models.Tree
     {
       TreePath path1, path2, path3;
       switch (modelKind)
-      { 
+      {
         case ModelKind.Int32:
           path1 = new TreePath(1);
           path2 = new TreePath(path1, 2);
@@ -108,7 +109,7 @@ namespace ExtTools_tests.Models.Tree
           break;
         case ModelKind.DataRow:
           if (_TestTreePathDataTable == null)
-          { 
+          {
             // Учитываем возможность асинхронного тестирования
             DataTable tbl = new DataTable();
             tbl.Columns.Add("Id", typeof(Int32));
@@ -128,6 +129,40 @@ namespace ExtTools_tests.Models.Tree
       }
 
       return new TreePath[4] { TreePath.Empty, path1, path2, path3 };
+    }
+
+    #endregion
+
+    #region GetCommonPath()
+
+    [TestCase("1,2,3", "1,2,4", "1,2")]
+    [TestCase("1,2,3,2", "1,2,3", "1,2,3")]
+    [TestCase("1,2,3", "1,2,3", "1,2,3")]
+    [TestCase("1,2,3", "2,3", "")]
+    [TestCase("1", "1", "1")]
+    [TestCase("1", "2", "")]
+    [TestCase("1,2,3", "", "")]
+    [TestCase("", "", "")]
+    public void GetCommonPath(string sPath1, string sPath2, string sWanted)
+    {
+      TreePath path1 = CreateTestPath(sPath1);
+      TreePath path2 = CreateTestPath(sPath2);
+      TreePath wanted = CreateTestPath(sWanted);
+
+      TreePath res1 = TreePath.GetCommonPath(path1, path2);
+      Assert.AreEqual(wanted, res1, "#1");
+
+      TreePath res2 = TreePath.GetCommonPath(path2, path1);
+      Assert.AreEqual(wanted, res2, "#2");
+    }
+
+    private static TreePath CreateTestPath(string s)
+    {
+      int[] a1 = StdConvert.ToInt32Array(s);
+      object[] a2 = new object[a1.Length];
+      for (int i = 0; i < a1.Length; i++)
+        a2[i] = a1[i];
+      return new TreePath(a2);
     }
 
     #endregion

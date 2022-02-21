@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-02-21T16:54:30.733000000"/>
+	<meta name="changed" content="2022-02-21T22:52:36.729000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -484,12 +485,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -543,7 +544,13 @@
 			можно было использовать не только идентификаторы типа </span>Int32<span lang="ru-RU">.
 			Добавлен метод GetIdWithChildren()</span></p>
 			<p lang="en-US">- <span lang="ru-RU">Операторы сравнения для
-			</span>TreePath.</p>
+			</span>TreePath. <span lang="ru-RU">Метод GetCommonPath().</span></p>
+			<p lang="en-US"><span lang="ru-RU">-</span><span lang="ru-RU">
+			P</span>rotected-<span lang="ru-RU">метод
+			</span>TreeModelBase.CallStructureChanged()<span lang="ru-RU">,
+			принимающий два пути. Если один путь является частью другого, то
+			</span>OnStructureChanged() <span lang="ru-RU">вызывается один
+			раз, иначе - дважды.</span></p>
 			<p lang="en-US"><span lang="ru-RU">- </span>DataTableTreeModel
 			<span lang="ru-RU">реализует только интерфейс IDataTableTreeModel,
 			но не ITreeModelWithIds. Убрано защищенное свойство </span>KeyType.
@@ -566,8 +573,8 @@
 			<p lang="en-US"><span lang="ru-RU">- Выделен класс
 			</span>DataTableTreeModelWithIds&lt;T&gt;, <span lang="ru-RU">реализующий
 			</span>интерфейс ITreeModelWithIds&lt;T&gt;</p>
-			<p lang="en-US">- <span lang="ru-RU">Класс </span>ListModel<span lang="ru-RU">
-			переименован в </span>ListTreeModel.</p>
+			<p lang="en-US">- <span lang="ru-RU">Класс </span>ListModel
+			<span lang="ru-RU">переименован в </span>ListTreeModel.</p>
 			<p lang="en-US">- <span lang="ru-RU">Новый класс
 			SimpleListTreeModel, взамен класса TreeListAdapter</span>, <span lang="ru-RU">который
 			был в </span>ExtForms.dll</p>

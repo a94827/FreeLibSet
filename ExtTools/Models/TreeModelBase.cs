@@ -98,10 +98,12 @@ namespace FreeLibSet.Models.Tree
 
   /// <summary>
   /// Путь в модели дерева.
-  /// Содержит массив объектов, образующих иерархию.
-  /// Тип объектов определяется моделью.
+  /// Содержит массив объектов (тегов), образующих иерархию.
+  /// Тип объектов определяется моделью. В пределах одного дерева могут быть разнотипные объекты.
+  /// Объекты должны быть сравниваемыми, то есть в пределах одного родительского (или корневого) узла разным дочерним узлам должны соответствовать теги, для которых Object.Equals() возвращает false.
+  /// Это ограничение не распространяется на все узлы дерева: у узлов, относящихся к разным родителям, могут быть одинаковые теги
   /// Ссылки на саму модель ITreeModel в объекте TreePath нет.
-  /// Является объектом "однократной записи"
+  /// Является объектом "однократной записи".
   /// </summary>
   public class TreePath : IEquatable<TreePath>
   {
@@ -313,6 +315,39 @@ namespace FreeLibSet.Models.Tree
         return LastNode.GetHashCode();
     }
 
+    /// <summary>
+    /// Находит часть пути, являющегося общим для обоих путей.
+    /// Если пути не имеют общей части, возвращается TreePath.Empty.
+    /// </summary>
+    /// <param name="a">Первый путь</param>
+    /// <param name="b">Второй путь</param>
+    /// <returns>Общий путь</returns>
+    public static TreePath GetCommonPath(TreePath a, TreePath b)
+    {
+      int n = Math.Min(a.FullPath.Length, b.FullPath.Length);
+      int common = 0;
+      for (int i = 0; i < n; i++)
+      {
+        if (Object.Equals(a.FullPath[i], b.FullPath[i]))
+          common++;
+        else
+          break;
+      }
+      if (common == 0)
+        return Empty;
+
+      // Стараемся избежать создания нового массива
+      if (common == a.FullPath.Length)
+        return a;
+      if (common == b.FullPath.Length)
+        return b;
+
+      // Создаем новый объект
+      object[] path = new object[common];
+      Array.Copy(a.FullPath, path, common);
+      return new TreePath(path);
+    }
+
     #endregion
 
     #region Статические свойства
@@ -445,7 +480,7 @@ namespace FreeLibSet.Models.Tree
   /// </summary>
   public abstract class TreeModelBase : IRefreshableTreeModel
   {
-    #region Методы
+    #region Абстрактные методы
 
     /// <summary>
     /// Возвращает перечислитель для узлов, являющихся дочерними для заданного родителького узла.
@@ -547,6 +582,34 @@ namespace FreeLibSet.Models.Tree
         throw new ArgumentException("Узел должен быть задан", "path");
       TreeModelEventArgs args = new TreeModelEventArgs(path.Parent, new object[] { path.LastNode });
       OnNodesChanged(args);
+    }
+
+    /// <summary>
+    /// Определяет, является ли один из узлов <paramref name="path1"/> и <paramref name="path2"/> частью другого.
+    /// Если да, то вызывается OnStructureChanged() для узла, который ближе к корню.
+    /// Иначе дважды вызывается OnStructureChanged() для обоих узлов.
+    /// Если любой из узлов является пустым, то выполняется полное обновление.
+    /// </summary>
+    /// <param name="path1">Первый путь</param>
+    /// <param name="path2">Второй путь</param>
+    protected void CallStructureChanged(TreePath path1, TreePath path2)
+    {
+      if (path1.IsEmpty || path2.IsEmpty)
+      {
+        OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
+        return;
+      }
+
+      TreePath commonPath = TreePath.GetCommonPath(path1, path2);
+      if (commonPath.FullPath.Length == path1.FullPath.Length)
+        OnStructureChanged(new TreePathEventArgs(path1));
+      else if (commonPath.FullPath.Length == path2.FullPath.Length)
+        OnStructureChanged(new TreePathEventArgs(path2));
+      else
+      {
+        OnStructureChanged(new TreePathEventArgs(path1));
+        OnStructureChanged(new TreePathEventArgs(path2));
+      }
     }
 
     #endregion

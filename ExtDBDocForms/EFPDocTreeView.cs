@@ -387,7 +387,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Игнорируется</returns>
     protected override bool OnEditData(EventArgs args)
     {
-      Int32[] ids = State == EFPDataGridViewState.Delete ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
+      Int32[] ids = (State == EFPDataGridViewState.Delete) ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
       DocTypeUI.PerformEditing(ids, State, Control.FindForm().Modal, ViewHandler);
       return true;
     }
@@ -516,6 +516,9 @@ namespace FreeLibSet.Forms.Docs
 
         DBxColumns filterColumns = Owner.Filters.GetColumnNames();
 
+        object oldSelRows = Owner.SelectedNodesObject;
+        bool hasOurEdited = false;
+
         // 08.07.2016
         // Таблица может не содержать первичного ключа
         DataView dvFind = null;
@@ -591,8 +594,15 @@ namespace FreeLibSet.Forms.Docs
               // В этом случае предыдущее условие "ResRow==null" выполняется для первого просмотра,
               // а второй просмотр не будет добавлять дублирующую строку в таблицу.
               // Но позиционировать на новую строку надо в любом случае, если она видна в просмотре.
-              if (srcRow.RowState == DataRowState.Added)
-                newSelRows.Add(resRow);
+              switch (srcRow.RowState)
+              {
+                case DataRowState.Added:
+                  newSelRows.Add(resRow);
+                  break;
+                case DataRowState.Modified:
+                  hasOurEdited = true;
+                  break;
+              }
             }
             else
             {
@@ -656,6 +666,8 @@ namespace FreeLibSet.Forms.Docs
         }
         if (newSelRows.Count > 0)
           Owner.SelectedDataRows = newSelRows.ToArray();
+        else if (hasOurEdited)
+          Owner.SelectedNodesObject = oldSelRows; // 21.02.2022
       }
 
       /// <summary>

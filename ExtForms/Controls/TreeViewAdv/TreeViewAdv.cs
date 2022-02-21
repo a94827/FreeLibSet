@@ -709,10 +709,14 @@ namespace FreeLibSet.Controls
 
     internal void ReadChilds(TreeNodeAdv parentNode, bool performFullUpdate)
     {
+      // 21.02.2022. Очищать нужно в любом случае
+      // Узел мог раньше содержать дочерние узлы, а после изменения структуры - нет.
+      parentNode.Nodes.Clear(); 
+
       if (!parentNode.IsLeaf)
       {
         parentNode.IsExpandedOnce = true;
-        parentNode.Nodes.Clear();
+        //parentNode.Nodes.Clear();
 
         if (Model != null)
         {

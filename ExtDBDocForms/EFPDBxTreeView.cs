@@ -251,6 +251,9 @@ namespace FreeLibSet.Forms.Docs
       Control.FullRowSelect = false;
       Control.SelectionChanged += new EventHandler(Control_SelectionChanged);
 
+      // Определяется автоматически из модели
+      // SelectedNodesMode = EFPDataTreeViewSelectedNodesMode.PrimaryKey;
+
       _SaveCurrentId = true;
 
       base.InitConfigHandler();
