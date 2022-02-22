@@ -189,7 +189,7 @@ namespace ExtTools_tests.Models.Tree
       DataTable table = CreateTestTableWithStringIds(usePK);
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
 
-      DataRow[] wanted1=new DataRow[1]{table.Rows[0]};
+      DataRow[] wanted1 = new DataRow[1] { table.Rows[0] };
       Assert.AreEqual(wanted1, sut.GetChildRows(null), "null");
 
       DataRow[] wanted2 = new DataRow[2] { table.Rows[1], table.Rows[2] };
@@ -474,6 +474,55 @@ namespace ExtTools_tests.Models.Tree
 
     #endregion
 
+    #region Begin/EndUpdate()
+
+    [Test]
+    public void Begin_EndUpdate()
+    {
+      DataTable table = CreateTestTableWithStringIds(false);
+      DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
+
+      // 1. Переносим узел 2: 1 <- 3 <- 2
+      EventTester tester1 = new EventTester(sut);
+      sut.BeginUpdate(); // #1
+      try
+      {
+        sut.BeginUpdate(); // #2
+        try
+        {
+          table.Rows[1]["F2"] = "3";
+          table.Rows[2]["F3"] = "XXX";
+        }
+        finally
+        {
+          sut.EndUpdate(); // #2
+        }
+
+        Assert.AreEqual(0, tester1.StructureChangedPaths.Count + tester1.NodesChangedPaths.Count, "No events");
+      }
+      finally
+      {
+        sut.EndUpdate(); //#1
+      }
+
+      Assert.AreEqual(1, tester1.StructureChangedPaths.Count, "Single StructureChanged event");
+      Assert.IsTrue(tester1.StructureChangedPaths[0].IsEmpty, "whole tree");
+      Assert.AreEqual(0, tester1.NodesChangedPaths.Count, "No NodesChanged event");
+    }
+
+    [Test]
+    public void Begin_EndUpdate_NoChanges()
+    {
+      DataTable table = CreateTestTableWithStringIds(false);
+      DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
+      EventTester tester1 = new EventTester(sut);
+      sut.BeginUpdate();
+      sut.EndUpdate();
+      Assert.AreEqual(0, tester1.StructureChangedPaths.Count);
+    }
+
+    #endregion
+
     #region Вспомогательные методы
 
     /// <summary>
@@ -506,6 +555,44 @@ namespace ExtTools_tests.Models.Tree
         a[i] = rows[i]["F1"].ToString();
       return String.Join(",", a);
     }
+
+#if XXX
+
+    object test_v1, test_v2;
+    DataRowAction test_act;
+
+    [Test]
+    public void Test1()
+    {
+      DataTable t = new DataTable();
+      t.Columns.Add("F1", typeof(string));
+      t.ColumnChanging += t_ColumnChanging;
+      t.RowChanged += t_RowChanged;
+
+      t.Rows.Add("ABC");
+      Assert.AreEqual("ABC", test_v2);
+      Assert.AreEqual(DataRowAction.Add, test_act);
+
+      test_v1 = null;
+      test_v2 = null;
+      t.Rows[0]["F1"] = "DEF";
+      Assert.AreEqual("ABC", test_v1);
+      Assert.AreEqual("DEF", test_v2);
+      Assert.AreEqual(DataRowAction.Change, test_act);
+    }
+
+    void t_ColumnChanging(object sender, DataColumnChangeEventArgs args)
+    {
+      test_v1 = args.Row["F1"];
+    }
+
+    void t_RowChanged(object sender, DataRowChangeEventArgs args)
+    {
+      test_v2 = args.Row["F1"];
+      test_act = args.Action;
+    }
+
+#endif
 
     #endregion
   }

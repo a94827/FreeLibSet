@@ -280,7 +280,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Идентификаторы выбранных узлов
+    /// Идентификаторы выбранных узлов.
+    /// Вложенные узлы не возвращаются.
     /// </summary>
     public virtual Int32[] SelectedIds
     {
@@ -295,16 +296,8 @@ namespace FreeLibSet.Forms.Docs
         if (model == null)
           return null;
 
-
-        // TODO: Неэффективно
-
-        Int32[] ids = new Int32[Control.SelectedNodes.Count];
-        for (int i = 0; i < ids.Length; i++)
-        {
-          TreePath path = Control.GetPath(Control.SelectedNodes[i]);
-          ids[i] = model.TreePathToId(path);
-        }
-        return ids;
+        DataRow[] rows = SelectedDataRows;
+        return DataTools.GetIdsFromColumn(rows, "Id");
       }
       set
       {
@@ -399,7 +392,7 @@ namespace FreeLibSet.Forms.Docs
       {
         Int32[] ids = SelectedIds;
         ITreeModelWithIds<Int32> model = Control.Model as ITreeModelWithIds<Int32>;
-        if (model == null || ids.Length==0)
+        if (model == null || ids.Length == 0)
           return ids;
 
         IdList idList = new IdList();

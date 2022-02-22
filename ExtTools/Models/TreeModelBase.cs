@@ -105,20 +105,11 @@ namespace FreeLibSet.Models.Tree
   /// Ссылки на саму модель ITreeModel в объекте TreePath нет.
   /// Является объектом "однократной записи".
   /// </summary>
-  public class TreePath : IEquatable<TreePath>
+  public struct TreePath : IEquatable<TreePath>
   {
     // Класс TreePath взят из Aga.Controls (с изменениями)
 
     #region Конструкторы
-
-    /// <summary>
-    /// Создает пустой путь.
-    /// Используйте статическое свойство Empty.
-    /// </summary>
-    public TreePath()
-    {
-      _FullPath = new object[0];
-    }
 
     /// <summary>
     /// Создает путь с единственным узлом
@@ -159,7 +150,16 @@ namespace FreeLibSet.Models.Tree
     /// Возвращает путь в виде массива объектов.
     /// Тип объектов зависит от модели.
     /// </summary>
-    public object[] FullPath { get { return _FullPath; } }
+    public object[] FullPath
+    {
+      get
+      {
+        if (Object.ReferenceEquals(_FullPath, null))
+          return DataTools.EmptyObjects;
+        else
+          return _FullPath;
+      }
+    }
     private readonly object[] _FullPath;
 
     /// <summary>
@@ -171,7 +171,7 @@ namespace FreeLibSet.Models.Tree
     {
       get
       {
-        if (_FullPath.Length > 0)
+        if (!Object.ReferenceEquals(_FullPath, null))
           return _FullPath[0];
         else
           return null;
@@ -187,7 +187,7 @@ namespace FreeLibSet.Models.Tree
     {
       get
       {
-        if (_FullPath.Length > 0)
+        if (!Object.ReferenceEquals(_FullPath, null))
           return _FullPath[_FullPath.Length - 1];
         else
           return null;
@@ -205,12 +205,12 @@ namespace FreeLibSet.Models.Tree
 
       get
       {
-        if (_FullPath.Length < 2)
+        if (FullPath.Length < 2)
           return Empty;
         else
         {
-          object[] a = new object[_FullPath.Length - 1];
-          Array.Copy(_FullPath, a, a.Length);
+          object[] a = new object[FullPath.Length - 1];
+          Array.Copy(FullPath, a, a.Length);
           return new TreePath(a);
         }
       }
@@ -222,7 +222,7 @@ namespace FreeLibSet.Models.Tree
     /// <returns>FullPath.Length=0</returns>
     public bool IsEmpty
     {
-      get { return (_FullPath.Length == 0); }
+      get { return Object.ReferenceEquals(_FullPath, null); }
     }
 
     /// <summary>
@@ -234,7 +234,7 @@ namespace FreeLibSet.Models.Tree
       if (IsEmpty)
         return "Empty";
       else
-        return "Level=" + _FullPath.Length.ToString() + ", " + LastNode.ToString();
+        return "Level=" + FullPath.Length.ToString() + ", " + LastNode.ToString();
     }
 
     #endregion
@@ -254,12 +254,12 @@ namespace FreeLibSet.Models.Tree
       if (Object.ReferenceEquals(other, this))
         return true;
 
-      if (other._FullPath.Length != this._FullPath.Length)
+      if (other.FullPath.Length != this.FullPath.Length)
         return false;
 
-      for (int i = 0; i < this._FullPath.Length; i++)
+      for (int i = 0; i < this.FullPath.Length; i++)
       {
-        if (!Object.Equals(this._FullPath[i], other._FullPath[i]))
+        if (!Object.Equals(this.FullPath[i], other.FullPath[i]))
           return false;
       }
 
@@ -269,12 +269,14 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Сравнение с другим путем
     /// </summary>
-    /// <param name="other">Второй путь</param>
+    /// <param name="obj">Второй путь</param>
     /// <returns>Результат сравнения</returns>
     public override bool Equals(object obj)
     {
-      TreePath other = obj as TreePath;
-      return Equals(other);
+      if (obj is TreePath)
+        return Equals((TreePath)obj);
+      else
+        return false;
     }
 
     /// <summary>
@@ -385,9 +387,6 @@ namespace FreeLibSet.Models.Tree
     /// <param name="path">Путь</param>
     public TreePathEventArgs(TreePath path)
     {
-      if (path == null)
-        throw new ArgumentNullException("path");
-
       _Path = path;
     }
 
@@ -576,8 +575,6 @@ namespace FreeLibSet.Models.Tree
     /// <param name="path">Путь к узлу, который требуется обновить. Не может быть пустым</param>
     public void RefreshNode(TreePath path)
     {
-      if (path == null)
-        throw new ArgumentNullException("path");
       if (path.IsEmpty)
         throw new ArgumentException("Узел должен быть задан", "path");
       TreeModelEventArgs args = new TreeModelEventArgs(path.Parent, new object[] { path.LastNode });

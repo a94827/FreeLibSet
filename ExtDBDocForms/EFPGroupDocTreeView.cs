@@ -130,9 +130,9 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.BeginWait("ќбновление данных", "Refresh");
       try
       {
-        DBxDocTreeModel Model = new DBxDocTreeModel(DocTypeUI.UI.DocProvider, DocTypeUI.DocType, UsedColumnNames);
-        AddRootNode(Model);
-        Control.Model = Model;
+        DBxDocTreeModel model = new DBxDocTreeModel(DocTypeUI.UI.DocProvider, DocTypeUI.DocType, UsedColumnNames);
+        AddRootNode(model);
+        Control.Model = model;
 
         base.CallRefreshDataEventHandler(args);
       }
@@ -150,12 +150,12 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>»м€ изображени€</returns>
     public override string GetNodeImageKey(TreeNodeAdv node)
     {
-      DataRow Row = node.Tag as DataRow;
-      if (Row == null)
+      DataRow row = node.Tag as DataRow;
+      if (row == null)
         return base.GetNodeImageKey(node);
 
-      Int32 DocId = DataTools.GetInt(Row, "Id");
-      if (DocId == RootNodeDocId)
+      Int32 docId = DataTools.GetInt(row, "Id");
+      if (docId == RootNodeDocId)
         return RootNodeImageKey;
       else if (node.IsLeaf)
         return node.IsSelected ? "TreeViewOpenFolder" : "TreeViewClosedFolder";
@@ -179,8 +179,8 @@ namespace FreeLibSet.Forms.Docs
       {
         if (FirstTextControl != null)
           _RootNodeDataRow[FirstTextControl.DataPropertyName] = this.RootNodeTextValue;
-        DBxDocTreeModel Model = (DBxDocTreeModel)(Control.Model);
-        Model.RefreshNode(Model.TreePathFromDataRow(_RootNodeDataRow));
+        DBxDocTreeModel model = (DBxDocTreeModel)(Control.Model);
+        model.RefreshNode(model.TreePathFromDataRow(_RootNodeDataRow));
       }
     }
 
@@ -221,8 +221,8 @@ namespace FreeLibSet.Forms.Docs
         {
           if (FirstTextControl != null)
             _RootNodeDataRow[FirstTextControl.DataPropertyName] = this.RootNodeTextValue;
-          DBxDocTreeModel Model = (DBxDocTreeModel)(Control.Model);
-          Model.RefreshNode(Model.TreePathFromDataRow(_RootNodeDataRow));
+          DBxDocTreeModel model = (DBxDocTreeModel)(Control.Model);
+          model.RefreshNode(model.TreePathFromDataRow(_RootNodeDataRow));
         }
 
         Control.Invalidate();
@@ -280,21 +280,32 @@ namespace FreeLibSet.Forms.Docs
 
     private void AddRootNode(DBxDocTreeModel model)
     {
-      foreach (DataRow Row in model.Table.Rows)
+      model.BeginUpdate();
+      try
       {
-        if (DataTools.GetInt(Row, model.ParentColumnName) == 0)
-          Row[model.ParentColumnName] = RootNodeDocId;
+        // 22.02.2022
+        // —начала нужно добавить корневой узел, а потом уже делать ссылки на него
+        _RootNodeDataRow = model.Table.NewRow();
+        _RootNodeDataRow["Id"] = RootNodeDocId;
+        BaseTextControl tc = base.FirstTextControl;
+        if (tc != null)
+          _RootNodeDataRow[tc.DataPropertyName] = RootNodeTextValue;
+        model.Table.Rows.Add(_RootNodeDataRow);
+
+
+        foreach (DataRow row in model.Table.Rows)
+        {
+          if (!Object.ReferenceEquals(row, _RootNodeDataRow))
+          {
+            if (DataTools.GetInt(row, model.ParentColumnName) == 0)
+              row[model.ParentColumnName] = RootNodeDocId;
+          }
+        }
       }
-
-      _RootNodeDataRow = model.Table.NewRow();
-      _RootNodeDataRow["Id"] = RootNodeDocId;
-
-      BaseTextControl tc = base.FirstTextControl;
-      if (tc != null)
+      finally
       {
-        _RootNodeDataRow[tc.DataPropertyName] = RootNodeTextValue;
+        model.EndUpdate();
       }
-      model.Table.Rows.Add(_RootNodeDataRow);
     }
 
     /// <summary>
@@ -336,8 +347,8 @@ namespace FreeLibSet.Forms.Docs
         _RootNodeImageKey = value;
         if (_RootNodeDataRow != null)
         {
-          DBxDocTreeModel Model = (DBxDocTreeModel)(Control.Model);
-          Model.RefreshNode(Model.TreePathFromDataRow(_RootNodeDataRow));
+          DBxDocTreeModel model = (DBxDocTreeModel)(Control.Model);
+          model.RefreshNode(model.TreePathFromDataRow(_RootNodeDataRow));
         }
       }
     }
@@ -366,7 +377,7 @@ namespace FreeLibSet.Forms.Docs
       #endregion
 
       /// <summary>
-      /// «аполнение строки DataRow <paramref name="resRow"/>, используемой моделью ирархического просмотра.
+      /// «аполнение строки DataRow <paramref name="resRow"/>, используемой моделью иерархического просмотра.
       /// ƒл€ групп верхнего уровн€ замен€ет значение пол€ "ParentId" фиктивным значением.
       /// </summary>
       /// <param name="srcRow">—трока в обновленном наборе данных</param>

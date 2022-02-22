@@ -517,7 +517,7 @@ namespace FreeLibSet.Forms.Docs
         DBxColumns filterColumns = Owner.Filters.GetColumnNames();
 
         object oldSelRows = Owner.SelectedNodesObject;
-        bool hasOurEdited = false;
+        bool hasOurEdited = false; // 22.02.2022
 
         // 08.07.2016
         // Таблица может не содержать первичного ключа
@@ -578,14 +578,12 @@ namespace FreeLibSet.Forms.Docs
               if (resRow == null)
               {
                 resRow = Owner.SourceAsDataTable.NewRow();
-                DataTools.CopyRowValues(srcRow, resRow, true);
-                UpdateRefValues(srcRow, resRow);
+                CopyRowValues(srcRow, resRow);
                 Owner.SourceAsDataTable.Rows.Add(resRow);
               }
               else
               {
-                DataTools.CopyRowValues(srcRow, resRow, true);
-                UpdateRefValues(srcRow, resRow);
+                CopyRowValues(srcRow, resRow);
                 Owner.InvalidateDataRow(resRow); // не Update
               }
 
@@ -671,7 +669,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Заполнение строки DataRow <paramref name="resRow"/>, используемой моделью ирархического просмотра.
+      /// Заполнение строки DataRow <paramref name="resRow"/>, используемой моделью иерархического просмотра.
       /// Метод переопределяется в EFPGroupTreeView
       /// </summary>
       /// <param name="srcRow">Строка в обновленном наборе данных</param>
