@@ -166,5 +166,45 @@ namespace ExtTools_tests.Models.Tree
     }
 
     #endregion
+
+    #region IsDescendantOf(), IsAncestorOf()
+
+    [TestCase("1,2,3", "1,2", true)]
+    [TestCase("1,2,3", "1,2,3", false)]
+    [TestCase("1,2,3", "1,2,3,4", false)]
+    [TestCase("1,2,3", "1,3", false)]
+    [TestCase("1,2,3", "1", true)]
+    [TestCase("1,2,3", "", true)]
+    [TestCase("1", "", true)]
+    [TestCase("", "", false)]
+    [TestCase("", "1", false)]
+    public void IsDescendantOf(string sPath1, string sPath2, bool wanted)
+    {
+      TreePath path1 = CreateTestPath(sPath1);
+      TreePath path2 = CreateTestPath(sPath2);
+
+      bool res = path1.IsDescendantOf(path2);
+      Assert.AreEqual(wanted, res);
+    }
+
+    [TestCase("1,2", "1,2,3", true)]
+    [TestCase("1,2", "1,2,3,4", true)]
+    [TestCase("1,2", "1,2", false)]
+    [TestCase("1,2", "1", false)]
+    [TestCase("1,2", "1", false)]
+    [TestCase("1,2", "1", false)]
+    [TestCase("1", "1", false)]
+    [TestCase("", "1", true)]
+    [TestCase("", "", false)]
+    public void IsAncestorOf(string sPath1, string sPath2, bool wanted)
+    {
+      TreePath path1 = CreateTestPath(sPath1);
+      TreePath path2 = CreateTestPath(sPath2);
+
+      bool res = path1.IsAncestorOf(path2);
+      Assert.AreEqual(wanted, res);
+    }
+
+    #endregion
   }
 }

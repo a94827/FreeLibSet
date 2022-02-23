@@ -350,6 +350,46 @@ namespace FreeLibSet.Models.Tree
       return new TreePath(path);
     }
 
+    /// <summary>
+    /// Возвращает true, если текущий путь является потомком заданного.
+    /// Если <paramref name="ansector"/> совпадает с текущим путем, возвращается false.
+    /// Если текущий путь - пустой (IsEmpty=true), возвращается false.
+    /// </summary>
+    /// <param name="ansector">Кандидат в предки</param>
+    /// <returns>True, если текущий объект - потомок</returns>
+    public bool IsDescendantOf(TreePath ansector)
+    {
+      if (this.FullPath.Length <= ansector.FullPath.Length)
+        return false;
+
+      for (int i = 0; i < ansector.FullPath.Length; i++)
+      {
+        if (!Object.Equals(this.FullPath[i], ansector.FullPath[i]))
+          return false;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Возвращает true, если текущий путь является предком заданного.
+    /// Если <paramref name="descendant"/> совпадает с текущим путем, возвращается false.
+    /// Если текущий путь - пустой (IsEmpty=true), возвращается true, если <paramref name="descendant"/>.IsEmpty=false.
+    /// </summary>
+    /// <param name="descendant">Кандидат в потомки</param>
+    /// <returns>True, если текущий объект - предок</returns>
+    public bool IsAncestorOf(TreePath descendant)
+    {
+      if (this.FullPath.Length >= descendant.FullPath.Length)
+        return false;
+
+      for (int i = 0; i < this.FullPath.Length; i++)
+      {
+        if (!Object.Equals(this.FullPath[i], descendant.FullPath[i]))
+          return false;
+      }
+      return true;
+    }
+
     #endregion
 
     #region Статические свойства
