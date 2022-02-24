@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2022-02-22T17:01:13.933000000"/>
+	<meta name="changed" content="2022-02-24T09:48:59.004000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -129,7 +129,7 @@ Forms</span>)</h1>
 			<p align="center">311</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p align="center">17.02.2022-22.02.2022</p>
+			<p align="center">17.02.2022-<span lang="en-US">2</span><span lang="en-US">4</span><span lang="en-US">.02.2022</span></p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. <span lang="ru-RU">Еще раз исправлена установка фокуса ввода
@@ -165,15 +165,26 @@ Forms</span>)</h1>
 			редактирования могла поменяться структура дерева. Аналогично,
 			после выполняется позиционирование после редактирования
 			поддокументов в </span>EFPSubDocTreeView.OnEditData().</p>
-			<p lang="en-US">7. <span lang="ru-RU">Метод EFPDocTreeView,
-			</span>EFPGroupDocTreeView.IntDocumentViewHandler.CopyRowValues()
-			<span lang="ru-RU">никогда не вызывался (</span><a href="ExtDBDocForms_11.htm#v100p6">v.100
-			<span lang="ru-RU">п.6</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">7. </span><span lang="ru-RU">Метод
+			EFPDocTreeView,
+			</span><span lang="en-US">EFPGroupDocTreeView.IntDocumentViewHandler.CopyRowValues()
+			</span><span lang="ru-RU">никогда не вызывался (</span><a href="ExtDBDocForms_11.htm#v100p6"><span lang="en-US">v.100
+			</span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">)</span></p>
 			<p><span lang="en-US">8</span><span lang="ru-RU">. Внутренний
 			метод </span><span lang="en-US">EFPGroupDocTreeView.AddRootNode()
 			</span><span lang="ru-RU">сначала добавляет строку в таблицу, а
 			потом меняет остальные ссылочные поля. Иначе возникает исключение
 			в </span><span lang="en-US">DataTableTreeModel.</span></p>
+			<p><span lang="en-US">9. </span><span lang="ru-RU">Изменения в
+			переходниках </span><span lang="en-US">DocValueControlBase </span><span lang="ru-RU">для
+			использования </span><span lang="en-US">DBxDocValue.ValueArray
+			</span><span lang="ru-RU">вместо </span><span lang="en-US">ComplexValue
+			(<a href="ExtDBDocs_20.htm#v311p11">ExtDBDocs, v.311 </a></span><a href="ExtDBDocs_20.htm#v311p11"><span lang="ru-RU">п.11</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">10. </span><span lang="ru-RU">Метод
+			InitDocEditFormEventArgs</span><span lang="en-US">.</span><span lang="ru-RU">AddRefToParent()</span><span lang="en-US">,
+			</span><span lang="ru-RU">который дополнительно добавляет
+			валидатор к </span><span lang="en-US">EFPDocComboBox </span><span lang="ru-RU">для
+			предотвращения зацикливания дерева документов.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

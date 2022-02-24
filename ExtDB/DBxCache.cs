@@ -126,8 +126,8 @@ namespace FreeLibSet.Data
 
       private bool GetDefaultValue(int columnIndex)
       {
-        DBxColumnStruct Col = _Owner._TableStruct.Columns[columnIndex];
-        return DBxTableCacheInfo.IsIndividualByDefault(Col);
+        DBxColumnStruct col = _Owner._TableStruct.Columns[columnIndex];
+        return DBxTableCacheInfo.IsIndividualByDefault(col);
       }
 
       /// <summary>
@@ -155,10 +155,10 @@ namespace FreeLibSet.Data
 
       private int GetColumnIndex(string columnName)
       {
-        int ColumnIndex = _Owner._TableStruct.Columns.IndexOf(columnName);
-        if (ColumnIndex < 0)
+        int colIndex = _Owner._TableStruct.Columns.IndexOf(columnName);
+        if (colIndex < 0)
           throw new ArgumentException("Поля \"" + columnName + "\" нет в описании структуры таблицы \"" + _Owner._TableStruct.TableName + "\"", "columnName");
-        return ColumnIndex;
+        return colIndex;
       }
 
       #endregion
@@ -487,26 +487,26 @@ namespace FreeLibSet.Data
       {
         lock (_Tables)
         {
-          DBxTableCache Res;
-          if (!_Tables.TryGetValue(tableName, out Res))
+          DBxTableCache res;
+          if (!_Tables.TryGetValue(tableName, out res))
           {
-            DBxTableStruct TableStruct = _Source.StructSource.GetTableStruct(tableName);
-            DBxTableCacheInfo CacheInfo = _Source.GetTableCacheInfo(tableName);
-            if (CacheInfo == null)
-              CacheInfo = new DBxTableCacheInfo(TableStruct);
+            DBxTableStruct ts = _Source.StructSource.GetTableStruct(tableName);
+            DBxTableCacheInfo cacheInfo = _Source.GetTableCacheInfo(tableName);
+            if (cacheInfo == null)
+              cacheInfo = new DBxTableCacheInfo(ts);
             else
-              CacheInfo.TableStruct = TableStruct; // восстановление после сериализации
+              cacheInfo.TableStruct = ts; // восстановление после сериализации
 
             // 25.10.2018
             // Кроме синхронизации потоков еще нужно предохраниться от реентрабельного вызова
             if (!_Tables.ContainsKey(tableName))
             {
-              Res = new DBxTableCache(this, CacheInfo);
-              _Tables.Add(tableName, Res);
+              res = new DBxTableCache(this, cacheInfo);
+              _Tables.Add(tableName, res);
             }
           }
 
-          return Res;
+          return res;
         }
       }
     }
@@ -520,12 +520,12 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     public DBxTableCache GetIfExists(string tableName)
     {
-      DBxTableCache Res;
+      DBxTableCache res;
       lock (_Tables)
       {
-        _Tables.TryGetValue(tableName, out Res);
+        _Tables.TryGetValue(tableName, out res);
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -582,9 +582,9 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(tableName))
         throw new ArgumentNullException("tableName");
 
-      DBxTableCache TC = GetIfExists(tableName);
-      if (TC != null)
-        TC.Clear();
+      DBxTableCache tc = GetIfExists(tableName);
+      if (tc != null)
+        tc.Clear();
     }
 
     /// <summary>
@@ -603,9 +603,9 @@ namespace FreeLibSet.Data
         return;
       }
 
-      DBxTableCache TC = GetIfExists(tableName);
-      if (TC != null)
-        TC.Clear(ids);
+      DBxTableCache tc = GetIfExists(tableName);
+      if (tc != null)
+        tc.Clear(ids);
     }
 
     /// <summary>
@@ -616,9 +616,9 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор</param>
     public void Clear(string tableName, Int32 id)
     {
-      DBxTableCache TC = GetIfExists(tableName);
-      if (TC != null)
-        TC.Clear(id);
+      DBxTableCache tc = GetIfExists(tableName);
+      if (tc != null)
+        tc.Clear(id);
     }
 
     /// <summary>
@@ -629,9 +629,9 @@ namespace FreeLibSet.Data
     /// <param name="ids">Массив идентификаторов</param>
     public void Clear(string tableName, IdList ids)
     {
-      DBxTableCache TC = GetIfExists(tableName);
-      if (TC != null)
-        TC.Clear(ids);
+      DBxTableCache tc = GetIfExists(tableName);
+      if (tc != null)
+        tc.Clear(ids);
     }
 
     /// <summary>
@@ -648,14 +648,14 @@ namespace FreeLibSet.Data
         Clear(); // запрошена полная очистка
       else
       {
-        foreach (KeyValuePair<string, IdList> Pair in clearCacheData)
+        foreach (KeyValuePair<string, IdList> pair in clearCacheData)
         {
-          if (Object.ReferenceEquals(Pair.Value, null))
-            Clear(Pair.Key); // запрошена очистка всей таблицы
+          if (Object.ReferenceEquals(pair.Value, null))
+            Clear(pair.Key); // запрошена очистка всей таблицы
           else
           {
             // Pair.Value содержит не все идентикаторы, а только первые идентификаторы страниц
-            Clear(Pair.Key, Pair.Value);
+            Clear(pair.Key, pair.Value);
           }
         }
       }
@@ -989,15 +989,15 @@ namespace FreeLibSet.Data
 
       _CacheInfo.TableStruct.CheckTablePrimaryKeyInt32();
 
-      DBxColumnList List = new DBxColumnList(_CacheInfo.TableStruct.Columns.Count);
-      _CacheInfo.TableStruct.Columns.GetColumnNames(List);
+      DBxColumnList list = new DBxColumnList(_CacheInfo.TableStruct.Columns.Count);
+      _CacheInfo.TableStruct.Columns.GetColumnNames(list);
       // Убираем поля, буферизуемые в индивидуальном порядке
-      for (int i = List.Count - 1; i >= 0; i--)
+      for (int i = list.Count - 1; i >= 0; i--)
       {
         if (_CacheInfo.IndividualColumnFlags[i])
-          List.RemoveAt(i);
+          list.RemoveAt(i);
       }
-      _ColumnNames = new DBxColumns(List);
+      _ColumnNames = new DBxColumns(list);
 
       byte[] b = Encoding.Unicode.GetBytes(_ColumnNames.AsString);
       _ColumnsMD5 = DataTools.MD5Sum(b);
@@ -1070,8 +1070,8 @@ namespace FreeLibSet.Data
       if (columnName.IndexOf('.') < 0 && CacheInfo.IndividualColumnFlags[columnName])
         return GetIndividualValue(id, columnName);
 
-      DataRow Row = GetRow(id, null); // там выполняются необходимые блокировки
-      return InternalGetValue(Row, id, columnName, null);
+      DataRow row = GetRow(id, null); // там выполняются необходимые блокировки
+      return InternalGetValue(row, id, columnName, null);
     }
 
     /// <summary>
@@ -1094,8 +1094,8 @@ namespace FreeLibSet.Data
       if (id == 0)
         return null;
 
-      DataRow Row = GetRow(id, primaryDS); // там выполняются необходимые блокировки. Вызываем даже для индивидуально буферизуемых полей
-      return InternalGetValue(Row, id, columnName, primaryDS);
+      DataRow row = GetRow(id, primaryDS); // там выполняются необходимые блокировки. Вызываем даже для индивидуально буферизуемых полей
+      return InternalGetValue(row, id, columnName, primaryDS);
     }
 
     private object InternalGetValue(DataRow row, Int32 id, string columnName, DataSet primaryDS)
@@ -1123,22 +1123,22 @@ namespace FreeLibSet.Data
       }
       else
       {
-        string RefColumnName = columnName.Substring(0, p);
+        string refColumnName = columnName.Substring(0, p);
 #if DEBUG
-        if (!row.Table.Columns.Contains(RefColumnName))
-          throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит поля \"" + RefColumnName + "\", или нет прав для просмотра поля", "columnName");
+        if (!row.Table.Columns.Contains(refColumnName))
+          throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит поля \"" + refColumnName + "\", или нет прав для просмотра поля", "columnName");
 #endif
-        Int32 RefId = DataTools.GetInt(row, RefColumnName);
-        if (RefId == 0)
+        Int32 refId = DataTools.GetInt(row, refColumnName);
+        if (refId == 0)
           return null; // пустая ссылка
 
-        string ExtTableName = TableStruct.Columns[RefColumnName].MasterTableName;
-        if (String.IsNullOrEmpty(ExtTableName))
-          throw new ArgumentException("Поле \"" + ExtTableName + "\" таблицы \"" + TableName + "\" не является ссылочным", "columnName");
+        string extTableName = TableStruct.Columns[refColumnName].MasterTableName;
+        if (String.IsNullOrEmpty(extTableName))
+          throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + TableName + "\" не является ссылочным", "columnName");
 
-        string ExtColumnName = columnName.Substring(p + 1);
+        string extColumnName = columnName.Substring(p + 1);
 
-        return Owner[ExtTableName].GetValue(RefId, ExtColumnName, primaryDS);
+        return Owner[extTableName].GetValue(refId, extColumnName, primaryDS);
       }
     }
 
@@ -1178,14 +1178,14 @@ namespace FreeLibSet.Data
       if (p < 0)
         throw new ArgumentException("Поле \"" + refColumnName + "\" не является ссылочным, так как не содержить точки", "refColumnName");
 #endif
-      string ThisColumnName = refColumnName.Substring(0, p);
-      string ExtColumnName = refColumnName.Substring(p + 1);
+      string thisColumnName = refColumnName.Substring(0, p);
+      string extColumnName = refColumnName.Substring(p + 1);
 
-      string ExtTableName = TableStruct.Columns[ThisColumnName].MasterTableName;
-      if (String.IsNullOrEmpty(ExtTableName))
-        throw new ArgumentException("Поле \"" + ExtTableName + "\" таблицы \"" + TableName + "\" не является ссылочным", "refColumnName");
+      string extTableName = TableStruct.Columns[thisColumnName].MasterTableName;
+      if (String.IsNullOrEmpty(extTableName))
+        throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + TableName + "\" не является ссылочным", "refColumnName");
 
-      return Owner[ExtTableName].GetValue(refId, ExtColumnName, primaryDS);
+      return Owner[extTableName].GetValue(refId, extColumnName, primaryDS);
     }
 
     /// <summary>
@@ -1200,9 +1200,9 @@ namespace FreeLibSet.Data
       object[] a = new object[columnNames.Count];
       if (id != 0)
       {
-        DataRow Row = GetRow(id, null); // там выполняются необходимые блокировки
+        DataRow row = GetRow(id, null); // там выполняются необходимые блокировки
         for (int i = 0; i < columnNames.Count; i++)
-          a[i] = InternalGetValue(Row, id, columnNames[i], null);
+          a[i] = InternalGetValue(row, id, columnNames[i], null);
       }
       return a;
     }
@@ -1220,9 +1220,9 @@ namespace FreeLibSet.Data
       object[] a = new object[columnNames.Count];
       if (id != 0)
       {
-        DataRow Row = GetRow(id, primaryDS); // там выполняются необходимые блокировки
+        DataRow row = GetRow(id, primaryDS); // там выполняются необходимые блокировки
         for (int i = 0; i < columnNames.Count; i++)
-          a[i] = InternalGetValue(Row, id, columnNames[i], primaryDS);
+          a[i] = InternalGetValue(row, id, columnNames[i], primaryDS);
       }
       return a;
     }
@@ -1264,9 +1264,9 @@ namespace FreeLibSet.Data
       object[] a = new object[columnNames.Length];
       if (id != 0)
       {
-        DataRow Row = GetRow(id, null); // там выполняются необходимые блокировки
+        DataRow row = GetRow(id, null); // там выполняются необходимые блокировки
         for (int i = 0; i < columnNames.Length; i++)
-          a[i] = InternalGetValue(Row, id, columnNames[i], null);
+          a[i] = InternalGetValue(row, id, columnNames[i], null);
       }
       return a;
     }
@@ -1284,9 +1284,9 @@ namespace FreeLibSet.Data
       object[] a = new object[columnNames.Length];
       if (id != 0)
       {
-        DataRow Row = GetRow(id, primaryDS); // там выполняются необходимые блокировки
+        DataRow row = GetRow(id, primaryDS); // там выполняются необходимые блокировки
         for (int i = 0; i < columnNames.Length; i++)
-          a[i] = InternalGetValue(Row, id, columnNames[i], primaryDS);
+          a[i] = InternalGetValue(row, id, columnNames[i], primaryDS);
       }
       return a;
     }
@@ -1509,15 +1509,15 @@ namespace FreeLibSet.Data
 
       #region Формируем структуру создаваемой таблицы
 
-      DataTable Table = new DataTable();
+      DataTable table = new DataTable();
       for (int i = 0; i < columnNames.Count; i++)
       {
-        DBxColumnStruct ColStr = GetColumnStruct(columnNames[i]); // рекурсивная процедура
-        if (ColStr == null)
+        DBxColumnStruct colStr = GetColumnStruct(columnNames[i]); // рекурсивная процедура
+        if (colStr == null)
           throw new ArgumentException("Неизвестное имя столбца \"" + columnNames[i] + "\"", "columnNames");
-        DataColumn Col = ColStr.CreateDataColumn(columnNames[i]);
-        Col.AllowDBNull = true; // для ссылочных полей может быть не задана ссылка
-        Table.Columns.Add(Col);
+        DataColumn col = colStr.CreateDataColumn(columnNames[i]);
+        col.AllowDBNull = true; // для ссылочных полей может быть не задана ссылка
+        table.Columns.Add(col);
       }
       // Структура определена
 
@@ -1530,20 +1530,20 @@ namespace FreeLibSet.Data
         if (ids[i] == 0)
           throw new ArgumentException("Не задан идентификатор строки в массиве в позиции " + i.ToString(), "ids");
 
-        DataRow SrcRow = GetRow(ids[i], null);
-        DataRow NewRow = Table.NewRow();
+        DataRow srcRow = GetRow(ids[i], null);
+        DataRow newRow = table.NewRow();
         for (int j = 0; j < columnNames.Count; j++)
-          NewRow[j] = InternalGetValue(SrcRow, ids[i], columnNames[j], null);
-        Table.Rows.Add(NewRow);
+          newRow[j] = InternalGetValue(srcRow, ids[i], columnNames[j], null);
+        table.Rows.Add(newRow);
       }
 
       // Table.RemotingFormat = SerializationFormat.Binary; // 16.03.2018
-      Table.RemotingFormat = SerializationTools.GetPreferredRemotingFormat(Table); // 19.01.2021
-      Table.AcceptChanges();
+      table.RemotingFormat = SerializationTools.GetPreferredRemotingFormat(table); // 19.01.2021
+      table.AcceptChanges();
 
       #endregion
 
-      return Table;
+      return table;
     }
 
     /// <summary>
@@ -1563,14 +1563,14 @@ namespace FreeLibSet.Data
       int p = columnName.IndexOf('.');
       if (p >= 0)
       {
-        string ColumnName1 = columnName.Substring(0, p);
-        string ColumnName2 = columnName.Substring(p + 1);
-        DBxColumnStruct ColStr1 = TableStruct.Columns[ColumnName1];
-        if (ColStr1 == null)
+        string columnName1 = columnName.Substring(0, p);
+        string columnName2 = columnName.Substring(p + 1);
+        DBxColumnStruct colStr1 = TableStruct.Columns[columnName1];
+        if (colStr1 == null)
           return null;
-        if (String.IsNullOrEmpty(ColStr1.MasterTableName))
+        if (String.IsNullOrEmpty(colStr1.MasterTableName))
           return null;
-        return Owner[ColStr1.MasterTableName].GetColumnStruct(ColumnName2);
+        return Owner[colStr1.MasterTableName].GetColumnStruct(columnName2);
       }
       else
         return TableStruct.Columns[columnName];
@@ -1623,10 +1623,10 @@ namespace FreeLibSet.Data
       {
         if (primaryDS.Tables.Contains(TableName))
         {
-          DataTable PrimaryTable = primaryDS.Tables[TableName];
-          DataRow PrimaryRow = PrimaryTable.Rows.Find(id);
-          if (PrimaryRow != null)
-            return PrimaryRow;
+          DataTable primaryTable = primaryDS.Tables[TableName];
+          DataRow primaryRow = primaryTable.Rows.Find(id);
+          if (primaryRow != null)
+            return primaryRow;
         }
       }
 
@@ -1639,22 +1639,22 @@ namespace FreeLibSet.Data
       } */
 
       // Получаем страницу
-      Int32 FirstPageId = GetFirstPageId(id);
+      Int32 firstPageId = GetFirstPageId(id);
 
 
-      DBxCacheTablePage Page = DoGetPage(FirstPageId);
+      DBxCacheTablePage page = DoGetPage(firstPageId);
 
-      DataRow Row = Page.Table.Rows.Find(id);
-      if (Row == null)
+      DataRow row = page.Table.Rows.Find(id);
+      if (row == null)
       {
         // Возможно, база данных содержит новые строки, которые не были загружены
         // Сбрасываем буфер данной страницы  и повторяем попытку
-        ClearCachePages(ColumnNames, new Int32[1] { FirstPageId });
+        ClearCachePages(ColumnNames, new Int32[1] { firstPageId });
 
-        Page = DoGetPage(FirstPageId);
+        page = DoGetPage(firstPageId);
 
-        Row = Page.Table.Rows.Find(id);
-        if (Row == null)
+        row = page.Table.Rows.Find(id);
+        if (row == null)
           throw new ArgumentException("Таблица \"" + TableName + "\" не содержит строки с идентификатором Id=" + id.ToString());
       }
 
@@ -1666,7 +1666,7 @@ namespace FreeLibSet.Data
         LastAccessRow = Row;
       }  */
 
-      return Row;
+      return row;
     }
 
     /// <summary>
@@ -1722,7 +1722,6 @@ namespace FreeLibSet.Data
         _PreloadPageIds.Add(pageIds);
       }
     }
-
 
     /// <summary>
     /// Добавляет указанные идентификаторы строк в список для предзагрузки страниц.
@@ -1835,8 +1834,8 @@ namespace FreeLibSet.Data
         throw new ArgumentException("Неправильный firstId=" + firstId.ToString());
 #endif
 
-      string[] SearchPageKeys = new string[4] { _Owner.DBIdentityMD5, TableName, firstId.ToString(), _ColumnsMD5 };
-      DBxCacheTablePage page = Cache.GetItemIfExists<DBxCacheTablePage>(SearchPageKeys, DBxTableCache.Persistance);
+      string[] searchPageKeys = new string[4] { _Owner.DBIdentityMD5, TableName, firstId.ToString(), _ColumnsMD5 };
+      DBxCacheTablePage page = Cache.GetItemIfExists<DBxCacheTablePage>(searchPageKeys, DBxTableCache.Persistance);
 
       if (page == null)
       {
@@ -1859,9 +1858,9 @@ namespace FreeLibSet.Data
 
     private object GetIndividualValue(Int32 id, string columnName)
     {
-      string[] SearchIndValKeys = new string[4] { Owner.DBIdentityMD5, TableName, id.ToString(), columnName };
+      string[] searchIndValKeys = new string[4] { Owner.DBIdentityMD5, TableName, id.ToString(), columnName };
 
-      DBxCacheIndividualValue page = Cache.GetItemIfExists<DBxCacheIndividualValue>(SearchIndValKeys, DBxTableCache.Persistance);
+      DBxCacheIndividualValue page = Cache.GetItemIfExists<DBxCacheIndividualValue>(searchIndValKeys, DBxTableCache.Persistance);
       if (page == null)
       {
         // Требуется запрос
@@ -1905,15 +1904,15 @@ namespace FreeLibSet.Data
       }
 
       // Многократно вызывать Cache.Clear() невыгодно
-      IdList FirstPageIds = new IdList();
+      IdList firstPageIds = new IdList();
       for (int i = 0; i < ids.Length; i++)
       {
-        FirstPageIds.Add(GetFirstPageId(ids[i]));
+        firstPageIds.Add(GetFirstPageId(ids[i]));
         Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, ids[i].ToString() });
       }
 
-      foreach (Int32 FirstPageId in FirstPageIds)
-        Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, FirstPageId.ToString() });
+      foreach (Int32 firstPageId in firstPageIds)
+        Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, firstPageId.ToString() });
     }
 
     /// <summary>
@@ -1925,8 +1924,8 @@ namespace FreeLibSet.Data
       if (id == 0)
         return;
 
-      Int32 FirstPageId = GetFirstPageId(id);
-      Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, FirstPageId.ToString() });
+      Int32 firstPageId = GetFirstPageId(id);
+      Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, firstPageId.ToString() });
       Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, id.ToString() });
     }
 
@@ -1940,15 +1939,15 @@ namespace FreeLibSet.Data
         return;
 
       // Многократно вызывать Cache.Clear() невыгодно
-      IdList FirstPageIds = new IdList();
-      foreach (Int32 Id in ids)
+      IdList firstPageIds = new IdList();
+      foreach (Int32 id in ids)
       {
-        FirstPageIds.Add(GetFirstPageId(Id));
-        Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, Id.ToString() });
+        firstPageIds.Add(GetFirstPageId(id));
+        Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, id.ToString() });
       }
 
-      foreach (Int32 FirstPageId in FirstPageIds)
-        Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, FirstPageId.ToString() });
+      foreach (Int32 firstPageId in firstPageIds)
+        Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, firstPageId.ToString() });
     }
 
     #endregion
@@ -1967,32 +1966,31 @@ namespace FreeLibSet.Data
       if ((firstId % DBxCache.PageRowCount) != 1)
         throw new ArgumentException("Идентификатор должен быть на границе страницы", "firstId");
 
-      DBxCacheTablePage Page = DoGetPage(firstId);
-      DBxColumns OrgColumnNames = DBxColumns.FromColumns(Page.Table.Columns);
-      if (String.Equals(columnNames.AsString, OrgColumnNames.AsString, StringComparison.Ordinal))
+      DBxCacheTablePage page = DoGetPage(firstId);
+      DBxColumns orgColumnNames = DBxColumns.FromColumns(page.Table.Columns);
+      if (String.Equals(columnNames.AsString, orgColumnNames.AsString, StringComparison.Ordinal))
         // Список полей совпадает
-        return Page;
+        return page;
       else
       {
         // Создаем таблицу с меньшим числом полей
-        DataTable Table2 = columnNames.CreateSubTable(Page.Table);
+        DataTable table2 = columnNames.CreateSubTable(page.Table);
         return new DBxCacheTablePage(
-          Page.DBIdentityMD5,
-          Page.TableName,
-          Page.FirstId,
+          page.DBIdentityMD5,
+          page.TableName,
+          page.FirstId,
           DataTools.MD5SumFromString(columnNames.AsString),
-          Table2, Page.PrimaryKeyColumn);
+          table2, page.PrimaryKeyColumn);
       }
     }
-
 
     internal void ClearCachePages(DBxColumns columnNames, Int32[] firstIds)
     {
       // 1. Очищаем собственный кэш
       for (int i = 0; i < firstIds.Length; i++)
       {
-        string[] SearchPageKeys = new string[] { Owner.DBIdentityMD5, TableName, firstIds[i].ToString() };
-        Cache.Clear<DBxCacheTablePage>(SearchPageKeys);
+        string[] searchPageKeys = new string[] { Owner.DBIdentityMD5, TableName, firstIds[i].ToString() };
+        Cache.Clear<DBxCacheTablePage>(searchPageKeys);
       }
 
       // 2. Сбрасываем кэш владельца
@@ -2028,18 +2026,18 @@ namespace FreeLibSet.Data
 
       #region Разбиение на страницы
 
-      Dictionary<Int32, List<DataRow>> RowGroups = new Dictionary<int, List<DataRow>>();
+      Dictionary<Int32, List<DataRow>> rowGroups = new Dictionary<int, List<DataRow>>();
       for (int iRow = 0; iRow < rows.Length; iRow++)
       {
-        Int32 Id = (Int32)(rows[iRow][pId]);
-        Int32 FirstId = GetFirstPageId(Id);
-        List<DataRow> RowList;
-        if (!RowGroups.TryGetValue(FirstId, out RowList))
+        Int32 id = (Int32)(rows[iRow][pId]);
+        Int32 firstId = GetFirstPageId(id);
+        List<DataRow> rowList;
+        if (!rowGroups.TryGetValue(firstId, out rowList))
         {
-          RowList = new List<DataRow>();
-          RowGroups.Add(FirstId, RowList);
+          rowList = new List<DataRow>();
+          rowGroups.Add(firstId, rowList);
         }
-        RowList.Add(rows[iRow]);
+        rowList.Add(rows[iRow]);
       }
 
       #endregion
@@ -2051,22 +2049,22 @@ namespace FreeLibSet.Data
 
       #region Обновление страниц
 
-      foreach (KeyValuePair<Int32, List<DataRow>> PagePair in RowGroups)
+      foreach (KeyValuePair<Int32, List<DataRow>> pagePair in rowGroups)
       {
-        string[] SearchPageKeys = new string[4] { Owner.DBIdentityMD5, TableName, PagePair.Key.ToString(), _ColumnsMD5 };
+        string[] searchPageKeys = new string[4] { Owner.DBIdentityMD5, TableName, pagePair.Key.ToString(), _ColumnsMD5 };
 
-        DBxCacheTablePage Page = Cache.GetItemIfExists<DBxCacheTablePage>(SearchPageKeys, Persistance);
-        if (Page == null)
+        DBxCacheTablePage page = Cache.GetItemIfExists<DBxCacheTablePage>(searchPageKeys, Persistance);
+        if (page == null)
           continue;
 
-        bool PageModified = false;
+        bool pageModified = false;
 
-        for (int iRow = 0; iRow < PagePair.Value.Count; iRow++)
+        for (int iRow = 0; iRow < pagePair.Value.Count; iRow++)
         {
-          DataRow SrcRow = PagePair.Value[iRow];
-          Int32 Id = (Int32)(SrcRow[pId]);
-          DataRow CacheRow = Page.Table.Rows.Find(Id);
-          if (CacheRow == null)
+          DataRow srcRow = pagePair.Value[iRow];
+          Int32 id = (Int32)(srcRow[pId]);
+          DataRow cacheRow = page.Table.Rows.Find(id);
+          if (cacheRow == null)
             continue; // может и не быть еще на странице кэша
 
           #region Создание словаря замены полей при первом обращении
@@ -2076,8 +2074,8 @@ namespace FreeLibSet.Data
             copyColumnIndices = new Dictionary<int, int>();
             for (int iCol = 0; iCol < ColumnNames.Count; iCol++)
             {
-              int pSrc = SrcRow.Table.Columns.IndexOf(ColumnNames[iCol]);
-              int pCache = Page.Table.Columns.IndexOf(ColumnNames[iCol]);
+              int pSrc = srcRow.Table.Columns.IndexOf(ColumnNames[iCol]);
+              int pCache = page.Table.Columns.IndexOf(ColumnNames[iCol]);
               if (pSrc < 0)
                 continue;
 #if DEBUG
@@ -2095,16 +2093,16 @@ namespace FreeLibSet.Data
 
           if (copyColumnIndices.Count > 0)
           {
-            PageModified = true;
+            pageModified = true;
             foreach (KeyValuePair<int, int> ColPair in copyColumnIndices)
-              CacheRow[ColPair.Value] = SrcRow[ColPair.Key];
+              cacheRow[ColPair.Value] = srcRow[ColPair.Key];
           }
         } // цикл по строкам в пределах страницы
 
-        if (PageModified)
+        if (pageModified)
         {
-          Page.Table.AcceptChanges();
-          Cache.SetItem<DBxCacheTablePage>(SearchPageKeys, Persistance, Page);
+          page.Table.AcceptChanges();
+          Cache.SetItem<DBxCacheTablePage>(searchPageKeys, Persistance, page);
         }
 
       } // цикл по страницам
@@ -2117,15 +2115,15 @@ namespace FreeLibSet.Data
 
       for (int iCol = 0; iCol < rows[0].Table.Columns.Count; iCol++)
       {
-        string ColumnName = rows[0].Table.Columns[iCol].ColumnName;
-        if (CacheInfo.IndividualColumnFlags[ColumnName])
+        string columnName = rows[0].Table.Columns[iCol].ColumnName;
+        if (CacheInfo.IndividualColumnFlags[columnName])
         {
           for (int iRow = 0; iRow < rows.Length; iRow++)
           {
-            Int32 Id = (Int32)(rows[iRow][pId]);
-            string[] SearchIndValKeys = new string[4] { Owner.DBIdentityMD5, TableName, Id.ToString(), ColumnName };
+            Int32 id = (Int32)(rows[iRow][pId]);
+            string[] searchIndValKeys = new string[4] { Owner.DBIdentityMD5, TableName, id.ToString(), columnName };
 
-            if (Cache.GetItemIfExists<DBxCacheIndividualValue>(SearchIndValKeys, Persistance) != null)
+            if (Cache.GetItemIfExists<DBxCacheIndividualValue>(searchIndValKeys, Persistance) != null)
             {
               object v = rows[iRow][iCol];
               if (v is DBNull)
@@ -2133,8 +2131,8 @@ namespace FreeLibSet.Data
               else if (v is string)
                 v = ((string)v).TrimEnd();
 
-              Cache.SetItem<DBxCacheIndividualValue>(SearchIndValKeys, Persistance, new DBxCacheIndividualValue(
-                Owner.DBIdentityMD5, TableName, Id, ColumnName,
+              Cache.SetItem<DBxCacheIndividualValue>(searchIndValKeys, Persistance, new DBxCacheIndividualValue(
+                Owner.DBIdentityMD5, TableName, id, columnName,
                 v));
             }
           }
@@ -2142,6 +2140,50 @@ namespace FreeLibSet.Data
       }
 
       #endregion
+    }
+
+    #endregion
+
+    #region Обработка деревьев
+
+    /// <summary>
+    /// Получить цепочку для таблицы, в которой реализовано дерево с использованием ссылочного поля, которое
+    /// ссылается на эту же таблицу. 
+    /// Идентификатор <paramref name="id"/> помещается в конец возвращаемого списка иденитификаторов.
+    /// Если <paramref name="id"/>=0, возвращается пустой массив.
+    /// Если дерево зациклено, то возвращается пустой массив.
+    /// </summary>
+    /// <param name="id">Идентификатор записи</param>
+    /// <param name="parentColumnName">Имя целочисленного ссылочного столбца, на котором построено дерево, например, "ParentId"</param>
+    /// <returns>Цепочки идентификаторов, образующих дерево. Первым элементом массива идет идентификатор корневого узла,
+    /// последним - идентификатор <paramref name="id"/>.</returns>
+    public Int32[] GetTreeChainIds(Int32 id, string parentColumnName)
+    {
+      if (id == 0)
+        return DataTools.EmptyIds;
+
+      Int32 parentId = GetInt(id, parentColumnName);
+      if (parentId == 0)
+        // Упрощенный вариант - нет родительской строки
+        return new Int32[1] { id };
+
+      if (parentId == id)
+        return DataTools.EmptyIds; // зациклилось на первом шаге
+
+      SingleScopeList<Int32> list = new SingleScopeList<Int32>(); // чтобы Contains() быстро работал.
+      list.Add(parentId);
+      list.Add(id); // последний элемент
+      while (true)
+      {
+        parentId = GetInt(parentId, parentColumnName);
+        if (parentId == 0)
+          break;
+        if (list.Contains(parentId))
+          return DataTools.EmptyIds; // дерево зациклилось
+        list.Insert(0, parentId);
+      }
+
+      return list.ToArray();
     }
 
     #endregion
@@ -2999,23 +3041,23 @@ Exception rethrown at [0]:
       {
         // ссылочное поле
 
-        string RefColumnName = name.Substring(0, p1);
-        Int32 RefId;
-        p = ColumnNameIndexer.IndexOf(RefColumnName);
+        string refColumnName = name.Substring(0, p1);
+        Int32 refId;
+        p = ColumnNameIndexer.IndexOf(refColumnName);
         if (p < 0)
         {
           // ссылочного поля тоже нет
-          Int32 Id = DataTools.GetInt(CurrentRow, "Id");
-          if (Id < 0)
+          Int32 id = DataTools.GetInt(CurrentRow, "Id");
+          if (id < 0)
             return null;
-          return tableCache.GetValue(Id, name);
+          return tableCache.GetValue(id, name);
         }
         else
         {
-          RefId = DataTools.GetInt(CurrentRow[p]);
-          if (RefId < 0)
+          refId = DataTools.GetInt(CurrentRow[p]);
+          if (refId < 0)
             return null;
-          return tableCache.GetRefValue(name, RefId);
+          return tableCache.GetRefValue(name, refId);
         }
       }
     }

@@ -252,15 +252,32 @@ namespace FreeLibSet.Data.Docs
       return false;
     }
 
-    object IDBxDocValues.GetComplexValue(int index)
+    object[] IDBxDocValues.GetValueArray(int index)
     {
-      return _Row[index];
+      return new object[1] { _Row[index] };
     }
 
-    void IDBxDocValues.SetComplexValue(int index, object value)
+    void IDBxDocValues.SetValueArray(int index, object[] values)
     {
-      _Row[index] = value;
+      if (values.Length != 1)
+        throw new ArgumentException("values.Length must be 1", "values");
+      _Row[index] = values[0];
     }
+
+    object IDBxDocValues.GetRowValue(int valueIndex, int rowIndex)
+    {
+      if (rowIndex != 0)
+        throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+      return GetValue(valueIndex, DBxDocValuePreferredType.Unknown);
+    }
+
+    void IDBxDocValues.SetRowValue(int valueIndex, int rowIndex, object value)
+    {
+      if (rowIndex != 0)
+        throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+      SetValue(valueIndex, value);
+    }
+
 
     #endregion
 
@@ -671,76 +688,72 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Реализация отката
+    #region Данные для отдельных строк
 
     /// <summary>
-    /// Хранилище данных для отката при наличии серого значения
-    /// Если в поле нет "серого" значения (во всех строках записано одно и то же значение),
-    /// этот объект не используется, а возвращается простое значение поля
-    /// </summary>
-    private class ComplexData : Dictionary<DataRow, object>
-    {
-      #region Конструктор
-
-      public ComplexData(DataTable table, int index)
-        : base(table.Rows.Count)
-      {
-        foreach (DataRow Row in table.Rows)
-          base.Add(Row, Row[index]);
-      }
-
-      #endregion
-
-      #region Восстановление данных
-
-      public void Write(DataTable table, int index)
-      {
-        foreach (DataRow Row in table.Rows)
-        {
-          object Value;
-          if (base.TryGetValue(Row, out Value))
-            Row[index] = Value;
-        }
-      }
-
-      #endregion
-    }
-
-    /// <summary>
-    /// Получение составного значения для последующего восстановления вызовом SetComplexValue()
+    /// Получение массива всех значений
     /// </summary>
     /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
-    /// <returns>Некоторый внутренний объект, не предназначенный для анализа в пользовательском коде</returns>
-    public object GetComplexValue(int index)
+    /// <returns>Массив</returns>
+    public object[] GetValueArray(int index)
     {
-      if (GetGrayed(index))
-        return new ComplexData(_Table, index);
-      else
-        return _BufValues[index];
+      object[] a = new object[Table.Rows.Count];
+      for (int i = 0; i < a.Length; i++)
+        a[i] = Table.Rows[i][index];
+      return a;
     }
 
     /// <summary>
-    /// Восстановление составного значения 
+    /// Присвоение значения для всех строк
     /// </summary>
     /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
-    /// <param name="value">Объект, полученный от GetComplexValue()</param>
-    public void SetComplexValue(int index, object value)
+    /// <param name="values">Массив значений</param>
+    public void SetValueArray(int index, object[] values)
     {
-      // Может быть null
-      //if (Value == null)
-      //  throw new ArgumentNullException("Value");
-
-      if (value is ComplexData)
-      {
-        // Буферизованное значение больше недейсвительно
-        _BufFlags[index] = false;
-        ((ComplexData)value).Write(_Table, index);
-      }
-      else
-      {
-        SetValue(index, value);
-      }
+#if DEBUG
+      if (values == null)
+        throw new ArgumentNullException("values");
+#endif
+      if (values.Length != Table.Rows.Count)
+        throw new ArgumentException("Длина массива должна быть равна " + RowCount.ToString(), "values");
+      for (int i = 0; i < values.Length; i++)
+        Table.Rows[i][index] = values[i];
+      ResetBuffer();
     }
+
+
+    /// <summary>
+    /// Получить значение для одной из строк. Значение не может быть "серым".
+    /// Так как свойство RowCount может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
+    /// </summary>
+    /// <param name="valueIndex">Индекс поля в списке</param>
+    /// <param name="rowIndex">Индекс строки в диапазоне от 0 до RowCount</param>
+    /// <returns></returns>
+    public object GetRowValue(int valueIndex, int rowIndex)
+    { 
+      if (rowIndex<0||rowIndex>=Table.Rows.Count)
+        throw new ArgumentOutOfRangeException("rowIndex");
+
+      object v = Table.Rows[rowIndex][valueIndex];
+      return v; 
+    }
+
+    /// <summary>
+    /// Установить значение для одной из строк.
+    /// Так как свойство RowCount может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
+    /// </summary>
+    /// <param name="valueIndex">Индекс поля в списке</param>
+    /// <param name="rowIndex">Индекс строки в диапазоне от 0 до RowCount</param>
+    /// <param name="value">Значение</param>
+    public void SetRowValue(int valueIndex, int rowIndex, object value)
+    {
+      if (rowIndex < 0 || rowIndex >= Table.Rows.Count)
+        throw new ArgumentOutOfRangeException("rowIndex");
+      if (value == null)
+        value = DBNull.Value;
+      Table.Rows[rowIndex][valueIndex] = value;
+    }
+
 
     #endregion
 

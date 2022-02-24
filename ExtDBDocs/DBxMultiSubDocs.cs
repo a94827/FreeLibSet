@@ -1092,14 +1092,30 @@ namespace FreeLibSet.Data.Docs
         return false;
       }
 
-      public object GetComplexValue(int index)
+      public object[] GetValueArray(int index)
       {
-        return GetValue(index, DBxDocValuePreferredType.Unknown);
+        return new object[1] { GetValue(index, DBxDocValuePreferredType.Unknown) };
       }
 
-      public void SetComplexValue(int index, object value)
+      public void SetValueArray(int index, object[] values)
       {
-        SetValue(index, value);
+        if (values.Length != 1)
+          throw new ArgumentException("values.Length must be 1", "values");
+        SetValue(index, values[0]);
+      }
+
+      public object GetRowValue(int valueIndex, int rowIndex)
+      {
+        if (rowIndex != 0)
+          throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+        return GetValue(valueIndex, DBxDocValuePreferredType.Unknown);
+      }
+
+      public void SetRowValue(int valueIndex, int rowIndex, object value)
+      {
+        if (rowIndex != 0)
+          throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+        SetValue(valueIndex, value);
       }
 
       #endregion

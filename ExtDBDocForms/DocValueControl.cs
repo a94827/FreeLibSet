@@ -406,9 +406,11 @@ namespace FreeLibSet.Forms.Docs
     private TValue _StartValue;
 
     /// <summary>
-    /// Исходное значение в режиме "Grayed"
+    /// Исходное значение в режиме "Grayed".
+    /// Если исходное состостояние Grayed=false, то не используем это поле, чтобы не хранить бесполезный массив одинаковых значений.
+    /// Вместо этого можно использовать поле _StartValue
     /// </summary>
-    private object _StartComplexValue;
+    private object[] _StartValueArray;
 
     /// <summary>
     /// Первоначальное значение признака Grayed
@@ -448,7 +450,8 @@ namespace FreeLibSet.Forms.Docs
       _ChangeInfo.OriginalValue = CurrentValueEx.Value;
       _ChangeInfo.CurrentValue = CurrentValueEx.Value;
 
-      _StartComplexValue = DocValue.ComplexValue;
+      if (DocValue.Grayed)
+        _StartValueArray = DocValue.ValueArray;
       _StartValue = CurrentValueEx.Value;
       _StartGrayed = GrayedEx.Value;
     }
@@ -498,7 +501,12 @@ namespace FreeLibSet.Forms.Docs
       }
 
       if (GrayedEx.Value)
-        _DocValue.ComplexValue = _StartComplexValue;
+      {
+        if (_StartValueArray == null)
+          _DocValue.SetValue(_StartValue);
+        else
+          _DocValue.ValueArray = _StartValueArray;
+      }
       else
         OnValueFromControl();
     }
@@ -627,7 +635,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
     public DocValueControl(DBxDocValue docValue, TControlProvider controlProvider, bool useGrayCheckBox, bool canMultiEdit)
-      : base(docValue, controlProvider, useGrayCheckBox, canMultiEdit)
+      : base(docValue, controlProvider, useGrayCheckBox , canMultiEdit)
     {
     }
 
@@ -763,8 +771,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     private TValue2 _StartValue2;
 
-    private object _StartComplexValue1;
-    private object _StartComplexValue2;
+    private object[] _StartValueArray1;
+    private object[] _StartValueArray2;
 
     /// <summary>
     /// Первоначальное значение признака Grayed
@@ -816,8 +824,10 @@ namespace FreeLibSet.Forms.Docs
       _ChangeInfo.OriginalValue = GetChangeInfoValue(CurrentValue1Ex.Value, CurrentValue2Ex.Value);
       _ChangeInfo.CurrentValue = _ChangeInfo.OriginalValue;
 
-      _StartComplexValue1 = DocValue1.ComplexValue;
-      _StartComplexValue2 = DocValue2.ComplexValue;
+      if (DocValue1.Grayed)
+        _StartValueArray1 = DocValue1.ValueArray;
+      if (DocValue2.Grayed)
+        _StartValueArray2 = DocValue2.ValueArray;
       _StartValue1 = CurrentValue1Ex.Value;
       _StartValue2 = CurrentValue2Ex.Value;
       _StartGrayed = GrayedEx.Value;
@@ -887,8 +897,14 @@ namespace FreeLibSet.Forms.Docs
 
       if (GrayedEx.Value)
       {
-        _DocValue1.ComplexValue = _StartComplexValue1;
-        _DocValue2.ComplexValue = _StartComplexValue2;
+        if (_StartValueArray1 == null)
+          _DocValue1.Value = _StartValue1;
+        else
+          _DocValue1.ValueArray = _StartValueArray1;
+        if (_StartValueArray2 == null)
+          _DocValue2.Value = _StartValue2;
+        else
+          _DocValue2.ValueArray = _StartValueArray2;
       }
       else
         OnValueFromControl();
@@ -1039,7 +1055,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
     public TwoDocValueControl(DBxDocValue docValue1, DBxDocValue docValue2, TControlProvider controlProvider, bool useGrayCheckBox, bool canMultiEdit)
-      : base(docValue1, docValue2, (EFPControlBase)(IEFPControl)controlProvider, useGrayCheckBox, canMultiEdit)
+      : base(docValue1, docValue2, (EFPControlBase)(IEFPControl)controlProvider, useGrayCheckBox , canMultiEdit)
     {
     }
 

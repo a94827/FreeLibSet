@@ -56,7 +56,7 @@ namespace FreeLibSet.Forms.Docs
 
       //Page.HelpContext = "BuxBase.chm::CompanyEdit.htm#Общие";
 
-      GroupDocTypeUI dtui=(GroupDocTypeUI)(args.Editor.DocTypeUI);
+      GroupDocTypeUI dtui = (GroupDocTypeUI)(args.Editor.DocTypeUI);
 
       efpName = new EFPTextBox(Page.BaseProvider, edName);
       efpName.CanBeEmpty = false;
@@ -64,7 +64,7 @@ namespace FreeLibSet.Forms.Docs
 
       EFPDocComboBox efpParent = new EFPDocComboBox(Page.BaseProvider, cbParent, dtui);
       efpParent.CanBeEmpty = true;
-      args.AddRef(efpParent, "ParentId", true);
+      args.AddRefToParent(efpParent, "ParentId", true);
     }
 
     #endregion

@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-02-20T20:25:49.360000000"/>
+	<meta name="changed" content="2022-02-23T21:18:13.940000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -79,7 +79,7 @@
 			<p lang="en-US" align="center">311</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">07.02.2022-20.02.2022</p>
+			<p lang="en-US" align="center">07.02.2022-23.02.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1</span><span lang="ru-RU">. Изменена
@@ -130,15 +130,24 @@
 			</span><span lang="ru-RU">больше не требуется. Если свойство
 			</span><span lang="en-US">MainDBEntry </span><span lang="ru-RU">установлено
 			в явном виде, то оно сохраняется.</span></p>
-			<p lang="en-US">10. <span lang="ru-RU">Классы </span>DBxDocTreeModel,
-			DBxSubDocTreeModel <span lang="ru-RU">наследуются от
-			DataTableTreeModelWithIds&lt;Int32&gt; (</span><a href="ExtTools_20.htm#v311p2">ExtTools,
-			v.311 <span lang="ru-RU">п.2</span></a><span lang="ru-RU">).
-			Порядок сортировки устанавливается как свойство </span>Sort, <span lang="ru-RU">а
-			не параметр конструктора базового класса. Класс
-			FilteredDataTableTreeModel переименован в
-			FilteredDataTableTreeModel</span>WithIds&lt;T&gt;<span lang="ru-RU">
-			и сделан типизированным</span></p>
+			<p><span lang="en-US">10. </span><span lang="ru-RU">Классы
+			</span><span lang="en-US">DBxDocTreeModel, DBxSubDocTreeModel
+			</span><span lang="ru-RU">наследуются от
+			DataTableTreeModelWithIds&lt;Int32&gt; (</span><a href="ExtTools_20.htm#v311p2"><span lang="en-US">ExtTools,
+			v.311 </span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">).
+			Порядок сортировки устанавливается как свойство </span><span lang="en-US">Sort,
+			</span><span lang="ru-RU">а не параметр конструктора базового
+			класса. Класс FilteredDataTableTreeModel переименован в
+			FilteredDataTableTreeModel</span><span lang="en-US">WithIds&lt;T&gt;
+			</span><span lang="ru-RU">и сделан типизированным</span></p>
+			<p lang="en-US"><a name="v311p11"></a>11. <span lang="ru-RU">В
+			интерфейсе </span>IDBxDocValues <span lang="ru-RU">убраны методы
+			</span>GetCompexValue() <span lang="ru-RU">и </span>SetComplexValue<span lang="ru-RU">()</span>.
+			<span lang="ru-RU">Вместо них обеспечивается полноценный доступ к
+			отдельным значениям методами </span>GetValueArray(), GetRowValue()
+			<span lang="ru-RU">и </span>SetRowValue()<span lang="ru-RU">.
+			Свойство </span>DBxDocValue.ComplexValue <span lang="ru-RU">заменено
+			на </span>ValueArray.</p>
 		</td>
 	</tr>
 	<tr valign="top">

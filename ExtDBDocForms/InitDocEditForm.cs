@@ -10,6 +10,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
+using FreeLibSet.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -113,7 +114,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Объект для управления вкладкой.</returns>
     public DocEditPage AddSimplePage<T>(string title, out EFPControlWithToolBar<T> controlWithToolBar)
       where T : Control, new()
-    {         
+    {
       Panel ThePanel = new Panel();
       DocEditPage Page = AddPage(title, ThePanel);
       controlWithToolBar = new EFPControlWithToolBar<T>(Page.BaseProvider, Page.MainControl);
@@ -123,7 +124,7 @@ namespace FreeLibSet.Forms.Docs
     #endregion
 
     #region Отслеживание изменений
-              
+
     /// <summary>
     /// Список с объектами, отслеживающими изменения в элементах, расположенных на текущей вкладке
     /// (свойство IDocEditItem.ChangeInfo)
@@ -565,7 +566,7 @@ namespace FreeLibSet.Forms.Docs
     /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
     public DocValueIntEnumCodeListControl<T> AddIntEnumCode<T>(EFPListControl controlProvider, string columnName, bool canMultiEdit)
-      where T:struct
+      where T : struct
     {
       DocValueIntEnumCodeListControl<T> dvc = new DocValueIntEnumCodeListControl<T>(GetDocValue(columnName), controlProvider, canMultiEdit);
       AddDocEditItem(dvc);
@@ -1175,7 +1176,7 @@ namespace FreeLibSet.Forms.Docs
       { 
       }
 
-      #endregion
+    #endregion
     }
 
     private class GridReportHandler
@@ -1188,7 +1189,7 @@ namespace FreeLibSet.Forms.Docs
 
       private bool FirstFlag;
 
-      #endregion
+    #endregion
 
     #region Обработчики
 
@@ -1212,11 +1213,88 @@ namespace FreeLibSet.Forms.Docs
           Report.RefreshReport();
       }
 
-      #endregion
+    #endregion
     }
 
     #endregion
 
+#endif
+
+    #endregion
+
+    #region Методы привязки полей
+
+#if !XXX
+    private class DocComboBoxParentIdValidator
+    {
+      #region Поля
+
+      /// <summary>
+      /// Используется для извлечения идентификаторов документов
+      /// </summary>
+      public DBxMultiDocs Docs;
+
+      public EFPDocComboBox ControlProvider;
+
+      public string ParentColumnName;
+
+      #endregion
+
+      #region Метод проверки
+
+      public void Validate(object sender, FreeLibSet.UICore.UIValidatingEventArgs args)
+      {
+        if (args.ValidateState == FreeLibSet.UICore.UIValidateState.Error)
+          return;
+
+        Int32[] chain = ControlProvider.DocTypeUI.TableCache.GetTreeChainIds(ControlProvider.DocId, ParentColumnName);
+        if (chain.Length == 0) // либо DocId=0, либо дерево уже зациклено.
+          return;
+
+        IdList chain2 = new IdList(chain); // чтобы быстрее работало
+
+        Int32[] currIds = Docs.DocIds;
+        for (int i = 0; i < currIds.Length; i++)
+        {
+          if (currIds[i] <= 0)
+            continue;
+
+          if (chain2.Contains(currIds[i]))
+          {
+            args.SetError("Зацикливание дерева для документа: " + ControlProvider.DocTypeUI.GetTextValue(currIds[i]));
+            return;
+          }
+        }
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Добавляет связку для редактирования ссылочного поля, которое используется для построения дерева, с помощью комбоблока.
+    /// Вызывает основной метод AddRef() и добавляет к <paramref name="controlProvider"/> валидатор, который не позволяет
+    /// задавать ссылку, которая приведет к зацикливанию дерева.
+    /// Если одновременно редактируется несколько документов, то проверяются все они.
+    /// </summary>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
+    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    public DocValueDocComboBox AddRefToParent(EFPDocComboBox controlProvider, string columnName, bool canMultiEdit)
+    {
+      //DBxColumnStruct cs = this.DocTypeUI.DocType.Struct.Columns[columnName];
+      //if (cs.MasterTableName!=controlProvider.)
+      DocValueDocComboBox dv = AddRef(controlProvider, columnName, canMultiEdit);
+
+      DocComboBoxParentIdValidator validator = new DocComboBoxParentIdValidator();
+      validator.Docs = this.Editor.Documents[controlProvider.DocTypeName];
+      validator.ControlProvider = controlProvider;
+      validator.ParentColumnName = columnName;
+      controlProvider.Validating += validator.Validate;
+
+      return dv;
+    }
 #endif
 
     #endregion

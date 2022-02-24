@@ -351,6 +351,53 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
+    /// Возвращает true, если текущий путь является прямым потомком (дочерним узлом) заданного.
+    /// Если <paramref name="ansector"/> совпадает с текущим путем, возвращается false.
+    /// Если текущий путь - пустой (IsEmpty=true), возвращается false.
+    /// </summary>
+    /// <param name="ansector">Кандидат в предки</param>
+    /// <returns>True, если текущий объект - потомок</returns>
+    public bool IsChildOf(TreePath ansector)
+    {
+      object[] aThis = this.FullPath;
+      object[] aAnsector = ansector.FullPath;
+
+      if (aThis.Length != (aAnsector.Length + 1))
+        return false;
+
+      for (int i = 0; i < aAnsector.Length; i++)
+      {
+        if (!Object.Equals(aThis[i], aAnsector[i]))
+          return false;
+      }
+      return true;
+    }
+
+
+    /// <summary>
+    /// Возвращает true, если текущий путь является прямым предком (родителем) заданного.
+    /// Если <paramref name="descendant"/> совпадает с текущим путем, возвращается false.
+    /// Если текущий путь - пустой (IsEmpty=true), возвращается true, если <paramref name="descendant"/>.IsEmpty=false.
+    /// </summary>
+    /// <param name="descendant">Кандидат в потомки</param>
+    /// <returns>True, если текущий объект - предок</returns>
+    public bool IsParentOf(TreePath descendant)
+    {
+      object[] aThis = this.FullPath;
+      object[] aDescendant = descendant.FullPath;
+
+      if (aThis.Length != (aDescendant.Length - 1))
+        return false;
+
+      for (int i = 0; i < aThis.Length; i++)
+      {
+        if (!Object.Equals(aThis[i], aDescendant[i]))
+          return false;
+      }
+      return true;
+    }
+
+    /// <summary>
     /// Возвращает true, если текущий путь является потомком заданного.
     /// Если <paramref name="ansector"/> совпадает с текущим путем, возвращается false.
     /// Если текущий путь - пустой (IsEmpty=true), возвращается false.
@@ -359,12 +406,15 @@ namespace FreeLibSet.Models.Tree
     /// <returns>True, если текущий объект - потомок</returns>
     public bool IsDescendantOf(TreePath ansector)
     {
-      if (this.FullPath.Length <= ansector.FullPath.Length)
+      object[] aThis = this.FullPath;
+      object[] aAnsector = ansector.FullPath;
+
+      if (aThis.Length <= aAnsector.Length)
         return false;
 
-      for (int i = 0; i < ansector.FullPath.Length; i++)
+      for (int i = 0; i < aAnsector.Length; i++)
       {
-        if (!Object.Equals(this.FullPath[i], ansector.FullPath[i]))
+        if (!Object.Equals(aThis[i], aAnsector[i]))
           return false;
       }
       return true;
@@ -379,12 +429,15 @@ namespace FreeLibSet.Models.Tree
     /// <returns>True, если текущий объект - предок</returns>
     public bool IsAncestorOf(TreePath descendant)
     {
-      if (this.FullPath.Length >= descendant.FullPath.Length)
+      object[] aThis = this.FullPath;
+      object[] aDescendant = descendant.FullPath;
+
+      if (aThis.Length >= aDescendant.Length)
         return false;
 
-      for (int i = 0; i < this.FullPath.Length; i++)
+      for (int i = 0; i < aThis.Length; i++)
       {
-        if (!Object.Equals(this.FullPath[i], descendant.FullPath[i]))
+        if (!Object.Equals(aThis[i], aDescendant[i]))
           return false;
       }
       return true;

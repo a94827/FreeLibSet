@@ -21,7 +21,7 @@ namespace FreeLibSet.Data.Docs
   /// </summary>
   [Serializable]
   public enum DBxDocValuePreferredType
-  { 
+  {
     /// <summary>
     /// Тип не определен
     /// </summary>
@@ -141,75 +141,91 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <param name="preferredType">Предпочитаемый тип значения</param>
     /// <returns>Значение поля</returns>
-    object GetValue(int index, DBxDocValuePreferredType preferredType);
+    object GetValue(int valueIndex, DBxDocValuePreferredType preferredType);
 
     /// <summary>
     /// Записать значение.
-    /// Требуется, чтобы был доступ на запись значения, то есть должно быть IsReadOnly=false и GetValueReadOnly(<paramref name="index"/>)=false.
+    /// Требуется, чтобы был доступ на запись значения, то есть должно быть IsReadOnly=false и GetValueReadOnly(<paramref name="valueIndex"/>)=false.
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <param name="value">Новое значение</param>
-    void SetValue(int index, object value);
+    void SetValue(int valueIndex, object value);
 
     /// <summary>
     /// Проверить, является ли значение пустым
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <returns>True, если значение NULL</returns>
-    bool IsNull(int index);
+    bool IsNull(int valueIndex);
 
     /// <summary>
     /// Может ли поле принимать пустое значение?
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <returns>True, если допускаются значения NULL</returns>
-    bool AllowDBNull(int index);
+    bool AllowDBNull(int valueIndex);
 
     /// <summary>
     /// Узнать максимальную длину для строкового поля
     /// (-1), если длина поля не ограничена (как для DataColumn)
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <returns>Длина</returns>
-    int MaxLength(int index);
+    int MaxLength(int valueIndex);
 
     /// <summary>
     /// Узнать, предназначено ли конкретное поле только для чтения.
     /// Должно возвращать true, если весь набор имеет свойство IsReadOnly=true
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <returns>Доступ только для чтения?</returns>
-    bool GetValueReadOnly(int index);
+    bool GetValueReadOnly(int valueIndex);
 
     /// <summary>
     /// Проверить, является ли значение "серым", то есть редактируется одновременно
     /// несколько строк и значения поля не совпадают.
     /// Если набор данных не поддерживает "серые" значения, возвращается false.
     /// </summary>
-    /// <param name="Index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <returns>Серое значение?</returns>
-    bool GetGrayed(int Index);
+    bool GetGrayed(int valueIndex);
 
     /// <summary>
-    /// Получить значение, пригодное для последующего восстановления с помощью SetComplexValue().
-    /// Если поле содержит "серое" значение, метод должен вернуть коллекцию всех значений.
-    /// Если коллекция поддерживает только одно значение, метод возвращает GetValue()
-    /// Внутренняя структура возвращаемых данных зависит от коллекции
+    /// Получить массив всех значений.
+    /// Длина массива равна RowCount.
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
+    /// <param name="valueIndex">Индекс поля в списке</param>
     /// <returns>Данные в произвольной форме</returns>
-    object GetComplexValue(int index);
+    object[] GetValueArray(int valueIndex);
 
     /// <summary>
-    /// Восстановить значение (откат).
-    /// После выполнения метода значение может стать серым
+    /// Установка всех значений
+    /// После выполнения метода значение может стать "серым".
     /// </summary>
-    /// <param name="index">Индекс поля в списке</param>
-    /// <param name="value">Данные, полученные от GetComplexValue</param>
-    void SetComplexValue(int index, object value);
+    /// <param name="valueIndex">Индекс поля в списке</param>
+    /// <param name="values">Массив значений. Длина массива должна быть равна RowCount</param>
+    void SetValueArray(int valueIndex, object[] values);
+
+    /// <summary>
+    /// Получить значение для одной из строк. Значение не может быть "серым".
+    /// Так как свойство RowCount может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
+    /// </summary>
+    /// <param name="valueIndex">Индекс поля в списке</param>
+    /// <param name="rowIndex">Индекс строки в диапазоне от 0 до RowCount</param>
+    /// <returns></returns>
+    object GetRowValue(int valueIndex, int rowIndex);
+
+    /// <summary>
+    /// Установить значение для одной из строк.
+    /// Так как свойство RowCount может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
+    /// </summary>
+    /// <param name="valueIndex">Индекс поля в списке</param>
+    /// <param name="rowIndex">Индекс строки в диапазоне от 0 до RowCount</param>
+    /// <param name="value">Значение ячейки</param>
+    void SetRowValue(int valueIndex, int rowIndex, object value);
 
     #endregion
   }
@@ -432,19 +448,13 @@ namespace FreeLibSet.Data.Docs
     public string DisplayName { get { return DocValues.GetDisplayName(Index); } }
 
     /// <summary>
-    /// Данные для отката изменений
-    /// Внутренняя структура данных считается неопределенной
+    /// Массив значений для всех строк.
+    /// Длина массива равна RowCount. Для некоторых объектов, реализацующих IDBxDocValues, может возвращаться массив нулевой длины
     /// </summary>
-    public object ComplexValue
+    public object[] ValueArray
     {
-      get
-      {
-        return _DocValues.GetComplexValue(Index);
-      }
-      set
-      {
-        _DocValues.SetComplexValue(Index, value);
-      }
+      get { return _DocValues.GetValueArray(Index); }
+      set { _DocValues.SetValueArray(Index, value); }
     }
 
     #endregion
@@ -742,7 +752,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="value">Значение</param>
     public void SetTimeSpan(TimeSpan value)
     {
-      if (value==TimeSpan.Zero && AllowDBNull)
+      if (value == TimeSpan.Zero && AllowDBNull)
         SetNull();
       else
         SetValue(value);
@@ -773,12 +783,12 @@ namespace FreeLibSet.Data.Docs
 
         StringBuilder sb = new StringBuilder();
 
-        XmlWriterSettings Settings = new XmlWriterSettings();
+        XmlWriterSettings wrtSettings = new XmlWriterSettings();
         //Settings.NewLineChars = Environment.NewLine;
-        Settings.OmitXmlDeclaration = true; // Убираем заголовок с кодировкой
+        wrtSettings.OmitXmlDeclaration = true; // Убираем заголовок с кодировкой
         //Settings.Indent = true;
         //Settings.IndentChars = "  ";
-        using (XmlWriter wrt = XmlWriter.Create(sb, Settings))
+        using (XmlWriter wrt = XmlWriter.Create(sb, wrtSettings))
         {
           value.WriteTo(wrt);
           wrt.Flush();
@@ -787,6 +797,11 @@ namespace FreeLibSet.Data.Docs
         SetString(sb.ToString());
       }
     }
+
+    //public void SetValueArray(object[] values)
+    //{
+    //  _DocValues.SetValueArray(Index, values);
+    //}
 
     #endregion
 
@@ -907,9 +922,9 @@ namespace FreeLibSet.Data.Docs
         SetDBFile(null);
       else
       {
-        byte[] Contents = DataTools.XmlDocumentToByteArray(xmlDoc);
-        FileContainer File = new FileContainer(fileName, Contents);
-        SetDBFile(File);
+        byte[] contents = DataTools.XmlDocumentToByteArray(xmlDoc);
+        FileContainer file = new FileContainer(fileName, contents);
+        SetDBFile(file);
       }
     }
 
@@ -926,11 +941,11 @@ namespace FreeLibSet.Data.Docs
     /// <returns>XML-документ или null</returns>
     public XmlDocument GetBinDataXml()
     {
-      byte[] Data = GetBinData();
-      if (Data == null)
+      byte[] data = GetBinData();
+      if (data == null)
         return null;
       else
-        return DataTools.XmlDocumentFromByteArray(Data);
+        return DataTools.XmlDocumentFromByteArray(data);
     }
 
     /// <summary>
@@ -946,8 +961,8 @@ namespace FreeLibSet.Data.Docs
         SetBinData(null);
       else
       {
-        byte[] Data = DataTools.XmlDocumentToByteArray(xmlDoc);
-        SetBinData(Data);
+        byte[] data = DataTools.XmlDocumentToByteArray(xmlDoc);
+        SetBinData(data);
       }
     }
 
@@ -958,7 +973,9 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Копирование значений из исходного набора <paramref name="src"/> в набор <paramref name="res"/>.
     /// Копирование выполняется по именам полей, а не по индексам. Непарные поля пропускаются.
-    /// Значения с установленным признаком IsReadOnly в конечном наборе пропускаются
+    /// Значения с установленным признаком IsReadOnly в конечном наборе пропускаются.
+    /// Копирование выполняется без обработки "серых" значений. Если в исходном наборе значение "серое",
+    /// то в конечном наборе будет пустое "не-серое" значение. Построчное копирование не используется.
     /// </summary>
     /// <param name="src">Исходный набор</param>
     /// <param name="res">Записываемый набор</param>
@@ -971,11 +988,11 @@ namespace FreeLibSet.Data.Docs
 
       for (int i = 0; i < res.Count; i++)
       {
-        string Name = res.GetName(i);
+        string name = res.GetName(i);
         if (res.GetValueReadOnly(i))
           continue;
 
-        int p = src.IndexOf(Name);
+        int p = src.IndexOf(name);
         if (p < 0)
           continue;
 
@@ -1024,7 +1041,7 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Перечислитель для реализации IDBxDocValues
   /// </summary>
-  public struct DBxDocValueEnumerator : IEnumerator<DBxDocValue> 
+  public struct DBxDocValueEnumerator : IEnumerator<DBxDocValue>
   {
     #region Конструктор
 
@@ -1337,20 +1354,37 @@ namespace FreeLibSet.Data.Docs
       return false;
     }
 
-    object IDBxDocValues.GetComplexValue(int index)
+    object[] IDBxDocValues.GetValueArray(int index)
     {
-      return _Values[index];
+      return new object[1] { _Values[index] };
     }
 
-    void IDBxDocValues.SetComplexValue(int index, object value)
+    void IDBxDocValues.SetValueArray(int index, object[] values)
     {
-      _Values[index] = value;
+      if (values.Length != 1)
+        throw new ArgumentException("values.Length must be 1", "values");
+
+      _Values[index] = values[0];
+    }
+
+    object IDBxDocValues.GetRowValue(int valueIndex, int rowIndex)
+    {
+      if (rowIndex != 0)
+        throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+      return GetValue(valueIndex, DBxDocValuePreferredType.Unknown);
+    }
+
+    void IDBxDocValues.SetRowValue(int valueIndex, int rowIndex, object value)
+    {
+      if (rowIndex != 0)
+        throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+      SetValue(valueIndex, value);
     }
 
     #endregion
 
     #region IEnumerable<DBxDocValue> Members
-                
+
     /// <summary>
     /// Создает перечислитель по всем полям, заданным в конструкторе
     /// </summary>

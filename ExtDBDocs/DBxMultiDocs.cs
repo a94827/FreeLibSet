@@ -915,14 +915,31 @@ namespace FreeLibSet.Data.Docs
         return false;
       }
 
-      object IDBxDocValues.GetComplexValue(int index)
+      object[] IDBxDocValues.GetValueArray(int index)
       {
-        return GetValue(index, DBxDocValuePreferredType.Unknown);
+        return new object[1] { GetValue(index, DBxDocValuePreferredType.Unknown) };
       }
 
-      void IDBxDocValues.SetComplexValue(int index, object value)
+      void IDBxDocValues.SetValueArray(int index, object[] values)
       {
-        SetValue(index, value);
+        if (values.Length != 1)
+          throw new ArgumentException("values.Length must be 1", "values");
+
+        SetValue(index, values[0]);
+      }
+
+      object IDBxDocValues.GetRowValue(int valueIndex, int rowIndex)
+      {
+        if (rowIndex != 0)
+          throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+        return ((IDBxDocValues)this).GetValue(valueIndex, DBxDocValuePreferredType.Unknown);
+      }
+
+      void IDBxDocValues.SetRowValue(int valueIndex, int rowIndex, object value)
+      {
+        if (rowIndex != 0)
+          throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+        ((IDBxDocValues)this).SetValue(valueIndex, value);
       }
 
       #endregion
