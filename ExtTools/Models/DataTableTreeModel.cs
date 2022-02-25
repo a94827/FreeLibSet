@@ -259,6 +259,7 @@ namespace FreeLibSet.Models.Tree
 #endif
         if (value.GetType() != _Table.Columns[IdColumnPosition].DataType)
           throw new ArgumentException("Значение должно иметь тип " + _Table.Columns[IdColumnPosition].DataType.ToString());
+        _IsNullDefaultValue = value;
       }
     }
     private object _IsNullDefaultValue;
@@ -726,7 +727,18 @@ namespace FreeLibSet.Models.Tree
     #region Доступ к строке по идентификатору
 
     /// <summary>
+    /// Нулевой идентификатор. Дублирует свойство IsNullDefaultValue
+    /// </summary>
+    public T DefaultId
+    {
+      get { return (T)IsNullDefaultValue; }
+      set { IsNullDefaultValue = value; }
+    }
+
+    /// <summary>
     /// Возвращает идентификатор (значение поля IdColumnName), соответствующее заданному пути.
+    /// Метод не проверяет весь путь, а находит строку, соответствующуую <paramref name="path"/>.LastNode.
+    /// Если строка не найдена, возвращается значение по умолчанию (0 ).
     /// </summary>
     /// <param name="path">Путь к узлу дерева</param>
     /// <returns>Идентификатор в строке таблицы данных</returns>
@@ -734,7 +746,7 @@ namespace FreeLibSet.Models.Tree
     {
       DataRow row = TreePathToDataRow(path);
       if (row == null)
-        return (T)IsNullDefaultValue;
+        return DefaultId;
       else
         return (T)(row[IdColumnPosition]);
     }
@@ -746,7 +758,7 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Путь в дереве</returns>
     public TreePath TreePathFromId(T id)
     {
-      if (id.Equals(IsNullDefaultValue))
+      if (id.Equals(DefaultId))
         return TreePath.Empty;
       else
         return TreePathFromKey(id);
@@ -754,27 +766,27 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает идентификатор для строки.
-    /// Возвращает IsNullDefaultValue, если <paramref name="row"/>==null.
+    /// Возвращает DefaultId, если <paramref name="row"/>==null.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <returns>Идентификатор</returns>
     public T DataRowToId(DataRow row)
     {
       if (row == null)
-        return (T)IsNullDefaultValue;
+        return (T)DefaultId;
       else
         return (T)(row[IdColumnPosition]);
     }
 
     /// <summary>
     /// Возвращает строку для заданного идентификатора.
-    /// Возвращает null при <paramref name="id"/>==IsNullDefaultValue или если идентификатор не найден.
+    /// Возвращает null при <paramref name="id"/>==DefaultId или если идентификатор не найден.
     /// </summary>
     /// <param name="id">Идентификатор</param>
     /// <returns>Строка в таблице или null</returns>
     public DataRow DataRowFromId(T id)
     {
-      if (id.Equals(IsNullDefaultValue))
+      if (id.Equals(DefaultId))
         return null;
       else
       {
@@ -818,7 +830,7 @@ namespace FreeLibSet.Models.Tree
     public T[] GetIdWithChildren(T id)
     {
       //return DataRowToIdWithChildren(DataRowFromId(Id));
-      if (id.Equals(IsNullDefaultValue))
+      if (id.Equals(DefaultId))
         return DataRowToIdWithChildren(null);
       else
       {
@@ -835,6 +847,7 @@ namespace FreeLibSet.Models.Tree
     /// Возвращает массив идентификаторов (значений поля IdColumnName), соответствующее заданному пути
     /// и всем его вложенным узлам рекурсивно.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
+    /// Для <paramref name="path"/>=TreePath.Empty возвращает все существующие идентификаторы в таблице.
     /// </summary>
     /// <param name="path">Путь к узлу дерева. Если путь пустой, возвращаются все идентификаторы в таблице</param>
     /// <returns>Массив идентификаторов</returns>
@@ -850,6 +863,7 @@ namespace FreeLibSet.Models.Tree
     /// Возвращает массив идентификаторов (значений поля IdColumnName), соответствующее заданному пути
     /// и всем его вложенным узлам рекурсивно.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
+    /// Для <paramref name="row"/>=null возвращает все существующие идентификаторы в таблице.
     /// </summary>
     /// <param name="row">Строка в таблице. Если задана пустая строка, возвращаются все идентификаторы</param>
     /// <returns>Массив идентификаторов</returns>

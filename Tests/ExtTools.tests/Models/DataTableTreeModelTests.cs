@@ -77,10 +77,12 @@ namespace ExtTools_tests.Models.Tree
       Assert.AreEqual("2,3", GetTestStringIds(sut.GetChildRows(table.Rows[0])), "#1 child rows");
 
       sut.IsNullDefaultValue = "ZZZ";
+      Assert.AreEqual("ZZZ", sut.IsNullDefaultValue, "#2 IsNullDefaultValue changed");
       Assert.AreEqual("1", GetTestStringIds(sut.GetChildRows(null)), "#2 root rows");
       Assert.AreEqual("2,3", GetTestStringIds(sut.GetChildRows(table.Rows[0])), "#2 child rows");
 
       Assert.Catch(delegate() { sut.IsNullDefaultValue = 0; }, "#3 invalid value");
+      Assert.AreEqual("ZZZ", sut.IsNullDefaultValue, "#3 IsNullDefaultValue not changed");
     }
 
     #endregion
@@ -126,21 +128,6 @@ namespace ExtTools_tests.Models.Tree
 
       TreePath path2 = new TreePath(path1, table.Rows[1]);
       Assert.IsTrue(sut.IsLeaf(path2), "#2");
-    }
-
-    #endregion
-
-    #region TreePath comparision
-
-    [Test]
-    public void TreePath_compare()
-    {
-      DataTable table = CreateTestTableWithStringIds(false);
-      DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
-
-      TreePath path1 = new TreePath(table.Rows[0]);
-      TreePath path2 = new TreePath(path1, table.Rows[1]);
-
     }
 
     #endregion
