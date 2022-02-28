@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTableDocValuesTests.cs" />
     <Compile Include="DBxBinDataHandlerTests.cs" />
     <Compile Include="DBxBinDataValidatorTests.cs" />
     <Compile Include="DBxDocPermissionsTests.cs" />

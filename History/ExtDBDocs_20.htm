@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-02-23T21:18:13.940000000"/>
+	<meta name="changed" content="2022-02-28T12:00:30.365000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -38,12 +38,12 @@
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
 		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		h1 { margin-bottom: 0.21cm; background: transparent; orphans: 2; widows: 2 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 2; widows: 2 }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -79,7 +79,7 @@
 			<p lang="en-US" align="center">311</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">07.02.2022-23.02.2022</p>
+			<p lang="en-US" align="center">07.02.2022-28.02.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1</span><span lang="ru-RU">. Изменена
@@ -141,13 +141,20 @@
 			FilteredDataTableTreeModel</span><span lang="en-US">WithIds&lt;T&gt;
 			</span><span lang="ru-RU">и сделан типизированным</span></p>
 			<p lang="en-US"><a name="v311p11"></a>11. <span lang="ru-RU">В
-			интерфейсе </span>IDBxDocValues <span lang="ru-RU">убраны методы
-			</span>GetCompexValue() <span lang="ru-RU">и </span>SetComplexValue<span lang="ru-RU">()</span>.
-			<span lang="ru-RU">Вместо них обеспечивается полноценный доступ к
-			отдельным значениям методами </span>GetValueArray(), GetRowValue()
-			<span lang="ru-RU">и </span>SetRowValue()<span lang="ru-RU">.
-			Свойство </span>DBxDocValue.ComplexValue <span lang="ru-RU">заменено
-			на </span>ValueArray.</p>
+			интерфейсе </span>IDBxDocValues (<a href="#v001p4">v<span lang="ru-RU">.1
+			п.4</span></a>)<span lang="ru-RU"> </span><span lang="ru-RU">убраны
+			методы </span>GetCompexValue() <span lang="ru-RU">и
+			</span>SetComplexValue<span lang="ru-RU">()</span>. <span lang="ru-RU">Вместо
+			них обеспечивается полноценный доступ к отдельным значениям
+			методами </span>GetValueArray(), GetRowValue() <span lang="ru-RU">и
+			</span>SetRowValue()<span lang="ru-RU">. Свойство
+			</span>DBxDocValue.ComplexValue <span lang="ru-RU">заменено на
+			</span>ValueArray.</p>
+			<p lang="en-US">12. <span lang="ru-RU">Свойство
+			</span>DataRowDocValues.IsReadOnly (<a href="#v001p4">v<span lang="ru-RU">.1
+			п.4</span></a>)<span lang="ru-RU"> является устанавливаемым для
+			симметрии с </span>DataTableDocValues<span lang="ru-RU">. Изменены</span>
+			<span lang="ru-RU">конструкторы.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

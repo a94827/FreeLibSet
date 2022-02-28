@@ -16,18 +16,26 @@ namespace FreeLibSet.Data.Docs
   /// Доступ к значениям одной строки DataRow.
   /// Не может иметь "серых" значений
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DataRowDocValues : IDBxDocValues
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает объект доступа
+    /// Создает объект доступа.
     /// </summary>
     /// <param name="row">Строка таблицы данных</param>
-    /// <param name="isReadOnly">Если true, то разрешено только чтение значений</param>
+    public DataRowDocValues(DataRow row)
+      : this(row, null)
+    {
+    }
+
+    /// <summary>
+    /// Создает объект доступа.
+    /// Эта перегрузка с индексатором столбцов предназначена, в основном, для внутреннего использования в библиотеке.
+    /// </summary>
+    /// <param name="row">Строка таблицы данных</param>
     /// <param name="columnNameIndexer">Индексатор имен полей. Если не задан, то будет создан автоматически при необходимости</param>
-    public DataRowDocValues(DataRow row, bool isReadOnly, StringArrayIndexer columnNameIndexer)
+    public DataRowDocValues(DataRow row, StringArrayIndexer columnNameIndexer)
     {
 #if DEBUG
       if (row == null)
@@ -35,27 +43,8 @@ namespace FreeLibSet.Data.Docs
 #endif
 
       _Row = row;
-      _IsReadOnly = isReadOnly;
+      _IsReadOnly = false;
       _ColumnNameIndexer = columnNameIndexer;
-    }
-
-    /// <summary>
-    /// Создает объект доступа
-    /// </summary>
-    /// <param name="row">Строка таблицы данных</param>
-    /// <param name="isReadOnly">Если true, то разрешено только чтение значений</param>
-    public DataRowDocValues(DataRow row, bool isReadOnly)
-      :this(row, isReadOnly, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает объект доступа
-    /// </summary>
-    /// <param name="row">Строка таблицы данных</param>
-    public DataRowDocValues(DataRow row)
-      : this(row, false, null)
-    {
     }
 
     #endregion
@@ -71,9 +60,12 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Режим "только чтение". Задается в конструкторе
     /// </summary>
-    public bool IsReadOnly { get { return _IsReadOnly; } }
-    private readonly bool _IsReadOnly;
+    public bool IsReadOnly { get { return _IsReadOnly; } set { _IsReadOnly = value; } }
+    private bool _IsReadOnly;
 
+    /// <summary>
+    /// См. описание в DataTableDocValues.
+    /// </summary>
     private StringArrayIndexer _ColumnNameIndexer;
 
     /// <summary>
@@ -99,10 +91,10 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        int Index = IndexOf(name);
-        if (Index < 0)
+        int index = IndexOf(name);
+        if (index < 0)
           throw new ArgumentException("Таблица \"" + _Row.Table.TableName + "\" не содержит поля \"" + name + "\"");
-        return new DBxDocValue(this, Index);
+        return new DBxDocValue(this, index);
       }
     }
 
@@ -163,10 +155,7 @@ namespace FreeLibSet.Data.Docs
       get { return _Row.Table.Columns.Count; }
     }
 
-    int IDBxDocValues.RowCount
-    {
-      get { return 1; }
-    }
+    int IDBxDocValues.RowCount { get { return 1; } }
 
     /// <summary>
     /// Получить значение поля
@@ -321,20 +310,33 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Доступ к значениям полей таблицы в-целом, с поддержкой "серых" значений
-  /// Используется буферизация. При изменении значений полей отдельных строк или добавлении/удалении строк, 
-  /// должен быть вызван метод ResetBuffer()
-  /// Доступ к значениям возможен, даже если таблица не содержит ни одной строки
+  /// Используется буферизация. При изменении значений полей отдельных строк (кроме установки значения с помощью SetRowValue())или добавлении/удалении строк, 
+  /// должен быть вызван метод ResetBuffer().
+  /// Доступ к значениям возможен, даже если таблица не содержит ни одной строки.
   /// </summary>
   public class DataTableDocValues : IDBxDocValues
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
     /// Создает объект доступа к таблице.
-    /// У таблицы уже должны быть добавлены столбцы и могут быть добавлены строки
+    /// У таблицы уже должны быть добавлены столбцы, дальнейшее изменение структуры таблицы не допускается.
+    /// Строки могут добавляться или удаляться после вызова конструктора, с вызовом метода ResetBuffer().
     /// </summary>
     /// <param name="table">Таблица</param>
-    /// <param name="columnNameIndexer">Индексатор имен полей. Если не задан, то будет создан автоматически при необходимости</param>
+    public DataTableDocValues(DataTable table)
+      : this(table, null)
+    {
+    }
+
+    /// <summary>
+    /// Создает объект доступа к таблице.
+    /// У таблицы уже должны быть добавлены столбцы, дальнейшее изменение структуры таблицы не допускается.
+    /// Строки могут добавляться или удаляться после вызова конструктора, с вызовом метода ResetBuffer().
+    /// Эта перегрузка с индексатором столбцов предназначена, в основном, для внутреннего использования в библиотеке.
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnNameIndexer">Индексатор имен полей. Если не задан, то будет создан автоматически при необходимости.</param>
     public DataTableDocValues(DataTable table, StringArrayIndexer columnNameIndexer)
     {
       if (table == null)
@@ -349,23 +351,13 @@ namespace FreeLibSet.Data.Docs
       _ColumnNameIndexer = columnNameIndexer;
     }
 
-    /// <summary>
-    /// Создает объект доступа к таблице.
-    /// У таблицы уже должны быть добавлены столбцы и могут быть добавлены строки
-    /// </summary>
-    /// <param name="table">Таблица</param>
-    public DataTableDocValues(DataTable table)
-      :this(table, null)
-    {
-    }
-
     #endregion
 
     #region Свойства
 
     /// <summary>
-    /// Таблица значений. Задается в конструкторе. Не может быть null
-    /// Свойство может быть установлено, при условии, что новая таблица имеет такой же список и тип полей,
+    /// Таблица значений. Задается в конструкторе. Не может быть null.
+    /// Свойство может быть установлено при условии, что новая таблица имеет такой же список и тип полей,
     /// что и первоначальная таблица.
     /// </summary>
     public DataTable Table
@@ -381,10 +373,10 @@ namespace FreeLibSet.Data.Docs
           throw new ArgumentException("Количество полей в новой таблице \"" + value.TableName + "\" (" + value.Columns.Count + ") должно совпадать с существующей таблицей (" + _Table.Columns.Count + ")");
         for (int i = 0; i < value.Columns.Count; i++)
         {
-          DataColumn OldCol = _Table.Columns[i];
-          DataColumn NewCol = value.Columns[i];
-          if (!String.Equals(OldCol.ColumnName, NewCol.ColumnName, StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("Имя столбца с индексом " + i.ToString() + " в новой таблице \"" + value.TableName + "\" (" + NewCol.ColumnName + ") не совпадает с именем столбца в существующей таблице (" + OldCol.ColumnName + ")");
+          DataColumn oldCol = _Table.Columns[i];
+          DataColumn newCol = value.Columns[i];
+          if (!String.Equals(oldCol.ColumnName, newCol.ColumnName, StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("Имя столбца с индексом " + i.ToString() + " в новой таблице \"" + value.TableName + "\" (" + newCol.ColumnName + ") не совпадает с именем столбца в существующей таблице (" + oldCol.ColumnName + ")");
 
           // 13.06.2017 Убрано.
           // Так может быть: в первоначальной таблице поле имеет тип Byte, а в новой - Int16
@@ -408,15 +400,24 @@ namespace FreeLibSet.Data.Docs
     /// <returns>текстовое представление</returns>
     public override string ToString()
     {
-      string TableName;
+      string tableName;
       if (String.IsNullOrEmpty(_Table.TableName))
-        TableName = "Без имени";
+        tableName = "Без имени";
       else
-        TableName = _Table.TableName;
-      return TableName + ", RowCount=" + _Table.Rows.Count.ToString();
+        tableName = _Table.TableName;
+      return tableName + ", RowCount=" + _Table.Rows.Count.ToString();
     }
 
+    /// <summary>
+    /// Индексатор столбцов по именам. 
+    /// Создается автоматически при необходимости, или задается в конструкторе.
+    /// Реализация в NetFramework метода DataColumnCollection.IndexOf(columnName) является медленной.
+    /// Несмотря на наличие внутреннего словаря DataColumnCollection.columnFromName, после проверки факта наличия
+    /// столбца выполняется обычный перебор столбцов в цикле. Перебор выполняется, даже если имя поля задано в правильном регистре.
+    /// Индексатор обычно должен быть нерегистрочувствительным.
+    /// </summary>
     private StringArrayIndexer _ColumnNameIndexer;
+    // TODO: StringArrayIndexer не позволяет указывать локаль. По идее, в индексаторе надо использовать свойство DataTable.Locale.
 
     #endregion
 
@@ -514,10 +515,10 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        int Index = IndexOf(name);
-        if (Index < 0)
+        int index = IndexOf(name);
+        if (index < 0)
           throw new ArgumentException("Таблица \"" + _Table.TableName + "\" не содержит столбца \"" + name + "\"", "name");
-        return new DBxDocValue(this, Index);
+        return new DBxDocValue(this, index);
       }
     }
 
@@ -538,11 +539,11 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Заголовок столбца</returns>
     public string GetDisplayName(int index)
     {
-      string DisplayName = _Table.Columns[index].Caption;
-      if (String.IsNullOrEmpty(DisplayName))
+      string displayName = _Table.Columns[index].Caption;
+      if (String.IsNullOrEmpty(displayName))
         return _Table.Columns[index].ColumnName;
       else
-        return DisplayName;
+        return displayName;
     }
 
     /// <summary>
@@ -597,11 +598,15 @@ namespace FreeLibSet.Data.Docs
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Получить значение
+    /// Получить значение.
+    /// Если во всех строках таблицы находится одинаковое значение, оно возвращается.
+    /// Если в таблице во всех строках находится пустое значение, возвращается DBNull.
+    /// Если в таблице в строках находятся разные значения ("серое" значение, Grayed=true), возвращается null.
+    /// Если таблица не содержит ни одной строки, возвращается DBNull.
     /// </summary>
     /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
     /// <param name="preferredType">Игнорируется</param>
-    /// <returns>Значение поля. Для "серого" значения возвращается null</returns>
+    /// <returns>Значение поля.</returns>
     public object GetValue(int index, DBxDocValuePreferredType preferredType)
     {
       GetReadyBuffer(index);
@@ -615,6 +620,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="value">Новое значение. Значение null заменяется на DBNull.</param>
     public void SetValue(int index, object value)
     {
+      CheckNotReadOnly(); // 28.02.2022
+
       if (value == null)
         value = DBNull.Value; // 17.04.2017
 
@@ -716,9 +723,12 @@ namespace FreeLibSet.Data.Docs
 #endif
       if (values.Length != Table.Rows.Count)
         throw new ArgumentException("Длина массива должна быть равна " + RowCount.ToString(), "values");
+      
+      CheckNotReadOnly(); // 28.02.2022
+
       for (int i = 0; i < values.Length; i++)
         Table.Rows[i][index] = values[i];
-      ResetBuffer();
+      ResetBuffer(index);
     }
 
 
@@ -730,12 +740,12 @@ namespace FreeLibSet.Data.Docs
     /// <param name="rowIndex">Индекс строки в диапазоне от 0 до RowCount</param>
     /// <returns></returns>
     public object GetRowValue(int valueIndex, int rowIndex)
-    { 
-      if (rowIndex<0||rowIndex>=Table.Rows.Count)
+    {
+      if (rowIndex < 0 || rowIndex >= Table.Rows.Count)
         throw new ArgumentOutOfRangeException("rowIndex");
 
       object v = Table.Rows[rowIndex][valueIndex];
-      return v; 
+      return v;
     }
 
     /// <summary>
@@ -749,9 +759,13 @@ namespace FreeLibSet.Data.Docs
     {
       if (rowIndex < 0 || rowIndex >= Table.Rows.Count)
         throw new ArgumentOutOfRangeException("rowIndex");
+
+      CheckNotReadOnly(); // 28.02.2022
+
       if (value == null)
         value = DBNull.Value;
       Table.Rows[rowIndex][valueIndex] = value;
+      ResetBuffer(valueIndex);
     }
 
 
