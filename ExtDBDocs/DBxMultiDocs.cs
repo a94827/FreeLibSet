@@ -643,8 +643,9 @@ namespace FreeLibSet.Data.Docs
 
       public new bool GetValueReadOnly(int index)
       {
-        if (IsReadOnly)
-          return true;
+        //лишнее
+        //if (IsReadOnly)
+        //  return true;
 
         if (index < _MultiDocs.DocProvider.MainDocTableServiceColumns.Count)
           return true; // Id и Deleted
@@ -901,8 +902,9 @@ namespace FreeLibSet.Data.Docs
 
       public bool GetValueReadOnly(int index)
       {
-        if (IsReadOnly)
-          return true;
+        // лишнее
+        //if (IsReadOnly)
+        //  return true;
 
         if (index < _MultiDocs.DocProvider.MainDocTableServiceColumns.Count)
           return true; // Id и Deleted

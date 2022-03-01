@@ -230,10 +230,12 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Признак "только чтение"</returns>
     public bool GetValueReadOnly(int index)
     {
-      if (_IsReadOnly)
-        return true;
+      // лишнее
+      //if (_IsReadOnly)
+      //  return true;
 
-      return _Row.Table.Columns[index].ReadOnly;
+      DataColumn col=_Row.Table.Columns[index];
+      return col.ReadOnly || col.Expression.Length > 0; // 01.03.2022
     }
 
     bool IDBxDocValues.GetGrayed(int index)
@@ -679,7 +681,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>true, если столбец доступен только для чтения</returns>
     public bool GetValueReadOnly(int index)
     {
-      return _Table.Columns[index].ReadOnly;
+      DataColumn col=_Table.Columns[index];
+      return col.ReadOnly || col.Expression.Length > 0; // 01.03.2022
     }
 
     /// <summary>

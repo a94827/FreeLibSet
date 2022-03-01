@@ -177,6 +177,9 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(DBNull.Value, sut.GetValue(0, DBxDocValuePreferredType.Unknown), "#3");
     }
 
+    #endregion
+
+    #region IsNull()
 
     [Test]
     public void IsNull()
@@ -191,6 +194,173 @@ namespace ExtDBDocs_tests.Data_Docs
       sut.ResetBuffer();
 
       Assert.IsTrue(sut.IsNull(0), "#3 (DBNull everywhere)");
+    }
+
+    #endregion
+
+    #region GetGrayed()
+
+    [Test]
+    public void GetGrayed()
+    {
+      DataTable table = CreateTestTable();
+      DataTableDocValues sut = new DataTableDocValues(table);
+      Assert.IsTrue(sut.GetGrayed(0), "#1 F1");
+      Assert.IsTrue(sut.GetGrayed(1), "#1 F2");
+      Assert.IsFalse(sut.GetGrayed(2), "#1 F3");
+
+      sut.SetRowValue(0, 0, "GHI");
+      sut.SetRowValue(0, 1, "GHI");
+      Assert.IsFalse(sut.GetGrayed(0), "#2 F1");
+
+      sut.SetValue(1, 123);
+      Assert.IsFalse(sut.GetGrayed(1), "#3 F2");
+
+      sut.SetValue(1, null);
+      Assert.IsFalse(sut.GetGrayed(1), "#4 F2");
+
+      sut.SetRowValue(1, 0, 123);
+      Assert.IsTrue(sut.GetGrayed(1), "#5 F2");
+
+      table.Rows.Clear();
+      table.AcceptChanges();
+      sut.ResetBuffer();
+      Assert.IsFalse(sut.GetGrayed(1), "#6 F2");
+    }
+
+    #endregion
+
+    #region Get/SetValueArray()
+
+    [Test]
+    public void GetValueArray()
+    {
+      DataTable table = CreateTestTable();
+      DataTableDocValues sut = new DataTableDocValues(table);
+      Assert.AreEqual(new object[] { "ABC", "DEF", "GHI" }, sut.GetValueArray(0), "F1");
+      Assert.AreEqual(new object[] { 1, 2, 3 }, sut.GetValueArray(1), "F2");
+      Assert.AreEqual(new object[] { 1, 1, 1 }, sut.GetValueArray(2), "F3");
+
+      sut.SetRowValue(2, 0, DBNull.Value);
+      Assert.AreEqual(new object[] { DBNull.Value, 1, 1 }, sut.GetValueArray(2), "#2 F3");
+
+      table.Rows.Clear();
+      table.AcceptChanges();
+      sut.ResetBuffer();
+      Assert.AreEqual(new object[0], sut.GetValueArray(2), "#3 F3");
+    }
+
+
+    [Test]
+    public void SetValueArray()
+    {
+      DataTable table = CreateTestTable();
+      DataTableDocValues sut = new DataTableDocValues(table);
+
+      sut.SetValueArray(1, new object[] { 111, 222, DBNull.Value });
+      Assert.AreEqual(111, sut.GetRowValue(1, 0), "#1 F1");
+      Assert.AreEqual(222, sut.GetRowValue(1, 1), "#1 F2");
+      Assert.AreEqual(DBNull.Value, sut.GetRowValue(1, 2), "#1 F3");
+
+      Assert.Catch<ArgumentException>(delegate() { sut.SetValueArray(1, new object[] { 111, 222 }); }, "small array");
+      Assert.Catch<ArgumentException>(delegate() { sut.SetValueArray(1, new object[] { 111, 222, 333, 444 }); }, "large array");
+    }
+
+    #endregion
+
+    #region Get/SetRowValue()
+
+
+    [Test]
+    public void GetRowValue()
+    {
+      DataTable table = CreateTestTable();
+      DataTableDocValues sut = new DataTableDocValues(table);
+
+      Assert.AreEqual(1, sut.GetRowValue(1, 0), "#1 F1");
+      Assert.AreEqual(2, sut.GetRowValue(1, 1), "#1 F2");
+      Assert.AreEqual(3, sut.GetRowValue(1, 2), "#1 F3");
+
+      sut.SetValue(1, 111);
+      Assert.AreEqual(111, sut.GetRowValue(1, 0), "#2 F1");
+      Assert.AreEqual(111, sut.GetRowValue(1, 1), "#2 F2");
+      Assert.AreEqual(111, sut.GetRowValue(1, 2), "#2 F3");
+
+      Assert.Catch<ArgumentException>(delegate() { sut.GetRowValue(1, -1); }, "negative row index");
+      Assert.Catch<ArgumentException>(delegate() { sut.GetRowValue(1, 3); }, "row index row out range");
+    }
+
+
+    [Test]
+    public void SetRowValue()
+    {
+      DataTable table = CreateTestTable();
+      DataTableDocValues sut = new DataTableDocValues(table);
+      sut.SetRowValue(1, 0, 111);
+
+      Assert.AreEqual(111, sut.GetRowValue(1,0), "#1");
+      Assert.Catch<ArgumentException>(delegate() { sut.SetRowValue(1, -1, 222); }, "negative row index");
+      Assert.Catch<ArgumentException>(delegate() { sut.SetRowValue(1, 3, 222); }, "row index row out range");
+    }
+
+    #endregion
+
+    #region AllowDBNull(), MaxLength(), GetValueReadOnly()
+
+    [Test]
+    public void AllowDBNull()
+    {
+      DataTable table = new DataTable();
+      table.Columns.Add("F1", typeof(string)).AllowDBNull = false;
+      table.Columns.Add("F2", typeof(int)).AllowDBNull = true;
+
+      DataTableDocValues sut = new DataTableDocValues(table);
+      Assert.IsFalse(sut.AllowDBNull(0), "F1");
+      Assert.IsTrue(sut.AllowDBNull(1), "F2");
+    }
+
+    [Test]
+    public void MaxLength()
+    {
+      DataTable table = new DataTable();
+      table.Columns.Add("F1", typeof(string));
+      table.Columns.Add("F2", typeof(string)).MaxLength = 100;
+
+      DataTableDocValues sut = new DataTableDocValues(table);
+      Assert.AreEqual(-1, sut.MaxLength(0), "F1");
+      Assert.AreEqual(100, sut.MaxLength(1), "F2");
+    }
+
+
+    [Test]
+    public void GetValueReadOnly()
+    {
+      DataTable table = new DataTable();
+      table.Columns.Add("F1", typeof(int));
+      table.Columns.Add("F2", typeof(int)).ReadOnly = true;
+      table.Columns.Add("F3", typeof(int)).Expression = "F1*2";
+
+      DataTableDocValues sut = new DataTableDocValues(table);
+      Assert.IsFalse(sut.GetValueReadOnly(0), "F1");
+      Assert.IsTrue(sut.GetValueReadOnly(1), "F2");
+      Assert.IsTrue(sut.GetValueReadOnly(2), "F3");
+    }
+
+    #endregion
+
+    #region GetEnumerator()
+
+    [Test]
+    public void GetEnumerator()
+    {
+      DataTable table = CreateTestTable();
+      DataTableDocValues sut = new DataTableDocValues(table);
+
+      List<string> lst = new List<string>();
+      foreach (DBxDocValue item in sut)
+        lst.Add(item.Name);
+
+      Assert.AreEqual(new string[] { "F1", "F2", "F3" }, lst.ToArray());
     }
 
     #endregion

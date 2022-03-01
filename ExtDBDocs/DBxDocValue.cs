@@ -983,8 +983,11 @@ namespace FreeLibSet.Data.Docs
     {
       if (src == null)
         throw new ArgumentNullException("src");
+#if DEBUG
       if (res == null)
         throw new ArgumentNullException("res");
+#endif
+      res.CheckNotReadOnly(); // 01.03.2022
 
       for (int i = 0; i < res.Count; i++)
       {
@@ -1016,8 +1019,12 @@ namespace FreeLibSet.Data.Docs
     {
       if (src == null)
         throw new ArgumentNullException("src");
+#if DEBUG
       if (res == null)
         throw new ArgumentNullException("res");
+#endif
+
+      res.CheckNotReadOnly(); // 01.03.2022
 
       for (int i = 0; i < res.Count; i++)
       {
@@ -1339,14 +1346,9 @@ namespace FreeLibSet.Data.Docs
       return 0;
     }
 
-    /// <summary>
-    /// Возвращает IsReadOnly
-    /// </summary>
-    /// <param name="index">Игнорируется</param>
-    /// <returns>Значение свойства IsReadOnly</returns>
-    public bool GetValueReadOnly(int index)
+    bool IDBxDocValues.GetValueReadOnly(int index)
     {
-      return _IsReadOnly;
+      return false;
     }
 
     bool IDBxDocValues.GetGrayed(int index)
