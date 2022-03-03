@@ -1135,8 +1135,10 @@ namespace FreeLibSet.Data.Docs
     /// <param name="names">Список имен. Массив может быть пустым, но не может содержать пустые строки</param>
     public DBxMemoryDocValues(string[] names)
     {
-      if (_Names == null)
+#if DEBUG
+      if (names == null)
         throw new ArgumentNullException("names");
+#endif
       for (int i = 0; i < names.Length; i++)
       {
         if (String.IsNullOrEmpty(names[i]))
@@ -1319,6 +1321,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="value">Новое значение</param>
     public void SetValue(int index, object value)
     {
+      CheckNotReadOnly(); // 03.03.2022
       _Values[index] = value;
     }
 
@@ -1343,7 +1346,8 @@ namespace FreeLibSet.Data.Docs
 
     int IDBxDocValues.MaxLength(int index)
     {
-      return 0;
+      //return 0;
+      return -1; // 03.03.2022
     }
 
     bool IDBxDocValues.GetValueReadOnly(int index)
@@ -1366,6 +1370,8 @@ namespace FreeLibSet.Data.Docs
       if (values.Length != 1)
         throw new ArgumentException("values.Length must be 1", "values");
 
+      CheckNotReadOnly(); // 03.03.2022
+
       _Values[index] = values[0];
     }
 
@@ -1380,6 +1386,7 @@ namespace FreeLibSet.Data.Docs
     {
       if (rowIndex != 0)
         throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+      CheckNotReadOnly(); // 03.03.2022
       SetValue(valueIndex, value);
     }
 

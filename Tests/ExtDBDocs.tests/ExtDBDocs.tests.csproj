@@ -40,12 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataRowDocValuesTests.cs" />
     <Compile Include="DataTableDocValuesTests.cs" />
     <Compile Include="DBxBinDataHandlerTests.cs" />
     <Compile Include="DBxBinDataValidatorTests.cs" />
     <Compile Include="DBxDocPermissionsTests.cs" />
     <Compile Include="DBxDocSetTests.cs" />
     <Compile Include="DBxDocTypesTests.cs" />
+    <Compile Include="DBxMemoryDocValuesTests.cs" />
     <Compile Include="DBxRealDocProviderGlobalTests.cs" />
     <Compile Include="DBxDocProviderTests.cs" />
   </ItemGroup>

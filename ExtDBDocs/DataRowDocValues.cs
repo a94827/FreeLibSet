@@ -58,7 +58,7 @@ namespace FreeLibSet.Data.Docs
     private readonly DataRow _Row;
 
     /// <summary>
-    /// Режим "только чтение". Задается в конструкторе
+    /// Режим "только чтение". По умолчанию - false.
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } set { _IsReadOnly = value; } }
     private bool _IsReadOnly;
@@ -186,6 +186,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="value">Значение поля. Null заменяется на DBNull</param>
     public void SetValue(int index, object value)
     {
+      CheckNotReadOnly();
       if (value == null)
         _Row[index] = DBNull.Value; // 14.10.2015
       else

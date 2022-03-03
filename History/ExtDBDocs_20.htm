@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-03-01T12:03:29.702000000"/>
+	<meta name="changed" content="2022-03-03T11:21:28.202000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -79,7 +79,7 @@
 			<p lang="en-US" align="center">311</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">07.02.2022-01.03.2022</p>
+			<p lang="en-US" align="center">07.02.2022-03.03.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1</span><span lang="ru-RU">. Изменена
@@ -123,7 +123,8 @@
 			убранного </span><span lang="en-US">EditIfNotChanged (<a href="#v309p1">v.309
 			</a></span><a href="#v309p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">9. </span><span lang="ru-RU">Установка
-			свойства </span><span lang="en-US">DBxRealDocProviderSource.UserPermissions
+			свойства </span><span lang="en-US">DBxRealDocProviderSource.UserPermissions</span><span lang="en-US">
+			(<a href="ExtDBDocs_11.htm#v001p2">v.1 </a></span><a href="ExtDBDocs_11.htm#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span><span lang="en-US">
 			</span><span lang="ru-RU">автоматически создает новую точку
 			подключения с правильными разрешениями </span><span lang="en-US">DBPermissions.
 			</span><span lang="ru-RU">Явно устанавливать свойство </span><span lang="en-US">MainDBEntry
@@ -131,13 +132,16 @@
 			</span><span lang="en-US">MainDBEntry </span><span lang="ru-RU">установлено
 			в явном виде, то оно сохраняется.</span></p>
 			<p><span lang="en-US">10. </span><span lang="ru-RU">Классы
-			</span><span lang="en-US">DBxDocTreeModel, DBxSubDocTreeModel
+			</span><span lang="en-US">DBxDocTreeModel, DBxSubDocTreeModel </span><span lang="ru-RU">(</span><a href="ExtDBDocs_11.htm#v001p9"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.9</span></a><span lang="ru-RU">)
 			</span><span lang="ru-RU">наследуются от
 			DataTableTreeModelWithIds&lt;Int32&gt; (</span><a href="ExtTools_20.htm#v311p2"><span lang="en-US">ExtTools,
 			v.311 </span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">).
 			Порядок сортировки устанавливается как свойство </span><span lang="en-US">Sort,
 			</span><span lang="ru-RU">а не параметр конструктора базового
-			класса. Класс FilteredDataTableTreeModel переименован в
+			класса. Класс FilteredDataTableTreeModel </span><span lang="ru-RU">(</span><a href="ExtDBDocs_11.htm#v052p5"><span lang="en-US">v.52
+			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">)
+			</span><span lang="ru-RU">переименован в
 			FilteredDataTableTreeModel</span><span lang="en-US">WithIds&lt;T&gt;
 			</span><span lang="ru-RU">и сделан типизированным</span></p>
 			<p><a name="v311p11"></a><span lang="en-US">11. </span><span lang="ru-RU">В
@@ -154,11 +158,15 @@
 			</span><span lang="en-US">DataRowDocValues.IsReadOnly (<a href="#v001p4">v</a></span><a href="#v001p4"><span lang="ru-RU">.1
 			п.4</span></a><span lang="en-US">) </span><span lang="ru-RU">является
 			устанавливаемым для симметрии с </span><span lang="en-US">DataTableDocValues</span><span lang="ru-RU">.
-			Изменены</span><span lang="en-US"> </span><span lang="ru-RU">конструкторы.</span></p>
+			Изменены</span> <span lang="ru-RU">конструкторы.</span></p>
 			<p lang="en-US">13. DataTableDocValues,
-			DataRowDocValues.GetValueReadOnly() <span lang="ru-RU">возвращает
+			DataRowDocValues.GetValueReadOnly()<span lang="ru-RU"> </span>(<a href="#v001p4">v</a><a href="#v001p4"><span lang="ru-RU">.1
+			п.4</span></a>)  <span lang="ru-RU">возвраща</span><span lang="ru-RU">ю</span><span lang="ru-RU">т
 			</span>true<span lang="ru-RU">, если задано свойство
 			</span>Column.Expression<span lang="ru-RU">.</span></p>
+			<p lang="en-US">14. DBxMemoryDocValues (<a href="#v001p4">v</a><a href="#v001p4"><span lang="ru-RU">.1
+			п.4</span></a>) <span lang="ru-RU">игнорировал установку
+			</span>SetReadOnly().</p>
 		</td>
 	</tr>
 	<tr valign="top">
