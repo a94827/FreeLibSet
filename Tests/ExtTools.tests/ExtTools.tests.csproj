@@ -41,6 +41,8 @@
     <Compile Include="Collections\ArrayIndexerTests.cs" />
     <Compile Include="Collections\BidirectionalDictionaryTests.cs" />
     <Compile Include="Collections\HistoryListTests.cs" />
+    <Compile Include="Collections\ObjectWithCodeComparerTests.cs" />
+    <Compile Include="Collections\SelectionFlagListTests.cs" />
     <Compile Include="Core\DataRowValueArrayTests.cs" />
     <Compile Include="Core\DataTableValueArrayTests.cs" />
     <Compile Include="Core\DataToolsTests_AggregateFunctions.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="PropertyAssert.cs" />
     <Compile Include="IO\TempDirectoryTests.cs" />
     <Compile Include="Collections\WeakReferenceCollectionTests.cs" />
+    <Compile Include="Text\TextWithRowsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">

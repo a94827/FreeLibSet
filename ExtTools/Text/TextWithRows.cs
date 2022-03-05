@@ -72,13 +72,13 @@ namespace FreeLibSet.Text
     /// При этом "сложные" разделители должны идти перед простыми, то есть правильным будет порядок
     /// { "\r\n", "\r\n", "\r", "\n" }
     /// </summary>
-    /// <param name="Text">Текст</param>
+    /// <param name="text">Текст</param>
     /// <param name="lineSeparators">Список разделителей строк. Если не содержит разделителей, считается, что текст содержит единственную строку</param>
-    public TextWithRows(string Text, string[] lineSeparators)
+    public TextWithRows(string text, string[] lineSeparators)
     {
-      if (Text == null)
+      if (text == null)
         throw new ArgumentNullException("Text");
-      _Text = Text;
+      _Text = text;
 
       _RowStarts = new List<int>();
       _RowLengths = new List<int>();
@@ -90,7 +90,7 @@ namespace FreeLibSet.Text
         _RowStarts = new List<int>(1);
         _RowLengths = new List<int>(1);
         _RowStarts.Add(0);
-        _RowLengths.Add(Text.Length);
+        _RowLengths.Add(text.Length);
       }
 
       _RowStarts = new List<int>();
@@ -101,9 +101,9 @@ namespace FreeLibSet.Text
       if (lineSeparators.Length == 1)
       {
         // Оптимзированная реализация для одного разделителя
-        while (pos < Text.Length)
+        while (pos < text.Length)
         {
-          int p = Text.IndexOf(lineSeparators[0], pos, Text.Length - pos, StringComparison.Ordinal);
+          int p = text.IndexOf(lineSeparators[0], pos, text.Length - pos, StringComparison.Ordinal);
           if (p < 0)
             break;
 
@@ -115,12 +115,12 @@ namespace FreeLibSet.Text
       }
       else
       {
-        while (pos < Text.Length)
+        while (pos < text.Length)
         {
-          bool Found = false;
+          bool found = false;
           for (int i = 0; i < lineSeparators.Length; i++)
           {
-            int p = Text.IndexOf(lineSeparators[i], pos, Text.Length - pos, StringComparison.Ordinal);
+            int p = text.IndexOf(lineSeparators[i], pos, text.Length - pos, StringComparison.Ordinal);
             if (p < 0)
               continue;
 
@@ -128,19 +128,19 @@ namespace FreeLibSet.Text
             _RowStarts.Add(pos);
             _RowLengths.Add(p - pos);
             pos = p + lineSeparators[i].Length;
-            Found = true;
+            found = true;
             break;
           }
-          if (!Found)
+          if (!found)
             break;
         }
       }
 
-      if (pos < (Text.Length - 1))
+      if (pos < (text.Length - 1))
       {
         // Последняя строка, не завершенная символом конца строки
         _RowStarts.Add(pos);
-        _RowLengths.Add(Text.Length - pos);
+        _RowLengths.Add(text.Length - pos);
       }
     }
 
@@ -230,9 +230,9 @@ namespace FreeLibSet.Text
     /// <returns>Позиция символа (индекс строки и столбца)</returns>
     public TextPosition GetPosition(int index)
     {
-      int Row = GetRow(index);
-      int RowStart = _RowStarts[Row];
-      return new TextPosition(Row, index - RowStart);
+      int row = GetRow(index);
+      int rowStart = _RowStarts[row];
+      return new TextPosition(row, index - rowStart);
     }
 
     /// <summary>
@@ -296,12 +296,12 @@ namespace FreeLibSet.Text
     /// <returns>Индекс в строке Text</returns>
     public int GetCharIndex(TextPosition position)
     {
-      int StartIndex = GetRowStartIndex(position.Row); // там проверяется номер строки
-      int Length = _RowLengths[position.Row];
+      int startIndex = GetRowStartIndex(position.Row); // там проверяется номер строки
+      int length = _RowLengths[position.Row];
       int p = position.Column;
-      if (p > Length)
-        p = Length;
-      return StartIndex + p;
+      if (p > length)
+        p = length;
+      return startIndex + p;
     }
 
     #endregion
