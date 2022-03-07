@@ -2149,7 +2149,10 @@ namespace FreeLibSet.Data.Docs
         mainConUser.AddRecord(tableDef.TableName, fieldPairs);
       }
       else
-        mainConUser.SetValues(tableDef.TableName, subDoc.SubDocId, fieldPairs);
+      {
+        if (fieldPairs.Count > 0) // 07.03.2022
+          mainConUser.SetValues(tableDef.TableName, subDoc.SubDocId, fieldPairs);
+      }
     }
 
     private void SubApplyDelete1(DBxSubDoc subDoc, DBxCon mainConUser, int docVersion,

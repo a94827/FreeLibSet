@@ -5,7 +5,7 @@
 	<title>»зменени€ в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2022-03-03T11:21:28.202000000"/>
+	<meta name="changed" content="2022-03-07T12:45:53.673000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -76,6 +76,25 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">312</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">07.03.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">ѕри повторной записи
+			документа с не изменившимс€ поддокументом могло возникать
+			исключение при вызове </span>DBxCon.SetValues() <span lang="ru-RU">с
+			пустым списком полей. »сключение возникало только в определенном
+			случае при </span>UseDeleted=false<span lang="ru-RU"> и
+			</span>UseVersions=false. <span lang="ru-RU">ѕохожее исправление
+			было в другом вызове </span>SetValues() <span lang="ru-RU">(</span><a href="#v308p6">v.308
+			<span lang="ru-RU">п.6</span></a><span lang="ru-RU">) </span>
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">311</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -123,10 +142,10 @@
 			убранного </span><span lang="en-US">EditIfNotChanged (<a href="#v309p1">v.309
 			</a></span><a href="#v309p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">9. </span><span lang="ru-RU">”становка
-			свойства </span><span lang="en-US">DBxRealDocProviderSource.UserPermissions</span><span lang="en-US">
-			(<a href="ExtDBDocs_11.htm#v001p2">v.1 </a></span><a href="ExtDBDocs_11.htm#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span><span lang="en-US">
-			</span><span lang="ru-RU">автоматически создает новую точку
-			подключени€ с правильными разрешени€ми </span><span lang="en-US">DBPermissions.
+			свойства </span><span lang="en-US">DBxRealDocProviderSource.UserPermissions</span>
+			<span lang="en-US">(<a href="ExtDBDocs_11.htm#v001p2">v.1 </a></span><a href="ExtDBDocs_11.htm#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span>
+			<span lang="ru-RU">автоматически создает новую точку подключени€ с
+			правильными разрешени€ми </span><span lang="en-US">DBPermissions.
 			</span><span lang="ru-RU">явно устанавливать свойство </span><span lang="en-US">MainDBEntry
 			</span><span lang="ru-RU">больше не требуетс€. ≈сли свойство
 			</span><span lang="en-US">MainDBEntry </span><span lang="ru-RU">установлено
@@ -134,15 +153,13 @@
 			<p><span lang="en-US">10. </span><span lang="ru-RU"> лассы
 			</span><span lang="en-US">DBxDocTreeModel, DBxSubDocTreeModel </span><span lang="ru-RU">(</span><a href="ExtDBDocs_11.htm#v001p9"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.9</span></a><span lang="ru-RU">)
-			</span><span lang="ru-RU">наследуютс€ от
-			DataTableTreeModelWithIds&lt;Int32&gt; (</span><a href="ExtTools_20.htm#v311p2"><span lang="en-US">ExtTools,
+			наследуютс€ от DataTableTreeModelWithIds&lt;Int32&gt; (</span><a href="ExtTools_20.htm#v311p2"><span lang="en-US">ExtTools,
 			v.311 </span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">).
 			ѕор€док сортировки устанавливаетс€ как свойство </span><span lang="en-US">Sort,
 			</span><span lang="ru-RU">а не параметр конструктора базового
-			класса.  ласс FilteredDataTableTreeModel </span><span lang="ru-RU">(</span><a href="ExtDBDocs_11.htm#v052p5"><span lang="en-US">v.52
+			класса.  ласс FilteredDataTableTreeModel (</span><a href="ExtDBDocs_11.htm#v052p5"><span lang="en-US">v.52
 			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">)
-			</span><span lang="ru-RU">переименован в
-			FilteredDataTableTreeModel</span><span lang="en-US">WithIds&lt;T&gt;
+			переименован в FilteredDataTableTreeModel</span><span lang="en-US">WithIds&lt;T&gt;
 			</span><span lang="ru-RU">и сделан типизированным</span></p>
 			<p><a name="v311p11"></a><span lang="en-US">11. </span><span lang="ru-RU">¬
 			интерфейсе </span><span lang="en-US">IDBxDocValues (<a href="#v001p4">v</a></span><a href="#v001p4"><span lang="ru-RU">.1
@@ -159,14 +176,14 @@
 			п.4</span></a><span lang="en-US">) </span><span lang="ru-RU">€вл€етс€
 			устанавливаемым дл€ симметрии с </span><span lang="en-US">DataTableDocValues</span><span lang="ru-RU">.
 			»зменены</span> <span lang="ru-RU">конструкторы.</span></p>
-			<p lang="en-US">13. DataTableDocValues,
-			DataRowDocValues.GetValueReadOnly()<span lang="ru-RU"> </span>(<a href="#v001p4">v</a><a href="#v001p4"><span lang="ru-RU">.1
-			п.4</span></a>)  <span lang="ru-RU">возвраща</span><span lang="ru-RU">ю</span><span lang="ru-RU">т
-			</span>true<span lang="ru-RU">, если задано свойство
-			</span>Column.Expression<span lang="ru-RU">.</span></p>
-			<p lang="en-US">14. DBxMemoryDocValues (<a href="#v001p4">v</a><a href="#v001p4"><span lang="ru-RU">.1
-			п.4</span></a>) <span lang="ru-RU">игнорировал установку
-			</span>SetReadOnly().</p>
+			<p><span lang="en-US">13. DataTableDocValues,
+			DataRowDocValues.GetValueReadOnly() (<a href="#v001p4">v</a></span><a href="#v001p4"><span lang="ru-RU">.1
+			п.4</span></a><span lang="en-US">) </span><span lang="ru-RU">возвращают
+			</span><span lang="en-US">true</span><span lang="ru-RU">, если
+			задано свойство </span><span lang="en-US">Column.Expression</span><span lang="ru-RU">.</span></p>
+			<p><span lang="en-US">14. DBxMemoryDocValues (<a href="#v001p4">v</a></span><a href="#v001p4"><span lang="ru-RU">.1
+			п.4</span></a><span lang="en-US">) </span><span lang="ru-RU">игнорировал
+			установку </span><span lang="en-US">SetReadOnly().</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -271,7 +288,7 @@
 			</span><span lang="en-US">BeforeEdit</span></p>
 			<p><span lang="en-US">- DBxSingleDoc.Delete() </span><span lang="ru-RU">вызывает
 			проверку </span><span lang="en-US">BeforeDelete</span></p>
-			<p>6. <span lang="en-US">DBxRealDocProvider.ApplyChanges()
+			<p><a name="v308p6"></a>6. <span lang="en-US">DBxRealDocProvider.ApplyChanges()
 			</span>выполн€ет считывание актуальных значений полей документа и
 			использует их при тестировании документов в режимах <span lang="en-US">ApplyEditOrg
 			</span>и <span lang="en-US">ApplyDelete. </span>–аньше

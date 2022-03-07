@@ -2825,7 +2825,8 @@ namespace FreeLibSet.Forms
         if (_DialogStack.Count > 0)
         {
           Form frm = _DialogStack.Peek();
-          if ((!frm.IsDisposed) && (frm.Visible))
+          if ((!frm.IsDisposed) && (frm.Visible) && 
+            EFPFormProvider.FindFormProviderRequired(frm).VisibleCompleted) // 07.03.2022
             return _DialogStack.Peek();
 
           // 16.09.2021
@@ -2833,7 +2834,8 @@ namespace FreeLibSet.Forms
           Form[] a = _DialogStack.ToArray();
           for (int i = 0; i < a.Length; i++)
           {
-            if ((!a[i].IsDisposed) && (a[i].Visible))
+            if ((!a[i].IsDisposed) && (a[i].Visible) &&
+              EFPFormProvider.FindFormProviderRequired(a[i]).VisibleCompleted) // 07.03.2022
               return a[i];
           }
           return null;

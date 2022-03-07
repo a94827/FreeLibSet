@@ -26,18 +26,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики формы
-
-    #endregion
-
     #region Статический метод запуска
 
     /// <summary>
     /// Статический экземпляр формы
     /// </summary>
     private static TempWaitForm _TheForm = null;
-
-    #endregion
 
     public static void BeginWait(string message, int imageIndex, bool updateImmediately)
     {
@@ -63,11 +57,11 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      WaitInfo WaitObj = new WaitInfo();
-      WaitObj.Message = message;
-      WaitObj.ImageIndex = imageIndex;
+      WaitInfo waitObj = new WaitInfo();
+      waitObj.Message = message;
+      waitObj.ImageIndex = imageIndex;
 
-      _WaitInfoStack.Push(WaitObj);
+      _WaitInfoStack.Push(waitObj);
 
       try
       {
@@ -88,7 +82,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    internal static void EndWait()
+    public static void EndWait()
     {
       //#if DEBUG
       //      CheckTread();
@@ -103,9 +97,9 @@ namespace FreeLibSet.Forms
           _TheForm.Visible = false;
         else
         {
-          WaitInfo WaitObj = _WaitInfoStack.Peek();
-          _TheForm.TheLabel.Text = WaitObj.Message;
-          _TheForm.TheImg.Image = EFPApp.MainImages.Images[WaitObj.ImageIndex];
+          WaitInfo waitObj = _WaitInfoStack.Peek();
+          _TheForm.TheLabel.Text = waitObj.Message;
+          _TheForm.TheImg.Image = EFPApp.MainImages.Images[waitObj.ImageIndex];
         }
       }
       catch (Exception e) // 06.06.2017
@@ -114,6 +108,10 @@ namespace FreeLibSet.Forms
       }
 
     }
+
+    #endregion
+
+    #region Обработка ошибок
 
     /// <summary>
     /// Признак однократного логгирования ошибки в BeginWait() / EndWait()
@@ -128,6 +126,9 @@ namespace FreeLibSet.Forms
       LogoutTools.LogoutException(e, "Перехват ошибки EFPApp.BeginWait()/EndWait(). Повторные сообщения не выводятся");
     }
 
+    #endregion
+
+    #region Стек сообщений
 
     /// <summary>
     /// Объект для стека сообщений. Для вызовов WaitCursor без аргументов
@@ -147,5 +148,7 @@ namespace FreeLibSet.Forms
     /// Стек вызовов
     /// </summary>
     private static Stack<WaitInfo> _WaitInfoStack = new Stack<WaitInfo>();
+
+    #endregion
   }
 }

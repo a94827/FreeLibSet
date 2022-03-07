@@ -367,12 +367,20 @@ namespace FreeLibSet.Forms
     public bool Visible { get { return _Visible; } }
     private bool _Visible;
 
+    /// <summary>
+    /// В отличие от Visible, свойство возвращает true только после полного окончания установки видимости
+    /// формы, когда отработается событие Applicaction.Idle
+    /// </summary>
+    internal bool VisibleCompleted { get { return _VisibleCompleted; } }
+    private bool _VisibleCompleted;
+
     private void DoForm_VisibleChanged(bool isVisible)
     {
       if (isVisible == _Visible)
         return;
 
       _Visible = isVisible;
+      _VisibleCompleted = false;
 
       // Начальная проверка ошибок для всех элементов
       if (isVisible)
@@ -483,7 +491,6 @@ namespace FreeLibSet.Forms
           LogoutTools.LogoutException(e, "Включение tool forms"); // без вывода диалога
         }
         Form.Activate(); // добавлено 17.12.2010 для работы формы предварительного просмотра
-
       }
 
       // 21.05.2021 Перенесено из OnShown(), т.к. должно вызываться и при повторном вызове формы
@@ -1047,6 +1054,8 @@ namespace FreeLibSet.Forms
 
       if (Form.IsDisposed)
         return; // 16.06.2021
+      if (!Visible)
+        return; // 07.03.2022. На всякий случай
 
       if (_ToolTipNestedControls != null)
       {
@@ -1084,6 +1093,8 @@ namespace FreeLibSet.Forms
       }
 
       DelayedSetFocus(); // 17.02.2022
+
+      _VisibleCompleted = true;
     }
 
     /// <summary>

@@ -83,27 +83,26 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     private Form GetWantedOwner()
     {
-      Form WantedOwner;
-
-      Form AF = Form.ActiveForm; // 21.12.2018. См. исправление в EFPApp.DialogOwnerWindow
-
       if (EFPApp.ActiveDialog != null)
-        WantedOwner = EFPApp.ActiveDialog;
-      else if (EFPApp.MainWindow != null)
-        WantedOwner = EFPApp.MainWindow; // 21.09.2018
-      else if (AF != null && (!object.ReferenceEquals(this, AF))) // 06.06.2017
-        WantedOwner = AF;
-      else
-        WantedOwner = null;
+        return EFPApp.ActiveDialog; // дополнительные проверки видимости формы не нужны.
 
-      if (WantedOwner != null)
+      Form af = Form.ActiveForm; // 21.12.2018. См. исправление в EFPApp.DialogOwnerWindow
+      Form wantedOwner;
+      if (EFPApp.MainWindow != null)
+        wantedOwner = EFPApp.MainWindow; // 21.09.2018
+      else if (af != null && (!object.ReferenceEquals(this, af))) // 06.06.2017
+        wantedOwner = af;
+      else
+        wantedOwner = null;
+
+      if (wantedOwner != null)
       {
         // 17.06.2018 - проверяем, что активная форма нормальная
 
-        if (WantedOwner.IsDisposed)
-          WantedOwner = null;
-        else if (!WantedOwner.Visible)
-          WantedOwner = null;
+        if (wantedOwner.IsDisposed)
+          wantedOwner = null;
+        else if (!wantedOwner.Visible)
+          wantedOwner = null;
       }
 
       //if (WantedOwner != null)
@@ -113,7 +112,7 @@ namespace FreeLibSet.Forms
       //    WantedOwner.Select();
       //}
 
-      return WantedOwner;
+      return wantedOwner;
     }
 
     protected override bool ShowWithoutActivation
@@ -123,7 +122,6 @@ namespace FreeLibSet.Forms
         return true;
       }
     }
-
 
     #endregion
 
@@ -165,8 +163,8 @@ namespace FreeLibSet.Forms
     {
       if (this.Owner == null)
         return; // 04.10.2018
-      Rectangle Rect = this.Owner.RectangleToScreen(this.Owner.ClientRectangle);
-      SetFormPosition(Rect);
+      Rectangle rect = this.Owner.RectangleToScreen(this.Owner.ClientRectangle);
+      SetFormPosition(rect);
       //EFPApp.MessageBox(Rect.ToString()+Environment.NewLine+this.Bounds.ToString());
     }
 

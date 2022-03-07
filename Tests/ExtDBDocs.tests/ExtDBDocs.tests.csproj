@@ -45,6 +45,7 @@
     <Compile Include="DBxBinDataHandlerTests.cs" />
     <Compile Include="DBxBinDataValidatorTests.cs" />
     <Compile Include="DBxDocPermissionsTests.cs" />
+    <Compile Include="DBxDocProviderTests_TimeOut.cs" />
     <Compile Include="DBxDocSetTests.cs" />
     <Compile Include="DBxDocTypesTests.cs" />
     <Compile Include="DBxMemoryDocValuesTests.cs" />
