@@ -463,7 +463,6 @@ namespace FreeLibSet.OLE
   /// <summary>
   /// Ссылка на интерфейс + ссылка на Helper
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct ObjBase
   {
     #region Конструктор

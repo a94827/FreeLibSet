@@ -408,7 +408,6 @@ namespace FreeLibSet.Calendar
   /// Месяцы не обязаны относиться к одному году.
   /// Открытые интервалы не поддерживаются.
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   [Serializable]
   public struct YearMonthRange : IEnumerable<YearMonth>
   {
@@ -674,7 +673,6 @@ namespace FreeLibSet.Calendar
     /// Перечислитель по списку месяцев
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<YearMonth>
     {
       #region Конструктор

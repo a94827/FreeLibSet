@@ -15,7 +15,6 @@ namespace FreeLibSet.Data.Docs
   /// Список однотипных поддокументов, относящихся к одному документу
   /// При переборе поддокументов могут встречаться удаленные поддокументы
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DBxSingleSubDocs : IObjectWithCode, IEnumerable<DBxSubDoc>, IReadOnlyObject
   {
     #region Защищенный конструктор
@@ -234,7 +233,6 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Перечислитель поддокументов одного вида в одном документе
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<DBxSubDoc>
     {
       #region Конструктор

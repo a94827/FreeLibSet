@@ -474,7 +474,6 @@ namespace FreeLibSet.Collections
       /// Порядок перебора соответствует порядку добавления элементов в список
       /// </summary>
       [Serializable]
-      [StructLayout(LayoutKind.Auto)]
       public struct Enumerator : IEnumerator<TValue>
       {
         #region Конструктор
@@ -830,7 +829,6 @@ namespace FreeLibSet.Collections
     /// Реализация перечислителя по парам "Ключ-Значение"
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
     {
       #region Конструктор
@@ -3233,6 +3231,19 @@ namespace FreeLibSet.Collections
     protected void SetReadOnly()
     {
       _IsReadOnly = true;
+    }
+
+    #endregion
+
+    #region Прочее
+
+    /// <summary>
+    /// Возвращает строку "Count=XXX" для отладки
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return "Count=" + Count.ToString();
     }
 
     #endregion

@@ -19,7 +19,6 @@ namespace FreeLibSet.FIAS
   // К сожалению, в базе данных ФИАС могут повторяться идентификаторы. То есть идентификаторы AOID и AOGUID могут совпадать
   // Нужно либо хранить отдельные словари, либо использовать различающиеся ключи
 
-  [StructLayout(LayoutKind.Auto)]
   internal struct FiasGuidKey : IEquatable<FiasGuidKey>
   {
     #region Конструктор
@@ -85,7 +84,6 @@ namespace FreeLibSet.FIAS
   /// Не используется в прикладном коде
   /// </summary>
   [Serializable]
-  [StructLayout(LayoutKind.Auto)]
   public struct FiasGuidInfo
   {
     #region Конструктор

@@ -1330,7 +1330,6 @@ namespace FreeLibSet.Collections
     /// Это позволяет использовать метод LinkedList.Remove(), принимающий не ключ, а узел. 
     /// У этих методов производительность разная: O(1) и O(Count) соответственно.
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     private struct NodeAndValue
     {
       #region Конструктор

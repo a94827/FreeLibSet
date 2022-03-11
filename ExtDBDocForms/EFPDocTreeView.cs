@@ -228,16 +228,16 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.BeginWait("Обновление данных", "Refresh");
       try
       {
-        DBxFilter Filter = Filters.GetSqlFilter();
+        DBxFilter filter = Filters.GetSqlFilter();
         if ((!ShowDeleted) && UI.DocProvider.DocTypes.UseDeleted /* 23.05.2021 */)
         {
-          if (Filter == null)
-            Filter = DBSDocType.DeletedFalseFilter;
+          if (filter == null)
+            filter = DBSDocType.DeletedFalseFilter;
           else
-            Filter = AndFilter.FromArray(new DBxFilter[] { Filter, DBSDocType.DeletedFalseFilter });
+            filter = AndFilter.FromArray(new DBxFilter[] { filter, DBSDocType.DeletedFalseFilter });
         }
 
-        _OriginalModel = new DBxDocTreeModel(DocTypeUI.UI.DocProvider, DocTypeUI.DocType, UsedColumnNames, Filter);
+        _OriginalModel = new DBxDocTreeModel(DocTypeUI.UI.DocProvider, DocTypeUI.DocType, UsedColumnNames, filter);
         InitAuxFiltersModel();
 
         base.CallRefreshDataEventHandler(args);
@@ -299,9 +299,9 @@ namespace FreeLibSet.Forms.Docs
         _AuxFilterGroupIds = value;
         if (_OriginalModel != null)
         {
-          EFPDataTreeViewSelection OldSel = Selection;
+          EFPDataTreeViewSelection oldSel = Selection;
           InitAuxFiltersModel();
-          Selection = OldSel; // по возможности
+          Selection = oldSel; // по возможности
         }
       }
     }
@@ -320,12 +320,12 @@ namespace FreeLibSet.Forms.Docs
         Control.Model = _OriginalModel;
       else
       {
-        DBxFilter Filter2;
+        DBxFilter filter2;
         if (AuxFilterGroupIds.Length == 0)
-          Filter2 = new ValueFilter(DocTypeUI.DocType.GroupRefColumnName, 0);
+          filter2 = new ValueFilter(DocTypeUI.DocType.GroupRefColumnName, 0);
         else
-          Filter2 = new IdsFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
-        Control.Model = new FilteredDataTableTreeModelWithIds<Int32>(_OriginalModel, Filter2, _OriginalModel.IntegrityFlagColumnName);
+          filter2 = new IdsFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
+        Control.Model = new FilteredDataTableTreeModelWithIds<Int32>(_OriginalModel, filter2, _OriginalModel.IntegrityFlagColumnName);
       }
 
       try

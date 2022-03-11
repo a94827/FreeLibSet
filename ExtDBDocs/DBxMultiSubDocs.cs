@@ -1257,7 +1257,6 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Перечислитель поддокументов
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<DBxSubDoc>
     {
       #region Конструктор

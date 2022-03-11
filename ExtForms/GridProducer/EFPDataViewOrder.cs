@@ -18,7 +18,6 @@ namespace FreeLibSet.Forms
   /// Описание порядка сортировки для табличного просмотра
   /// Структура содержит имя основного столбца сортировки и порядок сортировки
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct EFPDataGridViewSortInfo
   {
     #region Конструктор

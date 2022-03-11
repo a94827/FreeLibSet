@@ -14,7 +14,6 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Доступ к отдельному поддокументу
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DBxSubDoc
   {
     #region Защищенный конструктор

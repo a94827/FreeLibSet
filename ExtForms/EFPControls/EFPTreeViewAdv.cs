@@ -628,7 +628,7 @@ namespace FreeLibSet.Forms
     /// Вызов метода PerformRefresh(), который можно выполнять из обработчика события
     /// </summary>
     /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнеорируется</param>
+    /// <param name="args">Игнорируется</param>
     public void PerformRefresh(object sender, EventArgs args)
     {
       PerformRefresh();

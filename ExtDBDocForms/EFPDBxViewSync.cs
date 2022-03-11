@@ -20,7 +20,6 @@ namespace FreeLibSet.Forms.Docs
   {
     #region Вложенная структура
 
-    [StructLayout(LayoutKind.Auto)]
     private struct Info
     {
       #region Конструктор

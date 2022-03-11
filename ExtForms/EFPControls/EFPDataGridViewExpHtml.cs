@@ -38,7 +38,6 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Поля сводки документа, используемые при сохранении табличного просмотра
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct EFPDocumentProperties
   {
     #region Поля для сводки

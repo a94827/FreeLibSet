@@ -87,7 +87,6 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Информация о размещении формы
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct ScreenInfo
     {
       #region Конструктор

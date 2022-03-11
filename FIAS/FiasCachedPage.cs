@@ -46,7 +46,6 @@ namespace FreeLibSet.FIAS
   /// Не используется в прикладном коде
   /// </summary>
   [Serializable]
-  [StructLayout(LayoutKind.Auto)]
   public struct FiasSearchRowResult
   {
     #region Конструктор

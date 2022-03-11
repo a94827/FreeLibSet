@@ -38,7 +38,6 @@ namespace FreeLibSet.Core
   /// Одно сообщение об ошибке, хранящееся в ErrorMessageList
   /// </summary>
   [Serializable]
-  [StructLayout(LayoutKind.Auto)]
   public struct ErrorMessageItem
   {
     #region Конструкторы

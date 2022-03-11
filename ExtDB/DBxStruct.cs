@@ -847,7 +847,6 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает перечислитель по таблицам
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<DBxTableStruct>
     {
       #region Конструктор

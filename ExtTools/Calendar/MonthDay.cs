@@ -13,7 +13,6 @@ namespace FreeLibSet.Calendar
   /// Структура для хранения дня и месяца (применимых к любому году).
   /// Хранит номер дня в году как число от 1 до 365 (29 февраля отсутствует).
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   [Serializable]
   public struct MonthDay : IEquatable<MonthDay>, IComparable<MonthDay>
   {
@@ -547,7 +546,6 @@ namespace FreeLibSet.Calendar
   /// Если First.IsEmpty и Last.IsEmpty, то структура считается неинициализированной (IsEmpty=true). Не путать с полным периодом (IsWholeYear=true)
   /// Структура также содержит поле Tag, которое может хранить произвольные пользовательские данные
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   [Serializable]
   public struct MonthDayRange : IEnumerable<MonthDay>
   {

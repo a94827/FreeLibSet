@@ -1686,7 +1686,6 @@ namespace FreeLibSet.Data.Docs
     /// Эта структура не используется в прикладном коде
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Auto)]
     public struct DocSubDocDataId
     {
       #region Конструктор

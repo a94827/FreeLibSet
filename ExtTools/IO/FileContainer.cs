@@ -19,7 +19,6 @@ namespace FreeLibSet.IO
   /// Поля времени объявлены Nullable, чтобы яснее указывать, что данные недоступны
   /// </summary>
   [Serializable]
-  [StructLayout(LayoutKind.Auto)]
   public struct StoredFileInfo
   {
     #region Конструкторы

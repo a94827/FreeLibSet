@@ -18,7 +18,6 @@ namespace FreeLibSet.Calendar
   /// Интервал дат (закрытый)
   /// </summary>
   [Serializable]
-  [StructLayout(LayoutKind.Auto)]
   public struct DateRange : IEnumerable<DateTime>, IEquatable<DateRange>
   {
     #region Конструкторы
@@ -764,7 +763,6 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Перечислитель
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<DateTime>
     {
       #region Конструктор

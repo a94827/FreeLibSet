@@ -2495,7 +2495,6 @@ namespace FreeLibSet.IO
   /// <summary>
   /// Элемент списка шаблонов файлов
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct FileTemplateItem
   {
     #region Конструктор

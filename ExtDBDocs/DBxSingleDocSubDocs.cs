@@ -11,7 +11,6 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Реализация свойства DBxSingleDoc.SubDocs
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DBxSingleDocSubDocs
   {
     #region Конструктор

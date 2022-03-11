@@ -312,7 +312,6 @@ namespace FreeLibSet.Text
     /// Перечислитель по строкам
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Auto)]
     public struct Enumerator : IEnumerator<string>
     {
       #region Конструктор
@@ -398,7 +397,6 @@ namespace FreeLibSet.Text
   /// <summary>
   /// Структура, хранящая индекс строки и столбца текстовой позиции
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   [Serializable]
   public struct TextPosition
   {

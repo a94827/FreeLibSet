@@ -861,7 +861,6 @@ namespace FreeLibSet.FIAS
 
     #region Компоненты
 
-    [StructLayout(LayoutKind.Auto)]
     internal struct FormatItem
     {
       #region Поля

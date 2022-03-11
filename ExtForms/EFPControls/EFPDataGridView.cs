@@ -1171,7 +1171,6 @@ namespace FreeLibSet.Forms
   /// Метод EFPDataGridView.GetExcelCellAttr() позволяет получить атрибуты ячейки,
   /// совместимые с Microsoft Excel
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct EFPDataGridViewExcelCellAttributes
   {
     #region Поля
@@ -6944,7 +6943,7 @@ namespace FreeLibSet.Forms
     /// Вызов метода PerformRefresh(), который можно выполнять из обработчика события
     /// </summary>
     /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнеорируется</param>
+    /// <param name="args">Игнорируется</param>
     public void PerformRefresh(object sender, EventArgs args)
     {
       PerformRefresh();

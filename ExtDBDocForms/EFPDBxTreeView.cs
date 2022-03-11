@@ -515,6 +515,9 @@ namespace FreeLibSet.Forms.Docs
       base.OnAttached();
 
       if (Control.Model == null)
+        OnRefreshData(EventArgs.Empty); // 09.03.2022
+
+      if (Control.Model == null)
         throw new BugException("Control.Model==null");
 
       // Восстановление сохраненной текущей позиции

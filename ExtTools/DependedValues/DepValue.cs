@@ -18,7 +18,6 @@ namespace FreeLibSet.DependedValues
   /// Хранится в DepValuе и используется для отладочных целей.
   /// Структура не является сериализуемой
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DepOwnerInfo
   {
     #region Конструктор

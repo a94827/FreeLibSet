@@ -19,7 +19,6 @@ namespace FreeLibSet.DBF
   /// Структура однократной записи
   /// </summary>
   [Serializable]
-  [StructLayout(LayoutKind.Auto)]
   public struct DbfFieldInfo
   {
     #region Конструкторы
@@ -3676,7 +3675,6 @@ namespace FreeLibSet.DBF
 
     #region Внутренние списки для копирования
 
-    [StructLayout(LayoutKind.Auto)]
     private struct DirectCopyItem : IComparable<DirectCopyItem>
     {
       #region Конструктор
@@ -3712,7 +3710,6 @@ namespace FreeLibSet.DBF
     private List<DirectCopyItem> DirectCopyList;
 
 
-    [StructLayout(LayoutKind.Auto)]
     private struct SpaceFillItem : IComparable<SpaceFillItem>
     {
       #region Конструктор
@@ -3751,7 +3748,6 @@ namespace FreeLibSet.DBF
     /// </summary>
     private byte[] SpaceBuffer;
 
-    [StructLayout(LayoutKind.Auto)]
     private struct FieldPair
     {
       #region Конструктор

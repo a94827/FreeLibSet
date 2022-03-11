@@ -16,7 +16,6 @@ namespace FreeLibSet.Data.Docs
   /// Доступ к отдельному документу
   /// Для доступа к объекту используется индексированное свойство DBxMultiDocs[] или метод DBxMultiDocs.FindDocId()
   /// </summary>
-  [StructLayout(LayoutKind.Auto)]
   public struct DBxSingleDoc
   {
     #region Защищенный конструктор
