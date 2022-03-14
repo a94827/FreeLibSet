@@ -63,13 +63,13 @@ namespace FreeLibSet.OpenOffice.Calc
       if (odsPath.IsEmpty)
         throw new ArgumentException("Путь не задан", "odsPath");
 
-      unoidl.com.sun.star.beans.PropertyValue[] Props = new unoidl.com.sun.star.beans.PropertyValue[2];
-      Props[0] = new unoidl.com.sun.star.beans.PropertyValue("ReadOnly", 0, new uno.Any(readOnly), unoidl.com.sun.star.beans.PropertyState.DIRECT_VALUE);
-      Props[1] = new unoidl.com.sun.star.beans.PropertyValue("Hidden", 0, new uno.Any(!application.Visible), unoidl.com.sun.star.beans.PropertyState.DIRECT_VALUE);
+      unoidl.com.sun.star.beans.PropertyValue[] props = new unoidl.com.sun.star.beans.PropertyValue[2];
+      props[0] = new unoidl.com.sun.star.beans.PropertyValue("ReadOnly", 0, new uno.Any(readOnly), unoidl.com.sun.star.beans.PropertyState.DIRECT_VALUE);
+      props[1] = new unoidl.com.sun.star.beans.PropertyValue("Hidden", 0, new uno.Any(!application.Visible), unoidl.com.sun.star.beans.PropertyState.DIRECT_VALUE);
 
       unoidl.com.sun.star.lang.XComponent xComponent = application.XComponentLoader.loadComponentFromURL(
         odsPath.Uri.ToString(), "_blank", 0,
-        Props);
+        props);
 
       _XSpreadsheetDocument = (unoidl.com.sun.star.sheet.XSpreadsheetDocument)xComponent;
     }
@@ -95,12 +95,12 @@ namespace FreeLibSet.OpenOffice.Calc
       if (sheetCount < 1)
         throw new ArgumentOutOfRangeException("sheetCount");
 
-      unoidl.com.sun.star.beans.PropertyValue[] Props = new unoidl.com.sun.star.beans.PropertyValue[1];
-      Props[0] = new unoidl.com.sun.star.beans.PropertyValue("Hidden", 0, new uno.Any(!application.Visible), unoidl.com.sun.star.beans.PropertyState.DIRECT_VALUE);
+      unoidl.com.sun.star.beans.PropertyValue[] props = new unoidl.com.sun.star.beans.PropertyValue[1];
+      props[0] = new unoidl.com.sun.star.beans.PropertyValue("Hidden", 0, new uno.Any(!application.Visible), unoidl.com.sun.star.beans.PropertyState.DIRECT_VALUE);
 
 
       unoidl.com.sun.star.lang.XComponent xComponent = application.XComponentLoader.loadComponentFromURL(
-        "private:factory/scalc", "_blank", 0, Props);
+        "private:factory/scalc", "_blank", 0, props);
 
       _XSpreadsheetDocument = (unoidl.com.sun.star.sheet.XSpreadsheetDocument)xComponent;
 
@@ -164,7 +164,7 @@ namespace FreeLibSet.OpenOffice.Calc
 
     public unoidl.com.sun.star.beans.XPropertySet XPropertySet { get { return _XSpreadsheetDocument as unoidl.com.sun.star.beans.XPropertySet; } }
 
-    public unoidl.com.sun.star.document.XActionLockable XActionLockable { get { return _XSpreadsheetDocument as unoidl.com.sun.star.document.XActionLockable;} }
+    public unoidl.com.sun.star.document.XActionLockable XActionLockable { get { return _XSpreadsheetDocument as unoidl.com.sun.star.document.XActionLockable; } }
 
     #endregion
 
@@ -331,7 +331,7 @@ namespace FreeLibSet.OpenOffice.Calc
         //if (Index < 0 || Index >= Count)
         //  throw new ArgumentOutOfRangeException("Index");
 
-        Worksheet sht=this[index];
+        Worksheet sht = this[index];
         this.XSpreadsheets.removeByName(sht.Name);
       }
 
@@ -349,6 +349,18 @@ namespace FreeLibSet.OpenOffice.Calc
         XSpreadsheets2.importSheet(source.Workbook.XSpreadsheetDocument, source.Name, Count);
 
         return this[Count - 1];
+      }
+
+      public override string ToString()
+      {
+        try
+        {
+          return String.Join(", ", GetAllNames());
+        }
+        catch (Exception e)
+        {
+          return "Ошибка при получении списка листов: " + e.Message;
+        }
       }
 
       #endregion
@@ -482,6 +494,22 @@ namespace FreeLibSet.OpenOffice.Calc
         }
       }
 
+      /// <summary>
+      /// Возвращает список имен через запятую
+      /// </summary>
+      /// <returns></returns>
+      public override string ToString()
+      {
+        try
+        {
+          return String.Join(", ", ToArray());
+        }
+        catch (Exception e)
+        {
+          return "Ошибка при получении списка имен: " + e.Message;
+        }
+      }
+
       #endregion
 
       #region Методы
@@ -511,7 +539,7 @@ namespace FreeLibSet.OpenOffice.Calc
             return new Range(); // 29.01.2020
 
           unoidl.com.sun.star.sheet.XCellRangeReferrer crr = nr as unoidl.com.sun.star.sheet.XCellRangeReferrer;
-          if (crr==null)
+          if (crr == null)
             return new Range(); // 10.10.2018
 
           unoidl.com.sun.star.table.XCellRange cr = crr.getReferredCells();
@@ -551,7 +579,7 @@ namespace FreeLibSet.OpenOffice.Calc
               return new Cell(); // 14.01.2019
             else
             {
-              unoidl.com.sun.star.table.XCellRange cr=crr.getReferredCells();
+              unoidl.com.sun.star.table.XCellRange cr = crr.getReferredCells();
               if (cr == null)
                 return new Cell(); // 25.01.2022
               unoidl.com.sun.star.table.XCell c = cr.getCellByPosition(0, 0);
@@ -619,16 +647,16 @@ namespace FreeLibSet.OpenOffice.Calc
     /// <param name="newPath">Путь к файлу</param>
     public void SaveAs(AbsPath newPath)
     {
-      string Ext = newPath.Extension.ToUpperInvariant();
-      string FilterName;
-      switch (Ext)
+      string ext = newPath.Extension.ToUpperInvariant();
+      string filterName;
+      switch (ext)
       {
-        case ".ODS": FilterName = "calc8"; break;
-        case ".XLS": FilterName = "MS Excel 97"; break;
+        case ".ODS": filterName = "calc8"; break;
+        case ".XLS": filterName = "MS Excel 97"; break;
         default:
-          throw new ArgumentException("Неизвестное расширение файла \"" + Ext + "\"");
+          throw new ArgumentException("Неизвестное расширение файла \"" + ext + "\"");
       }
-      SaveAs(newPath, FilterName);
+      SaveAs(newPath, filterName);
     }
 
     /// <summary>
@@ -638,11 +666,11 @@ namespace FreeLibSet.OpenOffice.Calc
     /// <param name="filterName">Имя фильтра, использумого для записи</param>
     private void SaveAs(AbsPath newPath, string filterName)
     {
-      unoidl.com.sun.star.beans.PropertyValue[] Props = new unoidl.com.sun.star.beans.PropertyValue[1];
-      Props[0] = new unoidl.com.sun.star.beans.PropertyValue();
-      Props[0].Name = "FilterName";
-      Props[0].Value = new uno.Any(filterName);
-      XStorable.storeAsURL(newPath.Uri.ToString(), Props);
+      unoidl.com.sun.star.beans.PropertyValue[] props = new unoidl.com.sun.star.beans.PropertyValue[1];
+      props[0] = new unoidl.com.sun.star.beans.PropertyValue();
+      props[0].Name = "FilterName";
+      props[0].Value = new uno.Any(filterName);
+      XStorable.storeAsURL(newPath.Uri.ToString(), props);
     }
 
 
@@ -670,6 +698,25 @@ namespace FreeLibSet.OpenOffice.Calc
     public void SetModified(bool value)
     {
       XModifiable.setModified(value);
+    }
+
+    /// <summary>
+    /// Возвращает путь к книге.
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      try
+      {
+        if (XStorable.hasLocation())
+          return XStorable.getLocation();
+        else
+          return "Без имени";
+      }
+      catch (Exception e)
+      {
+        return "Ошибка при получении имени книги: " + e.Message;
+      }
     }
 
     #endregion
@@ -716,8 +763,8 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        Worksheet Sheet = Sheets[address.Sheet];
-        return Sheet[address.Row, address.Column];
+        Worksheet sht = Sheets[address.Sheet];
+        return sht[address.Row, address.Column];
       }
     }
 
@@ -730,8 +777,8 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        Worksheet Sheet = Sheets[address.Sheet];
-        return Sheet.GetRange(address.StartRow, address.StartColumn, address.EndRow, address.EndColumn);
+        Worksheet sht = Sheets[address.Sheet];
+        return sht.GetRange(address.StartRow, address.StartColumn, address.EndRow, address.EndColumn);
       }
     }
 
@@ -773,12 +820,12 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        unoidl.com.sun.star.frame.XController XController = XModel.getCurrentController();
-        unoidl.com.sun.star.sheet.XSpreadsheetView XSpreadsheetView = XController as unoidl.com.sun.star.sheet.XSpreadsheetView;
-        if (XSpreadsheetView == null)
+        unoidl.com.sun.star.frame.XController xController = XModel.getCurrentController();
+        unoidl.com.sun.star.sheet.XSpreadsheetView xSpreadsheetView = xController as unoidl.com.sun.star.sheet.XSpreadsheetView;
+        if (xSpreadsheetView == null)
           return new SpreadsheetView(); // не инициализированный объект
         else
-          return new SpreadsheetView(XSpreadsheetView, XSpreadsheetDocument);
+          return new SpreadsheetView(xSpreadsheetView, XSpreadsheetDocument);
       }
     }
 
@@ -800,13 +847,13 @@ namespace FreeLibSet.OpenOffice.Calc
       //unoidl.com.sun.star.lang.Locale Locale=new unoidl.com.sun.star.lang.Locale();
       //unoidl.com.sun.star.lang.Locale Locale = new unoidl.com.sun.star.lang.Locale("ru", "RU", "");
       int[] keys = XNumberFormatsSupplier.getNumberFormats().queryKeys(unoidl.com.sun.star.util.NumberFormat.ALL, locale, false);
-      Dictionary<int, NumberFormatProperties> Dict = new Dictionary<int, NumberFormatProperties>(keys.Length);
+      Dictionary<int, NumberFormatProperties> dict = new Dictionary<int, NumberFormatProperties>(keys.Length);
       for (int i = 0; i < keys.Length; i++)
       {
         unoidl.com.sun.star.beans.XPropertySet ps = XNumberFormatsSupplier.getNumberFormats().getByKey(keys[i]);
-        Dict.Add(keys[i], new NumberFormatProperties(ps, XSpreadsheetDocument));
+        dict.Add(keys[i], new NumberFormatProperties(ps, XSpreadsheetDocument));
       }
-      return Dict;
+      return dict;
     }
 
     /// <summary>
@@ -823,14 +870,14 @@ namespace FreeLibSet.OpenOffice.Calc
 
     public int ReplaceNumberFormat(string oldNumberFormat, string newNumberFormat, unoidl.com.sun.star.lang.Locale locale)
     {
-      int OldKey = XNumberFormatsSupplier.getNumberFormats().queryKey(oldNumberFormat, locale, false);
-      if (OldKey < 0)
+      int oldKey = XNumberFormatsSupplier.getNumberFormats().queryKey(oldNumberFormat, locale, false);
+      if (oldKey < 0)
         return 0;
-      int NewKey = XNumberFormatsSupplier.getNumberFormats().queryKey(newNumberFormat, locale, false);
-      if (NewKey < 0)
-        NewKey = XNumberFormatsSupplier.getNumberFormats().addNew(newNumberFormat, locale);
+      int newKey = XNumberFormatsSupplier.getNumberFormats().queryKey(newNumberFormat, locale, false);
+      if (newKey < 0)
+        newKey = XNumberFormatsSupplier.getNumberFormats().addNew(newNumberFormat, locale);
 
-      return ReplaceNumberFormat(OldKey, NewKey);
+      return ReplaceNumberFormat(oldKey, newKey);
     }
 
     public int ReplaceNumberFormat(int oldKey, int newKey)
@@ -840,10 +887,10 @@ namespace FreeLibSet.OpenOffice.Calc
       if (newKey < 0)
         throw new ArgumentException("newKey");
 
-      int Res = 0;
+      int res = 0;
       foreach (Worksheet sht in Sheets)
-        Res += sht.Range.ReplaceNumberFormat(oldKey, newKey);
-      return Res;
+        res += sht.Range.ReplaceNumberFormat(oldKey, newKey);
+      return res;
     }
 
     #endregion
@@ -856,13 +903,13 @@ namespace FreeLibSet.OpenOffice.Calc
     public void Activate()
     {
       // ?? Что надо выбрать
-      unoidl.com.sun.star.frame.XFrame XFrame = XModel.getCurrentController().getFrame();
-      if (XFrame != null)
+      unoidl.com.sun.star.frame.XFrame xFrame = XModel.getCurrentController().getFrame();
+      if (xFrame != null)
       {
-        unoidl.com.sun.star.awt.XWindow wnd1 = XFrame.getContainerWindow();
+        unoidl.com.sun.star.awt.XWindow wnd1 = xFrame.getContainerWindow();
         if (wnd1 != null)
           wnd1.setFocus();
-        unoidl.com.sun.star.awt.XWindow wnd2 = XFrame.getComponentWindow();
+        unoidl.com.sun.star.awt.XWindow wnd2 = xFrame.getComponentWindow();
         if (wnd2 != null)
           wnd2.setFocus();
       }
@@ -1363,8 +1410,8 @@ namespace FreeLibSet.OpenOffice.Calc
       ssv.setActiveSheet(XSpreadsheet);
 
 #if DEBUG
-      unoidl.com.sun.star.container.XNamed XNamed2 = ssv.getActiveSheet() as unoidl.com.sun.star.container.XNamed;
-      string NewName = XNamed2.getName();
+      unoidl.com.sun.star.container.XNamed xNamed2 = ssv.getActiveSheet() as unoidl.com.sun.star.container.XNamed;
+      string newName = xNamed2.getName();
 #endif
     }
 
@@ -1449,8 +1496,8 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        unoidl.com.sun.star.sheet.XSpreadsheet XSpreadsheet = _XSheetCellRange.getSpreadsheet();
-        return new Worksheet(XSpreadsheet, _XSpreadsheetDocument);
+        unoidl.com.sun.star.sheet.XSpreadsheet xSpreadsheet = _XSheetCellRange.getSpreadsheet();
+        return new Worksheet(xSpreadsheet, _XSpreadsheetDocument);
       }
     }
 
@@ -1782,16 +1829,16 @@ namespace FreeLibSet.OpenOffice.Calc
 
     internal int ReplaceNumberFormat(int oldKey, int newKey)
     {
-      int Res = 0;
-      foreach (Range R in CellFormatRanges)
+      int res = 0;
+      foreach (Range r in CellFormatRanges)
       {
-        if (R.Properties.NumberFormatIndex == oldKey)
+        if (r.Properties.NumberFormatIndex == oldKey)
         {
-          R.Properties.SetNumberFormatIndex(newKey);
-          Res += R.CellCount;
+          r.Properties.SetNumberFormatIndex(newKey);
+          res += r.CellCount;
         }
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -1861,8 +1908,8 @@ namespace FreeLibSet.OpenOffice.Calc
       get
       {
         unoidl.com.sun.star.sheet.XSheetCellRange scr = _XCell as unoidl.com.sun.star.sheet.XSheetCellRange;
-        unoidl.com.sun.star.sheet.XSpreadsheet Spreadsheet = scr.getSpreadsheet();
-        return new Worksheet(Spreadsheet, _XSpreadsheetDocument);
+        unoidl.com.sun.star.sheet.XSpreadsheet xSpreadsheet = scr.getSpreadsheet();
+        return new Worksheet(xSpreadsheet, _XSpreadsheetDocument);
       }
     }
 
@@ -2038,7 +2085,7 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        unoidl.com.sun.star.table.CellContentType typ=XCell.getType();
+        unoidl.com.sun.star.table.CellContentType typ = XCell.getType();
         switch (typ) // 18.10.2016
         {
           case unoidl.com.sun.star.table.CellContentType.EMPTY:
@@ -2119,9 +2166,9 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        unoidl.com.sun.star.sheet.XSheetCellCursor Cursor = XSheetCellRange.getSpreadsheet().createCursorByRange(XSheetCellRange);
-        Cursor.collapseToMergedArea();
-        return new Range(Cursor, _XSpreadsheetDocument);
+        unoidl.com.sun.star.sheet.XSheetCellCursor xCursor = XSheetCellRange.getSpreadsheet().createCursorByRange(XSheetCellRange);
+        xCursor.collapseToMergedArea();
+        return new Range(xCursor, _XSpreadsheetDocument);
       }
     }
 
@@ -2183,8 +2230,8 @@ namespace FreeLibSet.OpenOffice.Calc
       unoidl.com.sun.star.sheet.XCellRangeReferrer crr = nr as unoidl.com.sun.star.sheet.XCellRangeReferrer;
       unoidl.com.sun.star.table.XCell c = crr.getReferredCells().getCellByPosition(0, 0);
       unoidl.com.sun.star.sheet.XCellAddressable ca = c as unoidl.com.sun.star.sheet.XCellAddressable;
-      unoidl.com.sun.star.table.CellAddress Addr2 = ca.getCellAddress();
-      return Compare(CellAddress, Addr2) == 0;
+      unoidl.com.sun.star.table.CellAddress addr2 = ca.getCellAddress();
+      return Compare(CellAddress, addr2) == 0;
     }
 
     /// <summary>
@@ -2572,7 +2619,7 @@ namespace FreeLibSet.OpenOffice.Calc
       XPropertySet.setPropertyValue("Orientation", new uno.Any(typeof(unoidl.com.sun.star.table.CellOrientation), value));
     }
 
-    // TODO: Вращшение
+    // TODO: Вращение
 
     #endregion
 
@@ -2651,28 +2698,28 @@ namespace FreeLibSet.OpenOffice.Calc
 
       public void SetBorder(BorderKind border, unoidl.com.sun.star.table.BorderLine value)
       {
-        uno.Any Value2 = new uno.Any(typeof(unoidl.com.sun.star.table.BorderLine), value);
+        uno.Any value2 = new uno.Any(typeof(unoidl.com.sun.star.table.BorderLine), value);
 
         switch (border)
         {
-          case BorderKind.Top: _Owner.XPropertySet.setPropertyValue("TopBorder", Value2); break;
-          case BorderKind.Left: _Owner.XPropertySet.setPropertyValue("LeftBorder", Value2); break;
-          case BorderKind.Right: _Owner.XPropertySet.setPropertyValue("RightBorder", Value2); break;
-          case BorderKind.Bottom: _Owner.XPropertySet.setPropertyValue("BottomBorder", Value2); break;
-          case BorderKind.TLBR: _Owner.XPropertySet.setPropertyValue("DiagonalTLBR", Value2); break;
-          case BorderKind.BLTR: _Owner.XPropertySet.setPropertyValue("DiagonalBLTR", Value2); break;
+          case BorderKind.Top: _Owner.XPropertySet.setPropertyValue("TopBorder", value2); break;
+          case BorderKind.Left: _Owner.XPropertySet.setPropertyValue("LeftBorder", value2); break;
+          case BorderKind.Right: _Owner.XPropertySet.setPropertyValue("RightBorder", value2); break;
+          case BorderKind.Bottom: _Owner.XPropertySet.setPropertyValue("BottomBorder", value2); break;
+          case BorderKind.TLBR: _Owner.XPropertySet.setPropertyValue("DiagonalTLBR", value2); break;
+          case BorderKind.BLTR: _Owner.XPropertySet.setPropertyValue("DiagonalBLTR", value2); break;
           case BorderKind.All:
-            _Owner.XPropertySet.setPropertyValue("TopBorder", Value2);
-            _Owner.XPropertySet.setPropertyValue("LeftBorder", Value2);
-            _Owner.XPropertySet.setPropertyValue("RightBorder", Value2);
-            _Owner.XPropertySet.setPropertyValue("BottomBorder", Value2);
+            _Owner.XPropertySet.setPropertyValue("TopBorder", value2);
+            _Owner.XPropertySet.setPropertyValue("LeftBorder", value2);
+            _Owner.XPropertySet.setPropertyValue("RightBorder", value2);
+            _Owner.XPropertySet.setPropertyValue("BottomBorder", value2);
             break;
           case BorderKind.Diagonals:
-            _Owner.XPropertySet.setPropertyValue("DiagonalTLBR", Value2); 
-            _Owner.XPropertySet.setPropertyValue("DiagonalBLTR", Value2); 
-          break;
+            _Owner.XPropertySet.setPropertyValue("DiagonalTLBR", value2);
+            _Owner.XPropertySet.setPropertyValue("DiagonalBLTR", value2);
+            break;
           default:
-          throw new ArgumentException("Неизвестный Border=" + border.ToString(), "border");
+            throw new ArgumentException("Неизвестный Border=" + border.ToString(), "border");
         }
       }
 
@@ -2765,8 +2812,6 @@ namespace FreeLibSet.OpenOffice.Calc
     #endregion
   }
 
-
-
   /// <summary>
   /// Коллекция диапазонов ячеек
   /// </summary>
@@ -2822,8 +2867,8 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        unoidl.com.sun.star.sheet.XSheetCellRange XSheetCellRange = _XIndexAccess.getByIndex(index).Value as unoidl.com.sun.star.sheet.XSheetCellRange;
-        return new Range(XSheetCellRange, _XSpreadsheetDocument);
+        unoidl.com.sun.star.sheet.XSheetCellRange xSheetCellRange = _XIndexAccess.getByIndex(index).Value as unoidl.com.sun.star.sheet.XSheetCellRange;
+        return new Range(xSheetCellRange, _XSpreadsheetDocument);
       }
     }
 
@@ -3186,10 +3231,10 @@ namespace FreeLibSet.OpenOffice.Calc
     /// </summary>
     public bool IsVisible
     {
-      get 
+      get
       {
         object v = XPropertySet.getPropertyValue("IsVisible").Value;
-        return DataTools.GetBool(v); 
+        return DataTools.GetBool(v);
       }
     }
 
@@ -3613,7 +3658,6 @@ namespace FreeLibSet.OpenOffice.Calc
     #endregion
   }
 
-
   /// <summary>
   /// Просмотр для листа (контроллер).
   /// Для доступа к контроллеру используйте свойство Workbook.CurrentControoler
@@ -3910,7 +3954,7 @@ namespace FreeLibSet.OpenOffice.Calc
       XPropertySet.setPropertyValue("ShowHelpLines", new uno.Any(value));
     }
 
-    
+
     /// <summary>
     /// enables display of anchor symbols when drawing objects are selected.
     /// </summary>
@@ -4053,8 +4097,8 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       get
       {
-        unoidl.com.sun.star.sheet.XSpreadsheet XSpreadsheet = XSpreadsheetView.getActiveSheet();
-        return new Worksheet(XSpreadsheet, XSpreadsheetDocument);
+        unoidl.com.sun.star.sheet.XSpreadsheet xSpreadsheet = XSpreadsheetView.getActiveSheet();
+        return new Worksheet(xSpreadsheet, XSpreadsheetDocument);
       }
       set
       {
