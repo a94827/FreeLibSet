@@ -187,8 +187,8 @@ namespace FreeLibSet.Collections
     public TypedStringDictionary(IDictionary<string, TValue> dictionary, bool ignoreCase)
       : this(dictionary.Count, ignoreCase)
     {
-      foreach (KeyValuePair<string, TValue> Pair in dictionary)
-        Add(Pair.Key, Pair.Value);
+      foreach (KeyValuePair<string, TValue> pair in dictionary)
+        Add(pair.Key, pair.Value);
     }
 
     /// <summary>
@@ -201,8 +201,8 @@ namespace FreeLibSet.Collections
     {
       _IgnoreCase = DataTools.GetIgnoreCase(comparer);
 
-      foreach (KeyValuePair<string, TValue> Pair in dictionary)
-        Add(Pair.Key, Pair.Value);
+      foreach (KeyValuePair<string, TValue> pair in dictionary)
+        Add(pair.Key, pair.Value);
     }
 
     #endregion
@@ -301,8 +301,8 @@ namespace FreeLibSet.Collections
     public BidirectionalTypedStringDictionary(IDictionary<string, TValue> dictionary, bool ignoreCase)
       : this(dictionary.Count, ignoreCase)
     {
-      foreach (KeyValuePair<string, TValue> Pair in dictionary)
-        Add(Pair.Key, Pair.Value);
+      foreach (KeyValuePair<string, TValue> pair in dictionary)
+        Add(pair.Key, pair.Value);
     }
 
     /// <summary>
@@ -313,8 +313,8 @@ namespace FreeLibSet.Collections
     public BidirectionalTypedStringDictionary(IDictionary<string, TValue> dictionary, StringComparer comparer)
       : this(dictionary.Count, comparer)
     {
-      foreach (KeyValuePair<string, TValue> Pair in dictionary)
-        Add(Pair.Key, Pair.Value);
+      foreach (KeyValuePair<string, TValue> pair in dictionary)
+        Add(pair.Key, pair.Value);
     }
 
     #endregion
@@ -900,8 +900,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, int> Pair in source)
-        checked { this[Pair.Key] += Pair.Value; }
+      foreach (KeyValuePair<string, int> pair in source)
+        checked { this[pair.Key] += pair.Value; }
     }
 
     /// <summary>
@@ -915,8 +915,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, int> Pair in source)
-        checked { this[Pair.Key] -= Pair.Value; }
+      foreach (KeyValuePair<string, int> pair in source)
+        checked { this[pair.Key] -= pair.Value; }
     }
 
     /// <summary>
@@ -930,9 +930,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static IntNamedDictionary operator +(IntNamedDictionary a, IDictionary<string, int> b)
     {
-      IntNamedDictionary Res = new IntNamedDictionary(a, a.IgnoreCase);
-      Res.Add(b);
-      return Res;
+      IntNamedDictionary res = new IntNamedDictionary(a, a.IgnoreCase);
+      res.Add(b);
+      return res;
     }
 
     /// <summary>
@@ -946,9 +946,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static IntNamedDictionary operator -(IntNamedDictionary a, IDictionary<string, int> b)
     {
-      IntNamedDictionary Res = new IntNamedDictionary(a, a.IgnoreCase);
-      Res.Substract(b);
-      return Res;
+      IntNamedDictionary res = new IntNamedDictionary(a, a.IgnoreCase);
+      res.Substract(b);
+      return res;
     }
 
     #endregion
@@ -962,10 +962,10 @@ namespace FreeLibSet.Collections
     /// <param name="m">Множитель</param>
     public void Multiply(int m)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        checked { this[Codes[i]] *= m; }
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        checked { this[codes[i]] *= m; }
     }
 
     /// <summary>
@@ -976,10 +976,10 @@ namespace FreeLibSet.Collections
     /// <param name="d">Делитель. Не может быть равен 0</param>
     public void Divide(int d)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        checked { this[Codes[i]] /= d; }
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        checked { this[codes[i]] /= d; }
     }
 
     #endregion
@@ -1094,8 +1094,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, long> Pair in source)
-        checked { this[Pair.Key] += Pair.Value; }
+      foreach (KeyValuePair<string, long> pair in source)
+        checked { this[pair.Key] += pair.Value; }
     }
 
     /// <summary>
@@ -1109,8 +1109,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, long> Pair in source)
-        checked { this[Pair.Key] -= Pair.Value; }
+      foreach (KeyValuePair<string, long> pair in source)
+        checked { this[pair.Key] -= pair.Value; }
     }
 
     /// <summary>
@@ -1124,9 +1124,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static Int64NamedDictionary operator +(Int64NamedDictionary a, IDictionary<string, long> b)
     {
-      Int64NamedDictionary Res = new Int64NamedDictionary(a, a.IgnoreCase);
-      Res.Add(b);
-      return Res;
+      Int64NamedDictionary res = new Int64NamedDictionary(a, a.IgnoreCase);
+      res.Add(b);
+      return res;
     }
 
     /// <summary>
@@ -1140,9 +1140,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static Int64NamedDictionary operator -(Int64NamedDictionary a, IDictionary<string, long> b)
     {
-      Int64NamedDictionary Res = new Int64NamedDictionary(a, a.IgnoreCase);
-      Res.Substract(b);
-      return Res;
+      Int64NamedDictionary res = new Int64NamedDictionary(a, a.IgnoreCase);
+      res.Substract(b);
+      return res;
     }
 
     #endregion
@@ -1156,10 +1156,10 @@ namespace FreeLibSet.Collections
     /// <param name="m">Множитель</param>
     public void Multiply(long m)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        checked { this[Codes[i]] *= m; }
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        checked { this[codes[i]] *= m; }
     }
 
     /// <summary>
@@ -1170,10 +1170,10 @@ namespace FreeLibSet.Collections
     /// <param name="d">Делитель. Не может быть равен 0</param>
     public void Divide(long d)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        checked { this[Codes[i]] /= d; }
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        checked { this[codes[i]] /= d; }
     }
 
     #endregion
@@ -1288,8 +1288,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, float> Pair in source)
-        this[Pair.Key] += Pair.Value;
+      foreach (KeyValuePair<string, float> pair in source)
+        this[pair.Key] += pair.Value;
     }
 
     /// <summary>
@@ -1303,8 +1303,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, float> Pair in source)
-        this[Pair.Key] -= Pair.Value;
+      foreach (KeyValuePair<string, float> pair in source)
+        this[pair.Key] -= pair.Value;
     }
 
     /// <summary>
@@ -1318,9 +1318,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static SingleNamedDictionary operator +(SingleNamedDictionary a, IDictionary<string, float> b)
     {
-      SingleNamedDictionary Res = new SingleNamedDictionary(a, a.IgnoreCase);
-      Res.Add(b);
-      return Res;
+      SingleNamedDictionary res = new SingleNamedDictionary(a, a.IgnoreCase);
+      res.Add(b);
+      return res;
     }
 
     /// <summary>
@@ -1334,9 +1334,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static SingleNamedDictionary operator -(SingleNamedDictionary a, IDictionary<string, float> b)
     {
-      SingleNamedDictionary Res = new SingleNamedDictionary(a, a.IgnoreCase);
-      Res.Substract(b);
-      return Res;
+      SingleNamedDictionary res = new SingleNamedDictionary(a, a.IgnoreCase);
+      res.Substract(b);
+      return res;
     }
 
     #endregion
@@ -1350,10 +1350,10 @@ namespace FreeLibSet.Collections
     /// <param name="m">Множитель</param>
     public void Multiply(float m)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] *= m;
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] *= m;
     }
 
     /// <summary>
@@ -1365,10 +1365,10 @@ namespace FreeLibSet.Collections
     /// <param name="d">Делитель. Не может быть равен 0</param>
     public void Divide(float d)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] /= d;
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] /= d;
     }
 
     #endregion
@@ -1382,10 +1382,10 @@ namespace FreeLibSet.Collections
     /// <param name="decimals">Число знаков после запятой</param>
     public void Round(int decimals)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] = (float)(Math.Round((double)(this[Codes[i]]), decimals, MidpointRounding.AwayFromZero));
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] = (float)(Math.Round((double)(this[codes[i]]), decimals, MidpointRounding.AwayFromZero));
     }
 
     /// <summary>
@@ -1509,8 +1509,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, double> Pair in source)
-        this[Pair.Key] += Pair.Value;
+      foreach (KeyValuePair<string, double> pair in source)
+        this[pair.Key] += pair.Value;
     }
 
     /// <summary>
@@ -1524,8 +1524,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, double> Pair in source)
-        this[Pair.Key] -= Pair.Value;
+      foreach (KeyValuePair<string, double> pair in source)
+        this[pair.Key] -= pair.Value;
     }
 
     /// <summary>
@@ -1539,9 +1539,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static DoubleNamedDictionary operator +(DoubleNamedDictionary a, IDictionary<string, double> b)
     {
-      DoubleNamedDictionary Res = new DoubleNamedDictionary(a, a.IgnoreCase);
-      Res.Add(b);
-      return Res;
+      DoubleNamedDictionary res = new DoubleNamedDictionary(a, a.IgnoreCase);
+      res.Add(b);
+      return res;
     }
 
     /// <summary>
@@ -1555,9 +1555,9 @@ namespace FreeLibSet.Collections
     /// <returns>Новая коллекция</returns>
     public static DoubleNamedDictionary operator -(DoubleNamedDictionary a, IDictionary<string, double> b)
     {
-      DoubleNamedDictionary Res = new DoubleNamedDictionary(a, a.IgnoreCase);
-      Res.Substract(b);
-      return Res;
+      DoubleNamedDictionary res = new DoubleNamedDictionary(a, a.IgnoreCase);
+      res.Substract(b);
+      return res;
     }
 
     #endregion
@@ -1571,10 +1571,10 @@ namespace FreeLibSet.Collections
     /// <param name="m">Множитель</param>
     public void Multiply(double m)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] *= m;
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] *= m;
     }
 
     /// <summary>
@@ -1586,10 +1586,10 @@ namespace FreeLibSet.Collections
     /// <param name="d">Делитель. Не может быть равен 0</param>
     public void Divide(double d)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] /= d;
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] /= d;
     }
 
     #endregion
@@ -1603,10 +1603,10 @@ namespace FreeLibSet.Collections
     /// <param name="decimals">Число знаков после запятой</param>
     public void Round(int decimals)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] = Math.Round(this[Codes[i]], decimals, MidpointRounding.AwayFromZero);
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] = Math.Round(this[codes[i]], decimals, MidpointRounding.AwayFromZero);
     }
 
     /// <summary>
@@ -1730,8 +1730,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, decimal> Pair in source)
-        this[Pair.Key] += Pair.Value;
+      foreach (KeyValuePair<string, decimal> pair in source)
+        this[pair.Key] += pair.Value;
     }
 
     /// <summary>
@@ -1745,8 +1745,8 @@ namespace FreeLibSet.Collections
       if (source == null)
         return;
 
-      foreach (KeyValuePair<string, decimal> Pair in source)
-        this[Pair.Key] -= Pair.Value;
+      foreach (KeyValuePair<string, decimal> pair in source)
+        this[pair.Key] -= pair.Value;
     }
 
     /// <summary>
@@ -1792,10 +1792,10 @@ namespace FreeLibSet.Collections
     /// <param name="m">Множитель</param>
     public void Multiply(decimal m)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] *= m;
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] *= m;
     }
 
     /// <summary>
@@ -1807,10 +1807,10 @@ namespace FreeLibSet.Collections
     /// <param name="d">Делитель. Не может быть равен 0</param>
     public void Divide(decimal d)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] /= d;
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] /= d;
     }
 
     #endregion
@@ -1824,10 +1824,10 @@ namespace FreeLibSet.Collections
     /// <param name="decimals">Число знаков после запятой</param>
     public void Round(int decimals)
     {
-      string[] Codes = new string[base.Count];
-      base.Keys.CopyTo(Codes, 0);
-      for (int i = 0; i < Codes.Length; i++)
-        this[Codes[i]] = Math.Round(this[Codes[i]], decimals, MidpointRounding.AwayFromZero);
+      string[] codes = new string[base.Count];
+      base.Keys.CopyTo(codes, 0);
+      for (int i = 0; i < codes.Length; i++)
+        this[codes[i]] = Math.Round(this[codes[i]], decimals, MidpointRounding.AwayFromZero);
     }
 
     /// <summary>

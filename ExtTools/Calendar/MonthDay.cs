@@ -83,7 +83,7 @@ namespace FreeLibSet.Calendar
     /// Дата, от которой отсчитывается DayOfYear.
     /// Используется для получения свойств Month и Day
     /// </summary>
-    private static readonly DateTime BaseDate = new DateTime(2000, 12, 31);
+    private static readonly DateTime _BaseDate = new DateTime(2000, 12, 31);
 
     /// <summary>
     /// Месяц в диапазоне от 1 до 12.
@@ -96,7 +96,7 @@ namespace FreeLibSet.Calendar
         if (DayOfYear == 0)
           return 0;
         else
-          return BaseDate.AddDays(DayOfYear).Month;
+          return _BaseDate.AddDays(DayOfYear).Month;
       }
     }
 
@@ -111,7 +111,7 @@ namespace FreeLibSet.Calendar
         if (DayOfYear == 0)
           return 0;
         else
-          return BaseDate.AddDays(DayOfYear).Day;
+          return _BaseDate.AddDays(DayOfYear).Day;
       }
     }
 
@@ -617,21 +617,21 @@ namespace FreeLibSet.Calendar
         _First = new MonthDay(range.FirstDate);
         _Last = new MonthDay(range.LastDate);
 
-        int DeltaY = range.LastDate.Year - range.FirstDate.Year;
-        bool SetWholeYear = false;
-        switch (DeltaY)
+        int deltaY = range.LastDate.Year - range.FirstDate.Year;
+        bool setWholeYear = false;
+        switch (deltaY)
         {
           case 0: // в пределах одного года
             break;
           case 1: // Два соседних года
             if (_Last >= _First)
-              SetWholeYear = true;
+              setWholeYear = true;
             break;
           default:
-            SetWholeYear = true;
+            setWholeYear = true;
             break;
         }
-        if (SetWholeYear)
+        if (setWholeYear)
         {
           _First = MonthDay.BottomOfYear;
           _Last = MonthDay.EndOfYear;

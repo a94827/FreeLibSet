@@ -146,13 +146,13 @@ namespace FreeLibSet.Forms
 
           tpServ.Controls.Add(grServ);
 
-          DataTable TableServ = new DataTable();
-          TableServ.Columns.Add("Служба", typeof(String));
+          DataTable tableServ = new DataTable();
+          tableServ.Columns.Add("Служба", typeof(String));
           for (int i = 0; i < aNames.Length; i++)
           {
-            TableServ.Rows.Add(aNames[i]);
+            tableServ.Rows.Add(aNames[i]);
           }
-          grServ.DataSource = TableServ;
+          grServ.DataSource = tableServ;
         }
         if (ia != null)
         {
@@ -180,13 +180,13 @@ namespace FreeLibSet.Forms
           TableMethods.Columns.Add("Метод", typeof(String));
           TableMethods.Columns.Add("Класс", typeof(String));
 
-          unoidl.com.sun.star.reflection.XIdlMethod[] Methods = ia.getMethods(unoidl.com.sun.star.beans.MethodConcept.ALL);
+          unoidl.com.sun.star.reflection.XIdlMethod[] aMethods = ia.getMethods(unoidl.com.sun.star.beans.MethodConcept.ALL);
 
-          for (int i = 0; i < Methods.Length; i++)
+          for (int i = 0; i < aMethods.Length; i++)
           {
-            unoidl.com.sun.star.reflection.XIdlClass cls = Methods[i].getDeclaringClass();
+            unoidl.com.sun.star.reflection.XIdlClass cls = aMethods[i].getDeclaringClass();
             string ClassName = cls.getName();
-            TableMethods.Rows.Add(Methods[i].getName(), ClassName);
+            TableMethods.Rows.Add(aMethods[i].getName(), ClassName);
           }
           grMethods.DataSource = TableMethods;
         }
@@ -326,56 +326,56 @@ namespace FreeLibSet.Forms
     /// <param name="title"></param>
     public static void DebugNumberFormats(IDictionary<int, OpenOffice.Calc.NumberFormatProperties> dict, string title)
     {
-      DataTable Table = CreateNumberFormatsTable(dict);
-      DebugTools.DebugDataTable(Table, title);
+      DataTable table = CreateNumberFormatsTable(dict);
+      DebugTools.DebugDataTable(table, title);
     }
 
     public static DataTable CreateNumberFormatsTable(IDictionary<int, OpenOffice.Calc.NumberFormatProperties> dict)
     {
-      DataTable Table = new DataTable();
-      Table.Columns.Add("Key", typeof(int));
-      Table.Columns.Add("FormatString", typeof(string));
-      Table.Columns.Add("Locale", typeof(string));
-      Table.Columns.Add("LocaleVariant", typeof(string));
-      Table.Columns.Add("Type", typeof(int));
-      Table.Columns.Add("TypeText", typeof(string));
-      Table.Columns.Add("Comment", typeof(string));
+      DataTable table = new DataTable();
+      table.Columns.Add("Key", typeof(int));
+      table.Columns.Add("FormatString", typeof(string));
+      table.Columns.Add("Locale", typeof(string));
+      table.Columns.Add("LocaleVariant", typeof(string));
+      table.Columns.Add("Type", typeof(int));
+      table.Columns.Add("TypeText", typeof(string));
+      table.Columns.Add("Comment", typeof(string));
 
-      foreach (KeyValuePair<int, OpenOffice.Calc.NumberFormatProperties> Pair in dict)
+      foreach (KeyValuePair<int, OpenOffice.Calc.NumberFormatProperties> pair in dict)
       {
-        DataRow Row = Table.NewRow();
-        Row["Key"] = Pair.Key;
-        Row["FormatString"] = Pair.Value.FormatString;
-        Row["Locale"] = Pair.Value.Locale.Language + "-" + Pair.Value.Locale.Country;
-        Row["LocaleVariant"] = Pair.Value.Locale.Variant;
-        Row["Type"] = Pair.Value.Type;
-        string TypeText;
-        int Type1 = Pair.Value.Type & (~unoidl.com.sun.star.util.NumberFormat.DEFINED);
-        switch (Type1)
+        DataRow row = table.NewRow();
+        row["Key"] = pair.Key;
+        row["FormatString"] = pair.Value.FormatString;
+        row["Locale"] = pair.Value.Locale.Language + "-" + pair.Value.Locale.Country;
+        row["LocaleVariant"] = pair.Value.Locale.Variant;
+        row["Type"] = pair.Value.Type;
+        string typeText;
+        int type1 = pair.Value.Type & (~unoidl.com.sun.star.util.NumberFormat.DEFINED);
+        switch (type1)
         {
-          case unoidl.com.sun.star.util.NumberFormat.DATE: TypeText = "DATE"; break;
-          case unoidl.com.sun.star.util.NumberFormat.DATETIME: TypeText = "DATETIME"; break;
-          case unoidl.com.sun.star.util.NumberFormat.TIME: TypeText = "TIME"; break;
-          case unoidl.com.sun.star.util.NumberFormat.NUMBER: TypeText = "NUMBER"; break;
-          case unoidl.com.sun.star.util.NumberFormat.CURRENCY: TypeText = "CURRENCY"; break;
-          case unoidl.com.sun.star.util.NumberFormat.FRACTION: TypeText = "FRACTION"; break;
-          case unoidl.com.sun.star.util.NumberFormat.PERCENT: TypeText = "PERCENT"; break;
-          case unoidl.com.sun.star.util.NumberFormat.SCIENTIFIC: TypeText = "SCIENTIFIC"; break;
-          case unoidl.com.sun.star.util.NumberFormat.LOGICAL: TypeText = "LOGICAL"; break;
-          case unoidl.com.sun.star.util.NumberFormat.TEXT: TypeText = "TEXT"; break;
+          case unoidl.com.sun.star.util.NumberFormat.DATE: typeText = "DATE"; break;
+          case unoidl.com.sun.star.util.NumberFormat.DATETIME: typeText = "DATETIME"; break;
+          case unoidl.com.sun.star.util.NumberFormat.TIME: typeText = "TIME"; break;
+          case unoidl.com.sun.star.util.NumberFormat.NUMBER: typeText = "NUMBER"; break;
+          case unoidl.com.sun.star.util.NumberFormat.CURRENCY: typeText = "CURRENCY"; break;
+          case unoidl.com.sun.star.util.NumberFormat.FRACTION: typeText = "FRACTION"; break;
+          case unoidl.com.sun.star.util.NumberFormat.PERCENT: typeText = "PERCENT"; break;
+          case unoidl.com.sun.star.util.NumberFormat.SCIENTIFIC: typeText = "SCIENTIFIC"; break;
+          case unoidl.com.sun.star.util.NumberFormat.LOGICAL: typeText = "LOGICAL"; break;
+          case unoidl.com.sun.star.util.NumberFormat.TEXT: typeText = "TEXT"; break;
           //case unoidl.com.sun.star.util.NumberFormat.UNDEFINED: TypeText = "UNDEFINED"; break;
 
-          default: TypeText = Type1.ToString(); break;
+          default: typeText = type1.ToString(); break;
         }
-        if ((Pair.Value.Type & unoidl.com.sun.star.util.NumberFormat.DEFINED) != 0)
-          TypeText += " DEFINED";
+        if ((pair.Value.Type & unoidl.com.sun.star.util.NumberFormat.DEFINED) != 0)
+          typeText += " DEFINED";
 
-        Row["TypeText"] = TypeText;
-        Row["Comment"] = Pair.Value.Comment;
-        Table.Rows.Add(Row);
+        row["TypeText"] = typeText;
+        row["Comment"] = pair.Value.Comment;
+        table.Rows.Add(row);
       }
 
-      return Table;
+      return table;
     }
 
     #endregion

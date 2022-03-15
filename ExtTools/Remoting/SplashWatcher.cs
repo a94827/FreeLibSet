@@ -335,7 +335,7 @@ namespace FreeLibSet.Remoting
     /// <returns></returns>
     public SplashInfoPack GetSplashInfoPack()
     {
-      SplashInfoPack Pack = DoGetSplashInfoPack();
+      SplashInfoPack pack = DoGetSplashInfoPack();
 
 #if DEBUG_SPLASHWATCHERS
 
@@ -356,7 +356,7 @@ namespace FreeLibSet.Remoting
       Trace.WriteLine("ServerSplashWatcher " + _WatcherGuid.ToString() + ". GetSplashInfoPack() # " + GetSplashInfoPackCount.ToString() + ". Returning " + sPack);
 #endif
 
-      return Pack;
+      return pack;
     }
 
     private SplashInfoPack DoGetSplashInfoPack()
@@ -656,10 +656,10 @@ namespace FreeLibSet.Remoting
         if (_ClientSplashes.Count != pack1.Stack.Length)
           throw new BugException("–асхождение количества заставок");
 
-        ISplash[] ClientSplashes2 = _ClientSplashes.ToArray();
+        ISplash[] clientSplashes2 = _ClientSplashes.ToArray();
         // »нициализируем состо€ние всех заставок
         for (int i = 0; i < pack1.Stack.Length; i++)
-          InitSplashStates(pack1.Stack[i], ClientSplashes2[i]);
+          InitSplashStates(pack1.Stack[i], clientSplashes2[i]);
 
         return;
       }

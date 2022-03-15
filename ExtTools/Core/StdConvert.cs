@@ -256,10 +256,10 @@ namespace FreeLibSet.Core
     /// <returns>Преобразованное значение</returns>
     public static DateTime ToDateTime(string s, bool useTime)
     {
-      DateTime Res = DateTime.Parse(s, DateTimeFormat, DateTimeStyles.None);
+      DateTime res = DateTime.Parse(s, DateTimeFormat, DateTimeStyles.None);
       if (!useTime)
-        Res = Res.Date;
-      return Res;
+        res = res.Date;
+      return res;
     }
 
     #endregion

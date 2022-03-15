@@ -209,15 +209,15 @@ namespace FreeLibSet.Data
 
             InitRowMapMode();
 
-            foreach (DataRow SrcRow in _MasterTable.Rows)
+            foreach (DataRow srcRow in _MasterTable.Rows)
             {
-              if (SrcRow.RowState == DataRowState.Deleted)
+              if (srcRow.RowState == DataRowState.Deleted)
                 continue; // 16.06.2021 ? 
-              DataRow ResRow = _SlaveTable.NewRow();
-              ProcessRow(SrcRow, ResRow);
-              _SlaveTable.Rows.Add(ResRow);
+              DataRow resRow = _SlaveTable.NewRow();
+              ProcessRow(srcRow, resRow);
+              _SlaveTable.Rows.Add(resRow);
               if (_RowDict != null)
-                _RowDict.Add(SrcRow, ResRow);
+                _RowDict.Add(srcRow, resRow);
             }
           }
         }
@@ -252,7 +252,7 @@ namespace FreeLibSet.Data
 
     void DataSource_RowChanged(object sender, DataRowChangeEventArgs args)
     {
-      DataRow ResRow;
+      DataRow resRow;
 
       // Не бывает
       //if ((args.Action & DataRowAction.Delete) != 0)
@@ -270,17 +270,17 @@ namespace FreeLibSet.Data
       {
         if ((args.Action & DataRowAction.Add) != 0)
         {
-          ResRow = _SlaveTable.NewRow();
-          ProcessRow(args.Row, ResRow);
-          _SlaveTable.Rows.Add(ResRow);
+          resRow = _SlaveTable.NewRow();
+          ProcessRow(args.Row, resRow);
+          _SlaveTable.Rows.Add(resRow);
           if (_RowDict != null)
-            _RowDict.Add(args.Row, ResRow);
+            _RowDict.Add(args.Row, resRow);
         }
         else if ((args.Action & DataRowAction.Change) != 0)
         {
-          ResRow = GetSlaveRow(args.Row);
-          if (ResRow != null) // 20.06.2021
-            ProcessRow(args.Row, ResRow);
+          resRow = GetSlaveRow(args.Row);
+          if (resRow != null) // 20.06.2021
+            ProcessRow(args.Row, resRow);
         }
       }
       finally
@@ -291,8 +291,8 @@ namespace FreeLibSet.Data
 
     void DataSource_RowDeleting(object sender, DataRowChangeEventArgs args)
     {
-      DataRow ResRow = GetSlaveRow(args.Row);
-      ResRow.Delete();
+      DataRow resRow = GetSlaveRow(args.Row);
+      resRow.Delete();
       if (_RowDict != null)
         _RowDict.Remove(args.Row);
     }
@@ -439,18 +439,18 @@ namespace FreeLibSet.Data
       }
       else
       {
-        string MasterPK = DataTools.GetPrimaryKey(_MasterTable);
-        string SlavePK = DataTools.GetPrimaryKey(_SlaveTable);
-        if (!String.Equals(MasterPK, SlavePK, StringComparison.Ordinal))
-          throw new InvalidOperationException("Таблица SlaveTable имеет первичный ключ \"" + SlavePK + "\". Подключаемая таблица MasterTable должна иметь такой же ключ, а не \"" + MasterPK + "\"");
+        string masterPK = DataTools.GetPrimaryKey(_MasterTable);
+        string slavePK = DataTools.GetPrimaryKey(_SlaveTable);
+        if (!String.Equals(masterPK, slavePK, StringComparison.Ordinal))
+          throw new InvalidOperationException("Таблица SlaveTable имеет первичный ключ \"" + slavePK + "\". Подключаемая таблица MasterTable должна иметь такой же ключ, а не \"" + masterPK + "\"");
 
-        if (SlavePK.IndexOf(',') >= 0)
+        if (slavePK.IndexOf(',') >= 0)
           _RowMapMode = RowMapMode.ComplexPrimaryKey;
         else
         {
           _RowMapMode = RowMapMode.SimplePrimaryKey;
-          _MasterPKColPos = _MasterTable.Columns.IndexOf(MasterPK);
-          _SlavePKColPos = _SlaveTable.Columns.IndexOf(SlavePK);
+          _MasterPKColPos = _MasterTable.Columns.IndexOf(masterPK);
+          _SlavePKColPos = _SlaveTable.Columns.IndexOf(slavePK);
         }
       }
     }

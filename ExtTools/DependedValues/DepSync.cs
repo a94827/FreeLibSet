@@ -381,10 +381,10 @@ namespace FreeLibSet.DependedValues
     /// <param name="value">Значение</param>
     public void AddConst<T>(string name, T value)
     {
-      DepSync<T> ConstObj = new DepSync<T>();
-      ConstObj.Value = value;
-      ConstObj.SyncMaster = true;
-      Add(name, ConstObj);
+      DepSync<T> constObj = new DepSync<T>();
+      constObj.Value = value;
+      constObj.SyncMaster = true;
+      Add(name, constObj);
     }
 
     /// <summary>
@@ -397,10 +397,10 @@ namespace FreeLibSet.DependedValues
     {
       if (valueEx == null)
         throw new ArgumentNullException("valueEx");
-      DepSyncValue<T> SyncObj = new DepSyncValue<T>();
-      SyncObj.ValueEx = valueEx;
-      SyncObj.SyncMaster = true;
-      Add(name, SyncObj);
+      DepSyncValue<T> syncObj = new DepSyncValue<T>();
+      syncObj.ValueEx = valueEx;
+      syncObj.SyncMaster = true;
+      Add(name, syncObj);
     }
 
 
@@ -437,8 +437,8 @@ namespace FreeLibSet.DependedValues
       int p = _Names.IndexOf(name);
       if (p < 0)
         return null;
-      IDepSyncObject SyncObj = _Objects[p];
-      return SyncObj.SyncValue;
+      IDepSyncObject syncObj = _Objects[p];
+      return syncObj.SyncValue;
     }
 
     /// <summary>

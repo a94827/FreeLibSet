@@ -243,13 +243,13 @@ namespace FreeLibSet.Parsing
         #region Дата и время
 
         case "DATE":
-          return new FunctionDef(name, fdDateTime, 3);
+          return new FunctionDef(name, _FDDateTime, 3);
         case "NOW":
-          fd = new FunctionDef(name, fdDateTime, 0);
+          fd = new FunctionDef(name, _FDDateTime, 0);
           fd.IsVolatile = true;
           return fd;
         case "TODAY":
-          fd = new FunctionDef(name, fdDateTime, 0);
+          fd = new FunctionDef(name, _FDDateTime, 0);
           fd.IsVolatile = true;
           return fd;
 
@@ -260,7 +260,7 @@ namespace FreeLibSet.Parsing
         case "MINUTE":
         case "SECOND":
         case "WEEKDAY":
-          fd = new FunctionDef(name, fdDateTimePart, 1);
+          fd = new FunctionDef(name, _FDDateTimePart, 1);
           return fd;
 
         case "DATEDIF":
@@ -346,9 +346,9 @@ namespace FreeLibSet.Parsing
     /// <returns></returns>
     public static object CalcSum(object args)
     {
-      object ResValue = null;
-      DoCalcSum(args, ref ResValue); // рекурсивный метод
-      return ResValue;
+      object resValue = null;
+      DoCalcSum(args, ref resValue); // рекурсивный метод
+      return resValue;
     }
 
     private static void DoCalcSum(object item, ref object resValue)
@@ -364,8 +364,8 @@ namespace FreeLibSet.Parsing
       Array a = item as Array;
       if (a != null)
       {
-        foreach (object Item2 in a)
-          DoCalcSum(Item2, ref resValue); // Рекурсия
+        foreach (object item2 in a)
+          DoCalcSum(item2, ref resValue); // Рекурсия
         return;
       }
 
@@ -412,46 +412,46 @@ namespace FreeLibSet.Parsing
 
     private static object CalcRound(string name, object[] args, NamedValues userData)
     {
-      object Value = args[0];
-      int Digits = 0;
+      object value = args[0];
+      int digits = 0;
       if (args.Length >= 2)
-        Digits = DataTools.GetInt(args[1]);
+        digits = DataTools.GetInt(args[1]);
 
       switch (name)
       {
         case "FLOOR":
         case "CEILING":
         case "TRUNC":
-          if (Digits != 0)
-            throw new NotImplementedException("Для функций FLOOR, CEILING и TRUNC аргумент \"Число знаков\", отличный от 0, не реализован. Задано: " + Digits.ToString());
+          if (digits != 0)
+            throw new NotImplementedException("Для функций FLOOR, CEILING и TRUNC аргумент \"Число знаков\", отличный от 0, не реализован. Задано: " + digits.ToString());
           break;
         case "ROUND":
-          if (Digits < 0)
-            throw new NotImplementedException("Для функции ROUND аргумент \"Число знаков\", должен быть больше или равен 0. Отрицательное число знаков не реализовано. Задано: " + Digits.ToString());
+          if (digits < 0)
+            throw new NotImplementedException("Для функции ROUND аргумент \"Число знаков\", должен быть больше или равен 0. Отрицательное число знаков не реализовано. Задано: " + digits.ToString());
           break;
       }
 
-      if (Value is decimal)
+      if (value is decimal)
       {
-        decimal v = (decimal)Value;
+        decimal v = (decimal)value;
         switch (name)
         {
           case "FLOOR": return Math.Floor(v);
           case "CEILING": return Math.Ceiling(v);
-          case "ROUND": return Math.Round(v, Digits, MidpointRounding.AwayFromZero);
+          case "ROUND": return Math.Round(v, digits, MidpointRounding.AwayFromZero);
           case "TRUNC": return Math.Truncate(v);
           default: throw new BugException();
         }
       }
       else
       {
-        double v = Convert.ToDouble(Value);
+        double v = Convert.ToDouble(value);
         double res;
         switch (name)
         {
           case "FLOOR": res = Math.Floor(v); break;
           case "CEILING": res = Math.Ceiling(v); break;
-          case "ROUND": res = Math.Round(v, Digits, MidpointRounding.AwayFromZero); break;
+          case "ROUND": res = Math.Round(v, digits, MidpointRounding.AwayFromZero); break;
           case "TRUNC": res = Math.Truncate(v); break;
           default: throw new BugException();
         }
@@ -471,23 +471,23 @@ namespace FreeLibSet.Parsing
 
     private static object CalcMinMax(string name, object[] args, NamedValues userData)
     {
-      bool IsMax = (name == "MAX");
+      bool isMax = (name == "MAX");
 
-      object ResValue = null;
+      object resValue = null;
 
       for (int i = 0; i < args.Length; i++)
       {
         Array a = args[i] as Array;
         if (a == null)
-          DoCalcMinMax(args[i], ref ResValue, IsMax);
+          DoCalcMinMax(args[i], ref resValue, isMax);
         else
         {
           foreach (object Item in a)
-            DoCalcMinMax(Item, ref ResValue, IsMax);
+            DoCalcMinMax(Item, ref resValue, isMax);
         }
       }
 
-      return ResValue;
+      return resValue;
     }
 
     private static void DoCalcMinMax(object item, ref object resValue, bool isMax)
@@ -816,37 +816,37 @@ namespace FreeLibSet.Parsing
     private static object CalcLeftRight(string name, object[] args, NamedValues userData)
     {
       CheckArgCount(args, 1, 2);
-      int Len = 1;
+      int len = 1;
       if (args.Length >= 2)
-        Len = DataTools.GetInt(args[1]);
-      if (Len < 0)
+        len = DataTools.GetInt(args[1]);
+      if (len < 0)
         throw new ArgumentException("Число знаков должно быть больше или равно 0");
 
       if (name == "LEFT")
-        return DataTools.StrLeft(GetStr(args[0]), Len);
+        return DataTools.StrLeft(GetStr(args[0]), len);
       else
-        return DataTools.StrRight(GetStr(args[0]), Len);
+        return DataTools.StrRight(GetStr(args[0]), len);
     }
 
     private static object CalcMid(string name, object[] args, NamedValues userData)
     {
       CheckArgCount(args, 3);
-      int Start = DataTools.GetInt(args[1]); // Помним, что нумерация символов с 1, а не с 0 
-      int Len = DataTools.GetInt(args[2]);
-      if (Start < 1)
+      int start = DataTools.GetInt(args[1]); // Помним, что нумерация символов с 1, а не с 0 
+      int len = DataTools.GetInt(args[2]);
+      if (start < 1)
         throw new ArgumentException("Начальная позиция должна быть больше 0");
-      if (Len < 0)
+      if (len < 0)
         throw new ArgumentException("Начальная позиция должна быть больше 0");
 
       // В остальных случаях ошибка не возвращается
 
       string s = GetStr(args[0]);
-      if (Start > s.Length)
+      if (start > s.Length)
         return String.Empty;
-      if ((Start + Len) > s.Length)
-        return s.Substring(Start - 1);
+      if ((start + len) > s.Length)
+        return s.Substring(start - 1);
       else
-        return s.Substring(Start - 1, Len);
+        return s.Substring(start - 1, len);
     }
 
     private static object CalcUpperLower(string name, object[] args, NamedValues userData)
@@ -918,7 +918,7 @@ namespace FreeLibSet.Parsing
 
     #region DATE, NOW, TODAY
 
-    private static FunctionDelegate fdDateTime = new FunctionDelegate(CalcDateTime);
+    private static FunctionDelegate _FDDateTime = new FunctionDelegate(CalcDateTime);
 
     private static object CalcDateTime(string name, object[] args, NamedValues userData)
     {
@@ -945,7 +945,7 @@ namespace FreeLibSet.Parsing
 
     #region Компоненты даты (YEAR .. SECOND), WEEKDAY
 
-    private static FunctionDelegate fdDateTimePart = new FunctionDelegate(CalcDateTimePart);
+    private static FunctionDelegate _FDDateTimePart = new FunctionDelegate(CalcDateTimePart);
 
     private static object CalcDateTimePart(string name, object[] args, NamedValues userData)
     {
@@ -1001,8 +1001,8 @@ namespace FreeLibSet.Parsing
 
       DateRange dtr = new DateRange(dt1, dt2);
 
-      string Mode = DataTools.GetString(args[2]);
-      switch (Mode.ToLowerInvariant())
+      string mode = DataTools.GetString(args[2]);
+      switch (mode.ToLowerInvariant())
       {
         case "d": return dtr.Days - 1;
         case "m": return dtr.Months;
@@ -1012,7 +1012,7 @@ namespace FreeLibSet.Parsing
         case "yd":
           throw new NotImplementedException("Режимы расчета ym, md и yd не реализованы");
         default:
-          throw new ArgumentException("Задан неправильный режим вычисления \"" + Mode + "\"");
+          throw new ArgumentException("Задан неправильный режим вычисления \"" + mode + "\"");
       }
     }
 
@@ -1089,10 +1089,10 @@ namespace FreeLibSet.Parsing
 
     private static object CalcChoose(string name, object[] args, NamedValues userData)
     {
-      int Index = DataTools.GetInt(args[0]);
-      if (Index < 1 || Index >= args.Length)
-        throw new ArgumentOutOfRangeException("args", Index, "Индекс должен быть в диапазоне от 1 до " + (args.Length - 1).ToString());
-      return args[Index - 1];
+      int index = DataTools.GetInt(args[0]);
+      if (index < 1 || index >= args.Length)
+        throw new ArgumentOutOfRangeException("args", index, "Индекс должен быть в диапазоне от 1 до " + (args.Length - 1).ToString());
+      return args[index - 1];
     }
 
     #endregion

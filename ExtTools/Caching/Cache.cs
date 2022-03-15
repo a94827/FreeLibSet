@@ -622,7 +622,7 @@ namespace FreeLibSet.Caching
         if (keys.Length < 1)
           throw new ArgumentException("Длина списка ключей не может быть меньше 1", "keys");
 
-        InternalCacheItem Res;
+        InternalCacheItem res;
 
         lock (_TheTypeDict)
         {
@@ -644,44 +644,44 @@ namespace FreeLibSet.Caching
 
           #region Создание промежуточных страниц
 
-          KeyDict Dict = ti;
+          KeyDict dict = ti;
 
           for (int i = 0; i < (keys.Length - 1); i++)
           {
-            object Dict2;
-            if (!Dict.TryGetValue(keys[i], out Dict2))
+            object dict2;
+            if (!dict.TryGetValue(keys[i], out dict2))
             {
               if (create)
               {
-                Dict2 = new KeyDict(this, objType, Dict, keys[i]);
-                Dict.Add(keys[i], Dict2);
+                dict2 = new KeyDict(this, objType, dict, keys[i]);
+                dict.Add(keys[i], dict2);
               }
               else
                 return null;
             }
-            Dict = (KeyDict)Dict2;
+            dict = (KeyDict)dict2;
           }
 
           #endregion
 
           #region Создание InternalCacheItem
 
-          object Res2;
-          string LastKey = keys[keys.Length - 1];
-          if (Dict.TryGetValue(LastKey, out Res2))
+          object res2;
+          string lastKey = keys[keys.Length - 1];
+          if (dict.TryGetValue(lastKey, out res2))
           {
-            Res = (InternalCacheItem)Res2;
-            MRUToFirst(Res);
+            res = (InternalCacheItem)res2;
+            MRUToFirst(res);
           }
           else
           {
             if (create)
             {
-              Res = new InternalCacheItem(Dict, LastKey);
-              Res.Persistance = ItemNotInit;
-              Dict.Add(LastKey, Res);
+              res = new InternalCacheItem(dict, lastKey);
+              res.Persistance = ItemNotInit;
+              dict.Add(lastKey, res);
               // Добавляем в MRU
-              MRUAdd(Res);
+              MRUAdd(res);
               _Count++;
               IncStat(objType, CacheStatParam.AddCount);
               IncStat(objType, CacheStatParam.Count);
@@ -695,7 +695,7 @@ namespace FreeLibSet.Caching
           IncStat(objType, CacheStatParam.AccessCount);
         }
 
-        return Res;
+        return res;
       }
 
 
@@ -727,14 +727,14 @@ namespace FreeLibSet.Caching
       [DebuggerStepThrough] // подавление остановки в отладчике при возникновении исключения
       private object LoadFromFile(AbsPath rootDir, Type objType, string[] keys, bool isPersistDir)
       {
-        AbsPath FilePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
-        if (!File.Exists(FilePath.Path))
+        AbsPath filePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
+        if (!File.Exists(filePath.Path))
           return null;
 
         try
         {
           object obj;
-          FileStream fs = new FileStream(FilePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+          FileStream fs = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
           try
           {
             BinaryFormatter bf = new BinaryFormatter();
@@ -772,10 +772,10 @@ namespace FreeLibSet.Caching
       {
         try
         {
-          AbsPath FilePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
-          FileTools.ForceDirs(FilePath.ParentDir);
+          AbsPath filePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
+          FileTools.ForceDirs(filePath.ParentDir);
 
-          FileStream fs = new FileStream(FilePath.Path, FileMode.Create);
+          FileStream fs = new FileStream(filePath.Path, FileMode.Create);
           try
           {
             BinaryFormatter bf = new BinaryFormatter();
@@ -801,10 +801,10 @@ namespace FreeLibSet.Caching
       {
         try
         {
-          AbsPath FilePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
-          if (File.Exists(FilePath.Path)) // чтобы не нарываться на исключение
+          AbsPath filePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
+          if (File.Exists(filePath.Path)) // чтобы не нарываться на исключение
           {
-            File.Delete(FilePath.Path);
+            File.Delete(filePath.Path);
             // Удалять дерево каталогов пока не будем
             IncStat(objType, CacheStatParam.DelFileCount);
             if (Cache.TraceSwitch.Enabled)
@@ -819,20 +819,20 @@ namespace FreeLibSet.Caching
 
       private AbsPath GetBinFilePath(AbsPath rootDir, Type objType, string[] keys, bool isPersistDir, bool isFile)
       {
-        AbsPath TypePath = new AbsPath(rootDir, objType.ToString());
-        AbsPath FilePath = new AbsPath(TypePath, keys);
+        AbsPath typePath = new AbsPath(rootDir, objType.ToString());
+        AbsPath filePath = new AbsPath(typePath, keys);
         if (isFile)
         {
           if (isPersistDir)
           {
             string version = GetVesion(objType, keys);
-            string ExtFileName = FilePath.FileName + "#" + version + ".bin";
-            FilePath = new AbsPath(FilePath.ParentDir, ExtFileName);
+            string extFileName = filePath.FileName + "#" + version + ".bin";
+            filePath = new AbsPath(filePath.ParentDir, extFileName);
           }
           else
-            FilePath = FilePath.ChangeExtension(".bin");
+            filePath = filePath.ChangeExtension(".bin");
         }
-        return FilePath;
+        return filePath;
       }
 
       /// <summary>
@@ -845,8 +845,8 @@ namespace FreeLibSet.Caching
       /// <returns></returns>
       private bool TestFileExists(AbsPath rootDir, Type objType, string[] keys, bool isPersistDir)
       {
-        AbsPath FilePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
-        return File.Exists(FilePath.Path);
+        AbsPath filePath = GetBinFilePath(rootDir, objType, keys, isPersistDir, true);
+        return File.Exists(filePath.Path);
       }
 
       #endregion
@@ -903,7 +903,7 @@ namespace FreeLibSet.Caching
       {
         InternalCacheItem item = GetInternalItem(typeof(T), keys, true);
 
-        T Res;
+        T res;
 
         //lock (item)
         if (!Monitor.TryEnter(item, lockTimeout))
@@ -918,7 +918,7 @@ namespace FreeLibSet.Caching
           item.InsideGetItemFlag = true;
           try
           {
-            Res = DoGetItem2<T>(item, keys, persistance, factory);
+            res = DoGetItem2<T>(item, keys, persistance, factory);
           }
           finally
           {
@@ -933,7 +933,7 @@ namespace FreeLibSet.Caching
         // После того, как данные получены, можно удалить лишние элементы из списка
         TrimExcess();
 
-        return Res;
+        return res;
       }
 
       private void ThrowLockTimeoutException(Type objType, string[] keys)
@@ -963,7 +963,7 @@ namespace FreeLibSet.Caching
       private T DoGetItem2<T>(InternalCacheItem item, string[] keys, CachePersistance persistance, ICacheFactory<T> factory)
         where T : class
       {
-        T Res;
+        T res;
 
         #region Из памяти
 
@@ -990,13 +990,13 @@ namespace FreeLibSet.Caching
           }
           else
           {
-            Res = (T)(LoadFromFile(_Params.PersistDir, typeof(T), keys, true));
-            if (Res != null)
+            res = (T)(LoadFromFile(_Params.PersistDir, typeof(T), keys, true));
+            if (res != null)
             {
               if (persistance == CachePersistance.MemoryAndPersist)
-                item.MemValue = Res; // "приклеили" данные обратно к элементу
+                item.MemValue = res; // "приклеили" данные обратно к элементу
 
-              return Res;
+              return res;
             }
           }
         }
@@ -1005,13 +1005,13 @@ namespace FreeLibSet.Caching
         {
           if ((persistance & CachePersistance.TempDirOnly) == CachePersistance.TempDirOnly)
           {
-            Res = (T)(LoadFromFile(_TempDir.Dir, typeof(T), keys, false));
-            if (Res != null)
+            res = (T)(LoadFromFile(_TempDir.Dir, typeof(T), keys, false));
+            if (res != null)
             {
               if (persistance == CachePersistance.MemoryAndTempDir)
-                item.MemValue = Res; // "приклеили" данные обратно к элементу
+                item.MemValue = res; // "приклеили" данные обратно к элементу
 
-              return Res;
+              return res;
             }
           }
         }
@@ -1026,14 +1026,14 @@ namespace FreeLibSet.Caching
         if (TraceSwitch.Enabled)
         {
           DateTime tmStart = DateTime.Now;
-          Res = factory.CreateCacheItem(keys);
+          res = factory.CreateCacheItem(keys);
           TimeSpan ts = DateTime.Now - tmStart;
           Trace.WriteLine(Cache.GetTracePrefix(typeof(T), keys) + "Item created. Time=" + ts.ToString());
         }
         else
-          Res = factory.CreateCacheItem(keys);
+          res = factory.CreateCacheItem(keys);
 
-        if (Res == null)
+        if (res == null)
           throw new NullReferenceException("Объект кэша не был создан в " + factory.ToString());
 
         IncStat(typeof(T), CacheStatParam.CreateCount);
@@ -1048,11 +1048,11 @@ namespace FreeLibSet.Caching
         {
           case CachePersistance.MemoryAndPersist:
           case CachePersistance.PersistOnly:
-            WriteToFile(_Params.PersistDir, typeof(T), keys, Res, true);
+            WriteToFile(_Params.PersistDir, typeof(T), keys, res, true);
             break;
           // Потом перебросим case CachePersistance.MemoryAndTempDir:
           case CachePersistance.TempDirOnly:
-            WriteToFile(_TempDir.Dir, typeof(T), keys, Res, false);
+            WriteToFile(_TempDir.Dir, typeof(T), keys, res, false);
             break;
         }
 
@@ -1065,13 +1065,13 @@ namespace FreeLibSet.Caching
           case CachePersistance.MemoryOnly:
           case CachePersistance.MemoryAndPersist:
           case CachePersistance.MemoryAndTempDir:
-            item.MemValue = Res;
+            item.MemValue = res;
             break;
         }
 
         #endregion
 
-        return Res;
+        return res;
       }
 
       #endregion
@@ -1089,7 +1089,7 @@ namespace FreeLibSet.Caching
           if (item == null)
             return null;
 
-          T Res;
+          T res;
 
           //lock (Item)
           if (!Monitor.TryEnter(item, lockTimeout))
@@ -1097,16 +1097,16 @@ namespace FreeLibSet.Caching
           try
           {
             if (item.InsideGetItemFlag)
-              Res = null;
+              res = null;
             else
-              Res = DoGetItem2<T>(item, keys, persistance, null);
+              res = DoGetItem2<T>(item, keys, persistance, null);
           }
           finally
           {
             Monitor.Exit(item);
           }
 
-          return Res;
+          return res;
         }
         catch
         {
@@ -1390,9 +1390,9 @@ namespace FreeLibSet.Caching
 
       private AbsPath GetVersionTxtPath(Type objType, string[] keys)
       {
-        AbsPath TypePath = new AbsPath(_Params.PersistDir, objType.ToString());
-        AbsPath KeyPath = new AbsPath(TypePath, keys);
-        return new AbsPath(KeyPath, "version.txt");
+        AbsPath typePath = new AbsPath(_Params.PersistDir, objType.ToString());
+        AbsPath keyPath = new AbsPath(typePath, keys);
+        return new AbsPath(keyPath, "version.txt");
       }
 
       #endregion
@@ -1416,15 +1416,15 @@ namespace FreeLibSet.Caching
         // Удаляем из списков до блокировки Item, чтобы порядок блокировки не нарушался
         lock (_TheTypeDict)
         {
-          KeyDict Dict = item.Parent;
-          string ParentKey = item.ParentKey;
-          while (Dict != null)
+          KeyDict dict = item.Parent;
+          string parentKey = item.ParentKey;
+          while (dict != null)
           {
-            Dict.Remove(ParentKey);
-            if (Dict.Count > 0)
+            dict.Remove(parentKey);
+            if (dict.Count > 0)
               break;
-            ParentKey = Dict.ParentKey;
-            Dict = Dict.Parent;
+            parentKey = dict.ParentKey;
+            dict = dict.Parent;
           }
           if (MRURemove(item))
           {
@@ -1514,7 +1514,7 @@ namespace FreeLibSet.Caching
       private void DoClear(Type objType, string[] keys, bool clearPersist)
       {
 
-        List<InternalCacheItem> Items;
+        List<InternalCacheItem> items;
 
         lock (_TheTypeDict)
         {
@@ -1522,35 +1522,35 @@ namespace FreeLibSet.Caching
           if (!_TheTypeDict.TryGetValue(objType, out ti))
             return; // Не было ни одного объекта заданного типа
 
-          KeyDict Dict = ti;
-          object CurrObj = Dict;
+          KeyDict dict = ti;
+          object currObj = dict;
           for (int i = 0; i < keys.Length; i++)
           {
-            if (!Dict.TryGetValue(keys[i], out CurrObj))
+            if (!dict.TryGetValue(keys[i], out currObj))
               return; // заданного ключа нет
             if (i < (keys.Length - 1))
             {
-              Dict = CurrObj as KeyDict;
-              if (Dict == null)
+              dict = currObj as KeyDict;
+              if (dict == null)
                 throw new ArgumentException("Неправильная длина списка ключей: " + keys.Length.ToString());
             }
           }
 
-          if (CurrObj is InternalCacheItem)
+          if (currObj is InternalCacheItem)
           {
-            Items = new List<InternalCacheItem>(1);
-            Items.Add((InternalCacheItem)CurrObj);
+            items = new List<InternalCacheItem>(1);
+            items.Add((InternalCacheItem)currObj);
           }
           else
           {
-            Items = new List<InternalCacheItem>();
-            AddItems(Items, (KeyDict)CurrObj);
+            items = new List<InternalCacheItem>();
+            AddItems(items, (KeyDict)currObj);
           }
         }
 
         // Список Items содержит массив объектов для удаления
-        for (int i = 0; i < Items.Count; i++)
-          Remove(Items[i], clearPersist);
+        for (int i = 0; i < items.Count; i++)
+          Remove(items[i], clearPersist);
       }
 
       [DebuggerStepThrough]
@@ -1561,9 +1561,9 @@ namespace FreeLibSet.Caching
         // Ключи могут задавать путь к файлу или каталогу
         try
         {
-          AbsPath DirPath = GetBinFilePath(Params.PersistDir, objType, keys, true, false);
-          if (Directory.Exists(DirPath.Path))
-            FileTools.ClearDirAsPossible(DirPath);
+          AbsPath dirPath = GetBinFilePath(Params.PersistDir, objType, keys, true, false);
+          if (Directory.Exists(dirPath.Path))
+            FileTools.ClearDirAsPossible(dirPath);
           else if (keys.Length > 0) // условие добавлено 19.10.2020
           {
             AbsPath FilePath = GetBinFilePath(Params.PersistDir, objType, keys, true, true);
@@ -1584,10 +1584,10 @@ namespace FreeLibSet.Caching
 
             // 04.01.2021
             // И опять неправильно!
-            string FileMask = keys[keys.Length - 1] + "*.bin";
+            string fileMask = keys[keys.Length - 1] + "*.bin";
 
             if (Directory.Exists(FilePath.ParentDir.Path))
-              FileTools.DeleteFiles(FilePath.ParentDir, FileMask, SearchOption.TopDirectoryOnly);
+              FileTools.DeleteFiles(FilePath.ParentDir, fileMask, SearchOption.TopDirectoryOnly);
           }
 
           // Восстановление файлов version.info
@@ -1665,13 +1665,13 @@ namespace FreeLibSet.Caching
       /// <param name="dict"></param>
       private static void AddItems(List<InternalCacheItem> items, KeyDict dict)
       {
-        foreach (KeyValuePair<string, object> Pair in dict)
+        foreach (KeyValuePair<string, object> pair in dict)
         {
-          if (Pair.Value is InternalCacheItem)
-            items.Add((InternalCacheItem)(Pair.Value));
+          if (pair.Value is InternalCacheItem)
+            items.Add((InternalCacheItem)(pair.Value));
           else
             // рекурсивный вызов
-            AddItems(items, (KeyDict)(Pair.Value));
+            AddItems(items, (KeyDict)(pair.Value));
         }
       }
 
@@ -1744,7 +1744,7 @@ namespace FreeLibSet.Caching
       {
         bool flag = false;
         bool resolved = true;
-        bool HasDel = false;
+        bool hasDel = false;
 
         while (!MemoryTools.CheckSufficientMemory(MemoryTools.LowMemorySizeMB))
         {
@@ -1758,7 +1758,7 @@ namespace FreeLibSet.Caching
 #if USE_GCCOLLECT
           GC.Collect();
 #endif
-          HasDel = true;
+          hasDel = true;
         }
 
         if (flag)
@@ -1768,7 +1768,7 @@ namespace FreeLibSet.Caching
             Cache._CheckMemoryStat.Inc(CacheCheckMemoryStatParam.InsufficientMemoryResolvedCount);
         }
 
-        if (HasDel)
+        if (hasDel)
         {
           // После того, как освободили критическое количество виртуальной памяти,
           // перекидываем один блок в файлы
@@ -1808,7 +1808,7 @@ namespace FreeLibSet.Caching
       /// <returns></returns>
       private bool DeleteBlockWhenMemoryLow()
       {
-        bool Res = false;
+        bool res = false;
         for (int i = 0; i < Params.ClearCacheBlockSize; i++)
         {
           InternalCacheItem ItemToDelete;
@@ -1821,12 +1821,12 @@ namespace FreeLibSet.Caching
           {
             Remove(ItemToDelete, false);
             IncStat(ItemToDelete.Parent.ObjType, CacheStatParam.LowMemoryRemoveCount);
-            Res = true;
+            res = true;
           }
           else
             break;
         }
-        return Res;
+        return res;
       }
 
       private bool FlushBlock(bool deleteMemoryOnly)
@@ -1836,16 +1836,16 @@ namespace FreeLibSet.Caching
         List<InternalCacheItem> items = new List<InternalCacheItem>();
         lock (_TheTypeDict)
         {
-          InternalCacheItem Item = this._LastItem;
-          while (Item != null && items.Count < 100)
+          InternalCacheItem item = this._LastItem;
+          while (item != null && items.Count < 100)
           {
-            if (Item.MemValue != null)
+            if (item.MemValue != null)
             {
-              if (deleteMemoryOnly || (Item.Persistance != CachePersistance.MemoryOnly))
-                items.Add(Item);
+              if (deleteMemoryOnly || (item.Persistance != CachePersistance.MemoryOnly))
+                items.Add(item);
             }
 
-            Item = Item.PrevItem;
+            item = item.PrevItem;
           }
         }
 
@@ -2019,13 +2019,13 @@ namespace FreeLibSet.Caching
       {
         lock (_TypeStats)
         {
-          CacheStat Stat;
-          if (!_TypeStats.TryGetValue(objType, out Stat))
+          CacheStat stat;
+          if (!_TypeStats.TryGetValue(objType, out stat))
           {
-            Stat = new CacheStat();
-            _TypeStats.Add(objType, Stat);
+            stat = new CacheStat();
+            _TypeStats.Add(objType, stat);
           }
-          Stat.Inc(statParam);
+          stat.Inc(statParam);
         }
       }
 
@@ -2033,13 +2033,13 @@ namespace FreeLibSet.Caching
       {
         lock (_TypeStats)
         {
-          CacheStat Stat;
-          if (!_TypeStats.TryGetValue(objType, out Stat))
+          CacheStat stat;
+          if (!_TypeStats.TryGetValue(objType, out stat))
           {
-            Stat = new CacheStat();
-            _TypeStats.Add(objType, Stat);
+            stat = new CacheStat();
+            _TypeStats.Add(objType, stat);
           }
-          Stat.Dec(statParam);
+          stat.Dec(statParam);
         }
       }
 
@@ -2047,9 +2047,9 @@ namespace FreeLibSet.Caching
       {
         lock (_TypeStats)
         {
-          CacheStat Stat;
-          if (_TypeStats.TryGetValue(objType, out Stat))
-            return Stat.Clone();
+          CacheStat stat;
+          if (_TypeStats.TryGetValue(objType, out stat))
+            return stat.Clone();
           else
             return new CacheStat();
         }
@@ -2085,11 +2085,11 @@ namespace FreeLibSet.Caching
       {
         foreach (KeyValuePair<string, object> Pair in dict)
         {
-          InternalCacheItem Item = Pair.Value as InternalCacheItem;
-          if (Item == null)
+          InternalCacheItem item = Pair.Value as InternalCacheItem;
+          if (item == null)
             GetKeys2((KeyDict)(Pair.Value), keyList); // рекурсивный вызов
           else
-            keyList.Add(Item.Keys);
+            keyList.Add(item.Keys);
         }
       }
 
@@ -2111,13 +2111,13 @@ namespace FreeLibSet.Caching
       {
         foreach (KeyValuePair<string, object> Pair in dict)
         {
-          InternalCacheItem Item = Pair.Value as InternalCacheItem;
-          if (Item == null)
+          InternalCacheItem item = Pair.Value as InternalCacheItem;
+          if (item == null)
             GetKeysCommaString2((KeyDict)(Pair.Value), sb); // рекурсивный вызов
           else
           {
             FreeLibSet.Text.CsvTextConvert cnv = new Text.CsvTextConvert();
-            cnv.ToString(sb, Item.Keys);
+            cnv.ToString(sb, item.Keys);
             sb.Append(Environment.NewLine);
           }
         }
@@ -2204,22 +2204,22 @@ namespace FreeLibSet.Caching
         {
           // Нет необходимости блокировать коллекции, т.к. свойства Parent и ParentKey задаются в конструкторе InternalCacheItem
           int cnt = 0;
-          KeyDict Dict = Parent;
-          while (Dict != null)
+          KeyDict dict = Parent;
+          while (dict != null)
           {
             cnt++;
-            Dict = Dict.Parent;
+            dict = dict.Parent;
           }
 
           string[] a = new string[cnt];
-          Dict = Parent;
+          dict = Parent;
           a[a.Length - 1] = ParentKey;
           cnt = 1;
-          while (Dict.Parent != null)
+          while (dict.Parent != null)
           {
             cnt++;
-            a[a.Length - cnt] = Dict.ParentKey;
-            Dict = Dict.Parent;
+            a[a.Length - cnt] = dict.ParentKey;
+            dict = dict.Parent;
           }
 
           return a;
@@ -2472,9 +2472,9 @@ namespace FreeLibSet.Caching
       if (objType == null)
         throw new ArgumentNullException("objType");
 
-      InternalCache MainObj = GetMainObj(GetMainObjMode.CreateIfPersistDir);
-      if (MainObj != null)
-        MainObj.Clear(objType, keys, true);
+      InternalCache mainObj = GetMainObj(GetMainObjMode.CreateIfPersistDir);
+      if (mainObj != null)
+        mainObj.Clear(objType, keys, true);
     }
 
     /// <summary>
@@ -2503,9 +2503,9 @@ namespace FreeLibSet.Caching
     /// </summary>
     public static void FreeMemory()
     {
-      InternalCache MainObj = GetMainObj(GetMainObjMode.DontCreate);
-      if (MainObj != null)
-        MainObj.FreeMemory();
+      InternalCache mainObj = GetMainObj(GetMainObjMode.DontCreate);
+      if (mainObj != null)
+        mainObj.FreeMemory();
     }
 
 
@@ -2615,11 +2615,11 @@ namespace FreeLibSet.Caching
       if (objType == null)
         throw new ArgumentNullException("objType");
 
-      InternalCache MainObj = GetMainObj(GetMainObjMode.DontCreate);
-      if (MainObj == null)
+      InternalCache mainObj = GetMainObj(GetMainObjMode.DontCreate);
+      if (mainObj == null)
         return new CacheStat();
       else
-        return MainObj.GetStat(objType);
+        return mainObj.GetStat(objType);
     }
 
     /// <summary>
@@ -2632,14 +2632,14 @@ namespace FreeLibSet.Caching
     /// <param name="stats">Массив статистики по каждому типу. Длина массива равна <paramref name="objTypes"/></param>
     public static void GetStat(out Type[] objTypes, out CacheStat[] stats)
     {
-      InternalCache MainObj = GetMainObj(GetMainObjMode.DontCreate);
-      if (MainObj == null)
+      InternalCache mainObj = GetMainObj(GetMainObjMode.DontCreate);
+      if (mainObj == null)
       {
         objTypes = new Type[0];
         stats = new CacheStat[0];
       }
       else
-        MainObj.GetStat(out objTypes, out stats);
+        mainObj.GetStat(out objTypes, out stats);
     }
 
     /// <summary>
@@ -2649,13 +2649,13 @@ namespace FreeLibSet.Caching
     /// <returns>Объект статистики</returns>
     public static CacheStat GetStat()
     {
-      Type[] ObjTypes;
-      CacheStat[] Stats;
-      GetStat(out ObjTypes, out Stats);
-      CacheStat Res = new CacheStat();
-      for (int i = 0; i < Stats.Length; i++)
-        Res.Add(Stats[i]);
-      return Res;
+      Type[] objTypes;
+      CacheStat[] stats;
+      GetStat(out objTypes, out stats);
+      CacheStat res = new CacheStat();
+      for (int i = 0; i < stats.Length; i++)
+        res.Add(stats[i]);
+      return res;
     }
 
     /// <summary>
@@ -2671,11 +2671,11 @@ namespace FreeLibSet.Caching
       if (objType == null)
         throw new ArgumentNullException("objType");
 
-      List<string[]> KeyList = new List<string[]>();
-      InternalCache MainObj = GetMainObj(GetMainObjMode.DontCreate);
-      if (MainObj != null)
-        MainObj.GetKeys(objType, KeyList);
-      return KeyList.ToArray();
+      List<string[]> keyList = new List<string[]>();
+      InternalCache mainObj = GetMainObj(GetMainObjMode.DontCreate);
+      if (mainObj != null)
+        mainObj.GetKeys(objType, keyList);
+      return keyList.ToArray();
     }
 
     /// <summary>
@@ -2706,9 +2706,9 @@ namespace FreeLibSet.Caching
     public static void GetKeysCommaString(StringBuilder sb, Type objType)
     {
       //List<string[]> KeyList = new List<string[]>();
-      InternalCache MainObj = GetMainObj(GetMainObjMode.DontCreate);
-      if (MainObj != null)
-        MainObj.GetKeysCommaString(objType, sb);
+      InternalCache mainObj = GetMainObj(GetMainObjMode.DontCreate);
+      if (mainObj != null)
+        mainObj.GetKeysCommaString(objType, sb);
     }
 
     /// <summary>
@@ -2773,9 +2773,9 @@ namespace FreeLibSet.Caching
       if (objType == null)
         throw new ArgumentNullException("objType");
 
-      InternalCache MainObj = GetMainObj(GetMainObjMode.DontCreate);
-      if (MainObj != null)
-        return MainObj.GetVesion(objType, keys);
+      InternalCache mainObj = GetMainObj(GetMainObjMode.DontCreate);
+      if (mainObj != null)
+        return mainObj.GetVesion(objType, keys);
       else
         return string.Empty;
     }
@@ -2801,20 +2801,20 @@ namespace FreeLibSet.Caching
     {
       lock (typeof(InternalCache))
       {
-        InternalCache Res = _MainObjRef.Target;
-        if (Res == null)
+        InternalCache res = _MainObjRef.Target;
+        if (res == null)
         {
           if (mode == GetMainObjMode.CreateIfPersistDir)
             mode = _StaticParams.PersistDir.IsEmpty ? GetMainObjMode.DontCreate : GetMainObjMode.Create;
 
           if (mode == GetMainObjMode.Create)
           {
-            Res = new InternalCache(_StaticParams);
-            _MainObjRef = new AutoDisposeReference<InternalCache>(Res);
+            res = new InternalCache(_StaticParams);
+            _MainObjRef = new AutoDisposeReference<InternalCache>(res);
             _StartTime = DateTime.Now;
           }
         }
-        return Res;
+        return res;
       }
     }
 
@@ -2844,9 +2844,9 @@ namespace FreeLibSet.Caching
     /// </summary>
     public static void CheckMemory()
     {
-      InternalCache MainObj = GetMainObj(GetMainObjMode.DontCreate);
-      if (MainObj != null)
-        MainObj.CheckMemory();
+      InternalCache mainObj = GetMainObj(GetMainObjMode.DontCreate);
+      if (mainObj != null)
+        mainObj.CheckMemory();
     }
 
 
@@ -2914,15 +2914,15 @@ namespace FreeLibSet.Caching
       //Args.WritePair("PersistDir", Cache.Params.PersistDir.ToString());
       args.IndentLevel--;
 
-      Type[] ObjTypes;
-      CacheStat[] Stats;
-      Cache.GetStat(out ObjTypes, out Stats);
+      Type[] objTypes;
+      CacheStat[] stats;
+      Cache.GetStat(out objTypes, out stats);
       CacheStat Total = new CacheStat();
-      for (int i = 0; i < ObjTypes.Length; i++)
+      for (int i = 0; i < objTypes.Length; i++)
       {
-        args.WriteLine(ObjTypes[i].FullName);
-        LogoutCacheStat(args, Stats[i]);
-        Total.Add(Stats[i]);
+        args.WriteLine(objTypes[i].FullName);
+        LogoutCacheStat(args, stats[i]);
+        Total.Add(stats[i]);
       }
       args.WriteLine("Общая статистика");
       LogoutCacheStat(args, Total);
@@ -2936,21 +2936,21 @@ namespace FreeLibSet.Caching
     private static void LogoutCacheStat(LogoutInfoNeededEventArgs args, CacheStat stat)
     {
       args.IndentLevel++;
-      foreach (KeyValuePair<CacheStatParam, long> Pair in stat)
+      foreach (KeyValuePair<CacheStatParam, long> pair in stat)
       {
-        string s = Pair.Value.ToString().PadRight(8);
-        switch (Pair.Key)
+        string s = pair.Value.ToString().PadRight(8);
+        switch (pair.Key)
         {
           case CacheStatParam.CreateCount:
           case CacheStatParam.LoadFileCount:
           case CacheStatParam.FromMemCount:
             if (stat[CacheStatParam.AccessCount] > 0)
             {
-              s += " (" + (Pair.Value * 100 / stat[CacheStatParam.AccessCount]).ToString().PadLeft(3) + "%)";
+              s += " (" + (pair.Value * 100 / stat[CacheStatParam.AccessCount]).ToString().PadLeft(3) + "%)";
             }
             break;
         }
-        args.WritePair(Pair.Key.ToString(), s);
+        args.WritePair(pair.Key.ToString(), s);
       }
       args.IndentLevel--;
     }
@@ -3468,9 +3468,9 @@ namespace FreeLibSet.Caching
     /// <returns>Копия</returns>
     public CacheCheckMemoryStat Clone()
     {
-      CacheCheckMemoryStat Res = new CacheCheckMemoryStat();
-      Res.Add(this);
-      return Res;
+      CacheCheckMemoryStat res = new CacheCheckMemoryStat();
+      res.Add(this);
+      return res;
     }
 
     #endregion
@@ -3614,7 +3614,7 @@ namespace FreeLibSet.Caching
     PersistOnly = 4
   }
 
-  #endregion
+#endregion
 
   /// <summary>
   /// Интерфейс, который должен реализовываться в прикладном коде для создания данных кэша
@@ -3658,7 +3658,7 @@ namespace FreeLibSet.Caching
       _DelayedWriteQueueCapacity = 1000;
     }
 
-    #endregion
+#endregion
 
 #region Параметры
 
@@ -3842,7 +3842,7 @@ namespace FreeLibSet.Caching
         throw new ArgumentOutOfRangeException("lockTimeout", lockTimeout, "Значение должно быть больше 0 или равна System.Threading.Timeout.Infinite");
     }
 
-    #endregion
+#endregion
 
 #region IReadOnlyObject Members
 
@@ -3869,7 +3869,7 @@ namespace FreeLibSet.Caching
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -3889,7 +3889,7 @@ namespace FreeLibSet.Caching
       _PersistFilesCleared = persistFilesCleared;
     }
 
-    #endregion
+#endregion
 
 #region Свойства
 
@@ -3908,7 +3908,7 @@ namespace FreeLibSet.Caching
     public bool PersistFilesCleared { get { return _PersistFilesCleared; } }
     private readonly bool _PersistFilesCleared;
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -3939,7 +3939,7 @@ namespace FreeLibSet.Caching
       /// </summary>
       private const CachePersistance ItemDeleted = (CachePersistance)(0x10);
 
-      #endregion
+#endregion
 
 #region Конструктор и Dispose
 
@@ -4000,7 +4000,7 @@ namespace FreeLibSet.Caching
         base.Dispose(disposing);
       }
 
-      #endregion
+#endregion
 
 #region Доступ по ключам
 
@@ -4034,13 +4034,13 @@ namespace FreeLibSet.Caching
       /// </summary>
       private readonly TypeDict _TheTypeDict;
 
-      #endregion
+#endregion
 
 #region Параметры
 
       private readonly CacheParams _Params;
 
-      #endregion
+#endregion
 
 #region MRU-список
 
@@ -4175,7 +4175,7 @@ namespace FreeLibSet.Caching
 
 #endif
 
-      #endregion
+#endregion
 
 #region Доступ к элементам
 
@@ -4204,7 +4204,7 @@ namespace FreeLibSet.Caching
               return null;
           }
 
-          #endregion
+#endregion
 
 #region Создание промежуточных страниц
 
@@ -4226,7 +4226,7 @@ namespace FreeLibSet.Caching
             Dict = (KeyDict)Dict2;
           }
 
-          #endregion
+#endregion
 
 #region Создание InternalCacheItem
 
@@ -4253,7 +4253,7 @@ namespace FreeLibSet.Caching
               return null;
           }
 
-          #endregion
+#endregion
         }
 
         return Res;
@@ -4276,7 +4276,7 @@ namespace FreeLibSet.Caching
           Remove(ItemToDelete, ItemClearMode.MRUOut);
       }
 
-      #endregion
+#endregion
 
 #region Чтение / запись в файл
 
@@ -4427,7 +4427,7 @@ namespace FreeLibSet.Caching
         return File.Exists(FilePath.Path);
       }
 
-      #endregion
+#endregion
 
 #region Основной метод доступа
 
@@ -4541,7 +4541,7 @@ namespace FreeLibSet.Caching
           return (T)(item.MemValue);
         }
 
-        #endregion
+#endregion
 
 #region Из еще незаписанного файла
 
@@ -4556,7 +4556,7 @@ namespace FreeLibSet.Caching
           return res;
         }
 
-        #endregion
+#endregion
 
 #region Из файла
 
@@ -4574,7 +4574,7 @@ namespace FreeLibSet.Caching
           }
         }
 
-        #endregion
+#endregion
 
         if (factory == null)
           return null;
@@ -4596,7 +4596,7 @@ namespace FreeLibSet.Caching
 
         IncStat(typeof(T), CacheStatParam.CreateCount);
 
-        #endregion
+#endregion
 
 #region Присвоение ссылки в памяти
 
@@ -4607,7 +4607,7 @@ namespace FreeLibSet.Caching
 
         item.Persistance = persistance;
 
-        #endregion
+#endregion
 
 #region Сериализация для отложенной записи в файл
 
@@ -4638,12 +4638,12 @@ namespace FreeLibSet.Caching
         else // MemoryOnly
           item.SetSerializedData(this, null);
 
-        #endregion
+#endregion
 
         return res;
       }
 
-      #endregion
+#endregion
 
 #region Вспомогательные методы доступа
 
@@ -4790,7 +4790,7 @@ namespace FreeLibSet.Caching
         if (item.MemValue != null || item.SerializedData != null)
           return true;
 
-        #endregion
+#endregion
 
 #region Из файла
 
@@ -4806,12 +4806,12 @@ namespace FreeLibSet.Caching
             return true;
         }
 
-        #endregion
+#endregion
 
         return false;
       }
 
-      #endregion
+#endregion
 
 #region Версии
 
@@ -4829,7 +4829,7 @@ namespace FreeLibSet.Caching
             _TheTypeDict.Add(objType, ti);
           }
 
-          #endregion
+#endregion
 
 #region Инициализация и проверка словаря версий
 
@@ -4844,7 +4844,7 @@ namespace FreeLibSet.Caching
               throw new InvalidOperationException("Для одного типа данных нельзя вызывать попеременно SetVersion() и SyncVersion()");
           }
 
-          #endregion
+#endregion
 
 #region Запись в словарь
 
@@ -4854,7 +4854,7 @@ namespace FreeLibSet.Caching
             oldVersion = String.Empty;
           ti.VesrionDict[sKeys] = version;
 
-          #endregion
+#endregion
         }
 
         return oldVersion;
@@ -4976,9 +4976,9 @@ namespace FreeLibSet.Caching
         return new AbsPath(KeyPath, "version.txt");
       }
 
-      #endregion
+#endregion
 
-      #endregion
+#endregion
 
 #region Методы очистки
 
@@ -5301,7 +5301,7 @@ namespace FreeLibSet.Caching
       }
 #endif
 
-      #endregion
+#endregion
 
 #region Обработка сигнала таймера проверки памяти
 
@@ -5555,7 +5555,7 @@ namespace FreeLibSet.Caching
           }
         }
 
-        #endregion
+#endregion
 
         if (items.Count == 0)
           return false;
@@ -5593,12 +5593,12 @@ namespace FreeLibSet.Caching
             }
           }
         }
-        #endregion
+#endregion
 
         return true;
       }
 
-      #endregion
+#endregion
 
 #region Отложенная запись файлов и очистка элементов
 
@@ -5697,7 +5697,7 @@ namespace FreeLibSet.Caching
           return false;
         }
 
-        #endregion
+#endregion
       }
 
       private bool BackgroundThreadProcessWriteOneFile(InternalCacheItem item)
@@ -5726,7 +5726,7 @@ namespace FreeLibSet.Caching
             Monitor.Exit(item);
           }
 
-          #endregion
+#endregion
 
           if (SerializedData == null)
             return true;
@@ -5747,7 +5747,7 @@ namespace FreeLibSet.Caching
             if (Cache.TraceSwitch.Enabled)
               Trace.WriteLine(GetTracePrefix(objType, keys) + "Temp file created " + tempPath.FileName);
 
-            #endregion
+#endregion
 
 #region Второй доступ
 
@@ -5767,7 +5767,7 @@ namespace FreeLibSet.Caching
                 System.IO.File.Delete(tempPath.Path);
             }
 
-            #endregion
+#endregion
           }
           catch
           {
@@ -5782,7 +5782,7 @@ namespace FreeLibSet.Caching
         return true;
       }
 
-      #endregion
+#endregion
 
 #region Очистка элементов
 
@@ -5797,7 +5797,7 @@ namespace FreeLibSet.Caching
           _Keys = keys;
         }
 
-        #endregion
+#endregion
 
 #region Свойства
 
@@ -5810,7 +5810,7 @@ namespace FreeLibSet.Caching
         internal string[] Keys { get { return _Keys; } }
         private readonly string[] _Keys;
 
-        #endregion
+#endregion
       }
 
       /// <summary>
@@ -5848,7 +5848,7 @@ namespace FreeLibSet.Caching
             busyItems.Add(info);
           }
 
-          #endregion
+#endregion
         }
 
 #region Повторное добавление элемента в очередь
@@ -5862,12 +5862,12 @@ namespace FreeLibSet.Caching
           return false;
         }
 
-        #endregion
+#endregion
       }
 
-      #endregion
+#endregion
 
-      #endregion
+#endregion
 
 #region Сбор статистики
 
@@ -6058,7 +6058,7 @@ namespace FreeLibSet.Caching
         }
       }
 
-      #endregion
+#endregion
     }
 
     /// <summary>
@@ -6077,7 +6077,7 @@ namespace FreeLibSet.Caching
 
       private readonly T _newValue;
 
-      #endregion
+#endregion
 
 #region ICacheFactory<T> Members
 
@@ -6086,7 +6086,7 @@ namespace FreeLibSet.Caching
         return _newValue;
       }
 
-      #endregion
+#endregion
     }
 
     /// <summary>
@@ -6103,7 +6103,7 @@ namespace FreeLibSet.Caching
         _ParentKey = parentKey;
       }
 
-      #endregion
+#endregion
 
 #region Основные свойства
 
@@ -6171,7 +6171,7 @@ namespace FreeLibSet.Caching
       /// </summary>
       public CachePersistance Persistance;
 
-      #endregion
+#endregion
 
 #region Дополнительные свойства
 
@@ -6220,7 +6220,7 @@ namespace FreeLibSet.Caching
       /// </summary>
       public bool InsideGetItemFlag;
 
-      #endregion
+#endregion
 
 #region MRU-список
 
@@ -6241,7 +6241,7 @@ namespace FreeLibSet.Caching
       /// </summary>
       internal InternalCacheItem PrevItem;
 
-      #endregion
+#endregion
     }
 
 
@@ -6261,7 +6261,7 @@ namespace FreeLibSet.Caching
         _ParentKey = parentKey;
       }
 
-      #endregion
+#endregion
 
 #region Свойства
 
@@ -6280,7 +6280,7 @@ namespace FreeLibSet.Caching
       public string ParentKey { get { return _ParentKey; } }
       private readonly string _ParentKey;
 
-      #endregion
+#endregion
     }
 
     /// <summary>
@@ -6295,7 +6295,7 @@ namespace FreeLibSet.Caching
       {
       }
 
-      #endregion
+#endregion
 
 #region Свойства для версии
 
@@ -6331,7 +6331,7 @@ namespace FreeLibSet.Caching
       public Dictionary<string, string> VesrionDict { get { return _VesrionDict; } }
       private Dictionary<string, string> _VesrionDict;
 
-      #endregion
+#endregion
     }
 
     /// <summary>
@@ -6341,7 +6341,7 @@ namespace FreeLibSet.Caching
     {
     }
 
-    #endregion
+#endregion
 
 #region Статические свойства и методы
 
@@ -6839,7 +6839,7 @@ namespace FreeLibSet.Caching
         return string.Empty;
     }
 
-    #endregion
+#endregion
 
 #region Экземпляр InternalCache
 
@@ -6892,7 +6892,7 @@ namespace FreeLibSet.Caching
     }
     private static DateTime? _StartTime;
 
-    #endregion
+#endregion
 
 #region Освобождение при нехватке оперативной памяти
 
@@ -6909,7 +6909,7 @@ namespace FreeLibSet.Caching
     }
 
 
-    #endregion
+#endregion
 
 #region Трассировка
 
@@ -6937,7 +6937,7 @@ namespace FreeLibSet.Caching
       return sbTrace.ToString();
     }
 
-    #endregion
+#endregion
 
 #region log-файл
 
@@ -7019,7 +7019,7 @@ namespace FreeLibSet.Caching
       args.IndentLevel--;
     }
 
-    #endregion
+#endregion
   }
 
 #region Перечисление CacheStatParam
@@ -7243,7 +7243,7 @@ namespace FreeLibSet.Caching
     EmergencyClearCount,
   }
 
-  #endregion
+#endregion
 
   /// <summary>
   /// Объект статистики кэширования для одного типа данных, или итоговой статистики по всем типам.
@@ -7306,7 +7306,7 @@ namespace FreeLibSet.Caching
       }
     }
 
-    #endregion
+#endregion
 
 #region Конструктор
 
@@ -7318,7 +7318,7 @@ namespace FreeLibSet.Caching
       _Items = new long[ParamCount];
     }
 
-    #endregion
+#endregion
 
 #region Доступ к значениям
 
@@ -7341,7 +7341,7 @@ namespace FreeLibSet.Caching
 
     private readonly long[] _Items;
 
-    #endregion
+#endregion
 
 #region Математические действия
 
@@ -7436,7 +7436,7 @@ namespace FreeLibSet.Caching
       return res;
     }
 
-    #endregion
+#endregion
 
 #region ICloneable Members
 
@@ -7456,7 +7456,7 @@ namespace FreeLibSet.Caching
       return Res;
     }
 
-    #endregion
+#endregion
 
 #region IEnumerable<KeyValuePair<CacheStatParam,long>> Members
 
@@ -7474,7 +7474,7 @@ namespace FreeLibSet.Caching
         _Index = -1;
       }
 
-      #endregion
+#endregion
 
 #region Поля
 
@@ -7482,7 +7482,7 @@ namespace FreeLibSet.Caching
 
       private int _Index;
 
-      #endregion
+#endregion
 
 #region Методы перечислителя
 
@@ -7524,7 +7524,7 @@ namespace FreeLibSet.Caching
         _Index = -1;
       }
 
-      #endregion
+#endregion
     }
 
     /// <summary>
@@ -7546,7 +7546,7 @@ namespace FreeLibSet.Caching
       return new Enumerator(this);
     }
 
-    #endregion
+#endregion
   }
 }
 

@@ -597,7 +597,7 @@ namespace FreeLibSet.Remoting
         throw new BugException("State=" + _State.ToString());
 #endif
 
-      NamedValues Res;
+      NamedValues res;
 
       lock (SyncRoot)
       {
@@ -617,7 +617,7 @@ namespace FreeLibSet.Remoting
         OnBeforeExecute(args);
         try
         {
-          Res = OnExecute(args);
+          res = OnExecute(args);
           _State = ExecProcState.Success;
         }
         catch (Exception e)
@@ -627,7 +627,7 @@ namespace FreeLibSet.Remoting
           OnAfterExecute(args, null, e);
           throw;
         }
-        OnAfterExecute(args, Res, null);
+        OnAfterExecute(args, res, null);
       }
       finally
       {
@@ -645,12 +645,12 @@ namespace FreeLibSet.Remoting
         }
       }
 
-      if (Res == null)
-        Res = NamedValues.Empty;
+      if (res == null)
+        res = NamedValues.Empty;
       else
-        Res.SetReadOnly();
+        res.SetReadOnly();
 
-      return Res;
+      return res;
     }
 
     private void DoLogoutError(Exception e)
@@ -697,22 +697,22 @@ namespace FreeLibSet.Remoting
       if (args.IsEmpty)
         return args;
 
-      NamedValues Args2 = new NamedValues();
-      foreach (KeyValuePair<string, object> Pair in args)
+      NamedValues args2 = new NamedValues();
+      foreach (KeyValuePair<string, object> pair in args)
       {
         // Надо перехватывать ошибки, т.к. среди аргументов могут быть "просроченные" MarshalByReference-объекты
         try
         {
-          object v = CreateDebugValue(Pair.Value);
-          Args2[Pair.Key] = v;
+          object v = CreateDebugValue(pair.Value);
+          args2[pair.Key] = v;
         }
         catch (Exception e)
         {
-          Args2[Pair.Key] = "*** Ошибка получения аргумента ***. " + e.Message;
+          args2[pair.Key] = "*** Ошибка получения аргумента ***. " + e.Message;
         }
       }
-      Args2.SetReadOnly();
-      return Args2;
+      args2.SetReadOnly();
+      return args2;
     }
 
     private static object CreateDebugValue(object v)
@@ -758,7 +758,7 @@ namespace FreeLibSet.Remoting
       if (_Context == null)
         throw new NullReferenceException("Не установлен контекст выполнения (свойство Context)");
 
-      NamedValues Res = null;
+      NamedValues res = null;
       Exception ex2 = null;
 
       if (_CurrentProc != null)
@@ -788,7 +788,7 @@ namespace FreeLibSet.Remoting
         {
           try
           {
-            Res = DoExecute2(args);
+            res = DoExecute2(args);
           }
           catch (Exception e)
           {
@@ -822,7 +822,7 @@ namespace FreeLibSet.Remoting
           Dispose();
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -952,18 +952,18 @@ namespace FreeLibSet.Remoting
       /// </summary>
       internal void Finish()
       {
-        ManualResetEvent AsyncWaitHandle2;
+        ManualResetEvent asyncWaitHandle2;
         lock (Owner.SyncRoot)
         {
           _IsCompleted = true;
           // должно быть установлено до обращения к FAsyncWaitHandle,
           // т.к. объект WaintHandle может между lock и вызовом Reset
-          AsyncWaitHandle2 = AsyncWaitHandleField;
+          asyncWaitHandle2 = AsyncWaitHandleField;
         }
 
         // Это нельзя делать внутри блокировки
-        if (AsyncWaitHandle2 != null)
-          AsyncWaitHandle2.Set();
+        if (asyncWaitHandle2 != null)
+          asyncWaitHandle2.Set();
 
         if (UserCallback != null)
           UserCallback(this);
@@ -1039,12 +1039,12 @@ namespace FreeLibSet.Remoting
     private void DoExecuteAsync(object startValue)
     {
       ExecProcAsyncResult ar = (ExecProcAsyncResult)startValue;
-      NamedValues Args = ar.Args;
+      NamedValues args = ar.Args;
       ar.Args = null; // освобождаем память
 
       try
       {
-        ar.Results = DoExecute2(Args);
+        ar.Results = DoExecute2(args);
       }
       catch (Exception e)
       {
@@ -1058,7 +1058,7 @@ namespace FreeLibSet.Remoting
       {
         _ErrorDebugException = ar.Exception;
         if (_ErrorDebugException != null)
-          _ErrorDebugArgs = CreateDebugArgs(Args);
+          _ErrorDebugArgs = CreateDebugArgs(args);
       }
 
       ar.Finish();
@@ -1305,64 +1305,64 @@ namespace FreeLibSet.Remoting
     /// <returns>Информация о текущей процедуре</returns>
     public ExecProcInfo GetInfo(bool useStackTrace)
     {
-      ExecProcInfo Res = new ExecProcInfo();
+      ExecProcInfo res = new ExecProcInfo();
       lock (_SyncRoot)
       {
-        Res.InfoTime = DateTime.Now;
-        Res.Guid = _Guid;
-        Res.CreationTime = _CreationTime;
+        res.InfoTime = DateTime.Now;
+        res.Guid = _Guid;
+        res.CreationTime = _CreationTime;
         //Res.AssemblyName = GetType().AssemblyQualifiedName;
-        Res.AssemblyName = GetType().Assembly.FullName; // 06.06.2019
-        Res.TypeName = GetType().FullName;
-        Res.DisplayName = _DisplayName;
-        Res.ActionName = _ActionName;
+        res.AssemblyName = GetType().Assembly.FullName; // 06.06.2019
+        res.TypeName = GetType().FullName;
+        res.DisplayName = _DisplayName;
+        res.ActionName = _ActionName;
 
         //Res.StartTime = FStartTime;
-        Res.StartCount = _StartCount;
+        res.StartCount = _StartCount;
         if (_StartCount > 0)
-          Res.StartTime = _StartTime;
-        Res.IsAsyncStarted = _IsAsyncStarted;
+          res.StartTime = _StartTime;
+        res.IsAsyncStarted = _IsAsyncStarted;
 
-        Res.State = State;
-        Res.AutoDispose = AutoDispose;
-        Res.SyncTime = SyncTime;
+        res.State = State;
+        res.AutoDispose = AutoDispose;
+        res.SyncTime = SyncTime;
 
         Thread trd = _ExecThread; // может обратиться в null асинхронно
         if (trd == null)
-          Res.ThreadState = System.Threading.ThreadState.Unstarted;
+          res.ThreadState = System.Threading.ThreadState.Unstarted;
         else
         {
-          Res.ManagedThreadId = trd.ManagedThreadId; // 28.04.2018
-          Res.ThreadState = trd.ThreadState;
+          res.ManagedThreadId = trd.ManagedThreadId; // 28.04.2018
+          res.ThreadState = trd.ThreadState;
         }
 
         ExecProc pp = _ParentProc;
         if (pp != null)
-          Res.ParentProcGuid = pp.Guid;
+          res.ParentProcGuid = pp.Guid;
         ExecProc cp = _ChildProc;
         if (cp != null)
-          Res.ChildProcGuid = cp.Guid;
+          res.ChildProcGuid = cp.Guid;
         ExecProcCallBack cpcb = _ChildProcCallBack;
         if (cpcb != null)
-          Res.ChildProcCallBackGuid = cpcb.Guid;
+          res.ChildProcCallBackGuid = cpcb.Guid;
 
         if (_ErrorDebugException != null)
         {
-          Res.ExceptionMessage = _ErrorDebugException.Message;
-          Res.ExceptionType = _ErrorDebugException.GetType().ToString();
+          res.ExceptionMessage = _ErrorDebugException.Message;
+          res.ExceptionType = _ErrorDebugException.GetType().ToString();
           if (_ErrorDebugException.Data.Contains("OriginalStackTrace"))
-            Res.StackTrace = _ErrorDebugException.Data["OriginalStackTrace"].ToString(); // 03.05.2018
+            res.StackTrace = _ErrorDebugException.Data["OriginalStackTrace"].ToString(); // 03.05.2018
           else
-            Res.StackTrace = _ErrorDebugException.StackTrace;
-          Res.ExceptionDebugArgs = _ErrorDebugArgs;
+            res.StackTrace = _ErrorDebugException.StackTrace;
+          res.ExceptionDebugArgs = _ErrorDebugArgs;
         }
         // 06.01.2021 - убрано
         //else if (useStackTrace && Res.IsExecuting && trd != null)
         //  Res.StackTrace = LogoutTools.GetStackTrace(trd); // 29.04.2018
 
-        Res.InitDomainInfo();
+        res.InitDomainInfo();
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -1645,7 +1645,7 @@ namespace FreeLibSet.Remoting
       //Res.WriteLine("Серверная процедура");
       AddProcDetails(args);
 
-      int OldLevel = args.IndentLevel;
+      int oldLevel = args.IndentLevel;
 
       // TODO: ExecProc Ex2 = ExternalSplashOwner;
       // TODO: for (int i = 0; i < 100; i++)
@@ -1660,7 +1660,7 @@ namespace FreeLibSet.Remoting
       // TODO:   Ex2 = Ex2.ExternalSplashOwner;
       // TODO: }
 
-      args.IndentLevel = OldLevel;
+      args.IndentLevel = oldLevel;
     }
 
     /// <summary>
@@ -1738,49 +1738,49 @@ namespace FreeLibSet.Remoting
       args.WritePair("Current AppDomain", AppDomain.CurrentDomain.FriendlyName);
       args.WritePair("Current ExecProc", ExecProc.CurrentProc == null ? "none" : ExecProc.CurrentProc.ToString());
 
-      int IndentLevel = args.IndentLevel;
+      int indentLevel = args.IndentLevel;
 
-      ExecProc[] Procs1 = ExecProc.GetExecutingProcs();
-      args.WritePair("Executing ExecProcs", Procs1.Length.ToString());
+      ExecProc[] procs1 = ExecProc.GetExecutingProcs();
+      args.WritePair("Executing ExecProcs", procs1.Length.ToString());
       int cnt = 0;
-      for (int i = 0; i < Procs1.Length; i++)
+      for (int i = 0; i < procs1.Length; i++)
       {
-        DoLogoutOneProc(args, Procs1[i], cnt);
+        DoLogoutOneProc(args, procs1[i], cnt);
         cnt++;
-        args.IndentLevel = IndentLevel;
+        args.IndentLevel = indentLevel;
       }
 
-      ExecProc[] Procs2 = ExecProc.GetAllProcs();
-      args.WritePair("All ExecProcs", (Procs2.Length - Procs1.Length).ToString());
-      for (int i = 0; i < Procs2.Length; i++)
+      ExecProc[] procs2 = ExecProc.GetAllProcs();
+      args.WritePair("All ExecProcs", (procs2.Length - procs1.Length).ToString());
+      for (int i = 0; i < procs2.Length; i++)
       {
-        if (Array.IndexOf<ExecProc>(Procs1, Procs2[i]) >= 0)
+        if (Array.IndexOf<ExecProc>(procs1, procs2[i]) >= 0)
           continue; // выполняющая процедура была выведена
-        DoLogoutOneProc(args, Procs2[i], cnt);
+        DoLogoutOneProc(args, procs2[i], cnt);
         cnt++;
-        args.IndentLevel = IndentLevel;
+        args.IndentLevel = indentLevel;
       }
 
       cnt = 0;
-      RemoteExecProc[] Procs3 = RemoteExecProc.GetExecutingProcs();
-      args.WritePair("Executing RemoteExecProcs", Procs3.Length.ToString());
+      RemoteExecProc[] procs3 = RemoteExecProc.GetExecutingProcs();
+      args.WritePair("Executing RemoteExecProcs", procs3.Length.ToString());
 
-      for (int i = 0; i < Procs3.Length; i++)
+      for (int i = 0; i < procs3.Length; i++)
       {
-        DoLogoutOneProc(args, Procs3[i], cnt);
+        DoLogoutOneProc(args, procs3[i], cnt);
         cnt++;
-        args.IndentLevel = IndentLevel;
+        args.IndentLevel = indentLevel;
       }
 
-      RemoteExecProc[] Procs4 = RemoteExecProc.GetAllProcs();
-      args.WritePair("All RemoteExecProcs", (Procs4.Length - Procs3.Length).ToString());
-      for (int i = 0; i < Procs4.Length; i++)
+      RemoteExecProc[] procs4 = RemoteExecProc.GetAllProcs();
+      args.WritePair("All RemoteExecProcs", (procs4.Length - procs3.Length).ToString());
+      for (int i = 0; i < procs4.Length; i++)
       {
-        if (Array.IndexOf<RemoteExecProc>(Procs3, Procs4[i]) >= 0)
+        if (Array.IndexOf<RemoteExecProc>(procs3, procs4[i]) >= 0)
           continue; // выполняющая процедура была выведена
-        DoLogoutOneProc(args, Procs4[i], cnt);
+        DoLogoutOneProc(args, procs4[i], cnt);
         cnt++;
-        args.IndentLevel = IndentLevel;
+        args.IndentLevel = indentLevel;
       }
     }
 
@@ -1912,10 +1912,10 @@ namespace FreeLibSet.Remoting
     /// <param name="args">Аргументы, которая получила процедура перед выполнением</param>
     protected virtual void TraceBeforeExecute(NamedValues args)
     {
-      IExecProcTracer Tracer = Context["Tracer"] as IExecProcTracer;
-      if (Tracer == null)
-        Tracer = DefaultTracer;
-      Tracer.TraceBeforeExecute(this, args);
+      IExecProcTracer tracer = Context["Tracer"] as IExecProcTracer;
+      if (tracer == null)
+        tracer = DefaultTracer;
+      tracer.TraceBeforeExecute(this, args);
     }
 
     /// <summary>
@@ -1928,10 +1928,10 @@ namespace FreeLibSet.Remoting
     /// <param name="exception">Исключение, если выполнение завершилось ошибкой</param>
     protected virtual void TraceAfterExecute(NamedValues args, NamedValues results, Exception exception)
     {
-      IExecProcTracer Tracer = Context["Tracer"] as IExecProcTracer;
-      if (Tracer == null)
-        Tracer = DefaultTracer;
-      Tracer.TraceAfterExecute(this, args, results, exception);
+      IExecProcTracer tracer = Context["Tracer"] as IExecProcTracer;
+      if (tracer == null)
+        tracer = DefaultTracer;
+      tracer.TraceAfterExecute(this, args, results, exception);
     }
 
     #endregion
@@ -1980,12 +1980,12 @@ namespace FreeLibSet.Remoting
     /// <returns>true, если есть выполняющаяся процедура с заданным идентификатором</returns>
     public static bool AbortExecution(Guid guid)
     {
-      ExecProc[] Procs = GetExecutingProcs();
-      for (int i = 0; i < Procs.Length; i++)
+      ExecProc[] procs = GetExecutingProcs();
+      for (int i = 0; i < procs.Length; i++)
       {
-        if (Procs[i].Guid == guid)
+        if (procs[i].Guid == guid)
         {
-          Thread th = Procs[i].ExecThread;
+          Thread th = procs[i].ExecThread;
           if (th != null)
             th.Abort();
           return true;
@@ -2005,12 +2005,12 @@ namespace FreeLibSet.Remoting
     /// <returns>true, если есть выполняющаяся процедура с заданным идентификатором</returns>
     public static bool AbortExecutionAndDispose(Guid guid, int milliseconds)
     {
-      ExecProc[] Procs = GetAllProcs();
-      for (int i = 0; i < Procs.Length; i++)
+      ExecProc[] procs = GetAllProcs();
+      for (int i = 0; i < procs.Length; i++)
       {
-        if (Procs[i].Guid == guid)
+        if (procs[i].Guid == guid)
         {
-          Procs[i].AbortExecutionAndDispose(milliseconds);
+          procs[i].AbortExecutionAndDispose(milliseconds);
           return true;
         }
       }
@@ -2233,12 +2233,12 @@ namespace FreeLibSet.Remoting
     /// <returns>Копия объекта</returns>
     public ExecProcLeaseSettings Clone()
     {
-      ExecProcLeaseSettings Res = new ExecProcLeaseSettings(false);
-      Res._InitialLeaseTime = InitialLeaseTime;
-      Res._RenewOnCallTime = RenewOnCallTime;
-      Res._SponsorshipTimeout = SponsorshipTimeout;
-      Res._RenewalTime = RenewalTime;
-      return Res;
+      ExecProcLeaseSettings res = new ExecProcLeaseSettings(false);
+      res._InitialLeaseTime = InitialLeaseTime;
+      res._RenewOnCallTime = RenewOnCallTime;
+      res._SponsorshipTimeout = SponsorshipTimeout;
+      res._RenewalTime = RenewalTime;
+      return res;
     }
 
     object ICloneable.Clone()
@@ -2608,14 +2608,14 @@ namespace FreeLibSet.Remoting
       /// <returns>Объект, реализующий ILease</returns>
       public override object InitializeLifetimeService()
       {
-        System.Runtime.Remoting.Lifetime.ILease Lease = (System.Runtime.Remoting.Lifetime.ILease)base.InitializeLifetimeService();
-        if (Lease.CurrentState == System.Runtime.Remoting.Lifetime.LeaseState.Initial)
+        System.Runtime.Remoting.Lifetime.ILease lease = (System.Runtime.Remoting.Lifetime.ILease)base.InitializeLifetimeService();
+        if (lease.CurrentState == System.Runtime.Remoting.Lifetime.LeaseState.Initial)
         {
           _LeaseSettings.SetReadOnly();
-          _LeaseSettings.InitLease(Lease);
-          Lease.Register(this);
+          _LeaseSettings.InitLease(lease);
+          lease.Register(this);
         }
-        return Lease;
+        return lease;
       }
 
       TimeSpan System.Runtime.Remoting.Lifetime.ISponsor.Renewal(System.Runtime.Remoting.Lifetime.ILease lease)
@@ -2820,13 +2820,13 @@ namespace FreeLibSet.Remoting
         if (isCompleted)
         {
           // Освобождаем ссылку до вызова базового метода
-          IAsyncResult AsyncResult3 = _AsyncResult2;
-          ExecProc ExecProc3 = _ExecProc2;
+          IAsyncResult asyncResult3 = _AsyncResult2;
+          ExecProc execProc3 = _ExecProc2;
           _AsyncResult2 = null;
           _ExecProc2 = null;
 
-          NamedValues Results = ExecProc3.EndExecute(AsyncResult3);
-          return Results;
+          NamedValues results = execProc3.EndExecute(asyncResult3);
+          return results;
         }
         else
           return null;
@@ -2893,10 +2893,10 @@ namespace FreeLibSet.Remoting
       {
         if (ExecProc == null)
         {
-          ExecProcInfo Info = new ExecProcInfo();
-          Info.Guid = _Guid;
-          Info.State = ExecProcState.Disposed;
-          return Info;
+          ExecProcInfo info = new ExecProcInfo();
+          info.Guid = _Guid;
+          info.State = ExecProcState.Disposed;
+          return info;
         }
         else
           return ExecProc.GetInfo();
@@ -3034,10 +3034,10 @@ namespace FreeLibSet.Remoting
       public override NamedValues InternalExecute(NamedValues args, bool autoDispose)
       {
         CheckNotDisposed();
-        NamedValues Results = _Source.InternalExecute(args, autoDispose);
+        NamedValues results = _Source.InternalExecute(args, autoDispose);
         if (autoDispose)
           _Source = null;
-        return Results;
+        return results;
       }
 
       private bool _SavedAutoDispose;
@@ -3133,10 +3133,10 @@ namespace FreeLibSet.Remoting
       {
         if (_Source == null)
         {
-          ExecProcInfo Info = new ExecProcInfo();
-          Info.Guid = _Guid;
-          Info.State = ExecProcState.Disposed;
-          return Info;
+          ExecProcInfo info = new ExecProcInfo();
+          info.Guid = _Guid;
+          info.State = ExecProcState.Disposed;
+          return info;
         }
         else
           return _Source.GetInfo();
@@ -3647,7 +3647,7 @@ namespace FreeLibSet.Remoting
 
       _ExecutingProcs.Add(this);
 
-      NamedValues Results;
+      NamedValues results;
 
       try
       {
@@ -3655,7 +3655,7 @@ namespace FreeLibSet.Remoting
 
         try
         {
-          Results = proxy.Handler.InternalExecute(args, AutoDispose);
+          results = proxy.Handler.InternalExecute(args, AutoDispose);
           if (AutoDispose)
           {
             _Proxy = null;
@@ -3676,7 +3676,7 @@ namespace FreeLibSet.Remoting
         _ExecutingProcs.Remove(this);
       }
 
-      return Results;
+      return results;
     }
 
     /// <summary>
@@ -3815,19 +3815,19 @@ namespace FreeLibSet.Remoting
 
       internal void Finish()
       {
-        ManualResetEvent AsyncWaitHandle2;
+        ManualResetEvent asyncWaitHandle2;
         lock (this)
         {
           _IsCompleted = true;
           // не нужно очищать! Еще будет вызов GetUsCompleted() _SplashInfoPack = null;
           // должно быть установлено до обращения к FAsyncWaitHandle,
           // т.к. объект WaintHandle может между lock и вызовом Reset
-          AsyncWaitHandle2 = _AsyncWaitHandle;
+          asyncWaitHandle2 = _AsyncWaitHandle;
         }
 
         // Это нельзя делать внутри блокировки
-        if (AsyncWaitHandle2 != null)
-          AsyncWaitHandle2.Set();
+        if (asyncWaitHandle2 != null)
+          asyncWaitHandle2.Set();
 
         if (UserCallback != null)
           UserCallback(this);
@@ -4894,34 +4894,34 @@ namespace FreeLibSet.Remoting
     /// <returns></returns>
     public ExecProcInfo GetInfo()
     {
-      ExecProcInfo Res = new ExecProcInfo();
+      ExecProcInfo res = new ExecProcInfo();
       lock (_SyncRoot)
       {
-        Res.InfoTime = DateTime.Now;
-        Res.Guid = _Guid;
-        Res.CreationTime = _CreationTime;
+        res.InfoTime = DateTime.Now;
+        res.Guid = _Guid;
+        res.CreationTime = _CreationTime;
         //Res.AssemblyName = GetType().AssemblyQualifiedName;
-        Res.AssemblyName = GetType().Assembly.FullName; // 06.06.2019
-        Res.TypeName = GetType().FullName;
-        Res.DisplayName = _DisplayName;
-        Res.State = State;
+        res.AssemblyName = GetType().Assembly.FullName; // 06.06.2019
+        res.TypeName = GetType().FullName;
+        res.DisplayName = _DisplayName;
+        res.State = State;
 
         // Res.StartTime = FStartTime;
-        Res.StartCount = _StartCount;
+        res.StartCount = _StartCount;
         if (_StartCount > 0)
-          Res.StartTime = _StartTime;
-        Res.State = State;
-        if (Res.State == ExecProcState.Executing)
-          Res.ThreadState = System.Threading.ThreadState.Running;
+          res.StartTime = _StartTime;
+        res.State = State;
+        if (res.State == ExecProcState.Executing)
+          res.ThreadState = System.Threading.ThreadState.Running;
         else
-          Res.ThreadState = System.Threading.ThreadState.Unstarted;
+          res.ThreadState = System.Threading.ThreadState.Unstarted;
         if (_ParentProc != null)
-          Res.ParentProcGuid = _ParentProc.Guid;
+          res.ParentProcGuid = _ParentProc.Guid;
         //if (FException != null)
         //  Res.ExceptionMessage = FException.Message;
-        Res.InitDomainInfo();
+        res.InitDomainInfo();
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -5000,19 +5000,19 @@ namespace FreeLibSet.Remoting
 
       _SetDisposedCalled = true;
 
-      AutoResetEvent Signaller2;
+      AutoResetEvent signaller2;
 
       lock (_SyncRoot)
       {
-        Signaller2 = _Signaller;
+        signaller2 = _Signaller;
         _Results = null;
         _Exception = null;
         _SuspendedArgs = null;
       }
 
       // Нельзя было вызвать из-под lock
-      if (Signaller2 != null)
-        Signaller2.Set();
+      if (signaller2 != null)
+        signaller2.Set();
     }
 
     /// <summary>
@@ -5301,10 +5301,10 @@ namespace FreeLibSet.Remoting
       {
         for (int i = 0; i < _List.Count; i++)
         {
-          NamedValues Args;
+          NamedValues args;
           try
           {
-            Args = _List[i].GetSuspended();
+            args = _List[i].GetSuspended();
           }
           catch (Exception e)
           {
@@ -5312,10 +5312,10 @@ namespace FreeLibSet.Remoting
             throw new InvalidOperationException("Один из дочерних объектов в callback-селекторе создал исключение при вызове GetSuspended(). Этот объект удален из списка", e);
           }
 
-          if (Args != null)
+          if (args != null)
           {
             _SelectedItem = _List[i];
-            return Args;
+            return args;
           }
         }
       }
@@ -5432,7 +5432,7 @@ namespace FreeLibSet.Remoting
     /// </summary>
     public int Count { get { return _Proxies.Count + _Procs.Count; } }
 
-    private static readonly ExecProcInfo[] EmptyArray = new ExecProcInfo[0];
+    private static readonly ExecProcInfo[] _EmptyArray = new ExecProcInfo[0];
 
     /// <summary>
     /// Возвращает информацию для всех процедур в списке
@@ -5443,7 +5443,7 @@ namespace FreeLibSet.Remoting
       ExecProcProxy[] a1 = _Proxies.ToArray();
       IExecProc[] a2 = _Procs.ToArray();
       if (a1.Length + a2.Length == 0)
-        return EmptyArray;
+        return _EmptyArray;
 
       Dictionary<Guid, ExecProcInfo> dict = new Dictionary<Guid, ExecProcInfo>(a1.Length + a2.Length);
       for (int i = 0; i < a1.Length; i++)
@@ -5558,10 +5558,10 @@ namespace FreeLibSet.Remoting
     {
       if (ExecProc.CurrentProc == null)
       {
-        using (MethodInvokeExecProc Proc = new MethodInvokeExecProc(userDelegate, methodParams)) //27.12.2020 - Добавлен using
+        using (MethodInvokeExecProc proc = new MethodInvokeExecProc(userDelegate, methodParams)) //27.12.2020 - Добавлен using
         {
-          Proc.Execute(NamedValues.Empty);
-          return Proc.Result;
+          proc.Execute(NamedValues.Empty);
+          return proc.Result;
         }
       }
       else

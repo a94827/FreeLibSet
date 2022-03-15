@@ -42,8 +42,8 @@ namespace FreeLibSet.Data
     public IdList(ICollection<Int32> source)
     {
       _Items = new Dictionary<Int32, object>(source.Count);
-      foreach (Int32 Id in source)
-        Add(Id);
+      foreach (Int32 id in source)
+        Add(id);
     }
 
     /// <summary>
@@ -55,8 +55,8 @@ namespace FreeLibSet.Data
     public IdList(IEnumerable<Int32> source)
       : this()
     {
-      foreach (Int32 Id in source)
-        Add(Id);
+      foreach (Int32 id in source)
+        Add(id);
     }
 
 
@@ -76,10 +76,10 @@ namespace FreeLibSet.Data
 
     private IdList(SerializationInfo info, StreamingContext context)
     {
-      Int32[] Ids = (Int32[])(info.GetValue("Ids", typeof(Int32[])));
-      _Items = new Dictionary<Int32, object>(Ids.Length);
-      for (int i = 0; i < Ids.Length; i++)
-        _Items.Add(Ids[i], null);
+      Int32[] ids = (Int32[])(info.GetValue("Ids", typeof(Int32[])));
+      _Items = new Dictionary<Int32, object>(ids.Length);
+      for (int i = 0; i < ids.Length; i++)
+        _Items.Add(ids[i], null);
       _IsReadOnly = info.GetBoolean("IsReadOnly");
     }
 
@@ -136,9 +136,9 @@ namespace FreeLibSet.Data
     /// <returns>Массив - копия</returns>
     public Int32[] ToArray()
     {
-      Int32[] Ids = new Int32[_Items.Count];
-      _Items.Keys.CopyTo(Ids, 0);
-      return Ids;
+      Int32[] ids = new Int32[_Items.Count];
+      _Items.Keys.CopyTo(ids, 0);
+      return ids;
     }
 
     /// <summary>
@@ -170,8 +170,8 @@ namespace FreeLibSet.Data
 
       CheckNotReadOnly();
 
-      foreach (Int32 Id in source)
-        Add(Id);
+      foreach (Int32 id in source)
+        Add(id);
     }
 
     /// <summary>
@@ -189,8 +189,8 @@ namespace FreeLibSet.Data
 
       CheckNotReadOnly();
 
-      foreach (Int32 Id in source)
-        Add(Id);
+      foreach (Int32 id in source)
+        Add(id);
     }
 
     /// <summary>
@@ -229,8 +229,8 @@ namespace FreeLibSet.Data
 
       CheckNotReadOnly();
 
-      foreach (Int32 Id in source)
-        Remove(Id);
+      foreach (Int32 id in source)
+        Remove(id);
     }
 
     /// <summary>
@@ -246,8 +246,8 @@ namespace FreeLibSet.Data
 
       CheckNotReadOnly();
 
-      foreach (Int32 Id in source)
-        Remove(Id);
+      foreach (Int32 id in source)
+        Remove(id);
     }
 
     /// <summary>
@@ -283,12 +283,11 @@ namespace FreeLibSet.Data
 #endif
 
       // Единственный простой способ - создать временный IdList
-      IdList Source2 = new IdList();
-      foreach (Int32 Id in source)
-        Source2.Add(Id);
+      IdList source2 = new IdList();
+      foreach (Int32 id in source)
+        source2.Add(id);
 
-
-      RemoveOthers(Source2);
+      RemoveOthers(source2);
     }
 
     #endregion
@@ -367,9 +366,9 @@ namespace FreeLibSet.Data
       if (this.Count == 0 || other.Count == 0)
         return false;
 
-      foreach (Int32 OtherId in other)
+      foreach (Int32 otherId in other)
       {
-        if (Contains(OtherId))
+        if (Contains(otherId))
           return true;
       }
       return false;
@@ -393,11 +392,11 @@ namespace FreeLibSet.Data
       if (this.Count == 0 || other.Count == 0)
         return false;
 
-      foreach (Int32 OtherId in other)
+      foreach (Int32 otherId in other)
       {
-        if (Contains(OtherId))
+        if (Contains(otherId))
         {
-          firstMatchedId = OtherId;
+          firstMatchedId = otherId;
           return true;
         }
       }
@@ -411,8 +410,8 @@ namespace FreeLibSet.Data
     /// <returns>true при наличии пересечения</returns>
     public bool ContainsAny(Int32[] ids)
     {
-      Int32 FirstMatchedId;
-      return ContainsAny(ids, out FirstMatchedId);
+      Int32 firstMatchedId;
+      return ContainsAny(ids, out firstMatchedId);
     }
 
     /// <summary>
@@ -463,9 +462,9 @@ namespace FreeLibSet.Data
       if (this.Count == 0)
         return false;
 
-      foreach (Int32 OtherId in other)
+      foreach (Int32 otherId in other)
       {
-        if (!Contains(OtherId))
+        if (!Contains(otherId))
           return false;
       }
 
@@ -596,10 +595,10 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("b");
 #endif
 
-      IdList Res = a.Clone();
-      foreach (Int32 Id in b)
-        Res.Add(Id);
-      return Res;
+      IdList res = a.Clone();
+      foreach (Int32 id in b)
+        res.Add(id);
+      return res;
     }
 
     /// <summary>
@@ -618,13 +617,13 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("b");
 #endif
 
-      IdList Res = new IdList();
-      foreach (Int32 Id in a)
+      IdList res = new IdList();
+      foreach (Int32 id in a)
       {
-        if (b.Contains(Id))
-          Res.Add(Id);
+        if (b.Contains(id))
+          res.Add(id);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -645,8 +644,8 @@ namespace FreeLibSet.Data
 #endif
 
       IdList Res = a.Clone();
-      foreach (Int32 Id in b)
-        Res.Add(Id);
+      foreach (Int32 id in b)
+        Res.Add(id);
       return Res;
     }
 
@@ -666,13 +665,13 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("b");
 #endif
 
-      IdList Res = new IdList();
-      foreach (Int32 Id in a)
+      IdList res = new IdList();
+      foreach (Int32 id in a)
       {
-        if (!b.Contains(Id))
-          Res.Add(Id);
+        if (!b.Contains(id))
+          res.Add(id);
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -726,19 +725,19 @@ namespace FreeLibSet.Data
       if (table == null)
         return new IdList(); // 20.08.2019
 
-      int ColPos = table.Columns.IndexOf("Id");
-      if (ColPos < 0)
+      int colPos = table.Columns.IndexOf("Id");
+      if (colPos < 0)
         throw new ArgumentException("Таблица\"" + table.TableName + "\" не содержит столбца \"Id\"", "table");
 
-      IdList Res = new IdList(false, table.Rows.Count);
+      IdList res = new IdList(false, table.Rows.Count);
       for (int i = 0; i < table.Rows.Count; i++)
       {
         if (table.Rows[i].RowState == DataRowState.Deleted)
-          Res._Items.Add((Int32)(table.Rows[i][ColPos, DataRowVersion.Original]), null);
+          res._Items.Add((Int32)(table.Rows[i][colPos, DataRowVersion.Original]), null);
         else
-          Res._Items.Add((Int32)(table.Rows[i][ColPos]), null);
+          res._Items.Add((Int32)(table.Rows[i][colPos]), null);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -753,20 +752,20 @@ namespace FreeLibSet.Data
       if (dv == null)
         return new IdList(); // 20.08.2019
 
-      int ColPos = dv.Table.Columns.IndexOf("Id");
-      if (ColPos < 0)
+      int colPos = dv.Table.Columns.IndexOf("Id");
+      if (colPos < 0)
         throw new ArgumentException("Таблица\"" + dv.Table.TableName + "\" не содержит столбца \"Id\"", "dv");
 
-      IdList Res = new IdList(false, dv.Count);
+      IdList res = new IdList(false, dv.Count);
       for (int i = 0; i < dv.Count; i++)
       {
-        DataRow Row = dv[i].Row;
-        if (Row.RowState == DataRowState.Deleted)
-          Res._Items.Add((Int32)(Row[ColPos, DataRowVersion.Original]), null);
+        DataRow row = dv[i].Row;
+        if (row.RowState == DataRowState.Deleted)
+          res._Items.Add((Int32)(row[colPos, DataRowVersion.Original]), null);
         else
-          Res._Items.Add((Int32)(Row[ColPos]), null);
+          res._Items.Add((Int32)(row[colPos]), null);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -780,23 +779,23 @@ namespace FreeLibSet.Data
       if (rows == null)
         return new IdList(); // 20.08.2019
 
-      IdList Res = new IdList(false, rows.Count);
+      IdList res = new IdList(false, rows.Count);
 
-      int ColPos = -1;
-      foreach (DataRow Row in rows)
+      int colPos = -1;
+      foreach (DataRow row in rows)
       {
-        if (ColPos < 0)
+        if (colPos < 0)
         {
-          ColPos = Row.Table.Columns.IndexOf("Id");
-          if (ColPos < 0)
-            throw new ArgumentException("Таблица\"" + Row.Table.TableName + "\" не содержит столбца \"Id\"", "rows");
+          colPos = row.Table.Columns.IndexOf("Id");
+          if (colPos < 0)
+            throw new ArgumentException("Таблица\"" + row.Table.TableName + "\" не содержит столбца \"Id\"", "rows");
         }
-        if (Row.RowState == DataRowState.Deleted)
-          Res._Items.Add((Int32)(Row[ColPos, DataRowVersion.Original]), null);
+        if (row.RowState == DataRowState.Deleted)
+          res._Items.Add((Int32)(row[colPos, DataRowVersion.Original]), null);
         else
-          Res._Items.Add((Int32)(Row[ColPos]), null);
+          res._Items.Add((Int32)(row[colPos]), null);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -810,24 +809,24 @@ namespace FreeLibSet.Data
       if (rows == null)
         return new IdList(); // 20.08.2019
 
-      IdList Res = new IdList(false, rows.Count);
+      IdList res = new IdList(false, rows.Count);
 
-      int ColPos = -1;
+      int colPos = -1;
       foreach (DataRowView drv in rows)
       {
-        if (ColPos < 0)
+        if (colPos < 0)
         {
-          ColPos = drv.Row.Table.Columns.IndexOf("Id");
-          if (ColPos < 0)
+          colPos = drv.Row.Table.Columns.IndexOf("Id");
+          if (colPos < 0)
             throw new InvalidOperationException("Таблица\"" + drv.Row.Table.TableName + "\" не содержит столбца \"Id\"");
         }
         if (drv.Row.RowState == DataRowState.Deleted)
-          Res._Items.Add((Int32)(drv.Row[ColPos, DataRowVersion.Original]), null);
+          res._Items.Add((Int32)(drv.Row[colPos, DataRowVersion.Original]), null);
         else
-          Res._Items.Add((Int32)(drv.Row[ColPos]), null);
+          res._Items.Add((Int32)(drv.Row[colPos]), null);
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -838,10 +837,10 @@ namespace FreeLibSet.Data
     /// <returns>Список</returns>
     public static IdList FromId(Int32 id)
     {
-      IdList List = new IdList();
+      IdList list = new IdList();
       if (id != 0)
-        List.Add(id);
-      return List;
+        list.Add(id);
+      return list;
     }
 
     #endregion
@@ -863,26 +862,26 @@ namespace FreeLibSet.Data
 
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
-      int ColPos = table.Columns.IndexOf(columnName);
-      if (ColPos < 0)
+      int colPos = table.Columns.IndexOf(columnName);
+      if (colPos < 0)
         throw new ArgumentException("Таблица\"" + table.TableName + "\" не содержит столбца \"" +
           columnName + "\"", "columnName");
 
-      IdList Res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
 
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.IsNull(ColPos))
+        if (row.IsNull(colPos))
           continue;
-        Int32 Id = (Int32)(Row[ColPos]);
+        Int32 Id = (Int32)(row[colPos]);
         if (Id == 0)
           continue;
 
-        if (!Res._Items.ContainsKey(Id))
-          Res._Items.Add(Id, null);
+        if (!res._Items.ContainsKey(Id))
+          res._Items.Add(Id, null);
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -902,26 +901,26 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 
-      int ColPos = dv.Table.Columns.IndexOf(columnName);
-      if (ColPos < 0)
+      int colPos = dv.Table.Columns.IndexOf(columnName);
+      if (colPos < 0)
         throw new ArgumentException("Таблица\"" + dv.Table.TableName + "\" не содержит столбца \"" +
           columnName + "\"", "columnName");
 
-      IdList Res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
 
       for (int i = 0; i < dv.Count; i++)
       {
-        if (dv[i].Row.IsNull(ColPos))
+        if (dv[i].Row.IsNull(colPos))
           continue;
-        Int32 Id = (Int32)(dv[i].Row[ColPos]);
-        if (Id == 0)
+        Int32 id = (Int32)(dv[i].Row[colPos]);
+        if (id == 0)
           continue;
 
-        if (!Res._Items.ContainsKey(Id))
-          Res._Items.Add(Id, null);
+        if (!res._Items.ContainsKey(id))
+          res._Items.Add(id, null);
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -942,28 +941,28 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 
-      IdList Res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-      int ColPos = -1;
-      foreach (DataRow Row in rows)
+      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      int colPos = -1;
+      foreach (DataRow row in rows)
       {
-        if (ColPos < 0)
+        if (colPos < 0)
         {
-          ColPos = Row.Table.Columns.IndexOf(columnName);
-          if (ColPos < 0)
-            throw new ArgumentException("Таблица\"" + Row.Table.TableName + "\" не содержит столбца \"" +
+          colPos = row.Table.Columns.IndexOf(columnName);
+          if (colPos < 0)
+            throw new ArgumentException("Таблица\"" + row.Table.TableName + "\" не содержит столбца \"" +
               columnName + "\"", "columnName");
         }
 
-        if (Row.IsNull(ColPos))
+        if (row.IsNull(colPos))
           continue;
-        Int32 Id = (Int32)(Row[ColPos]);
-        if (Id == 0)
+        Int32 id = (Int32)(row[colPos]);
+        if (id == 0)
           continue;
-        if (!Res._Items.ContainsKey(Id))
-          Res._Items.Add(Id, null);
+        if (!res._Items.ContainsKey(id))
+          res._Items.Add(id, null);
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -984,28 +983,28 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 
-      IdList Res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-      int ColPos = -1;
+      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      int colPos = -1;
       foreach (DataRowView drv in rows)
       {
-        if (ColPos < 0)
+        if (colPos < 0)
         {
-          ColPos = drv.Row.Table.Columns.IndexOf(columnName);
-          if (ColPos < 0)
+          colPos = drv.Row.Table.Columns.IndexOf(columnName);
+          if (colPos < 0)
             throw new ArgumentException("Таблица\"" + drv.Row.Table.TableName + "\" не содержит столбца \"" +
               columnName + "\"", "columnName");
         }
 
-        if (drv.Row.IsNull(ColPos))
+        if (drv.Row.IsNull(colPos))
           continue;
-        Int32 Id = (Int32)(drv.Row[ColPos]);
-        if (Id == 0)
+        Int32 id = (Int32)(drv.Row[colPos]);
+        if (id == 0)
           continue;
-        if (!Res._Items.ContainsKey(Id))
-          Res._Items.Add(Id, null);
+        if (!res._Items.ContainsKey(id))
+          res._Items.Add(id, null);
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -1023,16 +1022,16 @@ namespace FreeLibSet.Data
       if (ids == null)
         return new IdList();
 
-      IdList Res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
 
       for (int i = 0; i < ids.Length; i++)
       {
         if (ids[i] == 0)
           continue;
-        if (!Res._Items.ContainsKey(ids[i]))
-          Res._Items.Add(ids[i], null);
+        if (!res._Items.ContainsKey(ids[i]))
+          res._Items.Add(ids[i], null);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -1046,7 +1045,7 @@ namespace FreeLibSet.Data
       if (ids == null)
         return new IdList();
 
-      IdList Res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
 
       int n1 = ids.GetLowerBound(0);
       int n2 = ids.GetUpperBound(0);
@@ -1060,14 +1059,13 @@ namespace FreeLibSet.Data
           if (ids[i, j] == 0)
             continue;
 
-          if (!Res._Items.ContainsKey(ids[i, j]))
-            Res._Items.Add(ids[i, j], null);
+          if (!res._Items.ContainsKey(ids[i, j]))
+            res._Items.Add(ids[i, j], null);
         }
       }
 
-      return Res;
+      return res;
     }
-
 
     /// <summary>
     /// Получить список идентификаторов из jagged-массива.
@@ -1080,17 +1078,16 @@ namespace FreeLibSet.Data
       if (ids == null)
         return new IdList();
 
-      IdList Res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
 
       for (int i = 0; i < ids.Length; i++)
       {
         if (ids[i] == null)
           continue;
-        Res.Add(ids[i]);
+        res.Add(ids[i]);
       }
-      return Res;
+      return res;
     }
-
 
     #endregion
 
@@ -1105,9 +1102,9 @@ namespace FreeLibSet.Data
 
     private static IdList CreateEmpty()
     {
-      IdList Res = new IdList();
-      Res.SetReadOnly();
-      return Res;
+      IdList res = new IdList();
+      res.SetReadOnly();
+      return res;
     }
 
     #endregion
@@ -1438,9 +1435,9 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("b");
 #endif
 
-      TableAndIdList Res = a.Clone();
-      Res.Add(b);
-      return Res;
+      TableAndIdList res = a.Clone();
+      res.Add(b);
+      return res;
     }
 
     /// <summary>
@@ -1460,9 +1457,9 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("b");
 #endif
 
-      TableAndIdList Res = a.Clone();
-      Res.Add(b);
-      return Res;
+      TableAndIdList res = a.Clone();
+      res.Add(b);
+      return res;
     }
 
     /// <summary>
@@ -1481,9 +1478,9 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("b");
 #endif
 
-      TableAndIdList Res = a.Clone();
-      Res.Remove(b);
-      return Res;
+      TableAndIdList res = a.Clone();
+      res.Remove(b);
+      return res;
     }
 
     /// <summary>
@@ -1502,14 +1499,14 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("b");
 #endif
 
-      TableAndIdList Res = new TableAndIdList();
+      TableAndIdList res = new TableAndIdList();
       foreach (string tableName in a.GetTableNames())
       {
         IdList resList = a[tableName] & b[tableName];
         if (resList.Count > 0)
-          Res[tableName].Add(resList);
+          res[tableName].Add(resList);
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -1546,7 +1543,6 @@ namespace FreeLibSet.Data
 
       return true;
     }
-
 
     /// <summary>
     /// Возвращает true, если два списка отличаются

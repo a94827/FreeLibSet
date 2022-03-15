@@ -284,15 +284,15 @@ namespace FreeLibSet.IO
       }
 
       string s3 = s1.Substring(s1.Length - nDigs, nDigs);
-      int StartNom;
-      if (int.TryParse(s3, out StartNom))
+      int startNom;
+      if (int.TryParse(s3, out startNom))
       {
-        StartNom += fileIndex;
+        startNom += fileIndex;
         s1 = s1.Substring(0, s1.Length - nDigs);
-        if (StartNom.ToString().Length > nDigs)
-          return s1 + StartNom.ToString() + s2;
+        if (startNom.ToString().Length > nDigs)
+          return s1 + startNom.ToString() + s2;
         else
-          return s1 + StartNom.ToString(new string('0', nDigs)) + s2;
+          return s1 + startNom.ToString(new string('0', nDigs)) + s2;
       }
       else
       {
@@ -385,33 +385,33 @@ namespace FreeLibSet.IO
 
 
       int p;
-      string FileName1, FileName2;
+      string fileName1, fileName2;
       p = fileName.LastIndexOf('.');
       if (p < 0)
       {
-        FileName1 = fileName;
-        FileName2 = String.Empty;
+        fileName1 = fileName;
+        fileName2 = String.Empty;
       }
       else
       {
-        FileName1 = fileName.Substring(0, p);
-        FileName2 = fileName.Substring(p + 1);
+        fileName1 = fileName.Substring(0, p);
+        fileName2 = fileName.Substring(p + 1);
       }
 
-      string Template1, Template2;
+      string template1, template2;
       p = template.LastIndexOf('.');
       if (p < 0)
       {
-        Template1 = template;
-        Template2 = "*";
+        template1 = template;
+        template2 = "*";
       }
       else
       {
-        Template1 = template.Substring(0, p);
-        Template2 = template.Substring(p + 1);
+        template1 = template.Substring(0, p);
+        template2 = template.Substring(p + 1);
       }
 
-      return TestFileNameWildcardsPart(FileName1, Template1) && TestFileNameWildcardsPart(FileName2, Template2);
+      return TestFileNameWildcardsPart(fileName1, template1) && TestFileNameWildcardsPart(fileName2, template2);
     }
 
     private static bool TestFileNameWildcardsPart(string fileName, string template)
@@ -560,10 +560,10 @@ namespace FreeLibSet.IO
         return false;
       }
 
-      char[] BadChars = System.IO.Path.GetInvalidPathChars();
+      char[] badChars = System.IO.Path.GetInvalidPathChars();
       for (int i = 0; i < name.Length; i++)
       {
-        if (Array.IndexOf<char>(BadChars, name[i]) >= 0)
+        if (Array.IndexOf<char>(badChars, name[i]) >= 0)
         {
           errorText = "Недопустимый символ \"" + name[i] + "\" в позиции " + (i + 1).ToString();
           return false;
@@ -646,8 +646,8 @@ namespace FreeLibSet.IO
           return false;
         }
 
-        char FirstChar = char.ToUpperInvariant(name[0]);
-        if (FirstChar < 'A' || FirstChar > 'Z')
+        char firstChar = char.ToUpperInvariant(name[0]);
+        if (firstChar < 'A' || firstChar > 'Z')
         {
           errorText = "Перед символом \":\" должна идти буква диска";
           return false;
@@ -917,12 +917,12 @@ namespace FreeLibSet.IO
 
       if (mustClear)
       {
-        string[] Files = Directory.GetFiles(dirPath.Path);
-        for (int i = 0; i < Files.Length; i++)
-          DeleteFile(new AbsPath(Files[i]));
-        string[] SubDirs = Directory.GetDirectories(dirPath.Path);
-        for (int i = 0; i < SubDirs.Length; i++)
-          Directory.Delete(SubDirs[i], true);
+        string[] files = Directory.GetFiles(dirPath.Path);
+        for (int i = 0; i < files.Length; i++)
+          DeleteFile(new AbsPath(files[i]));
+        string[] subDirs = Directory.GetDirectories(dirPath.Path);
+        for (int i = 0; i < subDirs.Length; i++)
+          Directory.Delete(subDirs[i], true);
       }
       else
         ClearDirAsPossible(dirPath);
@@ -952,7 +952,7 @@ namespace FreeLibSet.IO
         return false;
       }
 
-      bool AllDeleted = true;
+      bool allDeleted = true;
 
       #region Очистка файлов
 
@@ -964,7 +964,7 @@ namespace FreeLibSet.IO
       catch // 27.12.2019. Перехватываем IOException на случай повреждения структуры каталогов
       {
         a = DataTools.EmptyStrings;
-        AllDeleted = false;
+        allDeleted = false;
       }
       for (int i = 0; i < a.Length; i++)
       {
@@ -974,7 +974,7 @@ namespace FreeLibSet.IO
         }
         catch
         {
-          AllDeleted = false;
+          allDeleted = false;
           // но break не делаем
         }
       }
@@ -990,30 +990,30 @@ namespace FreeLibSet.IO
       catch // 27.12.2019. Перехватываем IOException на случай повреждения структуры каталогов
       {
         a = DataTools.EmptyStrings;
-        AllDeleted = false;
+        allDeleted = false;
       }
       for (int i = 0; i < a.Length; i++)
       {
-        AbsPath SubDir = new AbsPath(a[i]);
-        if (!ClearDirAsPossible(SubDir))
+        AbsPath subDir = new AbsPath(a[i]);
+        if (!ClearDirAsPossible(subDir))
         {
-          AllDeleted = false;
+          allDeleted = false;
           continue;
         }
 
         try
         {
-          Directory.Delete(SubDir.Path);
+          Directory.Delete(subDir.Path);
         }
         catch
         {
-          AllDeleted = false;
+          allDeleted = false;
         }
       }
 
       #endregion
 
-      return AllDeleted;
+      return allDeleted;
     }
 
     /// <summary>
@@ -1220,7 +1220,7 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("dstStream");
 #endif
 
-      int BufLen = 1024;
+      int bufLen = 1024;
       if (seekStart)
       {
         srcStream.Seek(0, SeekOrigin.Begin);
@@ -1229,17 +1229,17 @@ namespace FreeLibSet.IO
         if (l == 0L)
           return;
         if (l > 0L && l < 1024L)
-          BufLen = Math.Max(BufLen, (int)l);
+          bufLen = Math.Max(bufLen, (int)l);
       }
 
-      byte[] Buffer = new byte[BufLen];
+      byte[] buffer = new byte[bufLen];
       while (true)
       {
-        int n = srcStream.Read(Buffer, 0, Buffer.Length);
+        int n = srcStream.Read(buffer, 0, buffer.Length);
         if (n == 0)
           break;
 
-        dstStream.Write(Buffer, 0, n);
+        dstStream.Write(buffer, 0, n);
       }
     }
 
@@ -1355,32 +1355,32 @@ namespace FreeLibSet.IO
       if (bytes == null)
         throw new ArgumentNullException("bytes");
 
-      bool Res;
-      long StartPos = testStream.Position;
+      bool res;
+      long startPos = testStream.Position;
       try
       {
-        byte[] Bytes2 = new byte[bytes.Length];
-        if (testStream.Read(Bytes2, 0, Bytes2.Length) == bytes.Length)
+        byte[] bytes2 = new byte[bytes.Length];
+        if (testStream.Read(bytes2, 0, bytes2.Length) == bytes.Length)
         {
-          Res = true;
+          res = true;
           for (int i = 0; i < bytes.Length; i++)
           {
-            if (Bytes2[i] != bytes[i])
+            if (bytes2[i] != bytes[i])
             {
-              Res = false;
+              res = false;
               break;
             }
           }
         }
         else
-          Res = false;
+          res = false;
       }
       finally
       {
-        testStream.Position = StartPos;
+        testStream.Position = startPos;
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -1427,12 +1427,12 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("filePath");
 
       Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
-      XmlWriterSettings Settings = new XmlWriterSettings();
-      Settings.NewLineChars = "\r\n";
-      Settings.Encoding = enc;
-      Settings.Indent = true;
-      Settings.IndentChars = "  ";
-      XmlWriter wrt = XmlWriter.Create(filePath.Path, Settings);
+      XmlWriterSettings settings = new XmlWriterSettings();
+      settings.NewLineChars = "\r\n";
+      settings.Encoding = enc;
+      settings.Indent = true;
+      settings.IndentChars = "  ";
+      XmlWriter wrt = XmlWriter.Create(filePath.Path, settings);
       try
       {
         xmlDoc.WriteTo(wrt);
@@ -1459,13 +1459,13 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("xmlDoc");
 
       Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
-      XmlWriterSettings Settings = new XmlWriterSettings();
-      Settings.NewLineChars = "\r\n";
-      Settings.Encoding = enc;
-      Settings.Indent = true;
-      Settings.IndentChars = "  ";
+      XmlWriterSettings settings = new XmlWriterSettings();
+      settings.NewLineChars = "\r\n";
+      settings.Encoding = enc;
+      settings.Indent = true;
+      settings.IndentChars = "  ";
       StreamWriter wrt1 = new StreamWriter(outStream, enc);
-      XmlWriter wrt2 = XmlWriter.Create(wrt1, Settings);
+      XmlWriter wrt2 = XmlWriter.Create(wrt1, settings);
       try
       {
         xmlDoc.WriteTo(wrt2);
@@ -1492,9 +1492,9 @@ namespace FreeLibSet.IO
       if (filePath.IsEmpty)
         throw new ArgumentNullException("filePath");
 
-      XmlDocument Doc = new XmlDocument();
-      Doc.Load(filePath.Path);
-      return Doc;
+      XmlDocument xmlDoc = new XmlDocument();
+      xmlDoc.Load(filePath.Path);
+      return xmlDoc;
     }
 
     /// <summary>
@@ -1508,9 +1508,9 @@ namespace FreeLibSet.IO
       if (inStream == null)
         throw new ArgumentNullException("inStream");
 
-      XmlDocument Doc = new XmlDocument();
-      Doc.Load(inStream);
-      return Doc;
+      XmlDocument xmlDoc = new XmlDocument();
+      xmlDoc.Load(inStream);
+      return xmlDoc;
     }
 
     #endregion
@@ -1521,29 +1521,29 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Начало любого XML-файла в однобайтной кодировке (например, 1251 или 866)
     /// </summary>
-    private static readonly byte[] XmlStartAnsiBytes = new byte[] { 0x3c, 0x3f, 0x78, 0x6d, 0x6c, 0x20 };
+    private static readonly byte[] _XmlStartAnsiBytes = new byte[] { 0x3c, 0x3f, 0x78, 0x6d, 0x6c, 0x20 };
 
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-8
     /// </summary>
-    private static readonly byte[] XmlStartUtf8Bytes = new byte[] { 0xEF, 0xBB, 0xBF, 0x3c, 0x3f , 0x78 , 0x6d , 0x6c , 0x20 };
+    private static readonly byte[] _XmlStartUtf8Bytes = new byte[] { 0xEF, 0xBB, 0xBF, 0x3c, 0x3f , 0x78 , 0x6d , 0x6c , 0x20 };
 
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-16
     /// </summary>
-    private static readonly byte[] XmlStartUtf16Bytes = new byte[] { 0xFF, 0xFE , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00 , 0x6d, 0x00, 0x6c, 0x00, 0x20, 0x00 };
+    private static readonly byte[] _XmlStartUtf16Bytes = new byte[] { 0xFF, 0xFE , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00 , 0x6d, 0x00, 0x6c, 0x00, 0x20, 0x00 };
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-16BE
     /// </summary>
-    private static readonly byte[] XmlStartUtf16BEBytes = new byte[] { 0xFE, 0xFF , 0x00 , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20 };
+    private static readonly byte[] _XmlStartUtf16BEBytes = new byte[] { 0xFE, 0xFF , 0x00 , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20 };
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-32
     /// </summary>
-    private static readonly byte[] XmlStartUtf32Bytes = new byte[] { 0xFF , 0xFE , 0x00 , 0x00 ,
+    private static readonly byte[] _XmlStartUtf32Bytes = new byte[] { 0xFF , 0xFE , 0x00 , 0x00 ,
                                                                      0x3c , 0x00 , 0x00 , 0x00 ,
                                                                      0x3f, 0x00, 0x00, 0x00,
                                                                      0x78, 0x00, 0x00, 0x00,
@@ -1553,7 +1553,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-32BE
     /// </summary>
-    private static readonly byte[] XmlStartUtf32BEBytes = new byte[] { 0x00, 0x00, 0xFE, 0xFF,
+    private static readonly byte[] _XmlStartUtf32BEBytes = new byte[] { 0x00, 0x00, 0xFE, 0xFF,
                                                                        0x00, 0x00, 0x00, 0x3c,
                                                                        0x00, 0x00, 0x00, 0x3f,
                                                                        0x00, 0x00, 0x00, 0x78,
@@ -1564,8 +1564,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Массив возможных "начал" файлов
     /// </summary>
-    private static readonly byte[][] XmlStartAnyBytes = new byte[][] { XmlStartAnsiBytes, XmlStartUtf8Bytes,
-      XmlStartUtf16Bytes, XmlStartUtf16BEBytes, XmlStartUtf32Bytes, XmlStartUtf32BEBytes };
+    private static readonly byte[][] _XmlStartAnyBytes = new byte[][] { _XmlStartAnsiBytes, _XmlStartUtf8Bytes,
+      _XmlStartUtf16Bytes, _XmlStartUtf16BEBytes, _XmlStartUtf32Bytes, _XmlStartUtf32BEBytes };
 
     /// <summary>
     /// Возвращает true, если байты потока, начиная с текущей позиции, соответствуют XML-файлу в любой (определяемой) кодировке
@@ -1582,9 +1582,9 @@ namespace FreeLibSet.IO
       if (inStream == null)
         return false;
 
-      for (int i = 0; i < XmlStartAnyBytes.Length; i++)
+      for (int i = 0; i < _XmlStartAnyBytes.Length; i++)
       {
-        if (StartsWith(inStream, XmlStartAnyBytes[i]))
+        if (StartsWith(inStream, _XmlStartAnyBytes[i]))
           return true;
       }
 
@@ -1613,7 +1613,6 @@ namespace FreeLibSet.IO
         return IsValidXmlStart(Stream);
       }
     }
-
 
     #endregion
 
@@ -1803,14 +1802,14 @@ namespace FreeLibSet.IO
 
           // Указатель на заголовок PE
           fs.Position = 0x3c;
-          long PEPos = rdr.ReadUInt32();
+          long pePos = rdr.ReadUInt32();
 
           // Проверка сигнатуры PE
-          fs.Position = PEPos;
+          fs.Position = pePos;
           if (rdr.ReadUInt32() != 0x00004550)
             return null;
-          UInt16 Machine = rdr.ReadUInt16();
-          switch (Machine)
+          UInt16 machine = rdr.ReadUInt16();
+          switch (machine)
           {
             case IMAGE_FILE_MACHINE_I386:
               return false;
@@ -1891,15 +1890,15 @@ namespace FreeLibSet.IO
       string[] a = GetServerList(WindowsNative.SV_101_TYPES.SV_TYPE_ALL);
 
       // Надо, чтобы наш компьютер был в списке
-      string CompName = Environment.MachineName;
-      if (!String.IsNullOrEmpty(CompName))
+      string compName = Environment.MachineName;
+      if (!String.IsNullOrEmpty(compName))
       {
-        int p = Array.IndexOf<string>(a, CompName);
+        int p = Array.IndexOf<string>(a, compName);
         if (p < 0)
         {
           string[] a2 = new string[a.Length + 1];
           a.CopyTo(a2, 1);
-          a2[0] = CompName;
+          a2[0] = compName;
           a = a2;
         }
       }
@@ -1966,8 +1965,8 @@ namespace FreeLibSet.IO
       if (splash == null)
         splash = new DummySplash();
 
-      string OldPhaseText = splash.PhaseText;
-      bool OldAllowCancel = splash.AllowCancel;
+      string oldPhaseText = splash.PhaseText;
+      bool oldAllowCancel = splash.AllowCancel;
 
       splash.PhaseText = "Построение списка файлов";
       splash.AllowCancel = false;
@@ -1976,20 +1975,20 @@ namespace FreeLibSet.IO
       splash.PhaseText = "Вычисление размера файлов";
       splash.PercentMax = aFiles.Length;
       splash.AllowCancel = true;
-      long TotalSize = 0;
+      long totalSize = 0;
       for (int i = 0; i < aFiles.Length; i++)
       {
         FileInfo fi = new FileInfo(srcDir.SlashedPath + aFiles[i]);
-        TotalSize += fi.Length;
+        totalSize += fi.Length;
         splash.IncPercent();
       }
 
       //Splash.PhaseText = "Копирование файлов";
-      splash.PhaseText = OldPhaseText; // Тот текст заставки, который был задан
+      splash.PhaseText = oldPhaseText; // Тот текст заставки, который был задан
       splash.PercentMax = 100;
       splash.AllowCancel = true;
 
-      byte[] Buffer = new byte[32768]; // Размер буфера копирования
+      byte[] buffer = new byte[32768]; // Размер буфера копирования
       long CopiedSize = 0;
       for (int i = 0; i < aFiles.Length; i++)
       {
@@ -1998,22 +1997,22 @@ namespace FreeLibSet.IO
         FileStream fsSrc = new FileStream(srcDir.SlashedPath + aFiles[i], FileMode.Open, FileAccess.Read, FileShare.Read);
         try
         {
-          AbsPath ResFileName = new AbsPath(resDir, aFiles[i]);
+          AbsPath resFileName = new AbsPath(resDir, aFiles[i]);
           // Каталог для конечного файла
-          ForceDirs(ResFileName.ParentDir);
+          ForceDirs(resFileName.ParentDir);
 
-          FileStream fsDst = new FileStream(ResFileName.Path, FileMode.Create, FileAccess.Write, FileShare.None);
+          FileStream fsDst = new FileStream(resFileName.Path, FileMode.Create, FileAccess.Write, FileShare.None);
           try
           {
             while (true)
             {
-              int Count = fsSrc.Read(Buffer, 0, Buffer.Length);
-              if (Count == 0)
+              int count = fsSrc.Read(buffer, 0, buffer.Length);
+              if (count == 0)
                 break;
-              fsDst.Write(Buffer, 0, Count);
-              CopiedSize += Count;
-              if (TotalSize > 0)
-                splash.Percent = (int)((double)CopiedSize / (double)TotalSize * 100.0);
+              fsDst.Write(buffer, 0, count);
+              CopiedSize += count;
+              if (totalSize > 0)
+                splash.Percent = (int)((double)CopiedSize / (double)totalSize * 100.0);
             }
 
             fsDst.Close();
@@ -2045,7 +2044,7 @@ namespace FreeLibSet.IO
       }
 
       splash.PercentMax = 0;
-      splash.AllowCancel = OldAllowCancel;
+      splash.AllowCancel = oldAllowCancel;
       //Splash.PhaseText = OldPhaseText;
     }
 
@@ -2062,32 +2061,32 @@ namespace FreeLibSet.IO
 
     private static AbsPath GetApplicationPath()
     {
-      AbsPath Path;
+      AbsPath path;
       Assembly asm = Assembly.GetEntryAssembly();
       if (asm == null)
       {
         try
         {
-          Path = new AbsPath(Process.GetCurrentProcess().MainModule.FileName);
+          path = new AbsPath(Process.GetCurrentProcess().MainModule.FileName);
         }
         catch
         {
-          Path = new AbsPath(Environment.GetCommandLineArgs()[0]);
+          path = new AbsPath(Environment.GetCommandLineArgs()[0]);
         }
       }
       else
-        Path = new AbsPath(asm.Location);
+        path = new AbsPath(asm.Location);
 
-      if (!Path.IsEmpty)
+      if (!path.IsEmpty)
       {
-        if (Path.FileNameWithoutExtension.EndsWith(".vshost", StringComparison.OrdinalIgnoreCase))
+        if (path.FileNameWithoutExtension.EndsWith(".vshost", StringComparison.OrdinalIgnoreCase))
         {
-          string Name = Path.FileNameWithoutExtension;
+          string Name = path.FileNameWithoutExtension;
           Name = Name.Substring(0, Name.Length - 7);
-          Path = new AbsPath(Path.ParentDir, (Name + Path.Extension));
+          path = new AbsPath(path.ParentDir, (Name + path.Extension));
         }
       }
-      return Path;
+      return path;
     }
 
     /// <summary>
@@ -2102,22 +2101,22 @@ namespace FreeLibSet.IO
         if (_ApplicationPath.IsEmpty)
           return AbsPath.Empty;
 
-        AbsPath Dir1 = _ApplicationPath.ParentDir;
-        AbsPath Dir2 = Dir1;
-        string Last = Dir2.FileName.ToUpper();
-        if (Last == "DEBUG" || Last == "RELEASE")
+        AbsPath dir1 = _ApplicationPath.ParentDir;
+        AbsPath dir2 = dir1;
+        string last = dir2.FileName.ToUpper();
+        if (last == "DEBUG" || last == "RELEASE")
         {
-          Dir2 = Dir2.ParentDir;
-          Last = Dir2.FileName.ToUpper();
-          if (Last == "X86" || Last == "X64" || Last == "IA64")
+          dir2 = dir2.ParentDir;
+          last = dir2.FileName.ToUpper();
+          if (last == "X86" || last == "X64" || last == "IA64")
           {
-            Dir2 = Dir2.ParentDir;
-            Last = Dir2.FileName.ToUpper();
+            dir2 = dir2.ParentDir;
+            last = dir2.FileName.ToUpper();
           }
-          if (Last == "BIN")
-            return Dir2.ParentDir;
+          if (last == "BIN")
+            return dir2.ParentDir;
         }
-        return Dir1;
+        return dir1;
       }
     }
 
@@ -2141,11 +2140,11 @@ namespace FreeLibSet.IO
 
       if (System.IO.Path.IsPathRooted(fileName)) // задан абсолютный путь к файлу?
       {
-        AbsPath File = new AbsPath(fileName);
+        AbsPath path = new AbsPath(fileName);
         try
         {
-          if (System.IO.File.Exists(File.Path))
-            return File;
+          if (System.IO.File.Exists(path.Path))
+            return path;
         }
         catch { } // может не быть доступа к каталогу
         return AbsPath.Empty;
@@ -2155,14 +2154,14 @@ namespace FreeLibSet.IO
       string[] aPaths = sPaths.Split(System.IO.Path.PathSeparator);
       for (int i = 0; i < aPaths.Length; i++)
       {
-        AbsPath Dir = new AbsPath(Environment.ExpandEnvironmentVariables(aPaths[i]));
-        if (Dir.IsEmpty)
+        AbsPath dir = new AbsPath(Environment.ExpandEnvironmentVariables(aPaths[i]));
+        if (dir.IsEmpty)
           continue; // 04.12.2018
-        AbsPath File = new AbsPath(Dir, fileName);
+        AbsPath path = new AbsPath(dir, fileName);
         try
         {
-          if (System.IO.File.Exists(File.Path))
-            return File;
+          if (System.IO.File.Exists(path.Path))
+            return path;
         }
         catch { } // может не быть доступа к каталогу
       }
@@ -2186,8 +2185,8 @@ namespace FreeLibSet.IO
       if (strm == null)
         return DataTools.MD5Sum(new byte[0]);
       System.Security.Cryptography.MD5 md5Hasher = System.Security.Cryptography.MD5.Create();
-      byte[] HashRes = md5Hasher.ComputeHash(strm);
-      return DataTools.BytesToHex(HashRes, false);
+      byte[] hashRes = md5Hasher.ComputeHash(strm);
+      return DataTools.BytesToHex(hashRes, false);
     }
 
     /// <summary>
@@ -2246,16 +2245,16 @@ namespace FreeLibSet.IO
 
     private static AbsPath InitRootDir()
     {
-      string AppName = null;
+      string appName = null;
       try
       {
-        AppName = EnvironmentTools.ApplicationName;
+        appName = EnvironmentTools.ApplicationName;
       }
       catch { }
-      if (String.IsNullOrEmpty(AppName))
-        AppName = "NonameApp";
+      if (String.IsNullOrEmpty(appName))
+        appName = "NonameApp";
 
-      return new AbsPath(Path.GetTempPath()) + AppName;
+      return new AbsPath(Path.GetTempPath()) + appName;
     }
 
 
@@ -2271,12 +2270,12 @@ namespace FreeLibSet.IO
     {
       _DeleteOnDispose = true;
 
-      AbsPath TempRoot = RootDir;
+      AbsPath tempRoot = RootDir;
       lock (DataTools.InternalSyncRoot)
       {
         while (true)
         {
-          _Dir = TempRoot + DataTools.TheRandom.Next().ToString("x8");
+          _Dir = tempRoot + DataTools.TheRandom.Next().ToString("x8");
           if (!Directory.Exists(_Dir.Path))
           {
             FileTools.ForceDirs(_Dir);
@@ -2457,11 +2456,11 @@ namespace FreeLibSet.IO
 
       FileTools.ForceDirs(Dir);
 
-      string Name = Guid.NewGuid().ToString("D");
+      string name = Guid.NewGuid().ToString("D");
       if (!String.IsNullOrEmpty(extension))
-        Name += "." + extension;
+        name += "." + extension;
 
-      return new AbsPath(Dir, Name);
+      return new AbsPath(Dir, name);
     }
 
     /// <summary>
@@ -2480,11 +2479,11 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("fileName");
 
 
-      string SubDirName = Guid.NewGuid().ToString("D");
-      AbsPath Dir2 = new AbsPath(Dir, SubDirName);
-      FileTools.ForceDirs(Dir2);
+      string subDirName = Guid.NewGuid().ToString("D");
+      AbsPath dir2 = new AbsPath(Dir, subDirName);
+      FileTools.ForceDirs(dir2);
 
-      return new AbsPath(Dir2, fileName);
+      return new AbsPath(dir2, fileName);
     }
 
     #endregion
@@ -2725,8 +2724,8 @@ namespace FreeLibSet.IO
     /// <param name="recurse">true, если используется рекурсия по подкаталогам</param>
     public void AddRange(ICollection<string> templates, bool recurse)
     {
-      foreach (string Template in templates)
-        Add(Template, recurse);
+      foreach (string template in templates)
+        Add(template, recurse);
     }
 
     /// <summary>
@@ -2751,20 +2750,20 @@ namespace FreeLibSet.IO
       SortedDictionary<string, object> lst = new SortedDictionary<string, object>(); // Используем только ключи
 
       // Длина обрезки каталога
-      int BaseLen = root.SlashedPath.Length;
+      int baseLen = root.SlashedPath.Length;
 
       // Файлы могут входить сразу в несколько шаблонов
       for (int i = 0; i < Count; i++)
       {
-        AbsPath NewRoot;
-        string NewTemplate;
-        this[i].GetNormalTemplate(root, out NewRoot, out NewTemplate);
-        if (Directory.Exists(NewRoot.Path))
+        AbsPath newRoot;
+        string newTemplate;
+        this[i].GetNormalTemplate(root, out newRoot, out newTemplate);
+        if (Directory.Exists(newRoot.Path))
         {
-          string[] a = Directory.GetFiles(NewRoot.Path, NewTemplate, this[i].Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+          string[] a = Directory.GetFiles(newRoot.Path, newTemplate, this[i].Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
           for (int j = 0; j < a.Length; j++)
           {
-            string s = a[j].Substring(BaseLen);
+            string s = a[j].Substring(baseLen);
             if (!lst.ContainsKey(s))
               lst.Add(s, null);
           }
@@ -2803,12 +2802,12 @@ namespace FreeLibSet.IO
       // Файлы могут входить сразу в несколько шаблонов
       for (int i = 0; i < Count; i++)
       {
-        AbsPath NewRoot;
-        string NewTemplate;
-        this[i].GetNormalTemplate(root, out NewRoot, out NewTemplate);
-        if (Directory.Exists(NewRoot.Path))
+        AbsPath newRoot;
+        string newTemplate;
+        this[i].GetNormalTemplate(root, out newRoot, out newTemplate);
+        if (Directory.Exists(newRoot.Path))
         {
-          string[] a = Directory.GetFiles(NewRoot.Path, NewTemplate, this[i].Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+          string[] a = Directory.GetFiles(newRoot.Path, newTemplate, this[i].Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
           for (int j = 0; j < a.Length; j++)
           {
             if (!lst.ContainsKey(a[j]))
@@ -2865,7 +2864,7 @@ namespace FreeLibSet.IO
     {
       if (OSSupported)
       {
-        if (WindowsNative.Wow64DisableWow64FsRedirection(out OldValue) != 0)
+        if (WindowsNative.Wow64DisableWow64FsRedirection(out _OldValue) != 0)
           _Active = true;
       }
     }
@@ -2879,7 +2878,7 @@ namespace FreeLibSet.IO
       if (_Active)
       {
         _Active = false;
-        WindowsNative.Wow64RevertWow64FsRedirection(OldValue);
+        WindowsNative.Wow64RevertWow64FsRedirection(_OldValue);
       }
       base.Dispose(disposing);
     }
@@ -2894,7 +2893,7 @@ namespace FreeLibSet.IO
     public bool Active { get { return _Active; } }
     private bool _Active;
 
-    private IntPtr OldValue;
+    private IntPtr _OldValue;
 
     #endregion
 
@@ -2930,12 +2929,12 @@ namespace FreeLibSet.IO
     {
       get
       {
-        bool Res;
+        bool res;
         using (FileRedirectionSupressor Obj = new FileRedirectionSupressor())
         {
-          Res = Obj.Active;
+          res = Obj.Active;
         }
-        return Res;
+        return res;
       }
     }
 

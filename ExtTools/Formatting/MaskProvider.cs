@@ -128,9 +128,9 @@ namespace FreeLibSet.Formatting
 
     private bool DoTest(string text, out string errorText)
     {
-      int TestPos;
-      MaskedTextResultHint TestHint;
-      if (_Provider.Set(text, out TestPos, out TestHint))
+      int testPos;
+      MaskedTextResultHint testHint;
+      if (_Provider.Set(text, out testPos, out testHint))
       {
         if (_Provider.MaskCompleted)
         {
@@ -144,8 +144,8 @@ namespace FreeLibSet.Formatting
         }
       }
 
-      if (TestPos >= 0 && TestPos < text.Length)
-        errorText = "Недопустимый символ \"" + text[TestPos] + "\" в позиции " + (TestPos + 1).ToString();
+      if (testPos >= 0 && testPos < text.Length)
+        errorText = "Недопустимый символ \"" + text[testPos] + "\" в позиции " + (testPos + 1).ToString();
       else
         errorText = "Значение не соответствует маске";
       return false;
@@ -158,8 +158,8 @@ namespace FreeLibSet.Formatting
     /// <returns>true, если строка соответствует маске</returns>
     public bool Test(string text)
     {
-      string ErrorText;
-      return Test(text, out ErrorText);
+      string errorText;
+      return Test(text, out errorText);
     }
 
 
@@ -291,8 +291,8 @@ namespace FreeLibSet.Formatting
     /// <returns>true, если строка соответствует маске</returns>
     public bool Test(string text)
     {
-      string ErrorText;
-      return Test(text, out ErrorText);
+      string errorText;
+      return Test(text, out errorText);
     }
 
     /// <summary>

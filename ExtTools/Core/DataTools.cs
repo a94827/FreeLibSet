@@ -2152,13 +2152,13 @@ namespace FreeLibSet.Core
     {
       if (dict1.Count != dict2.Count)
         return false;
-      foreach (KeyValuePair<TKey, TValue> Pair in dict1)
+      foreach (KeyValuePair<TKey, TValue> pair in dict1)
       {
-        TValue Value2;
-        if (!dict2.TryGetValue(Pair.Key, out Value2))
+        TValue value2;
+        if (!dict2.TryGetValue(pair.Key, out value2))
           return false;
 
-        if (!object.Equals(Pair.Value, Value2))
+        if (!object.Equals(pair.Value, value2))
           return false;
       }
 
@@ -2177,14 +2177,14 @@ namespace FreeLibSet.Core
     {
       if (dict1.Count != dict2.Count)
         return false;
-      foreach (DictionaryEntry Pair in dict1)
+      foreach (DictionaryEntry pair in dict1)
       {
-        if (!dict2.Contains(Pair.Key))
+        if (!dict2.Contains(pair.Key))
           return false;
 
-        object Value2 = dict2[Pair.Key];
+        object value2 = dict2[pair.Key];
 
-        if (!object.Equals(Pair.Value, Value2))
+        if (!object.Equals(pair.Value, value2))
           return false;
       }
 
@@ -2217,16 +2217,16 @@ namespace FreeLibSet.Core
       if (columnNames.IndexOf(',') < 0)
       {
         // 14.06.2017 Оптимизация
-        DataColumn[] Columns = new DataColumn[1];
-        Columns[0] = table.Columns[columnNames];
-        if (Columns[0] == null)
+        DataColumn[] cols = new DataColumn[1];
+        cols[0] = table.Columns[columnNames];
+        if (cols[0] == null)
         {
           ArgumentException e = new ArgumentException("Таблица \"" + table.TableName +
             "\" не содержит столбца \"" + columnNames + "\", которое предполагалось сделать ключевым", "columnNames");
           AddExceptionColumnsInfo(e, table);
           throw e;
         }
-        table.PrimaryKey = Columns;
+        table.PrimaryKey = cols;
 
         return;
       }
@@ -2254,11 +2254,11 @@ namespace FreeLibSet.Core
         table.PrimaryKey = null;
         return;
       }
-      DataColumn[] Columns = new DataColumn[columnNames.Length];
+      DataColumn[] cols = new DataColumn[columnNames.Length];
       for (int i = 0; i < columnNames.Length; i++)
       {
-        Columns[i] = table.Columns[columnNames[i]];
-        if (Columns[i] == null)
+        cols[i] = table.Columns[columnNames[i]];
+        if (cols[i] == null)
         {
           ArgumentException e = new ArgumentException("Таблица \"" + table.TableName +
             "\" не содержит столбца \"" + columnNames[i] + "\", которое предполагалось сделать ключевым", "columnNames");
@@ -2266,7 +2266,7 @@ namespace FreeLibSet.Core
           throw e;
         }
       }
-      table.PrimaryKey = Columns;
+      table.PrimaryKey = cols;
     }
 
     /// <summary>
@@ -2327,15 +2327,15 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("rows");
 #endif
 
-      object[,] KeyValues = new object[rows.Length, table.PrimaryKey.Length];
+      object[,] keyValues = new object[rows.Length, table.PrimaryKey.Length];
       for (int i = 0; i < rows.Length; i++)
       {
         if (rows[i] == null)
           continue;
         for (int j = 0; j < table.PrimaryKey.Length; j++)
-          KeyValues[i, j] = rows[i][table.PrimaryKey[j]];
+          keyValues[i, j] = rows[i][table.PrimaryKey[j]];
       }
-      return KeyValues;
+      return keyValues;
     }
 
     /// <summary>
@@ -2365,13 +2365,13 @@ namespace FreeLibSet.Core
         return null;
       if (table.PrimaryKey == null || table.PrimaryKey.Length == 0)
         return null;
-      object[] KeyValues = new object[table.PrimaryKey.Length];
-      for (int i = 0; i < KeyValues.Length; i++)
+      object[] keyValues = new object[table.PrimaryKey.Length];
+      for (int i = 0; i < keyValues.Length; i++)
       {
-        string ColName = table.PrimaryKey[i].ColumnName;
-        KeyValues[i] = row[ColName];
+        string colName = table.PrimaryKey[i].ColumnName;
+        keyValues[i] = row[colName];
       }
-      return KeyValues;
+      return keyValues;
     }
 
     /// <summary>
@@ -2404,27 +2404,27 @@ namespace FreeLibSet.Core
       if (keyValues.GetLength(1) != n)
         throw new ArgumentException("Размерность массива (" + keyValues.GetLength(1).ToString() + ") не соответствует количеству ключевых полей (" + n.ToString() + ") таблицы \"" + table.TableName + "\"", "keyValues");
 
-      object[] FindKeys = null;
+      object[] findKeys = null;
       if (n > 1)
-        FindKeys = new object[n]; // сюда будем копировать ключи для поиска
+        findKeys = new object[n]; // сюда будем копировать ключи для поиска
 
-      DataRow[] Rows = new DataRow[keyValues.GetLength(0)];
-      for (int i = 0; i < Rows.Length; i++)
+      DataRow[] rows = new DataRow[keyValues.GetLength(0)];
+      for (int i = 0; i < rows.Length; i++)
       {
         if (keyValues[i, 0] == null)
           continue;
         if (n == 1)
           // Простой поиск по одному столбцу. Копирование не нужно
-          Rows[i] = table.Rows.Find(keyValues[i, 0]);
+          rows[i] = table.Rows.Find(keyValues[i, 0]);
         else
         {
           // Требуется дополнительное копирование
           for (int j = 0; j < n; j++)
-            FindKeys[j] = keyValues[i, j];
-          Rows[i] = table.Rows.Find(FindKeys);
+            findKeys[j] = keyValues[i, j];
+          rows[i] = table.Rows.Find(findKeys);
         }
       }
-      return Rows;
+      return rows;
     }
 
     /// <summary>
@@ -2557,23 +2557,23 @@ namespace FreeLibSet.Core
         throw new ArgumentException("Мастер таблица не имеет первичного ключа", "masterTable");
 
       string[] aColNames = referenceColumn.Split(',');
-      DataColumn[] RefCols = new DataColumn[aColNames.Length];
-      for (int i = 0; i < RefCols.Length; i++)
+      DataColumn[] refCols = new DataColumn[aColNames.Length];
+      for (int i = 0; i < refCols.Length; i++)
       {
-        RefCols[i] = detailsTable.Columns[aColNames[i]];
-        if (RefCols[i] == null)
+        refCols[i] = detailsTable.Columns[aColNames[i]];
+        if (refCols[i] == null)
           throw new InvalidOperationException("Таблица \"" + detailsTable.TableName + "\" не имеет столбца \"" +
             aColNames[i] + "\", которое предполагалось использовать для связывания");
       }
-      if (RefCols.Length != masterTable.PrimaryKey.Length)
+      if (refCols.Length != masterTable.PrimaryKey.Length)
         throw new InvalidOperationException("В мастер-таблице \"" + masterTable.TableName + "\" объявлены ключевые поля \"" +
           GetPrimaryKey(masterTable) + "\" (" + masterTable.PrimaryKey.Length.ToString() +
           " шт.) Нельзя использовать для связи поля \"" + referenceColumn +
-          "\" (" + RefCols.Length.ToString() + " шт). Количество полей должно быть одинаковым");
+          "\" (" + refCols.Length.ToString() + " шт). Количество полей должно быть одинаковым");
 
       if (String.IsNullOrEmpty(relationName))
         relationName = referenceColumn.Replace(',', '_') + "_Ref";
-      DataRelation Rel = new DataRelation(relationName, masterTable.PrimaryKey, RefCols);
+      DataRelation Rel = new DataRelation(relationName, masterTable.PrimaryKey, refCols);
       detailsTable.DataSet.Relations.Add(Rel);
     }
 
@@ -2596,13 +2596,13 @@ namespace FreeLibSet.Core
         throw new ArgumentException("Длина массива флагов (" + flags.Length.ToString() +
           ") не совпадает с количеством строк в таблице (" + table.Rows.Count.ToString() + ")");
 
-      DataTable ResTable = table.Clone();
+      DataTable resTable = table.Clone();
       for (int i = 0; i < flags.Length; i++)
       {
         if (flags[i])
-          ResTable.Rows.Add(table.Rows[i].ItemArray);
+          resTable.Rows.Add(table.Rows[i].ItemArray);
       }
-      return ResTable;
+      return resTable;
     }
 
     /// <summary>
@@ -2650,15 +2650,15 @@ namespace FreeLibSet.Core
       if (sPK.IndexOf(',') >= 0)
         throw new ArgumentException("У таблицы " + table.TableName + " задан составной первичный ключ");
 
-      DataTable Table2 = table.Clone();
+      DataTable table2 = table.Clone();
       for (int i = 0; i < ids.Length; i++)
       {
-        DataRow Row1 = table.Rows.Find(ids[i]);
-        if (Row1 == null)
+        DataRow row1 = table.Rows.Find(ids[i]);
+        if (row1 == null)
           throw new InvalidOperationException("Для таблицы \"" + table.TableName + "\" не удалось получить строку со значением первичного ключа " + sPK + "=" + ids[i].ToString());
-        Table2.Rows.Add(Row1.ItemArray);
+        table2.Rows.Add(row1.ItemArray);
       }
-      return Table2;
+      return table2;
     }
 
     /// <summary>
@@ -2693,16 +2693,16 @@ namespace FreeLibSet.Core
       {
         DataRowInt64Extractor extId = new DataRowInt64Extractor(sPK); // исправлено 17.12.2021
 
-        bool Good = true;
+        bool isGood = true;
         for (int i = 0; i < ids.Length; i++)
         {
           if (extId[table.Rows[i]] != ids[i])
           {
-            Good = false;
+            isGood = false;
             break;
           }
         }
-        if (Good)
+        if (isGood)
           return table;
       }
 
@@ -2819,37 +2819,37 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 #endif
-      int ColPos = GetColumnPosWithCheck(table, columnName);
-      DataColumn Col = table.Columns[ColPos];
+      int colPos = GetColumnPosWithCheck(table, columnName);
+      DataColumn col = table.Columns[colPos];
 
-      SingleScopeList<Int32> Ids = null;
-      foreach (DataRow Row in table.Rows)
+      SingleScopeList<Int32> ids = null;
+      foreach (DataRow row in table.Rows)
       {
-        Int32 Id;
-        if (Row.RowState == DataRowState.Deleted)
+        Int32 id;
+        if (row.RowState == DataRowState.Deleted)
         {
-          if (Row.IsNull(Col, DataRowVersion.Original))
+          if (row.IsNull(col, DataRowVersion.Original))
             continue;
-          Id = (Int32)(Row[ColPos, DataRowVersion.Original]);
+          id = (Int32)(row[colPos, DataRowVersion.Original]);
         }
         else
         {
-          if (Row.IsNull(ColPos))
+          if (row.IsNull(colPos))
             continue;
-          Id = (Int32)(Row[ColPos]);
+          id = (Int32)(row[colPos]);
         }
-        if (Id == 0)
+        if (id == 0)
           continue;
 
-        if (Ids == null)
-          Ids = new SingleScopeList<Int32>();
-        Ids.Add(Id);
+        if (ids == null)
+          ids = new SingleScopeList<Int32>();
+        ids.Add(id);
       }
 
-      if (Ids == null)
+      if (ids == null)
         return EmptyIds;
       else
-        return Ids.ToArray();
+        return ids.ToArray();
     }
 
     /// <summary>
@@ -2871,37 +2871,37 @@ namespace FreeLibSet.Core
       if (dv.Count == 0)
         return EmptyIds;
 
-      int ColPos = GetColumnPosWithCheck(dv.Table, columnName);
-      DataColumn Col = dv.Table.Columns[ColPos];
+      int colPos = GetColumnPosWithCheck(dv.Table, columnName);
+      DataColumn col = dv.Table.Columns[colPos];
 
-      SingleScopeList<Int32> Ids = null;
+      SingleScopeList<Int32> ids = null;
       for (int i = 0; i < dv.Count; i++)
       {
-        Int32 Id;
+        Int32 id;
         if (dv[i].Row.RowState == DataRowState.Deleted)
         {
-          if (dv[i].Row.IsNull(Col, DataRowVersion.Original))
+          if (dv[i].Row.IsNull(col, DataRowVersion.Original))
             continue;
-          Id = (int)(dv[i].Row[ColPos, DataRowVersion.Original]);
+          id = (int)(dv[i].Row[colPos, DataRowVersion.Original]);
         }
         else
         {
-          if (dv[i].Row.IsNull(ColPos))
+          if (dv[i].Row.IsNull(colPos))
             continue;
-          Id = (int)(dv[i].Row[ColPos]);
+          id = (int)(dv[i].Row[colPos]);
         }
-        if (Id == 0)
+        if (id == 0)
           continue;
 
-        if (Ids == null)
-          Ids = new SingleScopeList<Int32>();
-        Ids.Add(Id);
+        if (ids == null)
+          ids = new SingleScopeList<Int32>();
+        ids.Add(id);
       }
 
-      if (Ids == null)
+      if (ids == null)
         return EmptyIds;
       else
-        return Ids.ToArray();
+        return ids.ToArray();
     }
 
     /// <summary>
@@ -2926,41 +2926,41 @@ namespace FreeLibSet.Core
       if (rows.Count == 0)
         return EmptyIds;
 
-      SingleScopeList<Int32> Ids = null;
-      int ColPos = -1;
-      DataColumn Col = null;
+      SingleScopeList<Int32> ids = null;
+      int colPos = -1;
+      DataColumn col = null;
 
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (ColPos < 0)
+        if (colPos < 0)
         {
-          ColPos = GetColumnPosWithCheck(Row.Table, columnName);
-          Col = Row.Table.Columns[ColPos];
+          colPos = GetColumnPosWithCheck(row.Table, columnName);
+          col = row.Table.Columns[colPos];
         }
 
-        Int32 Id;
-        if (Row.RowState == DataRowState.Deleted)
+        Int32 id;
+        if (row.RowState == DataRowState.Deleted)
         {
-          if (Row.IsNull(Col, DataRowVersion.Original))
+          if (row.IsNull(col, DataRowVersion.Original))
             continue;
-          Id = (Int32)(Row[ColPos, DataRowVersion.Original]);
+          id = (Int32)(row[colPos, DataRowVersion.Original]);
         }
         else
         {
-          if (Row.IsNull(ColPos))
+          if (row.IsNull(colPos))
             continue;
-          Id = (Int32)(Row[ColPos]);
+          id = (Int32)(row[colPos]);
         }
-        if (Id == 0)
+        if (id == 0)
           continue;
-        if (Ids == null)
-          Ids = new SingleScopeList<Int32>();
-        Ids.Add(Id);
+        if (ids == null)
+          ids = new SingleScopeList<Int32>();
+        ids.Add(id);
       }
-      if (Ids == null)
+      if (ids == null)
         return EmptyIds;
       else
-        return Ids.ToArray();
+        return ids.ToArray();
     }
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
@@ -2984,40 +2984,40 @@ namespace FreeLibSet.Core
       if (rows.Count == 0)
         return EmptyIds;
 
-      SingleScopeList<Int32> Ids = null;
-      int ColPos = -1;
-      DataColumn Col = null;
+      SingleScopeList<Int32> ids = null;
+      int colPos = -1;
+      DataColumn col = null;
       foreach (DataRowView drv in rows)
       {
-        if (ColPos < 0)
+        if (colPos < 0)
         {
-          ColPos = GetColumnPosWithCheck(drv.Row.Table, columnName);
-          Col = drv.Row.Table.Columns[ColPos];
+          colPos = GetColumnPosWithCheck(drv.Row.Table, columnName);
+          col = drv.Row.Table.Columns[colPos];
         }
 
-        Int32 Id;
+        Int32 id;
         if (drv.Row.RowState == DataRowState.Deleted)
         {
-          if (drv.Row.IsNull(Col, DataRowVersion.Original))
+          if (drv.Row.IsNull(col, DataRowVersion.Original))
             continue;
-          Id = (Int32)(drv.Row[ColPos, DataRowVersion.Original]);
+          id = (Int32)(drv.Row[colPos, DataRowVersion.Original]);
         }
         else
         {
-          if (drv.Row.IsNull(ColPos))
+          if (drv.Row.IsNull(colPos))
             continue;
-          Id = (Int32)(drv.Row[ColPos]);
+          id = (Int32)(drv.Row[colPos]);
         }
-        if (Id == 0)
+        if (id == 0)
           continue;
-        if (Ids == null)
-          Ids = new SingleScopeList<Int32>();
-        Ids.Add(Id);
+        if (ids == null)
+          ids = new SingleScopeList<Int32>();
+        ids.Add(id);
       }
-      if (Ids == null)
+      if (ids == null)
         return EmptyIds;
       else
-        return Ids.ToArray();
+        return ids.ToArray();
     }
 
     #endregion
@@ -3037,7 +3037,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("table");
 #endif
 
-      int ColPos = GetColumnPosWithCheck(table, "Id");
+      int colPos = GetColumnPosWithCheck(table, "Id");
 
       if (table.Rows.Count == 0)
         return EmptyIds;
@@ -3046,9 +3046,9 @@ namespace FreeLibSet.Core
       for (int i = 0; i < res.Length; i++)
       {
         if (table.Rows[i].RowState == DataRowState.Deleted)
-          res[i] = (Int32)(table.Rows[i][ColPos, DataRowVersion.Original]);
+          res[i] = (Int32)(table.Rows[i][colPos, DataRowVersion.Original]);
         else
-          res[i] = (Int32)(table.Rows[i][ColPos]);
+          res[i] = (Int32)(table.Rows[i][colPos]);
       }
       return res;
     }
@@ -3068,7 +3068,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dv");
 #endif
 
-      int ColPos = GetColumnPosWithCheck(dv.Table, "Id");
+      int colPos = GetColumnPosWithCheck(dv.Table, "Id");
 
       if (dv.Count == 0)
         return EmptyIds;
@@ -3078,9 +3078,9 @@ namespace FreeLibSet.Core
       {
         DataRow Row = dv[i].Row;
         if (Row.RowState == DataRowState.Deleted)
-          res[i] = (Int32)(Row[ColPos, DataRowVersion.Original]);
+          res[i] = (Int32)(Row[colPos, DataRowVersion.Original]);
         else
-          res[i] = (Int32)(Row[ColPos]);
+          res[i] = (Int32)(Row[colPos]);
       }
       return res;
     }
@@ -3103,18 +3103,18 @@ namespace FreeLibSet.Core
         return EmptyIds;
 
       Int32[] res = new Int32[rows.Count];
-      int Index = 0;
-      int ColPos = -1;
-      foreach (DataRow Row in rows)
+      int index = 0;
+      int colPos = -1;
+      foreach (DataRow row in rows)
       {
-        if (Index == 0)
-          ColPos = GetColumnPosWithCheck(Row.Table, "Id");
+        if (index == 0)
+          colPos = GetColumnPosWithCheck(row.Table, "Id");
 
-        if (Row.RowState == DataRowState.Deleted)
-          res[Index] = (Int32)(Row[ColPos, DataRowVersion.Original]);
+        if (row.RowState == DataRowState.Deleted)
+          res[index] = (Int32)(row[colPos, DataRowVersion.Original]);
         else
-          res[Index] = (Int32)(Row[ColPos]);
-        Index++;
+          res[index] = (Int32)(row[colPos]);
+        index++;
       }
       return res;
     }
@@ -3137,18 +3137,18 @@ namespace FreeLibSet.Core
         return EmptyIds;
 
       Int32[] res = new Int32[rows.Count];
-      int Index = 0;
-      int ColPos = -1;
+      int index = 0;
+      int colPos = -1;
       foreach (DataRowView drv in rows)
       {
-        if (Index == 0)
-          ColPos = GetColumnPosWithCheck(drv.Row.Table, "Id");
+        if (index == 0)
+          colPos = GetColumnPosWithCheck(drv.Row.Table, "Id");
 
         if (drv.Row.RowState == DataRowState.Deleted)
-          res[Index] = (Int32)(drv.Row[ColPos, DataRowVersion.Original]);
+          res[index] = (Int32)(drv.Row[colPos, DataRowVersion.Original]);
         else
-          res[Index] = (Int32)(drv.Row[ColPos]);
-        Index++;
+          res[index] = (Int32)(drv.Row[colPos]);
+        index++;
       }
       return res;
     }
@@ -3173,8 +3173,8 @@ namespace FreeLibSet.Core
       if (table.Rows.Count == 0)
         return 0;
 
-      DataRow Row = table.Rows[0];
-      return DataTools.GetInt(Row, "Id");
+      DataRow row = table.Rows[0];
+      return DataTools.GetInt(row, "Id");
     }
 
     /// <summary>
@@ -3193,8 +3193,8 @@ namespace FreeLibSet.Core
       if (table.Rows.Count == 0)
         return 0;
 
-      DataRow Row = table.Rows[table.Rows.Count - 1];
-      return DataTools.GetInt(Row, "Id");
+      DataRow row = table.Rows[table.Rows.Count - 1];
+      return DataTools.GetInt(row, "Id");
     }
 
     /// <summary>
@@ -3213,8 +3213,8 @@ namespace FreeLibSet.Core
       if (dv.Count == 0)
         return 0;
 
-      DataRow Row = dv[0].Row;
-      return DataTools.GetInt(Row, "Id");
+      DataRow row = dv[0].Row;
+      return DataTools.GetInt(row, "Id");
     }
 
     /// <summary>
@@ -3233,8 +3233,8 @@ namespace FreeLibSet.Core
       if (dv.Count == 0)
         return 0;
 
-      DataRow Row = dv[dv.Count - 1].Row;
-      return DataTools.GetInt(Row, "Id");
+      DataRow row = dv[dv.Count - 1].Row;
+      return DataTools.GetInt(row, "Id");
     }
 
     /// <summary>
@@ -3253,8 +3253,8 @@ namespace FreeLibSet.Core
       if (rows.Count == 0)
         return 0;
 
-      DataRow Row = rows[0];
-      return DataTools.GetInt(Row, "Id");
+      DataRow row = rows[0];
+      return DataTools.GetInt(row, "Id");
     }
 
     /// <summary>
@@ -3273,8 +3273,8 @@ namespace FreeLibSet.Core
       if (rows.Count == 0)
         return 0;
 
-      DataRow Row = rows[rows.Count - 1];
-      return DataTools.GetInt(Row, "Id");
+      DataRow row = rows[rows.Count - 1];
+      return DataTools.GetInt(row, "Id");
     }
 
     #endregion
@@ -3301,26 +3301,26 @@ namespace FreeLibSet.Core
       if (n < 1)
         throw new ArgumentException("N<1", "n");
 
-      int NN = ((table.Rows.Count + (n - 1))) / n;
-      Int32[][] res = new Int32[NN][];
+      int nn = ((table.Rows.Count + (n - 1))) / n;
+      Int32[][] res = new Int32[nn][];
 
-      for (int i = 0; i < NN; i++)
+      for (int i = 0; i < nn; i++)
       {
-        if (i == (NN - 1))
-          res[i] = new Int32[table.Rows.Count - (NN - 1) * n];
+        if (i == (nn - 1))
+          res[i] = new Int32[table.Rows.Count - (nn - 1) * n];
         else
           res[i] = new Int32[n];
       }
 
-      for (int Index = 0; Index < table.Rows.Count; Index++)
+      for (int index = 0; index < table.Rows.Count; index++)
       {
-        int idx1 = Index / n;
-        int idx2 = Index - (idx1 * n);
+        int idx1 = index / n;
+        int idx2 = index - (idx1 * n);
 
-        if (table.Rows[Index].RowState == DataRowState.Deleted)
-          res[idx1][idx2] = GetInt(table.Rows[Index][ColPos, DataRowVersion.Original]);
+        if (table.Rows[index].RowState == DataRowState.Deleted)
+          res[idx1][idx2] = GetInt(table.Rows[index][ColPos, DataRowVersion.Original]);
         else
-          res[idx1][idx2] = GetInt(table.Rows[Index][ColPos]);
+          res[idx1][idx2] = GetInt(table.Rows[index][ColPos]);
       }
       return res;
     }
@@ -3342,31 +3342,31 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dv");
 #endif
 
-      int ColPos = GetColumnPosWithCheck(dv.Table, "Id");
+      int colPos = GetColumnPosWithCheck(dv.Table, "Id");
 
       if (n < 1)
         throw new ArgumentOutOfRangeException("N", n, "N<1");
 
-      int NN = ((dv.Count + (n - 1))) / n;
+      int nn = ((dv.Count + (n - 1))) / n;
 
-      Int32[][] res = new Int32[NN][];
-      for (int i = 0; i < NN; i++)
+      Int32[][] res = new Int32[nn][];
+      for (int i = 0; i < nn; i++)
       {
-        if (i == (NN - 1))
-          res[i] = new Int32[dv.Count - (NN - 1) * n];
+        if (i == (nn - 1))
+          res[i] = new Int32[dv.Count - (nn - 1) * n];
         else
           res[i] = new Int32[n];
       }
 
-      for (int Index = 0; Index < dv.Count; Index++)
+      for (int index = 0; index < dv.Count; index++)
       {
-        int idx1 = Index / n;
-        int idx2 = Index - (idx1 * n);
-        DataRow Row = dv[Index].Row;
-        if (Row.RowState == DataRowState.Deleted)
-          res[idx1][idx2] = GetInt(Row[ColPos, DataRowVersion.Original]);
+        int idx1 = index / n;
+        int idx2 = index - (idx1 * n);
+        DataRow row = dv[index].Row;
+        if (row.RowState == DataRowState.Deleted)
+          res[idx1][idx2] = GetInt(row[colPos, DataRowVersion.Original]);
         else
-          res[idx1][idx2] = GetInt(Row[ColPos]);
+          res[idx1][idx2] = GetInt(row[colPos]);
       }
       return res;
     }
@@ -3388,34 +3388,34 @@ namespace FreeLibSet.Core
       if (n < 1)
         throw new ArgumentOutOfRangeException("N", n, "N<1");
 
-      int NN = ((rows.Count + (n - 1))) / n;
+      int nn = ((rows.Count + (n - 1))) / n;
 
-      Int32[][] res = new Int32[NN][];
+      Int32[][] res = new Int32[nn][];
       if (rows.Count == 0)
         return res;
 
-      for (int i = 0; i < NN; i++)
+      for (int i = 0; i < nn; i++)
       {
-        if (i == (NN - 1))
-          res[i] = new Int32[rows.Count - (NN - 1) * n];
+        if (i == (nn - 1))
+          res[i] = new Int32[rows.Count - (nn - 1) * n];
         else
           res[i] = new Int32[n];
       }
 
-      int Index = 0;
-      int ColPos = -1;
-      foreach (DataRow Row in rows)
+      int index = 0;
+      int colPos = -1;
+      foreach (DataRow row in rows)
       {
-        if (Index == 0)
-          ColPos = GetColumnPosWithCheck(Row.Table, "Id");
+        if (index == 0)
+          colPos = GetColumnPosWithCheck(row.Table, "Id");
 
-        int idx1 = Index / n;
-        int idx2 = Index - (idx1 * n);
-        if (Row.RowState == DataRowState.Deleted)
-          res[idx1][idx2] = GetInt(Row[ColPos, DataRowVersion.Original]);
+        int idx1 = index / n;
+        int idx2 = index - (idx1 * n);
+        if (row.RowState == DataRowState.Deleted)
+          res[idx1][idx2] = GetInt(row[colPos, DataRowVersion.Original]);
         else
-          res[idx1][idx2] = GetInt(Row[ColPos]);
-        Index++;
+          res[idx1][idx2] = GetInt(row[colPos]);
+        index++;
       }
       return res;
     }
@@ -3537,14 +3537,14 @@ namespace FreeLibSet.Core
     /// <returns>Таблица со столбцом "Id"</returns>
     public static DataTable TableFromIds(Int32[] ids)
     {
-      DataTable Table = new DataTable();
-      Table.Columns.Add("Id", typeof(Int32));
+      DataTable table = new DataTable();
+      table.Columns.Add("Id", typeof(Int32));
       if (ids != null)
       {
         for (int i = 0; i < ids.Length; i++)
-          Table.Rows.Add(ids[i]);
+          table.Rows.Add(ids[i]);
       }
-      return Table;
+      return table;
     }
 
     #endregion
@@ -3691,8 +3691,8 @@ namespace FreeLibSet.Core
       {
         if (source is DataTable)
         {
-          foreach (DataRow Row1 in ((DataTable)source).Rows)
-            yield return Row1;
+          foreach (DataRow row1 in ((DataTable)source).Rows)
+            yield return row1;
         }
         else if (source is DataView)
         {
@@ -3719,8 +3719,8 @@ namespace FreeLibSet.Core
             foreach (object Item1 in (IEnumerable)source)
             {
               IEnumerable<DataRow> en2 = GetDataRowEnumerable(Item1);
-              foreach (DataRow Row2 in en2)
-                yield return Row2;
+              foreach (DataRow row2 in en2)
+                yield return row2;
             }
           }
         }
@@ -3755,26 +3755,26 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("columnName");
 #endif
 
-      int ColPos = GetColumnPosWithCheck(table, columnName);
+      int colPos = GetColumnPosWithCheck(table, columnName);
 
-      SingleScopeList<string> Values = null;
-      foreach (DataRow Row in table.Rows)
+      SingleScopeList<string> values = null;
+      foreach (DataRow row in table.Rows)
       {
-        string s = DataTools.GetString(Row[ColPos]);
+        string s = DataTools.GetString(row[colPos]);
         if (String.IsNullOrEmpty(s))
           continue;
 
-        if (Values == null)
-          Values = new SingleScopeList<string>();
-        if (!Values.Contains(s))
-          Values.Add(s);
+        if (values == null)
+          values = new SingleScopeList<string>();
+        if (!values.Contains(s))
+          values.Add(s);
       }
 
-      if (Values == null)
+      if (values == null)
         return EmptyStrings;
       else
       {
-        string[] a = Values.ToArray();
+        string[] a = values.ToArray();
         Array.Sort<string>(a);
         return a;
       }
@@ -3801,25 +3801,25 @@ namespace FreeLibSet.Core
       if (dv.Count == 0)
         return DataTools.EmptyStrings;
 
-      int ColPos = GetColumnPosWithCheck(dv.Table, columnName);
+      int colPos = GetColumnPosWithCheck(dv.Table, columnName);
 
-      SingleScopeList<String> Values = null;
+      SingleScopeList<String> values = null;
       for (int i = 0; i < dv.Count; i++)
       {
-        string s = DataTools.GetString(dv[i].Row[ColPos]);
+        string s = DataTools.GetString(dv[i].Row[colPos]);
         if (String.IsNullOrEmpty(s))
           continue;
 
-        if (Values == null)
-          Values = new SingleScopeList<string>();
-        Values.Add(s);
+        if (values == null)
+          values = new SingleScopeList<string>();
+        values.Add(s);
       }
 
-      if (Values == null)
+      if (values == null)
         return EmptyStrings;
       else
       {
-        string[] a = Values.ToArray();
+        string[] a = values.ToArray();
         Array.Sort<string>(a);
         return a;
       }
@@ -3847,26 +3847,26 @@ namespace FreeLibSet.Core
       if (rows.Count == 0)
         return DataTools.EmptyStrings;
 
-      SingleScopeList<string> Values = null;
-      int ColPos = -1;
-      foreach (DataRow Row in rows)
+      SingleScopeList<string> values = null;
+      int colPos = -1;
+      foreach (DataRow row in rows)
       {
-        if (ColPos < 1)
-          ColPos = GetColumnPosWithCheck(Row.Table, columnName);
+        if (colPos < 1)
+          colPos = GetColumnPosWithCheck(row.Table, columnName);
 
-        string s = DataTools.GetString(Row[ColPos]);
+        string s = DataTools.GetString(row[colPos]);
         if (String.IsNullOrEmpty(s))
           continue;
 
-        if (Values == null)
-          Values = new SingleScopeList<string>();
-        Values.Add(s);
+        if (values == null)
+          values = new SingleScopeList<string>();
+        values.Add(s);
       }
-      if (Values == null)
+      if (values == null)
         return DataTools.EmptyStrings;
       else
       {
-        string[] a = Values.ToArray();
+        string[] a = values.ToArray();
         Array.Sort<string>(a);
         return a;
       }
@@ -3892,8 +3892,8 @@ namespace FreeLibSet.Core
 
       T[] res = new T[table.Rows.Count];
 
-      Type ResType = typeof(T);
-      if (ResType == table.Columns[colPos].DataType)
+      Type resType = typeof(T);
+      if (resType == table.Columns[colPos].DataType)
       {
         for (int i = 0; i < table.Rows.Count; i++)
         {
@@ -3906,7 +3906,7 @@ namespace FreeLibSet.Core
         for (int i = 0; i < table.Rows.Count; i++)
         {
           if (!table.Rows[i].IsNull(colPos))
-            res[i] = (T)(Convert.ChangeType(table.Rows[i][colPos], ResType));
+            res[i] = (T)(Convert.ChangeType(table.Rows[i][colPos], resType));
         }
       }
       return res;
@@ -3930,8 +3930,8 @@ namespace FreeLibSet.Core
       int colPos = GetColumnPosWithCheck(dv.Table, columnName);
 
       T[] res = new T[dv.Count];
-      Type ResType = typeof(T);
-      if (ResType == dv.Table.Columns[colPos].DataType)
+      Type resType = typeof(T);
+      if (resType == dv.Table.Columns[colPos].DataType)
       {
         for (int i = 0; i < dv.Count; i++)
         {
@@ -3946,7 +3946,7 @@ namespace FreeLibSet.Core
         {
           DataRow Row = dv[i].Row;
           if (!Row.IsNull(colPos))
-            res[i] = (T)(Convert.ChangeType(Row[colPos], ResType));
+            res[i] = (T)(Convert.ChangeType(Row[colPos], resType));
         }
       }
       return res;
@@ -4030,16 +4030,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<int> lst = new SingleScopeList<int>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetInt(Row[p]));
+        lst.Add(DataTools.GetInt(row[p]));
       }
 
       return lst.ToArray();
@@ -4058,16 +4058,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyInts;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor Extr = new DataRowNullableIntExtractor(columnName);
+      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
       SingleScopeList<int> lst = new SingleScopeList<int>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        int? v = Extr[Row];
+        int? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4128,16 +4128,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<long> lst = new SingleScopeList<long>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetInt64(Row[p]));
+        lst.Add(DataTools.GetInt64(row[p]));
       }
 
       return lst.ToArray();
@@ -4156,16 +4156,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyInt64s;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor Extr = new DataRowNullableInt64Extractor(columnName);
+      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
       SingleScopeList<long> lst = new SingleScopeList<long>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        long? v = Extr[Row];
+        long? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4224,16 +4224,16 @@ namespace FreeLibSet.Core
         return EmptySingles;
       int p = GetColumnPosWithCheck(table, columnName);
       SingleScopeList<float> lst = new SingleScopeList<float>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetSingle(Row[p]));
+        lst.Add(DataTools.GetSingle(row[p]));
       }
 
       return lst.ToArray();
@@ -4252,16 +4252,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptySingles;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor Extr = new DataRowNullableSingleExtractor(columnName);
+      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
       SingleScopeList<float> lst = new SingleScopeList<float>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        float? v = Extr[Row];
+        float? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4320,16 +4320,16 @@ namespace FreeLibSet.Core
         return EmptyDoubles;
       int p = GetColumnPosWithCheck(table, columnName);
       SingleScopeList<double> lst = new SingleScopeList<double>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetDouble(Row[p]));
+        lst.Add(DataTools.GetDouble(row[p]));
       }
 
       return lst.ToArray();
@@ -4348,16 +4348,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyDoubles;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor Extr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
       SingleScopeList<double> lst = new SingleScopeList<double>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        double? v = Extr[Row];
+        double? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4418,16 +4418,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<decimal> lst = new SingleScopeList<decimal>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetDecimal(Row[p]));
+        lst.Add(DataTools.GetDecimal(row[p]));
       }
 
       return lst.ToArray();
@@ -4446,16 +4446,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyDecimals;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor Extr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
       SingleScopeList<decimal> lst = new SingleScopeList<decimal>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        decimal? v = Extr[Row];
+        decimal? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4512,11 +4512,11 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<DateTime> lst = new SingleScopeList<DateTime>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        DateTime? v = DataTools.GetNullableDateTime(Row[p]);
+        DateTime? v = DataTools.GetNullableDateTime(row[p]);
         if (v.HasValue)
           lst.Add(v.Value);
       }
@@ -4537,16 +4537,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyDateTimes;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor Extr = new DataRowNullableDateTimeExtractor(columnName);
+      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
       SingleScopeList<DateTime> lst = new SingleScopeList<DateTime>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        DateTime? v = Extr[Row];
+        DateTime? v = xtr[row];
         if (v.HasValue)
           lst.Add(v.Value);
       }
@@ -4603,16 +4603,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<TimeSpan> lst = new SingleScopeList<TimeSpan>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetTimeSpan(Row[p]));
+        lst.Add(DataTools.GetTimeSpan(row[p]));
       }
 
       return lst.ToArray();
@@ -4631,16 +4631,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyTimeSpans;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor Extr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
       SingleScopeList<TimeSpan> lst = new SingleScopeList<TimeSpan>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        TimeSpan? v = Extr[Row];
+        TimeSpan? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4701,16 +4701,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetGuid(Row[p]));
+        lst.Add(DataTools.GetGuid(row[p]));
       }
 
       return lst.ToArray();
@@ -4729,17 +4729,17 @@ namespace FreeLibSet.Core
       if (rows == null)
         return EmptyGuids;
       // Строки могут относиться к разным таблицам
-      DataRowNullableGuidExtractor Extr = new DataRowNullableGuidExtractor(columnName);
+      DataRowNullableGuidExtractor xtr = new DataRowNullableGuidExtractor(columnName);
       SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
 
-        Guid? v = Extr[Row];
+        Guid? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4802,16 +4802,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<T> lst = new SingleScopeList<T>();
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetEnum<T>(Row[p]));
+        lst.Add(DataTools.GetEnum<T>(row[p]));
       }
 
       return lst.ToArray();
@@ -4831,17 +4831,17 @@ namespace FreeLibSet.Core
       if (rows == null)
         return new T[0];
       // Строки могут относиться к разным таблицам
-      DataRowNullableEnumExtractor<T> Extr = new DataRowNullableEnumExtractor<T>(columnName);
+      DataRowNullableEnumExtractor<T> xtr = new DataRowNullableEnumExtractor<T>(columnName);
       SingleScopeList<T> lst = new SingleScopeList<T>();
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
 
-        T? v = Extr[Row];
+        T? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4865,10 +4865,10 @@ namespace FreeLibSet.Core
     /// <returns>Массив имен</returns>
     public static string[] GetColumnNames(DataTable table)
     {
-      string[] Names = new string[table.Columns.Count];
-      for (int i = 0; i < Names.Length; i++)
-        Names[i] = table.Columns[i].ColumnName;
-      return Names;
+      string[] names = new string[table.Columns.Count];
+      for (int i = 0; i < names.Length; i++)
+        names[i] = table.Columns[i].ColumnName;
+      return names;
     }
 
     /// <summary>
@@ -4878,10 +4878,10 @@ namespace FreeLibSet.Core
     /// <returns>Массив имен таблиц</returns>
     public static string[] GetTableNames(DataSet ds)
     {
-      string[] Names = new string[ds.Tables.Count];
-      for (int i = 0; i < Names.Length; i++)
-        Names[i] = ds.Tables[i].TableName;
-      return Names;
+      string[] names = new string[ds.Tables.Count];
+      for (int i = 0; i < names.Length; i++)
+        names[i] = ds.Tables[i].TableName;
+      return names;
     }
 
     #endregion
@@ -4912,29 +4912,29 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("MainColumnName");
 #endif
 
-      int MainColumnPos = GetColumnPosWithCheck(table, mainColumnName);
+      int mainColumnPos = GetColumnPosWithCheck(table, mainColumnName);
 
-      int BeginFlagColumnPos, EndFlagColumnPos;
+      int beginFlagColumnPos, endFlagColumnPos;
 
       if (String.IsNullOrEmpty(beginFlagColumnName))
-        BeginFlagColumnPos = -1;
+        beginFlagColumnPos = -1;
       else
       {
-        BeginFlagColumnPos = GetColumnPosWithCheck(table, beginFlagColumnName);
+        beginFlagColumnPos = GetColumnPosWithCheck(table, beginFlagColumnName);
 #if DEBUG
-        if (table.Columns[BeginFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + beginFlagColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[BeginFlagColumnPos].DataType.ToString() + "\", а не логический", "beginFlagColumnName");
+        if (table.Columns[beginFlagColumnPos].DataType != typeof(bool))
+          throw new ArgumentException("Столбец \"" + beginFlagColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[beginFlagColumnPos].DataType.ToString() + "\", а не логический", "beginFlagColumnName");
 #endif
       }
 
       if (String.IsNullOrEmpty(endFlagColumnName))
-        EndFlagColumnPos = -1;
+        endFlagColumnPos = -1;
       else
       {
-        EndFlagColumnPos = GetColumnPosWithCheck(table, endFlagColumnName);
+        endFlagColumnPos = GetColumnPosWithCheck(table, endFlagColumnName);
 #if DEBUG
-        if (table.Columns[EndFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + endFlagColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[EndFlagColumnPos].DataType.ToString() + "\", а не логический", "endFlagColumnName");
+        if (table.Columns[endFlagColumnPos].DataType != typeof(bool))
+          throw new ArgumentException("Столбец \"" + endFlagColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[endFlagColumnPos].DataType.ToString() + "\", а не логический", "endFlagColumnName");
 #endif
       }
 
@@ -4944,19 +4944,19 @@ namespace FreeLibSet.Core
       // Перебор строк
       for (int i = 1; i < table.Rows.Count; i++)
       {
-        DataRow PrevRow = table.Rows[i - 1];
-        DataRow ThisRow = table.Rows[i];
-        bool Flag = !AreValuesEqual(PrevRow, ThisRow, MainColumnPos);
-        if (BeginFlagColumnPos >= 0)
-          ThisRow[BeginFlagColumnPos] = Flag;
-        if (EndFlagColumnPos >= 0)
-          PrevRow[EndFlagColumnPos] = Flag;
+        DataRow prevRow = table.Rows[i - 1];
+        DataRow thisRow = table.Rows[i];
+        bool flag = !AreValuesEqual(prevRow, thisRow, mainColumnPos);
+        if (beginFlagColumnPos >= 0)
+          thisRow[beginFlagColumnPos] = flag;
+        if (endFlagColumnPos >= 0)
+          prevRow[endFlagColumnPos] = flag;
       }
       // Для первой и последней строки флаги устанавливаются принудительно
-      if (BeginFlagColumnPos >= 0)
-        table.Rows[0][BeginFlagColumnPos] = true;
-      if (EndFlagColumnPos >= 0)
-        table.Rows[table.Rows.Count - 1][EndFlagColumnPos] = true;
+      if (beginFlagColumnPos >= 0)
+        table.Rows[0][beginFlagColumnPos] = true;
+      if (endFlagColumnPos >= 0)
+        table.Rows[table.Rows.Count - 1][endFlagColumnPos] = true;
     }
 
 
@@ -4986,29 +4986,29 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dv");
 #endif
 
-      int MainColumnPos = GetColumnPosWithCheck(dv.Table, mainColumnName);
+      int mainColumnPos = GetColumnPosWithCheck(dv.Table, mainColumnName);
 
-      int BeginFlagColumnPos, EndFlagColumnPos;
+      int beginFlagColumnPos, endFlagColumnPos;
 
       if (String.IsNullOrEmpty(beginFlagColumnName))
-        BeginFlagColumnPos = -1;
+        beginFlagColumnPos = -1;
       else
       {
-        BeginFlagColumnPos = GetColumnPosWithCheck(dv.Table, beginFlagColumnName);
+        beginFlagColumnPos = GetColumnPosWithCheck(dv.Table, beginFlagColumnName);
 #if DEBUG
-        if (dv.Table.Columns[BeginFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + beginFlagColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[BeginFlagColumnPos].DataType.ToString() + "\", а не логический", "beginFlagColumnName");
+        if (dv.Table.Columns[beginFlagColumnPos].DataType != typeof(bool))
+          throw new ArgumentException("Столбец \"" + beginFlagColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[beginFlagColumnPos].DataType.ToString() + "\", а не логический", "beginFlagColumnName");
 #endif
       }
 
       if (String.IsNullOrEmpty(endFlagColumnName))
-        EndFlagColumnPos = -1;
+        endFlagColumnPos = -1;
       else
       {
-        EndFlagColumnPos = GetColumnPosWithCheck(dv.Table, endFlagColumnName);
+        endFlagColumnPos = GetColumnPosWithCheck(dv.Table, endFlagColumnName);
 #if DEBUG
-        if (dv.Table.Columns[EndFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + endFlagColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[EndFlagColumnPos].DataType.ToString() + "\", а не логический", "endFlagColumnName");
+        if (dv.Table.Columns[endFlagColumnPos].DataType != typeof(bool))
+          throw new ArgumentException("Столбец \"" + endFlagColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[endFlagColumnPos].DataType.ToString() + "\", а не логический", "endFlagColumnName");
 #endif
       }
 
@@ -5018,19 +5018,19 @@ namespace FreeLibSet.Core
       // Перебор строк
       for (int i = 1; i < dv.Count; i++)
       {
-        DataRowView PrevRow = dv[i - 1];
-        DataRowView ThisRow = dv[i];
-        bool Flag = !AreValuesEqual(PrevRow, ThisRow, MainColumnPos);
-        if (BeginFlagColumnPos >= 0)
-          ThisRow[BeginFlagColumnPos] = Flag;
-        if (EndFlagColumnPos >= 0)
-          PrevRow[EndFlagColumnPos] = Flag;
+        DataRowView prevRow = dv[i - 1];
+        DataRowView thisRow = dv[i];
+        bool flag = !AreValuesEqual(prevRow, thisRow, mainColumnPos);
+        if (beginFlagColumnPos >= 0)
+          thisRow[beginFlagColumnPos] = flag;
+        if (endFlagColumnPos >= 0)
+          prevRow[endFlagColumnPos] = flag;
       }
       // Для первой и последней строки флаги устанавливаются принудительно
-      if (BeginFlagColumnPos >= 0)
-        dv[0][BeginFlagColumnPos] = true;
-      if (EndFlagColumnPos >= 0)
-        dv[dv.Count - 1][EndFlagColumnPos] = true;
+      if (beginFlagColumnPos >= 0)
+        dv[0][beginFlagColumnPos] = true;
+      if (endFlagColumnPos >= 0)
+        dv[dv.Count - 1][endFlagColumnPos] = true;
     }
 
     #endregion
@@ -5139,13 +5139,13 @@ namespace FreeLibSet.Core
         // 28.08.2009
         // обычное сравнение не работает, например, для типов byte и short
         // !! Надо бы как-нибудь, используя Convert.GetTypeCode()
-        int Level1 = GetEqLevel(value1);
-        int Level2 = GetEqLevel(value2);
-        if (Level1 > 0 && Level2 > 0)
+        int level1 = GetEqLevel(value1);
+        int level2 = GetEqLevel(value2);
+        if (level1 > 0 && level2 > 0)
         {
-          int Level = Math.Max(Level1, Level2);
-          value1 = ToEqLevel(value1, Level);
-          value2 = ToEqLevel(value2, Level);
+          int level = Math.Max(level1, level2);
+          value1 = ToEqLevel(value1, level);
+          value2 = ToEqLevel(value2, level);
         }
       }
       // 13.05.2015, 24.03.2016
@@ -5306,12 +5306,12 @@ namespace FreeLibSet.Core
 #endif
 
       string[] aKeyColumnNames = keyColumnNames.Split(',');
-      int[] KeyColumnPoss = new int[aKeyColumnNames.Length];
+      int[] keyColumnPoss = new int[aKeyColumnNames.Length];
       keyTable = new DataTable();
       for (int i = 0; i < aKeyColumnNames.Length; i++)
       {
-        KeyColumnPoss[i] = GetColumnPosWithCheck(srcTable, aKeyColumnNames[i]);
-        DataColumn SrcCol = srcTable.Columns[KeyColumnPoss[i]];
+        keyColumnPoss[i] = GetColumnPosWithCheck(srcTable, aKeyColumnNames[i]);
+        DataColumn SrcCol = srcTable.Columns[keyColumnPoss[i]];
         keyTable.Columns.Add(SrcCol.ColumnName, SrcCol.DataType); // другие ограничения не применяем
       }
 
@@ -5320,37 +5320,37 @@ namespace FreeLibSet.Core
       // Их нельзя применять в качестве первичных ключей таблицы, но можно использовать в сортировке DataView.Sort
 
       //DataTools.SetPrimaryKey(KeyTable, KeyColumnNames);
-      object[] KeyValues = new object[aKeyColumnNames.Length];
+      object[] keyValues = new object[aKeyColumnNames.Length];
       keyTable.DefaultView.Sort = keyColumnNames;
 
       // 15.02.2019
       // Сначала добавляем все строки в ключевую таблицу, а затем - сортируем ее
-      foreach (DataRow SrcRow in srcTable.Rows)
+      foreach (DataRow srcRow in srcTable.Rows)
       {
-        InitGroupRowsKeyValues(SrcRow, KeyValues, KeyColumnPoss, dbNullAsZero);
-        DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues);
+        InitGroupRowsKeyValues(srcRow, keyValues, keyColumnPoss, dbNullAsZero);
+        DataTools.FindOrAddDataRow(keyTable.DefaultView, keyValues);
       }
       keyTable = keyTable.DefaultView.ToTable();
       keyTable.DefaultView.Sort = keyColumnNames;
 
-      List<List<DataRow>> Rows2 = new List<List<DataRow>>(keyTable.Rows.Count);
+      List<List<DataRow>> rows2 = new List<List<DataRow>>(keyTable.Rows.Count);
       for (int i = 0; i < keyTable.Rows.Count; i++)
-        Rows2.Add(new List<DataRow>());
+        rows2.Add(new List<DataRow>());
 
-      foreach (DataRow SrcRow in srcTable.Rows)
+      foreach (DataRow srcRow in srcTable.Rows)
       {
-        InitGroupRowsKeyValues(SrcRow, KeyValues, KeyColumnPoss, dbNullAsZero);
-        DataRow KeyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues); // 26.01.2017
+        InitGroupRowsKeyValues(srcRow, keyValues, keyColumnPoss, dbNullAsZero);
+        DataRow keyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, keyValues); // 26.01.2017
 
-        int KeyRowIndex = keyTable.Rows.IndexOf(KeyRow);
-        List<DataRow> CurrList = Rows2[KeyRowIndex];
-        CurrList.Add(SrcRow);
+        int keyRowIndex = keyTable.Rows.IndexOf(keyRow);
+        List<DataRow> currList = rows2[keyRowIndex];
+        currList.Add(srcRow);
       }
 
       // Преобразование списков в массив
-      rows = new DataRow[Rows2.Count][];
-      for (int i = 0; i < Rows2.Count; i++)
-        rows[i] = Rows2[i].ToArray();
+      rows = new DataRow[rows2.Count][];
+      for (int i = 0; i < rows2.Count; i++)
+        rows[i] = rows2[i].ToArray();
     }
 
     private static void InitGroupRowsKeyValues(DataRow srcRow, object[] keyValues, int[] keyColumnPoss, bool dbNullAsZero)
@@ -5378,10 +5378,10 @@ namespace FreeLibSet.Core
     /// уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataTable srcTable, string keyColumnNames)
     {
-      DataTable KeyTable;
-      DataRow[][] Rows;
-      GroupRows(srcTable, keyColumnNames, out KeyTable, out Rows, false);
-      return Rows;
+      DataTable keyTable;
+      DataRow[][] rows;
+      GroupRows(srcTable, keyColumnNames, out keyTable, out rows, false);
+      return rows;
     }
 
     /// <summary>
@@ -5402,10 +5402,10 @@ namespace FreeLibSet.Core
     /// уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataTable srcTable, string keyColumnNames, bool dbNullAsZero)
     {
-      DataTable KeyTable;
-      DataRow[][] Rows;
-      GroupRows(srcTable, keyColumnNames, out KeyTable, out Rows, dbNullAsZero);
-      return Rows;
+      DataTable keyTable;
+      DataRow[][] rows;
+      GroupRows(srcTable, keyColumnNames, out keyTable, out rows, dbNullAsZero);
+      return rows;
     }
 
     #endregion
@@ -5463,50 +5463,50 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("keyColumnNames");
 #endif
       string[] aKeyColumnNames = keyColumnNames.Split(',');
-      int[] KeyColumnPoss = new int[aKeyColumnNames.Length];
+      int[] keyColumnPoss = new int[aKeyColumnNames.Length];
       keyTable = new DataTable();
       for (int i = 0; i < aKeyColumnNames.Length; i++)
       {
-        KeyColumnPoss[i] = GetColumnPosWithCheck(srcDataView.Table, aKeyColumnNames[i]);
-        DataColumn SrcCol = srcDataView.Table.Columns[KeyColumnPoss[i]];
-        keyTable.Columns.Add(SrcCol.ColumnName, SrcCol.DataType); // другие ограничения не применяем
+        keyColumnPoss[i] = GetColumnPosWithCheck(srcDataView.Table, aKeyColumnNames[i]);
+        DataColumn srcCol = srcDataView.Table.Columns[keyColumnPoss[i]];
+        keyTable.Columns.Add(srcCol.ColumnName, srcCol.DataType); // другие ограничения не применяем
       }
       // 26.01.2016
       // Среди значений полей, по которым выполяется группировка, могут быть DBNull.
       // Их нельзя применять в качестве первичных ключей таблицы, но можно использовать в сортировке DataView.Sort
 
       //DataTools.SetPrimaryKey(KeyTable, KeyColumnNames);
-      object[] KeyValues = new object[aKeyColumnNames.Length];
+      object[] keyValues = new object[aKeyColumnNames.Length];
       keyTable.DefaultView.Sort = keyColumnNames;
 
       // 15.02.2019
       // Сначала добавляем все строки в ключевую таблицу, а затем - сортируем ее
-      foreach (DataRowView SrcDRV in srcDataView)
+      foreach (DataRowView srcDRV in srcDataView)
       {
-        InitGroupRowsKeyValues(SrcDRV.Row, KeyValues, KeyColumnPoss, dbNullAsZero);
-        DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues);
+        InitGroupRowsKeyValues(srcDRV.Row, keyValues, keyColumnPoss, dbNullAsZero);
+        DataTools.FindOrAddDataRow(keyTable.DefaultView, keyValues);
       }
       keyTable = keyTable.DefaultView.ToTable();
       keyTable.DefaultView.Sort = keyColumnNames;
 
-      List<List<DataRow>> Rows2 = new List<List<DataRow>>(keyTable.Rows.Count);
+      List<List<DataRow>> rows2 = new List<List<DataRow>>(keyTable.Rows.Count);
       for (int i = 0; i < keyTable.Rows.Count; i++)
-        Rows2.Add(new List<DataRow>());
+        rows2.Add(new List<DataRow>());
 
-      foreach (DataRowView SrcDRV in srcDataView)
+      foreach (DataRowView srcDRV in srcDataView)
       {
-        InitGroupRowsKeyValues(SrcDRV.Row, KeyValues, KeyColumnPoss, dbNullAsZero);
-        DataRow KeyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues); // 26.01.2017
+        InitGroupRowsKeyValues(srcDRV.Row, keyValues, keyColumnPoss, dbNullAsZero);
+        DataRow keyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, keyValues); // 26.01.2017
 
-        int KeyRowIndex = keyTable.Rows.IndexOf(KeyRow);
-        List<DataRow> CurrList = Rows2[KeyRowIndex];
-        CurrList.Add(SrcDRV.Row);
+        int keyRowIndex = keyTable.Rows.IndexOf(keyRow);
+        List<DataRow> currList = rows2[keyRowIndex];
+        currList.Add(srcDRV.Row);
       }
 
       // Преобразование списков в массив
-      rows = new DataRow[Rows2.Count][];
-      for (int i = 0; i < Rows2.Count; i++)
-        rows[i] = Rows2[i].ToArray();
+      rows = new DataRow[rows2.Count][];
+      for (int i = 0; i < rows2.Count; i++)
+        rows[i] = rows2[i].ToArray();
     }
 
     /// <summary>
@@ -5524,10 +5524,10 @@ namespace FreeLibSet.Core
     /// уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataView srcDataView, string keyColumnNames)
     {
-      DataTable KeyTable;
-      DataRow[][] Rows;
-      GroupRows(srcDataView, keyColumnNames, out KeyTable, out Rows, false);
-      return Rows;
+      DataTable keyTable;
+      DataRow[][] rows;
+      GroupRows(srcDataView, keyColumnNames, out keyTable, out rows, false);
+      return rows;
     }
 
     /// <summary>
@@ -5546,10 +5546,10 @@ namespace FreeLibSet.Core
     /// SrcDataView.Table. Первая размерность соответствует уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataView srcDataView, string keyColumnNames, bool dbNullAsZero)
     {
-      DataTable KeyTable;
-      DataRow[][] Rows;
-      GroupRows(srcDataView, keyColumnNames, out KeyTable, out Rows, dbNullAsZero);
-      return Rows;
+      DataTable keyTable;
+      DataRow[][] rows;
+      GroupRows(srcDataView, keyColumnNames, out keyTable, out rows, dbNullAsZero);
+      return rows;
     }
 
     #endregion
@@ -5619,12 +5619,12 @@ namespace FreeLibSet.Core
 
 
       string[] aKeyColumnNames = keyColumnNames.Split(',');
-      int[] KeyColumnPoss = new int[aKeyColumnNames.Length];
+      int[] keyColumnPoss = new int[aKeyColumnNames.Length];
       keyTable = new DataTable();
       for (int i = 0; i < aKeyColumnNames.Length; i++)
       {
-        KeyColumnPoss[i] = GetColumnPosWithCheck(srcRows[0].Table, aKeyColumnNames[i]);
-        DataColumn SrcCol = srcRows[0].Table.Columns[KeyColumnPoss[i]];
+        keyColumnPoss[i] = GetColumnPosWithCheck(srcRows[0].Table, aKeyColumnNames[i]);
+        DataColumn SrcCol = srcRows[0].Table.Columns[keyColumnPoss[i]];
         keyTable.Columns.Add(SrcCol.ColumnName, SrcCol.DataType); // другие ограничения не применяем
       }
 
@@ -5633,37 +5633,37 @@ namespace FreeLibSet.Core
       // Их нельзя применять в качестве первичных ключей таблицы, но можно использовать в сортировке DataView.Sort
 
       //DataTools.SetPrimaryKey(KeyTable, KeyColumnNames);
-      object[] KeyValues = new object[aKeyColumnNames.Length];
+      object[] keyValues = new object[aKeyColumnNames.Length];
       keyTable.DefaultView.Sort = keyColumnNames;
 
       // 15.02.2019
       // Сначала добавляем все строки в ключевую таблицу, а затем - сортируем ее
       for (int j = 0; j < srcRows.Length; j++)
       {
-        InitGroupRowsKeyValues(srcRows[j], KeyValues, KeyColumnPoss, dbNullAsZero);
-        DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues);
+        InitGroupRowsKeyValues(srcRows[j], keyValues, keyColumnPoss, dbNullAsZero);
+        DataTools.FindOrAddDataRow(keyTable.DefaultView, keyValues);
       }
       keyTable = keyTable.DefaultView.ToTable();
       keyTable.DefaultView.Sort = keyColumnNames;
 
-      List<List<DataRow>> Rows2 = new List<List<DataRow>>(keyTable.Rows.Count);
+      List<List<DataRow>> rows2 = new List<List<DataRow>>(keyTable.Rows.Count);
       for (int i = 0; i < keyTable.Rows.Count; i++)
-        Rows2.Add(new List<DataRow>());
+        rows2.Add(new List<DataRow>());
 
       for (int j = 0; j < srcRows.Length; j++)
       {
-        InitGroupRowsKeyValues(srcRows[j], KeyValues, KeyColumnPoss, dbNullAsZero);
-        DataRow KeyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, KeyValues); // 26.01.2017
+        InitGroupRowsKeyValues(srcRows[j], keyValues, keyColumnPoss, dbNullAsZero);
+        DataRow keyRow = DataTools.FindOrAddDataRow(keyTable.DefaultView, keyValues); // 26.01.2017
 
-        int KeyRowIndex = keyTable.Rows.IndexOf(KeyRow);
-        List<DataRow> CurrList = Rows2[KeyRowIndex];
-        CurrList.Add(srcRows[j]);
+        int keyRowIndex = keyTable.Rows.IndexOf(keyRow);
+        List<DataRow> currList = rows2[keyRowIndex];
+        currList.Add(srcRows[j]);
       }
 
       // Преобразование списков в массив
-      rows = new DataRow[Rows2.Count][];
-      for (int i = 0; i < Rows2.Count; i++)
-        rows[i] = Rows2[i].ToArray();
+      rows = new DataRow[rows2.Count][];
+      for (int i = 0; i < rows2.Count; i++)
+        rows[i] = rows2[i].ToArray();
     }
 
     /// <summary>
@@ -5680,10 +5680,10 @@ namespace FreeLibSet.Core
     /// SrcRows. Первая размерность соответствует уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataRow[] srcRows, string keyColumnNames)
     {
-      DataTable KeyTable;
-      DataRow[][] Rows;
-      GroupRows(srcRows, keyColumnNames, out KeyTable, out Rows);
-      return Rows;
+      DataTable keyTable;
+      DataRow[][] rows;
+      GroupRows(srcRows, keyColumnNames, out keyTable, out rows);
+      return rows;
     }
 
     /// <summary>
@@ -5702,10 +5702,10 @@ namespace FreeLibSet.Core
     /// SrcRows. Первая размерность соответствует уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataRow[] srcRows, string keyColumnNames, bool dbNullAsZero)
     {
-      DataTable KeyTable;
-      DataRow[][] Rows;
-      GroupRows(srcRows, keyColumnNames, out KeyTable, out Rows, dbNullAsZero);
-      return Rows;
+      DataTable keyTable;
+      DataRow[][] rows;
+      GroupRows(srcRows, keyColumnNames, out keyTable, out rows, dbNullAsZero);
+      return rows;
     }
 
     #endregion
@@ -5842,27 +5842,27 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("srcColumn");
 #endif
 
-      DataColumn Res = new DataColumn();
+      DataColumn res = new DataColumn();
 
-      Res.ColumnName = srcColumn.ColumnName;
-      Res.DataType = srcColumn.DataType;
-      Res.Caption = srcColumn.Caption;
-      Res.Expression = srcColumn.Expression;
-      Res.DefaultValue = srcColumn.DefaultValue;
-      Res.AllowDBNull = srcColumn.AllowDBNull;
-      Res.AutoIncrement = srcColumn.AutoIncrement;
-      Res.AutoIncrementSeed = srcColumn.AutoIncrementSeed;
-      Res.AutoIncrementStep = srcColumn.AutoIncrementStep;
-      Res.ColumnMapping = srcColumn.ColumnMapping;
-      Res.DateTimeMode = srcColumn.DateTimeMode;
-      Res.MaxLength = srcColumn.MaxLength;
-      Res.Namespace = srcColumn.Namespace;
-      Res.ReadOnly = srcColumn.ReadOnly;
-      Res.Unique = srcColumn.Unique;
+      res.ColumnName = srcColumn.ColumnName;
+      res.DataType = srcColumn.DataType;
+      res.Caption = srcColumn.Caption;
+      res.Expression = srcColumn.Expression;
+      res.DefaultValue = srcColumn.DefaultValue;
+      res.AllowDBNull = srcColumn.AllowDBNull;
+      res.AutoIncrement = srcColumn.AutoIncrement;
+      res.AutoIncrementSeed = srcColumn.AutoIncrementSeed;
+      res.AutoIncrementStep = srcColumn.AutoIncrementStep;
+      res.ColumnMapping = srcColumn.ColumnMapping;
+      res.DateTimeMode = srcColumn.DateTimeMode;
+      res.MaxLength = srcColumn.MaxLength;
+      res.Namespace = srcColumn.Namespace;
+      res.ReadOnly = srcColumn.ReadOnly;
+      res.Unique = srcColumn.Unique;
 
-      CopyProperties(srcColumn.ExtendedProperties, Res.ExtendedProperties);
+      CopyProperties(srcColumn.ExtendedProperties, res.ExtendedProperties);
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -5903,10 +5903,10 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("row");
 #endif
 
-      Dictionary<string, object> Dict = new Dictionary<string, object>(row.Table.Columns.Count);
+      Dictionary<string, object> dict = new Dictionary<string, object>(row.Table.Columns.Count);
       for (int i = 0; i < row.Table.Columns.Count; i++)
-        Dict.Add(row.Table.Columns[i].ColumnName, row[i, rowVersion]);
-      return Dict;
+        dict.Add(row.Table.Columns[i].ColumnName, row[i, rowVersion]);
+      return dict;
     }
 
     /// <summary>
@@ -6032,12 +6032,12 @@ namespace FreeLibSet.Core
 
       DataTable table = rows[0].Table.Clone();
       table.Columns.Add("_$ORDER$_2c0dfea6832644e4ba55a994e0bedd10", typeof(int)); // чтобы точно такого имени небыло
-      int OrdColPos = table.Columns.Count - 1;
+      int ordColPos = table.Columns.Count - 1;
       table.BeginLoadData();
       for (int i = 0; i < rows.Length; i++)
       {
         DataRow row2 = table.Rows.Add(rows[i].ItemArray);
-        row2[OrdColPos] = i;
+        row2[ordColPos] = i;
       }
       table.EndLoadData();
       table.DefaultView.Sort = sort;
@@ -6045,7 +6045,7 @@ namespace FreeLibSet.Core
       DataRow[] rows2 = new DataRow[rows.Length];
       for (int i = 0; i < table.DefaultView.Count; i++)
       {
-        int order = (int)(table.DefaultView[i].Row[OrdColPos]);
+        int order = (int)(table.DefaultView[i].Row[ordColPos]);
         rows2[i] = rows[order];
       }
 
@@ -6177,10 +6177,10 @@ namespace FreeLibSet.Core
 
       for (int i = 0; i < srcDS.Tables.Count; i++)
       {
-        DataTable SrcTable = srcDS.Tables[i];
-        DataTable DstTable = dstDS.Tables[SrcTable.TableName];
-        if (DstTable != null)
-          CopyRowsToRows(SrcTable, DstTable, false, false);
+        DataTable srcTable = srcDS.Tables[i];
+        DataTable dstTable = dstDS.Tables[srcTable.TableName];
+        if (dstTable != null)
+          CopyRowsToRows(srcTable, dstTable, false, false);
       }
       CopyProperties(srcDS.ExtendedProperties, dstDS.ExtendedProperties);
     }
@@ -6189,8 +6189,8 @@ namespace FreeLibSet.Core
     {
       if (src.Count == 0)
         return;
-      foreach (object Key in src.Keys)
-        dst[Key] = src[Key];
+      foreach (object key in src.Keys)
+        dst[key] = src[key];
     }
 
     /// <summary>
@@ -6228,40 +6228,40 @@ namespace FreeLibSet.Core
       // ошибка, т.к. в DstTable окажутся строки с ключами "2" и "2".
       //
       // На время копирования первичный ключ убираем
-      DataColumn[] OldPrimaryKey = dstTable.PrimaryKey;
+      DataColumn[] oldPrimaryKey = dstTable.PrimaryKey;
       dstTable.PrimaryKey = null;
       try
       {
         if (useColumnNames)
         {
           // При копировании по именам столбцов сначала создаем список пар, которые можно копировать
-          List<int> SrcColPos = new List<int>();
-          List<int> DstColPos = new List<int>();
+          List<int> srcColPos = new List<int>();
+          List<int> dstColPos = new List<int>();
           for (int i = 0; i < srcTable.Columns.Count; i++)
           {
             int p = dstTable.Columns.IndexOf(srcTable.Columns[i].ColumnName);
             if (p >= 0)
             {
-              SrcColPos.Add(i);
-              DstColPos.Add(p);
+              srcColPos.Add(i);
+              dstColPos.Add(p);
               // Копируем свойства столбцов
-              DataColumn SrcCol = srcTable.Columns[i];
-              DataColumn DstCol = dstTable.Columns[p];
-              CopyProperties(SrcCol.ExtendedProperties, DstCol.ExtendedProperties);
+              DataColumn srcCol = srcTable.Columns[i];
+              DataColumn dstCol = dstTable.Columns[p];
+              CopyProperties(srcCol.ExtendedProperties, dstCol.ExtendedProperties);
             }
           }
-          if (SrcColPos.Count > 0)
+          if (srcColPos.Count > 0)
           {
             for (int i = 0; i < srcTable.Rows.Count; i++)
             {
-              DataRow SrcRow = srcTable.Rows[i];
-              if (SrcRow.RowState == DataRowState.Deleted)
+              DataRow srcRow = srcTable.Rows[i];
+              if (srcRow.RowState == DataRowState.Deleted)
                 continue;
-              DataRow DstRow = addRows ? dstTable.NewRow() : dstTable.Rows[i];
-              for (int j = 0; j < SrcColPos.Count; j++)
-                DstRow[DstColPos[j]] = SrcRow[SrcColPos[j]];
+              DataRow dstRow = addRows ? dstTable.NewRow() : dstTable.Rows[i];
+              for (int j = 0; j < srcColPos.Count; j++)
+                dstRow[dstColPos[j]] = srcRow[srcColPos[j]];
               if (addRows)
-                dstTable.Rows.Add(DstRow);
+                dstTable.Rows.Add(dstRow);
             }
           }
         }
@@ -6269,26 +6269,26 @@ namespace FreeLibSet.Core
         {
           for (int i = 0; i < srcTable.Rows.Count; i++)
           {
-            DataRow SrcRow = srcTable.Rows[i];
-            if (SrcRow.RowState == DataRowState.Deleted)
+            DataRow srcRow = srcTable.Rows[i];
+            if (srcRow.RowState == DataRowState.Deleted)
               continue;
-            DataRow DstRow = addRows ? dstTable.NewRow() : dstTable.Rows[i];
-            CopyRowValues(SrcRow, DstRow, false);
+            DataRow dstRow = addRows ? dstTable.NewRow() : dstTable.Rows[i];
+            CopyRowValues(srcRow, dstRow, false);
             if (addRows)
-              dstTable.Rows.Add(DstRow);
+              dstTable.Rows.Add(dstRow);
           }
           // Копируем свойства столбцов
           for (int j = 0; j < srcTable.Columns.Count; j++)
           {
-            DataColumn SrcCol = srcTable.Columns[j];
-            DataColumn DstCol = dstTable.Columns[j];
-            CopyProperties(SrcCol.ExtendedProperties, DstCol.ExtendedProperties);
+            DataColumn srcCol = srcTable.Columns[j];
+            DataColumn dstCol = dstTable.Columns[j];
+            CopyProperties(srcCol.ExtendedProperties, dstCol.ExtendedProperties);
           }
         }
       }
       finally
       {
-        dstTable.PrimaryKey = OldPrimaryKey;
+        dstTable.PrimaryKey = oldPrimaryKey;
       }
 
       // Копируем свойства таблицы 
@@ -6323,15 +6323,15 @@ namespace FreeLibSet.Core
 
       if (useColumnNames)
       {
-        DataColumnCollection SrcColumns = srcRow.Table.Columns;
-        DataColumnCollection DstColumns = dstRow.Table.Columns;
+        DataColumnCollection srcColumns = srcRow.Table.Columns;
+        DataColumnCollection dstColumns = dstRow.Table.Columns;
         DataRowVersion srcVer = DataRowVersion.Default;
         if (srcRow.RowState == DataRowState.Deleted)
           srcVer = DataRowVersion.Original; // 17.07.2020
 
-        for (int i = 0; i < SrcColumns.Count; i++)
+        for (int i = 0; i < srcColumns.Count; i++)
         {
-          int p = DstColumns.IndexOf(SrcColumns[i].ColumnName);
+          int p = dstColumns.IndexOf(srcColumns[i].ColumnName);
           if (p >= 0)
             dstRow[p] = srcRow[i, srcVer];
         }
@@ -6424,17 +6424,17 @@ namespace FreeLibSet.Core
 
       for (int i = 0; i < srcRow.Table.Columns.Count; i++)
       {
-        string ColumnName = srcRow.Table.Columns[i].ColumnName;
+        string columnName = srcRow.Table.Columns[i].ColumnName;
         if (!String.IsNullOrEmpty(srcColumnPrefix))
         {
-          if (ColumnName.StartsWith(srcColumnPrefix))
-            ColumnName = ColumnName.Substring(srcColumnPrefix.Length);
+          if (columnName.StartsWith(srcColumnPrefix))
+            columnName = columnName.Substring(srcColumnPrefix.Length);
           else
             continue;
         }
         if (!String.IsNullOrEmpty(dstColumnPrefix))
-          ColumnName = dstColumnPrefix + ColumnName;
-        int p = dstRow.Table.Columns.IndexOf(ColumnName);
+          columnName = dstColumnPrefix + columnName;
+        int p = dstRow.Table.Columns.IndexOf(columnName);
         if (p >= 0)
           dstRow[p] = srcRow[i, srcVer];
       }
@@ -6476,8 +6476,8 @@ namespace FreeLibSet.Core
     /// <param name="newValue">Новое значение</param>
     public static void ReplaceNulls(DataView dv, string columnName, object newValue)
     {
-      DataRow[] Rows = GetDataViewRows(dv);
-      ReplaceNulls(Rows, columnName, newValue);
+      DataRow[] rows = GetDataViewRows(dv);
+      ReplaceNulls(rows, columnName, newValue);
     }
 
     /// <summary>
@@ -6545,23 +6545,23 @@ namespace FreeLibSet.Core
       if (columnIndex < 0 || columnIndex >= table.Columns.Count)
         throw new ArgumentOutOfRangeException("columnIndex", columnIndex, "Неправильный индекс столбца таблицы");
 #endif
-      DataColumn Column = table.Columns[columnIndex];
+      DataColumn col = table.Columns[columnIndex];
 
-      if (Column.DataType != typeof(string))
-        throw new ArgumentException("Столбец \"" + Column.ColumnName + "\" не является строковым");
+      if (col.DataType != typeof(string))
+        throw new ArgumentException("Столбец \"" + col.ColumnName + "\" не является строковым");
 
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.IsNull(columnIndex))
+        if (row.IsNull(columnIndex))
           continue;
-        string s1 = (string)Row[columnIndex];
+        string s1 = (string)row[columnIndex];
         string s2 = s1.Trim();
         if (s2.Length == s1.Length)
           continue;
-        if (s2.Length == 0 && Column.AllowDBNull)
-          Row[columnIndex] = DBNull.Value;
+        if (s2.Length == 0 && col.AllowDBNull)
+          row[columnIndex] = DBNull.Value;
         else
-          Row[columnIndex] = s2;
+          row[columnIndex] = s2;
       }
     }
 
@@ -6639,8 +6639,8 @@ namespace FreeLibSet.Core
       if (Object.ReferenceEquals(srcTable, dstTable))
         throw new ArgumentException("Таблицы не должны совпадать", "dstTable");
 
-      foreach (DataRow SrcRow in srcTable.Rows)
-        UpdateRowByPrimaryKey(SrcRow, dstTable, useColumnNames);
+      foreach (DataRow srcRow in srcTable.Rows)
+        UpdateRowByPrimaryKey(srcRow, dstTable, useColumnNames);
     }
 
     /// <summary>
@@ -6665,15 +6665,15 @@ namespace FreeLibSet.Core
         return false;
 
       // Поиск по ключу
-      object[] Keys = GetPrimaryKeyValues(srcRow, dstTable);
-      if (Keys == null)
+      object[] keys = GetPrimaryKeyValues(srcRow, dstTable);
+      if (keys == null)
         throw new ArgumentException("Не удалось извлечь ключевые поля для строки", "dstTable");
 
-      DataRow DstRow = dstTable.Rows.Find(Keys);
-      if (DstRow == null)
+      DataRow dstRow = dstTable.Rows.Find(keys);
+      if (dstRow == null)
         return false;
 
-      CopyRowValues(srcRow, DstRow, useColumnNames);
+      CopyRowValues(srcRow, dstRow, useColumnNames);
       return true;
     }
 
@@ -6706,33 +6706,33 @@ namespace FreeLibSet.Core
         throw new ArgumentException("Таблицы не должны совпадать", "dstTable");
 
       // Список строк в DstTable, которые были использованы
-      Dictionary<DataRow, object> UsedRows = new Dictionary<DataRow, object>(dstTable.Rows.Count);
+      Dictionary<DataRow, object> usedRows = new Dictionary<DataRow, object>(dstTable.Rows.Count);
 
-      int OrgRowCount = dstTable.Rows.Count;
+      int orgRowCount = dstTable.Rows.Count;
 
       dstTable.BeginLoadData();
       try
       {
         #region Первый проход - добавление / изменение строк
 
-        foreach (DataRow SrcRow in srcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
           // Поиск по ключу
-          object[] Keys = GetPrimaryKeyValues(SrcRow, dstTable);
-          if (Keys == null)
+          object[] keys = GetPrimaryKeyValues(srcRow, dstTable);
+          if (keys == null)
             throw new InvalidOperationException("Не удалось извлечь ключевые поля для строки");
 
-          DataRow DstRow = dstTable.Rows.Find(Keys);
-          if (DstRow == null)
+          DataRow dstRow = dstTable.Rows.Find(keys);
+          if (dstRow == null)
           {
-            DstRow = dstTable.NewRow();
-            CopyRowValues(SrcRow, DstRow, useColumnNames);
-            dstTable.Rows.Add(DstRow);
+            dstRow = dstTable.NewRow();
+            CopyRowValues(srcRow, dstRow, useColumnNames);
+            dstTable.Rows.Add(dstRow);
           }
           else
           {
-            CopyRowValues(SrcRow, DstRow, useColumnNames);
-            UsedRows.Add(DstRow, null);
+            CopyRowValues(srcRow, dstRow, useColumnNames);
+            usedRows.Add(dstRow, null);
           }
         }
 
@@ -6740,9 +6740,9 @@ namespace FreeLibSet.Core
 
         #region Второй проход - удаление ненужных строк
 
-        for (int i = OrgRowCount - 1; i >= 0; i--)
+        for (int i = orgRowCount - 1; i >= 0; i--)
         {
-          if (!UsedRows.ContainsKey(dstTable.Rows[i]))
+          if (!usedRows.ContainsKey(dstTable.Rows[i]))
             dstTable.Rows[i].Delete();
         }
 
@@ -6916,8 +6916,8 @@ namespace FreeLibSet.Core
       Dictionary<Int32, int> res = new Dictionary<Int32, int>(dv.Count);
       for (int i = 0; i < dv.Count; i++)
       {
-        Int32 Id = (Int32)(dv[i].Row["Id"]);
-        res.Add(Id, i);
+        Int32 id = (Int32)(dv[i].Row["Id"]);
+        res.Add(id, i);
       }
       return res;
     }
@@ -7283,33 +7283,33 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("uniqueColumnNames");
 #endif
 
-      DataTable ResTable = srcTable.Clone();
+      DataTable resTable = srcTable.Clone();
       if (srcTable.Rows.Count == 0)
-        return ResTable;
-      int[] UniqueColPoss = new int[uniqueColumnNames.Length];
+        return resTable;
+      int[] uniqueColPoss = new int[uniqueColumnNames.Length];
       for (int j = 0; j < uniqueColumnNames.Length; j++)
-        UniqueColPoss[j] = GetColumnPosWithCheck(srcTable, uniqueColumnNames[j]);
+        uniqueColPoss[j] = GetColumnPosWithCheck(srcTable, uniqueColumnNames[j]);
 
-      ResTable.DefaultView.Sort = String.Join(",", uniqueColumnNames);
-      ResTable.DefaultView.RowFilter = String.Empty;
+      resTable.DefaultView.Sort = String.Join(",", uniqueColumnNames);
+      resTable.DefaultView.RowFilter = String.Empty;
 
-      object[] Keys = new object[uniqueColumnNames.Length];
+      object[] keys = new object[uniqueColumnNames.Length];
       for (int i = 0; i < srcTable.Rows.Count; i++)
       {
-        DataRow SrcRow = srcTable.Rows[i];
-        if (SrcRow.RowState == DataRowState.Deleted)
+        DataRow srcRow = srcTable.Rows[i];
+        if (srcRow.RowState == DataRowState.Deleted)
           continue;
 
         for (int j = 0; j < uniqueColumnNames.Length; j++)
-          Keys[j] = SrcRow[UniqueColPoss[j]];
+          keys[j] = srcRow[uniqueColPoss[j]];
 
-        if (ResTable.DefaultView.Find(Keys) < 0)
-          ResTable.Rows.Add(SrcRow.ItemArray);
+        if (resTable.DefaultView.Find(keys) < 0)
+          resTable.Rows.Add(srcRow.ItemArray);
       }
 
-      ResTable.DefaultView.Sort = srcTable.DefaultView.Sort;
-      ResTable.DefaultView.RowFilter = srcTable.DefaultView.RowFilter;
-      return ResTable;
+      resTable.DefaultView.Sort = srcTable.DefaultView.Sort;
+      resTable.DefaultView.RowFilter = srcTable.DefaultView.RowFilter;
+      return resTable;
     }
 
     /// <summary>
@@ -7350,31 +7350,31 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("uniqueColumnNames");
 #endif
 
-      DataTable ResTable = srcDV.Table.Clone();
+      DataTable resTable = srcDV.Table.Clone();
       if (srcDV.Count == 0)
-        return ResTable;
-      int[] UniqueColPoss = new int[uniqueColumnNames.Length];
+        return resTable;
+      int[] uniqueColPoss = new int[uniqueColumnNames.Length];
       for (int j = 0; j < uniqueColumnNames.Length; j++)
-        UniqueColPoss[j] = GetColumnPosWithCheck(srcDV.Table, uniqueColumnNames[j]);
+        uniqueColPoss[j] = GetColumnPosWithCheck(srcDV.Table, uniqueColumnNames[j]);
 
-      ResTable.DefaultView.Sort = String.Join(",", uniqueColumnNames);
-      ResTable.DefaultView.RowFilter = String.Empty;
+      resTable.DefaultView.Sort = String.Join(",", uniqueColumnNames);
+      resTable.DefaultView.RowFilter = String.Empty;
 
-      object[] Keys = new object[uniqueColumnNames.Length];
+      object[] keys = new object[uniqueColumnNames.Length];
       for (int i = 0; i < srcDV.Count; i++)
       {
         DataRow SrcRow = srcDV[i].Row;
 
         for (int j = 0; j < uniqueColumnNames.Length; j++)
-          Keys[j] = SrcRow[UniqueColPoss[j]];
+          keys[j] = SrcRow[uniqueColPoss[j]];
 
-        if (ResTable.DefaultView.Find(Keys) < 0)
-          ResTable.Rows.Add(SrcRow.ItemArray);
+        if (resTable.DefaultView.Find(keys) < 0)
+          resTable.Rows.Add(SrcRow.ItemArray);
       }
 
-      ResTable.DefaultView.Sort = String.Empty;
-      ResTable.DefaultView.RowFilter = String.Empty;
-      return ResTable;
+      resTable.DefaultView.Sort = String.Empty;
+      resTable.DefaultView.RowFilter = String.Empty;
+      return resTable;
     }
 
     /// <summary>
@@ -7493,8 +7493,8 @@ namespace FreeLibSet.Core
         return ((Array)testValue).Length == 0;
 
       // 17.04.2015
-      object EmptyValue = GetEmptyValue(testValue.GetType());
-      return testValue.Equals(EmptyValue);
+      object emptyValue = GetEmptyValue(testValue.GetType());
+      return testValue.Equals(emptyValue);
 
       /*
 
@@ -7613,11 +7613,11 @@ namespace FreeLibSet.Core
     /// <returns>true, если все нули</returns>
     public static bool AreAllDecimalZeros(DataTable table, string columnNames)
     {
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (!AreAllDecimalZeros(Row, columnNames))
+        if (!AreAllDecimalZeros(row, columnNames))
           return false;
       }
       return true;
@@ -7630,11 +7630,11 @@ namespace FreeLibSet.Core
     /// <returns>true, если все нули</returns>
     public static bool AreAllDecimalZeros(DataTable table)
     {
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (!AreAllDecimalZeros(Row))
+        if (!AreAllDecimalZeros(row))
           return false;
       }
       return true;

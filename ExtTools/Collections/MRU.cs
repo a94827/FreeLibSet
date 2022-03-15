@@ -111,16 +111,16 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        LinkedListNode<KeyValuePair<TKey, TValue>> Node;
-        if (_Dict.TryGetValue(key, out Node))
+        LinkedListNode<KeyValuePair<TKey, TValue>> node;
+        if (_Dict.TryGetValue(key, out node))
         {
           // Объект уже есть в списке. Перемещаем его в начало MRU
-          if (!Object.ReferenceEquals(Node, _MRU.First))
+          if (!Object.ReferenceEquals(node, _MRU.First))
           {
-            _MRU.Remove(Node);
-            _MRU.AddFirst(Node);
+            _MRU.Remove(node);
+            _MRU.AddFirst(node);
           }
-          return Node.Value.Value;
+          return node.Value.Value;
         }
 
         // Проверяем, не пора ли удалять старые элементы
@@ -128,22 +128,22 @@ namespace FreeLibSet.Collections
 
         // Создаем новый элемент
 
-        TValue NewItem = CreateItem(key); // Во время вызова виртуального метода могут быть вложенные вызовы
+        TValue newItem = CreateItem(key); // Во время вызова виртуального метода могут быть вложенные вызовы
 
         if (!_Dict.ContainsKey(key)) // 07.04.2018 - Обеспечиваем реентрабельность
         {
-          Node = _MRU.AddFirst(new KeyValuePair<TKey, TValue>(key, NewItem));
-          _Dict.Add(key, Node);
+          node = _MRU.AddFirst(new KeyValuePair<TKey, TValue>(key, newItem));
+          _Dict.Add(key, node);
         }
 
-        return NewItem;
+        return newItem;
       }
       set // 04.10.2018
       {
         this.Remove(key);
-        LinkedListNode<KeyValuePair<TKey, TValue>> Node;
-        Node = _MRU.AddFirst(new KeyValuePair<TKey, TValue>(key, value));
-        _Dict.Add(key, Node);
+        LinkedListNode<KeyValuePair<TKey, TValue>> node;
+        node = _MRU.AddFirst(new KeyValuePair<TKey, TValue>(key, value));
+        _Dict.Add(key, node);
       }
     }
 
@@ -256,19 +256,19 @@ namespace FreeLibSet.Collections
     /// <returns>true, если запись была в коллекйии</returns>
     public bool Remove(TKey key)
     {
-      LinkedListNode<KeyValuePair<TKey, TValue>> Node;
-      if (!_Dict.TryGetValue(key, out Node))
+      LinkedListNode<KeyValuePair<TKey, TValue>> node;
+      if (!_Dict.TryGetValue(key, out node))
         return false;
 
-      DestroyItem(key, Node.Value.Value);
-      _MRU.Remove(Node);
+      DestroyItem(key, node.Value.Value);
+      _MRU.Remove(node);
       try
       {
         _Dict.Remove(key);
       }
       catch
       {
-        _MRU.AddLast(Node);
+        _MRU.AddLast(node);
         throw;
       }
 
@@ -283,14 +283,14 @@ namespace FreeLibSet.Collections
     /// <returns>true, если значение найдено</returns>
     public bool TryGetValue(TKey key, out TValue value)
     {
-      LinkedListNode<KeyValuePair<TKey, TValue>> Node;
-      if (!_Dict.TryGetValue(key, out Node))
+      LinkedListNode<KeyValuePair<TKey, TValue>> node;
+      if (!_Dict.TryGetValue(key, out node))
       {
         value = default(TValue);
         return false;
       }
 
-      value = Node.Value.Value;
+      value = node.Value.Value;
       return true;
     }
 
@@ -304,12 +304,12 @@ namespace FreeLibSet.Collections
         // Придется создавать собстенную коллекцию
         // Использовать следует список значений коллекции, а не MRUList,
         // чтобы порядок совпадал с массивом Keys
-        LinkedListNode<KeyValuePair<TKey, TValue>>[] Nodes = new LinkedListNode<KeyValuePair<TKey, TValue>>[_Dict.Count];
-        _Dict.Values.CopyTo(Nodes, 0);
+        LinkedListNode<KeyValuePair<TKey, TValue>>[] nodes = new LinkedListNode<KeyValuePair<TKey, TValue>>[_Dict.Count];
+        _Dict.Values.CopyTo(nodes, 0);
 
-        TValue[] a = new TValue[Nodes.Length];
-        for (int i = 0; i < Nodes.Length; i++)
-          a[i] = Nodes[i].Value.Value;
+        TValue[] a = new TValue[nodes.Length];
+        for (int i = 0; i < nodes.Length; i++)
+          a[i] = nodes[i].Value.Value;
 
         return a;
       }
@@ -338,11 +338,11 @@ namespace FreeLibSet.Collections
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
     {
-      LinkedListNode<KeyValuePair<TKey, TValue>> Node;
-      if (!_Dict.TryGetValue(item.Key, out Node))
+      LinkedListNode<KeyValuePair<TKey, TValue>> node;
+      if (!_Dict.TryGetValue(item.Key, out node))
         return false;
 
-      return Object.Equals(item.Value, Node.Value.Value);
+      return Object.Equals(item.Value, node.Value.Value);
     }
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
@@ -551,10 +551,10 @@ namespace FreeLibSet.Collections
       }
       set
       {
-        T OldValue = _List[index];
+        T oldValue = _List[index];
         _List[index] = value;
 
-        _LinkedList.Remove(OldValue);
+        _LinkedList.Remove(oldValue);
         _LinkedList.AddFirst(value);
         // здесь LimitCount() не вызываем, т.к. количество элементов не поменялось
       }

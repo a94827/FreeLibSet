@@ -322,9 +322,9 @@ namespace FreeLibSet.Remoting
     /// <returns></returns>
     public bool IsMarshallable()
     {
-      foreach (KeyValuePair<string, object> Pair in _Items)
+      foreach (KeyValuePair<string, object> pair in _Items)
       {
-        if (!SerializationTools.IsMarshallable(Pair.Value))
+        if (!SerializationTools.IsMarshallable(pair.Value))
           return false;
       }
       return true;
@@ -336,10 +336,10 @@ namespace FreeLibSet.Remoting
     /// </summary>
     public void CheckIfMarshallable()
     {
-      foreach (KeyValuePair<string, object> Pair in _Items)
+      foreach (KeyValuePair<string, object> pair in _Items)
       {
-        if (!SerializationTools.IsMarshallable(Pair.Value))
-          throw new SerializationException("Значение с ключом \"" + Pair.Key + "\" имеет тип \"" + Pair.Value.GetType().ToString() +
+        if (!SerializationTools.IsMarshallable(pair.Value))
+          throw new SerializationException("Значение с ключом \"" + pair.Key + "\" имеет тип \"" + pair.Value.GetType().ToString() +
             "\", который не является сериализуемым и не может передаваться по ссылке");
       }
     }
@@ -351,16 +351,16 @@ namespace FreeLibSet.Remoting
     /// <returns>true, если запись обнаружена</returns>
     public bool ContainsXmlSerialized()
     {
-      foreach (KeyValuePair<string, object> Pair in _Items)
+      foreach (KeyValuePair<string, object> pair in _Items)
       {
-        if (Pair.Value is System.Data.DataSet)
+        if (pair.Value is System.Data.DataSet)
         {
-          if (((System.Data.DataSet)(Pair.Value)).RemotingFormat == System.Data.SerializationFormat.Xml)
+          if (((System.Data.DataSet)(pair.Value)).RemotingFormat == System.Data.SerializationFormat.Xml)
             return true;
         }
-        if (Pair.Value is System.Data.DataTable)
+        if (pair.Value is System.Data.DataTable)
         {
-          if (((System.Data.DataTable)(Pair.Value)).RemotingFormat == System.Data.SerializationFormat.Xml)
+          if (((System.Data.DataTable)(pair.Value)).RemotingFormat == System.Data.SerializationFormat.Xml)
             return true;
         }
       }
@@ -399,10 +399,10 @@ namespace FreeLibSet.Remoting
     /// <returns></returns>
     public NamedValues Clone()
     {
-      NamedValues NewObj = new NamedValues(_Items.Count, false);
+      NamedValues newObj = new NamedValues(_Items.Count, false);
       foreach (KeyValuePair<string, object> Pair in _Items)
-        NewObj._Items.Add(Pair.Key, Pair.Value);
-      return NewObj;
+        newObj._Items.Add(Pair.Key, Pair.Value);
+      return newObj;
     }
 
     object ICloneable.Clone()

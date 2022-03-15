@@ -498,22 +498,22 @@ namespace FreeLibSet.Core
       if (removingArray.Length == 0)
         return;
 
-      List<T> ResArray = null;
+      List<T> resArray = null;
       for (int i = 0; i < removingArray.Length; i++)
       {
         if (Array.IndexOf<T>(a, removingArray[i]) >= 0)
         {
           // Требуется удалить элемент из массива SrcArray
-          if (ResArray == null)
+          if (resArray == null)
           {
-            ResArray = new List<T>(a.Length);
-            ResArray.AddRange(a);
+            resArray = new List<T>(a.Length);
+            resArray.AddRange(a);
           }
-          ResArray.Remove(removingArray[i]);
+          resArray.Remove(removingArray[i]);
         }
       }
-      if (ResArray != null)
-        a = ResArray.ToArray();
+      if (resArray != null)
+        a = resArray.ToArray();
     }
 
     /// <summary>
@@ -677,10 +677,10 @@ namespace FreeLibSet.Core
 
       int n1 = a.GetLowerBound(1);
       int n2 = a.GetUpperBound(1);
-      T[] Res = new T[n2 - n1 + 1];
+      T[] res = new T[n2 - n1 + 1];
       for (int i = n1; i <= n2; i++)
-        Res[i - n1] = a[rowIndex, i];
-      return Res;
+        res[i - n1] = a[rowIndex, i];
+      return res;
     }
 
     /// <summary>
@@ -704,10 +704,10 @@ namespace FreeLibSet.Core
 
       int n1 = a.GetLowerBound(0);
       int n2 = a.GetUpperBound(0);
-      T[] Res = new T[n2 - n1 + 1];
+      T[] res = new T[n2 - n1 + 1];
       for (int i = n1; i <= n2; i++)
-        Res[i - n1] = a[i, columnIndex];
-      return Res;
+        res[i - n1] = a[i, columnIndex];
+      return res;
     }
 
     /// <summary>
@@ -725,18 +725,18 @@ namespace FreeLibSet.Core
       int m1 = a.GetLowerBound(1);
       int m2 = a.GetUpperBound(1);
 
-      T[] Res = new T[(n2 - n1 + 1) * (m2 - m1 + 1)];
+      T[] res = new T[(n2 - n1 + 1) * (m2 - m1 + 1)];
 
       int pos = 0;
       for (int i = n1; i <= n2; i++)
       {
         for (int j = m1; j <= m2; j++)
         {
-          Res[pos] = a[i, j];
+          res[pos] = a[i, j];
           pos++;
         }
       }
-      return Res;
+      return res;
     }
 
 
@@ -761,18 +761,18 @@ namespace FreeLibSet.Core
         len += a[i].Length;
       }
 
-      T[] Res = new T[len];
+      T[] res = new T[len];
 
       len = 0;
       for (int i = n1; i <= n2; i++)
       {
         if (a[i] == null)
           continue;
-        Array.Copy(a[i], a[i].GetLowerBound(0), Res, len, a[i].Length);
+        Array.Copy(a[i], a[i].GetLowerBound(0), res, len, a[i].Length);
         len += a[i].Length;
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -801,7 +801,7 @@ namespace FreeLibSet.Core
         }
       }
 
-      T[] Res = new T[len];
+      T[] res = new T[len];
 
       len = 0;
       for (int i = n1; i <= n2; i++)
@@ -810,12 +810,12 @@ namespace FreeLibSet.Core
         {
           if (a[i, j] == null)
             continue;
-          Array.Copy(a[i, j], a[i, j].GetLowerBound(0), Res, len, a[i, j].Length);
+          Array.Copy(a[i, j], a[i, j].GetLowerBound(0), res, len, a[i, j].Length);
           len += a[i, j].Length;
         }
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -876,14 +876,14 @@ namespace FreeLibSet.Core
       if (a.Length <= n)
         return new T[1][] { a };
 
-      int NN = ((a.Length + (n - 1))) / n;
+      int nn = ((a.Length + (n - 1))) / n;
 
-      T[][] res = new T[NN][];
+      T[][] res = new T[nn][];
 
       int cnt = 0;
-      for (int i = 0; i < NN; i++)
+      for (int i = 0; i < nn; i++)
       {
-        if (i == (NN - 1))
+        if (i == (nn - 1))
           res[i] = new T[a.Length - cnt];
         else
           res[i] = new T[n];

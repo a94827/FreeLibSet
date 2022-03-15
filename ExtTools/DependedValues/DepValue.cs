@@ -245,11 +245,11 @@ namespace FreeLibSet.DependedValues
       if (ValueChanged != null)
         ValueChanged(this, EventArgs.Empty);
 
-      DepInput<T> CurrOutput = FirstOutput;
-      while (CurrOutput != null)
+      DepInput<T> currOutput = FirstOutput;
+      while (currOutput != null)
       {
-        CurrOutput.SetValueChanged();
-        CurrOutput = CurrOutput.NextOutput;
+        currOutput.SetValueChanged();
+        currOutput = currOutput.NextOutput;
       }
     }
 
@@ -396,27 +396,27 @@ namespace FreeLibSet.DependedValues
         #region Подсчет
 
         int n = 0;
-        DepInput<T> CurrInput = FirstOutput;
-        while (CurrInput != null)
+        DepInput<T> currInput = FirstOutput;
+        while (currInput != null)
         {
           n++;
-          CurrInput = CurrInput.NextOutput;
+          currInput = currInput.NextOutput;
         }
 
         #endregion
 
         #region Создание списка
 
-        DepInput<T>[] Outputs = new DepInput<T>[n];
+        DepInput<T>[] outputs = new DepInput<T>[n];
         n = 0;
-        CurrInput = FirstOutput;
-        while (CurrInput != null)
+        currInput = FirstOutput;
+        while (currInput != null)
         {
-          Outputs[n] = CurrInput;
+          outputs[n] = currInput;
           n++;
-          CurrInput = CurrInput.NextOutput;
+          currInput = currInput.NextOutput;
         }
-        return Outputs;
+        return outputs;
 
         #endregion
       }
@@ -444,15 +444,15 @@ namespace FreeLibSet.DependedValues
         FirstOutput = theInput.NextOutput;
       else
       {
-        DepInput<T> CurrOutput = FirstOutput;
-        while (CurrOutput != null)
+        DepInput<T> currOutput = FirstOutput;
+        while (currOutput != null)
         {
-          if (CurrOutput.NextOutput == theInput)
+          if (currOutput.NextOutput == theInput)
           {
-            CurrOutput.NextOutput = theInput.NextOutput;
+            currOutput.NextOutput = theInput.NextOutput;
             break;
           }
-          CurrOutput = CurrOutput.NextOutput;
+          currOutput = currOutput.NextOutput;
         }
       }
       theInput.NextOutput = null;
@@ -861,7 +861,7 @@ namespace FreeLibSet.DependedValues
 
     internal void SetValueChanged()
     {
-      T NewVal;
+      T newVal;
       if (Source == null)
       {
         //NewVal = default(T);
@@ -871,7 +871,7 @@ namespace FreeLibSet.DependedValues
         return;
       }
       else
-        NewVal = Source.Value;
+        newVal = Source.Value;
 
       // 09.11.2009
       // Проверки не нужны, т.к.:
@@ -885,7 +885,7 @@ namespace FreeLibSet.DependedValues
 
       // Значение на входе изменилось
       //BaseSetValue(NewVal);
-      SetValue(NewVal); // 21.10.2021. Иначе не будет работать DepInput()
+      SetValue(newVal); // 21.10.2021. Иначе не будет работать DepInput()
     }
 
     #endregion

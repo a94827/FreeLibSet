@@ -619,12 +619,12 @@ namespace FreeLibSet.RI
     /// <returns>Найденный элемент или null</returns>
     public RIItem FindError()
     {
-      List<RIItem> Items = new List<RIItem>();
-      GetItems(Items);
-      for (int i = 0; i < Items.Count; i++)
+      List<RIItem> items = new List<RIItem>();
+      GetItems(items);
+      for (int i = 0; i < items.Count; i++)
       {
-        if (!String.IsNullOrEmpty(Items[i].ErrorMessage))
-          return Items[i];
+        if (!String.IsNullOrEmpty(items[i].ErrorMessage))
+          return items[i];
       }
       return null;
     }
@@ -854,8 +854,8 @@ namespace FreeLibSet.RI
 
       while (true)
       {
-        TempCfg Cfg = new TempCfg();
-        dialog.WriteChanges(Cfg); // 21.10.2021 - для сброса RIItem.ErrorMessage
+        TempCfg cfg = new TempCfg();
+        dialog.WriteChanges(cfg); // 21.10.2021 - для сброса RIItem.ErrorMessage
 
         NamedValues dispArgs = new NamedValues();
         dispArgs["Action"] = "ShowDialog";
@@ -864,9 +864,9 @@ namespace FreeLibSet.RI
         DialogResult dlgRes = (DialogResult)(dispRes["DialogResult"]);
         if (dlgRes == DialogResult.OK || dlgRes == DialogResult.Yes)
         {
-          Cfg = new TempCfg();
-          Cfg.AsXmlText = dispRes.GetString("Changes");
-          dialog.ReadChanges(Cfg);
+          cfg = new TempCfg();
+          cfg.AsXmlText = dispRes.GetString("Changes");
+          dialog.ReadChanges(cfg);
 
           if (!dialog.Validate())
             continue;
@@ -894,27 +894,27 @@ namespace FreeLibSet.RI
 
       while (true)
       {
-        TempCfg Cfg = new TempCfg();
-        dialog.WriteChanges(Cfg); // 21.10.2021 - для сброса RIItem.ErrorMessage
+        TempCfg cfg = new TempCfg();
+        dialog.WriteChanges(cfg); // 21.10.2021 - для сброса RIItem.ErrorMessage
 
-        NamedValues DispArgs = new NamedValues();
-        DispArgs["Action"] = "ShowStandardDialog";
-        DispArgs["Dialog"] = dialog;
-        NamedValues DispRes = _ExecProc.Execute(DispArgs);
+        NamedValues dispArgs = new NamedValues();
+        dispArgs["Action"] = "ShowStandardDialog";
+        dispArgs["Dialog"] = dialog;
+        NamedValues dispRes = _ExecProc.Execute(dispArgs);
 
-        DialogResult DlgRes = (DialogResult)(DispRes["DialogResult"]);
-        if (DlgRes == DialogResult.OK || DlgRes == DialogResult.Yes)
+        DialogResult dlgRes = (DialogResult)(dispRes["DialogResult"]);
+        if (dlgRes == DialogResult.OK || dlgRes == DialogResult.Yes)
         {
-          Cfg = new TempCfg();
-          Cfg.AsXmlText = DispRes.GetString("Changes");
-          dialog.ReadChanges(Cfg);
+          cfg = new TempCfg();
+          cfg.AsXmlText = dispRes.GetString("Changes");
+          dialog.ReadChanges(cfg);
 
           if (!dialog.Validate())
             continue;
 
           dialog.WriteValues(Saver);
         }
-        return DlgRes;
+        return dlgRes;
       }
     }
 
@@ -1290,9 +1290,9 @@ namespace FreeLibSet.RI
           dispRes["DialogResult"] = dlgRes;
           if (dlgRes == DialogResult.OK || dlgRes == DialogResult.Yes) // 06.12.2021
           {
-            TempCfg Cfg1 = new TempCfg();
-            dlg1.WriteChanges(Cfg1);
-            dispRes["Changes"] = Cfg1.AsXmlText;
+            TempCfg cfg1 = new TempCfg();
+            dlg1.WriteChanges(cfg1);
+            dispRes["Changes"] = cfg1.AsXmlText;
           }
           return dispRes;
         case "ShowStandardDialog":
@@ -1306,9 +1306,9 @@ namespace FreeLibSet.RI
           dispRes["DialogResult"] = dlgRes;
           if (dlgRes == DialogResult.OK || dlgRes == DialogResult.Yes) // 06.12.2021
           {
-            TempCfg Cfg2 = new TempCfg();
-            dlg2.WriteChanges(Cfg2);
-            dispRes["Changes"] = Cfg2.AsXmlText;
+            TempCfg cfg2 = new TempCfg();
+            dlg2.WriteChanges(cfg2);
+            dispRes["Changes"] = cfg2.AsXmlText;
           }
           return dispRes;
         case "MessageBox":

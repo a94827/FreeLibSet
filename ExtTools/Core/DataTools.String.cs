@@ -326,15 +326,15 @@ namespace FreeLibSet.Core
 
       char[] a = new char[s.Length];
 
-      bool NextUpper = true;
+      bool nextUpper = true;
       for (int i = 0; i < s.Length; i++)
       {
         if (Char.IsLetter(s[i]))
         {
-          if (NextUpper)
+          if (nextUpper)
           {
             a[i] = Char.ToUpper(s[i], culture);
-            NextUpper = false;
+            nextUpper = false;
           }
           else
           {
@@ -343,7 +343,7 @@ namespace FreeLibSet.Core
         }
         else
         {
-          NextUpper = true;
+          nextUpper = true;
           a[i] = s[i]; // 14.07.2021
         }
       }
@@ -365,15 +365,15 @@ namespace FreeLibSet.Core
 
       char[] a = new char[s.Length];
 
-      bool NextUpper = true;
+      bool nextUpper = true;
       for (int i = 0; i < s.Length; i++)
       {
         if (Char.IsLetter(s[i]))
         {
-          if (NextUpper)
+          if (nextUpper)
           {
             a[i] = Char.ToUpperInvariant(s[i]);
-            NextUpper = false;
+            nextUpper = false;
           }
           else
           {
@@ -382,7 +382,7 @@ namespace FreeLibSet.Core
         }
         else
         {
-          NextUpper = true;
+          nextUpper = true;
           a[i] = s[i]; // 14.07.2021
         }
       }
@@ -830,10 +830,10 @@ namespace FreeLibSet.Core
         return str.Replace(searchChars[0], replaceChars[0]);
 
       // Замена по словарю
-      Dictionary<char, char> Dict = new Dictionary<char, char>(searchChars.Length);
+      Dictionary<char, char> dict = new Dictionary<char, char>(searchChars.Length);
       for (int i = 0; i < searchChars.Length; i++)
-        Dict.Add(searchChars[i], replaceChars[i]);
-      return ReplaceChars(str, Dict);
+        dict.Add(searchChars[i], replaceChars[i]);
+      return ReplaceChars(str, dict);
     }
 
     /// <summary>
@@ -1248,7 +1248,7 @@ namespace FreeLibSet.Core
     {
       for (int i = 0; i < a.Length; i++)
       {
-        if (String.Equals(a[i], searchStr, comparisonType)) 
+        if (String.Equals(a[i], searchStr, comparisonType))
           return i;
       }
       return -1;
@@ -1924,16 +1924,16 @@ namespace FreeLibSet.Core
       }
 
       int nRows2 = 0;
-      int[] RowRefs = new int[nRows];
+      int[] rowRefs = new int[nRows];
       for (int i = 0; i < nRows; i++)
       {
         if (RowFlags[i])
         {
-          RowRefs[i] = nRows2;
+          rowRefs[i] = nRows2;
           nRows2++;
         }
         else
-          RowRefs[i] = -1;
+          rowRefs[i] = -1;
       }
 
       if (nRows2 == 0)
@@ -1946,8 +1946,8 @@ namespace FreeLibSet.Core
       {
         for (int j = 0; j < nCols; j++)
         {
-          if (RowRefs[i] >= 0)
-            a2[RowRefs[i], j] = a[i, j];
+          if (rowRefs[i] >= 0)
+            a2[rowRefs[i], j] = a[i, j];
         }
       }
 
@@ -1970,27 +1970,27 @@ namespace FreeLibSet.Core
 
       int nRows = a.GetLength(0);
       int nCols = a.GetLength(1);
-      bool[] ColFlags = new bool[nCols];
+      bool[] colFlags = new bool[nCols];
       for (int i = 0; i < nRows; i++)
       {
         for (int j = 0; j < nCols; j++)
         {
           if (!String.IsNullOrEmpty(a[i, j]))
-            ColFlags[j] = true;
+            colFlags[j] = true;
         }
       }
 
       int nCols2 = 0;
-      int[] ColRefs = new int[nCols];
+      int[] colRefs = new int[nCols];
       for (int j = 0; j < nCols; j++)
       {
-        if (ColFlags[j])
+        if (colFlags[j])
         {
-          ColRefs[j] = nCols2;
+          colRefs[j] = nCols2;
           nCols2++;
         }
         else
-          ColRefs[j] = -1;
+          colRefs[j] = -1;
       }
 
       if (nCols2 == 0)
@@ -2003,8 +2003,8 @@ namespace FreeLibSet.Core
       {
         for (int j = 0; j < nCols; j++)
         {
-          if (ColRefs[j] >= 0)
-            a2[i, ColRefs[j]] = a[i, j];
+          if (colRefs[j] >= 0)
+            a2[i, colRefs[j]] = a[i, j];
         }
       }
 
@@ -2027,44 +2027,44 @@ namespace FreeLibSet.Core
 
       int nRows = a.GetLength(0);
       int nCols = a.GetLength(1);
-      bool[] RowFlags = new bool[nRows];
-      bool[] ColFlags = new bool[nCols];
+      bool[] rowFlags = new bool[nRows];
+      bool[] colFlags = new bool[nCols];
       for (int i = 0; i < nRows; i++)
       {
         for (int j = 0; j < nCols; j++)
         {
           if (!String.IsNullOrEmpty(a[i, j]))
           {
-            RowFlags[i] = true;
-            ColFlags[j] = true;
+            rowFlags[i] = true;
+            colFlags[j] = true;
           }
         }
       }
 
       int nRows2 = 0;
-      int[] RowRefs = new int[nRows];
+      int[] rowRefs = new int[nRows];
       for (int i = 0; i < nRows; i++)
       {
-        if (RowFlags[i])
+        if (rowFlags[i])
         {
-          RowRefs[i] = nRows2;
+          rowRefs[i] = nRows2;
           nRows2++;
         }
         else
-          RowRefs[i] = -1;
+          rowRefs[i] = -1;
       }
 
       int nCols2 = 0;
-      int[] ColRefs = new int[nCols];
+      int[] colRefs = new int[nCols];
       for (int j = 0; j < nCols; j++)
       {
-        if (ColFlags[j])
+        if (colFlags[j])
         {
-          ColRefs[j] = nCols2;
+          colRefs[j] = nCols2;
           nCols2++;
         }
         else
-          ColRefs[j] = -1;
+          colRefs[j] = -1;
       }
 
 #if DEBUG
@@ -2082,8 +2082,8 @@ namespace FreeLibSet.Core
       {
         for (int j = 0; j < nCols; j++)
         {
-          if (RowRefs[i] >= 0 && ColRefs[j] >= 0)
-            a2[RowRefs[i], ColRefs[j]] = a[i, j];
+          if (rowRefs[i] >= 0 && colRefs[j] >= 0)
+            a2[rowRefs[i], colRefs[j]] = a[i, j];
         }
       }
 

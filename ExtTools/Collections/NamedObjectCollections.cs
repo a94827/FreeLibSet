@@ -855,8 +855,8 @@ namespace FreeLibSet.Collections
     public NamedList(ICollection<T> srcCollection, bool ignoreCase)
       : this(srcCollection.Count, ignoreCase)
     {
-      foreach (T Item in srcCollection)
-        Add(Item);
+      foreach (T item in srcCollection)
+        Add(item);
     }
 
     /// <summary>
@@ -879,8 +879,8 @@ namespace FreeLibSet.Collections
     public NamedList(IEnumerable<T> srcCollection, bool ignoreCase)
       : this(ignoreCase)
     {
-      foreach (T Item in srcCollection)
-        Add(Item);
+      foreach (T item in srcCollection)
+        Add(item);
     }
 
     #endregion
@@ -923,10 +923,10 @@ namespace FreeLibSet.Collections
 
       for (int i = 0; i < _List.Count; i++)
       {
-        string Code = _List[i].Code;
+        string code = _List[i].Code;
         if (_IgnoreCase)
-          Code = Code.ToUpperInvariant();
-        _Dict[Code] = i;
+          code = code.ToUpperInvariant();
+        _Dict[code] = i;
       }
 
 #if DEBUG
@@ -961,25 +961,25 @@ namespace FreeLibSet.Collections
         if (Object.Equals(value, default(T)))
           throw new ArgumentNullException();
 #endif
-        string NewCode = value.Code;
-        if (String.IsNullOrEmpty(NewCode))
+        string newCode = value.Code;
+        if (String.IsNullOrEmpty(newCode))
           throw new ArgumentException("value.Code пустой");
         if (_IgnoreCase)
-          NewCode = NewCode.ToUpperInvariant();
+          newCode = newCode.ToUpperInvariant();
 
 
-        T OldItem = _List[index];
-        _Dict.Remove(OldItem.Code);
+        T oldItem = _List[index];
+        _Dict.Remove(oldItem.Code);
         try
         {
-          _Dict.Add(NewCode, index);
+          _Dict.Add(newCode, index);
         }
         catch
         {
-          string OldItemCode = OldItem.Code;
+          string oldItemCode = oldItem.Code;
           if (_IgnoreCase)
-            OldItemCode = OldItemCode.ToUpperInvariant();
-          _Dict.Add(OldItemCode, index);
+            oldItemCode = oldItemCode.ToUpperInvariant();
+          _Dict.Add(oldItemCode, index);
           _DictIsValid = false;
           throw;
         }
@@ -997,9 +997,9 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        int Index = IndexOf(code); // восстанавливает словарь
-        if (Index >= 0)
-          return _List[Index];
+        int index = IndexOf(code); // восстанавливает словарь
+        if (index >= 0)
+          return _List[index];
         else
           return default(T);
       }
@@ -1013,9 +1013,9 @@ namespace FreeLibSet.Collections
     /// <returns>Объект</returns>
     public T GetRequired(string code)
     {
-      int Index = IndexOf(code); // восстанавливает словарь
-      if (Index >= 0)
-        return _List[Index];
+      int index = IndexOf(code); // восстанавливает словарь
+      if (index >= 0)
+        return _List[index];
       else if (string.IsNullOrEmpty(code))
         throw new ArgumentNullException("code");
       else
@@ -1149,16 +1149,16 @@ namespace FreeLibSet.Collections
       if (index > _List.Count)
         throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + _List.Count.ToString());
 
-      string ItemCode = item.Code;
-      if (String.IsNullOrEmpty(ItemCode))
+      string itemCode = item.Code;
+      if (String.IsNullOrEmpty(itemCode))
         throw new ArgumentException("Пустой Item.Code", "item");
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
       if (index < _List.Count)
         _DictIsValid = false; // иначе это обычный метод Add()
 
-      _Dict.Add(ItemCode, index); // здесь возникнет исключение, если уже есть элемент с таким кодом
+      _Dict.Add(itemCode, index); // здесь возникнет исключение, если уже есть элемент с таким кодом
       try
       {
         _List.Insert(index, item);
@@ -1166,7 +1166,7 @@ namespace FreeLibSet.Collections
       catch
       {
         _DictIsValid = false;
-        _Dict.Remove(ItemCode);
+        _Dict.Remove(itemCode);
         throw;
       }
     }
@@ -1185,11 +1185,11 @@ namespace FreeLibSet.Collections
       T item = _List[index];
       _List.RemoveAt(index);
 
-      string ItemCode = item.Code;
+      string itemCode = item.Code;
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
-      _Dict.Remove(ItemCode);
+      _Dict.Remove(itemCode);
     }
 
     #endregion
@@ -1209,13 +1209,13 @@ namespace FreeLibSet.Collections
         throw new ArgumentNullException("item");
 #endif
 
-      string ItemCode = item.Code;
-      if (String.IsNullOrEmpty(ItemCode))
+      string itemCode = item.Code;
+      if (String.IsNullOrEmpty(itemCode))
         throw new ArgumentException("Пустой Item.Code", "item");
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
-      _Dict.Add(ItemCode, _List.Count); // здесь возникнет исключение, если уже есть элемент с таким кодом
+      _Dict.Add(itemCode, _List.Count); // здесь возникнет исключение, если уже есть элемент с таким кодом
       try
       {
         _List.Add(item);
@@ -1223,7 +1223,7 @@ namespace FreeLibSet.Collections
       catch
       {
         _DictIsValid = false;
-        _Dict.Remove(ItemCode);
+        _Dict.Remove(itemCode);
         throw;
       }
 
@@ -1253,15 +1253,15 @@ namespace FreeLibSet.Collections
       if (Object.Equals(item, default(T)))
         return false;
 
-      string ItemCode = item.Code;
+      string itemCode = item.Code;
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
-      if (!_Dict.ContainsKey(ItemCode))
+        itemCode = itemCode.ToUpperInvariant();
+      if (!_Dict.ContainsKey(itemCode))
         return false;
 
       // 21.02.2018
       // Надо еще и на равенство проверить
-      return item.Equals(this[ItemCode]);
+      return item.Equals(this[itemCode]);
     }
 
     /// <summary>
@@ -1449,8 +1449,8 @@ namespace FreeLibSet.Collections
       if (Object.ReferenceEquals(collection, this))
         throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
 
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -1530,11 +1530,11 @@ namespace FreeLibSet.Collections
       _Dict = new Dictionary<string, int>(_List.Count);
       for (int i = 0; i < _List.Count; i++)
       {
-        string ItemCode = _List[i].Code;
+        string itemCode = _List[i].Code;
         if (IgnoreCase)
-          ItemCode = ItemCode.ToUpperInvariant();
+          itemCode = itemCode.ToUpperInvariant();
 
-        _Dict.Add(ItemCode, i);
+        _Dict.Add(itemCode, i);
       }
       _DictIsValid = true;
     }
@@ -2473,10 +2473,10 @@ namespace FreeLibSet.Collections
 
       for (int i = 0; i < _List.Count; i++)
       {
-        string Code = _List[i].Code;
+        string code = _List[i].Code;
         if (_IgnoreCase)
-          Code = Code.ToUpperInvariant();
-        _Dict[Code] = i;
+          code = code.ToUpperInvariant();
+        _Dict[code] = i;
       }
 
 #if DEBUG
@@ -2512,35 +2512,35 @@ namespace FreeLibSet.Collections
         if (Object.Equals(value, default(T)))
           throw new ArgumentNullException();
 #endif
-        string NewCode = value.Code;
-        if (String.IsNullOrEmpty(NewCode))
+        string newCode = value.Code;
+        if (String.IsNullOrEmpty(newCode))
           throw new ArgumentException("value.Code пустой");
         if (_IgnoreCase)
-          NewCode = NewCode.ToUpperInvariant();
+          newCode = newCode.ToUpperInvariant();
 
-        T OldItem = _List[index];
+        T oldItem = _List[index];
 
         OnBeforeAdd(value);
-        OnBeforeRemove(OldItem);
+        OnBeforeRemove(oldItem);
 
-        _Dict.Remove(OldItem.Code);
+        _Dict.Remove(oldItem.Code);
         try
         {
-          _Dict.Add(NewCode, index);
+          _Dict.Add(newCode, index);
         }
         catch
         {
-          string OldItemCode = OldItem.Code;
+          string oldItemCode = oldItem.Code;
           if (_IgnoreCase)
-            OldItemCode = OldItemCode.ToUpperInvariant();
-          _Dict.Add(OldItemCode, index);
+            oldItemCode = oldItemCode.ToUpperInvariant();
+          _Dict.Add(oldItemCode, index);
           _DictIsValid = false;
           throw;
         }
         _List[index] = value;
 
         OnAfterAdd(value);
-        OnAfterRemove(OldItem);
+        OnAfterRemove(oldItem);
 
         CallListChanged(ListChangedType.ItemChanged, index);
       }
@@ -2556,9 +2556,9 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        int Index = IndexOf(code); // восстанавливает словарь
-        if (Index >= 0)
-          return _List[Index];
+        int index = IndexOf(code); // восстанавливает словарь
+        if (index >= 0)
+          return _List[index];
         else
           return default(T);
       }
@@ -2572,9 +2572,9 @@ namespace FreeLibSet.Collections
     /// <returns>Объект</returns>
     public T GetRequired(string code)
     {
-      int Index = IndexOf(code); // восстанавливает словарь
-      if (Index >= 0)
-        return _List[Index];
+      int index = IndexOf(code); // восстанавливает словарь
+      if (index >= 0)
+        return _List[index];
       else if (string.IsNullOrEmpty(code))
         throw new ArgumentNullException("code");
       else
@@ -2708,18 +2708,18 @@ namespace FreeLibSet.Collections
       if (index > _List.Count)
         throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + _List.Count.ToString());
 
-      string ItemCode = item.Code;
-      if (String.IsNullOrEmpty(ItemCode))
+      string itemCode = item.Code;
+      if (String.IsNullOrEmpty(itemCode))
         throw new ArgumentException("Пустой Item.Code", "item");
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
       OnBeforeAdd(item);
 
       if (index < _List.Count)
         _DictIsValid = false; // иначе это обычный метод Add()
 
-      _Dict.Add(ItemCode, index);
+      _Dict.Add(itemCode, index);
       try
       {
         _List.Insert(index, item);// здесь возникнет исключение, если уже есть элемент с таким кодом
@@ -2727,7 +2727,7 @@ namespace FreeLibSet.Collections
       catch
       {
         _DictIsValid = false;
-        _Dict.Remove(ItemCode);
+        _Dict.Remove(itemCode);
         throw;
       }
 
@@ -2752,11 +2752,11 @@ namespace FreeLibSet.Collections
 
       _List.RemoveAt(index);
 
-      string ItemCode = item.Code;
+      string itemCode = item.Code;
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
-      _Dict.Remove(ItemCode);
+      _Dict.Remove(itemCode);
 
       OnAfterRemove(item);
       CallListChanged(ListChangedType.ItemDeleted, index);
@@ -2779,15 +2779,15 @@ namespace FreeLibSet.Collections
         throw new ArgumentNullException("item");
 #endif
 
-      string ItemCode = item.Code;
-      if (String.IsNullOrEmpty(ItemCode))
+      string itemCode = item.Code;
+      if (String.IsNullOrEmpty(itemCode))
         throw new ArgumentException("Пустой Item.Code", "item");
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
       OnBeforeAdd(item);
 
-      _Dict.Add(ItemCode, _List.Count); // здесь возникнет исключение, если уже есть элемент с таким кодом
+      _Dict.Add(itemCode, _List.Count); // здесь возникнет исключение, если уже есть элемент с таким кодом
       try
       {
         _List.Add(item);
@@ -2795,7 +2795,7 @@ namespace FreeLibSet.Collections
       catch
       {
         _DictIsValid = false;
-        _Dict.Remove(ItemCode);
+        _Dict.Remove(itemCode);
         throw;
       }
 
@@ -2815,16 +2815,16 @@ namespace FreeLibSet.Collections
       if (Count == 0)
         return;
 
-      T[] Items = ToArray();
-      for (int i = 0; i < Items.Length; i++)
-        OnBeforeRemove(Items[i]);
+      T[] items = ToArray();
+      for (int i = 0; i < items.Length; i++)
+        OnBeforeRemove(items[i]);
 
       _List.Clear();
       _Dict.Clear();
       _DictIsValid = true; // теперь словарь точно валидный
 
-      for (int i = 0; i < Items.Length; i++)
-        OnAfterRemove(Items[i]);
+      for (int i = 0; i < items.Length; i++)
+        OnAfterRemove(items[i]);
 
       CallListChanged(ListChangedType.Reset, -1);
     }
@@ -2840,14 +2840,14 @@ namespace FreeLibSet.Collections
       if (Object.Equals(item, default(T)))
         return false;
 
-      string ItemCode = item.Code;
+      string itemCode = item.Code;
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
-      if (!_Dict.ContainsKey(ItemCode))
+        itemCode = itemCode.ToUpperInvariant();
+      if (!_Dict.ContainsKey(itemCode))
         return false;
 
       // Надо еще и на равенство проверить
-      return item.Equals(this[ItemCode]);
+      return item.Equals(this[itemCode]);
     }
 
     /// <summary>
@@ -3038,8 +3038,8 @@ namespace FreeLibSet.Collections
       BeginUpdate();
       try
       {
-        foreach (T Item in collection)
-          Add(Item);
+        foreach (T item in collection)
+          Add(item);
       }
       finally
       {
@@ -3138,8 +3138,8 @@ namespace FreeLibSet.Collections
     {
       if (_UpdateCount == 0 && BeforeAdd != null)
       {
-        NamedListItemEventArgs<T> Args = new NamedListItemEventArgs<T>(item);
-        BeforeAdd(this, Args);
+        NamedListItemEventArgs<T> args = new NamedListItemEventArgs<T>(item);
+        BeforeAdd(this, args);
       }
     }
 
@@ -3158,8 +3158,8 @@ namespace FreeLibSet.Collections
     {
       if (_UpdateCount == 0 && AfterAdd != null)
       {
-        NamedListItemEventArgs<T> Args = new NamedListItemEventArgs<T>(item);
-        AfterAdd(this, Args);
+        NamedListItemEventArgs<T> args = new NamedListItemEventArgs<T>(item);
+        AfterAdd(this, args);
       }
     }
 
@@ -3178,8 +3178,8 @@ namespace FreeLibSet.Collections
     {
       if (_UpdateCount == 0 && BeforeRemove != null)
       {
-        NamedListItemEventArgs<T> Args = new NamedListItemEventArgs<T>(item);
-        BeforeRemove(this, Args);
+        NamedListItemEventArgs<T> args = new NamedListItemEventArgs<T>(item);
+        BeforeRemove(this, args);
       }
     }
 
@@ -3198,8 +3198,8 @@ namespace FreeLibSet.Collections
     {
       if (_UpdateCount == 0 && AfterRemove != null)
       {
-        NamedListItemEventArgs<T> Args = new NamedListItemEventArgs<T>(item);
-        AfterRemove(this, Args);
+        NamedListItemEventArgs<T> args = new NamedListItemEventArgs<T>(item);
+        AfterRemove(this, args);
       }
     }
 
@@ -3242,8 +3242,8 @@ namespace FreeLibSet.Collections
 
     private void CallListChanged(ListChangedType listChangedType, int newIndex)
     {
-      ListChangedEventArgs Args = new ListChangedEventArgs(listChangedType, newIndex);
-      OnListChanged(Args);
+      ListChangedEventArgs args = new ListChangedEventArgs(listChangedType, newIndex);
+      OnListChanged(args);
     }
 
     /// <summary>
@@ -3312,11 +3312,11 @@ namespace FreeLibSet.Collections
       _Dict = new Dictionary<string, int>(_List.Count);
       for (int i = 0; i < _List.Count; i++)
       {
-        string ItemCode = _List[i].Code;
+        string itemCode = _List[i].Code;
         if (IgnoreCase)
-          ItemCode = ItemCode.ToUpperInvariant();
+          itemCode = itemCode.ToUpperInvariant();
 
-        _Dict.Add(ItemCode, i);
+        _Dict.Add(itemCode, i);
       }
       _DictIsValid = true;
     }
@@ -3423,8 +3423,8 @@ namespace FreeLibSet.Collections
     public NamedCollection(ICollection<T> srcCollection, bool ignoreCase)
       : this(srcCollection.Count, ignoreCase)
     {
-      foreach (T Item in srcCollection)
-        Add(Item);
+      foreach (T item in srcCollection)
+        Add(item);
     }
 
 
@@ -3446,8 +3446,8 @@ namespace FreeLibSet.Collections
     public NamedCollection(IEnumerable<T> srcCollection, bool ignoreCase)
       : this(ignoreCase)
     {
-      foreach (T Item in srcCollection)
-        Add(Item);
+      foreach (T item in srcCollection)
+        Add(item);
     }
 
     #endregion
@@ -3623,15 +3623,15 @@ namespace FreeLibSet.Collections
     /// <returns></returns>
     public bool Contains(T item)
     {
-      string ItemCode = item.Code;
+      string itemCode = item.Code;
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
       //return FDict.ContainsKey(ItemCode);
 
       // 22.02.2018. Дополнительно проверяем на равенство
-      T ResItem;
-      if (_Dict.TryGetValue(ItemCode, out ResItem))
-        return item.Equals(ResItem);
+      T resItem;
+      if (_Dict.TryGetValue(itemCode, out resItem))
+        return item.Equals(resItem);
       else
         return false;
     }
@@ -3664,11 +3664,11 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 
-      string ItemCode = item.Code;
+      string itemCode = item.Code;
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
-      return _Dict.Remove(ItemCode);
+      return _Dict.Remove(itemCode);
     }
 
     #endregion
@@ -3741,8 +3741,8 @@ namespace FreeLibSet.Collections
       if (Object.ReferenceEquals(collection, this))
         throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
 
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -3771,9 +3771,9 @@ namespace FreeLibSet.Collections
     {
       string[] a = new string[_Dict.Count];
       int cnt = 0;
-      foreach (T Item in _Dict.Values)
+      foreach (T item in _Dict.Values)
       {
-        a[cnt] = Item.Code;
+        a[cnt] = item.Code;
         cnt++;
       }
 

@@ -194,8 +194,8 @@ namespace FreeLibSet.Core
         return;
       lock (ObjectTypes)
       {
-        DisposableObjList ObjList = GetObjList(obj);
-        ObjList.Add(obj);
+        DisposableObjList objList = GetObjList(obj);
+        objList.Add(obj);
       }
 #endif
     }
@@ -230,12 +230,12 @@ namespace FreeLibSet.Core
         return;
       lock (ObjectTypes)
       {
-        DisposableObjList ObjList = GetObjList(obj);
-        ObjList.Remove(obj);
+        DisposableObjList objList = GetObjList(obj);
+        objList.Remove(obj);
         if (disposing)
-          ObjList.DisposeCount++;
+          objList.DisposeCount++;
         else
-          ObjList.FinalizeCount++;
+          objList.FinalizeCount++;
       }
 #endif
     }
@@ -249,8 +249,8 @@ namespace FreeLibSet.Core
     /// <returns>Массив объектов</returns>
     private static DisposableObjList GetObjList(object obj)
     {
-      string TypeName = obj.GetType().ToString();
-      return GetObjListForType(TypeName);
+      string typeName = obj.GetType().ToString();
+      return GetObjListForType(typeName);
     }
 
     private static DisposableObjList GetObjListForType(string typeName)
@@ -376,11 +376,11 @@ namespace FreeLibSet.Core
     /// <returns>Таблица, содержащая поля "TypeName" и "Count"</returns>
     public static DataTable GetRegisteredObjectCountsTable(bool includeZeros)
     {
-      DataTable Table = new DataTable("ObjectTypes");
-      Table.Columns.Add("TypeName", typeof(string));
-      Table.Columns.Add("Count", typeof(int));
-      Table.Columns.Add("Disposed", typeof(long));
-      Table.Columns.Add("Finalized", typeof(long));
+      DataTable table = new DataTable("ObjectTypes");
+      table.Columns.Add("TypeName", typeof(string));
+      table.Columns.Add("Count", typeof(int));
+      table.Columns.Add("Disposed", typeof(long));
+      table.Columns.Add("Finalized", typeof(long));
 
 #if DEBUG
 
@@ -396,40 +396,40 @@ namespace FreeLibSet.Core
           if (counts[i] == 0)
             continue;
         }
-        DataRow Row = Table.NewRow();
-        Row[0] = objTypes[i];
+        DataRow row = table.NewRow();
+        row[0] = objTypes[i];
         if (counts[i] > 0)
-          Row[1] = counts[i];
+          row[1] = counts[i];
         if (disposed[i] > 0)
-          Row[2] = disposed[i];
+          row[2] = disposed[i];
         if (finalized[i] > 0)
-          Row[3] = finalized[i];
+          row[3] = finalized[i];
 
-        Table.Rows.Add(Row);
+        table.Rows.Add(row);
       }
 
 #endif
 
-      return Table;
+      return table;
     }
 
     /// <summary>
     /// Регистрирует тип объекта для вывода отладочной информации по каждому объекту.
     /// Этот метод ничего не делает в режиме Release.
     /// </summary>
-    /// <param name="typ">Класс, производный от DisposableObject</param>
-    public static void RegisterLogoutType(Type typ)
+    /// <param name="type">Класс, производный от DisposableObject</param>
+    public static void RegisterLogoutType(Type type)
     {
 #if DEBUG
-      if (typ == null)
+      if (type == null)
         throw new ArgumentNullException();
       // Не проверяем. Может быть MarshalByRefDisposableObject
       //if (!t.IsSubclassOf(typeof(DisposableObject)))
       //  throw new ArgumentException("Тип должен быть производным от DisposableObject");
-      lock (LogoutTypes)
+      lock (_LogoutTypes)
       {
-        if (!LogoutTypes.ContainsKey(typ.ToString()))
-          LogoutTypes.Add(typ.ToString(), null);
+        if (!_LogoutTypes.ContainsKey(type.ToString()))
+          _LogoutTypes.Add(type.ToString(), null);
       }
 #endif
     }
@@ -441,7 +441,7 @@ namespace FreeLibSet.Core
     /// Типы объектов, зарегистрированные для вывода отладочной информации.
     /// Ключ - Type.ToString(), значение - null
     /// </summary>
-    private static readonly Dictionary<string, object> LogoutTypes = new Dictionary<string, object>();
+    private static readonly Dictionary<string, object> _LogoutTypes = new Dictionary<string, object>();
 
     private class DebugItem : IComparable<DebugItem>
     {
@@ -524,13 +524,13 @@ namespace FreeLibSet.Core
         //Args.WritePair(DocTypes[i], Counts[i].ToString());
         args.WriteLine(lst[i].ToString());
 
-        bool IsLogType;
-        lock (LogoutTypes)
+        bool isLogType;
+        lock (_LogoutTypes)
         {
-          IsLogType = LogoutTypes.ContainsKey(lst[i].DocType);
+          isLogType = _LogoutTypes.ContainsKey(lst[i].DocType);
         }
 
-        if (IsLogType)
+        if (isLogType)
         {
           object[] a = GetRegisteredObjects(lst[i].DocType);
 
@@ -941,7 +941,6 @@ namespace FreeLibSet.Core
     //
     // Статическая ссылка на объект
     // public static readonly AutoDisposeReference<MyClass> TheObj=new AutoDisposeReference<MyClass>(new MyClass());
-
 
 
     #region Конструктор

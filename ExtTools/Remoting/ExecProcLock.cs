@@ -129,8 +129,8 @@ namespace FreeLibSet.Remoting
     /// <returns>True в случае успеха</returns>
     public bool TryLock(ExecProc caller)
     {
-      ExecProcLock LockedObj;
-      return TryLock(caller, out LockedObj);
+      ExecProcLock lockedObj;
+      return TryLock(caller, out lockedObj);
     }
 
     /// <summary>
@@ -147,13 +147,13 @@ namespace FreeLibSet.Remoting
     {
       if (caller == null)
         throw new ArgumentNullException("caller");
-      bool Res;
+      bool res;
 
       lock (_MainSyncRoot)
       {
-        Res = TryLock2(caller, out lockedObj);
+        res = TryLock2(caller, out lockedObj);
       }
-      return Res;
+      return res;
     }
 
     private bool TryLock2(ExecProc caller, out ExecProcLock lockedObj)
@@ -219,68 +219,68 @@ namespace FreeLibSet.Remoting
         return; // Удалось со второй попытки
       Thread.Sleep(100);
 
-      DateTime PretendingStartTime = DateTime.Now;
+      DateTime pretendingStartTime = DateTime.Now;
 
-      ExecProcLockStepInfo StepInfo = null; // используется вместо FirstFlag=true
+      ExecProcLockStepInfo stepInfo = null; // используется вместо FirstFlag=true
       //int PrevLockingId = 0;
       // TODO: ExecProc OldOwner = null;
-      ExecProcLockLogger Logger = null;
-      TempSplashPhaseHandler WaitSPH = null;
+      ExecProcLockLogger logger = null;
+      TempSplashPhaseHandler waitSPH = null;
       try
       {
-        ExecProcLock LockedObj;
-        while (!TryLock(caller, out LockedObj))
+        ExecProcLock lockedObj;
+        while (!TryLock(caller, out lockedObj))
         {
-          if (LockedObj == null)
+          if (lockedObj == null)
             throw new BugException("Метод TryLock не вернул LockedObj");
 
 
           // 29.11.2014
           // Может быть так, что свойство LockedObj.OwnCaller переключится на null в параллельном потоке, уже после вызова TryLock
-          ExecProc LockedObjOwnCaller = LockedObj.OwnCaller; // теперь никуда не денется
+          ExecProc lockedObjOwnCaller = lockedObj.OwnCaller; // теперь никуда не денется
           try
           {
-            if (LockedObjOwnCaller != null)
+            if (lockedObjOwnCaller != null)
             {
-              if (StepInfo == null) // первый такт ожидания
+              if (stepInfo == null) // первый такт ожидания
               {
-                if (LockedObjOwnCaller == caller)
-                  throw new BugException("Ошибка вложенной блокировки. Процедура " + caller.ToString() + " пытается повторно установить блокировку объекта " + LockedObj.ToString());
+                if (lockedObjOwnCaller == caller)
+                  throw new BugException("Ошибка вложенной блокировки. Процедура " + caller.ToString() + " пытается повторно установить блокировку объекта " + lockedObj.ToString());
 
                 // Синхронизируем splash-заставки.
                 // Эта заставки используется для проформы
-                WaitSPH = new TempSplashPhaseHandler(LockedObj.DisplayName);
-                WaitSPH.AllowCancel = true;
-                InitWaitSPH(WaitSPH, caller, LockedObj, LockedObjOwnCaller);
+                waitSPH = new TempSplashPhaseHandler(lockedObj.DisplayName);
+                waitSPH.AllowCancel = true;
+                InitWaitSPH(waitSPH, caller, lockedObj, lockedObjOwnCaller);
                 // TODO: OldOwner = Caller.ExternalSplashOwner;
                 // TODO: if (FOwnCaller == Caller)
                 // TODO:   Caller.ExternalSplashOwner = null;
                 // TODO: else
                 // TODO:   Caller.ExternalSplashOwner = FOwnCaller;
 
-                Logger = new ExecProcLockLogger(this, caller, LockedObj, LockedObjOwnCaller);
-                Waiters.Add(Logger);
-                caller.LongLockStarted(Logger);
-                StepInfo = new ExecProcLockStepInfo(Logger);
+                logger = new ExecProcLockLogger(this, caller, lockedObj, lockedObjOwnCaller);
+                Waiters.Add(logger);
+                caller.LongLockStarted(logger);
+                stepInfo = new ExecProcLockStepInfo(logger);
 
               }
               else
               {
                 //if (LockedObj.LockingId != PrevLockingId)
                 // Всегда обновляем заставку, так как может поменяться процентный индикатор
-                InitWaitSPH(WaitSPH, caller, LockedObj, LockedObjOwnCaller);
+                InitWaitSPH(waitSPH, caller, lockedObj, lockedObjOwnCaller);
               }
-              StepInfo.LockedObj = LockedObj;
-              StepInfo.LockedObjOwnCaller = LockedObjOwnCaller;
+              stepInfo.LockedObj = lockedObj;
+              stepInfo.LockedObjOwnCaller = lockedObjOwnCaller;
               //PrevLockingId = LockedObj.LockingId;
-              caller.LongLockStep(StepInfo);
+              caller.LongLockStep(stepInfo);
             }
 
             // Здесь WaitSPH не может быть null.
             // Дрыхнем полсекунды
-            WaitSPH.Sleep(500); 
+            waitSPH.Sleep(500); 
             // Проверяем прерывание ожидания
-            WaitSPH.CheckCancelled();
+            waitSPH.CheckCancelled();
           }
 
           catch (UserCancelException e)
@@ -288,14 +288,14 @@ namespace FreeLibSet.Remoting
             // 29.11.2014
             // Надо же узнать, почему 
             e.Data["ThisExecProcLock"] = this.ToString();
-            if (Object.ReferenceEquals(LockedObj, this))
+            if (Object.ReferenceEquals(lockedObj, this))
               e.Data["LockedObj"] = "=this";
             else
-              e.Data["LockedObj"] = LockedObj.ToString();
-            if (LockedObjOwnCaller == null)
+              e.Data["LockedObj"] = lockedObj.ToString();
+            if (lockedObjOwnCaller == null)
               e.Data["LockedObjOwnCaller"] = null;
             else
-              e.Data["LockedObjOwnCaller"] = LockedObjOwnCaller.ToString();
+              e.Data["LockedObjOwnCaller"] = lockedObjOwnCaller.ToString();
             e.Data["Pretender"] = caller.ToString();
 #if DEBUGSTACK
             e.Data["LockOwnerStackTrace"] = LockedObj.OwnCallerStackTrace;
@@ -303,7 +303,7 @@ namespace FreeLibSet.Remoting
 
             e.Data["LockOwnerTimeSpan"] = DateTime.Now - LockedObj.LockStartTime;
 #endif
-            e.Data["PretenderTimeSpan"] = DateTime.Now - PretendingStartTime;
+            e.Data["PretenderTimeSpan"] = DateTime.Now - pretendingStartTime;
 
             LogoutTools.LogoutException(e, "Отказ от ожидания блокировки");
             throw;
@@ -312,16 +312,16 @@ namespace FreeLibSet.Remoting
       }
       finally
       {
-        if (StepInfo != null)
+        if (stepInfo != null)
         {
           // TODO: Caller.ExternalSplashOwner = OldOwner;
-          WaitSPH.Dispose(); // WaitSPH больше недействителен
+          waitSPH.Dispose(); // WaitSPH больше недействителен
         }
-        if (Logger != null)
+        if (logger != null)
         {
-          caller.LongLockFinished(Logger);
-          Waiters.Remove(Logger);
-          Logger.Dispose();
+          caller.LongLockFinished(logger);
+          Waiters.Remove(logger);
+          logger.Dispose();
         }
       }
     }
@@ -398,12 +398,12 @@ namespace FreeLibSet.Remoting
       // После снятия блокировки передаем ненадолго управление другому потоку
       if (Waiters.Count > 0) // предварительная проверка
       {
-        ExecProcLockLogger[] Others = Waiters.ToArray();
-        if (Others.Length > 0)
+        ExecProcLockLogger[] others = Waiters.ToArray();
+        if (others.Length > 0)
         {
-          Thread OtherThread = Others[0].Pretender.ExecThread;
-          if (OtherThread != null)
-            OtherThread.Join(20); // Пусть попробует выполнить блокировку
+          Thread otherThread = others[0].Pretender.ExecThread;
+          if (otherThread != null)
+            otherThread.Join(20); // Пусть попробует выполнить блокировку
         }
       }
     }
@@ -526,12 +526,12 @@ namespace FreeLibSet.Remoting
         }
 
 
-        ExecProcLockLogger[] Others = Waiters.ToArray();
-        args.WriteLine("Процедуры, ожидающие освобождения блокировки (" + Others.Length.ToString() + ")");
+        ExecProcLockLogger[] others = Waiters.ToArray();
+        args.WriteLine("Процедуры, ожидающие освобождения блокировки (" + others.Length.ToString() + ")");
         args.IndentLevel++;
-        for (int i = 0; i < Others.Length; i++)
+        for (int i = 0; i < others.Length; i++)
         {
-          args.WriteLine(Others[i].Pretender.ToString());
+          args.WriteLine(others[i].Pretender.ToString());
         }
         args.IndentLevel--;
       }
@@ -570,11 +570,11 @@ namespace FreeLibSet.Remoting
       {
         unchecked
         {
-          LastWaitingId++;
-          if (LastWaitingId < 1)
-            LastWaitingId = 1;
+          _LastWaitingId++;
+          if (_LastWaitingId < 1)
+            _LastWaitingId = 1;
         }
-        _WaitingId = LastWaitingId;
+        _WaitingId = _LastWaitingId;
       }
 
       ActiveLocks.Add(this);
@@ -651,7 +651,7 @@ namespace FreeLibSet.Remoting
     public int WaitingId { get { return _WaitingId; } }
     private readonly int _WaitingId;
 
-    private static int LastWaitingId = 0;
+    private static int _LastWaitingId = 0;
 
     /// <summary>
     /// Текстовое представление для отладки
@@ -871,15 +871,15 @@ namespace FreeLibSet.Remoting
     /// <returns>True, если блокировка установлена</returns>
     protected override bool DoTryLock(ExecProc caller, out ExecProcLock lockedObj)
     {
-      ExecProcLock[] Children = GetChildren();
+      ExecProcLock[] children = GetChildren();
 
-      for (int i = 0; i < Children.Length; i++)
+      for (int i = 0; i < children.Length; i++)
       {
-        if (!Children[i].TryLock(caller, out lockedObj))
+        if (!children[i].TryLock(caller, out lockedObj))
         {
           // Снимаем блокировку с остальных объектов
           for (int j = 0; j < i; j++)
-            Children[j].Unlock();
+            children[j].Unlock();
           return false;
         }
       }
@@ -893,10 +893,10 @@ namespace FreeLibSet.Remoting
     /// </summary>
     protected override void DoUnlock()
     {
-      ExecProcLock[] Children = GetChildren();
+      ExecProcLock[] children = GetChildren();
 
-      for (int i = 0; i < Children.Length; i++)
-        Children[i].Unlock();
+      for (int i = 0; i < children.Length; i++)
+        children[i].Unlock();
     }
 
     #endregion

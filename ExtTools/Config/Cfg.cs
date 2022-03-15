@@ -55,9 +55,9 @@ namespace FreeLibSet.Config
     /// <returns>Преобразованное значение</returns>
     public int ParseInt(string s)
     {
-      int Value;
-      if (TryParse(s, out Value))
-        return Value;
+      int value;
+      if (TryParse(s, out value))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в целое число");
     }
@@ -95,9 +95,9 @@ namespace FreeLibSet.Config
     /// <returns>Преобразованное значение</returns>
     public Int64 ParseInt64(string s)
     {
-      Int64 Value;
-      if (TryParse(s, out Value))
-        return Value;
+      Int64 value;
+      if (TryParse(s, out value))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в целое число Int64");
     }
@@ -135,9 +135,9 @@ namespace FreeLibSet.Config
     /// <returns>Преобразованное значение</returns>
     public float ParseSingle(string s)
     {
-      float Value;
-      if (TryParse(s, out Value))
-        return Value;
+      float value;
+      if (TryParse(s, out value))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в число Single");
     }
@@ -175,9 +175,9 @@ namespace FreeLibSet.Config
     /// <returns>Преобразованное значение</returns>
     public double ParseDouble(string s)
     {
-      double Value;
-      if (TryParse(s, out Value))
-        return Value;
+      double value;
+      if (TryParse(s, out value))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в число Double");
     }
@@ -215,9 +215,9 @@ namespace FreeLibSet.Config
     /// <returns>Преобразованное значение</returns>
     public decimal ParseDecimal(string s)
     {
-      decimal Value;
-      if (TryParse(s, out Value))
-        return Value;
+      decimal value;
+      if (TryParse(s, out value))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в число Decimal");
     }
@@ -270,9 +270,9 @@ namespace FreeLibSet.Config
     /// <returns>Преобразованное значение</returns>
     public DateTime ParseDateTime(string s, bool useTime)
     {
-      DateTime Value;
-      if (TryParse(s, out Value, useTime))
-        return Value;
+      DateTime value;
+      if (TryParse(s, out value, useTime))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в DateTime");
     }
@@ -310,9 +310,9 @@ namespace FreeLibSet.Config
     /// <returns>Преобразованное значение</returns>
     public TimeSpan ParseTimeSpan(string s)
     {
-      TimeSpan Value;
-      if (TryParse(s, out Value))
-        return Value;
+      TimeSpan value;
+      if (TryParse(s, out value))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в TimeSpan");
     }
@@ -363,9 +363,9 @@ namespace FreeLibSet.Config
       // Можно было бы просто использовать конструктор Guid(s), но тогда не будет вызван виртуальный метод TryParse(), который, теоретически,
       // может быть переопределен
 
-      Guid Value;
-      if (TryParse(s, out Value))
-        return Value;
+      Guid value;
+      if (TryParse(s, out value))
+        return value;
       else
         throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в GUID");
     }
@@ -486,10 +486,10 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
 
-      int Value;
+      int value;
 
-      if (Converter.TryParse(s, out Value))
-        return Value;
+      if (Converter.TryParse(s, out value))
+        return value;
       else
         return 0;
     }
@@ -571,10 +571,10 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
 
-      long Value;
+      long value;
 
-      if (Converter.TryParse(s, out Value))
-        return Value;
+      if (Converter.TryParse(s, out value))
+        return value;
       else
         return 0L;
     }
@@ -969,9 +969,9 @@ namespace FreeLibSet.Config
     public DateTime GetDate(string name)
     {
       string s = GetString(name);
-      DateTime Value;
-      Converter.TryParse(s, out Value, false);
-      return Value;
+      DateTime value;
+      Converter.TryParse(s, out value, false);
+      return value;
     }
 
     /// <summary>
@@ -1039,9 +1039,9 @@ namespace FreeLibSet.Config
     public DateTime GetDateTime(string name)
     {
       string s = GetString(name);
-      DateTime Value;
-      Converter.TryParse(s, out Value, true);
-      return Value;
+      DateTime value;
+      Converter.TryParse(s, out value, true);
+      return value;
     }
 
     /// <summary>
@@ -1184,9 +1184,9 @@ namespace FreeLibSet.Config
     public T GetEnum<T>(string name)
       where T : struct
     {
-      T Value = default(T);
-      GetEnum<T>(name, ref Value);
-      return Value;
+      T value = default(T);
+      GetEnum<T>(name, ref value);
+      return value;
     }
 
     /// <summary>
@@ -1512,9 +1512,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        int Res;
-        if (Converter.TryParse(s, out Res))
-          return Res;
+        int res;
+        if (Converter.TryParse(s, out res))
+          return res;
         else
           return null;
       }
@@ -1550,9 +1550,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        long Res;
-        if (Converter.TryParse(s, out Res))
-          return Res;
+        long res;
+        if (Converter.TryParse(s, out res))
+          return res;
         else
           return null;
       }
@@ -1620,9 +1620,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        float Res;
-        if (Converter.TryParse(s, out Res))
-          return Res;
+        float res;
+        if (Converter.TryParse(s, out res))
+          return res;
         else
           return null;
       }
@@ -1658,9 +1658,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        double Res;
-        if (Converter.TryParse(s, out Res))
-          return Res;
+        double res;
+        if (Converter.TryParse(s, out res))
+          return res;
         else
           return null;
       }
@@ -1696,9 +1696,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        decimal Res;
-        if (Converter.TryParse(s, out Res))
-          return Res;
+        decimal res;
+        if (Converter.TryParse(s, out res))
+          return res;
         else
           return null;
       }
@@ -1735,9 +1735,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        DateTime Value;
-        if (Converter.TryParse(s, out Value, false))
-          return Value;
+        DateTime value;
+        if (Converter.TryParse(s, out value, false))
+          return value;
         else
           return null;
       }
@@ -1773,9 +1773,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        DateTime Value;
-        if (Converter.TryParse(s, out Value, true))
-          return Value;
+        DateTime value;
+        if (Converter.TryParse(s, out value, true))
+          return value;
         else
           return null;
       }
@@ -1809,9 +1809,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        TimeSpan Value;
-        if (Converter.TryParse(s, out Value))
-          return Value;
+        TimeSpan value;
+        if (Converter.TryParse(s, out value))
+          return value;
         else
           return null;
       }
@@ -1847,9 +1847,9 @@ namespace FreeLibSet.Config
         return null;
       else
       {
-        Guid Res;
-        if (Converter.TryParse(s, out Res))
-          return Res;
+        Guid res;
+        if (Converter.TryParse(s, out res))
+          return res;
         else
           return null;
       }
@@ -1915,11 +1915,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      int[] Values = new int[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseInt(a[i].Trim());
+      int[] values = new int[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseInt(a[i].Trim());
 
-      return Values;
+      return values;
     }
 
 
@@ -1955,11 +1955,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      Int64[] Values = new Int64[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseInt64(a[i].Trim());
+      Int64[] values = new Int64[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseInt64(a[i].Trim());
 
-      return Values;
+      return values;
     }
 
 
@@ -1995,11 +1995,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      float[] Values = new float[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseSingle(a[i].Trim());
+      float[] values = new float[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseSingle(a[i].Trim());
 
-      return Values;
+      return values;
     }
 
 
@@ -2035,11 +2035,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      double[] Values = new double[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseDouble(a[i].Trim());
+      double[] values = new double[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseDouble(a[i].Trim());
 
-      return Values;
+      return values;
     }
 
 
@@ -2075,11 +2075,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      decimal[] Values = new decimal[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseDecimal(a[i].Trim());
+      decimal[] values = new decimal[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseDecimal(a[i].Trim());
 
-      return Values;
+      return values;
     }
 
 
@@ -2117,11 +2117,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      DateTime[] Values = new DateTime[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseDateTime(a[i].Trim(), useTime);
+      DateTime[] values = new DateTime[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseDateTime(a[i].Trim(), useTime);
 
-      return Values;
+      return values;
     }
 
 
@@ -2157,11 +2157,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      TimeSpan[] Values = new TimeSpan[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseTimeSpan(a[i].Trim());
+      TimeSpan[] values = new TimeSpan[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseTimeSpan(a[i].Trim());
 
-      return Values;
+      return values;
     }
 
 
@@ -2197,11 +2197,11 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return null;
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
-      Guid[] Values = new Guid[a.Length];
-      for (int i = 0; i < Values.Length; i++)
-        Values[i] = Converter.ParseGuid(a[i].Trim());
+      Guid[] values = new Guid[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseGuid(a[i].Trim());
 
-      return Values;
+      return values;
     }
 
     #endregion
@@ -2264,22 +2264,22 @@ namespace FreeLibSet.Config
     /// <returns>Список</returns>
     public HistoryList GetHist(string name)
     {
-      string MainValue = GetString(name);
-      CfgPart Part = GetChild(name + "_Hist", false);
-      if (String.IsNullOrEmpty(MainValue) && Part == null)
+      string mainValue = GetString(name);
+      CfgPart part = GetChild(name + "_Hist", false);
+      if (String.IsNullOrEmpty(mainValue) && part == null)
         return new HistoryList();
       else
       {
         //List<string> lst = new List<string>();
         SingleScopeList<string> lst = new SingleScopeList<string>(); // 20.06.2018
-        lst.Add(MainValue);
-        if (Part != null)
+        lst.Add(mainValue);
+        if (part != null)
         {
           int cnt = 0;
           while (true)
           {
             cnt++;
-            string s = Part.GetString("H" + cnt.ToString());
+            string s = part.GetString("H" + cnt.ToString());
             if (String.IsNullOrEmpty(s))
               break;
             lst.Add(s);
@@ -2308,9 +2308,9 @@ namespace FreeLibSet.Config
     /// <param name="maxHistLength">Максимальная длина списка. Если список превысит этот предел, то самые послежние записи будут удалены из списка</param>
     public void AddToHist(string name, string value, int maxHistLength)
     {
-      HistoryList Hist = GetHist(name);
-      Hist = Hist.Add(value, maxHistLength);
-      SetHist(name, Hist);
+      HistoryList hist = GetHist(name);
+      hist = hist.Add(value, maxHistLength);
+      SetHist(name, hist);
     }
 
     #endregion
@@ -2331,20 +2331,20 @@ namespace FreeLibSet.Config
       if (dest == null)
         throw new ArgumentNullException("dest");
 
-      string[] ValueNames = GetValueNames();
-      for (int i = 0; i < ValueNames.Length; i++)
+      string[] valueNames = GetValueNames();
+      for (int i = 0; i < valueNames.Length; i++)
       {
-        string s = GetString(ValueNames[i]);
-        dest.SetString(ValueNames[i], s);
+        string s = GetString(valueNames[i]);
+        dest.SetString(valueNames[i], s);
       }
 
-      string[] ChildNames = GetChildNames();
-      for (int i = 0; i < ChildNames.Length; i++)
+      string[] childNames = GetChildNames();
+      for (int i = 0; i < childNames.Length; i++)
       {
-        CfgPart SrcChild = GetChild(ChildNames[i], false);
-        CfgPart DestChild = dest.GetChild(ChildNames[i], true);
+        CfgPart srcChild = GetChild(childNames[i], false);
+        CfgPart destChild = dest.GetChild(childNames[i], true);
         // Рекурсивный вызов
-        SrcChild.CopyTo(DestChild);
+        srcChild.CopyTo(destChild);
       }
     }
 
@@ -2675,12 +2675,12 @@ namespace FreeLibSet.Config
     /// <returns>Имена секций</returns>
     public override string[] GetChildNames()
     {
-      XmlNodeList List = RootNode.ChildNodes;
-      List<string> Names = new List<string>(List.Count);
-      for (int i = 0; i < List.Count; i++)
+      XmlNodeList list = RootNode.ChildNodes;
+      List<string> Names = new List<string>(list.Count);
+      for (int i = 0; i < list.Count; i++)
       {
-        if (HasChild(List[i].Name))
-          Names.Add(List[i].Name);
+        if (HasChild(list[i].Name))
+          Names.Add(list[i].Name);
       }
       return Names.ToArray();
     }
@@ -2691,14 +2691,14 @@ namespace FreeLibSet.Config
     /// <returns>Имена значений</returns>
     public override string[] GetValueNames()
     {
-      XmlNodeList List = RootNode.ChildNodes;
-      List<string> Names = new List<string>(List.Count);
-      foreach (XmlNode Node in List)
+      XmlNodeList list = RootNode.ChildNodes;
+      List<string> names = new List<string>(list.Count);
+      foreach (XmlNode node in list)
       {
-        if (HasValue(Node.Name))
-          Names.Add(Node.Name);
+        if (HasValue(node.Name))
+          names.Add(node.Name);
       }
-      return Names.ToArray();
+      return names.ToArray();
     }
 
     /// <summary>
@@ -2707,11 +2707,11 @@ namespace FreeLibSet.Config
     /// <returns>Имена дочерних секций и имен</returns>
     public override string[] GetChildAndValueNames()
     {
-      XmlNodeList List = RootNode.ChildNodes;
-      string[] Names = new string[List.Count];
-      for (int i = 0; i < List.Count; i++)
-        Names[i] = List[i].Name;
-      return Names;
+      XmlNodeList list = RootNode.ChildNodes;
+      string[] names = new string[list.Count];
+      for (int i = 0; i < list.Count; i++)
+        names[i] = list[i].Name;
+      return names;
     }
 
 
@@ -2813,9 +2813,9 @@ namespace FreeLibSet.Config
       XmlNode SrcNode = RootNode.SelectSingleNode(name);
       if (SrcNode != null)
       {
-        XmlNode ResNode = dest.Document.CreateElement(name);
-        ResNode.InnerText = SrcNode.InnerText;
-        dest.RootNode.AppendChild(ResNode);
+        XmlNode resNode = dest.Document.CreateElement(name);
+        resNode.InnerText = SrcNode.InnerText;
+        dest.RootNode.AppendChild(resNode);
         dest.PerformChange();
       }
     }
@@ -2870,8 +2870,8 @@ namespace FreeLibSet.Config
     /// <returns>MD5</returns>
     public override string MD5Sum()
     {
-      byte[] Bytes = Encoding.Unicode.GetBytes(RootNode.OuterXml);
-      return DataTools.MD5Sum(Bytes);
+      byte[] bytes = Encoding.Unicode.GetBytes(RootNode.OuterXml);
+      return DataTools.MD5Sum(bytes);
     }
 
     #endregion
@@ -3223,11 +3223,11 @@ namespace FreeLibSet.Config
     {
       //if (name.IndexOf('\\') >= 0)
       //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
-      string ChildKeyName = KeyName + "\\" + name;
+      string childKeyName = KeyName + "\\" + name;
 
       if (!create)
       {
-        if (!Tree.Exists(ChildKeyName))
+        if (!Tree.Exists(childKeyName))
           return null;
       }
       return new RegistryCfgPart(Tree, KeyName + "\\" + name, Converter);
@@ -3268,16 +3268,16 @@ namespace FreeLibSet.Config
         return;
 
       // Сначала удаляем все значения
-      string[] ValueNames = Tree[KeyName].GetValueNames();
-      for (int i = 0; i < ValueNames.Length; i++)
-        Tree[KeyName].DeleteValue(ValueNames[i]);
+      string[] valueNames = Tree[KeyName].GetValueNames();
+      for (int i = 0; i < valueNames.Length; i++)
+        Tree[KeyName].DeleteValue(valueNames[i]);
 
       // Удаляем дочерние узлы
-      string[] SubNames = Tree[KeyName].GetSubKeyNames();
-      if (SubNames.Length > 0)
+      string[] subNames = Tree[KeyName].GetSubKeyNames();
+      if (subNames.Length > 0)
         Tree.Close(); // закрываем все узлы, т.к. удалять открытые узлы нельзя
-      for (int i = 0; i < SubNames.Length; i++)
-        Tree[KeyName].DeleteSubKeyTree(SubNames[i]);
+      for (int i = 0; i < subNames.Length; i++)
+        Tree[KeyName].DeleteSubKeyTree(subNames[i]);
     }
 
     /// <summary>
@@ -3303,9 +3303,9 @@ namespace FreeLibSet.Config
     {
       //if (name.IndexOf('\\') >= 0)
       //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
-      string ChildKeyName = KeyName + "\\" + name;
+      string childKeyName = KeyName + "\\" + name;
 
-      return Tree.Exists(ChildKeyName);
+      return Tree.Exists(childKeyName);
     }
 
     /// <summary>
@@ -3567,11 +3567,11 @@ namespace FreeLibSet.Config
     {
       //if (name.IndexOf('\\') >= 0)
       //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
-      string ChildKeyName = KeyName + "\\" + name;
+      string childKeyName = KeyName + "\\" + name;
 
       if (!create)
       {
-        if (!Tree.Exists(ChildKeyName))
+        if (!Tree.Exists(childKeyName))
           return null;
       }
       return new RegistryCfgPart2(Tree, KeyName + "\\" + name, Converter);
@@ -3612,16 +3612,16 @@ namespace FreeLibSet.Config
         return;
 
       // Сначала удаляем все значения
-      string[] ValueNames = Tree[KeyName].GetValueNames();
-      for (int i = 0; i < ValueNames.Length; i++)
-        Tree[KeyName].DeleteValue(ValueNames[i]);
+      string[] valueNames = Tree[KeyName].GetValueNames();
+      for (int i = 0; i < valueNames.Length; i++)
+        Tree[KeyName].DeleteValue(valueNames[i]);
 
       // Удаляем дочерние узлы
-      string[] SubNames = Tree[KeyName].GetSubKeyNames();
-      if (SubNames.Length > 0)
+      string[] subNames = Tree[KeyName].GetSubKeyNames();
+      if (subNames.Length > 0)
         Tree.Close(); // закрываем все узлы, т.к. удалять открытые узлы нельзя
-      for (int i = 0; i < SubNames.Length; i++)
-        Tree[KeyName].DeleteSubKeyTree(SubNames[i]);
+      for (int i = 0; i < subNames.Length; i++)
+        Tree[KeyName].DeleteSubKeyTree(subNames[i]);
     }
 
     /// <summary>
@@ -3647,9 +3647,9 @@ namespace FreeLibSet.Config
     {
       //if (name.IndexOf('\\') >= 0)
       //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
-      string ChildKeyName = KeyName + "\\" + name;
+      string childKeyName = KeyName + "\\" + name;
 
-      return Tree.Exists(ChildKeyName);
+      return Tree.Exists(childKeyName);
     }
 
     /// <summary>
@@ -3978,17 +3978,17 @@ namespace FreeLibSet.Config
     /// <returns>Объект для доступа к дочерней секции</returns>
     protected override CfgPart DoGetChild(string name, bool create)
     {
-      string SubName = SectionName + "\\" + name;
+      string subName = SectionName + "\\" + name;
 
       if (!create)
       {
         // Проверяем наличие секции
-        string[] AllNames = File.GetSectionNames();
-        if (Array.LastIndexOf<string>(AllNames, name) < 0)
+        string[] allNames = File.GetSectionNames();
+        if (Array.LastIndexOf<string>(allNames, name) < 0)
           return null;
       }
 
-      return new IniCfgPart(File, SubName);
+      return new IniCfgPart(File, subName);
     }
 
     /// <summary>
@@ -3999,25 +3999,25 @@ namespace FreeLibSet.Config
     /// <returns>Список имен</returns>
     public override string[] GetChildNames()
     {
-      string[] AllNames = File.GetSectionNames();
-      List<string> SubNames = null;
+      string[] allNames = File.GetSectionNames();
+      List<string> subNames = null;
       string Name2 = SectionName + "\\";
-      for (int i = 0; i < AllNames.Length; i++)
+      for (int i = 0; i < allNames.Length; i++)
       {
-        if (AllNames[i].StartsWith(Name2))
+        if (allNames[i].StartsWith(Name2))
         {
-          if (SubNames == null)
-            SubNames = new List<string>();
-          SubNames.Add(AllNames[i].Substring(Name2.Length));
+          if (subNames == null)
+            subNames = new List<string>();
+          subNames.Add(allNames[i].Substring(Name2.Length));
         }
       }
 
-      if (SubNames == null)
+      if (subNames == null)
         return DataTools.EmptyStrings;
       else
       {
-        SubNames.Sort();
-        return SubNames.ToArray();
+        subNames.Sort();
+        return subNames.ToArray();
       }
     }
 
@@ -4063,8 +4063,8 @@ namespace FreeLibSet.Config
       //string SubName = SectionName + "\\" + name;
 
       // Проверяем наличие секции
-      string[] AllNames = File.GetSectionNames();
-      return Array.LastIndexOf<string>(AllNames, name) >= 0;
+      string[] allNames = File.GetSectionNames();
+      return Array.LastIndexOf<string>(allNames, name) >= 0;
     }
 
     /// <summary>
@@ -4074,8 +4074,8 @@ namespace FreeLibSet.Config
     /// <returns>Наличие записанного значения</returns>
     protected override bool DoHasValue(string name)
     {
-      string[] AllNames = File.GetKeyNames(SectionName);
-      return Array.IndexOf<string>(AllNames, name) >= 0;
+      string[] allNames = File.GetKeyNames(SectionName);
+      return Array.IndexOf<string>(allNames, name) >= 0;
     }
   }
 

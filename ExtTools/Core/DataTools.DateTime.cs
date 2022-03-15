@@ -196,10 +196,10 @@ namespace FreeLibSet.Core
     /// <returns>Дата, большая или равная заданной</returns>
     public static DateTime EndOfWeek(DateTime date, DayOfWeek lastDayOfWeek)
     {
-      int Delta = (int)lastDayOfWeek - (int)(date.DayOfWeek);
-      if (Delta < 0)
-        Delta += 7;
-      return date.AddDays(Delta);
+      int delta = (int)lastDayOfWeek - (int)(date.DayOfWeek);
+      if (delta < 0)
+        delta += 7;
+      return date.AddDays(delta);
     }
 
     /// <summary>
@@ -210,10 +210,10 @@ namespace FreeLibSet.Core
     /// <returns>Дата, меньшая или равная заданной</returns>
     public static DateTime BottomOfWeek(DateTime date, DayOfWeek firstDayOfWeek)
     {
-      int Delta = (int)(date.DayOfWeek) - (int)firstDayOfWeek;
-      if (Delta < 0)
-        Delta += 7;
-      return date.AddDays(-Delta);
+      int delta = (int)(date.DayOfWeek) - (int)firstDayOfWeek;
+      if (delta < 0)
+        delta += 7;
+      return date.AddDays(-delta);
     }
 
     /// <summary>

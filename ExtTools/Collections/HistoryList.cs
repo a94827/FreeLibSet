@@ -398,27 +398,27 @@ namespace FreeLibSet.Collections
     public static HistoryList Merge(params HistoryList[] histLists)
     {
       List<string> lst = new List<string>();
-      bool Flag = false;
-      int Index = 0;
+      bool flag = false;
+      int index = 0;
       do
       {
-        Flag = false;
+        flag = false;
 
         for (int i = 0; i < histLists.Length; i++)
         {
           if (histLists[i].IsEmpty)
             continue;
-          if (Index < histLists[i].Count)
+          if (index < histLists[i].Count)
           {
-            Flag = true;
-            string s = histLists[i][Index];
+            flag = true;
+            string s = histLists[i][index];
             if (!lst.Contains(s))
               lst.Add(s);
           }
         }
 
-        Index++;
-      } while (Flag);
+        index++;
+      } while (flag);
 
       return new HistoryList(lst);
     }

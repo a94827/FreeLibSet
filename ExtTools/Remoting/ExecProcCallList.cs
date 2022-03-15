@@ -197,7 +197,7 @@ namespace FreeLibSet.Remoting
       base.Dispose(disposing);
 
       EventHandler ehDisposed = Disposed; // 12.01.2021. Учитываем возможность асинхронного присоединения и отсоединения обработчиков событий
-      if (ehDisposed != null) 
+      if (ehDisposed != null)
       {
         try
         {
@@ -261,7 +261,7 @@ namespace FreeLibSet.Remoting
     /// <summary>
     /// Идентификатор процедуры ExecProc
     /// </summary>
-    public abstract Guid Guid { get;}
+    public abstract Guid Guid { get; }
 
     /// <summary>
     /// Отображаемое название в списке процедур.
@@ -828,7 +828,7 @@ namespace FreeLibSet.Remoting
       if (item == null)
         throw new ArgumentNullException("item");
 #endif
-      NamedValues Results;
+      NamedValues results;
 
       try
       {
@@ -840,25 +840,25 @@ namespace FreeLibSet.Remoting
             if (IsSplashStackSupported())
             {
               if (item.InternalExecProc is ExecProc)
-                Results = DoExecuteSyncWithSyncSplash(item.InternalExecProc as ExecProc, args);
+                results = DoExecuteSyncWithSyncSplash(item.InternalExecProc as ExecProc, args);
               else
-                Results = DoExecuteSyncWithAsyncSplash(item, args);
+                results = DoExecuteSyncWithAsyncSplash(item, args);
             }
             else
             {
               // Заставки не используются
-              Results = item.InternalExecProc.Execute(args);
+              results = item.InternalExecProc.Execute(args);
             }
           }
           catch (Exception e2)
           {
             item.AddExceptionInfo(e2);
             OnFailed(item, e2);
-            Results = null;
+            results = null;
           }
 
-          if (Results != null)
-            OnFinished(item, Results);
+          if (results != null)
+            OnFinished(item, results);
         }
         catch (Exception e1)
         {
@@ -875,7 +875,7 @@ namespace FreeLibSet.Remoting
         catch { }
       }
 
-      return Results;
+      return results;
     }
 
     /// <summary>
@@ -1125,10 +1125,10 @@ namespace FreeLibSet.Remoting
 
       #region Метод
 
-      public void Item_Finished(object Sender, ExecProcCallEventArgs Args)
+      public void Item_Finished(object sender, ExecProcCallEventArgs args)
       {
-        Results = Args.Results;
-        Exception = Args.Exception;
+        Results = args.Results;
+        Exception = args.Exception;
       }
 
       #endregion
@@ -1161,9 +1161,9 @@ namespace FreeLibSet.Remoting
       ExecProcCallItem item2 = new ExecProcCallItem(item.InternalExecProc);
       item2.DisplayName = item.DisplayName;
 
-      ExecProcExecuteAsyncAndWaitHandler TempHandler = new ExecProcExecuteAsyncAndWaitHandler();
+      ExecProcExecuteAsyncAndWaitHandler tempHandler = new ExecProcExecuteAsyncAndWaitHandler();
       item2.UseFinishedWhenFailed = true;
-      item2.Finished += TempHandler.Item_Finished;
+      item2.Finished += tempHandler.Item_Finished;
       try
       {
         ExecuteAsync(item2, args);
@@ -1184,19 +1184,19 @@ namespace FreeLibSet.Remoting
         item.Dispose();
       }
 
-      if (TempHandler.Exception != null)
+      if (tempHandler.Exception != null)
       {
-        TempHandler.Exception.Data["AsyncStackTrace"] = TempHandler.Exception.StackTrace;
+        tempHandler.Exception.Data["AsyncStackTrace"] = tempHandler.Exception.StackTrace;
         //OnFailed(item, TempHandler.Exception);
         // 19.12.2019
         // Не надо, чтобы вызывался виртуальный метод, который перехватит исключение.
         // Если собственный обработчик ошибок не установлен для ExecProcCallItem, то пусть исключение выбрасывается.
-        DoOnFailed(item, TempHandler.Exception);
+        DoOnFailed(item, tempHandler.Exception);
       }
       else
-        OnFinished(item, TempHandler.Results);
+        OnFinished(item, tempHandler.Results);
 
-      return TempHandler.Results;
+      return tempHandler.Results;
     }
 
     /// <summary>
@@ -1210,9 +1210,9 @@ namespace FreeLibSet.Remoting
       // 21.01.2021.
       // Убрана проверка. Метод может вызываться асинхронно
 
-// #if DEBUG_THREADS
+      // #if DEBUG_THREADS
       //CheckMainThread();
-// #endif
+      // #endif
       Thread.Sleep(milliseconds);
     }
 
@@ -1230,14 +1230,14 @@ namespace FreeLibSet.Remoting
     /// <returns>Результаты вызова</returns>
     public virtual NamedValues ExecuteAsyncAndWait(IExecProc proc, NamedValues args)
     {
-      ExecProcCallItem Item = new ExecProcCallItem(proc);
-      Item.UseFinishedWhenFailed = true;
-      Item.Finished += new ExecProcCallEventHandler(Item_Finished);
-      ExecuteAsyncAndWait(Item, args);
-      NamedValues Results = Item.UserData["Results"] as NamedValues;
-      if (Results != null)
-        return Results;
-      Exception Exception = Item.UserData["Exception"] as Exception;
+      ExecProcCallItem item = new ExecProcCallItem(proc);
+      item.UseFinishedWhenFailed = true;
+      item.Finished += new ExecProcCallEventHandler(Item_Finished);
+      ExecuteAsyncAndWait(item, args);
+      NamedValues results = item.UserData["Results"] as NamedValues;
+      if (results != null)
+        return results;
+      Exception Exception = item.UserData["Exception"] as Exception;
       if (Exception != null)
         throw Exception;
       throw new BugException("После завершения процедуры возвращен неправильный результат");
@@ -1281,7 +1281,7 @@ namespace FreeLibSet.Remoting
 
         if (item.DistributedProc.StartData.IsCompleted)
         {
-          NamedValues res=item.EndExecute(item.AsyncResult);
+          NamedValues res = item.EndExecute(item.AsyncResult);
           OnFinished(item, res);
           item.Dispose();
         }
@@ -1327,10 +1327,10 @@ namespace FreeLibSet.Remoting
 
       #region Метод
 
-      public void Item_Finished(object Sender, DistributedProcCallEventArgs Args)
+      public void Item_Finished(object sender, DistributedProcCallEventArgs args)
       {
-        Results = Args.Results;
-        Exception = Args.Exception;
+        Results = args.Results;
+        Exception = args.Exception;
       }
 
       #endregion
@@ -1360,9 +1360,9 @@ namespace FreeLibSet.Remoting
       DistributedProcCallItem item2 = new DistributedProcCallItem(item.DistributedProc);
       item2.DisplayName = item.DisplayName;
 
-      DistributedProcExecuteAsyncAndWaitHandler TempHandler = new DistributedProcExecuteAsyncAndWaitHandler();
+      DistributedProcExecuteAsyncAndWaitHandler tempHandler = new DistributedProcExecuteAsyncAndWaitHandler();
       item2.UseFinishedWhenFailed = true;
-      item2.Finished += TempHandler.Item_Finished;
+      item2.Finished += tempHandler.Item_Finished;
       try
       {
         ExecuteAsync(item2);
@@ -1383,19 +1383,19 @@ namespace FreeLibSet.Remoting
         item.Dispose();
       }
 
-      if (TempHandler.Exception != null)
+      if (tempHandler.Exception != null)
       {
-        TempHandler.Exception.Data["AsyncStackTrace"] = TempHandler.Exception.StackTrace;
+        tempHandler.Exception.Data["AsyncStackTrace"] = tempHandler.Exception.StackTrace;
         //OnFailed(item, TempHandler.Exception);
         // 19.12.2019
         // Не надо, чтобы вызывался виртуальный метод, который перехватит исключение.
         // Если собственный обработчик ошибок не установлен для ExecProcCallItem, то пусть исключение выбрасывается.
-        DoOnFailed(item, TempHandler.Exception);
+        DoOnFailed(item, tempHandler.Exception);
       }
       else
-        OnFinished(item, TempHandler.Results);
+        OnFinished(item, tempHandler.Results);
 
-      return TempHandler.Results;
+      return tempHandler.Results;
     }
 
     #endregion
@@ -1426,7 +1426,7 @@ namespace FreeLibSet.Remoting
         throw new ArgumentNullException("results");
 
       item.State = ExecProcCallItemState.Finished;
-      
+
       item.OnFinished(results, null);
       item.Dispose();
     }
@@ -1485,7 +1485,7 @@ namespace FreeLibSet.Remoting
     /// <summary>
     /// Предотвращение вложенных вызовов
     /// </summary>
-    private bool InsideProcess;
+    private bool _InsideProcess;
 
     /// <summary>
     /// Этот метод должен вызываться приложением клиента по таймеру.
@@ -1501,12 +1501,12 @@ namespace FreeLibSet.Remoting
       CheckMainThread();
 #endif
 
-      if (InsideProcess)
+      if (_InsideProcess)
         return;
-      InsideProcess = true;
+      _InsideProcess = true;
       try
       {
-        ExecProcCallItemBase Item = null;
+        ExecProcCallItemBase item = null;
         lock (_Items)
         {
           if (_Items.Count > 0)
@@ -1514,19 +1514,19 @@ namespace FreeLibSet.Remoting
             if (_CurrIndex >= _Items.Count)
               _CurrIndex = 0;
 
-            Item = _Items[_CurrIndex];
+            item = _Items[_CurrIndex];
 
             _CurrIndex++;
           }
         }
-        if (Item != null)
-          ProcessItem(Item);
+        if (item != null)
+          ProcessItem(item);
       }
       catch (Exception e)
       {
         OnUnhandledException(e, "Внутренняя ошибка в ExecProcCallList.Process()");
       }
-      InsideProcess = false;
+      _InsideProcess = false;
     }
 
 
@@ -1550,15 +1550,15 @@ namespace FreeLibSet.Remoting
 
       #region Проверка IsCompleted
 
-      bool IsCompleted;
+      bool isCompleted;
 
       try
       {
         if (item.AsyncResultHandler == null)
-          IsCompleted = item.AsyncResult.IsCompleted; // стандартный вызов
+          isCompleted = item.AsyncResult.IsCompleted; // стандартный вызов
         else
         {
-          IsCompleted = item.AsyncResultHandler.GetIsCompleted();
+          isCompleted = item.AsyncResultHandler.GetIsCompleted();
           item.SplashWatcher.UseDefaultSplash = this.UseDefaultSplash;
           item.SplashWatcher.ProcessSplash();
         }
@@ -1583,7 +1583,7 @@ namespace FreeLibSet.Remoting
 
       #endregion
 
-      if (!IsCompleted)
+      if (!isCompleted)
         return;
 
       // 19.08.2020
@@ -1702,10 +1702,10 @@ namespace FreeLibSet.Remoting
 
     private void DoEndExecute(ExecProcCallItemBase item)
     {
-      NamedValues Results;
+      NamedValues results;
       try
       {
-        Results = item.EndExecute(item.AsyncResult);
+        results = item.EndExecute(item.AsyncResult);
       }
       catch (Exception e)
       {
@@ -1713,7 +1713,7 @@ namespace FreeLibSet.Remoting
         return;
       }
 
-      OnFinished(item, Results);
+      OnFinished(item, results);
     }
 
 
@@ -1732,9 +1732,9 @@ namespace FreeLibSet.Remoting
       CheckMainThread();
 #endif
 
-      if (InsideProcess)
+      if (_InsideProcess)
         return;
-      InsideProcess = true;
+      _InsideProcess = true;
       try
       {
         ExecProcCallItemBase[] a;
@@ -1750,7 +1750,7 @@ namespace FreeLibSet.Remoting
       {
         OnUnhandledException(e, "Внутренняя ошибка в ExecProcCallList.ProcessAll()");
       }
-      InsideProcess = false;
+      _InsideProcess = false;
     }
 
 

@@ -42,7 +42,7 @@ namespace FreeLibSet.Diagnostics
   {
     #region CheckSufficientMemory
 
-    private static bool CheckSufficientMemoryExceptionLogged = false;
+    private static bool _CheckSufficientMemoryExceptionLogged = false;
 
     /// <summary>
     /// Проверить возможность выделения блока памяти с помощью MemoryFailPoint
@@ -68,9 +68,9 @@ namespace FreeLibSet.Diagnostics
         // 20.06.2017
         // В mono MemoryFailPoint не работает и выбрасывает NotImplementedException
         // TODO: Надо проверять свободную память как-то по-другому
-        if (!CheckSufficientMemoryExceptionLogged)
+        if (!_CheckSufficientMemoryExceptionLogged)
         {
-          CheckSufficientMemoryExceptionLogged = true;
+          _CheckSufficientMemoryExceptionLogged = true;
           LogoutTools.LogoutException(e, "MemoryTools.CheckSufficientMemory");
         }
 

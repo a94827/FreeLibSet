@@ -50,11 +50,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int s = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += DataTools.GetInt(Row[p]); }
+        checked { s += DataTools.GetInt(row[p]); }
       }
       return s;
     }
@@ -70,15 +70,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowIntExtractor Extr = new DataRowIntExtractor(columnName);
+      DataRowIntExtractor xtr = new DataRowIntExtractor(columnName);
       int s = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += Extr[Row]; }
+        checked { s += xtr[row]; }
       }
       return s;
     }
@@ -151,11 +151,11 @@ namespace FreeLibSet.Core
         return 0L;
       int p = GetColumnPosWithCheck(table, columnName);
       long s = 0L;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += DataTools.GetInt64(Row[p]); }
+        checked { s += DataTools.GetInt64(row[p]); }
       }
       return s;
     }
@@ -171,15 +171,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowInt64Extractor Extr = new DataRowInt64Extractor(columnName);
+      DataRowInt64Extractor xtr = new DataRowInt64Extractor(columnName);
       long s = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += Extr[Row]; }
+        checked { s += xtr[row]; }
       }
       return s;
     }
@@ -252,11 +252,11 @@ namespace FreeLibSet.Core
         return 0f;
       int p = GetColumnPosWithCheck(table, columnName);
       float s = 0f;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += DataTools.GetSingle(Row[p]); }
+        checked { s += DataTools.GetSingle(row[p]); }
       }
       return s;
     }
@@ -274,13 +274,13 @@ namespace FreeLibSet.Core
       // Строки могут относиться к разным таблицам
       DataRowSingleExtractor Extr = new DataRowSingleExtractor(columnName);
       float s = 0f;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += Extr[Row]; }
+        checked { s += Extr[row]; }
       }
       return s;
     }
@@ -354,11 +354,11 @@ namespace FreeLibSet.Core
         return 0.0;
       int p = GetColumnPosWithCheck(table, columnName);
       double s = 0.0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += DataTools.GetDouble(Row[p]); }
+        checked { s += DataTools.GetDouble(row[p]); }
       }
       return s;
     }
@@ -374,15 +374,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0.0;
       // Строки могут относиться к разным таблицам
-      DataRowDoubleExtractor Extr = new DataRowDoubleExtractor(columnName);
+      DataRowDoubleExtractor xtr = new DataRowDoubleExtractor(columnName);
       double s = 0.0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += Extr[Row]; }
+        checked { s += xtr[row]; }
       }
       return s;
     }
@@ -455,11 +455,11 @@ namespace FreeLibSet.Core
         return 0m;
       int p = GetColumnPosWithCheck(table, columnName);
       decimal s = 0m;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += DataTools.GetDecimal(Row[p]); }
+        checked { s += DataTools.GetDecimal(row[p]); }
       }
       return s;
     }
@@ -475,15 +475,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0m;
       // Строки могут относиться к разным таблицам
-      DataRowDecimalExtractor Extr = new DataRowDecimalExtractor(columnName);
+      DataRowDecimalExtractor xtr = new DataRowDecimalExtractor(columnName);
       decimal s = 0m;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += Extr[Row]; }
+        checked { s += xtr[row]; }
       }
       return s;
     }
@@ -556,11 +556,11 @@ namespace FreeLibSet.Core
         return TimeSpan.Zero;
       int p = GetColumnPosWithCheck(table, columnName);
       TimeSpan s = TimeSpan.Zero;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        s += DataTools.GetTimeSpan(Row[p]);
+        s += DataTools.GetTimeSpan(row[p]);
       }
       return s;
     }
@@ -576,15 +576,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return TimeSpan.Zero;
       // Строки могут относиться к разным таблицам
-      DataRowTimeSpanExtractor Extr = new DataRowTimeSpanExtractor(columnName);
+      DataRowTimeSpanExtractor xtr = new DataRowTimeSpanExtractor(columnName);
       TimeSpan s = TimeSpan.Zero;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        s += Extr[Row];
+        s += xtr[row];
       }
       return s;
     }
@@ -660,9 +660,9 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("typ");
 #endif
 
-      SumType Res;
-      if (_SumTypeDict.TryGetValue(typ, out Res))
-        return Res;
+      SumType res;
+      if (_SumTypeDict.TryGetValue(typ, out res))
+        return res;
       else
         return SumType.None;
     }
@@ -681,13 +681,13 @@ namespace FreeLibSet.Core
       column = null;
       if (rows == null)
         return null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        column = Row.Table.Columns[columnName];
+        column = row.Table.Columns[columnName];
         if (column == null)
-          throw new ArgumentException("Таблица " + Row.Table.TableName + " не содержит столбца с именем \"" + columnName + "\"", "columnName");
+          throw new ArgumentException("Таблица " + row.Table.TableName + " не содержит столбца с именем \"" + columnName + "\"", "columnName");
         return column.DataType;
       }
       return null; // Нет ни одной строки
@@ -916,8 +916,8 @@ namespace FreeLibSet.Core
     /// <returns>Сумма значений для всех строк</returns>
     public static object SumValue(IEnumerable<DataRow> rows, string columnName)
     {
-      DataColumn Column;
-      Type t = GetDataTypeFromRows(rows, columnName, out Column);
+      DataColumn col;
+      Type t = GetDataTypeFromRows(rows, columnName, out col);
       if (t == null)
         return null;
 
@@ -930,7 +930,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return SumDecimal(rows, columnName);
         case SumType.TimeSpan: return SumTimeSpan(rows, columnName);
         default:
-          throw ColumnTypeException("Нельзя вычислить сумму значений", Column);
+          throw ColumnTypeException("Нельзя вычислить сумму значений", col);
       }
     }
 
@@ -1073,19 +1073,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       int? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Min(s.Value, DataTools.GetInt(Row[p]));
+          s = Math.Min(s.Value, DataTools.GetInt(row[p]));
         else
-          s = DataTools.GetInt(Row[p]);
+          s = DataTools.GetInt(row[p]);
       }
       return s;
     }
@@ -1103,16 +1103,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor Extr = new DataRowNullableIntExtractor(columnName);
+      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
       int? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        int? v = Extr[Row];
+        int? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1158,12 +1158,12 @@ namespace FreeLibSet.Core
         return null;
 
       int? s = null;
-      foreach (int Item in items)
+      foreach (int item in items)
       {
         if (s.HasValue)
-          s = Math.Min(s.Value, Item);
+          s = Math.Min(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -1219,19 +1219,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       long? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Min(s.Value, DataTools.GetInt64(Row[p]));
+          s = Math.Min(s.Value, DataTools.GetInt64(row[p]));
         else
-          s = DataTools.GetInt64(Row[p]);
+          s = DataTools.GetInt64(row[p]);
       }
       return s;
     }
@@ -1249,15 +1249,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor Extr = new DataRowNullableInt64Extractor(columnName);
+      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
       long? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        long? v = Extr[Row];
+        long? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1303,12 +1303,12 @@ namespace FreeLibSet.Core
         return null;
 
       long? s = null;
-      foreach (long Item in items)
+      foreach (long item in items)
       {
         if (s.HasValue)
-          s = Math.Min(s.Value, Item);
+          s = Math.Min(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -1364,19 +1364,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       float? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Min(s.Value, DataTools.GetSingle(Row[p]));
+          s = Math.Min(s.Value, DataTools.GetSingle(row[p]));
         else
-          s = DataTools.GetSingle(Row[p]);
+          s = DataTools.GetSingle(row[p]);
       }
       return s;
     }
@@ -1394,15 +1394,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor Extr = new DataRowNullableSingleExtractor(columnName);
+      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
       float? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        float? v = Extr[Row];
+        float? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1448,12 +1448,12 @@ namespace FreeLibSet.Core
         return null;
 
       float? s = null;
-      foreach (float Item in items)
+      foreach (float item in items)
       {
         if (s.HasValue)
-          s = Math.Min(s.Value, Item);
+          s = Math.Min(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -1509,19 +1509,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       double? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Min(s.Value, DataTools.GetDouble(Row[p]));
+          s = Math.Min(s.Value, DataTools.GetDouble(row[p]));
         else
-          s = DataTools.GetDouble(Row[p]);
+          s = DataTools.GetDouble(row[p]);
       }
       return s;
     }
@@ -1539,15 +1539,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor Extr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
       double? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        double? v = Extr[Row];
+        double? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1593,12 +1593,12 @@ namespace FreeLibSet.Core
         return null;
 
       double? s = null;
-      foreach (double Item in items)
+      foreach (double item in items)
       {
         if (s.HasValue)
-          s = Math.Min(s.Value, Item);
+          s = Math.Min(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -1654,19 +1654,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       decimal? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Min(s.Value, DataTools.GetDecimal(Row[p]));
+          s = Math.Min(s.Value, DataTools.GetDecimal(row[p]));
         else
-          s = DataTools.GetDecimal(Row[p]);
+          s = DataTools.GetDecimal(row[p]);
       }
       return s;
     }
@@ -1684,15 +1684,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor Extr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
       decimal? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        decimal? v = Extr[Row];
+        decimal? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1738,12 +1738,12 @@ namespace FreeLibSet.Core
         return null;
 
       decimal? s = null;
-      foreach (decimal Item in items)
+      foreach (decimal item in items)
       {
         if (s.HasValue)
-          s = Math.Min(s.Value, Item);
+          s = Math.Min(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -1799,9 +1799,9 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       DateTime? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         //if (SkipNulls)
         //{
@@ -1809,9 +1809,9 @@ namespace FreeLibSet.Core
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Min(s.Value, DataTools.GetNullableDateTime(Row[p]));
+          s = DataTools.Min(s.Value, DataTools.GetNullableDateTime(row[p]));
         else
-          s = DataTools.GetNullableDateTime(Row[p]);
+          s = DataTools.GetNullableDateTime(row[p]);
       }
       return s;
     }
@@ -1829,15 +1829,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor Extr = new DataRowNullableDateTimeExtractor(columnName);
+      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
       DateTime? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        DateTime? v = Extr[Row];
+        DateTime? v = xtr[row];
         //if (SkipNulls)
         //{
         //  if (!v.HasValue)
@@ -1882,12 +1882,12 @@ namespace FreeLibSet.Core
         return null;
 
       DateTime? s = null;
-      foreach (DateTime Item in items)
+      foreach (DateTime item in items)
       {
         if (s.HasValue)
-          s = DataTools.Min(s.Value, Item);
+          s = DataTools.Min(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -1943,19 +1943,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       TimeSpan? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Min(s.Value, DataTools.GetTimeSpan(Row[p]));
+          s = DataTools.Min(s.Value, DataTools.GetTimeSpan(row[p]));
         else
-          s = DataTools.GetTimeSpan(Row[p]);
+          s = DataTools.GetTimeSpan(row[p]);
       }
       return s;
     }
@@ -1973,15 +1973,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor Extr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
       TimeSpan? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        TimeSpan? v = Extr[Row];
+        TimeSpan? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2027,12 +2027,12 @@ namespace FreeLibSet.Core
         return null;
 
       TimeSpan? s = null;
-      foreach (TimeSpan Item in items)
+      foreach (TimeSpan item in items)
       {
         if (s.HasValue)
-          s = DataTools.Min(s.Value, Item);
+          s = DataTools.Min(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -2121,8 +2121,8 @@ namespace FreeLibSet.Core
     /// <returns>Найденное значение или null</returns>
     public static object MinValue(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      DataColumn Column;
-      Type t = GetDataTypeFromRows(rows, columnName, out Column);
+      DataColumn col;
+      Type t = GetDataTypeFromRows(rows, columnName, out col);
       if (t == null)
         return null;
 
@@ -2136,7 +2136,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MinDateTime(rows, columnName);
         case SumType.TimeSpan: return MinTimeSpan(rows, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить минимальное значение", Column);
+          throw ColumnTypeException("Нельзя вычислить минимальное значение", col);
       }
     }
 
@@ -2288,19 +2288,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       int? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
         if (skipNulls)
         {
-          if (Row.RowState == DataRowState.Deleted)
+          if (row.RowState == DataRowState.Deleted)
             continue;
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Max(s.Value, DataTools.GetInt(Row[p]));
+          s = Math.Max(s.Value, DataTools.GetInt(row[p]));
         else
-          s = DataTools.GetInt(Row[p]);
+          s = DataTools.GetInt(row[p]);
       }
       return s;
     }
@@ -2318,15 +2318,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor Extr = new DataRowNullableIntExtractor(columnName);
+      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
       int? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        int? v = Extr[Row];
+        int? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2372,12 +2372,12 @@ namespace FreeLibSet.Core
         return null;
 
       int? s = null;
-      foreach (int Item in items)
+      foreach (int item in items)
       {
         if (s.HasValue)
-          s = Math.Max(s.Value, Item);
+          s = Math.Max(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -2433,19 +2433,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       long? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Max(s.Value, DataTools.GetInt64(Row[p]));
+          s = Math.Max(s.Value, DataTools.GetInt64(row[p]));
         else
-          s = DataTools.GetInt64(Row[p]);
+          s = DataTools.GetInt64(row[p]);
       }
       return s;
     }
@@ -2463,15 +2463,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor Extr = new DataRowNullableInt64Extractor(columnName);
+      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
       long? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        long? v = Extr[Row];
+        long? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2517,12 +2517,12 @@ namespace FreeLibSet.Core
         return null;
 
       long? s = null;
-      foreach (long Item in items)
+      foreach (long item in items)
       {
         if (s.HasValue)
-          s = Math.Max(s.Value, Item);
+          s = Math.Max(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -2578,19 +2578,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       float? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Max(s.Value, DataTools.GetSingle(Row[p]));
+          s = Math.Max(s.Value, DataTools.GetSingle(row[p]));
         else
-          s = DataTools.GetSingle(Row[p]);
+          s = DataTools.GetSingle(row[p]);
       }
       return s;
     }
@@ -2608,15 +2608,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor Extr = new DataRowNullableSingleExtractor(columnName);
+      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
       float? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        float? v = Extr[Row];
+        float? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2662,12 +2662,12 @@ namespace FreeLibSet.Core
         return null;
 
       float? s = null;
-      foreach (float Item in items)
+      foreach (float item in items)
       {
         if (s.HasValue)
-          s = Math.Max(s.Value, Item);
+          s = Math.Max(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -2723,19 +2723,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       double? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Max(s.Value, DataTools.GetDouble(Row[p]));
+          s = Math.Max(s.Value, DataTools.GetDouble(row[p]));
         else
-          s = DataTools.GetDouble(Row[p]);
+          s = DataTools.GetDouble(row[p]);
       }
       return s;
     }
@@ -2753,15 +2753,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor Extr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
       double? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        double? v = Extr[Row];
+        double? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2807,12 +2807,12 @@ namespace FreeLibSet.Core
         return null;
 
       double? s = null;
-      foreach (double Item in items)
+      foreach (double item in items)
       {
         if (s.HasValue)
-          s = Math.Max(s.Value, Item);
+          s = Math.Max(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -2868,19 +2868,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       decimal? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = Math.Max(s.Value, DataTools.GetDecimal(Row[p]));
+          s = Math.Max(s.Value, DataTools.GetDecimal(row[p]));
         else
-          s = DataTools.GetDecimal(Row[p]);
+          s = DataTools.GetDecimal(row[p]);
       }
       return s;
     }
@@ -2898,15 +2898,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor Extr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
       decimal? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        decimal? v = Extr[Row];
+        decimal? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2952,12 +2952,12 @@ namespace FreeLibSet.Core
         return null;
 
       decimal? s = null;
-      foreach (decimal Item in items)
+      foreach (decimal item in items)
       {
         if (s.HasValue)
-          s = Math.Max(s.Value, Item);
+          s = Math.Max(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -3013,9 +3013,9 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       DateTime? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         //if (SkipNulls)
         //{
@@ -3023,9 +3023,9 @@ namespace FreeLibSet.Core
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Max(s.Value, DataTools.GetNullableDateTime(Row[p]));
+          s = DataTools.Max(s.Value, DataTools.GetNullableDateTime(row[p]));
         else
-          s = DataTools.GetNullableDateTime(Row[p]);
+          s = DataTools.GetNullableDateTime(row[p]);
       }
       return s;
     }
@@ -3043,15 +3043,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor Extr = new DataRowNullableDateTimeExtractor(columnName);
+      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
       DateTime? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        DateTime? v = Extr[Row];
+        DateTime? v = xtr[row];
         //if (SkipNulls)
         //{
         //  if (!v.HasValue)
@@ -3097,12 +3097,12 @@ namespace FreeLibSet.Core
         return null;
 
       DateTime? s = null;
-      foreach (DateTime Item in items)
+      foreach (DateTime item in items)
       {
         if (s.HasValue)
-          s = DataTools.Max(s.Value, Item);
+          s = DataTools.Max(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -3158,19 +3158,19 @@ namespace FreeLibSet.Core
         return null;
       int p = GetColumnPosWithCheck(table, columnName);
       TimeSpan? s = null;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Max(s.Value, DataTools.GetTimeSpan(Row[p]));
+          s = DataTools.Max(s.Value, DataTools.GetTimeSpan(row[p]));
         else
-          s = DataTools.GetTimeSpan(Row[p]);
+          s = DataTools.GetTimeSpan(row[p]);
       }
       return s;
     }
@@ -3188,15 +3188,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor Extr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
       TimeSpan? s = null;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        TimeSpan? v = Extr[Row];
+        TimeSpan? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -3242,12 +3242,12 @@ namespace FreeLibSet.Core
         return null;
 
       TimeSpan? s = null;
-      foreach (TimeSpan Item in items)
+      foreach (TimeSpan item in items)
       {
         if (s.HasValue)
-          s = DataTools.Max(s.Value, Item);
+          s = DataTools.Max(s.Value, item);
         else
-          s = Item;
+          s = item;
       }
       return s;
     }
@@ -3336,8 +3336,8 @@ namespace FreeLibSet.Core
     /// <returns>Найденное значение или null</returns>
     public static object MaxValue(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      DataColumn Column;
-      Type t = GetDataTypeFromRows(rows, columnName, out Column);
+      DataColumn col;
+      Type t = GetDataTypeFromRows(rows, columnName, out col);
       if (t == null)
         return null;
 
@@ -3351,7 +3351,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MaxDateTime(rows, columnName);
         case SumType.TimeSpan: return MaxTimeSpan(rows, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить максимальное значение", Column);
+          throw ColumnTypeException("Нельзя вычислить максимальное значение", col);
       }
     }
 
@@ -3465,11 +3465,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Int32> MinMaxInt(DataView dv, string columnName, bool skipNulls)
     {
-      MinMax<Int32> Res = new MinMax<Int32>();
+      MinMax<Int32> res = new MinMax<Int32>();
       if (dv == null)
-        return Res;
+        return res;
       if (dv.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       foreach (DataRowView drv in dv)
       {
@@ -3478,9 +3478,9 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetInt(drv.Row[p]);
+        res += DataTools.GetInt(drv.Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3493,11 +3493,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Int32> MinMaxInt(DataTable table, string columnName, bool skipNulls)
     {
-      MinMax<Int32> Res = new MinMax<Int32>();
+      MinMax<Int32> res = new MinMax<Int32>();
       if (table == null)
-        return Res;
+        return res;
       if (table.Rows.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(table, columnName);
       foreach (DataRow Row in table.Rows)
       {
@@ -3508,9 +3508,9 @@ namespace FreeLibSet.Core
           if (Row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetInt(Row[p]);
+        res += DataTools.GetInt(Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3523,27 +3523,27 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Int32> MinMaxInt(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      MinMax<Int32> Res = new MinMax<Int32>();
+      MinMax<Int32> res = new MinMax<Int32>();
       if (rows == null)
-        return Res;
+        return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor Extr = new DataRowNullableIntExtractor(columnName);
-      foreach (DataRow Row in rows)
+      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        int? v = Extr[Row];
+        int? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
-        Res += v ?? 0;
+        res += v ?? 0;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -3560,11 +3560,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Int64> MinMaxInt64(DataView dv, string columnName, bool skipNulls)
     {
-      MinMax<Int64> Res = new MinMax<Int64>();
+      MinMax<Int64> res = new MinMax<Int64>();
       if (dv == null)
-        return Res;
+        return res;
       if (dv.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       foreach (DataRowView drv in dv)
       {
@@ -3573,9 +3573,9 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetInt64(drv.Row[p]);
+        res += DataTools.GetInt64(drv.Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3588,24 +3588,24 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Int64> MinMaxInt64(DataTable table, string columnName, bool skipNulls)
     {
-      MinMax<Int64> Res = new MinMax<Int64>();
+      MinMax<Int64> res = new MinMax<Int64>();
       if (table == null)
-        return Res;
+        return res;
       if (table.Rows.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(table, columnName);
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetInt64(Row[p]);
+        res += DataTools.GetInt64(row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3618,27 +3618,27 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Int64> MinMaxInt64(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      MinMax<Int64> Res = new MinMax<Int64>();
+      MinMax<Int64> res = new MinMax<Int64>();
       if (rows == null)
-        return Res;
+        return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor Extr = new DataRowNullableInt64Extractor(columnName);
-      foreach (DataRow Row in rows)
+      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        long? v = Extr[Row];
+        long? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
-        Res += v ?? 0L;
+        res += v ?? 0L;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -3655,11 +3655,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Single> MinMaxSingle(DataView dv, string columnName, bool skipNulls)
     {
-      MinMax<Single> Res = new MinMax<Single>();
+      MinMax<Single> res = new MinMax<Single>();
       if (dv == null)
-        return Res;
+        return res;
       if (dv.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       foreach (DataRowView drv in dv)
       {
@@ -3668,9 +3668,9 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetSingle(drv.Row[p]);
+        res += DataTools.GetSingle(drv.Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3683,24 +3683,24 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Single> MinMaxSingle(DataTable table, string columnName, bool skipNulls)
     {
-      MinMax<Single> Res = new MinMax<Single>();
+      MinMax<Single> res = new MinMax<Single>();
       if (table == null)
-        return Res;
+        return res;
       if (table.Rows.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(table, columnName);
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetSingle(Row[p]);
+        res += DataTools.GetSingle(row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3713,27 +3713,27 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Single> MinMaxSingle(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      MinMax<Single> Res = new MinMax<Single>();
+      MinMax<Single> res = new MinMax<Single>();
       if (rows == null)
-        return Res;
+        return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor Extr = new DataRowNullableSingleExtractor(columnName);
-      foreach (DataRow Row in rows)
+      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        float? v = Extr[Row];
+        float? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
-        Res += v ?? 0f;
+        res += v ?? 0f;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -3750,11 +3750,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Double> MinMaxDouble(DataView dv, string columnName, bool skipNulls)
     {
-      MinMax<Double> Res = new MinMax<Double>();
+      MinMax<Double> res = new MinMax<Double>();
       if (dv == null)
-        return Res;
+        return res;
       if (dv.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       foreach (DataRowView drv in dv)
       {
@@ -3763,9 +3763,9 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetDouble(drv.Row[p]);
+        res += DataTools.GetDouble(drv.Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3778,24 +3778,24 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Double> MinMaxDouble(DataTable table, string columnName, bool skipNulls)
     {
-      MinMax<Double> Res = new MinMax<Double>();
+      MinMax<Double> res = new MinMax<Double>();
       if (table == null)
-        return Res;
+        return res;
       if (table.Rows.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(table, columnName);
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetDouble(Row[p]);
+        res += DataTools.GetDouble(row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3808,27 +3808,27 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Double> MinMaxDouble(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      MinMax<Double> Res = new MinMax<Double>();
+      MinMax<Double> res = new MinMax<Double>();
       if (rows == null)
-        return Res;
+        return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor Extr = new DataRowNullableDoubleExtractor(columnName);
-      foreach (DataRow Row in rows)
+      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        double? v = Extr[Row];
+        double? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
-        Res += v ?? 0.0;
+        res += v ?? 0.0;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -3845,11 +3845,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Decimal> MinMaxDecimal(DataView dv, string columnName, bool skipNulls)
     {
-      MinMax<Decimal> Res = new MinMax<Decimal>();
+      MinMax<Decimal> res = new MinMax<Decimal>();
       if (dv == null)
-        return Res;
+        return res;
       if (dv.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       foreach (DataRowView drv in dv)
       {
@@ -3858,9 +3858,9 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetDecimal(drv.Row[p]);
+        res += DataTools.GetDecimal(drv.Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3873,24 +3873,24 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Decimal> MinMaxDecimal(DataTable table, string columnName, bool skipNulls)
     {
-      MinMax<Decimal> Res = new MinMax<Decimal>();
+      MinMax<Decimal> res = new MinMax<Decimal>();
       if (table == null)
-        return Res;
+        return res;
       if (table.Rows.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(table, columnName);
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetDecimal(Row[p]);
+        res += DataTools.GetDecimal(row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3903,27 +3903,27 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<Decimal> MinMaxDecimal(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      MinMax<Decimal> Res = new MinMax<Decimal>();
+      MinMax<Decimal> res = new MinMax<Decimal>();
       if (rows == null)
-        return Res;
+        return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor Extr = new DataRowNullableDecimalExtractor(columnName);
-      foreach (DataRow Row in rows)
+      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        decimal? v = Extr[Row];
+        decimal? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
-        Res += v ?? 0m;
+        res += v ?? 0m;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -3940,11 +3940,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<DateTime> MinMaxDateTime(DataView dv, string columnName)
     {
-      MinMax<DateTime> Res = new MinMax<DateTime>();
+      MinMax<DateTime> res = new MinMax<DateTime>();
       if (dv == null)
-        return Res;
+        return res;
       if (dv.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       foreach (DataRowView drv in dv)
       {
@@ -3953,9 +3953,9 @@ namespace FreeLibSet.Core
         //  if (drv.Row.IsNull(p))
         //    continue;
         //}
-        Res += DataTools.GetNullableDateTime(drv.Row[p]);
+        res += DataTools.GetNullableDateTime(drv.Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3968,24 +3968,24 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<DateTime> MinMaxDateTime(DataTable table, string columnName)
     {
-      MinMax<DateTime> Res = new MinMax<DateTime>();
+      MinMax<DateTime> res = new MinMax<DateTime>();
       if (table == null)
-        return Res;
+        return res;
       if (table.Rows.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(table, columnName);
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         //if (SkipNulls)
         //{
         //  if (Row.IsNull(p))
         //    continue;
         //}
-        Res += DataTools.GetNullableDateTime(Row[p]);
+        res += DataTools.GetNullableDateTime(row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3998,27 +3998,27 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<DateTime> MinMaxDateTime(IEnumerable<DataRow> rows, string columnName)
     {
-      MinMax<DateTime> Res = new MinMax<DateTime>();
+      MinMax<DateTime> res = new MinMax<DateTime>();
       if (rows == null)
-        return Res;
+        return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor Extr = new DataRowNullableDateTimeExtractor(columnName);
-      foreach (DataRow Row in rows)
+      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        DateTime? v = Extr[Row];
+        DateTime? v = xtr[row];
         //if (SkipNulls)
         //{
         //  if (!v.HasValue)
         //    continue;
         //}
-        Res += v;
+        res += v;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -4035,11 +4035,11 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<TimeSpan> MinMaxTimeSpan(DataView dv, string columnName, bool skipNulls)
     {
-      MinMax<TimeSpan> Res = new MinMax<TimeSpan>();
+      MinMax<TimeSpan> res = new MinMax<TimeSpan>();
       if (dv == null)
-        return Res;
+        return res;
       if (dv.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       foreach (DataRowView drv in dv)
       {
@@ -4048,9 +4048,9 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetTimeSpan(drv.Row[p]);
+        res += DataTools.GetTimeSpan(drv.Row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -4063,24 +4063,24 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<TimeSpan> MinMaxTimeSpan(DataTable table, string columnName, bool skipNulls)
     {
-      MinMax<TimeSpan> Res = new MinMax<TimeSpan>();
+      MinMax<TimeSpan> res = new MinMax<TimeSpan>();
       if (table == null)
-        return Res;
+        return res;
       if (table.Rows.Count == 0)
-        return Res;
+        return res;
       int p = GetColumnPosWithCheck(table, columnName);
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        Res += DataTools.GetTimeSpan(Row[p]);
+        res += DataTools.GetTimeSpan(row[p]);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -4093,27 +4093,27 @@ namespace FreeLibSet.Core
     /// <returns>Диапазон</returns>
     public static MinMax<TimeSpan> MinMaxTimeSpan(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      MinMax<TimeSpan> Res = new MinMax<TimeSpan>();
+      MinMax<TimeSpan> res = new MinMax<TimeSpan>();
       if (rows == null)
-        return Res;
+        return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor Extr = new DataRowNullableTimeSpanExtractor(columnName);
-      foreach (DataRow Row in rows)
+      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
 
-        TimeSpan? v = Extr[Row];
+        TimeSpan? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
-        Res += v ?? TimeSpan.Zero;
+        res += v ?? TimeSpan.Zero;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -4176,16 +4176,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
       int s = 0;
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        s += DataTools.GetInt(Row[p]);
+        s += DataTools.GetInt(row[p]);
         cnt++;
       }
       if (cnt > 0)
@@ -4208,16 +4208,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor Extr = new DataRowNullableIntExtractor(columnName);
+      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
       int s = 0;
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        int? v = Extr[Row];
+        int? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4267,9 +4267,9 @@ namespace FreeLibSet.Core
 
       int s = 0;
       int cnt = 0;
-      foreach (int Item in items)
+      foreach (int item in items)
       {
-        s += Item;
+        s += item;
         cnt++;
       }
       if (cnt == 0)
@@ -4334,16 +4334,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
       long s = 0;
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        s += DataTools.GetInt64(Row[p]);
+        s += DataTools.GetInt64(row[p]);
         cnt++;
       }
       if (cnt > 0)
@@ -4366,16 +4366,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor Extr = new DataRowNullableInt64Extractor(columnName);
+      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
       long s = 0;
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        long? v = Extr[Row];
+        long? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4425,9 +4425,9 @@ namespace FreeLibSet.Core
 
       long s = 0;
       int cnt = 0;
-      foreach (long Item in items)
+      foreach (long item in items)
       {
-        s += Item;
+        s += item;
         cnt++;
       }
       if (cnt == 0)
@@ -4490,16 +4490,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
       float s = 0;
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        s += DataTools.GetSingle(Row[p]);
+        s += DataTools.GetSingle(row[p]);
         cnt++;
       }
       if (cnt > 0)
@@ -4521,16 +4521,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor Extr = new DataRowNullableSingleExtractor(columnName);
+      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
       float s = 0;
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        float? v = Extr[Row];
+        float? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4579,9 +4579,9 @@ namespace FreeLibSet.Core
 
       float s = 0;
       int cnt = 0;
-      foreach (float Item in items)
+      foreach (float item in items)
       {
-        s += Item;
+        s += item;
         cnt++;
       }
 
@@ -4645,16 +4645,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
       double s = 0;
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        s += DataTools.GetDouble(Row[p]);
+        s += DataTools.GetDouble(row[p]);
         cnt++;
       }
       if (cnt > 0)
@@ -4676,16 +4676,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor Extr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
       double s = 0;
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        double? v = Extr[Row];
+        double? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4734,9 +4734,9 @@ namespace FreeLibSet.Core
 
       double s = 0;
       int cnt = 0;
-      foreach (double Item in items)
+      foreach (double item in items)
       {
-        s += Item;
+        s += item;
         cnt++;
       }
 
@@ -4800,16 +4800,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
       decimal s = 0;
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        s += DataTools.GetDecimal(Row[p]);
+        s += DataTools.GetDecimal(row[p]);
         cnt++;
       }
       if (cnt > 0)
@@ -4831,16 +4831,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor Extr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
       decimal s = 0;
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        decimal? v = Extr[Row];
+        decimal? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4889,9 +4889,9 @@ namespace FreeLibSet.Core
 
       decimal s = 0;
       int cnt = 0;
-      foreach (decimal Item in items)
+      foreach (decimal item in items)
       {
-        s += Item;
+        s += item;
         cnt++;
       }
 
@@ -4955,16 +4955,16 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(table, columnName);
       TimeSpan s = TimeSpan.Zero;
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
         if (skipNulls)
         {
-          if (Row.IsNull(p))
+          if (row.IsNull(p))
             continue;
         }
-        s += DataTools.GetTimeSpan(Row[p]);
+        s += DataTools.GetTimeSpan(row[p]);
         cnt++;
       }
       if (cnt > 0)
@@ -4986,16 +4986,16 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor Extr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
       TimeSpan s = TimeSpan.Zero;
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        TimeSpan? v = Extr[Row];
+        TimeSpan? v = xtr[row];
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -5044,9 +5044,9 @@ namespace FreeLibSet.Core
 
       TimeSpan s = TimeSpan.Zero;
       int cnt = 0;
-      foreach (TimeSpan Item in items)
+      foreach (TimeSpan item in items)
       {
-        s += Item;
+        s += item;
         cnt++;
       }
 
@@ -5137,8 +5137,8 @@ namespace FreeLibSet.Core
     /// <returns>Найденное значение для всех строк</returns>
     public static object AverageValue(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
-      DataColumn Column;
-      Type t = GetDataTypeFromRows(rows, columnName, out Column);
+      DataColumn col;
+      Type t = GetDataTypeFromRows(rows, columnName, out col);
       if (t == null)
         return null;
 
@@ -5151,7 +5151,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return AverageDecimal(rows, columnName, skipNulls);
         case SumType.TimeSpan: return AverageTimeSpan(rows, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить среднее значение", Column);
+          throw ColumnTypeException("Нельзя вычислить среднее значение", col);
       }
     }
 
@@ -5298,11 +5298,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetBool(Row[p]) == searchValue)
+        if (DataTools.GetBool(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5320,15 +5320,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowBoolExtractor Extr = new DataRowBoolExtractor(columnName);
+      DataRowBoolExtractor xtr = new DataRowBoolExtractor(columnName);
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (Extr[Row] == searchValue)
+        if (xtr[row] == searchValue)
           cnt++;
       }
       return cnt;
@@ -5376,11 +5376,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetInt(Row[p]) == searchValue)
+        if (DataTools.GetInt(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5398,15 +5398,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowIntExtractor Extr = new DataRowIntExtractor(columnName);
+      DataRowIntExtractor xtr = new DataRowIntExtractor(columnName);
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (Extr[Row] == searchValue)
+        if (xtr[row] == searchValue)
           cnt++;
       }
       return cnt;
@@ -5454,11 +5454,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetInt64(Row[p]) == searchValue)
+        if (DataTools.GetInt64(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5476,15 +5476,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowInt64Extractor Extr = new DataRowInt64Extractor(columnName);
+      DataRowInt64Extractor xtr = new DataRowInt64Extractor(columnName);
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (Extr[Row] == searchValue)
+        if (xtr[row] == searchValue)
           cnt++;
       }
       return cnt;
@@ -5532,11 +5532,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetSingle(Row[p]) == searchValue)
+        if (DataTools.GetSingle(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5554,15 +5554,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowSingleExtractor Extr = new DataRowSingleExtractor(columnName);
+      DataRowSingleExtractor xtr = new DataRowSingleExtractor(columnName);
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (Extr[Row] == searchValue)
+        if (xtr[row] == searchValue)
           cnt++;
       }
       return cnt;
@@ -5610,11 +5610,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetDouble(Row[p]) == searchValue)
+        if (DataTools.GetDouble(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5632,15 +5632,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowDoubleExtractor Extr = new DataRowDoubleExtractor(columnName);
+      DataRowDoubleExtractor xtr = new DataRowDoubleExtractor(columnName);
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (Extr[Row] == searchValue)
+        if (xtr[row] == searchValue)
           cnt++;
       }
       return cnt;
@@ -5688,11 +5688,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetDecimal(Row[p]) == searchValue)
+        if (DataTools.GetDecimal(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5710,15 +5710,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowDecimalExtractor Extr = new DataRowDecimalExtractor(columnName);
+      DataRowDecimalExtractor xtr = new DataRowDecimalExtractor(columnName);
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (Extr[Row] == searchValue)
+        if (xtr[row] == searchValue)
           cnt++;
       }
       return cnt;
@@ -5766,11 +5766,11 @@ namespace FreeLibSet.Core
         return 0;
       int p = GetColumnPosWithCheck(table, columnName);
       int cnt = 0;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetTimeSpan(Row[p]) == searchValue)
+        if (DataTools.GetTimeSpan(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5788,15 +5788,15 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowTimeSpanExtractor Extr = new DataRowTimeSpanExtractor(columnName);
+      DataRowTimeSpanExtractor xtr = new DataRowTimeSpanExtractor(columnName);
       int cnt = 0;
-      foreach (DataRow Row in rows)
+      foreach (DataRow row in rows)
       {
-        if (Row == null)
+        if (row == null)
           continue;
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           continue;
-        if (Extr[Row] == searchValue)
+        if (xtr[row] == searchValue)
           cnt++;
       }
       return cnt;

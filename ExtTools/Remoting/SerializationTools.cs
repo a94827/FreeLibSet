@@ -160,9 +160,9 @@ namespace FreeLibSet.Remoting
     {
       for (int i = 0; i < table.Columns.Count; i++)
       {
-        DataColumn Column = table.Columns[i];
-        if (Column.DataType == typeof(DateTime) && Column.DateTimeMode == DataSetDateTime.UnspecifiedLocal)
-          Column.DateTimeMode = DataSetDateTime.Unspecified;
+        DataColumn col = table.Columns[i];
+        if (col.DataType == typeof(DateTime) && col.DateTimeMode == DataSetDateTime.UnspecifiedLocal)
+          col.DateTimeMode = DataSetDateTime.Unspecified;
       }
     }
 

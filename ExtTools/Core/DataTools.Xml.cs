@@ -46,14 +46,14 @@ namespace FreeLibSet.Core
       if (xmlDoc.ChildNodes.Count == 0)
         return false;
 
-      XmlDeclaration Decl = xmlDoc.ChildNodes[0] as XmlDeclaration;
-      if (Decl == null)
+      XmlDeclaration decl = xmlDoc.ChildNodes[0] as XmlDeclaration;
+      if (decl == null)
         return false;
-      if (String.IsNullOrEmpty(Decl.Encoding)) // 18.09.2013
+      if (String.IsNullOrEmpty(decl.Encoding)) // 18.09.2013
         return false;
       try
       {
-        encoding = Encoding.GetEncoding(Decl.Encoding);
+        encoding = Encoding.GetEncoding(decl.Encoding);
         return true;
       }
       catch
@@ -76,31 +76,31 @@ namespace FreeLibSet.Core
       if (encoding == null)
         throw new ArgumentNullException("Encoding");
 
-      XmlDeclaration Decl = null;
+      XmlDeclaration decl = null;
       if (xmlDoc.ChildNodes.Count > 0)
-        Decl = xmlDoc.ChildNodes[0] as XmlDeclaration;
-      if (Decl != null)
+        decl = xmlDoc.ChildNodes[0] as XmlDeclaration;
+      if (decl != null)
       {
-        if (!String.IsNullOrEmpty(Decl.Encoding)) // 21.12.2021
+        if (!String.IsNullOrEmpty(decl.Encoding)) // 21.12.2021
         {
           try
           {
-            Encoding OldEncoding = Encoding.GetEncoding(Decl.Encoding);
-            if (encoding.WebName == OldEncoding.WebName)
+            Encoding oldEncoding = Encoding.GetEncoding(decl.Encoding);
+            if (encoding.WebName == oldEncoding.WebName)
               return; // Никаких действий выполнять не надо
           }
           catch { } // 21.12.2021
         }
-        Decl.Encoding = encoding.WebName;
+        decl.Encoding = encoding.WebName;
       }
       else
       {
         // Добавляем декларацию
-        Decl = xmlDoc.CreateXmlDeclaration("1.0", encoding.WebName, null);
+        decl = xmlDoc.CreateXmlDeclaration("1.0", encoding.WebName, null);
         if (xmlDoc.DocumentElement == null)
-          xmlDoc.AppendChild(Decl);
+          xmlDoc.AppendChild(decl);
         else
-          xmlDoc.InsertBefore(Decl, xmlDoc.DocumentElement);
+          xmlDoc.InsertBefore(decl, xmlDoc.DocumentElement);
       }
     }
 
@@ -117,19 +117,19 @@ namespace FreeLibSet.Core
     {
       if (xmlDoc == null)
         return null;
-      byte[] Bytes;
+      byte[] bytes;
       MemoryStream strm = new MemoryStream();
       try
       {
         FileTools.WriteXmlDocument(strm, xmlDoc);
         strm.Flush();
-        Bytes = strm.ToArray();
+        bytes = strm.ToArray();
       }
       finally
       {
         strm.Close();
       }
-      return Bytes;
+      return bytes;
     }
 
     /// <summary>
@@ -161,11 +161,11 @@ namespace FreeLibSet.Core
 
       StringBuilder sb = new StringBuilder();
 
-      XmlWriterSettings Settings = new XmlWriterSettings();
-      Settings.NewLineChars = Environment.NewLine;
-      Settings.Indent = true;
-      Settings.IndentChars = "  ";
-      using (XmlWriter wrt = XmlWriter.Create(sb, Settings))
+      XmlWriterSettings settings = new XmlWriterSettings();
+      settings.NewLineChars = Environment.NewLine;
+      settings.Indent = true;
+      settings.IndentChars = "  ";
+      using (XmlWriter wrt = XmlWriter.Create(sb, settings))
       {
         xmlDoc.WriteTo(wrt);
         wrt.Flush();
@@ -185,9 +185,9 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(str))
         return null;
 
-      XmlDocument Doc = new XmlDocument();
-      Doc.LoadXml(str);
-      return Doc;
+      XmlDocument xmlDoc = new XmlDocument();
+      xmlDoc.LoadXml(str);
+      return xmlDoc;
     }
 
     #endregion

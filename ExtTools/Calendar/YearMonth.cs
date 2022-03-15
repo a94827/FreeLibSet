@@ -691,7 +691,7 @@ namespace FreeLibSet.Calendar
       #region Поля
 
       private readonly YearMonthRange _Range;
-      YearMonth _Current;
+      private YearMonth _Current;
 
       #endregion
 

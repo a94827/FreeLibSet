@@ -247,7 +247,7 @@ namespace FreeLibSet.Parsing
 
       if (data.FirstErrorToken == null)
       {
-        int LastPos = 0;
+        int lastPos = 0;
         for (int i = 0; i < data.Tokens.Count; i++)
         {
           if (data.Tokens[i].Start < 0)
@@ -255,7 +255,7 @@ namespace FreeLibSet.Parsing
             data.Tokens[i].SetError("Начальная позиция лексемы \"" + data.Tokens[i].TokenType+ "\" не может быть отрицательной");
             break;
           }
-          if (data.Tokens[i].Start < LastPos)
+          if (data.Tokens[i].Start < lastPos)
           {
             data.Tokens[i].SetError("Лексема \"" + data.Tokens[i].TokenType + "\" перекрывается с предыдущей \"" + data.Tokens[i-1].TokenType + "\"");
             break;
@@ -265,7 +265,7 @@ namespace FreeLibSet.Parsing
             data.Tokens[i].SetError("Лексема \"" + data.Tokens[i].TokenType + "\" выходит за границу текста");
             break;
           }
-          LastPos = data.Tokens[i].Start + data.Tokens[i].Length;
+          lastPos = data.Tokens[i].Start + data.Tokens[i].Length;
         }
       }
 
@@ -276,19 +276,19 @@ namespace FreeLibSet.Parsing
 
     private void DoParse(ParsingData data, string[] endTokens)
     {
-      List<Token> TempTokens = new List<Token>();
+      List<Token> tempTokens = new List<Token>();
 
       while (data.CurrPos < data.Text.Text.Length)
       {
-        int CurrTokenCount = data.Tokens.Count;
-        TempTokens.Clear();
+        int currTokenCount = data.Tokens.Count;
+        tempTokens.Clear();
         for (int i = 0; i < Count; i++)
         {
           data.SuspectedTokens.Clear();
 
           this[i].Parse(data); // основной метод
 
-          if (data.Tokens.Count > CurrTokenCount)
+          if (data.Tokens.Count > currTokenCount)
           {
             // Распознавание успешно выполнено
             data.InitCurrPos();
@@ -298,19 +298,19 @@ namespace FreeLibSet.Parsing
           if (data.SuspectedTokens.Count > 0)
           {
             // Выполнено частичное распознавание
-            if (TempTokens.Count == 0) // приоритет отдается первом парсеру в списке
-              TempTokens.AddRange(data.SuspectedTokens);
+            if (tempTokens.Count == 0) // приоритет отдается первом парсеру в списке
+              tempTokens.AddRange(data.SuspectedTokens);
             // продолжаем разбор
           }
         } // цикл по парсерам
 
-        if (data.Tokens.Count == CurrTokenCount)
+        if (data.Tokens.Count == currTokenCount)
         {
           // Успешного распознавания не было
-          if (TempTokens.Count > 0)
+          if (tempTokens.Count > 0)
           {
             // но было частичное распознавание
-            data.Tokens.AddRange(TempTokens);
+            data.Tokens.AddRange(tempTokens);
             data.InitCurrPos();
           }
           else
@@ -412,9 +412,9 @@ namespace FreeLibSet.Parsing
     /// <returns></returns>
     public IExpression CreateExpression(ParsingData data, bool throwException)
     {
-      IExpression Expr = CreateExpression(data);
+      IExpression expr = CreateExpression(data);
       Token et = data.FirstErrorToken;
-      if (Expr == null)
+      if (expr == null)
       {
         if (throwException)
         {
@@ -434,7 +434,7 @@ namespace FreeLibSet.Parsing
         }
       }
 
-      return Expr;
+      return expr;
     }
 
     /// <summary>
@@ -459,12 +459,12 @@ namespace FreeLibSet.Parsing
         return null; // были ошибки на первой фазе парсинга
 
       data.State = ParsingState.ExpressionCreating;
-      IExpression ResExpr;
+      IExpression resExpr;
       data.InternalTokenIndex = 0;
       data.EndTokens = DataTools.EmptyStrings;
       try
       {
-        ResExpr = CreateSubExpression(data, null);
+        resExpr = CreateSubExpression(data, null);
       }
       finally
       {
@@ -473,7 +473,7 @@ namespace FreeLibSet.Parsing
         data.State = ParsingState.ExpressionCreated;
       }
 
-      return ResExpr;
+      return resExpr;
     }
 
     /// <summary>
@@ -490,35 +490,35 @@ namespace FreeLibSet.Parsing
       if (endTokens == null)
         endTokens = data.EndTokens;
 
-      IExpression ResExpr = null;
+      IExpression resExpr = null;
 
-      string[] OldEndTokens = data.EndTokens;
+      string[] oldEndTokens = data.EndTokens;
       data.EndTokens = endTokens;
       try
       {
         while (data.InternalTokenIndex < data.Tokens.Count)
         {
-          int CurrIndex = data.InternalTokenIndex;
+          int currIndex = data.InternalTokenIndex;
 
           if (Array.IndexOf<string>(endTokens, data.CurrTokenType) >= 0)
             // найдена завершающая скобка
             break;
 
-          IExpression ThisExpr = data.Tokens[CurrIndex].Parser.CreateExpression(data, ResExpr);
-          if (ThisExpr != null)
-            ResExpr = ThisExpr;
+          IExpression thisExpr = data.Tokens[currIndex].Parser.CreateExpression(data, resExpr);
+          if (thisExpr != null)
+            resExpr = thisExpr;
 
-          if (data.InternalTokenIndex == CurrIndex) // текущая позиция не передвинута
+          if (data.InternalTokenIndex == currIndex) // текущая позиция не передвинута
             data.InternalTokenIndex++;
         }
 
       }
       finally
       {
-        data.EndTokens = OldEndTokens;
+        data.EndTokens = oldEndTokens;
       }
 
-      return ResExpr;
+      return resExpr;
     }
 
     #endregion
@@ -535,11 +535,11 @@ namespace FreeLibSet.Parsing
     public T GetParser<T>()
       where T : IParser
     {
-      int Index = IndexOf(typeof(T));
-      if (Index < 0)
+      int index = IndexOf(typeof(T));
+      if (index < 0)
         return default(T);
       else
-        return (T)(base[Index]);
+        return (T)(base[index]);
     }
 
     /// <summary>
@@ -967,10 +967,10 @@ namespace FreeLibSet.Parsing
     /// <returns></returns>
     public int GetRowLength()
     {
-      int Row = Text.GetRow(_CurrPos);
-      int Start = Text.GetRowStartIndex(Row);
-      int Len = Text.GetRowLength(Row);
-      return Len - (_CurrPos - Start);
+      int row = Text.GetRow(_CurrPos);
+      int start = Text.GetRowStartIndex(row);
+      int len = Text.GetRowLength(row);
+      return len - (_CurrPos - start);
     }
 
     /// <summary>
@@ -1296,21 +1296,21 @@ namespace FreeLibSet.Parsing
     /// <returns>Найденная лексема или null</returns>
     public Token GetNextToken(int currTokenIndex, string[] skipTokens)
     {
-      int Index = GetNextTokenIndex(currTokenIndex, skipTokens);
-      if (Index < 0)
+      int index = GetNextTokenIndex(currTokenIndex, skipTokens);
+      if (index < 0)
         return null;
       else
-        return Tokens[Index];
+        return Tokens[index];
     }
 
-    private int GetNextTokenIndex(int currTokenIndex, string[] SkipTokens)
+    private int GetNextTokenIndex(int currTokenIndex, string[] skipTokens)
     {
-      if (SkipTokens == null)
-        SkipTokens = DataTools.EmptyStrings;
-      for (int Index = currTokenIndex + 1; Index < Tokens.Count; Index++)
+      if (skipTokens == null)
+        skipTokens = DataTools.EmptyStrings;
+      for (int index = currTokenIndex + 1; index < Tokens.Count; index++)
       {
-        if (Array.IndexOf<string>(SkipTokens, Tokens[Index].TokenType) < 0)
-          return Index;
+        if (Array.IndexOf<string>(skipTokens, Tokens[index].TokenType) < 0)
+          return index;
       }
       return -1;
     }
@@ -1325,11 +1325,11 @@ namespace FreeLibSet.Parsing
     /// <returns>Лексема</returns>
     public Token GetPrevToken(int currTokenIndex, string[] skipTokens)
     {
-      int Index = GetPrevTokenIndex(currTokenIndex, skipTokens);
-      if (Index < 0)
+      int index = GetPrevTokenIndex(currTokenIndex, skipTokens);
+      if (index < 0)
         return null;
       else
-        return Tokens[Index];
+        return Tokens[index];
     }
 
     private int GetPrevTokenIndex(int currTokenIndex, string[] skipTokens)
@@ -1337,16 +1337,16 @@ namespace FreeLibSet.Parsing
       if (skipTokens == null)
         skipTokens = DataTools.EmptyStrings;
 
-      int StartIndex;
+      int startIndex;
       if (currTokenIndex >= 0)
-        StartIndex = currTokenIndex - 1;
+        startIndex = currTokenIndex - 1;
       else
-        StartIndex = Tokens.Count - 1;
+        startIndex = Tokens.Count - 1;
 
-      for (int Index = StartIndex; Index >= 0; Index--)
+      for (int index = startIndex; index >= 0; index--)
       {
-        if (Array.IndexOf<string>(skipTokens, Tokens[Index].TokenType) < 0)
-          return Index;
+        if (Array.IndexOf<string>(skipTokens, Tokens[index].TokenType) < 0)
+          return index;
       }
       return -1;
     }
@@ -1368,18 +1368,18 @@ namespace FreeLibSet.Parsing
       if (tokenCount < 0 || (firstTokenIndex + tokenCount) > Tokens.Count)
         throw new ArgumentOutOfRangeException("tokenCount", tokenCount, "Число лексем должно быть в диапазоне от 0 до " + (Tokens.Count - firstTokenIndex).ToString());
 
-      ParsingData Data2 = new ParsingData(Text);
-      Data2._UserData = UserData.Clone(); // обязательно! Реализация может устанавливать разные параметры при разборе частей
-      Data2.Parsers = Parsers;
-      Data2.State = ParsingState.Parsed;
+      ParsingData data2 = new ParsingData(Text);
+      data2._UserData = UserData.Clone(); // обязательно! Реализация может устанавливать разные параметры при разборе частей
+      data2.Parsers = Parsers;
+      data2.State = ParsingState.Parsed;
 
       for (int i = 0; i < tokenCount; i++)
       {
         Token tk = Tokens[firstTokenIndex + i];
-        Data2.Tokens.Add(tk);
+        data2.Tokens.Add(tk);
       }
 
-      return Data2;
+      return data2;
     }
 
     /// <summary>
@@ -1390,8 +1390,8 @@ namespace FreeLibSet.Parsing
     /// <returns>Копия объекта ParsingData</returns>
     public ParsingData CreateSubTokens(int firstTokenIndex)
     {
-      int TokenCount = Tokens.Count - firstTokenIndex;
-      return CreateSubTokens(firstTokenIndex, TokenCount);
+      int tokenCount = Tokens.Count - firstTokenIndex;
+      return CreateSubTokens(firstTokenIndex, tokenCount);
     }
 
     /// <summary>
@@ -1410,21 +1410,21 @@ namespace FreeLibSet.Parsing
           n++;
       }
 
-      ParsingData[] Res = new ParsingData[n];
+      ParsingData[] res = new ParsingData[n];
       n = 0;
-      int FirstToken = 0;
+      int firstToken = 0;
       for (int i = 0; i < Tokens.Count; i++)
       {
         if (Tokens[i].TokenType == tokenType)
         {
-          Res[n] = CreateSubTokens(FirstToken, i - FirstToken);
+          res[n] = CreateSubTokens(firstToken, i - firstToken);
           n++;
-          FirstToken = i + 1;
+          firstToken = i + 1;
         }
       }
       // Последняя группа всегда есть
-      Res[n] = CreateSubTokens(FirstToken, Tokens.Count - FirstToken);
-      return Res;
+      res[n] = CreateSubTokens(firstToken, Tokens.Count - firstToken);
+      return res;
     }
 
     /// <summary>
@@ -1463,21 +1463,21 @@ namespace FreeLibSet.Parsing
     /// <returns>Список сообщений</returns>
     public ErrorMessageList GetErrorMessages(bool addTokenNumberAndState)
     {
-      ErrorMessageList List = new ErrorMessageList();
+      ErrorMessageList list = new ErrorMessageList();
       for (int i = 0; i < Tokens.Count; i++)
       {
         if (Tokens[i].ErrorMessage.HasValue)
         {
-          ParsingErrorItemData Data = new ParsingErrorItemData(i,
+          ParsingErrorItemData data = new ParsingErrorItemData(i,
             Tokens[i].TokenType, Tokens[i].Start, Tokens[i].Length);
-          ErrorMessageItem Src = Tokens[i].ErrorMessage.Value;
-          string Text = Src.Text;
+          ErrorMessageItem src = Tokens[i].ErrorMessage.Value;
+          string text = src.Text;
           if (addTokenNumberAndState)
-            Text = "№" + (i + 1).ToString() + " [" + Tokens[i].ErrorState.ToString() + "]. " + Text;
-          List.Add(new ErrorMessageItem(Src.Kind, Text, Src.Code, Data));
+            text = "№" + (i + 1).ToString() + " [" + Tokens[i].ErrorState.ToString() + "]. " + text;
+          list.Add(new ErrorMessageItem(src.Kind, text, src.Code, data));
         }
       }
-      return List;
+      return list;
     }
 
     /// <summary>
@@ -1491,16 +1491,16 @@ namespace FreeLibSet.Parsing
     public static ErrorMessageList GetErrorMessages(IExpression expression)
     {
       ErrorMessageList List = new ErrorMessageList();
-      List<Token> Tokens = new List<Token>();
-      GetTokens(expression, Tokens);
-      for (int i = 0; i < Tokens.Count; i++)
+      List<Token> tokens = new List<Token>();
+      GetTokens(expression, tokens);
+      for (int i = 0; i < tokens.Count; i++)
       {
-        if (Tokens[i].ErrorMessage.HasValue)
+        if (tokens[i].ErrorMessage.HasValue)
         {
-          ParsingErrorItemData Data = new ParsingErrorItemData(i,
-            Tokens[i].TokenType, Tokens[i].Start, Tokens[i].Length);
-          ErrorMessageItem Src = Tokens[i].ErrorMessage.Value;
-          List.Add(new ErrorMessageItem(Src.Kind, Src.Text, Src.Code, Data));
+          ParsingErrorItemData data = new ParsingErrorItemData(i,
+            tokens[i].TokenType, tokens[i].Start, tokens[i].Length);
+          ErrorMessageItem Src = tokens[i].ErrorMessage.Value;
+          List.Add(new ErrorMessageItem(Src.Kind, Src.Text, Src.Code, data));
         }
       }
       return List;
@@ -1514,7 +1514,7 @@ namespace FreeLibSet.Parsing
     {
       get
       {
-        bool HasWarning = false;
+        bool hasWarning = false;
         for (int i = 0; i < Tokens.Count; i++)
         {
           if (Tokens[i].ErrorMessage.HasValue)
@@ -1524,12 +1524,12 @@ namespace FreeLibSet.Parsing
               case ErrorMessageKind.Error:
                 return ErrorMessageKind.Error;
               case ErrorMessageKind.Warning:
-                HasWarning = true;
+                hasWarning = true;
                 break;
             }
           }
         }
-        if (HasWarning)
+        if (hasWarning)
           return ErrorMessageKind.Warning;
         else
           return ErrorMessageKind.Info;
@@ -1594,18 +1594,18 @@ namespace FreeLibSet.Parsing
       if (expression == null)
         return;
 
-      int Count = tokens.Count;
+      int count = tokens.Count;
       expression.GetTokens(tokens);
-      for (int i = Count; i < tokens.Count; i++)
+      for (int i = count; i < tokens.Count; i++)
       {
         if (tokens[i] == null)
           throw new NullReferenceException("Для выражения " + expression.ToString() + " метод GetTokens() добавил в список значение null");
       }
 
-      List<IExpression> Children = new List<IExpression>();
-      expression.GetChildExpressions(Children);
-      for (int i = 0; i < Children.Count; i++)
-        GetTokens(Children[i], tokens);
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
+        GetTokens(children[i], tokens);
     }
 
     /// <summary>
@@ -1623,17 +1623,17 @@ namespace FreeLibSet.Parsing
       if (String.IsNullOrEmpty(tokenType))
         throw new ArgumentNullException("tokenType");
 
-      List<Token> Tokens2 = new List<Token>();
-      expression.GetTokens(Tokens2);
-      for (int i = 0; i < Tokens2.Count; i++)
+      List<Token> tokens2 = new List<Token>();
+      expression.GetTokens(tokens2);
+      for (int i = 0; i < tokens2.Count; i++)
       {
-        if (Tokens2[i].TokenType == tokenType)
-          Tokens.Add(Tokens2[i]);
+        if (tokens2[i].TokenType == tokenType)
+          Tokens.Add(tokens2[i]);
       }
-      List<IExpression> Children = new List<IExpression>();
-      expression.GetChildExpressions(Children);
-      for (int i = 0; i < Children.Count; i++)
-        GetTokens(Children[i], Tokens, tokenType);
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
+        GetTokens(children[i], Tokens, tokenType);
     }
 
     /// <summary>
@@ -1651,8 +1651,8 @@ namespace FreeLibSet.Parsing
       if (String.IsNullOrEmpty(tokenType))
         throw new ArgumentNullException("tokenType");
 
-      List<Token> DummyTokens = new List<Token>();
-      return DoGetFirstToken(DummyTokens, expression, tokenType);
+      List<Token> dummyTokens = new List<Token>();
+      return DoGetFirstToken(dummyTokens, expression, tokenType);
     }
 
     private static Token DoGetFirstToken(List<Token> dummyTokens, IExpression expression, string tokenType)
@@ -1664,11 +1664,11 @@ namespace FreeLibSet.Parsing
         if (dummyTokens[i].TokenType == tokenType)
           return dummyTokens[i];
       }
-      List<IExpression> Children = new List<IExpression>();
-      expression.GetChildExpressions(Children);
-      for (int i = 0; i < Children.Count; i++)
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
       {
-        Token tk = DoGetFirstToken(dummyTokens, Children[i], tokenType);
+        Token tk = DoGetFirstToken(dummyTokens, children[i], tokenType);
         if (tk != null)
           return tk;
       }
@@ -1686,16 +1686,16 @@ namespace FreeLibSet.Parsing
       if (expression == null)
         return null;
 
-      List<Token> Tokens2 = new List<Token>();
-      expression.GetTokens(Tokens2);
-      if (Tokens2.Count > 0)
-        return Tokens2[0];
+      List<Token> tokens2 = new List<Token>();
+      expression.GetTokens(tokens2);
+      if (tokens2.Count > 0)
+        return tokens2[0];
 
-      List<IExpression> Children = new List<IExpression>();
-      expression.GetChildExpressions(Children);
-      for (int i = 0; i < Children.Count; i++)
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
       {
-        Token tk = GetFirstToken(Children[i]);
+        Token tk = GetFirstToken(children[i]);
         if (tk != null)
           return tk;
       }
@@ -1765,10 +1765,10 @@ namespace FreeLibSet.Parsing
 
     private static void DoGetChildExpressions(IExpression expression, List<IExpression> expressions)
     {
-      int First = expressions.Count;
+      int first = expressions.Count;
       expression.GetChildExpressions(expressions);
-      int Last = expressions.Count - 1;
-      for (int i = First; i <= Last; i++)
+      int last = expressions.Count - 1;
+      for (int i = first; i <= last; i++)
       {
         if (expressions[i] == null)
           throw new NullReferenceException("Для выражения " + expression.ToString() + " метод GetChildExpressions() добавил в список значение null");
@@ -1785,9 +1785,9 @@ namespace FreeLibSet.Parsing
     /// <returns>Массив найденных объектов</returns>
     public static IExpression[] GetExpressions(IExpression expression)
     {
-      List<IExpression> Expressions = new List<IExpression>();
-      GetExpressions(expression, Expressions);
-      return Expressions.ToArray();
+      List<IExpression> expressions = new List<IExpression>();
+      GetExpressions(expression, expressions);
+      return expressions.ToArray();
     }
 
     /// <summary>
@@ -1824,13 +1824,13 @@ namespace FreeLibSet.Parsing
       where T : IExpression
     {
       //int First = expressions.Count;
-      List<IExpression> Exprs2 = new List<IExpression>();
-      expression.GetChildExpressions(Exprs2);
-      for (int i = 0; i < Exprs2.Count; i++)
+      List<IExpression> exprs2 = new List<IExpression>();
+      expression.GetChildExpressions(exprs2);
+      for (int i = 0; i < exprs2.Count; i++)
       {
-        if (Exprs2[i] == null)
+        if (exprs2[i] == null)
           throw new NullReferenceException("Для выражения " + expression.ToString() + " метод GetChildExpressions() добавил в список значение null");
-        GetExpressions<T>(Exprs2[i], expressions);
+        GetExpressions<T>(exprs2[i], expressions);
       }
     }
 
@@ -1845,9 +1845,9 @@ namespace FreeLibSet.Parsing
     public static T[] GetExpressions<T>(IExpression expression)
       where T : IExpression
     {
-      List<T> Expressions = new List<T>();
-      GetExpressions<T>(expression, Expressions);
-      return Expressions.ToArray();
+      List<T> expressions = new List<T>();
+      GetExpressions<T>(expression, expressions);
+      return expressions.ToArray();
     }
 
     #endregion
@@ -2161,14 +2161,14 @@ namespace FreeLibSet.Parsing
     public SynthesisToken GetTokenAtPosition(int pos)
     {
       // Не выгодно использовать свойство SynthesisToken.Start, т.к. оно медленно работает
-      int CurrOff = 0;
+      int currOff = 0;
 
       for (int i = 0; i < Tokens.Count; i++)
       {
-        if (pos >= CurrOff && pos < (CurrOff + Tokens[i].Length))
+        if (pos >= currOff && pos < (currOff + Tokens[i].Length))
           return Tokens[i];
 
-        CurrOff += Tokens[i].Length;
+        currOff += Tokens[i].Length;
       }
 
       return null;

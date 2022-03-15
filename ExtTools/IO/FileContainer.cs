@@ -439,11 +439,11 @@ namespace FreeLibSet.IO
       if (dir.IsEmpty)
         throw new ArgumentException("Не задан каталог для сохранения", "dir");
 
-      AbsPath Dir2 = dir + SubDir;
-      FileTools.ForceDirs(Dir2);
-      AbsPath ResPath = Dir2 + FileInfo.Name;
-      File.WriteAllBytes(ResPath.Path, Contents);
-      FileInfo.ApplyToFile(ResPath);
+      AbsPath dir2 = dir + SubDir;
+      FileTools.ForceDirs(dir2);
+      AbsPath resPath = dir2 + FileInfo.Name;
+      File.WriteAllBytes(resPath.Path, Contents);
+      FileInfo.ApplyToFile(resPath);
     }
 
     /// <summary>
@@ -678,13 +678,13 @@ namespace FreeLibSet.IO
     {
       get
       {
-        FileContainer File;
+        FileContainer file;
         int p = IndexOf(fileName);
         if (p < 0)
-          File = null;
+          file = null;
         else
-          File = _Items[p];
-        return File;
+          file = _Items[p];
+        return file;
       }
     }
 
@@ -711,7 +711,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Удаляет файл из списка
     /// </summary>
-    /// <param name="item">Удвляемый элемент</param>
+    /// <param name="item">Удаляемый элемент</param>
     /// <returns>true, если элемент был найден в списке и удален</returns>
     public bool Remove(FileContainer item)
     {
@@ -878,10 +878,10 @@ namespace FreeLibSet.IO
     /// <returns>Копия списка файлов</returns>
     public FileContainerList Clone()
     {
-      FileContainerList Copy = new FileContainerList();
+      FileContainerList copy = new FileContainerList();
       for (int i = 0; i < _Items.Count; i++)
-        Copy.Add(_Items[i].Clone());
-      return Copy;
+        copy.Add(_Items[i].Clone());
+      return copy;
     }
 
     object ICloneable.Clone()

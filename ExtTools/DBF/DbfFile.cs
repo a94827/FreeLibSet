@@ -296,28 +296,28 @@ namespace FreeLibSet.DBF
     /// <returns>true, если поле может быть задано для файла с заданным форматом</returns>
     public bool TestFormat(DbfFileFormat fileFormat, out string errorText)
     {
-      string ValidFieldTypes;
+      string validFieldTypes;
       switch (fileFormat)
       {
         case DbfFileFormat.dBase2:
-          ValidFieldTypes = "CNL";
+          validFieldTypes = "CNL";
           break;
         case DbfFileFormat.dBase3:
-          ValidFieldTypes = "CNLDM";
+          validFieldTypes = "CNLDM";
           break;
         case DbfFileFormat.dBase4:
-          ValidFieldTypes = "CNLDMF";
+          validFieldTypes = "CNLDMF";
           break;
         default:
-          ValidFieldTypes = null;
+          validFieldTypes = null;
           break;
       }
 
-      if (ValidFieldTypes != null)
+      if (validFieldTypes != null)
       {
-        if (ValidFieldTypes.IndexOf(Type) < 0)
+        if (validFieldTypes.IndexOf(Type) < 0)
         {
-          errorText = "Неподдерживаемый тип \"" + Type + "\" поля \"" + Name + "\". Поддерживаемые типы: " + ValidFieldTypes;
+          errorText = "Неподдерживаемый тип \"" + Type + "\" поля \"" + Name + "\". Поддерживаемые типы: " + validFieldTypes;
           return false;
         }
       }
@@ -341,14 +341,14 @@ namespace FreeLibSet.DBF
     /// <returns>true, если имя поля является корректным</returns>
     public static bool IsValidFieldName(string fieldName)
     {
-      const string ValidChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
+      const string validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
       if (String.IsNullOrEmpty(fieldName))
         return false;
       if (/*fieldName.Length < 1 || 27.12.2020 - только что проверили */ fieldName.Length > 10)
         return false;
       for (int i = 0; i < fieldName.Length; i++)
       {
-        if (ValidChars.IndexOf(fieldName[i]) < 0)
+        if (validChars.IndexOf(fieldName[i]) < 0)
           return false;
         if (i == 0 && fieldName[0] >= '0' && fieldName[0] <= '9')
           return false;
@@ -566,15 +566,15 @@ namespace FreeLibSet.DBF
     /// <returns>Новый объект DataTable</returns>
     public DataTable CreateTable()
     {
-      DataTable Table = new DataTable();
+      DataTable table = new DataTable();
       for (int i = 0; i < _Items.Count; i++)
-        Table.Columns.Add(_Items[i].Name, _Items[i].DataType);
-      return Table;
+        table.Columns.Add(_Items[i].Name, _Items[i].DataType);
+      return table;
     }
 
     internal DataTable CreatePartialTable(string columnNames, out int[] dbfColPoss)
     {
-      DataTable Table = new DataTable();
+      DataTable table = new DataTable();
       string[] aColNames = columnNames.Split(',');
       dbfColPoss = new int[aColNames.Length];
       for (int i = 0; i < aColNames.Length; i++)
@@ -583,9 +583,9 @@ namespace FreeLibSet.DBF
         if (dbfColPoss[i] < 0)
           throw new ArgumentException("DBF-файл не содержит поля \"" + aColNames[i] + "\"", "columnNames");
 
-        Table.Columns.Add(aColNames[i], this[dbfColPoss[i]].DataType);
+        table.Columns.Add(aColNames[i], this[dbfColPoss[i]].DataType);
       }
-      return Table;
+      return table;
     }
 
     /// <summary>
@@ -595,8 +595,8 @@ namespace FreeLibSet.DBF
     /// <returns>true, если формат можно использовать</returns>
     public bool TestFormat(DbfFileFormat fileFormat)
     {
-      string ErrorText;
-      return TestFormat(fileFormat, out ErrorText);
+      string errorText;
+      return TestFormat(fileFormat, out errorText);
     }
 
     /// <summary>
@@ -1005,9 +1005,9 @@ namespace FreeLibSet.DBF
           throw new DbfFileFormatException("Файл \"" + dbfPath + "\" имеет нулевую длину");
 
         // Определяем наличие МЕМО-файла
-        int Code = fsDBF.ReadByte();
+        int code = fsDBF.ReadByte();
         fsDBF.Position = 0L; // обязательно возвращаем на начало
-        if (Code == 0x83)
+        if (code == 0x83)
         {
           AbsPath dbtPath = dbfPath.ChangeExtension(".DBT");
           if (!File.Exists(dbtPath.Path))
@@ -1105,25 +1105,25 @@ namespace FreeLibSet.DBF
 
       BinaryReader rdrDBF = new BinaryReader(fsDBF);
 
-      bool HasMemoFile;
+      bool hasMemoFile;
       // Идентификатор DBF-файла
-      int DbfId = rdrDBF.ReadByte();
-      switch (DbfId)
+      int dbfId = rdrDBF.ReadByte();
+      switch (dbfId)
       {
         case 0x03:
           _Format = DbfFileFormat.dBase3;
-          HasMemoFile = false;
+          hasMemoFile = false;
           break;
         case 0x04:
           _Format = DbfFileFormat.dBase4;
-          HasMemoFile = false;
+          hasMemoFile = false;
           break;
         case 0x83:
-          HasMemoFile = true;
+          hasMemoFile = true;
           _Format = DbfFileFormat.dBase3;
           break;
         case 0x8B:
-          HasMemoFile = true;
+          hasMemoFile = true;
           _Format = DbfFileFormat.dBase4;
           break;
         default:
@@ -1136,20 +1136,20 @@ namespace FreeLibSet.DBF
       rdrDBF.ReadByte();
 
       // Число записей
-      uint RecCount = rdrDBF.ReadUInt32();
-      if (RecCount > (uint)(int.MaxValue))
-        throw new DbfFileFormatException("Указано слишком много строк в заголовке: " + RecCount.ToString());
-      FRecordCount = (int)RecCount;
+      uint recCount = rdrDBF.ReadUInt32();
+      if (recCount > (uint)(int.MaxValue))
+        throw new DbfFileFormatException("Указано слишком много строк в заголовке: " + recCount.ToString());
+      _RecordCount = (int)recCount;
       // Смещение до начала данных
-      DataOffset = rdrDBF.ReadUInt16();
+      _DataOffset = rdrDBF.ReadUInt16();
       // Размер записи
-      RecSize = rdrDBF.ReadUInt16();
-      if (RecSize < 1)
+      _RecSize = rdrDBF.ReadUInt16();
+      if (_RecSize < 1)
         throw new DbfFileFormatException("Размер записи не может быть равен 0");
 
-      long WantedSize = DataOffset + (long)RecSize * (long)FRecordCount;
-      if (rdrDBF.BaseStream.Length < WantedSize)
-        throw new DbfFileFormatException("Длина файла (" + WantedSize.ToString() + ") не соответствует размеру и числу записей, заданных в заголовке. Длина файла должна быть не меньше, чем " + WantedSize.ToString());
+      long wantedSize = _DataOffset + (long)_RecSize * (long)_RecordCount;
+      if (rdrDBF.BaseStream.Length < wantedSize)
+        throw new DbfFileFormatException("Длина файла (" + wantedSize.ToString() + ") не соответствует размеру и числу записей, заданных в заголовке. Длина файла должна быть не меньше, чем " + wantedSize.ToString());
 
       // Заполнитель
       rdrDBF.ReadBytes(20);
@@ -1172,36 +1172,36 @@ namespace FreeLibSet.DBF
         if (rdrDBF.Read(bFldName, 1, 10) < 10)
           throw new DbfFileFormatException("Неожиданный конец файла. Список полей не закончен");
 
-        int EndPos = Array.IndexOf<byte>(bFldName, 0);
-        if (EndPos < 0)
+        int endPos = Array.IndexOf<byte>(bFldName, 0);
+        if (endPos < 0)
           throw new DbfFileFormatException("В списке полей для поля " + (DBStruct.Count + 1).ToString() + " не найден нулевой байт окончания имени поля");
 
-        if (EndPos == 0)
+        if (endPos == 0)
           throw new DbfFileFormatException("В списке полей для поля " + (DBStruct.Count + 1).ToString() + " не задано имя поля");
 
-        string FieldName = Encoding.GetString(bFldName, 0, EndPos);
+        string fieldName = Encoding.GetString(bFldName, 0, endPos);
         // Тип поля
         byte[] bFldType = rdrDBF.ReadBytes(1);
-        string FieldType = Encoding.GetString(bFldType);
+        string fieldType = Encoding.GetString(bFldType);
 
         rdrDBF.ReadBytes(4); // пропуск
 
-        int Len;
-        int Prec;
-        if (FieldType == "C")
+        int len;
+        int prec;
+        if (fieldType == "C")
         {
-          Len = rdrDBF.ReadUInt16();
-          Prec = 0;
+          len = rdrDBF.ReadUInt16();
+          prec = 0;
         }
         else
         {
-          Len = rdrDBF.ReadByte();
-          Prec = rdrDBF.ReadByte();
+          len = rdrDBF.ReadByte();
+          prec = rdrDBF.ReadByte();
         }
 
         rdrDBF.ReadBytes(14);
 
-        switch (FieldType)
+        switch (fieldType)
         {
           case "C":
           case "N":
@@ -1215,21 +1215,21 @@ namespace FreeLibSet.DBF
             FErrors.AddError("Поле \"" + FieldName + "\" имеет неизвестный тип \"" + FieldType +
               "\". Загружено как строковое поле");
              * */
-            FieldType = "C";
+            fieldType = "C";
             break;
         }
 
-        _DBStruct.Add(new DbfFieldInfo(FieldName, FieldType[0], Len, Prec));
+        _DBStruct.Add(new DbfFieldInfo(fieldName, fieldType[0], len, prec));
 
         _IsReadOnly = IsReadOnly;
       }
 
-      if (DBStruct.RecordSize != RecSize)
-        throw new DbfFileFormatException("Размер записи, заданный в заголовке (" + RecSize.ToString() +
+      if (DBStruct.RecordSize != _RecSize)
+        throw new DbfFileFormatException("Размер записи, заданный в заголовке (" + _RecSize.ToString() +
           ") не совпадает с размером всех полей (" + DBStruct.RecordSize.ToString() + ")");
 
-      if (DataOffset < rdrDBF.BaseStream.Position)
-        throw new DbfFileFormatException("Неправильная позиция начала данных (" + DataOffset.ToString() + "). Описания полей перекрывают область данных");
+      if (_DataOffset < rdrDBF.BaseStream.Position)
+        throw new DbfFileFormatException("Неправильная позиция начала данных (" + _DataOffset.ToString() + "). Описания полей перекрывают область данных");
 
       // Внутренние поля
       InitDBStructInternal();
@@ -1238,7 +1238,7 @@ namespace FreeLibSet.DBF
 
       #region 3. Подготовка буфера строки
 
-      _UseMemoFile = (fsDBT != null) && HasMemoFile;
+      _UseMemoFile = (fsDBT != null) && hasMemoFile;
       // Отсутствие мемо-файла при наличии заголовка 0x83 еще не является фатальной ошибкой
       // Ошибка возникнет при попытке чтени значения мемо-поля
       /*
@@ -1272,12 +1272,12 @@ namespace FreeLibSet.DBF
         if (_MemoBlockCount < MinMemoBlockCount || _MemoBlockCount > MaxMemoBlockCount)
           throw new DbfFileFormatException("В заголовке МЕМО-файла указано недопустимое число 512-байтных блоков: " + _MemoBlockCount.ToString());
 
-        long MinMemoFileSize = (long)(_MemoBlockCount - 1) * 512 + 2;
+        long minMemoFileSize = (long)(_MemoBlockCount - 1) * 512 + 2;
         //long MaxMemoFileSize = (long)(_MemoBlockCount) * 512 + 1;
-        if (rdrDBT.BaseStream.Length < MinMemoFileSize)
+        if (rdrDBT.BaseStream.Length < minMemoFileSize)
           throw new DbfFileFormatException("Реальный размер МЕМО-файла (" + rdrDBT.BaseStream.Length +
             ") меньше, чем вычисленный минимально возможный размер, исходя из заголовка (" +
-            MinMemoFileSize.ToString() + ")");
+            minMemoFileSize.ToString() + ")");
         // Максимально возможный размер не проверяем, вдруг там ЭЦП
       }
 
@@ -1491,7 +1491,7 @@ namespace FreeLibSet.DBF
       InitDBStructInternal();
       if (DBStruct.RecordSize > DbfStruct.MaxRecordSize)
         throw new DbfFileFormatException("Слишком большой размер одной записи");
-      RecSize = (ushort)(DBStruct.RecordSize);
+      _RecSize = (ushort)(DBStruct.RecordSize);
 
       BinaryWriter wrtDBF = new BinaryWriter(fsDBF);
 
@@ -1508,15 +1508,15 @@ namespace FreeLibSet.DBF
       wrtDBF.Write((byte)(dt.Day));
 
       // Число записей
-      FRecordCount = 0;
+      _RecordCount = 0;
       wrtDBF.Write((uint)0); // Число записей
 
       // Смещение данных в файле
-      DataOffset = (UInt16)((DBStruct.Count * 32) + 32 + 1);
-      wrtDBF.Write(DataOffset);
+      _DataOffset = (UInt16)((DBStruct.Count * 32) + 32 + 1);
+      wrtDBF.Write(_DataOffset);
 
       // Размер записи
-      wrtDBF.Write((UInt16)(RecSize));
+      wrtDBF.Write((UInt16)(_RecSize));
       // Заполнитель 20 байт
       WriteZeros(wrtDBF, 20);
 
@@ -1549,7 +1549,7 @@ namespace FreeLibSet.DBF
       wrtDBF.Flush();
 
       _UseMemoFile = DBStruct.HasMemo && (fsDBT != null);
-      _RecordBuffer = new byte[RecSize];
+      _RecordBuffer = new byte[_RecSize];
 
       if (_UseMemoFile)
       {
@@ -1581,12 +1581,12 @@ namespace FreeLibSet.DBF
     {
       _DBStruct.SetReadOnly(); // блокируем возможность изменения
       _FieldIndices = new Dictionary<string, int>(DBStruct.Count);
-      int CurrOffset = 1; // повторный проход
+      int currOffset = 1; // повторный проход
       _FieldOffsets = new int[DBStruct.Count];
       for (int i = 0; i < DBStruct.Count; i++)
       {
-        _FieldOffsets[i] = CurrOffset;
-        CurrOffset += DBStruct[i].Length;
+        _FieldOffsets[i] = currOffset;
+        currOffset += DBStruct[i].Length;
         _FieldIndices.Add(DBStruct[i].Name, i);
       }
     }
@@ -1777,7 +1777,7 @@ namespace FreeLibSet.DBF
           splash.AllowCancel = true;
         }
 
-        int OldRN = RecNo;
+        int oldRN = RecNo;
         try
         {
           RecNo = 0;
@@ -1801,7 +1801,7 @@ namespace FreeLibSet.DBF
         }
         finally
         {
-          RecNo = OldRN;
+          RecNo = oldRN;
         }
       }
       catch (UserCancelException)
@@ -1830,30 +1830,30 @@ namespace FreeLibSet.DBF
     {
       get
       {
-        int CodePage = CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
-        return Encoding.GetEncoding(CodePage);
+        int codePage = CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
+        return Encoding.GetEncoding(codePage);
       }
     }
 
-    #endregion
+    #endregion              
 
     #region Поля для поиска записи
 
     /// <summary>
     /// Число записей
     /// </summary>
-    public int RecordCount { get { return FRecordCount; } }
-    private int FRecordCount;
+    public int RecordCount { get { return _RecordCount; } }
+    private int _RecordCount;
 
     /// <summary>
     /// Смещение от начала файла до начала данных
     /// </summary>
-    private ushort DataOffset;
+    private ushort _DataOffset;
 
     /// <summary>
     ///  Размер одной записи
     /// </summary>
-    private ushort RecSize;
+    private ushort _RecSize;
 
     #endregion
 
@@ -1869,8 +1869,8 @@ namespace FreeLibSet.DBF
       get { return _RecNo; }
       set
       {
-        if (value < 0 || value > FRecordCount)
-          throw new ArgumentOutOfRangeException("Нельзя перейти к записи " + value.ToString() + ", т.к. количество записей в таблице равно " + FRecordCount.ToString());
+        if (value < 0 || value > _RecordCount)
+          throw new ArgumentOutOfRangeException("Нельзя перейти к записи " + value.ToString() + ", т.к. количество записей в таблице равно " + _RecordCount.ToString());
 
         if (value == _RecNo)
           return;
@@ -1882,8 +1882,8 @@ namespace FreeLibSet.DBF
           DataTools.FillArray<byte>(_RecordBuffer, 0);
         else
         {
-          fsDBF.Position = DataOffset + (value - 1) * RecSize;
-          fsDBF.Read(_RecordBuffer, 0, RecSize);
+          fsDBF.Position = _DataOffset + (value - 1) * _RecSize;
+          fsDBF.Read(_RecordBuffer, 0, _RecSize);
         }
       }
     }
@@ -2035,14 +2035,14 @@ namespace FreeLibSet.DBF
       if (DBStruct[fieldIndex].Type == 'M')
       {
         // Обработка MEMO-поля
-        uint MemoBlockEntry = ReadMemoEntry(fieldIndex);
-        if (MemoBlockEntry == 0)
+        uint memoBlockEntry = ReadMemoEntry(fieldIndex);
+        if (memoBlockEntry == 0)
           return String.Empty;
 
         if (fsDBT == null)
           throw new DbfFileFormatException("Запрошено чтение значения memo-поля \"" + DBStruct[fieldIndex].Name + "\", но memo-файл недоступен");
 
-        byte[] b = ReadMemoValue(MemoBlockEntry, DBStruct[fieldIndex].Name);
+        byte[] b = ReadMemoValue(memoBlockEntry, DBStruct[fieldIndex].Name);
         return Encoding.GetString(b);
       }
       else
@@ -2455,19 +2455,19 @@ namespace FreeLibSet.DBF
       if (String.IsNullOrEmpty(fieldName))
         throw new ArgumentNullException("fieldName"); // 27.12.2020 Перенесено в начало
 
-      int FieldPos;
-      if (!_FieldIndices.TryGetValue(fieldName.ToUpperInvariant(), out FieldPos))
+      int fieldPos;
+      if (!_FieldIndices.TryGetValue(fieldName.ToUpperInvariant(), out fieldPos))
         throw new ArgumentException("Таблица не содержит поля \"" + fieldName + "\"", "fieldName");
-      return FieldPos;
+      return fieldPos;
     }
 
     private uint ReadMemoEntry(int fieldIndex)
     {
-      int LastPos = _FieldOffsets[fieldIndex] + 9;
+      int lastPos = _FieldOffsets[fieldIndex] + 9;
       int nc = 0;
       while (nc < 10)
       {
-        byte b = _RecordBuffer[LastPos - nc];
+        byte b = _RecordBuffer[lastPos - nc];
         if (b >= (byte)'0' && b <= (byte)'9')
           nc++;
         else
@@ -2477,7 +2477,7 @@ namespace FreeLibSet.DBF
       if (nc == 0)
         return 0;
 
-      string s = Encoding.ASCII.GetString(_RecordBuffer, LastPos - nc + 1, nc);
+      string s = Encoding.ASCII.GetString(_RecordBuffer, lastPos - nc + 1, nc);
       return uint.Parse(s, StdConvert.NumberFormat);
     }
 
@@ -2487,14 +2487,14 @@ namespace FreeLibSet.DBF
         throw new DbfFileFormatException("В строке " + RecNo.ToString() + " в МЕМО-поле \"" + fieldName +
           "\" задан недопустимый номер блока: " + memoBlockEntry.ToString());
 
-      long FileOff = (long)memoBlockEntry * 512L;
-      if (fsDBT.Length <= FileOff)
+      long fileOff = (long)memoBlockEntry * 512L;
+      if (fsDBT.Length <= fileOff)
         throw new DbfFileFormatException("В строке " + RecNo.ToString() + " в МЕМО-поле \"" + fieldName +
           "\" задан недопустимый номер блока: " + memoBlockEntry.ToString() +
           ", который выходит за пределы МЕМО-файла");
 
       // Сначала нужно найти символ 1A, который завершает текст
-      fsDBT.Position = FileOff;
+      fsDBT.Position = fileOff;
       int cnt = 0;
       while (true)
       {
@@ -2512,7 +2512,7 @@ namespace FreeLibSet.DBF
       }
 
       // Теперь можно прочитать все байты
-      fsDBT.Position = FileOff;
+      fsDBT.Position = fileOff;
       byte[] buff = new byte[cnt];
       if (fsDBT.Read(buff, 0, cnt) != cnt)
         throw new IOException("Не удалось прочитать значение MEMO-поля");
@@ -2589,28 +2589,28 @@ namespace FreeLibSet.DBF
           return 0;
 
         case 'M':
-          uint MemoBlockEntry = ReadMemoEntry(fieldIndex);
-          if (MemoBlockEntry == 0)
+          uint memoBlockEntry = ReadMemoEntry(fieldIndex);
+          if (memoBlockEntry == 0)
             return 0;
           if (fsDBT == null)
             return 0;
 
-          if (MemoBlockEntry < MinMemoBlockCount || MemoBlockEntry > MaxMemoBlockCount)
+          if (memoBlockEntry < MinMemoBlockCount || memoBlockEntry > MaxMemoBlockCount)
             return 0;
 
-          long FileOff = (long)MemoBlockEntry * 512L;
-          if (fsDBT.Length <= FileOff)
+          long fileOff = (long)memoBlockEntry * 512L;
+          if (fsDBT.Length <= fileOff)
             return 0;
 
           // Сначала нужно найти символ 1A, который завершает текст
-          fsDBT.Position = FileOff;
+          fsDBT.Position = fileOff;
           int cnt = 0;
           while (true)
           {
             int v = fsDBT.ReadByte();
             if (v < 0)
               throw new DbfFileFormatException("Обнаружен неожиданный конец МЕМО-файла для блока " +
-                MemoBlockEntry.ToString() + ", указанного в строке " + RecNo.ToString() + " в поле \"" + DBStruct[fieldIndex].Name);
+                memoBlockEntry.ToString() + ", указанного в строке " + RecNo.ToString() + " в поле \"" + DBStruct[fieldIndex].Name);
             if (v == 0x1A)
               break;
             cnt++;
@@ -2762,9 +2762,9 @@ namespace FreeLibSet.DBF
 
       if (DBStruct[fieldIndex].Type == 'M')
       {
-        byte[] Bytes = Encoding.GetBytes(value);
-        uint MemoBlockEntry = WriteMemoValue(fieldIndex, Bytes);
-        value = MemoBlockEntry.ToString("d10", StdConvert.NumberFormat);
+        byte[] bytes = Encoding.GetBytes(value);
+        uint memoBlockEntry = WriteMemoValue(fieldIndex, bytes);
+        value = memoBlockEntry.ToString("d10", StdConvert.NumberFormat);
         Encoding.GetBytes(value, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
         _RecordModified = true;
         _TableModified = true;
@@ -2791,24 +2791,24 @@ namespace FreeLibSet.DBF
       // Число необходимых блоков
       int nBlocks = (value.Length + 511 + 1) / 512; // 1 байт для 0x1A
 
-      uint FirstBlock = ReadMemoEntry(fieldIndex);
-      int AvailBlocks = GetAvailMemoBlocks(FirstBlock);
+      uint firstBlock = ReadMemoEntry(fieldIndex);
+      int availBlocks = GetAvailMemoBlocks(firstBlock);
 
-      if (AvailBlocks >= nBlocks)
+      if (availBlocks >= nBlocks)
       {
         // Можно заменить существующий блок
-        fsDBT.Position = (long)FirstBlock * 512L;
+        fsDBT.Position = (long)firstBlock * 512L;
         fsDBT.Write(value, 0, value.Length);
         fsDBT.WriteByte(0x1A);
 
         // Затираем нулями старые значения
-        long sz = (long)(AvailBlocks) * 512;
+        long sz = (long)(availBlocks) * 512;
         long nZeros = sz - value.Length - 1;
         FileTools.WriteZeros(fsDBT, nZeros);
-        return FirstBlock; // Возвращаем существующее значение
+        return firstBlock; // Возвращаем существующее значение
       }
 
-      FirstBlock = _MemoBlockCount;
+      firstBlock = _MemoBlockCount;
       if ((_MemoBlockCount + nBlocks) > MaxMemoBlockCount)
         throw new InvalidOperationException("Нельзя добавить MEMO-значение в DBT-файл, т.к. будет превышено максимально допустимое число блоков " + MaxMemoBlockCount.ToString());
 
@@ -2823,7 +2823,7 @@ namespace FreeLibSet.DBF
       // Дополняем
       FillMemoToBlockCount();
 
-      return FirstBlock;
+      return firstBlock;
     }
 
     /// <summary>
@@ -3142,8 +3142,8 @@ namespace FreeLibSet.DBF
       FlushRecord();
 
       DataTools.FillArray<byte>(_RecordBuffer, (byte)' ');
-      FRecordCount++;
-      _RecNo = FRecordCount;
+      _RecordCount++;
+      _RecNo = _RecordCount;
       _IsAppendRecord = true;
       _TableModified = true;
     }
@@ -3153,8 +3153,8 @@ namespace FreeLibSet.DBF
       if (IsAppendRecord)
       {
         //fsDBF.Position = DataOffset + (FRecNo - 1) * RecSize;
-        fsDBF.Position = (long)DataOffset + ((long)_RecNo - 1L) * (long)RecSize; // 27.11.2018
-        fsDBF.Write(_RecordBuffer, 0, RecSize);
+        fsDBF.Position = (long)_DataOffset + ((long)_RecNo - 1L) * (long)_RecSize; // 27.11.2018
+        fsDBF.Write(_RecordBuffer, 0, _RecSize);
         fsDBF.WriteByte((byte)0x1A);
 
         _IsAppendRecord = false;
@@ -3165,8 +3165,8 @@ namespace FreeLibSet.DBF
       if (_RecordModified)
       {
         //fsDBF.Position = DataOffset + (FRecNo - 1) * RecSize;
-        fsDBF.Position = (long)DataOffset + ((long)_RecNo - 1L) * (long)RecSize; // 27.11.2018
-        fsDBF.Write(_RecordBuffer, 0, RecSize);
+        fsDBF.Position = (long)_DataOffset + ((long)_RecNo - 1L) * (long)_RecSize; // 27.11.2018
+        fsDBF.Write(_RecordBuffer, 0, _RecSize);
         _RecordModified = false;
         return;
       }
@@ -3184,9 +3184,9 @@ namespace FreeLibSet.DBF
 
 
       // Дата изменения
-      int Y2 = dt.Year % 100;
+      int year2 = dt.Year % 100;
       fsDBF.Position = 1L;
-      fsDBF.WriteByte((byte)Y2);
+      fsDBF.WriteByte((byte)year2);
       fsDBF.WriteByte((byte)(dt.Month));
       fsDBF.WriteByte((byte)(dt.Day));
 
@@ -3246,7 +3246,7 @@ namespace FreeLibSet.DBF
       if (splash == null)
         splash = new DummySplash();
 
-      DataTable Table = DBStruct.CreateTable();
+      DataTable table = DBStruct.CreateTable();
       int oldRN = RecNo;
       try
       {
@@ -3254,7 +3254,7 @@ namespace FreeLibSet.DBF
         splash.PercentMax = this.RecordCount;
         while (Read())
         {
-          AddDataTableRow(Table, errors);
+          AddDataTableRow(table, errors);
           splash.IncPercent();
         }
       }
@@ -3262,21 +3262,21 @@ namespace FreeLibSet.DBF
       {
         RecNo = oldRN;
       }
-      return Table;
+      return table;
     }
 
     private void AddDataTableRow(DataTable table, ErrorMessageList errors)
     {
-      DataRow Row = table.NewRow();
+      DataRow row = table.NewRow();
       for (int i = 0; i < DBStruct.Count; i++)
       {
         if (errors == null)
-          Row[i] = GetValue(i); // пусть выбрасывает исключение
+          row[i] = GetValue(i); // пусть выбрасывает исключение
         else
         {
           try
           {
-            Row[i] = GetValue(i);
+            row[i] = GetValue(i);
           }
           catch (DbfValueFormatException e)
           {
@@ -3288,7 +3288,7 @@ namespace FreeLibSet.DBF
           }
         }
       }
-      table.Rows.Add(Row);
+      table.Rows.Add(row);
     }
 
     /// <summary>
@@ -3339,8 +3339,8 @@ namespace FreeLibSet.DBF
       if (splash == null)
         splash = new DummySplash();
 
-      int[] DbfColPoss;
-      DataTable Table = DBStruct.CreatePartialTable(columnNames, out DbfColPoss);
+      int[] dbfColPoss;
+      DataTable table = DBStruct.CreatePartialTable(columnNames, out dbfColPoss);
 
       int oldRN = RecNo;
       try
@@ -3349,7 +3349,7 @@ namespace FreeLibSet.DBF
         splash.PercentMax = this.RecordCount;
         while (Read())
         {
-          AddDataTableRow(Table, errors, DbfColPoss);
+          AddDataTableRow(table, errors, dbfColPoss);
           splash.IncPercent();
         }
       }
@@ -3357,21 +3357,21 @@ namespace FreeLibSet.DBF
       {
         RecNo = oldRN;
       }
-      return Table;
+      return table;
     }
 
     private void AddDataTableRow(DataTable table, ErrorMessageList errors, int[] dbfColPoss)
     {
-      DataRow Row = table.NewRow();
+      DataRow row = table.NewRow();
       for (int i = 0; i < dbfColPoss.Length; i++)
       {
         if (errors == null)
-          Row[i] = GetValue(dbfColPoss[i]);// пусть выбрасывает исключение
+          row[i] = GetValue(dbfColPoss[i]);// пусть выбрасывает исключение
         else
         {
           try
           {
-            Row[i] = GetValue(dbfColPoss[i]);
+            row[i] = GetValue(dbfColPoss[i]);
           }
           catch (DbfValueFormatException e)
           {
@@ -3383,7 +3383,7 @@ namespace FreeLibSet.DBF
           }
         }
       }
-      table.Rows.Add(Row);
+      table.Rows.Add(row);
     }
 
     /// <summary>
@@ -3396,17 +3396,17 @@ namespace FreeLibSet.DBF
       CheckNotReadOnly();
       FlushRecord();
 
-      int[] Maps = new int[table.Columns.Count];
-      for (int i = 0; i < Maps.Length; i++)
-        Maps[i] = DBStruct.IndexOf(table.Columns[i].ColumnName);
+      int[] maps = new int[table.Columns.Count];
+      for (int i = 0; i < maps.Length; i++)
+        maps[i] = DBStruct.IndexOf(table.Columns[i].ColumnName);
 
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
         AppendRecord();
-        for (int i = 0; i < Maps.Length; i++)
+        for (int i = 0; i < maps.Length; i++)
         {
-          if (Maps[i] >= 0)
-            SetValue(Maps[i], Row[i]);
+          if (maps[i] >= 0)
+            SetValue(maps[i], row[i]);
         }
       }
 
@@ -3470,14 +3470,14 @@ namespace FreeLibSet.DBF
       if (String.IsNullOrEmpty(columnNames))
         throw new ArgumentNullException("columnNames");
 
-      int[] DbfColPoss = null; // без присвоения значения будет ошибка компилятора
+      int[] dbfColPoss = null; // без присвоения значения будет ошибка компилятора
 
       table = null;
       while (Read())
       {
         if (table == null)
-          table = DBStruct.CreatePartialTable(columnNames, out DbfColPoss);
-        AddDataTableRow(table, errors, DbfColPoss);
+          table = DBStruct.CreatePartialTable(columnNames, out dbfColPoss);
+        AddDataTableRow(table, errors, dbfColPoss);
         if (table.Rows.Count >= maxRowCount)
           break;
       }
@@ -3528,7 +3528,7 @@ namespace FreeLibSet.DBF
       _SrcFile = srcFile;
       _ResFile = resFile;
 
-      MainCopyList = new Dictionary<int, int>();
+      _MainCopyList = new Dictionary<int, int>();
     }
 
     #endregion
@@ -3557,7 +3557,7 @@ namespace FreeLibSet.DBF
     /// Основной список полей для копирования.
     /// Ключом является индекс поля в ResFile, а значением - индекс поля в исходной таблице
     /// </summary>
-    private readonly Dictionary<int, int> MainCopyList;
+    private readonly Dictionary<int, int> _MainCopyList;
 
     /// <summary>
     /// Добавить правило для копирования.
@@ -3572,10 +3572,10 @@ namespace FreeLibSet.DBF
         throw new ArgumentOutOfRangeException("srcFieldIndex", srcFieldIndex, "Индекс исходного поля должен быть в диапазоне от 0 до " + (SrcFile.DBStruct.Count - 1).ToString());
       if (resFieldIndex < 0 || resFieldIndex >= ResFile.DBStruct.Count)
         throw new ArgumentOutOfRangeException("resFieldIndex", resFieldIndex, "Индекс конечного поля должен быть в диапазоне от 0 до " + (ResFile.DBStruct.Count - 1).ToString());
-      if (MainCopyList.ContainsKey(resFieldIndex))
+      if (_MainCopyList.ContainsKey(resFieldIndex))
         throw new InvalidOperationException("Для конечного поля \"" + ResFile.DBStruct[resFieldIndex].Name + "\" уже задано правило копирования");
 
-      MainCopyList.Add(resFieldIndex, srcFieldIndex);
+      _MainCopyList.Add(resFieldIndex, srcFieldIndex);
     }
 
 
@@ -3586,13 +3586,13 @@ namespace FreeLibSet.DBF
     /// <param name="resFieldName">Имя столбца в заполняемой таблице</param>
     public void AddField(string srcFieldName, string resFieldName)
     {
-      int SrcFieldIndex = SrcFile.DBStruct.IndexOf(srcFieldName);
-      if (SrcFieldIndex < 0)
+      int srcFieldIndex = SrcFile.DBStruct.IndexOf(srcFieldName);
+      if (srcFieldIndex < 0)
         throw new ArgumentException("Исходная таблица не содержит поля \"" + srcFieldName + "\"", "srcFieldName");
-      int ResFieldIndex = ResFile.DBStruct.IndexOf(resFieldName);
-      if (ResFieldIndex < 0)
+      int resFieldIndex = ResFile.DBStruct.IndexOf(resFieldName);
+      if (resFieldIndex < 0)
         throw new ArgumentException("Конечная таблица не содержит поля \"" + resFieldName + "\"", "resFieldName");
-      AddField(SrcFieldIndex, ResFieldIndex);
+      AddField(srcFieldIndex, resFieldIndex);
     }
 
     /// <summary>
@@ -3609,36 +3609,36 @@ namespace FreeLibSet.DBF
     /// <param name="exceptedFields">Список исключаемых полей. Может быть null</param>
     public void AddAllFieldsExcept(string[] exceptedFields)
     {
-      for (int ResFieldIndex = 0; ResFieldIndex < ResFile.DBStruct.Count; ResFieldIndex++)
+      for (int resFieldIndex = 0; resFieldIndex < ResFile.DBStruct.Count; resFieldIndex++)
       {
-        if (MainCopyList.ContainsKey(ResFieldIndex))
+        if (_MainCopyList.ContainsKey(resFieldIndex))
           continue; // уже есть правило
 
-        string FieldName = ResFile.DBStruct[ResFieldIndex].Name;
+        string fieldName = ResFile.DBStruct[resFieldIndex].Name;
 
         if (exceptedFields != null)
         {
-          bool ExceptFlag = false;
+          bool exceptFlag = false;
           for (int i = 0; i < exceptedFields.Length; i++)
           {
-            if (String.Equals(FieldName, exceptedFields[i], StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(fieldName, exceptedFields[i], StringComparison.OrdinalIgnoreCase))
             {
-              ExceptFlag = true;
+              exceptFlag = true;
               break;
             }
           }
-          if (ExceptFlag)
+          if (exceptFlag)
             continue;
         }
 
-        int SrcFieldIndex = SrcFile.DBStruct.IndexOf(FieldName);
-        if (SrcFieldIndex < 0)
+        int srcFieldIndex = SrcFile.DBStruct.IndexOf(fieldName);
+        if (srcFieldIndex < 0)
           continue; // Нет такого поля
 
-        if (SrcFile.DBStruct[SrcFieldIndex].Type == 'M' && (!SrcFile.HasMemoFile))
+        if (SrcFile.DBStruct[srcFieldIndex].Type == 'M' && (!SrcFile.HasMemoFile))
           continue;
 
-        AddField(SrcFieldIndex, ResFieldIndex);
+        AddField(srcFieldIndex, resFieldIndex);
       }
     }
 
@@ -3647,7 +3647,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     protected void CheckNotReadOnly()
     {
-      if (DirectCopyList != null)
+      if (_DirectCopyList != null)
         throw new ReadOnlyException("Объект уже использован для копирования и не может быть модифицирован");
     }
 
@@ -3669,7 +3669,7 @@ namespace FreeLibSet.DBF
     /// преобразование byte[]-byte[] иди прямое копирование.
     /// Иначе требуется преобразование byte[]-string-byte[]
     /// </summary>
-    private SingleByteTranscoding Transcoding;
+    private SingleByteTranscoding _Transcoding;
 
     #endregion
 
@@ -3707,7 +3707,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Список блоков, которые можно копировать напрямую без преобразования значений
     /// </summary>
-    private List<DirectCopyItem> DirectCopyList;
+    private List<DirectCopyItem> _DirectCopyList;
 
 
     private struct SpaceFillItem : IComparable<SpaceFillItem>
@@ -3741,12 +3741,12 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Список блоков в конечной строке, которые должны заполняться пробелами
     /// </summary>
-    private List<SpaceFillItem> SpaceFillList;
+    private List<SpaceFillItem> _SpaceFillList;
 
     /// <summary>
     /// Буфер, содержащий символы ' '
     /// </summary>
-    private byte[] SpaceBuffer;
+    private byte[] _SpaceBuffer;
 
     private struct FieldPair
     {
@@ -3771,7 +3771,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Список полей, которые нужно копивать по значениям
     /// </summary>
-    private List<FieldPair> ByValueCopyList;
+    private List<FieldPair> _ByValueCopyList;
 
     /// <summary>
     /// Выполнение подготовительных действий.
@@ -3779,44 +3779,44 @@ namespace FreeLibSet.DBF
     /// </summary>
     protected void Prepare()
     {
-      if (DirectCopyList != null)
+      if (_DirectCopyList != null)
         return; // повторный вызов
 
       if (SingleByteTranscoding.CanCreate(SrcFile.Encoding, ResFile.Encoding))
-        Transcoding = new SingleByteTranscoding(SrcFile.Encoding, ResFile.Encoding);
+        _Transcoding = new SingleByteTranscoding(SrcFile.Encoding, ResFile.Encoding);
 
       #region Заполнение списков
 
-      DirectCopyList = new List<DirectCopyItem>();
-      SpaceFillList = new List<SpaceFillItem>();
-      ByValueCopyList = new List<FieldPair>();
+      _DirectCopyList = new List<DirectCopyItem>();
+      _SpaceFillList = new List<SpaceFillItem>();
+      _ByValueCopyList = new List<FieldPair>();
 
-      foreach (KeyValuePair<int, int> Pair in MainCopyList)
+      foreach (KeyValuePair<int, int> pair in _MainCopyList)
       {
-        if (TestDirectCopy(Pair.Value, Pair.Key))
+        if (TestDirectCopy(pair.Value, pair.Key))
           continue;
 
         // Медленное копирование
-        ByValueCopyList.Add(new FieldPair(Pair.Value, Pair.Key));
+        _ByValueCopyList.Add(new FieldPair(pair.Value, pair.Key));
       }
 
       #endregion
 
       #region Cписок для прямого копирования
 
-      DirectCopyList.Sort();
+      _DirectCopyList.Sort();
 
-      for (int i = DirectCopyList.Count - 1; i > 0; i--)
+      for (int i = _DirectCopyList.Count - 1; i > 0; i--)
       {
-        DirectCopyItem Item1 = DirectCopyList[i - 1];
-        DirectCopyItem Item2 = DirectCopyList[i];
-        if ((Item1.SrcStart + Item1.Len == Item2.SrcStart) &&
-          (Item1.ResStart + Item1.Len == Item2.ResStart))
+        DirectCopyItem item1 = _DirectCopyList[i - 1];
+        DirectCopyItem item2 = _DirectCopyList[i];
+        if ((item1.SrcStart + item1.Len == item2.SrcStart) &&
+          (item1.ResStart + item1.Len == item2.ResStart))
         {
           // Два блока подряд
-          DirectCopyItem Item3 = new DirectCopyItem(Item1.SrcStart, Item1.ResStart, Item1.Len + Item2.Len);
-          DirectCopyList[i - 1] = Item3;
-          DirectCopyList.RemoveAt(i);
+          DirectCopyItem item3 = new DirectCopyItem(item1.SrcStart, item1.ResStart, item1.Len + item2.Len);
+          _DirectCopyList[i - 1] = item3;
+          _DirectCopyList.RemoveAt(i);
         }
       }
 
@@ -3830,28 +3830,28 @@ namespace FreeLibSet.DBF
        * чем в исходной таблице
        */
 
-      SpaceFillList.Sort();
+      _SpaceFillList.Sort();
 
-      for (int i = SpaceFillList.Count - 1; i > 0; i--)
+      for (int i = _SpaceFillList.Count - 1; i > 0; i--)
       {
-        SpaceFillItem Item1 = SpaceFillList[i - 1];
-        SpaceFillItem Item2 = SpaceFillList[i];
-        if (Item1.ResStart + Item1.Len == Item2.ResStart)
+        SpaceFillItem item1 = _SpaceFillList[i - 1];
+        SpaceFillItem item2 = _SpaceFillList[i];
+        if (item1.ResStart + item1.Len == item2.ResStart)
         {
           // Два блока подряд
-          SpaceFillItem Item3 = new SpaceFillItem(Item1.ResStart, Item1.Len + Item2.Len);
-          SpaceFillList[i - 1] = Item3;
-          SpaceFillList.RemoveAt(i);
+          SpaceFillItem item3 = new SpaceFillItem(item1.ResStart, item1.Len + item2.Len);
+          _SpaceFillList[i - 1] = item3;
+          _SpaceFillList.RemoveAt(i);
         }
       }
 
-      int MaxLen = 0;
-      for (int i = 0; i < SpaceFillList.Count; i++)
-        MaxLen = Math.Max(MaxLen, SpaceFillList[i].Len);
-      if (MaxLen > 0)
+      int maxLen = 0;
+      for (int i = 0; i < _SpaceFillList.Count; i++)
+        maxLen = Math.Max(maxLen, _SpaceFillList[i].Len);
+      if (maxLen > 0)
       {
-        SpaceBuffer = new byte[MaxLen];
-        DataTools.FillArray<byte>(SpaceBuffer, (byte)' ');
+        _SpaceBuffer = new byte[maxLen];
+        DataTools.FillArray<byte>(_SpaceBuffer, (byte)' ');
       }
 
       #endregion
@@ -3859,25 +3859,25 @@ namespace FreeLibSet.DBF
 
     private bool TestDirectCopy(int srcFieldIndex, int resFieldIndex)
     {
-      DbfFieldInfo SrcField = SrcFile.DBStruct[srcFieldIndex];
-      DbfFieldInfo ResField = ResFile.DBStruct[resFieldIndex];
-      if (SrcField.Type != ResField.Type)
+      DbfFieldInfo srcField = SrcFile.DBStruct[srcFieldIndex];
+      DbfFieldInfo resField = ResFile.DBStruct[resFieldIndex];
+      if (srcField.Type != resField.Type)
         return false;
 
-      int SrcOff = SrcFile.GetFieldOffset(srcFieldIndex);
-      int ResOff = ResFile.GetFieldOffset(resFieldIndex);
+      int srcOff = SrcFile.GetFieldOffset(srcFieldIndex);
+      int resOff = ResFile.GetFieldOffset(resFieldIndex);
 
-      switch (SrcField.Type)
+      switch (srcField.Type)
       {
         case 'M':
           return false;
 
         case 'C':
-          if (Transcoding != null)
+          if (_Transcoding != null)
           {
-            DirectCopyList.Add(new DirectCopyItem(SrcOff, ResOff, Math.Min(SrcField.Length, ResField.Length)));
-            if (ResField.Length > SrcField.Length)
-              SpaceFillList.Add(new SpaceFillItem(ResOff + SrcField.Length, ResField.Length - SrcField.Length));
+            _DirectCopyList.Add(new DirectCopyItem(srcOff, resOff, Math.Min(srcField.Length, resField.Length)));
+            if (resField.Length > srcField.Length)
+              _SpaceFillList.Add(new SpaceFillItem(resOff + srcField.Length, resField.Length - srcField.Length));
             return true;
           }
           else
@@ -3885,21 +3885,21 @@ namespace FreeLibSet.DBF
 
         case 'D':
         case 'L':
-          DirectCopyList.Add(new DirectCopyItem(SrcOff, ResOff, SrcField.Length));
+          _DirectCopyList.Add(new DirectCopyItem(srcOff, resOff, srcField.Length));
           return true;
 
         case 'N':
-          if (SrcField.Precision != ResField.Precision)
+          if (srcField.Precision != resField.Precision)
             return false;
-          if (SrcField.Length > ResField.Length)
+          if (srcField.Length > resField.Length)
             return false; // нельзя укорачивать длину
-          DirectCopyList.Add(new DirectCopyItem(SrcOff, ResOff, Math.Min(SrcField.Length, ResField.Length)));
-          if (ResField.Length > SrcField.Length)
-            SpaceFillList.Add(new SpaceFillItem(ResOff + SrcField.Length, ResField.Length - SrcField.Length));
+          _DirectCopyList.Add(new DirectCopyItem(srcOff, resOff, Math.Min(srcField.Length, resField.Length)));
+          if (resField.Length > srcField.Length)
+            _SpaceFillList.Add(new SpaceFillItem(resOff + srcField.Length, resField.Length - srcField.Length));
           return true;
         case 'F':
           // ??? Наверное, можно выполнять удлинение, как и для 'N'
-          return SrcField.Length == ResField.Length && SrcField.Precision == ResField.Precision;
+          return srcField.Length == resField.Length && srcField.Precision == resField.Precision;
         default:
           return false;
       }
@@ -3917,36 +3917,36 @@ namespace FreeLibSet.DBF
 
       StringBuilder sb = new StringBuilder();
       sb.Append("Direct copy blocks: ");
-      sb.Append(DirectCopyList.Count.ToString());
+      sb.Append(_DirectCopyList.Count.ToString());
       sb.Append(Environment.NewLine);
       sb.Append("Space fill blocks: ");
-      sb.Append(SpaceFillList.Count.ToString());
+      sb.Append(_SpaceFillList.Count.ToString());
       sb.Append(Environment.NewLine);
       sb.Append("Transcoding: ");
-      if (Transcoding == null)
+      if (_Transcoding == null)
         sb.Append("Not used");
-      else if (Transcoding.IsDirect)
+      else if (_Transcoding.IsDirect)
         sb.Append("Direct copy");
       else
-        sb.Append(Transcoding.ToString());
+        sb.Append(_Transcoding.ToString());
       sb.Append(Environment.NewLine);
       sb.Append("Slow copy fields: ");
-      sb.Append(ByValueCopyList.Count.ToString());
-      for (int i = 0; i < ByValueCopyList.Count; i++)
+      sb.Append(_ByValueCopyList.Count.ToString());
+      for (int i = 0; i < _ByValueCopyList.Count; i++)
       {
         sb.Append(Environment.NewLine);
         sb.Append("  [");
         sb.Append(i);
         sb.Append("] ");
-        DbfFieldInfo SrcField = SrcFile.DBStruct[ByValueCopyList[i].SrcFieldIndex];
-        DbfFieldInfo ResField = ResFile.DBStruct[ByValueCopyList[i].ResFieldIndex];
-        sb.Append(SrcField.Name);
+        DbfFieldInfo srcField = SrcFile.DBStruct[_ByValueCopyList[i].SrcFieldIndex];
+        DbfFieldInfo resField = ResFile.DBStruct[_ByValueCopyList[i].ResFieldIndex];
+        sb.Append(srcField.Name);
         sb.Append("(");
-        sb.Append(SrcField.TypeSizeText);
+        sb.Append(srcField.TypeSizeText);
         sb.Append(") -> ");
-        sb.Append(ResField.Name);
+        sb.Append(resField.Name);
         sb.Append("(");
-        sb.Append(ResField.TypeSizeText);
+        sb.Append(resField.TypeSizeText);
         sb.Append(")");
       }
 
@@ -4009,35 +4009,35 @@ namespace FreeLibSet.DBF
     /// </summary>
     private void DoCopy()
     {
-      byte[] SrcBuf = SrcFile.RecordBuffer;
-      byte[] ResBuf = ResFile.RecordBuffer;
+      byte[] srcBuf = SrcFile.RecordBuffer;
+      byte[] resBuf = ResFile.RecordBuffer;
 
       #region Прямое копирование
 
-      for (int i = 0; i < DirectCopyList.Count; i++)
+      for (int i = 0; i < _DirectCopyList.Count; i++)
       {
-        DirectCopyItem Item = DirectCopyList[i];
-        if (Transcoding == null)
-          Array.Copy(SrcBuf, Item.SrcStart, ResBuf, Item.ResStart, Item.Len);
+        DirectCopyItem item = _DirectCopyList[i];
+        if (_Transcoding == null)
+          Array.Copy(srcBuf, item.SrcStart, resBuf, item.ResStart, item.Len);
         else
-          Transcoding.Transcode(SrcBuf, Item.SrcStart, ResBuf, Item.ResStart, Item.Len);
+          _Transcoding.Transcode(srcBuf, item.SrcStart, resBuf, item.ResStart, item.Len);
       }
 
       #endregion
 
       #region Заполнение пробелами
 
-      for (int i = 0; i < SpaceFillList.Count; i++)
-        Array.Copy(SpaceBuffer, 0, ResBuf, SpaceFillList[i].ResStart, SpaceFillList[i].Len);
+      for (int i = 0; i < _SpaceFillList.Count; i++)
+        Array.Copy(_SpaceBuffer, 0, resBuf, _SpaceFillList[i].ResStart, _SpaceFillList[i].Len);
 
       #endregion
 
       #region Медленное копирование
 
-      for (int i = 0; i < ByValueCopyList.Count; i++)
+      for (int i = 0; i < _ByValueCopyList.Count; i++)
       {
-        object x = SrcFile.GetValue(ByValueCopyList[i].SrcFieldIndex);
-        ResFile.SetValue(ByValueCopyList[i].ResFieldIndex, x);
+        object x = SrcFile.GetValue(_ByValueCopyList[i].SrcFieldIndex);
+        ResFile.SetValue(_ByValueCopyList[i].ResFieldIndex, x);
       }
 
       #endregion

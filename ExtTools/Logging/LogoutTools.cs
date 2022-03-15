@@ -102,19 +102,19 @@ namespace FreeLibSet.Logging
     {
       #region Поиск плохого символа
 
-      bool BadFound = false;
+      bool badFound = false;
       for (int i = 0; i < text.Length; i++)
       {
         if (text[i] < ' ')
         {
-          BadFound = true;
+          badFound = true;
           break;
         }
       }
 
       #endregion
 
-      if (!BadFound)
+      if (!badFound)
         return text;
 
       #region Замена
@@ -384,15 +384,15 @@ namespace FreeLibSet.Logging
       {
         if (_LogBaseDirectory.IsEmpty)
         {
-          string AppName = EnvironmentTools.ApplicationName;
-          if (String.IsNullOrEmpty(AppName))
-            AppName = "Application";
+          string appName = EnvironmentTools.ApplicationName;
+          if (String.IsNullOrEmpty(appName))
+            appName = "Application";
           // Так нельзя.
           // Нет разрешение на создание папок и файлов в ("/var/log"
           //if (Environment.OSVersion.Platform==PlatformID.Unix)
           //  return new AbsPath(new AbsPath("/var/log"), AppName); // 12.05.2016
           //else
-          return new AbsPath(new AbsPath(Path.GetTempPath()), "Log", AppName);
+          return new AbsPath(new AbsPath(Path.GetTempPath()), "Log", appName);
         }
         else
           return _LogBaseDirectory;
@@ -420,32 +420,32 @@ namespace FreeLibSet.Logging
     /// <returns>Путь к файлу</returns>
     public static AbsPath GetLogFileName(string subDir, string prefix)
     {
-      AbsPath FileName = AbsPath.Empty;
+      AbsPath fileName = AbsPath.Empty;
       lock (DataTools.InternalSyncRoot)
       {
-        AbsPath Dir = LogBaseDirectory;
+        AbsPath dir = LogBaseDirectory;
         if (!String.IsNullOrEmpty(subDir))
-          Dir += subDir;
-        FileTools.ForceDirs(Dir);
+          dir += subDir;
+        FileTools.ForceDirs(dir);
         DateTime dt = DateTime.Now;
         if (prefix == null)
           prefix = String.Empty;
-        string FileNameBase = Dir.SlashedPath + prefix + dt.ToString("yyyyMMddHHmmss");
-        FileName = new AbsPath(FileNameBase + ".log");
+        string fileNameBase = dir.SlashedPath + prefix + dt.ToString("yyyyMMddHHmmss");
+        fileName = new AbsPath(fileNameBase + ".log");
         int cnt = 0;
-        while (File.Exists(FileName.Path))
+        while (File.Exists(fileName.Path))
         {
           if (cnt >= 100)
             throw new InvalidOperationException("Не удалось придумать уникальное имя файла");
           cnt++;
-          FileName = new AbsPath(FileNameBase + cnt.ToString() + ".log");
+          fileName = new AbsPath(fileNameBase + cnt.ToString() + ".log");
         }
 
         // Создаем файл нулевой длины
-        StreamWriter wrt = new StreamWriter(FileName.Path);
+        StreamWriter wrt = new StreamWriter(fileName.Path);
         wrt.Close();
       }
-      return FileName;
+      return fileName;
     }
 
     /// <summary>
@@ -491,45 +491,45 @@ namespace FreeLibSet.Logging
     /// <returns>Таблица со списком файлов</returns>
     public static DataTable CreateLogFileTable(string subDir, string prefix)
     {
-      DataTable Table = new DataTable("ErrorLogFiles");
-      Table.Columns.Add("Time", typeof(DateTime));
-      Table.Columns.Add("FilePath", typeof(string));
-      Table.Columns.Add("ComputerName", typeof(String));
+      DataTable table = new DataTable("ErrorLogFiles");
+      table.Columns.Add("Time", typeof(DateTime));
+      table.Columns.Add("FilePath", typeof(string));
+      table.Columns.Add("ComputerName", typeof(String));
       lock (DataTools.InternalSyncRoot)
       {
-        AbsPath Dir = LogBaseDirectory;
+        AbsPath dir = LogBaseDirectory;
         if (!String.IsNullOrEmpty(subDir))
-          Dir += subDir;
+          dir += subDir;
         if (prefix == null)
           prefix = String.Empty;
-        if (Directory.Exists(Dir.Path))
+        if (Directory.Exists(dir.Path))
         {
-          string[] Names = Directory.GetFiles(Dir.Path, prefix + "*.log");
+          string[] fileNames = Directory.GetFiles(dir.Path, prefix + "*.log");
 
-          object CompName = DBNull.Value;
+          object compName = DBNull.Value;
           if (!String.IsNullOrEmpty(Environment.MachineName))
-            CompName = Environment.MachineName;
+            compName = Environment.MachineName;
 
-          for (int i = 0; i < Names.Length; i++)
+          for (int i = 0; i < fileNames.Length; i++)
           {
-            string Name1 = Path.GetFileNameWithoutExtension(Names[i]).Substring(prefix.Length);
-            if (Name1.Length < 14)
+            string name1 = Path.GetFileNameWithoutExtension(fileNames[i]).Substring(prefix.Length);
+            if (name1.Length < 14)
               continue; // старый формат не поддерживается
-            Name1 = Name1.Substring(0, 14);
-            DateTime Time;
-            if (!DateTime.TryParseExact(Name1, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out Time))
+            name1 = name1.Substring(0, 14);
+            DateTime time;
+            if (!DateTime.TryParseExact(name1, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out time))
               continue; // что-то неправильное
 
             // Подходящий файл
-            DataRow Row = Table.NewRow();
-            Row["Time"] = Time;
-            Row["FilePath"] = Names[i];
-            Row["ComputerName"] = CompName;
-            Table.Rows.Add(Row);
+            DataRow row = table.NewRow();
+            row["Time"] = time;
+            row["FilePath"] = fileNames[i];
+            row["ComputerName"] = compName;
+            table.Rows.Add(row);
           }
         }
       }
-      return Table;
+      return table;
     }
 
     #endregion
@@ -579,9 +579,9 @@ namespace FreeLibSet.Logging
       Trace.WriteLine("OnLogoutInfoNeeded started");
 #endif
 
-      int IndentLevel = args.IndentLevel;
+      int indentLevel = args.IndentLevel;
 
-      bool OutOfMemory = false; // 06.03.2018
+      bool outOfMemory = false; // 06.03.2018
 
       if (settings.AddSystemInfo)
       {
@@ -598,15 +598,15 @@ namespace FreeLibSet.Logging
         catch (Exception e)
         {
           if (e is OutOfMemoryException)
-            OutOfMemory = true;
+            outOfMemory = true;
 
           args.IndentLevel++;
           DoLogoutException2(args, e, "*** Ошибка при добавлении системной информации ***", false);
         }
-        args.IndentLevel = IndentLevel; // восстанавливаем уровень отступов на случай сбоя
+        args.IndentLevel = indentLevel; // восстанавливаем уровень отступов на случай сбоя
       }
 
-      if (OutOfMemory)
+      if (outOfMemory)
       {
         args.WriteLine("*** Вывод отладочной информации отменен из-за OutOfMemoryException ***");
         return;
@@ -614,20 +614,20 @@ namespace FreeLibSet.Logging
 
       if (settings.UseHandlers)
       {
-        LogoutInfoNeededEventHandler[] Handlers;
+        LogoutInfoNeededEventHandler[] handlers;
         lock (_LogoutInfoNeededList)
         {
-          Handlers = _LogoutInfoNeededList.ToArray();
+          handlers = _LogoutInfoNeededList.ToArray();
         }
 
-        for (int i = 0; i < Handlers.Length; i++)
+        for (int i = 0; i < handlers.Length; i++)
         {
 #if TRACE_LOGOUT
       Trace.WriteLine("Handler #"+i.ToString()+" started");
 #endif
           try
           {
-            Handlers[i](null, args);
+            handlers[i](null, args);
 #if TRACE_LOGOUT
       Trace.WriteLine("Handler #"+i.ToString()+" finished");
 #endif
@@ -636,7 +636,7 @@ namespace FreeLibSet.Logging
           {
             if (e is OutOfMemoryException)
             {
-              OutOfMemory = true;
+              outOfMemory = true;
               break;
             }
             else
@@ -644,18 +644,18 @@ namespace FreeLibSet.Logging
               try
               {
                 e.Data["LogoutTools.HandlerIndex"] = i;
-                e.Data["LogoutTools.Handler"] = Handlers[i].ToString(); // наверное, бесполезно
+                e.Data["LogoutTools.Handler"] = handlers[i].ToString(); // наверное, бесполезно
               }
               catch { }
             }
             args.IndentLevel++;
             DoLogoutException2(args, e, "*** Ошибка при добавлении информации обработчиком logout ***", false);
           }
-          args.IndentLevel = IndentLevel; // восстанавливаем уровень отступов на случай сбоя
+          args.IndentLevel = indentLevel; // восстанавливаем уровень отступов на случай сбоя
         }
       }
 
-      if (OutOfMemory)
+      if (outOfMemory)
       {
         args.WriteLine("*** Вывод отладочной информации прекращен из-за OutOfMemoryException ***");
         return;
@@ -722,17 +722,17 @@ namespace FreeLibSet.Logging
     {
       DefaultLogoutProp(args);
 
-      LogoutPropEventHandler[] Handlers;
+      LogoutPropEventHandler[] handlers;
       lock (_LogoutPropList)
       {
-        Handlers = _LogoutPropList.ToArray();
+        handlers = _LogoutPropList.ToArray();
       }
 
-      for (int i = 0; i < Handlers.Length; i++)
+      for (int i = 0; i < handlers.Length; i++)
       {
         try
         {
-          Handlers[i](null, args);
+          handlers[i](null, args);
         }
         catch { } // Ошибки выводить некуда
       }
@@ -1081,9 +1081,9 @@ namespace FreeLibSet.Logging
         sb.Append(textFileName.Path);
       }
 
-      EventLog Log = new EventLog();
-      Log.Source = "Application";
-      Log.WriteEntry(sb.ToString(), entryType);
+      EventLog evLog = new EventLog();
+      evLog.Source = "Application";
+      evLog.WriteEntry(sb.ToString(), entryType);
     }
 
     #endregion
@@ -1104,7 +1104,7 @@ namespace FreeLibSet.Logging
     }
     private static bool _LogoutInfoForException = true;
 
-    private static bool InsideLogoutException = false;
+    private static bool _InsideLogoutException = false;
 
     /// <summary>
     /// Записывает исключение в log-файл
@@ -1133,9 +1133,9 @@ namespace FreeLibSet.Logging
         // быть перехвачено другим обработчиком, который, в свою очередь, выполнит
         // повторный вызов LogoutException
 
-        if (!InsideLogoutException)
+        if (!_InsideLogoutException)
         {
-          InsideLogoutException = true;
+          _InsideLogoutException = true;
           try
           {
             filePath = GetLogFileName("Errors", null);
@@ -1155,7 +1155,7 @@ namespace FreeLibSet.Logging
             // В случае ошибки помещаем запись в журнал событий Windows
             EventLogException(e2, "Ошибка при записи LOG-файла ошибки");
           }
-          InsideLogoutException = false;
+          _InsideLogoutException = false;
         }
       }
 
@@ -1222,13 +1222,13 @@ namespace FreeLibSet.Logging
     /// выводит системную информацию и вызывает обработчики события LogoutInfoNeeded.</param>
     public static void LogoutException(TextWriter writer, Exception e, string title, bool logoutInfo)
     {
-      using (TextWriterTraceListener Listener = new TextWriterTraceListener(writer))
+      using (TextWriterTraceListener listener = new TextWriterTraceListener(writer))
       {
-        Listener.IndentSize = 2;
-        LogoutInfoNeededEventArgs args = new LogoutInfoNeededEventArgs(Listener, e);
+        listener.IndentSize = 2;
+        LogoutInfoNeededEventArgs args = new LogoutInfoNeededEventArgs(listener, e);
         DoLogoutException2(args, e, title, logoutInfo);
 
-        Listener.Flush();
+        listener.Flush();
       }
     }
 
@@ -1309,8 +1309,8 @@ namespace FreeLibSet.Logging
       ExceptionLogFileCreatedEventHandler ehExceptionLogFileCreated = ExceptionLogFileCreated; // 12.01.2021. Учитываем возможность асинхронного присоединения и отсоединения обработчиков событий
       if (ehExceptionLogFileCreated != null)
       {
-        ExceptionLogFileCreatedEventArgs Args = new ExceptionLogFileCreatedEventArgs(filePath);
-        ehExceptionLogFileCreated(null, Args);
+        ExceptionLogFileCreatedEventArgs args = new ExceptionLogFileCreatedEventArgs(filePath);
+        ehExceptionLogFileCreated(null, args);
       }
     }
 
@@ -1350,8 +1350,8 @@ namespace FreeLibSet.Logging
     /// <param name="settings">Настройки</param>
     public static void GetDebugInfo(TraceListener listener, LogoutDebugInfoSettings settings)
     {
-      LogoutInfoNeededEventArgs Args = new LogoutInfoNeededEventArgs(listener, null);
-      OnLogoutInfoNeeded(Args, settings);
+      LogoutInfoNeededEventArgs args = new LogoutInfoNeededEventArgs(listener, null);
+      OnLogoutInfoNeeded(args, settings);
     }
 
     /// <summary>
@@ -1364,11 +1364,11 @@ namespace FreeLibSet.Logging
       if (writer == null)
         throw new ArgumentNullException("writer");
 
-      using (TextWriterTraceListener Listener = new TextWriterTraceListener(writer))
+      using (TextWriterTraceListener listener = new TextWriterTraceListener(writer))
       {
-        Listener.IndentSize = 2;
-        GetDebugInfo(Listener, settings);
-        Listener.Flush();
+        listener.IndentSize = 2;
+        GetDebugInfo(listener, settings);
+        listener.Flush();
       }
     }
 
@@ -1387,8 +1387,8 @@ namespace FreeLibSet.Logging
     {
       try
       {
-        Stack ObjStack = new Stack();
-        DoLogoutObject(args, obj, ObjStack);
+        Stack objStack = new Stack();
+        DoLogoutObject(args, obj, objStack);
       }
       catch
       {
@@ -1429,27 +1429,27 @@ namespace FreeLibSet.Logging
 
       #region Запрос для объекта в-целом
 
-      LogoutPropEventArgs Args2 = new LogoutPropEventArgs(obj, objStack.Count);
+      LogoutPropEventArgs args2 = new LogoutPropEventArgs(obj, objStack.Count);
 
       //if (ObjStack.Count > 0)
       //{
       if (objStack.Count > 4)
-        Args2.Mode = LogoutPropMode.None;
+        args2.Mode = LogoutPropMode.None;
       else
-        Args2.Mode = LogoutPropMode.Default;
+        args2.Mode = LogoutPropMode.Default;
 
-      OnLogoutProp(Args2);
+      OnLogoutProp(args2);
       //}
       //else
       //  Args2.Mode = LogoutPropMode.Default;
 
-      if (objStack.Count == 0 && Args2.Mode != LogoutPropMode.Default && Args2.Handler == null)
+      if (objStack.Count == 0 && args2.Mode != LogoutPropMode.Default && args2.Handler == null)
       {
         args.WriteLine("Вывод объекта отменен");
         return;
       }
 
-      if (Args2.Mode == LogoutPropMode.None)
+      if (args2.Mode == LogoutPropMode.None)
         return; // 23.10.2017
 
       #endregion
@@ -1457,11 +1457,11 @@ namespace FreeLibSet.Logging
       objStack.Push(obj);
       try
       {
-        if (Args2.Mode == LogoutPropMode.Default)
+        if (args2.Mode == LogoutPropMode.Default)
           DoLogoutObject2(args, obj, objStack);
 
-        if (Args2.Handler != null)
-          Args2.Handler(args, obj); // после основного вывода для объекта
+        if (args2.Handler != null)
+          args2.Handler(args, obj); // после основного вывода для объекта
       }
       finally
       {
@@ -1519,7 +1519,7 @@ namespace FreeLibSet.Logging
 
       #region Вывод именных свойств
 
-      LogoutPropEventArgs Args2 = new LogoutPropEventArgs(obj, objStack.Count);
+      LogoutPropEventArgs args2 = new LogoutPropEventArgs(obj, objStack.Count);
 
       PropertyInfo[] aProps = typ.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
@@ -1534,20 +1534,20 @@ namespace FreeLibSet.Logging
         try
         {
 
-          Args2.PropertyName = aProps[i].Name;
-          Args2.Mode = LogoutPropMode.Default;
-          OnLogoutProp(Args2);
-          if (Args2.Mode == LogoutPropMode.None)
+          args2.PropertyName = aProps[i].Name;
+          args2.Mode = LogoutPropMode.Default;
+          OnLogoutProp(args2);
+          if (args2.Mode == LogoutPropMode.None)
             continue;
 
-          bool Indexed = false;
+          bool isIndexed = false;
           ParameterInfo[] aPars = aProps[i].GetIndexParameters();
           if (aPars != null)
           {
             if (aPars.Length > 0)
-              Indexed = true; // индексированное свойство
+              isIndexed = true; // индексированное свойство
           }
-          if (Indexed)
+          if (isIndexed)
             //Args.WritePair(aProps[i].Name, "[ Индексированное свойство ]");
             continue; // не нужно
           else
@@ -1563,7 +1563,7 @@ namespace FreeLibSet.Logging
               PropValDict[aProps[i].Name] = x;
 
               args.WritePair(aProps[i].Name, GetObjString(x));
-              if (x != null && Args2.Mode == LogoutPropMode.Default)
+              if (x != null && args2.Mode == LogoutPropMode.Default)
               {
                 args.IndentLevel++;
                 try
@@ -1597,7 +1597,7 @@ namespace FreeLibSet.Logging
 
       if (obj is MarshalByRefObject)
       {
-        int OldIndentLevel = args.IndentLevel;
+        int oldIndentLevel = args.IndentLevel;
         try
         {
           DoLogoutMarshalByRefObjectInfo(args, (MarshalByRefObject)obj);
@@ -1606,7 +1606,7 @@ namespace FreeLibSet.Logging
         {
           args.WriteLine("** Ошибка вывода информации MarshalByRefObject **. " + e.Message);
         }
-        args.IndentLevel = OldIndentLevel;
+        args.IndentLevel = oldIndentLevel;
       }
 
       #endregion
@@ -1725,16 +1725,16 @@ namespace FreeLibSet.Logging
       try
       {
         int cnt = 0;
-        foreach (object Obj2 in obj)
+        foreach (object obj2 in obj)
         {
-          args.WritePair("[" + cnt.ToString() + "]", GetObjString(Obj2));
-          if (Obj2 != null)
+          args.WritePair("[" + cnt.ToString() + "]", GetObjString(obj2));
+          if (obj2 != null)
           {
             int IndentLevel = args.IndentLevel;
             args.IndentLevel++;
             try
             {
-              DoLogoutObject(args, Obj2, objStack);
+              DoLogoutObject(args, obj2, objStack);
             }
             catch (Exception e)
             {
@@ -1777,16 +1777,16 @@ namespace FreeLibSet.Logging
       //Args.IndentLevel++;
       try
       {
-        foreach (DictionaryEntry Pair in obj)
+        foreach (DictionaryEntry pair in obj)
         {
-          args.WritePair("[" + Pair.Key.ToString() + "]", GetObjString(Pair.Value));
-          if (Pair.Value != null)
+          args.WritePair("[" + pair.Key.ToString() + "]", GetObjString(pair.Value));
+          if (pair.Value != null)
           {
             int IndentLevel = args.IndentLevel;
             args.IndentLevel++;
             try
             {
-              DoLogoutObject(args, Pair.Value, objStack);
+              DoLogoutObject(args, pair.Value, objStack);
             }
             catch (Exception e)
             {
@@ -1810,34 +1810,34 @@ namespace FreeLibSet.Logging
     [DebuggerStepThrough]
     private static void DoLogoutMarshalByRefObjectInfo(LogoutInfoNeededEventArgs args, MarshalByRefObject obj)
     {
-      string Uri = RemotingServices.GetObjectUri(obj);
-      if ((!RemotingServices.IsTransparentProxy(obj)) && Uri == null /*01.06.2017*/)
+      string uri = RemotingServices.GetObjectUri(obj);
+      if ((!RemotingServices.IsTransparentProxy(obj)) && uri == null /*01.06.2017*/)
         return;
       if (obj is System.Runtime.Remoting.Lifetime.ILease)
         return; // 01.06.2017
 
       args.WriteLine("Remote object info");
       args.IndentLevel++;
-      int IndentLevel = args.IndentLevel;
+      int indentLevel = args.IndentLevel;
 
 
       args.WritePair("IsTransparentProxy()", RemotingServices.IsTransparentProxy(obj).ToString());
-      args.WritePair("GetObjectUri()", Uri);
+      args.WritePair("GetObjectUri()", uri);
       args.WritePair("IsObjectOutOfAppDomain()", RemotingServices.IsObjectOutOfAppDomain(obj).ToString());
       args.WritePair("IsObjectOutOfContext()", RemotingServices.IsObjectOutOfContext(obj).ToString());
 
       try
       {
-        RealProxy Proxy2 = RemotingServices.GetRealProxy(obj);
-        if (Proxy2 != null)
+        RealProxy proxy2 = RemotingServices.GetRealProxy(obj);
+        if (proxy2 != null)
         {
-          args.WritePair("GetRealProxy()", Proxy2.ToString());
+          args.WritePair("GetRealProxy()", proxy2.ToString());
           args.IndentLevel++;
-          LogoutTools.LogoutObject(args, Proxy2);
+          LogoutTools.LogoutObject(args, proxy2);
         }
       }
       catch { }
-      args.IndentLevel = IndentLevel;
+      args.IndentLevel = indentLevel;
 
 #if XXX // тоже вызывает ошибку (NullReferenceException)
       Args.WriteLine("GetUrlsForObject");
@@ -1857,14 +1857,14 @@ namespace FreeLibSet.Logging
       args.IndentLevel++;
       try
       {
-        IDictionary Dict = System.Runtime.Remoting.Channels.ChannelServices.GetChannelSinkProperties(obj);
-        LogoutObject(args, Dict);
+        IDictionary dict = System.Runtime.Remoting.Channels.ChannelServices.GetChannelSinkProperties(obj);
+        LogoutObject(args, dict);
       }
       catch (Exception e)
       {
         args.WriteLine("** " + e.Message + " **");
       }
-      args.IndentLevel = IndentLevel;
+      args.IndentLevel = indentLevel;
 
 #if XXX // Не работает для удаленного объекта. Всегда вызывает исключение
       if (!String.IsNullOrEmpty(Uri))
@@ -1887,19 +1887,19 @@ namespace FreeLibSet.Logging
 #endif
 
 #if !XXX // Не работает для удаленного объекта
-      object LTS;
+      object lts;
       try
       {
         //LTS = RemotingServices.GetLifetimeService(Object);
         // LTS = obj.GetLifetimeService();
-        LTS = System.Runtime.Remoting.RemotingServices.GetLifetimeService(obj);
-        if (LTS == null)
+        lts = System.Runtime.Remoting.RemotingServices.GetLifetimeService(obj);
+        if (lts == null)
           args.WritePair("GetLifeTimeService()", "null");
         else
         {
-          args.WritePair("GetLifeTimeService()", LTS.GetType().ToString());
+          args.WritePair("GetLifeTimeService()", lts.GetType().ToString());
           args.IndentLevel++;
-          LogoutTools.LogoutObject(args, LTS);
+          LogoutTools.LogoutObject(args, lts);
           args.IndentLevel--;
         }
       }
@@ -1911,10 +1911,10 @@ namespace FreeLibSet.Logging
 
       //Type typ = Object.GetType();
       Type typ = typeof(MarshalByRefObject);
-      ObjRef Ref;
+      ObjRef objRef;
       try
       {
-        Ref = obj.CreateObjRef(typ);
+        objRef = obj.CreateObjRef(typ);
       }
       catch (Exception e)
       {
@@ -1930,7 +1930,7 @@ namespace FreeLibSet.Logging
       //Args.WritePair("IsFromThisAppDomain()", Ref.IsFromThisAppDomain().ToString()); 
       //Args.WritePair("IsFromThisProcess()", Ref.IsFromThisProcess().ToString());
       Stack ObjStack = new Stack();
-      DoLogoutObject(args, Ref, ObjStack);
+      DoLogoutObject(args, objRef, ObjStack);
       args.IndentLevel--;
 
       // Это не работает
@@ -1950,7 +1950,7 @@ namespace FreeLibSet.Logging
     private static void LogoutSysInfo(LogoutInfoNeededEventArgs args)
     {
       string s;
-      int CurrIndentLevel = args.IndentLevel;
+      int currIndentLevel = args.IndentLevel;
 
       #region Системная информация
 
@@ -2004,7 +2004,7 @@ namespace FreeLibSet.Logging
         {
           args.WriteLine("*** Ошибка получения информации о выполняемом файле ***. " + e.Message);
         }
-        args.IndentLevel=CurrIndentLevel;
+        args.IndentLevel=currIndentLevel;
       }
 
       args.WritePair("App. base dir", FileTools.ApplicationBaseDir.Path);
@@ -2028,7 +2028,7 @@ namespace FreeLibSet.Logging
         LogoutDriveInfo(args);
       }
       catch { }
-      args.IndentLevel = CurrIndentLevel;
+      args.IndentLevel = currIndentLevel;
 
       args.WriteLine();
 
@@ -2068,15 +2068,15 @@ namespace FreeLibSet.Logging
 
       try
       {
-        bool DirEx = false;
-        string Suffix;
+        bool dirEx = false;
+        string suffix;
         try
         {
-          DirEx = Directory.Exists(TempDirectory.RootDir.Path);
-          Suffix = DirEx ? " (Exists)" : " (Doesn't exist)";
+          dirEx = Directory.Exists(TempDirectory.RootDir.Path);
+          suffix = dirEx ? " (Exists)" : " (Doesn't exist)";
         }
-        catch { Suffix = " (Error)"; }
-        args.WritePair("TempDirectory.RootDir", TempDirectory.RootDir.Path + Suffix);
+        catch { suffix = " (Error)"; }
+        args.WritePair("TempDirectory.RootDir", TempDirectory.RootDir.Path + suffix);
       }
       catch { }
 
@@ -2219,19 +2219,19 @@ namespace FreeLibSet.Logging
       try
       {
         args.WriteHeader("DNS");
-        string Name = System.Net.Dns.GetHostName();
-        args.WritePair("Host name", Name);
-        System.Net.IPAddress[] addrs = System.Net.Dns.GetHostAddresses(Name);
+        string name = System.Net.Dns.GetHostName();
+        args.WritePair("Host name", name);
+        System.Net.IPAddress[] addrs = System.Net.Dns.GetHostAddresses(name);
         args.WritePair("IP addresses", addrs.Length.ToString());
         args.IndentLevel++;
         for (int i = 0; i < addrs.Length; i++)
           args.WriteLine(addrs[i].ToString());
         args.IndentLevel--;
-        string[] Aliases = System.Net.Dns.GetHostEntry(Name).Aliases;
-        args.WritePair("Aliases", Aliases.Length.ToString());
+        string[] aliases = System.Net.Dns.GetHostEntry(name).Aliases;
+        args.WritePair("Aliases", aliases.Length.ToString());
         args.IndentLevel++;
-        for (int i = 0; i < Aliases.Length; i++)
-          args.WriteLine(Aliases[i]);
+        for (int i = 0; i < aliases.Length; i++)
+          args.WriteLine(aliases[i]);
         args.IndentLevel--;
 #pragma warning disable 618 // Свойство System.Net.Sockets.Socket.SupportsIPv4 устарело в Net Framework 4.5
         args.WritePair("Supports IPv4", System.Net.Sockets.Socket.SupportsIPv4.ToString());
@@ -2295,7 +2295,7 @@ namespace FreeLibSet.Logging
       {
         args.IndentLevel++;
         args.WriteLine("*** Ошибка получения информации из RemotingConfiguration *** " + e.Message);
-        args.IndentLevel = CurrIndentLevel;
+        args.IndentLevel = currIndentLevel;
       }
 
       #endregion
@@ -2393,7 +2393,7 @@ namespace FreeLibSet.Logging
       {
         args.WriteLine("*** " + e.Message + " ***");
       }
-      args.IndentLevel = CurrIndentLevel;
+      args.IndentLevel = currIndentLevel;
       args.WriteLine();
 
       #endregion
@@ -2432,7 +2432,7 @@ namespace FreeLibSet.Logging
       args.IndentLevel++;
       for (int i = 0; i < dis.Length; i++)
       {
-        int CurrLevel = args.IndentLevel;
+        int indentLevel = args.IndentLevel;
         try
         {
           args.WritePair(dis[i].Name, dis[i].DriveType.ToString() + (dis[i].IsReady ? "" : " (Not Ready)"));
@@ -2450,7 +2450,7 @@ namespace FreeLibSet.Logging
         catch (Exception e)
         {
           args.WriteLine("Ошибка при получении информации об устройстве. " + e.Message);
-          args.IndentLevel = CurrLevel;
+          args.IndentLevel = indentLevel;
         }
       }
       args.IndentLevel--;
@@ -2459,7 +2459,7 @@ namespace FreeLibSet.Logging
     [DebuggerStepThrough]
     private static void LogoutThreadPool(LogoutInfoNeededEventArgs args)
     {
-      int IndentLevel = args.IndentLevel;
+      int indentLevel = args.IndentLevel;
       try
       {
         args.WriteLine("ThreadPool");
@@ -2475,13 +2475,13 @@ namespace FreeLibSet.Logging
       {
         args.WriteLine("Ошибка получения информации о ThreadPool. " + e.Message);
       }
-      args.IndentLevel = IndentLevel;
+      args.IndentLevel = indentLevel;
     }
 
 
     private static void LogoutWTS(LogoutInfoNeededEventArgs args)
     {
-      int IndentLevel = args.IndentLevel;
+      int indentLevel = args.IndentLevel;
       try
       {
         if (Win32.WTSSession.IsSupported)
@@ -2509,7 +2509,7 @@ namespace FreeLibSet.Logging
       {
         args.WriteLine("*** " + e.Message + " ***");
       }
-      args.IndentLevel = IndentLevel;
+      args.IndentLevel = indentLevel;
       args.WriteLine();
     }
 
@@ -2536,14 +2536,14 @@ namespace FreeLibSet.Logging
         {
           if (!String.IsNullOrEmpty(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile))
           {
-            AbsPath ConfigPath = new AbsPath(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-            if (File.Exists(ConfigPath.Path))
+            AbsPath configPath = new AbsPath(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+            if (File.Exists(configPath.Path))
             {
               args.WriteLine();
-              args.WriteLine("Конфигурационный файл \"" + ConfigPath.Path + "\"");
+              args.WriteLine("Конфигурационный файл \"" + configPath.Path + "\"");
               try
               {
-                string s = File.ReadAllText(ConfigPath.Path);
+                string s = File.ReadAllText(configPath.Path);
                 args.WriteLine(s);
               }
               catch
@@ -2552,7 +2552,7 @@ namespace FreeLibSet.Logging
               }
             }
             else
-              args.WriteLine("Конфигурационный файл \"" + ConfigPath.Path + "\" не найден");
+              args.WriteLine("Конфигурационный файл \"" + configPath.Path + "\" не найден");
           }
         }
       }
@@ -2632,19 +2632,19 @@ namespace FreeLibSet.Logging
           continue;
         cnt++;
 
-        bool Debug = false;
+        bool debugMode = false;
         DebuggableAttribute attrDebug = (DebuggableAttribute)Attribute.GetCustomAttribute(asses[i], typeof(DebuggableAttribute));
         if (attrDebug != null)
         {
           if (attrDebug.IsJITTrackingEnabled)
-            Debug = true; // не очень хорошо, но ладно
+            debugMode = true; // не очень хорошо, но ладно
         }
 
-        bool IsPIA = false;
+        bool isPIA = false;
         PrimaryInteropAssemblyAttribute attrPIA = (PrimaryInteropAssemblyAttribute)Attribute.GetCustomAttribute(asses[i], typeof(PrimaryInteropAssemblyAttribute));
         if (attrPIA != null)
         {
-          IsPIA = true; // Надо ли извлекать номер версии - не знаю
+          isPIA = true; // Надо ли извлекать номер версии - не знаю
         }
 
 
@@ -2653,21 +2653,21 @@ namespace FreeLibSet.Logging
         //" Version: " + asses[i].GetName().Version.ToString() + 
 
         args.IndentLevel++;
-        args.WriteLine("Build: " + (Debug ? " (Debug)" : " (Release)") + " (" + asses[i].GetName().ProcessorArchitecture.ToString() + ")" + (IsPIA ? " [PrimaryInteropAssembly]" : String.Empty));
+        args.WriteLine("Build: " + (debugMode ? " (Debug)" : " (Release)") + " (" + asses[i].GetName().ProcessorArchitecture.ToString() + ")" + (isPIA ? " [PrimaryInteropAssembly]" : String.Empty));
         args.WriteLine(asses[i].CodeBase);
-        int IndentLevel = args.IndentLevel;
+        int indentLevel = args.IndentLevel;
         try
         {
-          AbsPath FilePath = new AbsPath(asses[i].CodeBase);
-          if (File.Exists(FilePath.Path))
+          AbsPath filePath = new AbsPath(asses[i].CodeBase);
+          if (File.Exists(filePath.Path))
           {
             args.IndentLevel++;
-            FileInfo fi = new FileInfo(FilePath.Path);
+            FileInfo fi = new FileInfo(filePath.Path);
             args.WriteLine("LastWriteTime=" + fi.LastWriteTime.ToString() + ", Length=" + fi.Length.ToString());
           }
         }
         catch { }
-        args.IndentLevel = IndentLevel;
+        args.IndentLevel = indentLevel;
 
         if (asses[i].ReflectionOnly)
           args.WriteLine("Reflection only");
@@ -2778,10 +2778,10 @@ namespace FreeLibSet.Logging
 
       for (int i = 0; i < row.Table.Columns.Count; i++)
       {
-        string ColName = row.Table.Columns[i].ColumnName;
-        object Value = row[i];
-        string ValueText = GetObjString(Value);
-        args.WritePair(ColName, ValueText);
+        string colName = row.Table.Columns[i].ColumnName;
+        object value = row[i];
+        string valueText = GetObjString(value);
+        args.WritePair(colName, valueText);
       }
     }
 
@@ -2820,25 +2820,25 @@ namespace FreeLibSet.Logging
         return false;
       }
 
-      int IndentLevel = args.IndentLevel;
-      bool Res = false;
+      int indentLevel = args.IndentLevel;
+      bool res = false;
       try
       {
         int cnt = 0;
-        using (RegistryTree2 Tree = new RegistryTree2(true, view))
+        using (RegistryTree2 tree = new RegistryTree2(true, view))
         {
-          foreach (EnumRegistryEntry2 Entry in Tree.Enumerate(keyName, true))
+          foreach (EnumRegistryEntry2 regEntry in tree.Enumerate(keyName, true))
           {
             cnt++;
-            args.IndentLevel = IndentLevel + Entry.EnumKeyLevel;
-            if (String.IsNullOrEmpty(Entry.ValueName))
+            args.IndentLevel = indentLevel + regEntry.EnumKeyLevel;
+            if (String.IsNullOrEmpty(regEntry.ValueName))
             {
-              string s = Entry.Key.Name;
+              string s = regEntry.Key.Name;
               int p = s.LastIndexOf('\\');
               if (p >= 0)
                 s = s.Substring(p + 1);
               args.WriteLine("[-] " + s);
-              object defv = Entry.Key.GetValue(String.Empty);
+              object defv = regEntry.Key.GetValue(String.Empty);
               if (defv != null)
               {
                 args.IndentLevel++;
@@ -2848,7 +2848,7 @@ namespace FreeLibSet.Logging
             else
             {
               args.IndentLevel++;
-              args.WritePair(Entry.ValueName, GetRegistryValueStr(Entry.Key.GetValue(Entry.ValueName)));
+              args.WritePair(regEntry.ValueName, GetRegistryValueStr(regEntry.Key.GetValue(regEntry.ValueName)));
             }
           }
         }
@@ -2856,14 +2856,14 @@ namespace FreeLibSet.Logging
         if (cnt == 0)
           args.WriteLine("Нет раздела реестра " + keyName);
         else
-          Res = true;
+          res = true;
       }
       catch (Exception e)
       {
         args.WriteLine("*** Ошибка. " + e.Message + " ***");
       }
-      args.IndentLevel = IndentLevel;
-      return Res;
+      args.IndentLevel = indentLevel;
+      return res;
     }
 
     private static string GetRegistryValueStr(object defv) // 22.01.2019
@@ -2907,9 +2907,9 @@ namespace FreeLibSet.Logging
     /// <param name="obj">Объект, информация о котором выводится</param>
     public static void LogoutObject(TextWriter writer, object obj)
     {
-      TextWriterTraceListener Listener = new TextWriterTraceListener(writer);
-      LogoutInfoNeededEventArgs Args = new LogoutInfoNeededEventArgs(Listener, null);
-      LogoutObject(Args, obj);
+      TextWriterTraceListener listener = new TextWriterTraceListener(writer);
+      LogoutInfoNeededEventArgs args = new LogoutInfoNeededEventArgs(listener, null);
+      LogoutObject(args, obj);
     }
 
     #endregion
@@ -3152,23 +3152,23 @@ namespace FreeLibSet.Logging
     void LogoutTools_LogoutInfoNeeded(object sender, LogoutInfoNeededEventArgs args)
     {
       args.WriteHeader(Title);
-      int IndentLevel = args.IndentLevel;
+      int indentLevel = args.IndentLevel;
       foreach (KeyValuePair<string, object> Pair in this)
       {
-        string TypeStr; // 13.03.2017 - добавляем тип объекта
+        string typeStr; // 13.03.2017 - добавляем тип объекта
         try
         {
           if (Pair.Value == null)
-            TypeStr = "null";
+            typeStr = "null";
           else
-            TypeStr = "[" + Pair.Value.GetType().ToString() + "]";
+            typeStr = "[" + Pair.Value.GetType().ToString() + "]";
         }
         catch (Exception e)
         {
-          TypeStr = e.Message;
+          typeStr = e.Message;
         }
 
-        args.WritePair(Pair.Key, TypeStr);
+        args.WritePair(Pair.Key, typeStr);
         args.IndentLevel++;
         try
         {
@@ -3178,7 +3178,7 @@ namespace FreeLibSet.Logging
         {
           args.WriteLine("** Ошибка ** " + e.Message);
         }
-        args.IndentLevel = IndentLevel;
+        args.IndentLevel = indentLevel;
         args.WriteLine();
       }
     }
@@ -3208,7 +3208,7 @@ namespace FreeLibSet.Logging
     /// <returns></returns>
     protected override FreeLibSet.Remoting.NamedValues OnExecute(FreeLibSet.Remoting.NamedValues args)
     {
-      FreeLibSet.Remoting.NamedValues Res = new FreeLibSet.Remoting.NamedValues();
+      FreeLibSet.Remoting.NamedValues res = new FreeLibSet.Remoting.NamedValues();
 
       lock (_SyncRoot)
       {
@@ -3220,7 +3220,7 @@ namespace FreeLibSet.Logging
       try
       {
         BeginSplash("Получение отладочной информации");
-        Res["Text"] = LogoutTools.GetDebugInfo();
+        res["Text"] = LogoutTools.GetDebugInfo();
         EndSplash();
       }
       finally
@@ -3231,7 +3231,7 @@ namespace FreeLibSet.Logging
         }
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -3300,9 +3300,9 @@ namespace FreeLibSet.Logging
       if (filePath.IsEmpty)
         throw new ArgumentNullException("filePath", "Путь к файлу не задан");
 
-      using (FileStream Stream = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+      using (FileStream stream = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
       {
-        return Extract(Stream);
+        return Extract(stream);
       }
     }
 
@@ -3318,17 +3318,17 @@ namespace FreeLibSet.Logging
       if (stream == null)
         throw new ArgumentNullException("stream");
 
-      ExceptionLogFileExtractedInfo Info;
+      ExceptionLogFileExtractedInfo info;
       using (StreamReader reader = new StreamReader(stream, LogoutTools.LogEncoding))
       {
-        Info = DoExtract(reader);
+        info = DoExtract(reader);
       }
-      return Info;
+      return info;
     }
 
     private static ExceptionLogFileExtractedInfo DoExtract(StreamReader reader)
     {
-      ExceptionLogFileExtractedInfo Info = new ExceptionLogFileExtractedInfo();
+      ExceptionLogFileExtractedInfo info = new ExceptionLogFileExtractedInfo();
 
       int cnt = 0;
       while (reader.Peek() >= 0 && cnt < 10)
@@ -3339,7 +3339,7 @@ namespace FreeLibSet.Logging
         // Заголовок в первой строке
         if (cnt == 1)
         {
-          Info.Title = s;
+          info.Title = s;
           continue;
         }
 
@@ -3352,7 +3352,7 @@ namespace FreeLibSet.Logging
           int p = s.IndexOf('=');
           if (p < 0)
             return null;
-          Info.ExceptionClass = s.Substring(p + 1).Trim();
+          info.ExceptionClass = s.Substring(p + 1).Trim();
           continue;
         }
 
@@ -3361,8 +3361,8 @@ namespace FreeLibSet.Logging
           int p = s.IndexOf('=');
           if (p < 0)
             return null;
-          Info.Message = s.Substring(p + 1).Trim();
-          return Info; // Это - последнее поле
+          info.Message = s.Substring(p + 1).Trim();
+          return info; // Это - последнее поле
         }
       }
 

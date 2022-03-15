@@ -242,7 +242,7 @@ namespace FreeLibSet.Core
     {
       get
       {
-        bool HasWarning = false;
+        bool hasWarning = false;
         for (int i = 0; i < base.Count; i++)
         {
           switch (base[i].Kind)
@@ -250,11 +250,11 @@ namespace FreeLibSet.Core
             case ErrorMessageKind.Error:
               return ErrorMessageKind.Error;
             case ErrorMessageKind.Warning:
-              HasWarning = true;
+              hasWarning = true;
               break;
           }
         }
-        if (HasWarning)
+        if (hasWarning)
           return ErrorMessageKind.Warning;
         else
           return ErrorMessageKind.Info;
@@ -431,8 +431,8 @@ namespace FreeLibSet.Core
     /// <param name="warningCount">Сюда помещается количество предупреждений</param>
     public void GetCounts(out int errorCount, out int warningCount)
     {
-      int InfoCount;
-      GetCounts(out errorCount, out warningCount, out InfoCount);
+      int infoCount;
+      GetCounts(out errorCount, out warningCount, out infoCount);
     }
 
     /// <summary>
@@ -449,7 +449,7 @@ namespace FreeLibSet.Core
         if (Count == 0)
           return null;
 
-        int FirstWarningIndex = -1;
+        int firstWarningIndex = -1;
 
         for (int i = 0; i < Count; i++)
         {
@@ -458,14 +458,14 @@ namespace FreeLibSet.Core
             case ErrorMessageKind.Error:
               return this[i];
             case ErrorMessageKind.Warning:
-              if (FirstWarningIndex < 0)
-                FirstWarningIndex = i;
+              if (firstWarningIndex < 0)
+                firstWarningIndex = i;
               break;
           }
         }
 
-        if (FirstWarningIndex >= 0)
-          return this[FirstWarningIndex];
+        if (firstWarningIndex >= 0)
+          return this[firstWarningIndex];
         else
           return this[0]; // все сообщения имеют уровень Info
       }
@@ -678,15 +678,15 @@ namespace FreeLibSet.Core
     /// <returns></returns>
     public ErrorMessageList LimitKind(ErrorMessageKind maxKind)
     {
-      ErrorMessageList List2 = new ErrorMessageList();
+      ErrorMessageList list2 = new ErrorMessageList();
       for (int i = 0; i < Count; i++)
       {
         ErrorMessageKind thisKind = this[i].Kind;
         if (Compare(thisKind , maxKind) > 0)
           thisKind = maxKind;
-        List2.Add(new ErrorMessageItem(thisKind, this[i]));
+        list2.Add(new ErrorMessageItem(thisKind, this[i]));
       }
-      return List2;
+      return list2;
     }
 
     #endregion
@@ -717,7 +717,6 @@ namespace FreeLibSet.Core
         base[i] = new ErrorMessageItem(src.Kind, src.Text, src.Code, tag);
       }
     }
-
 
     #endregion
 
@@ -864,28 +863,28 @@ namespace FreeLibSet.Core
       if (Count == 0)
         return "Нет сообщений";
 
-      int ErrorCount, WarningCount, InfoCount;
-      this.GetCounts(out ErrorCount, out WarningCount, out InfoCount);
+      int errorCount, warningCount, infoCount;
+      this.GetCounts(out errorCount, out warningCount, out infoCount);
 
       StringBuilder sb = new StringBuilder();
-      if (ErrorCount > 0)
+      if (errorCount > 0)
       {
         sb.Append("Ошибок: ");
-        sb.Append(ErrorCount.ToString());
+        sb.Append(errorCount.ToString());
       }
-      if (WarningCount > 0)
+      if (warningCount > 0)
       {
         if (sb.Length > 0)
           sb.Append(", ");
         sb.Append("Предупреждений: ");
-        sb.Append(WarningCount.ToString());
+        sb.Append(warningCount.ToString());
       }
-      if (InfoCount > 0)
+      if (infoCount > 0)
       {
         if (sb.Length > 0)
           sb.Append(", ");
         sb.Append("Информационных сообщений: ");
-        sb.Append(InfoCount.ToString());
+        sb.Append(infoCount.ToString());
       }
 
       return sb.ToString();
@@ -1045,10 +1044,10 @@ namespace FreeLibSet.Core
     /// <returns>Копия списка</returns>
     public ErrorMessageList Clone()
     {
-      ErrorMessageList List2 = new ErrorMessageList();
+      ErrorMessageList list2 = new ErrorMessageList();
       for (int i = 0; i < Count; i++)
-        List2.Add(this[i]);
-      return List2;
+        list2.Add(this[i]);
+      return list2;
     }
 
     object ICloneable.Clone()
@@ -1076,13 +1075,13 @@ namespace FreeLibSet.Core
     /// <returns>Копия списка</returns>
     public ErrorMessageList Clone(ErrorMessageKind kind)
     {
-      ErrorMessageList lst2 = new ErrorMessageList();
+      ErrorMessageList list2 = new ErrorMessageList();
       for (int i = 0; i < Count; i++)
       {
         if (this[i].Kind == kind)
-          lst2.Add(this[i]);
+          list2.Add(this[i]);
       }
-      return lst2;
+      return list2;
     }
 
     #endregion

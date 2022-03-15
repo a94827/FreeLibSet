@@ -283,9 +283,9 @@ namespace FreeLibSet.IO
     {
       _FilePath = AbsPath.Empty;
 
-      Regex regexcomment = new Regex("^([\\s]*#.*)", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
-      Regex regexsection = new Regex("^[\\s]*\\[[\\s]*([^\\[\\s].*[^\\s\\]])[\\s]*\\][\\s]*$", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
-      Regex regexkey = new Regex("^\\s*([^=]*[^\\s=])\\s*=(.*)", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
+      Regex regexComment = new Regex("^([\\s]*#.*)", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
+      Regex regexSection = new Regex("^[\\s]*\\[[\\s]*([^\\[\\s].*[^\\s\\]])[\\s]*\\][\\s]*$", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
+      Regex regexKey = new Regex("^\\s*([^=]*[^\\s=])\\s*=(.*)", (RegexOptions.Singleline | RegexOptions.IgnoreCase));
 
       while (!oReader.EndOfStream)
       {
@@ -294,29 +294,29 @@ namespace FreeLibSet.IO
           continue;
         Match m;
 
-        m = regexcomment.Match(line);
+        m = regexComment.Match(line);
         if (m.Success)
           continue; // комментарии не сохраняем
 
-        m = regexsection.Match(line);
+        m = regexSection.Match(line);
         if (m.Success)
         {
-          IniSection Sect = _Sections[m.Groups[1].Value];
-          if (Sect == null)
-            Sect = new IniSection(m.Groups[1].Value);
+          IniSection sect = _Sections[m.Groups[1].Value];
+          if (sect == null)
+            sect = new IniSection(m.Groups[1].Value);
           else
-            _Sections.Remove(Sect);
-          _Sections.Add(Sect);
+            _Sections.Remove(sect);
+          _Sections.Add(sect);
           continue;
         }
 
-        m = regexkey.Match(line);
+        m = regexKey.Match(line);
         if (m.Success && _Sections.Count > 0)
         {
-          IniSection Sect = _Sections[_Sections.Count - 1];
+          IniSection sect = _Sections[_Sections.Count - 1];
           IniKeyValue v = new IniKeyValue(m.Groups[1].Value, m.Groups[2].Value);
-          Sect.Remove(v.Key); // на случай ошибки
-          Sect.Add(v);
+          sect.Remove(v.Key); // на случай ошибки
+          sect.Add(v);
         }
       }
     }
@@ -384,10 +384,10 @@ namespace FreeLibSet.IO
     private void DoSave(StreamWriter oWriter)
     {
       _FilePath = AbsPath.Empty;
-      foreach (IniSection Sect in _Sections)
+      foreach (IniSection sect in _Sections)
       {
-        oWriter.WriteLine(String.Format("[{0}]", Sect.Section));
-        foreach (IniKeyValue v in Sect)
+        oWriter.WriteLine(String.Format("[{0}]", sect.Section));
+        foreach (IniKeyValue v in sect)
         {
           oWriter.WriteLine(String.Format("{0}={1}", v.Key, v.Value));
         }
@@ -443,16 +443,16 @@ namespace FreeLibSet.IO
         if (value == null)
           value = String.Empty;
         CheckNotReadOnly();
-        IniSection Sect = _Sections[section];
-        if (Sect == null)
+        IniSection sect = _Sections[section];
+        if (sect == null)
         {
-          Sect = new IniSection(section);
-          _Sections.Add(Sect);
+          sect = new IniSection(section);
+          _Sections.Add(sect);
         }
 
         IniKeyValue v = new IniKeyValue(key, value);
-        Sect.Remove(key);
-        Sect.Add(v);
+        sect.Remove(key);
+        sect.Add(v);
       }
     }
 
@@ -470,10 +470,10 @@ namespace FreeLibSet.IO
       if (String.IsNullOrEmpty(key))
         throw new ArgumentNullException("key");
 
-      IniSection Sect = _Sections[section];
-      if (Sect == null)
+      IniSection sect = _Sections[section];
+      if (sect == null)
         return defaultValue;
-      IniKeyValue v = Sect[key];
+      IniKeyValue v = sect[key];
       //if (v.Key == null)
       if (v == null) // исправлено 08.11.2019
         return defaultValue;
@@ -500,11 +500,11 @@ namespace FreeLibSet.IO
       if (String.IsNullOrEmpty(section))
         throw new ArgumentNullException("section");
 
-      IniSection Sect = _Sections[section];
-      if (Sect == null)
+      IniSection sect = _Sections[section];
+      if (sect == null)
         return DataTools.EmptyStrings;
       else
-        return Sect.GetCodes();
+        return sect.GetCodes();
     }
 
     /// <summary>
@@ -535,10 +535,10 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("key");
 
       CheckNotReadOnly();
-      IniSection Sect = _Sections[section];
-      if (Sect == null)
+      IniSection sect = _Sections[section];
+      if (sect == null)
         return;
-      Sect.Remove(key);
+      sect.Remove(key);
     }
 
     /// <summary>
@@ -550,11 +550,11 @@ namespace FreeLibSet.IO
     {
       if (String.IsNullOrEmpty(section))
         throw new ArgumentNullException("section");
-      IniSection Sect = _Sections[section];
-      if (Sect == null)
+      IniSection sect = _Sections[section];
+      if (sect == null)
         return new DummyEnumerable<IniKeyValue>();
       else
-        return Sect;
+        return sect;
     }
 
     #endregion

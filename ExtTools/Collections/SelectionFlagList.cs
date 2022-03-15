@@ -146,16 +146,16 @@ namespace FreeLibSet.Collections
       if (value.Length != _Flags.Length)
         throw new ArgumentException("Неправильная длина массива");
 
-      bool Changed = false;
+      bool changed = false;
       for (int i = 0; i < _Flags.Length; i++)
       {
         if (value[i] != _Flags[i])
         {
           _Flags[i] = value[i];
-          Changed = true;
+          changed = true;
         }
       }
-      if (Changed)
+      if (changed)
         OnChanged();
     }
 
@@ -169,16 +169,16 @@ namespace FreeLibSet.Collections
     /// </summary>
     public void SelectAll()
     {
-      bool Changed = false;
+      bool changed = false;
       for (int i = 0; i < _Flags.Length; i++)
       {
         if (!_Flags[i])
         {
           _Flags[i] = true;
-          Changed = true;
+          changed = true;
         }
       }
-      if (Changed)
+      if (changed)
         OnChanged();
     }
 
@@ -188,16 +188,16 @@ namespace FreeLibSet.Collections
     /// </summary>
     public void UnselectAll()
     {
-      bool Changed = false;
+      bool changed = false;
       for (int i = 0; i < _Flags.Length; i++)
       {
         if (_Flags[i])
         {
           _Flags[i] = false;
-          Changed = true;
+          changed = true;
         }
       }
-      if (Changed)
+      if (changed)
         OnChanged();
     }
 

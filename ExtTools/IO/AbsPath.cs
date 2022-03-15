@@ -592,14 +592,14 @@ namespace FreeLibSet.IO
       if (IsEmpty)
         return false;
 
-      string RelPath = String.Join(new string(System.IO.Path.DirectorySeparatorChar, 1), relParts);
+      string relPath = String.Join(new string(System.IO.Path.DirectorySeparatorChar, 1), relParts);
 
-      RelPath = System.IO.Path.DirectorySeparatorChar + RelPath; // ведущий слэш
+      relPath = System.IO.Path.DirectorySeparatorChar + relPath; // ведущий слэш
 
-      if (RelPath[RelPath.Length - 1] == System.IO.Path.DirectorySeparatorChar)
-        RelPath = RelPath.Substring(0, RelPath.Length - 1);
+      if (relPath[relPath.Length - 1] == System.IO.Path.DirectorySeparatorChar)
+        relPath = relPath.Substring(0, relPath.Length - 1);
 
-      return _Path.EndsWith(RelPath, ComparisonType);
+      return _Path.EndsWith(relPath, ComparisonType);
     }
 
     /// <summary>
@@ -619,14 +619,14 @@ namespace FreeLibSet.IO
       if (IsEmpty)
         return false;
 
-      string RelPath = String.Join(new string(System.IO.Path.DirectorySeparatorChar, 1), relParts);
+      string relPath = String.Join(new string(System.IO.Path.DirectorySeparatorChar, 1), relParts);
 
-      RelPath = System.IO.Path.DirectorySeparatorChar + RelPath; // ведущий слэш
+      relPath = System.IO.Path.DirectorySeparatorChar + relPath; // ведущий слэш
 
-      if (RelPath[RelPath.Length - 1] == System.IO.Path.DirectorySeparatorChar)
-        RelPath = RelPath.Substring(0, RelPath.Length - 1);
+      if (relPath[relPath.Length - 1] == System.IO.Path.DirectorySeparatorChar)
+        relPath = relPath.Substring(0, relPath.Length - 1);
 
-      return _Path.EndsWith(RelPath, StringComparison.OrdinalIgnoreCase);
+      return _Path.EndsWith(relPath, StringComparison.OrdinalIgnoreCase);
     }
 
     #endregion

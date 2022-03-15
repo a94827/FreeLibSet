@@ -232,11 +232,11 @@ namespace FreeLibSet.DependedValues
     {
       for (int i = 0; i < _Items.Count; i++)
       {
-        DepChangeInfo Item = _Items[i];
-        if (Item is DepChangeInfoItem)
-          ((DepChangeInfoItem)Item).Changed = false;
-        else if (Item is DepChangeInfoList)
-          ((DepChangeInfoList)Item).ResetChanges();
+        DepChangeInfo item = _Items[i];
+        if (item is DepChangeInfoItem)
+          ((DepChangeInfoItem)item).Changed = false;
+        else if (item is DepChangeInfoList)
+          ((DepChangeInfoList)item).ResetChanges();
       }
     }
 

@@ -98,25 +98,25 @@ namespace FreeLibSet.Core
         //  return null;
 
         Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-        Assembly FirstAsm = null;
+        Assembly firstAsm = null;
         for (int i = 0; i < asms.Length; i++)
         {
           if (asms[i].GlobalAssemblyCache)
             continue;
 
-          if (FirstAsm == null)
-            FirstAsm = asms[i];
+          if (firstAsm == null)
+            firstAsm = asms[i];
 
-          string Name = asms[i].FullName;
-          int p = Name.IndexOf(',');
+          string name = asms[i].FullName;
+          int p = name.IndexOf(',');
           if (p >= 0)
-            Name = Name.Substring(0, p);
-          Name = Name.Trim();
-          if (String.Equals(Name, AppName, StringComparison.OrdinalIgnoreCase))
+            name = name.Substring(0, p);
+          name = name.Trim();
+          if (String.Equals(name, AppName, StringComparison.OrdinalIgnoreCase))
             return asms[i];
         }
 
-        return FirstAsm;
+        return firstAsm;
       }
     }
 
@@ -234,16 +234,16 @@ namespace FreeLibSet.Core
     /// <returns></returns>
     private static string GetSpecialOSVersion()
     {
-      bool AddSP, AddVer;
-      string s = DoGetSpecialOSVersion(out AddSP, out AddVer);
+      bool addSP, addVer;
+      string s = DoGetSpecialOSVersion(out addSP, out addVer);
       if (String.IsNullOrEmpty(s))
         return String.Empty; // 26.03.2018
-      if (AddSP)
+      if (addSP)
       {
         if (!String.IsNullOrEmpty(Environment.OSVersion.ServicePack))
           s += " " + Environment.OSVersion.ServicePack;
       }
-      if (AddVer)
+      if (addVer)
         s += " (" + Environment.OSVersion.Version.ToString() + ")";
       return s;
     }
@@ -259,9 +259,9 @@ namespace FreeLibSet.Core
       switch (Environment.OSVersion.Platform)
       {
         case PlatformID.Win32NT:
-          bool IsServer = ((int)(WinNTProductType)) > 1;
+          bool isServer = ((int)(WinNTProductType)) > 1;
 
-          if (IsServer)
+          if (isServer)
           {
             #region Серверные версии
 
@@ -426,7 +426,6 @@ namespace FreeLibSet.Core
         return false; // !!!
       }
     }
-
 
     #endregion
 

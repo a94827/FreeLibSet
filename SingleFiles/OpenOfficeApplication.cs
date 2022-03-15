@@ -39,23 +39,23 @@ namespace FreeLibSet.OpenOffice
       if (OpenOfficeTools.Installations.Length == 0)
         throw new InvalidOperationException("На Вашем компьютере нет установленного OpenOffice или LibreOffice");
 
-      string ErrorText = null; // чтобы не было предупреждения компилятора
+      string errorText = null; // чтобы не было предупреждения компилятора
       for (int i = 0; i < OpenOfficeTools.Installations.Length; i++)
       {
         if (OpenOfficeTools.Installations[i].Kind == OpenOfficeKind.LibreOffice)
         {
-          ErrorText = "LibreOffice пока не поддерживается";
+          errorText = "LibreOffice пока не поддерживается";
           continue;
         }
 
         // Найдена подходящая копия
-        ErrorText = null;
+        errorText = null;
         return OpenOfficeTools.Installations[i];
       }
 
       // Нет подходящей копии.
       // ErrorText уже содержит описание ошибки
-      throw new InvalidOperationException(ErrorText);
+      throw new InvalidOperationException(errorText);
     }
 
     public OpenOfficeApplication(OpenOfficeTools.OfficeInfo officeInfo)
@@ -79,7 +79,7 @@ namespace FreeLibSet.OpenOffice
         _XComponentLoader = (unoidl.com.sun.star.frame.XComponentLoader)XMultiServiceFactory.createInstance("com.sun.star.frame.Desktop");
       }
       finally
-      { 
+      {
         Environment.SetEnvironmentVariable("UNO_PATH", v1);
         Environment.SetEnvironmentVariable("PATH", v2);
       }
@@ -198,7 +198,7 @@ namespace FreeLibSet.OpenOffice
     public string Title
     {
       get
-      { 
+      {
         return DataTools.GetString(XPropertySet.getPropertyValue("Title").Value);
       }
     }
@@ -209,10 +209,10 @@ namespace FreeLibSet.OpenOffice
 
     public void Activate()
     {
-      unoidl.com.sun.star.frame.XFrame XFrame = XFramesSupplier.getActiveFrame();
-      if (XFrame != null)
+      unoidl.com.sun.star.frame.XFrame xFrame = XFramesSupplier.getActiveFrame();
+      if (xFrame != null)
       {
-        unoidl.com.sun.star.awt.XWindow wnd= XFrame.getContainerWindow();
+        unoidl.com.sun.star.awt.XWindow wnd = xFrame.getContainerWindow();
         wnd.setFocus();
       }
     }
@@ -293,7 +293,7 @@ namespace FreeLibSet.OpenOffice
     }
 
     public CommandButton AddButton(unoidl.com.sun.star.awt.Point position,
-      unoidl.com.sun.star.awt.Size size, 
+      unoidl.com.sun.star.awt.Size size,
       string label, EventHandler click)
     {
       unoidl.com.sun.star.drawing.XControlShape shp = XMultiServiceFactory.createInstance("com.sun.star.drawing.ControlShape") as unoidl.com.sun.star.drawing.XControlShape;
@@ -310,7 +310,6 @@ namespace FreeLibSet.OpenOffice
 
       XDrawPage.add(shp);
 
-
       return Control;
     }
 
@@ -320,7 +319,7 @@ namespace FreeLibSet.OpenOffice
   /// <summary>
   /// Командная кнопка
   /// </summary>
-  public class CommandButton:unoidl.com.sun.star.awt.XActionListener
+  public class CommandButton : unoidl.com.sun.star.awt.XActionListener
   {
     // Не может быть структурой,
     // т.к. вешаем себя в качестве обработчика события
@@ -337,11 +336,9 @@ namespace FreeLibSet.OpenOffice
 
 
       unoidl.com.sun.star.beans.XPropertySetInfo psi = XPropertySet.getPropertySetInfo();
-      unoidl.com.sun.star.beans.Property[] Props = psi.getProperties();
+      unoidl.com.sun.star.beans.Property[] props = psi.getProperties();
 
-
-
-//      XButton.addActionListener(this);
+      //      XButton.addActionListener(this);
     }
 
     #endregion
@@ -364,14 +361,11 @@ namespace FreeLibSet.OpenOffice
 
     public unoidl.com.sun.star.container.XNamed XNamed { get { return _XControlModel as unoidl.com.sun.star.container.XNamed; } }
 
-
-
     public unoidl.com.sun.star.form.submission.XSubmissionSupplier XSubmissionSupplier { get { return _XControlModel as unoidl.com.sun.star.form.submission.XSubmissionSupplier; } }
-
 
     public unoidl.com.sun.star.form.XImageProducerSupplier XImageProducerSupplier { get { return _XControlModel as unoidl.com.sun.star.form.XImageProducerSupplier; } }
 
-    public unoidl.com.sun.star.form.XReset XReset { get { return _XControlModel as unoidl.com.sun.star.form.XReset ; } }
+    public unoidl.com.sun.star.form.XReset XReset { get { return _XControlModel as unoidl.com.sun.star.form.XReset; } }
 
     #endregion
 
@@ -393,11 +387,13 @@ namespace FreeLibSet.OpenOffice
     #region Свойства
 
     public string Label
-    { get { return DataTools.GetString(XPropertySet.getPropertyValue("Label").Value); } }
+    {
+      get { return DataTools.GetString(XPropertySet.getPropertyValue("Label").Value); }
+    }
 
     public void SetLabel(string value)
-    { 
-      XPropertySet.setPropertyValue("Label", new uno.Any(value)); 
+    {
+      XPropertySet.setPropertyValue("Label", new uno.Any(value));
     }
 
     #endregion
@@ -423,7 +419,7 @@ namespace FreeLibSet.OpenOffice
 
     void unoidl.com.sun.star.lang.XEventListener.disposing(unoidl.com.sun.star.lang.EventObject source)
     {
-//      XButton.removeActionListener(this);
+      //      XButton.removeActionListener(this);
     }
 
     #endregion
@@ -445,7 +441,7 @@ namespace FreeLibSet.OpenOffice
 
     public DispatchHelper(unoidl.com.sun.star.lang.XMultiServiceFactory xMultiServiceFactory)
       : this(GetXDispatchHelper(xMultiServiceFactory))
-    { 
+    {
     }
 
     private static unoidl.com.sun.star.frame.XDispatchHelper GetXDispatchHelper(unoidl.com.sun.star.lang.XMultiServiceFactory xMultiServiceFactory)
@@ -489,11 +485,11 @@ namespace FreeLibSet.OpenOffice
 
     #region Выполнение команды
 
-    public void Execute(unoidl.com.sun.star.frame.XDispatchProvider xDispatchProvider, string url, 
-      string[] propNames, object [] propValues)
+    public void Execute(unoidl.com.sun.star.frame.XDispatchProvider xDispatchProvider, string url,
+      string[] propNames, object[] propValues)
     {
       CheckIfExists();
-      if (xDispatchProvider==null)
+      if (xDispatchProvider == null)
         throw new ArgumentNullException("xDispatchProvider");
       if (String.IsNullOrEmpty(url))
         throw new ArgumentNullException("url");
@@ -504,21 +500,21 @@ namespace FreeLibSet.OpenOffice
       if (propValues.Length != propNames.Length)
         throw new ArgumentException("Количество значений должно быть равно количеству имен", "propValues");
 
-      unoidl.com.sun.star.beans.PropertyValue[] Props = new unoidl.com.sun.star.beans.PropertyValue[propNames.Length];
-      for (int i = 0; i < Props.Length; i++)
+      unoidl.com.sun.star.beans.PropertyValue[] props = new unoidl.com.sun.star.beans.PropertyValue[propNames.Length];
+      for (int i = 0; i < props.Length; i++)
       {
         if (String.IsNullOrEmpty(propNames[i]))
           throw new ArgumentNullException("propNames[" + i.ToString() + "]");
 
-        Props[i] = new unoidl.com.sun.star.beans.PropertyValue();
-        Props[i].Name = propNames[i];
+        props[i] = new unoidl.com.sun.star.beans.PropertyValue();
+        props[i].Name = propNames[i];
         if (propValues[i] == null)
-          Props[i].Value = uno.Any.VOID;
+          props[i].Value = uno.Any.VOID;
         else
-          Props[i].Value = new uno.Any(Props[i].GetType(), Props[i]);
+          props[i].Value = new uno.Any(props[i].GetType(), props[i]);
       }
 
-      XDispatchHelper.executeDispatch(xDispatchProvider, url, String.Empty, 0, Props);
+      XDispatchHelper.executeDispatch(xDispatchProvider, url, String.Empty, 0, props);
     }
 
     #endregion

@@ -487,10 +487,25 @@ namespace FreeLibSet.OpenOffice.Calc
         {
           if (String.IsNullOrEmpty(name))
             throw new ArgumentNullException("name");
-          Range r = GetRangeIfExists(name);
-          if (!r.Exists)
+
+          if (XNamedRanges.hasByName(name))
+          {
+            unoidl.com.sun.star.sheet.XNamedRange nr = XNamedRanges.getByName(name).Value as unoidl.com.sun.star.sheet.XNamedRange;
+            if (nr == null)
+              throw new InvalidExpressionException("Вызов getByName(\"" + name + "\") не вернул XNamedRange");
+
+            unoidl.com.sun.star.sheet.XCellRangeReferrer crr = nr as unoidl.com.sun.star.sheet.XCellRangeReferrer;
+            if (crr == null)
+              throw new InvalidExpressionException("Не удалось получить ссылке на интерфейс XCellRangeReferrer");
+
+            unoidl.com.sun.star.table.XCellRange cr = crr.getReferredCells();
+            if (cr == null)
+              throw new InvalidExpressionException("Имя \"" + name + "\" не ссылается на диапазон ячеек");
+
+            return new Range(cr as unoidl.com.sun.star.sheet.XSheetCellRange, _Owner.XSpreadsheetDocument);
+          }
+          else
             throw new ArgumentException("Книга не содержит диапазона ячеек с именем \"" + name + "\"", "name");
-          return r;
         }
       }
 
@@ -1752,9 +1767,18 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentNullException("name");
-      if (removeOldName)
-        Workbook.Names.Remove(name);
-      Workbook.Names.XNamedRanges.addNewByName(name, ToString(), new unoidl.com.sun.star.table.CellAddress(), 0);
+      try
+      {
+        if (removeOldName)
+          Workbook.Names.Remove(name);
+        Workbook.Names.XNamedRanges.addNewByName(name, ToString(), new unoidl.com.sun.star.table.CellAddress(), 0);
+      }
+      catch (Exception e)
+      {
+        try { e.Data["Workbook.Names"] = Workbook.Names.ToArray(); }
+        catch { }
+        throw;
+      }
     }
 
     #endregion
@@ -2254,10 +2278,20 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentNullException("name");
-      if (removeOldName)
-        Workbook.Names.Remove(name);
 
-      Workbook.Names.XNamedRanges.addNewByName(name, ToString(), new unoidl.com.sun.star.table.CellAddress(), 0);
+      try
+      {
+        if (removeOldName)
+          Workbook.Names.Remove(name);
+
+        Workbook.Names.XNamedRanges.addNewByName(name, ToString(), new unoidl.com.sun.star.table.CellAddress(), 0);
+      }
+      catch (Exception e)
+      {
+        try { e.Data["Workbook.Names"] = Workbook.Names.ToArray(); }
+        catch { }
+        throw;
+      }
     }
 
     #endregion

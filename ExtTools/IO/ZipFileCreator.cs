@@ -291,18 +291,18 @@ namespace FreeLibSet.IO
     /// </summary>
     private static void TrySevenZipSharp()
     {
-      Type SomeType = typeof(SevenZip.SevenZipCompressor);
+      Type someType = typeof(SevenZip.SevenZipCompressor);
 
       // Инициализация библиотеки 7z.dll
-      string FileName = (IntPtr.Size == 8) ? "7z64.dll" : "7z.dll";
+      string fileName = (IntPtr.Size == 8) ? "7z64.dll" : "7z.dll";
 
       try
       {
-        AbsPath RootDir = new AbsPath(SomeType.Assembly.GetName().CodeBase).ParentDir;
-        if (File.Exists((RootDir + FileName).Path))
+        AbsPath rootDir = new AbsPath(someType.Assembly.GetName().CodeBase).ParentDir;
+        if (File.Exists((rootDir + fileName).Path))
         {
           // ReSharper disable once AccessToStaticMemberViaDerivedType
-          SevenZip.SevenZipCompressor.SetLibraryPath((RootDir + FileName).Path);
+          SevenZip.SevenZipCompressor.SetLibraryPath((rootDir + fileName).Path);
           return;
         }
       }
@@ -310,17 +310,17 @@ namespace FreeLibSet.IO
 
       try
       {
-        AbsPath RootDir = FileTools.ApplicationBaseDir;
-        if (File.Exists((RootDir + FileName).Path))
+        AbsPath rootDir = FileTools.ApplicationBaseDir;
+        if (File.Exists((rootDir + fileName).Path))
         {
           // ReSharper disable once AccessToStaticMemberViaDerivedType
-          SevenZip.SevenZipCompressor.SetLibraryPath((RootDir + FileName).Path);
+          SevenZip.SevenZipCompressor.SetLibraryPath((rootDir + fileName).Path);
           return;
         }
       }
       catch { }
 
-      throw new FileNotFoundException("Не найден файл " + FileName);
+      throw new FileNotFoundException("Не найден файл " + fileName);
     }
 
     /// <summary>
@@ -626,57 +626,57 @@ namespace FreeLibSet.IO
         ArchiveType = GetArchiveTypeFromFileName(ArchiveFileName);
 
 
-      AsyncCompress Async = new AsyncCompress();
-      ProcessArchiveOperation(Async, new ThreadStart(Async.CompressThreadProc), "Compressing " + ArchiveFileName.FileName);
+      AsyncCompress cmp = new AsyncCompress();
+      ProcessArchiveOperation(cmp, new ThreadStart(cmp.CompressThreadProc), "Compressing " + ArchiveFileName.FileName);
     }
 
-    private void ProcessArchiveOperation(AsyncBase async, ThreadStart threadMethod, string threadTitle)
+    private void ProcessArchiveOperation(AsyncBase asyncBase, ThreadStart threadMethod, string threadTitle)
     {
-      bool OldAllowCancel = false;
-      string OldPhaseText = null;
+      bool oldAllowCancel = false;
+      string oldPhaseText = null;
 
       if (Splash != null)
       {
-        OldAllowCancel = Splash.AllowCancel;
-        OldPhaseText = Splash.PhaseText;
+        oldAllowCancel = Splash.AllowCancel;
+        oldPhaseText = Splash.PhaseText;
 
         Splash.PercentMax = 100;
         Splash.AllowCancel = true;
       }
 
-      async.Owner = this;
-      async.IntFinished = false;
+      asyncBase.Owner = this;
+      asyncBase.IntFinished = false;
 
-      Thread SubThread = new Thread(threadMethod);
-      SubThread.Name = threadTitle;
-      SubThread.Start();
+      Thread subThread = new Thread(threadMethod);
+      subThread.Name = threadTitle;
+      subThread.Start();
       Thread.Sleep(50);
 
       while (true)
       {
-        lock (async)
+        lock (asyncBase)
         {
-          if (async.IntFinished)
+          if (asyncBase.IntFinished)
             break;
 
           if (Splash != null)
           {
             try
             {
-              if (async.IntCancelled)
-                Splash.PhaseText = async.IntPhaseText + ". Прерывание будет выполнено при обработке следующего файла";
+              if (asyncBase.IntCancelled)
+                Splash.PhaseText = asyncBase.IntPhaseText + ". Прерывание будет выполнено при обработке следующего файла";
               else
-                Splash.PhaseText = async.IntPhaseText;
-              Splash.Percent = async.IntPercent;
+                Splash.PhaseText = asyncBase.IntPhaseText;
+              Splash.Percent = asyncBase.IntPercent;
               Splash.CheckCancelled();
             }
             catch
             {
-              async.IntCancelled = true;
+              asyncBase.IntCancelled = true;
               try
               {
                 Splash.AllowCancel = false; // сразу отменяем
-                Splash.Percent = async.IntPercent;
+                Splash.Percent = asyncBase.IntPercent;
               }
               catch
               {
@@ -694,17 +694,17 @@ namespace FreeLibSet.IO
 
       if (Splash != null)
       {
-        if (async.IntCancelled)
+        if (asyncBase.IntCancelled)
           throw new UserCancelException();
 
         Splash.PercentMax = 0;
-        Splash.AllowCancel = OldAllowCancel;
-        Splash.PhaseText = OldPhaseText;
+        Splash.AllowCancel = oldAllowCancel;
+        Splash.PhaseText = oldPhaseText;
       }
 
       // Блокировка объекта не требуется, т.к. поток архивации уже завершен
-      if (async.Exception != null)
-        throw async.Exception;
+      if (asyncBase.Exception != null)
+        throw asyncBase.Exception;
     }
 
     /// <summary>
@@ -715,8 +715,8 @@ namespace FreeLibSet.IO
     /// <returns>Тип архива</returns>
     public static FileComressorArchiveType GetArchiveTypeFromFileName(AbsPath archiveFileName)
     {
-      string Ext = System.IO.Path.GetExtension(archiveFileName.FileName).ToUpperInvariant();
-      switch (Ext)
+      string fileExt = System.IO.Path.GetExtension(archiveFileName.FileName).ToUpperInvariant();
+      switch (fileExt)
       {
         case ".7Z": return FileComressorArchiveType.SevenZip;
         case ".ZIP": return FileComressorArchiveType.Zip;
@@ -879,9 +879,9 @@ namespace FreeLibSet.IO
       if (ArchiveFileName.IsEmpty)
         throw new NullReferenceException("Не задано имя файла архива");
 
-      string Path1 = ArchiveFileName.Path;
-      string Path2 = ArchiveFileName.Path + ".001"; // 17.12.2014
-      if (File.Exists(Path1) || File.Exists(Path2))
+      string sPath1 = ArchiveFileName.Path;
+      string sPath2 = ArchiveFileName.Path + ".001"; // 17.12.2014
+      if (File.Exists(sPath1) || File.Exists(sPath2))
         return;
       throw new FileNotFoundException("Архив \"" + ArchiveFileName.Path + "\" не найден");
     }
@@ -900,10 +900,10 @@ namespace FreeLibSet.IO
       ZipFileTools.CheckSevenZipSharpAvailable();
       TestArchiveFileExists();
 
-      AsyncDecompress Async = new AsyncDecompress();
-      ProcessArchiveOperation(Async, new ThreadStart(Async.TestThreadProc), "Testing " + ArchiveFileName.FileName);
+      AsyncDecompress decomp = new AsyncDecompress();
+      ProcessArchiveOperation(decomp, new ThreadStart(decomp.TestThreadProc), "Testing " + ArchiveFileName.FileName);
 
-      return Async.TestResult;
+      return decomp.TestResult;
     }
 
     #endregion

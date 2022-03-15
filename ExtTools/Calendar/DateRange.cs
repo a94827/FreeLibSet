@@ -200,12 +200,12 @@ namespace FreeLibSet.Calendar
 
           // Число месяцев, в предположении полных месяцев
           int m = (LastDate.Year - FirstDate.Year) * 12 + (LastDate.Month - FirstDate.Month) + 1;
-          bool WholeFirstMonth = DataTools.IsBottomOfMonth(FirstDate);
-          bool WholeLastMonth = DataTools.IsEndOfMonth(LastDate);
-          if (!WholeFirstMonth)
+          bool wholeFirstMonth = DataTools.IsBottomOfMonth(FirstDate);
+          bool wholeLastMonth = DataTools.IsEndOfMonth(LastDate);
+          if (!wholeFirstMonth)
           {
             m--;
-            if (!WholeLastMonth)
+            if (!wholeLastMonth)
             {
               if (FirstDate.Day > LastDate.Day)
                 m -= 2;
@@ -213,7 +213,7 @@ namespace FreeLibSet.Calendar
           }
           else
           {
-            if (!WholeLastMonth)
+            if (!wholeLastMonth)
               m--;
           }
           return m;
@@ -1091,25 +1091,25 @@ namespace FreeLibSet.Calendar
 
       date = date.Date;
 
-      int FirstIndex = 0;
-      int LastIndex = _List.Count - 1;
-      while (LastIndex > FirstIndex)
+      int firstIndex = 0;
+      int lastIndex = _List.Count - 1;
+      while (lastIndex > firstIndex)
       {
-        int MiddleIndex = (FirstIndex + LastIndex) / 2;
-        if (date < _List[MiddleIndex].FirstDate)
+        int middleIndex = (firstIndex + lastIndex) / 2;
+        if (date < _List[middleIndex].FirstDate)
         {
-          LastIndex = MiddleIndex - 1;
+          lastIndex = middleIndex - 1;
           continue;
         }
-        if (date > _List[MiddleIndex].LastDate)
+        if (date > _List[middleIndex].LastDate)
         {
-          FirstIndex = MiddleIndex + 1;
+          firstIndex = middleIndex + 1;
           continue;
         }
         // Попали в цель
-        return MiddleIndex;
+        return middleIndex;
       }
-      return FirstIndex;
+      return firstIndex;
     }
 
     #endregion
@@ -1172,17 +1172,17 @@ namespace FreeLibSet.Calendar
         // Возможны теоретически 9 вариантов пересечения интервалов, когда
         // начальная дата существующиего интервала 1)меньше, 2)равна и 3) больше
         // начальной даты удаляемого интервала, и, аналогично, для конечной даты.
-        int Sign1 = Math.Sign(DateTime.Compare(_List[i].FirstDate, range.FirstDate));
-        int Sign2 = Math.Sign(DateTime.Compare(_List[i].LastDate, range.LastDate));
+        int sign1 = Math.Sign(DateTime.Compare(_List[i].FirstDate, range.FirstDate));
+        int sign2 = Math.Sign(DateTime.Compare(_List[i].LastDate, range.LastDate));
         // Sign1 и Sign2 содержат:
         // (-1), если существующая дата меньше удаляемой
         // (0), если даты равны
         // (+1), если существующая дата больше удаляемой
 
-        switch (Sign1) // по начальной дате
+        switch (sign1) // по начальной дате
         {
           case -1:
-            switch (Sign2)
+            switch (sign2)
             {
               case -1:
               case 0:
@@ -1199,7 +1199,7 @@ namespace FreeLibSet.Calendar
 
           case 0:
           case +1:
-            switch (Sign2)
+            switch (sign2)
             {
               case -1:
               case 0:
@@ -1279,11 +1279,11 @@ namespace FreeLibSet.Calendar
       DateTime dt2 = _List[idx].LastDate;
       if (date == dt2)
         return;
-      object Tag = _List[idx].Tag;
-      DateRange Range1 = new DateRange(dt1, date, Tag);
-      DateRange Range2 = new DateRange(date.AddDays(1), dt2, Tag);
-      _List[idx] = Range2;
-      _List.Insert(idx, Range1);
+      object tag = _List[idx].Tag;
+      DateRange range1 = new DateRange(dt1, date, tag);
+      DateRange range2 = new DateRange(date.AddDays(1), dt2, tag);
+      _List[idx] = range2;
+      _List.Insert(idx, range1);
     }
 
     /// <summary>
@@ -1296,9 +1296,9 @@ namespace FreeLibSet.Calendar
       if (Count == 0)
         return;
 
-      int FirstYear = FirstDate.Value.Year;
-      int LastYear = LastDate.Value.Year;
-      for (int y = FirstYear; y < LastYear; y++)
+      int firstYear = FirstDate.Value.Year;
+      int lastYear = LastDate.Value.Year;
+      for (int y = firstYear; y < lastYear; y++)
         Split(DataTools.EndOfYear(y)); // 23.07.2021
     }
 
@@ -1417,13 +1417,13 @@ namespace FreeLibSet.Calendar
     /// <returns>Новый список</returns>
     public DateRangeList GetCross(DateRange range)
     {
-      DateRangeList NewList = new DateRangeList();
+      DateRangeList newList = new DateRangeList();
       for (int i = 0; i < Count; i++)
       {
         if (DateRange.IsCrossed(this[i], range))
-          NewList.Append(this[i] & range);
+          newList.Append(this[i] & range);
       }
-      return NewList;
+      return newList;
     }
 
     /// <summary>

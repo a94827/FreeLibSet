@@ -13,7 +13,6 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.Core
 {
-
   #region Интерфейс IReadOnlyObject
 
   /// <summary>
@@ -1014,13 +1013,13 @@ namespace FreeLibSet.Collections
     /// <returns>Новый массив</returns>
     public T[] ToArray()
     {
-      T[] Res;
+      T[] res;
       lock (SyncRoot)
       {
-        Res = new T[_Source.Count];
-        _Source.CopyTo(Res, 0);
+        res = new T[_Source.Count];
+        _Source.CopyTo(res, 0);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -1062,8 +1061,8 @@ namespace FreeLibSet.Collections
         }
 
         // Поэлементная загрузка
-        foreach (T Item in collection)
-          _Source.Add(Item);
+        foreach (T item in collection)
+          _Source.Add(item);
       }
     }
 
@@ -1139,12 +1138,12 @@ namespace FreeLibSet.Collections
     /// <returns>Наличие элемента в коллекции</returns>
     public bool Contains(T item)
     {
-      bool Res;
+      bool res;
       lock (SyncRoot)
       {
-        Res = _Source.Contains(item);
+        res = _Source.Contains(item);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -1184,12 +1183,12 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        int Res;
+        int res;
         lock (SyncRoot)
         {
-          Res = _Source.Count;
+          res = _Source.Count;
         }
-        return Res;
+        return res;
       }
     }
 
@@ -1200,12 +1199,12 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        bool Res;
+        bool res;
         lock (SyncRoot)
         {
-          Res = _Source.IsReadOnly;
+          res = _Source.IsReadOnly;
         }
-        return Res;
+        return res;
       }
     }
 
@@ -1216,13 +1215,13 @@ namespace FreeLibSet.Collections
     /// <returns>true, если элемент был найден и удален из списка</returns>
     public bool Remove(T item)
     {
-      bool Res;
+      bool res;
       lock (SyncRoot)
       {
         ResetCopyArray();
-        Res = _Source.Remove(item);
+        res = _Source.Remove(item);
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -1409,8 +1408,8 @@ namespace FreeLibSet.Collections
         // ReSharper disable once InconsistentlySynchronizedField
         _CopyDict = new Dictionary<TKey, TValue>(_Source.Count);
         // ReSharper disable once InconsistentlySynchronizedField
-        foreach (KeyValuePair<TKey, TValue> Pair in _Source)
-          _CopyDict.Add(Pair.Key, Pair.Value);
+        foreach (KeyValuePair<TKey, TValue> pair in _Source)
+          _CopyDict.Add(pair.Key, pair.Value);
       }
       return _CopyDict;
     }
@@ -2635,9 +2634,9 @@ namespace FreeLibSet.Collections
     /// Создает обертку для существующего списка.
     /// Список остается доступным для записи до вызова метода SetReadOnly().
     /// </summary>
-    /// <param name="Source"></param>
-    protected ListWithReadOnly(IList<T> Source)
-      : this(Source, false)
+    /// <param name="source">Исходный список</param>
+    protected ListWithReadOnly(IList<T> source)
+      : this(source, false)
     {
     }
 
@@ -2892,9 +2891,9 @@ namespace FreeLibSet.Collections
     /// <returns></returns>
     public T[] ToArray()
     {
-      T[] Res = new T[_Source.Count];
-      _Source.CopyTo(Res, 0);
-      return Res;
+      T[] res = new T[_Source.Count];
+      _Source.CopyTo(res, 0);
+      return res;
     }
 
     /// <summary>
@@ -2921,8 +2920,8 @@ namespace FreeLibSet.Collections
       }
 
       // Поэлементная загрузка
-      foreach (T Item in collection)
-        _Source.Add(Item);
+      foreach (T item in collection)
+        _Source.Add(item);
     }
 
     /// <summary>
@@ -3313,8 +3312,8 @@ namespace FreeLibSet.Collections
     public SingleScopeList(ICollection<T> collection)
       : this(collection.Count)
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -3326,8 +3325,8 @@ namespace FreeLibSet.Collections
     public SingleScopeList(ICollection<T> collection, IEqualityComparer<T> comparer)
       : this(collection.Count, comparer)
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -3338,8 +3337,8 @@ namespace FreeLibSet.Collections
     public SingleScopeList(IEnumerable<T> collection)
       : this()
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -3351,8 +3350,8 @@ namespace FreeLibSet.Collections
     public SingleScopeList(IEnumerable<T> collection, IEqualityComparer<T> comparer)
       : this(comparer)
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     #endregion
@@ -3394,15 +3393,15 @@ namespace FreeLibSet.Collections
         if (_Dict.ContainsKey(value))
           throw new InvalidOperationException("Значение " + value.ToString() + " уже есть в списке");
 
-        T OldItem = _List[index];
-        _Dict.Remove(OldItem);
+        T oldItem = _List[index];
+        _Dict.Remove(oldItem);
         try
         {
           _Dict.Add(value, null);
         }
         catch
         {
-          _Dict.Add(OldItem, null);
+          _Dict.Add(oldItem, null);
           throw;
         }
         _List[index] = value;
@@ -3706,8 +3705,8 @@ namespace FreeLibSet.Collections
       if (Object.ReferenceEquals(collection, this))
         throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
 
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     #endregion
@@ -3781,8 +3780,8 @@ namespace FreeLibSet.Collections
     public SingleScopeSortedList(ICollection<T> collection)
       : this(collection.Count)
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -3795,8 +3794,8 @@ namespace FreeLibSet.Collections
     public SingleScopeSortedList(ICollection<T> collection, IComparer<T> comparer)
       : this(collection.Count, comparer)
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -3808,8 +3807,8 @@ namespace FreeLibSet.Collections
     public SingleScopeSortedList(IEnumerable<T> collection)
       : this()
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -3822,8 +3821,8 @@ namespace FreeLibSet.Collections
     public SingleScopeSortedList(IEnumerable<T> collection, IComparer<T> comparer)
       : this(comparer)
     {
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     #endregion
@@ -4068,8 +4067,8 @@ namespace FreeLibSet.Collections
       if (Object.ReferenceEquals(collection, this))
         throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
 
-      foreach (T Item in collection)
-        Add(Item);
+      foreach (T item in collection)
+        Add(item);
     }
 
     /// <summary>
@@ -4228,9 +4227,9 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        TValue Res;
-        if (base.TryGetValue(Key, out Res))
-          return Res;
+        TValue res;
+        if (base.TryGetValue(Key, out res))
+          return res;
         else
           return default(TValue);
       }
@@ -4358,9 +4357,9 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        TValue Res;
-        if (_Items.TryGetValue(Key, out Res))
-          return Res;
+        TValue res;
+        if (_Items.TryGetValue(Key, out res))
+          return res;
         else
           return default(TValue);
       }
@@ -4714,11 +4713,11 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 
-      TValue Value;
-      if (_MainDict.TryGetValue(key, out Value))
+      TValue value;
+      if (_MainDict.TryGetValue(key, out value))
       {
         if (_ReversedDict != null)
-          _ReversedDict.Remove(Value);
+          _ReversedDict.Remove(value);
         _MainDict.Remove(key);
         return true;
       }
@@ -4764,8 +4763,8 @@ namespace FreeLibSet.Collections
       {
         CheckNotReadOnly();
 
-        TValue OldValue;
-        if (_MainDict.TryGetValue(key, out OldValue))
+        TValue oldValue;
+        if (_MainDict.TryGetValue(key, out oldValue))
         {
           Remove(key);
           try
@@ -4774,7 +4773,7 @@ namespace FreeLibSet.Collections
           }
           catch
           {
-            Add(key, OldValue);
+            Add(key, oldValue);
             throw;
           }
         }
@@ -4885,8 +4884,8 @@ namespace FreeLibSet.Collections
       else
         r2 = new Dictionary<TValue, TKey>(_MainDict.Count, _ValueComparer); // 28.08.2019
 
-      foreach (KeyValuePair<TKey, TValue> Pair in _MainDict)
-        r2.Add(Pair.Value, Pair.Key);
+      foreach (KeyValuePair<TKey, TValue> pair in _MainDict)
+        r2.Add(pair.Value, pair.Key);
       _ReversedDict = r2;
     }
 
@@ -5033,23 +5032,23 @@ namespace FreeLibSet.Collections
         throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
 
       // Подсчет числа добавляемых элементов
-      int AddedCount = 0;
+      int addedCount = 0;
       foreach (T item in collection)
-        AddedCount++;
+        addedCount++;
 
       // Удаляем лишние элементы
-      int DelCount = Count + AddedCount - Capacity;
-      if (DelCount > 0)
+      int delCount = Count + addedCount - Capacity;
+      if (delCount > 0)
       {
-        if (DelCount >= Count)
+        if (delCount >= Count)
           Clear();
         else
-          base.RemoveRange(0, DelCount);
+          base.RemoveRange(0, delCount);
       }
 
       // Сколько элементов пропустить
-      int SkipCount = AddedCount - Capacity;
-      if (SkipCount > 0)
+      int skipCount = addedCount - Capacity;
+      if (skipCount > 0)
       {
         // Добавляем руками
 #if DEBUG
@@ -5060,7 +5059,7 @@ namespace FreeLibSet.Collections
         foreach (T item in collection)
         {
           cnt++;
-          if (cnt > SkipCount)
+          if (cnt > skipCount)
             base.Add(item);
         }
       }
@@ -5130,7 +5129,7 @@ namespace FreeLibSet.Collections
       if (object.ReferenceEquals(item, null))
         throw new ArgumentNullException();
 
-      WeakReference Ref = new WeakReference(item);
+      WeakReference wr = new WeakReference(item);
 
       lock (_Refs)
       {
@@ -5145,7 +5144,7 @@ namespace FreeLibSet.Collections
           _AddCount = 0;
         }
 
-        _Refs.Add(Ref);
+        _Refs.Add(wr);
       }
     }
 
@@ -5420,9 +5419,9 @@ namespace FreeLibSet.Collections
 
       _Dict = new Dictionary<T, int>(collection.Count);
       int cnt = 0;
-      foreach (T Item in collection)
+      foreach (T item in collection)
       {
-        _Dict.Add(Item, cnt);
+        _Dict.Add(item, cnt);
         cnt++;
       }
     }
@@ -5439,9 +5438,9 @@ namespace FreeLibSet.Collections
 
       _Dict = new Dictionary<T, int>(collection.Count, comparer);
       int cnt = 0;
-      foreach (T Item in collection)
+      foreach (T item in collection)
       {
-        _Dict.Add(Item, cnt);
+        _Dict.Add(item, cnt);
         cnt++;
       }
     }
