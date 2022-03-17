@@ -279,7 +279,7 @@ namespace FreeLibSet.Forms
     {
       base.DoRefreshItems();
 
-      EFPDataGridViewSelectedRowsState SelState = Owner.SelectedRowsState;
+      EFPDataGridViewSelectedRowsState selState = Owner.SelectedRowsState;
 
       if (UseEditView)
       {
@@ -313,16 +313,16 @@ namespace FreeLibSet.Forms
 
 
         if (Owner.CanMultiEdit)
-          ciEdit.Enabled = (SelState != EFPDataGridViewSelectedRowsState.NoSelection);
+          ciEdit.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
         else
-          ciEdit.Enabled = (SelState == EFPDataGridViewSelectedRowsState.SingleRow);
-        ciInsertCopy.Enabled = (SelState == EFPDataGridViewSelectedRowsState.SingleRow);
-        ciDelete.Enabled = (SelState != EFPDataGridViewSelectedRowsState.NoSelection);
+          ciEdit.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
+        ciInsertCopy.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
+        ciDelete.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
 
         ciView.Enabled = ciEdit.Enabled;
 #endif
 
-        if (SelState == EFPDataGridViewSelectedRowsState.MultiRows)
+        if (selState == EFPDataGridViewSelectedRowsState.MultiRows)
         {
           if (!Owner.ReadOnly)
           {
@@ -382,7 +382,7 @@ namespace FreeLibSet.Forms
 
       if (ciSelectAll != null)
       {
-        ciSelectAll.Enabled = (SelState != EFPDataGridViewSelectedRowsState.NoSelection) &&
+        ciSelectAll.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) &&
           Owner.Control.SelectionMode == TreeViewAdvSelectionMode.Multi;
       }
 

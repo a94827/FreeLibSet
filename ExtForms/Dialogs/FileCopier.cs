@@ -292,14 +292,14 @@ namespace FreeLibSet.Forms
           Recurse = true;
           Template = Template.Substring(1);
         }
-        string SubDir = String.Empty;
+        string subDir = String.Empty;
         int p = Template.LastIndexOf(Path.DirectorySeparatorChar);
         if (p >= 0)
         {
-          SubDir = Template.Substring(0, p + 1);
+          subDir = Template.Substring(0, p + 1);
           Template = Template.Substring(p + 1);
         }
-        DoAddFiles(SrcDir + SubDir, Template, Recurse);
+        DoAddFiles(SrcDir + subDir, Template, Recurse);
       }
     }
 
@@ -311,14 +311,14 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < a.Length; i++)
       {
-        string FileName = a[i].Substring(dir.SlashedPath.Length);
-        FileInfo fi = new FileInfo(dir.SlashedPath + FileName);
+        string fileName = a[i].Substring(dir.SlashedPath.Length);
+        FileInfo fi = new FileInfo(dir.SlashedPath + fileName);
         if (!fi.Exists)
           throw new BugException("Потеряли файл \"" + a[i] + "\"");
-        if (_FileNames.Contains(FileName))
+        if (_FileNames.Contains(fileName))
           continue; // файл может входить больше чем в один шаблон
         _TotalSize += fi.Length;
-        _FileNames.Add(FileName);
+        _FileNames.Add(fileName);
       }
 
       _Form.lblTotalFiles.Text = _FileNames.Count.ToString();
@@ -353,29 +353,29 @@ namespace FreeLibSet.Forms
 
       _CopiedFiles = new List<string>();
       _CopiedTotalSize = 0L;
-      byte[] Buffer = new byte[32768]; // Размер буфера копирования
+      byte[] buffer = new byte[32768]; // Размер буфера копирования
       for (int i = 0; i < _FileNames.Count; i++)
       {
-        AbsPath ThisPath = new AbsPath(SrcDir.SlashedPath + _FileNames[i]);
-        FileInfo fi = new FileInfo(ThisPath.Path);
+        AbsPath thisPath = new AbsPath(SrcDir.SlashedPath + _FileNames[i]);
+        FileInfo fi = new FileInfo(thisPath.Path);
         if (!fi.Exists)
-          throw new FileNotFoundException("Не найден исходный файл", ThisPath.Path);
+          throw new FileNotFoundException("Не найден исходный файл", thisPath.Path);
 
         if (DstDir.Path.StartsWith("A:\\"))
         {
-          long FreeSpace = GetFreeSpace(DstDir.Path);
-          if (FreeSpace < fi.Length)
+          long freeSpace = GetFreeSpace(DstDir.Path);
+          if (freeSpace < fi.Length)
           {
             // Перед сменой дискеты надо выполнить проверку
             CheckPrevFiles();
           }
           // Требуем вставить дискету
-          while (FreeSpace < fi.Length)
+          while (freeSpace < fi.Length)
           {
             DialogResult res = EFPApp.MessageBox("Вставьте следующую дискету в устройство " +
               DstDir.Path.Substring(0, 2) + " для копирования файла \"" + _FileNames[i] +
               "\". Размер файла: " + fi.Length.ToString() +
-              ", на текущей дискете свободного места: " + FreeSpace.ToString() +
+              ", на текущей дискете свободного места: " + freeSpace.ToString() +
               ". Нажмите <Да>, после замены дискеты или очистки существующей. Нажмите <Нет> для очистки текущей дискеты с помощью Проводника Windows или автоматически",
               "Смена дискеты", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
             switch (res)
@@ -389,7 +389,7 @@ namespace FreeLibSet.Forms
                 throw new UserCancelException();
             }
             // Перечитываем размер
-            FreeSpace = GetFreeSpace(DstDir.Path);
+            freeSpace = GetFreeSpace(DstDir.Path);
           }
         }
 
@@ -397,8 +397,8 @@ namespace FreeLibSet.Forms
         _Form.lblFileSize.Text = "Каталог";
         Application.DoEvents();
         // Создаем каталог
-        AbsPath DstFile = DstDir + _FileNames[i];
-        FileTools.ForceDirs(DstFile.ParentDir);
+        AbsPath dstFile = DstDir + _FileNames[i];
+        FileTools.ForceDirs(dstFile.ParentDir);
         // Копирование одного файла
         _Form.lblFileSize.Text = fi.Length.ToString();
         _Form.ExtPBFile.MaxValue = fi.Length;
@@ -410,12 +410,12 @@ namespace FreeLibSet.Forms
           {
             while (true)
             {
-              int Count = fsSrc.Read(Buffer, 0, Buffer.Length);
-              if (Count == 0)
+              int count = fsSrc.Read(buffer, 0, buffer.Length);
+              if (count == 0)
                 break;
-              fsDst.Write(Buffer, 0, Count);
-              _Form.ExtPBFile.Inc(Count);
-              _Form.ExtPBTotal.Inc(Count);
+              fsDst.Write(buffer, 0, count);
+              _Form.ExtPBFile.Inc(count);
+              _Form.ExtPBTotal.Inc(count);
               _Form.lblCopiedBytes.Text = _Form.ExtPBTotal.Value.ToString();
             }
 
@@ -432,7 +432,7 @@ namespace FreeLibSet.Forms
           fsSrc.Dispose();
         }
         _Form.lblFileSize.Text = "Атрибуты";
-        FileInfo fiDst = new FileInfo(DstFile.Path); // исправлено 18.03.2016
+        FileInfo fiDst = new FileInfo(dstFile.Path); // исправлено 18.03.2016
         if (fi.CreationTime.Year < 1980)
           fiDst.CreationTime = fi.LastWriteTime;
         else
@@ -478,17 +478,17 @@ namespace FreeLibSet.Forms
 
     private void CheckOneFile(string fileName)
     {
-      AbsPath SrcFile = SrcDir + fileName;
-      AbsPath DstFile = DstDir + fileName;
+      AbsPath srcFile = SrcDir + fileName;
+      AbsPath dstFile = DstDir + fileName;
       _Form.lblFileName.Text = Path.GetFileName(fileName);
-      FileInfo fiSrc = new FileInfo(SrcFile.Path);
+      FileInfo fiSrc = new FileInfo(srcFile.Path);
       if (!fiSrc.Exists)
-        throw new FileNotFoundException("Не найден исходный файл", SrcFile.Path);
+        throw new FileNotFoundException("Не найден исходный файл", srcFile.Path);
       _Form.lblFileSize.Text = fiSrc.Length.ToString();
 
-      FileTools.ForceDirs(DstFile.ParentDir);
+      FileTools.ForceDirs(dstFile.ParentDir);
 
-      FileStream fsSrc = new FileStream(SrcFile.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+      FileStream fsSrc = new FileStream(srcFile.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
       try
       {
         FileStream fsDst = new FileStream(DstDir.Path + fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -522,8 +522,8 @@ namespace FreeLibSet.Forms
       try
       {
 
-        DriveInfo Info = new DriveInfo(path.Substring(0, 1));
-        return Info.TotalFreeSpace;
+        DriveInfo info = new DriveInfo(path.Substring(0, 1));
+        return info.TotalFreeSpace;
       }
       catch (Exception e)
       {
@@ -548,10 +548,10 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        WizardTempPage TempPage = new WizardTempPage(_Form.MainPanel, true);
-        TempPage.CancelClick += new EventHandler(TempPage_CancelClick);
-        TempPage.CancelEnabled = true;
-        _Wizard.BeginTempPage(TempPage);
+        WizardTempPage tempPage = new WizardTempPage(_Form.MainPanel, true);
+        tempPage.CancelClick += new EventHandler(TempPage_CancelClick);
+        tempPage.CancelEnabled = true;
+        _Wizard.BeginTempPage(tempPage);
       }
       _Form.CancelClicked = false;
     }
@@ -600,15 +600,15 @@ namespace FreeLibSet.Forms
 
     private static void DoShowClearFloppyMenu(AbsPath rootDir)
     {
-      string[] Files = Directory.GetFiles(rootDir.Path);
-      string[] SubDirs = Directory.GetDirectories(rootDir.Path);
+      string[] files = Directory.GetFiles(rootDir.Path);
+      string[] subDirs = Directory.GetDirectories(rootDir.Path);
 
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.Title = "Очистка диска " + rootDir.Path.Substring(0, 2);
       dlg.GroupTitle = "Что сделать";
       dlg.Items = new string[]{
         "Запустить проводник Windows",
-        "Удалить все файлы ("+Files.Length.ToString()+") и каталоги ("+SubDirs.Length.ToString()+")"};
+        "Удалить все файлы ("+files.Length.ToString()+") и каталоги ("+subDirs.Length.ToString()+")"};
       dlg.SelectedIndex = 0;
 #if DEBUG
       if (dlg.EnabledItemFlags == null)
@@ -629,19 +629,19 @@ namespace FreeLibSet.Forms
         try
         {
           spl.AllowCancel = true;
-          spl.PercentMax = Files.Length + SubDirs.Length;
-          for (int i = 0; i < Files.Length; i++)
+          spl.PercentMax = files.Length + subDirs.Length;
+          for (int i = 0; i < files.Length; i++)
           {
-            spl.PhaseText = "Удаление файла \"" + Files[i] + "\"";
+            spl.PhaseText = "Удаление файла \"" + files[i] + "\"";
             spl.CheckCancelled();
-            File.Delete(Files[i]);
+            File.Delete(files[i]);
             spl.IncPercent();
           }
-          for (int i = 0; i < SubDirs.Length; i++)
+          for (int i = 0; i < subDirs.Length; i++)
           {
-            spl.PhaseText = "Удаление каталога \"" + SubDirs[i] + "\"";
+            spl.PhaseText = "Удаление каталога \"" + subDirs[i] + "\"";
             spl.CheckCancelled();
-            Directory.Delete(SubDirs[i], true);
+            Directory.Delete(subDirs[i], true);
             spl.IncPercent();
           }
         }

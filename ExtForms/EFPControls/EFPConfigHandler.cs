@@ -356,9 +356,9 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < _Categories.Count; i++)
       {
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
         CfgPart cfg;
-        using (configManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
+        using (configManager.GetConfig(configInfo, EFPConfigMode.Write, out cfg))
         {
           WriteConfigPart(_Categories[i], cfg, _ConfigInfoObject);
         }
@@ -390,9 +390,9 @@ namespace FreeLibSet.Forms
       {
         if (Changed[_Categories[i]])
         {
-          EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
+          EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
           CfgPart cfg;
-          using (configManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
+          using (configManager.GetConfig(configInfo, EFPConfigMode.Write, out cfg))
           {
             WriteConfigPart(_Categories[i], cfg, _ConfigInfoObject);
           }
@@ -422,9 +422,9 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < _Categories.Count; i++)
       {
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
         CfgPart cfg;
-        using (configManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfg))
+        using (configManager.GetConfig(configInfo, EFPConfigMode.Read, out cfg))
         {
           ReadConfigPart(_Categories[i], cfg, _ConfigInfoObject);
         }
@@ -503,8 +503,8 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < _Categories.Count; i++)
       {
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
-        configInfos.Add(ConfigInfo);
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, _Categories[i]);
+        configInfos.Add(configInfo);
       }
     }
 

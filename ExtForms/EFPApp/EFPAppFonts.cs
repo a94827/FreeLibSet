@@ -27,8 +27,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal EFPAppFonts()
     {
-      _EHInstalledFontsChanged = new EventHandler(InstalledFontChanged);
-      SystemEvents.InstalledFontsChanged += _EHInstalledFontsChanged;
+      SystemEvents.InstalledFontsChanged += new EventHandler(InstalledFontChanged);
     }
 
     /// <summary>
@@ -37,11 +36,8 @@ namespace FreeLibSet.Forms
     /// <param name="disposing">true, если был вызван метод Dispose()</param>
     protected override void Dispose(bool disposing)
     {
-      if (_EHInstalledFontsChanged!=null)
-      {
-        SystemEvents.InstalledFontsChanged -= _EHInstalledFontsChanged;
-        _EHInstalledFontsChanged = null;
-      }
+      if (disposing)
+        SystemEvents.InstalledFontsChanged -= new EventHandler(InstalledFontChanged);
       base.Dispose(disposing);
     }
 
@@ -58,8 +54,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Внутренняя реализация
-
-    private EventHandler _EHInstalledFontsChanged;
 
     private void InstalledFontChanged(object sender, EventArgs args)
     {

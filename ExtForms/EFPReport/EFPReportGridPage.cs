@@ -89,16 +89,16 @@ namespace FreeLibSet.Forms
       base.InitData();
       if (DataSource != null)
       {
-        EFPDataGridViewSelection OldSel = _ControlProvider.Selection;
-        bool HasData = _ControlProvider.Control.DataSource != null;
+        EFPDataGridViewSelection oldSel = _ControlProvider.Selection;
+        bool hasData = _ControlProvider.Control.DataSource != null;
 
         OnInitControlDataSource();
         // так не работает, т.к. GridProducer еще не применен
         //if (FControlProvider.OrderCount > 0 && FControlProvider.AutoSort)
         //  FControlProvider.PerformAutoSort(); // 31.08.2017
 
-        if (HasData && DataSource != null)
-          _ControlProvider.Selection = OldSel;
+        if (hasData && DataSource != null)
+          _ControlProvider.Selection = oldSel;
       }
       InitStateImageKey();
     }
@@ -181,14 +181,14 @@ namespace FreeLibSet.Forms
             RecreateGrid();
           else
           {
-            EFPDataGridViewSelection OldSel = _ControlProvider.Selection;
-            bool HasData = _ControlProvider.Control.DataSource != null;
+            EFPDataGridViewSelection oldSel = _ControlProvider.Selection;
+            bool hasData = _ControlProvider.Control.DataSource != null;
 
             OnInitControlDataSource();
             InitStateImageKey();
 
-            if (HasData && value != null)
-              _ControlProvider.Selection = OldSel;
+            if (hasData && value != null)
+              _ControlProvider.Selection = oldSel;
           }
         }
         else
@@ -387,8 +387,8 @@ namespace FreeLibSet.Forms
       if (_ControlProvider == null)
         return;
 
-      EFPDataGridViewSelection OldSel = _ControlProvider.Selection;
-      bool HasData = _ControlProvider.Control.DataSource != null; // а не _DataSource!
+      EFPDataGridViewSelection oldSel = _ControlProvider.Selection;
+      bool hasData = _ControlProvider.Control.DataSource != null; // а не _DataSource!
 
       // Удаляем старый просмотр
       RemoveGrid();
@@ -399,8 +399,8 @@ namespace FreeLibSet.Forms
       OnInitControlDataSource();
       InitStateImageKey();
 
-      if (HasData && _DataSource != null)
-        _ControlProvider.Selection = OldSel;
+      if (hasData && _DataSource != null)
+        _ControlProvider.Selection = oldSel;
     }
 
     /// <summary>
@@ -1512,11 +1512,11 @@ namespace FreeLibSet.Forms
     /// <param name="parent">Панель для размещения страницы</param>
     protected override void CreatePage(Panel parent)
     {
-      DataGridView Control = new DataGridView();
-      Control.Dock = DockStyle.Fill;
-      parent.Controls.Add(Control);
+      DataGridView control = new DataGridView();
+      control.Dock = DockStyle.Fill;
+      parent.Controls.Add(control);
 
-      _ControlProvider = CreateControlProvider(Control);
+      _ControlProvider = CreateControlProvider(control);
       _ControlProvider.CodeWidth = CodeWidth;
 
       if (EditMessage != null)

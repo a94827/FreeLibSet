@@ -121,12 +121,12 @@ namespace FreeLibSet.Forms
     /// <returns>Число строк</returns>
     public int GetTextRowHeight(int height)
     {
-      int FH = ControlProvider.Control.DefaultCellStyle.Font.Height;
-      int RC = (height - 9) / FH;
-      if (RC < 1)
+      int fh = ControlProvider.Control.DefaultCellStyle.Font.Height;
+      int rc = (height - 9) / fh;
+      if (rc < 1)
         return 1;
       else
-        return RC;
+        return rc;
     }
 
     #endregion

@@ -121,9 +121,9 @@ namespace FreeLibSet.Controls
 
     private void TheMenuButton_Click(object sender, EventArgs args)
     {
-      CancelEventArgs Args2 = new CancelEventArgs();
-      OnMenuButtonClicked(Args2);
-      if (Args2.Cancel)
+      CancelEventArgs args2 = new CancelEventArgs();
+      OnMenuButtonClicked(args2);
+      if (args2.Cancel)
         return;
 
       //TheMenu.Show(TheMenuButton, 0, TheMenuButton.Height);

@@ -109,19 +109,19 @@ namespace FreeLibSet.Forms
     public EFPCommandItem AddToolBarSubMenu(EFPCommandItem menuView)
     {
       //// Вид - Панели инструментов
-      EFPCommandItem MenuViewToolBars = new EFPCommandItem("View", "ToolBars");
-      MenuViewToolBars.MenuText = "Панели инструментов";
-      MenuViewToolBars.Parent = menuView;
-      MenuViewToolBars.GroupBegin = true;
-      _CommandItems.Add(MenuViewToolBars);
+      EFPCommandItem menuViewToolBars = new EFPCommandItem("View", "ToolBars");
+      menuViewToolBars.MenuText = "Панели инструментов";
+      menuViewToolBars.Parent = menuView;
+      menuViewToolBars.GroupBegin = true;
+      _CommandItems.Add(menuViewToolBars);
 
       for (int i = 0; i < EFPApp.ToolBars.Count; i++)
-        AddToolBarVisible(MenuViewToolBars, EFPApp.ToolBars[i]);
+        AddToolBarVisible(menuViewToolBars, EFPApp.ToolBars[i]);
 
-      MenuViewToolBars.Children.AddSeparator();
-      AddToolBarsRestore(MenuViewToolBars);
+      menuViewToolBars.Children.AddSeparator();
+      AddToolBarsRestore(menuViewToolBars);
 
-      return MenuViewToolBars;
+      return menuViewToolBars;
     }
 
     #region Видимость панели инструментов
@@ -159,11 +159,11 @@ namespace FreeLibSet.Forms
     private static void ToolBarVisible_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
-      string Name = (string)(ci.Tag);
+      string name = (string)(ci.Tag);
 
       if (MainWindowActive)
       {
-        EFPAppToolBar tb = EFPApp.Interface.CurrentMainWindowLayout.ToolBars[Name];
+        EFPAppToolBar tb = EFPApp.Interface.CurrentMainWindowLayout.ToolBars[name];
         if (tb == null)
           return; // бяка какая-то
         tb.Visible = !tb.Visible;
@@ -203,7 +203,7 @@ namespace FreeLibSet.Forms
       if (!MainWindowActive)
         return;
 
-      bool All = false;
+      bool all = false;
       if (EFPApp.Interface.MainWindowCount > 1)
       {
         RadioSelectDialog dlg = new RadioSelectDialog();
@@ -213,12 +213,12 @@ namespace FreeLibSet.Forms
         if (dlg.ShowDialog() != DialogResult.OK)
           return;
         _RestoreToolBarsAllWindowsMode = dlg.SelectedIndex;
-        All = (dlg.SelectedIndex == 1);
+        all = (dlg.SelectedIndex == 1);
       }
-      if (All)
+      if (all)
       {
-        foreach (EFPAppMainWindowLayout Layout in EFPApp.Interface)
-          Layout.RestoreToolBars();
+        foreach (EFPAppMainWindowLayout layout in EFPApp.Interface)
+          layout.RestoreToolBars();
       }
       else
         EFPApp.Interface.CurrentMainWindowLayout.RestoreToolBars();
@@ -288,16 +288,16 @@ namespace FreeLibSet.Forms
 
     private void InitCommandsView()
     {
-      foreach (KeyValuePair<string, EFPCommandItem> Pair in ToolBarVisibleItems)
+      foreach (KeyValuePair<string, EFPCommandItem> pair in ToolBarVisibleItems)
       {
         if (MainWindowActive)
         {
-          Pair.Value.Visible = EFPApp.Interface.CurrentMainWindowLayout.ToolBars.Contains(Pair.Key);
-          if (Pair.Value.Visible)
-            Pair.Value.Checked = EFPApp.Interface.CurrentMainWindowLayout.ToolBars[Pair.Key].Visible;
+          pair.Value.Visible = EFPApp.Interface.CurrentMainWindowLayout.ToolBars.Contains(pair.Key);
+          if (pair.Value.Visible)
+            pair.Value.Checked = EFPApp.Interface.CurrentMainWindowLayout.ToolBars[pair.Key].Visible;
         }
         else
-          Pair.Value.Visible = false;
+          pair.Value.Visible = false;
       }
 
       if (_StatusBarVisible != null)
@@ -540,8 +540,8 @@ namespace FreeLibSet.Forms
     {
       if (MainWindowActive)
       {
-        Form Curr = EFPApp.Interface.CurrentChildForm;
-        if (Curr == null)
+        Form curr = EFPApp.Interface.CurrentChildForm;
+        if (curr == null)
         {
           EFPApp.ShowTempMessage("Нет текущего окна");
           return;
@@ -552,18 +552,18 @@ namespace FreeLibSet.Forms
         EFPApp.BeginUpdateInterface();
         try
         {
-          Form[] AllChildren;
+          Form[] allChildren;
           if (EFPApp.Interface.IsSDI)
-            AllChildren = EFPApp.Interface.GetChildForms(false);
+            allChildren = EFPApp.Interface.GetChildForms(false);
           else
-            AllChildren = EFPApp.Interface.CurrentMainWindowLayout.GetChildForms(false);
+            allChildren = EFPApp.Interface.CurrentMainWindowLayout.GetChildForms(false);
 
-          for (int i = 0; i < AllChildren.Length; i++)
+          for (int i = 0; i < allChildren.Length; i++)
           {
-            if (Object.ReferenceEquals(AllChildren[i], Curr))
+            if (Object.ReferenceEquals(allChildren[i], curr))
               continue;
             //ClosedMainWindows.Add(EFPApp.Interface.FindMainWindowLayout())
-            AllChildren[i].Close();
+            allChildren[i].Close();
           }
         }
         finally
@@ -727,12 +727,12 @@ namespace FreeLibSet.Forms
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
 
-      Form Form = ci.Tag as Form;
+      Form frm = ci.Tag as Form;
 
-      if (Form == null)
+      if (frm == null)
         EFPApp.ErrorMessageBox("Форма не присоединена к команде");
       else
-        EFPApp.Activate(Form); // 07.06.2021
+        EFPApp.Activate(frm); // 07.06.2021
     }
 
     void WindowListItem_MenuOpening(object sender, EventArgs args)
@@ -769,7 +769,6 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     #endregion
 
     #region "Другие окна"
@@ -803,34 +802,34 @@ namespace FreeLibSet.Forms
 
     private void InitCommandsWindow()
     {
-      bool Visible, Enabled;
+      bool visible, enabled;
 
       if (TileHorizontal != null)
       {
-        IsLayoutChildFormsSupported(MdiLayout.TileHorizontal, out Visible, out Enabled);
-        TileHorizontal.Visible = Visible;
-        TileHorizontal.Enabled = Enabled;
+        IsLayoutChildFormsSupported(MdiLayout.TileHorizontal, out visible, out enabled);
+        TileHorizontal.Visible = visible;
+        TileHorizontal.Enabled = enabled;
       }
 
       if (TileVertical != null)
       {
-        IsLayoutChildFormsSupported(MdiLayout.TileVertical, out Visible, out Enabled);
-        TileVertical.Visible = Visible;
-        TileVertical.Enabled = Enabled;
+        IsLayoutChildFormsSupported(MdiLayout.TileVertical, out visible, out enabled);
+        TileVertical.Visible = visible;
+        TileVertical.Enabled = enabled;
       }
 
       if (Cascade != null)
       {
-        IsLayoutChildFormsSupported(MdiLayout.Cascade, out Visible, out Enabled);
-        Cascade.Visible = Visible;
-        Cascade.Enabled = Enabled;
+        IsLayoutChildFormsSupported(MdiLayout.Cascade, out visible, out enabled);
+        Cascade.Visible = visible;
+        Cascade.Enabled = enabled;
       }
 
       if (ArrangeIcons != null)
       {
-        IsLayoutChildFormsSupported(MdiLayout.ArrangeIcons, out Visible, out Enabled);
-        ArrangeIcons.Visible = Visible;
-        ArrangeIcons.Enabled = Enabled;
+        IsLayoutChildFormsSupported(MdiLayout.ArrangeIcons, out visible, out enabled);
+        ArrangeIcons.Visible = visible;
+        ArrangeIcons.Enabled = enabled;
       }
 
       if (CloseAll != null)
@@ -893,26 +892,26 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          Form[] Forms = EFPApp.Interface.GetChildForms(false);
-          Form Curr = EFPApp.Interface.CurrentChildForm;
-          bool CurrFound = false;
+          Form[] forms = EFPApp.Interface.GetChildForms(false);
+          Form curr = EFPApp.Interface.CurrentChildForm;
+          bool currFound = false;
           for (int i = 0; i < WindowListItems.Length; i++)
           {
-            if (i >= Forms.Length)
+            if (i >= forms.Length)
               ClearWindowListItem(i);
             else
             {
-              InitWindowListItem(i, Forms[i], Object.ReferenceEquals(Forms[i], Curr));
+              InitWindowListItem(i, forms[i], Object.ReferenceEquals(forms[i], curr));
               if (WindowListItems[i].Checked)
-                CurrFound = true;
+                currFound = true;
             }
           }
 
           // Как принято в MDI, если текущая форма не попала в список, ее надо сделать последним элементом
-          if ((!CurrFound) && WindowListItems.Length > 0 && (!Object.ReferenceEquals(Curr, null)))
+          if ((!currFound) && WindowListItems.Length > 0 && (!Object.ReferenceEquals(curr, null)))
           {
             int i = WindowListItems.Length - 1;
-            InitWindowListItem(i, Curr, true);
+            InitWindowListItem(i, curr, true);
           }
         }
       }
@@ -926,28 +925,28 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private static void IsLayoutChildFormsSupported(MdiLayout Layout, out bool Visible, out bool Enabled)
+    private static void IsLayoutChildFormsSupported(MdiLayout layout, out bool visible, out bool enabled)
     {
       if (EFPApp.Interface == null)
       {
-        Visible = false;
-        Enabled = false;
+        visible = false;
+        enabled = false;
       }
       else
       {
-        Visible = EFPApp.Interface.IsLayoutChildFormsSupported(Layout);
-        if (Visible)
-          Enabled = EFPApp.Interface.IsLayoutChildFormsAppliable(Layout);
+        visible = EFPApp.Interface.IsLayoutChildFormsSupported(layout);
+        if (visible)
+          enabled = EFPApp.Interface.IsLayoutChildFormsAppliable(layout);
         else
-          Enabled = false;
+          enabled = false;
       }
     }
 
-    private void InitWindowListItem(int i, Form Form, bool IsCurrent)
+    private void InitWindowListItem(int i, Form form, bool isCurrent)
     {
-      WindowListItems[i].Checked = IsCurrent;
+      WindowListItems[i].Checked = isCurrent;
       WindowListItems[i].Visible = true;
-      WindowListItems[i].Tag = Form;
+      WindowListItems[i].Tag = form;
 
       // 07.06.2021 Текст и значок обновляется при открытии меню
       // Только, событие MenuStrip.MenuActivate, похоже, не всегда вызывается.

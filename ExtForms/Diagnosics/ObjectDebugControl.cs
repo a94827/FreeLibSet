@@ -74,22 +74,22 @@ namespace FreeLibSet.Forms.Diagnostics
       _TheTV.Nodes.Clear();
 
       // Корневой узел соответствует объекту
-      TreeNode RootNode = AddNode(_TheTV.Nodes, "(this)", _SelectedObject);
-      RootNode.ImageKey = "TreeViewOpenFolder";
-      RootNode.SelectedImageKey = RootNode.ImageKey;
-      RootNode.Nodes.Clear(); // возможна заглушка
+      TreeNode rootNode = AddNode(_TheTV.Nodes, "(this)", _SelectedObject);
+      rootNode.ImageKey = "TreeViewOpenFolder";
+      rootNode.SelectedImageKey = rootNode.ImageKey;
+      rootNode.Nodes.Clear(); // возможна заглушка
 
       if (_SelectedObject != null)
       {
-        AddPropNodes(RootNode.Nodes, _SelectedObject, _SelectedObject is Type);
+        AddPropNodes(rootNode.Nodes, _SelectedObject, _SelectedObject is Type);
       }
-      RootNode.Expand();
+      rootNode.Expand();
     }
 
     private TreeNode AddNode(TreeNodeCollection nodes, string name, object value)
     {
-      object TheValue = value;
-      bool ErrFlag = false;
+      object theValue = value;
+      bool errFlag = false;
 
       StringBuilder sb1 = new StringBuilder(); // текст
       StringBuilder sb2 = new StringBuilder(); // подсказка
@@ -127,24 +127,24 @@ namespace FreeLibSet.Forms.Diagnostics
           sb2.Append(Environment.NewLine);
           sb2.Append("Сообщение: ");
           sb2.Append(e.Message);
-          ErrFlag = true;
+          errFlag = true;
         }
       }
 
-      TreeNode Node = nodes.Add(sb1.ToString());
-      Node.ToolTipText = sb2.ToString();
-      if (ErrFlag)
+      TreeNode node = nodes.Add(sb1.ToString());
+      node.ToolTipText = sb2.ToString();
+      if (errFlag)
       {
-        Node.ImageKey = "Error";
-        Node.SelectedImageKey = "Error";
+        node.ImageKey = "Error";
+        node.SelectedImageKey = "Error";
       }
       else
       {
-        Node.ImageKey = "Item";
-        Node.SelectedImageKey = "Item";
+        node.ImageKey = "Item";
+        node.SelectedImageKey = "Item";
       }
-      AddDummySubNodes(Node, TheValue);
-      return Node;
+      AddDummySubNodes(node, theValue);
+      return node;
     }
 
     private void AddDummySubNodes(TreeNode node, object value)
@@ -168,24 +168,24 @@ namespace FreeLibSet.Forms.Diagnostics
 
     private void AddPropNodes(TreeNodeCollection nodes, object obj, bool asType)
     {
-      Type typ;
+      Type tp;
       if (asType)
       {
-        typ = (Type)obj;
+        tp = (Type)obj;
         obj = null;
       }
       else
       {
-        typ = obj.GetType();
+        tp = obj.GetType();
       }
 
       if (!asType)
       {
-        AddPropNodes1(nodes, obj, typ, false);
-        AddFieldNodes1(nodes, obj, typ, false);
+        AddPropNodes1(nodes, obj, tp, false);
+        AddFieldNodes1(nodes, obj, tp, false);
       }
-      AddPropNodes1(nodes, obj, typ, true);
-      AddFieldNodes1(nodes, obj, typ, true);
+      AddPropNodes1(nodes, obj, tp, true);
+      AddFieldNodes1(nodes, obj, tp, true);
 
 
       if (!asType)
@@ -223,8 +223,8 @@ namespace FreeLibSet.Forms.Diagnostics
         sb1.Length = 0;
         sb2.Length = 0;
 
-        object TheValue = null;
-        bool ErrFlag = false;
+        object theValue = null;
+        bool errFlag = false;
 
         sb1.Append(pi[i].Name);
         sb1.Append(": ");
@@ -255,7 +255,7 @@ namespace FreeLibSet.Forms.Diagnostics
             sb2.Append("Значение:");
             sb2.Append(v.ToString());
 
-            TheValue = v;
+            theValue = v;
           }
         }
         catch (Exception e)
@@ -267,22 +267,22 @@ namespace FreeLibSet.Forms.Diagnostics
           sb2.Append(Environment.NewLine);
           sb2.Append("Сообщение: ");
           sb2.Append(e.Message);
-          ErrFlag = true;
+          errFlag = true;
         }
 
-        TreeNode Node = nodes.Add(sb1.ToString());
-        Node.ToolTipText = sb2.ToString();
-        if (ErrFlag)
+        TreeNode node = nodes.Add(sb1.ToString());
+        node.ToolTipText = sb2.ToString();
+        if (errFlag)
         {
-          Node.ImageKey = "Error";
-          Node.SelectedImageKey = "Error";
+          node.ImageKey = "Error";
+          node.SelectedImageKey = "Error";
         }
         else
         {
-          Node.ImageKey = "CLRProperty";
-          Node.SelectedImageKey = Node.ImageKey;
+          node.ImageKey = "CLRProperty";
+          node.SelectedImageKey = node.ImageKey;
         }
-        AddDummySubNodes(Node, TheValue);
+        AddDummySubNodes(node, theValue);
       }
 
     }
@@ -302,8 +302,8 @@ namespace FreeLibSet.Forms.Diagnostics
         sb1.Length = 0;
         sb2.Length = 0;
 
-        object TheValue = null;
-        bool ErrFlag = false;
+        object theValue = null;
+        bool errFlag = false;
 
         sb1.Append(fi[i].Name);
         sb1.Append(": ");
@@ -334,7 +334,7 @@ namespace FreeLibSet.Forms.Diagnostics
             sb2.Append("Значение:");
             sb2.Append(v.ToString());
 
-            TheValue = v;
+            theValue = v;
           }
         }
         catch (Exception e)
@@ -346,22 +346,22 @@ namespace FreeLibSet.Forms.Diagnostics
           sb2.Append(Environment.NewLine);
           sb2.Append("Сообщение: ");
           sb2.Append(e.Message);
-          ErrFlag = true;
+          errFlag = true;
         }
 
-        TreeNode Node = nodes.Add(sb1.ToString());
-        Node.ToolTipText = sb2.ToString();
-        if (ErrFlag)
+        TreeNode node = nodes.Add(sb1.ToString());
+        node.ToolTipText = sb2.ToString();
+        if (errFlag)
         {
-          Node.ImageKey = "Error";
-          Node.SelectedImageKey = "Error";
+          node.ImageKey = "Error";
+          node.SelectedImageKey = "Error";
         }
         else
         {
-          Node.ImageKey = "CLRField";
-          Node.SelectedImageKey = Node.ImageKey;
+          node.ImageKey = "CLRField";
+          node.SelectedImageKey = node.ImageKey;
         }
-        AddDummySubNodes(Node, TheValue);
+        AddDummySubNodes(node, theValue);
       }
 
     }
@@ -372,9 +372,9 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
       if (args.Node.Nodes[0].Text != "???")
         return;
-      object Obj = args.Node.Nodes[0].Tag;
+      object obj = args.Node.Nodes[0].Tag;
       args.Node.Nodes.Clear();
-      AddPropNodes(args.Node.Nodes, Obj, false);
+      AddPropNodes(args.Node.Nodes, obj, false);
     }
 
     #endregion
@@ -456,10 +456,10 @@ namespace FreeLibSet.Forms.Diagnostics
 
       for (int i = 0; i < _Titles.Count; i++)
       {
-        TabPage Page = new TabPage(_Titles[i]);
-        TheTabControl.TabPages.Add(Page);
+        TabPage page = new TabPage(_Titles[i]);
+        TheTabControl.TabPages.Add(page);
 
-        ObjectDebugControl ctrl = new ObjectDebugControl(Page);
+        ObjectDebugControl ctrl = new ObjectDebugControl(page);
 
         ctrl.SelectedObject = _Objects[i];
       }

@@ -711,10 +711,10 @@ namespace FreeLibSet.Forms
           value.SetReadOnly();
         _CurrentConfig = value;
 
-        CancelEventArgs Args = new CancelEventArgs();
-        Args.Cancel = false;
-        OnCurrentGridConfigChanged(Args);
-        if ((!Args.Cancel) && (GridProducer != null))
+        CancelEventArgs args = new CancelEventArgs();
+        args.Cancel = false;
+        OnCurrentGridConfigChanged(args);
+        if ((!args.Cancel) && (GridProducer != null))
         {
           Control.Columns.Clear(); // 21.01.2012
           // TODO: GridProducer.InitGrid(this, CurrentConfigHasBeenSet);
@@ -811,7 +811,7 @@ namespace FreeLibSet.Forms
 
     void IEFPTreeView.CheckAll(bool isChecked)
     {
-      throw new NotImplementedException("The method or operation is not implemented.");
+      throw new NotImplementedException();
     }
 
     #endregion
@@ -858,9 +858,9 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public string[,] GetSelectedNodesTextMatrix()
     {
-      TreeNodeAdv[] Nodes = new TreeNodeAdv[Control.SelectedNodes.Count];
-      Control.SelectedNodes.CopyTo(Nodes, 0);
-      return GetTextMatrix2(Nodes);
+      TreeNodeAdv[] nodes = new TreeNodeAdv[Control.SelectedNodes.Count];
+      Control.SelectedNodes.CopyTo(nodes, 0);
+      return GetTextMatrix2(nodes);
     }
 
     private string[,] GetTextMatrix2(TreeNodeAdv[] nodes)
@@ -981,14 +981,14 @@ namespace FreeLibSet.Forms
       {
         if (Control.Root.Children.Count > 0)
         {
-          TreeNodeAdv Node = Control.Root;
+          TreeNodeAdv node = Control.Root;
           while (true)
           {
-            if (Node.IsLeaf)
-              return Node;
-            if (Node.Children.Count == 0)
-              return Node;
-            Node = Node.Children[Node.Children.Count - 1];
+            if (node.IsLeaf)
+              return node;
+            if (node.Children.Count == 0)
+              return node;
+            node = node.Children[node.Children.Count - 1];
           }
         }
         else
@@ -1289,9 +1289,9 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        CheckState Res;
-        if (_Dict.TryGetValue(tag, out Res))
-          return Res;
+        CheckState res;
+        if (_Dict.TryGetValue(tag, out res))
+          return res;
         else
           return CheckState.Unchecked;
       }

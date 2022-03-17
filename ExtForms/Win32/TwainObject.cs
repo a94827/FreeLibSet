@@ -97,8 +97,8 @@ namespace FreeLibSet.Win32.Twain
       Assembly asm = EnvironmentTools.EntryAssembly;
       if (asm != null)
       {
-        string ProgName = asm.FullName;
-        AssemblyName an = new AssemblyName(ProgName);
+        string progName = asm.FullName;
+        AssemblyName an = new AssemblyName(progName);
 
         AssemblyDescriptionAttribute attrDescr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyDescriptionAttribute));
         if (attrDescr != null)

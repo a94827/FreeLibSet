@@ -95,22 +95,22 @@ namespace FreeLibSet.Forms
 
       #region Текущая композиция
 
-      ParamSetComboBoxItem CurrItem = new ParamSetComboBoxItem("Current", "[ Текущая композиция ]",
+      ParamSetComboBoxItem currItem = new ParamSetComboBoxItem("Current", "[ Текущая композиция ]",
         "ArrowRight", /*DateTime.Now*/null, 1, _CurrPart.MD5Sum());
-      cbParamSet.Items.Add(CurrItem);
+      cbParamSet.Items.Add(currItem);
 
       #endregion
 
       #region Именные секции
 
-      EFPAppCompositionHistoryItem[] Items;
-      Items = EFPAppCompositionHistoryHandler.GetUserItems();
-      for (int i = 0; i < Items.Length; i++)
+      EFPAppCompositionHistoryItem[] items;
+      items = EFPAppCompositionHistoryHandler.GetUserItems();
+      for (int i = 0; i < items.Length; i++)
       {
-        ParamSetComboBoxItem cbItem = new ParamSetComboBoxItem(Items[i].UserSetName,
-          Items[i].DisplayName,
-          "User", /*Items[i].Time*/null, 2, Items[i].MD5);
-        cbItem.Tag = Items[i];
+        ParamSetComboBoxItem cbItem = new ParamSetComboBoxItem(items[i].UserSetName,
+          items[i].DisplayName,
+          "User", /*Items[i].Time*/null, 2, items[i].MD5);
+        cbItem.Tag = items[i];
         cbParamSet.Items.Add(cbItem);
       }
 
@@ -118,13 +118,13 @@ namespace FreeLibSet.Forms
 
       #region История
 
-      Items = EFPAppCompositionHistoryHandler.GetHistoryItems();
-      for (int i = 0; i < Items.Length; i++)
+      items = EFPAppCompositionHistoryHandler.GetHistoryItems();
+      for (int i = 0; i < items.Length; i++)
       {
-        ParamSetComboBoxItem cbItem = new ParamSetComboBoxItem(Items[i].UserSetName,
-          Items[i].DisplayName,
-          "Time", /*Items[i].Time*/null, 2, Items[i].MD5);
-        cbItem.Tag = Items[i];
+        ParamSetComboBoxItem cbItem = new ParamSetComboBoxItem(items[i].UserSetName,
+          items[i].DisplayName,
+          "Time", /*Items[i].Time*/null, 2, items[i].MD5);
+        cbItem.Tag = items[i];
         cbParamSet.Items.Add(cbItem);
       }
 
@@ -292,9 +292,9 @@ namespace FreeLibSet.Forms
         using (EFPApp.ConfigManager.GetConfig(EFPAppCompositionHistoryHandler.GetConfigInfo(SelectedItem),
           EFPConfigMode.Read, out cfg))
         {
-          TempCfg Cfg2 = new TempCfg();
-          cfg.CopyTo(Cfg2);
-          EFPApp.ShowTextView(DataTools.XmlDocumentToString(Cfg2.Document), SelectedItem.DisplayName);
+          TempCfg cfg2 = new TempCfg();
+          cfg.CopyTo(cfg2);
+          EFPApp.ShowTextView(DataTools.XmlDocumentToString(cfg2.Document), SelectedItem.DisplayName);
         }
       }
     }
@@ -338,14 +338,14 @@ namespace FreeLibSet.Forms
     /// <returns>true, если пользователь выполнил загрузку композиции рабочего стола</returns>
     public DialogResult ShowDialog()
     {
-      SelectCompositionForm Form = new SelectCompositionForm();
-      Form.efpForm.HelpContext = HelpContext;
-      if (EFPApp.ShowDialog(Form, true) == DialogResult.OK)
+      SelectCompositionForm frm = new SelectCompositionForm();
+      frm.efpForm.HelpContext = HelpContext;
+      if (EFPApp.ShowDialog(frm, true) == DialogResult.OK)
       {
-        if (Form.SelectedItem != null)
+        if (frm.SelectedItem != null)
         {
           CfgPart cfg;
-          using (EFPApp.ConfigManager.GetConfig(EFPAppCompositionHistoryHandler.GetConfigInfo(Form.SelectedItem), EFPConfigMode.Read, out cfg))
+          using (EFPApp.ConfigManager.GetConfig(EFPAppCompositionHistoryHandler.GetConfigInfo(frm.SelectedItem), EFPConfigMode.Read, out cfg))
           {
             EFPApp.LoadComposition(cfg);
           }

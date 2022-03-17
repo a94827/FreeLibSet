@@ -417,16 +417,16 @@ namespace FreeLibSet.Forms
     {
       if (ConfigureView != null)
       {
-        CancelEventArgs Args = new CancelEventArgs();
-        ConfigureView(this, Args);
-        return !Args.Cancel;
+        CancelEventArgs args = new CancelEventArgs();
+        ConfigureView(this, args);
+        return !args.Cancel;
       }
 
       if (String.IsNullOrEmpty(ConfigSectionName))
         return false;
 
-      IEFPConfigurableGridProducer GridProducer2 = GridProducer as IEFPConfigurableGridProducer;
-      if (GridProducer2 == null)
+      IEFPConfigurableGridProducer gridProducer2 = GridProducer as IEFPConfigurableGridProducer;
+      if (gridProducer2 == null)
         return false;
 
       if (CurrentConfig == null)
@@ -434,7 +434,7 @@ namespace FreeLibSet.Forms
 
       EFPDataGridViewConfigDialog dlg = new EFPDataGridViewConfigDialog();
       dlg.CallerControlProvider = this;
-      dlg.GridProducer = GridProducer2;
+      dlg.GridProducer = gridProducer2;
       dlg.ConfigCategory = EFPConfigCategories.GridConfig;
       dlg.HistoryCategory = EFPConfigCategories.GridConfigHistory;
       //dlg.Value = CurrentConfig;
@@ -533,10 +533,10 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          EFPDataGridViewConfig GridConfig = new EFPDataGridViewConfig();
-          GridConfig.ReadConfig(cfg);
-          GridConfig.SetReadOnly();
-          base.CurrentConfig = GridConfig;
+          EFPDataGridViewConfig gridConfig = new EFPDataGridViewConfig();
+          gridConfig.ReadConfig(cfg);
+          gridConfig.SetReadOnly();
+          base.CurrentConfig = gridConfig;
         }
         catch (Exception e)
         {
@@ -648,29 +648,29 @@ namespace FreeLibSet.Forms
       }
 
       // Сохраняем существующие данные на случай нажатия кнопки "Отмена"
-      TempCfg OriginalConfigSection = new TempCfg();
-      Filters.WriteConfig(OriginalConfigSection);
+      TempCfg originalConfigSection = new TempCfg();
+      Filters.WriteConfig(originalConfigSection);
 
-      bool Res;
+      bool res;
       Filters.BeginUpdate();
       try
       {
-        GridFilterForm Form = new GridFilterForm(this, _DefaultFilterCfg, OriginalConfigSection);
-        Form.SetStartFilter(startFilter);
-        if (EFPApp.ShowDialog(Form, true) == DialogResult.OK)
+        GridFilterForm form = new GridFilterForm(this, _DefaultFilterCfg, originalConfigSection);
+        form.SetStartFilter(startFilter);
+        if (EFPApp.ShowDialog(form, true) == DialogResult.OK)
         {
           // 04.10.2017
           // Вызываем виртуальный метод
           CallOnFilterChanged();
 
-          Res = true;
+          res = true;
         }
         else
         {
           // Выполняем откат редактирования
           Filters.ClearAllFilters();
-          Filters.ReadConfig(OriginalConfigSection);
-          Res = false;
+          Filters.ReadConfig(originalConfigSection);
+          res = false;
         }
       }
       finally
@@ -678,7 +678,7 @@ namespace FreeLibSet.Forms
         Filters.EndUpdate();
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -1146,15 +1146,15 @@ namespace FreeLibSet.Forms
     {
       ReadSendToSettings(SendToSettings);
 
-      EFPDataGridViewExpExcelForm Form = new EFPDataGridViewExpExcelForm();
-      Form.Text = "Отправить в " + ciSendToMicrosoftExcel.MenuTextWithoutMnemonic;
-      Form.Icon = EFPApp.MainImageIcon(ciSendToMicrosoftExcel.ImageKey);
-      Form.LoadValues(SendToSettings);
-      Form.InitVisibility(Owner);
-      if (EFPApp.ShowDialog(Form, true) != DialogResult.OK)
+      EFPDataGridViewExpExcelForm form = new EFPDataGridViewExpExcelForm();
+      form.Text = "Отправить в " + ciSendToMicrosoftExcel.MenuTextWithoutMnemonic;
+      form.Icon = EFPApp.MainImageIcon(ciSendToMicrosoftExcel.ImageKey);
+      form.LoadValues(SendToSettings);
+      form.InitVisibility(Owner);
+      if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
         return;
 
-      Form.SaveValues(SendToSettings);
+      form.SaveValues(SendToSettings);
       WriteSendToSettings(SendToSettings);
 
       Owner.SendToMicrosoftExcel(SendToSettings);
@@ -1168,15 +1168,15 @@ namespace FreeLibSet.Forms
     {
       ReadSendToSettings(SendToSettings);
 
-      EFPDataGridViewExpExcelForm Form = new EFPDataGridViewExpExcelForm();
-      Form.Text = "Отправить в " + ciSendToOpenOfficeCalc.MenuTextWithoutMnemonic;
-      Form.Icon = EFPApp.MainImageIcon(ciSendToOpenOfficeCalc.ImageKey);
-      Form.LoadValues(SendToSettings);
-      Form.InitVisibility(Owner);
-      if (EFPApp.ShowDialog(Form, true) != DialogResult.OK)
+      EFPDataGridViewExpExcelForm form = new EFPDataGridViewExpExcelForm();
+      form.Text = "Отправить в " + ciSendToOpenOfficeCalc.MenuTextWithoutMnemonic;
+      form.Icon = EFPApp.MainImageIcon(ciSendToOpenOfficeCalc.ImageKey);
+      form.LoadValues(SendToSettings);
+      form.InitVisibility(Owner);
+      if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
         return;
 
-      Form.SaveValues(SendToSettings);
+      form.SaveValues(SendToSettings);
       WriteSendToSettings(SendToSettings);
 
       Owner.SendToOpenOfficeCalc(SendToSettings);
@@ -1192,9 +1192,9 @@ namespace FreeLibSet.Forms
 
       if ((!String.IsNullOrEmpty(Owner.ConfigSectionName)) && EFPConfigTools.IsPersist(Owner.ConfigManager.Persistence))
       {
-        EFPConfigSectionInfo ConfigInfo1 = new EFPConfigSectionInfo(Owner.ConfigSectionName,
+        EFPConfigSectionInfo configInfo1 = new EFPConfigSectionInfo(Owner.ConfigSectionName,
           EFPConfigCategories.SendToExcel, String.Empty);
-        using (Owner.ConfigManager.GetConfig(ConfigInfo1, EFPConfigMode.Read, out cfg))
+        using (Owner.ConfigManager.GetConfig(configInfo1, EFPConfigMode.Read, out cfg))
         {
           if (!cfg.IsEmpty)
           {
@@ -1204,9 +1204,9 @@ namespace FreeLibSet.Forms
         }
       }
 
-      EFPConfigSectionInfo ConfigInfo2 = new EFPConfigSectionInfo("Default",
+      EFPConfigSectionInfo configInfo2 = new EFPConfigSectionInfo("Default",
         EFPConfigCategories.SendToExcel, String.Empty);
-      using (Owner.ConfigManager.GetConfig(ConfigInfo2, EFPConfigMode.Read, out cfg))
+      using (Owner.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Read, out cfg))
       {
         settings.ReadConfig(cfg);
       }
@@ -1222,10 +1222,10 @@ namespace FreeLibSet.Forms
 
       if ((!String.IsNullOrEmpty(Owner.ConfigSectionName)) && EFPConfigTools.IsPersist(Owner.ConfigManager.Persistence))
       {
-        EFPConfigSectionInfo ConfigInfo1 = new EFPConfigSectionInfo(Owner.ConfigSectionName,
+        EFPConfigSectionInfo configInfo1 = new EFPConfigSectionInfo(Owner.ConfigSectionName,
           EFPConfigCategories.SendToExcel, String.Empty);
 
-        using (Owner.ConfigManager.GetConfig(ConfigInfo1, EFPConfigMode.Write, out cfg))
+        using (Owner.ConfigManager.GetConfig(configInfo1, EFPConfigMode.Write, out cfg))
         {
           settings.WriteConfig(cfg);
         }
@@ -1233,10 +1233,10 @@ namespace FreeLibSet.Forms
 
       // В секцию по умолчанию запись выполняется всегда
 
-      EFPConfigSectionInfo ConfigInfo2 = new EFPConfigSectionInfo("Default",
+      EFPConfigSectionInfo configInfo2 = new EFPConfigSectionInfo("Default",
         EFPConfigCategories.SendToExcel, String.Empty);
 
-      using (Owner.ConfigManager.GetConfig(ConfigInfo2, EFPConfigMode.Write, out cfg))
+      using (Owner.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Write, out cfg))
       {
         settings.WriteConfig(cfg);
       }
@@ -1307,5 +1307,4 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
-
 }

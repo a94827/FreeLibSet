@@ -72,10 +72,10 @@ namespace FreeLibSet.Forms
 
     private static TabControl CreateTabControl(Control parent)
     {
-      TabControl TabControl = new TabControl();
-      TabControl.Dock = DockStyle.Fill;
-      parent.Controls.Add(TabControl);
-      return TabControl;
+      TabControl tabControl = new TabControl();
+      tabControl.Dock = DockStyle.Fill;
+      parent.Controls.Add(tabControl);
+      return tabControl;
     }
 
     void Control_Disposed(object sender, EventArgs args)
@@ -225,9 +225,9 @@ namespace FreeLibSet.Forms
       /// <returns>Провайдер для новой страницы</returns>
       public EFPTabPage Add(string text)
       {
-        TabPage Page = new TabPage(text);
-        _Owner.Control.TabPages.Add(Page);
-        return this[Page];
+        TabPage page = new TabPage(text);
+        _Owner.Control.TabPages.Add(page);
+        return this[page];
       }
 
       #endregion
@@ -312,9 +312,9 @@ namespace FreeLibSet.Forms
     {
       if (!String.IsNullOrEmpty(pageControl.ImageKey))
       {
-        string ImageKey = pageControl.ImageKey;
+        string imageKey = pageControl.ImageKey;
         pageControl.ImageKey = String.Empty;
-        pageControl.ImageKey = ImageKey;
+        pageControl.ImageKey = imageKey;
       }
     }
 
@@ -325,7 +325,7 @@ namespace FreeLibSet.Forms
 
       // Первый проход - удаление лишних объектов
       // Заодно создаем коллекцию для поиска
-      Dictionary<TabPage, EFPTabPage> Pages2 = new Dictionary<TabPage, EFPTabPage>();
+      Dictionary<TabPage, EFPTabPage> pages2 = new Dictionary<TabPage, EFPTabPage>();
       for (int i = _Items.Count - 1; i >= 0; i--)
       {
         if (!_Items[i].Visible)
@@ -337,35 +337,35 @@ namespace FreeLibSet.Forms
           _Items.RemoveAt(i);
         }
         else
-          Pages2.Add(_Items[i].Control, _Items[i]);
+          pages2.Add(_Items[i].Control, _Items[i]);
       }
 
       // Второй проход - добавление недостающих страниц
-      int LastItemIndex = 0;
+      int lastItemIndex = 0;
       for (int i = 0; i < Control.TabCount; i++)
       {
-        if (!Pages2.ContainsKey(Control.TabPages[i]))
+        if (!pages2.ContainsKey(Control.TabPages[i]))
         {
           // Необходимо добавить провайдер для страницы
-          EFPTabPage NewPage = new EFPTabPage(this, Control.TabPages[i]);
-          for (int j = LastItemIndex + 1; j < _Items.Count; j++)
+          EFPTabPage newPage = new EFPTabPage(this, Control.TabPages[i]);
+          for (int j = lastItemIndex + 1; j < _Items.Count; j++)
           {
             if (_Items[j].Visible)
               break;
             else
-              LastItemIndex++;
+              lastItemIndex++;
           }
 
-          if (LastItemIndex >= _Items.Count)
-            _Items.Add(NewPage);
+          if (lastItemIndex >= _Items.Count)
+            _Items.Add(newPage);
           else
-            _Items.Insert(LastItemIndex + 1, NewPage);
-          LastItemIndex++;
+            _Items.Insert(lastItemIndex + 1, newPage);
+          lastItemIndex++;
         }
         else
         {
-          EFPTabPage LastPage = Pages2[Control.TabPages[i]];
-          LastItemIndex = _Items.IndexOf(LastPage);
+          EFPTabPage LastPage = pages2[Control.TabPages[i]];
+          lastItemIndex = _Items.IndexOf(LastPage);
         }
       }
 
@@ -386,11 +386,11 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        TabPage Page = Control.SelectedTab;
-        if (Page == null)
+        TabPage page = Control.SelectedTab;
+        if (page == null)
           return null;
         else
-          return TabPages[Page];
+          return TabPages[page];
       }
       set
       {
@@ -505,11 +505,11 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        EFPTabPage Page = SelectedTab;
-        if (Page == null)
+        EFPTabPage page = SelectedTab;
+        if (page == null)
           return -1;
         else
-          return TabPages.IndexOf(Page);
+          return TabPages.IndexOf(page);
       }
       set
       {
@@ -741,21 +741,21 @@ namespace FreeLibSet.Forms
           if (value)
           {
             // Ищем индекс предыдущей страницы
-            int PrevPageIndex = -1;
+            int prevPageIndex = -1;
             for (int i = Parent.TabPages.IndexOf(this) - 1; i >= 0; i--)
             {
               if (Parent.TabPages[i].Visible)
               {
-                TabPage PrevPage = Parent.TabPages[i].Control;
-                PrevPageIndex = Parent.Control.TabPages.IndexOf(PrevPage);
+                TabPage prevPage = Parent.TabPages[i].Control;
+                prevPageIndex = Parent.Control.TabPages.IndexOf(prevPage);
                 break;
               }
             }
 
             // Добавляем страницу в TabControl
-            int ThisPageIndex = PrevPageIndex + 1;
-            if (ThisPageIndex < (Parent.TabPages.Count - 1))
-              Parent.Control.TabPages.Insert(ThisPageIndex, Control);
+            int thisPageIndex = prevPageIndex + 1;
+            if (thisPageIndex < (Parent.TabPages.Count - 1))
+              Parent.Control.TabPages.Insert(thisPageIndex, Control);
             else
               Parent.Control.TabPages.Add(Control);
           }

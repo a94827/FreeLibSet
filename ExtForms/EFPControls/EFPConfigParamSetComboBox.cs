@@ -297,9 +297,9 @@ namespace FreeLibSet.Forms
 
       private TempCfg GetCurrentCfg()
       {
-        TempCfg Cfg = new TempCfg();
-        _Owner.ConfigFromControls(Cfg);
-        return Cfg;
+        TempCfg cfg = new TempCfg();
+        _Owner.ConfigFromControls(cfg);
+        return cfg;
       }
 
       #endregion
@@ -422,10 +422,10 @@ namespace FreeLibSet.Forms
 
       if (AutoLoadLastConfig)
       {
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
            ParamsCategory, String.Empty);
         CfgPart cfg1;
-        using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfg1))
+        using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfg1))
         {
           ConfigToControls(cfg1);
         }
@@ -506,25 +506,25 @@ namespace FreeLibSet.Forms
       _TableUser.Columns.Add("MD5", typeof(string));
       DataTools.SetPrimaryKey(_TableUser, "Code");
 
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName, HistoryCategory, String.Empty);
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, HistoryCategory, String.Empty);
       CfgPart cfgHist;
-      using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfgHist))
+      using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgHist))
       {
         try
         {
-          string[] Names = cfgHist.GetChildNames();
-          for (int i = 0; i < Names.Length; i++)
+          string[] names = cfgHist.GetChildNames();
+          for (int i = 0; i < names.Length; i++)
           {
-            if (Names[i].StartsWith("Hist"))
+            if (names[i].StartsWith("Hist"))
             {
-              CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-              _TableHist.Rows.Add(Names[i], cfgOne.GetNullableDateTime("Time"),
+              CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+              _TableHist.Rows.Add(names[i], cfgOne.GetNullableDateTime("Time"),
                 cfgOne.GetString("MD5"), _TableHist.Rows.Count + 1);
             }
-            if (Names[i].StartsWith("User"))
+            if (names[i].StartsWith("User"))
             {
-              CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-              _TableUser.Rows.Add(Names[i], cfgOne.GetString("Name"), cfgOne.GetNullableDateTime("Time"),
+              CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+              _TableUser.Rows.Add(names[i], cfgOne.GetString("Name"), cfgOne.GetNullableDateTime("Time"),
                 cfgOne.GetString("MD5"));
             }
           }
@@ -546,15 +546,15 @@ namespace FreeLibSet.Forms
       {
         #region Выполняем упреждающее чтение секций конфигурации
 
-        List<EFPConfigSectionInfo> PreloadInfos = new List<EFPConfigSectionInfo>();
-        foreach (DataRow Row in _TableUser.Rows)
-          PreloadInfos.Add(new EFPConfigSectionInfo(ConfigSectionName,
-          ParamsCategory, DataTools.GetString(Row, "Code")));
-        foreach (DataRow Row in _TableHist.Rows)
-          PreloadInfos.Add(new EFPConfigSectionInfo(ConfigSectionName,
-          ParamsCategory, DataTools.GetString(Row, "Code")));
+        List<EFPConfigSectionInfo> preloadInfos = new List<EFPConfigSectionInfo>();
+        foreach (DataRow row in _TableUser.Rows)
+          preloadInfos.Add(new EFPConfigSectionInfo(ConfigSectionName,
+          ParamsCategory, DataTools.GetString(row, "Code")));
+        foreach (DataRow row in _TableHist.Rows)
+          preloadInfos.Add(new EFPConfigSectionInfo(ConfigSectionName,
+          ParamsCategory, DataTools.GetString(row, "Code")));
 
-        this.ConfigManager.Preload(PreloadInfos.ToArray(), EFPConfigMode.Read);
+        this.ConfigManager.Preload(preloadInfos.ToArray(), EFPConfigMode.Read);
 
         #endregion
       }
@@ -563,32 +563,32 @@ namespace FreeLibSet.Forms
         AuxTextHandler.BeginGetAuxText();
       try
       {
-        string AuxText = null;
+        string auxText = null;
 
         #region Сначала - именные данные пользователя
 
         _TableUser.DefaultView.Sort = "Name";
         foreach (DataRowView drv in _TableUser.DefaultView)
         {
-          string Code = DataTools.GetString(drv.Row, "Code");
+          string code = DataTools.GetString(drv.Row, "Code");
           //DateTime? dt = DataTools.GetNullableDateTime(drv.Row, "Time");
 
           if (_UseAuxText)
           {
-            EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName, ParamsCategory, Code);
+            EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, ParamsCategory, code);
             CfgPart cfgData;
-            using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfgData))
+            using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgData))
             {
-              AuxText = AuxTextHandler.GetAuxText(cfgData);
+              auxText = AuxTextHandler.GetAuxText(cfgData);
             }
           }
 
-          Control.Items.Add(new ParamSetComboBoxItem(Code,
+          Control.Items.Add(new ParamSetComboBoxItem(code,
           DataTools.GetString(drv.Row, "Name"),
           "User",
           null,
           GroupUser,
-          DataTools.GetString(drv.Row, "MD5"), AuxText));
+          DataTools.GetString(drv.Row, "MD5"), auxText));
         }
 
         #endregion
@@ -598,9 +598,9 @@ namespace FreeLibSet.Forms
         for (int i = 0; i < DefaultSets.Count; i++)
         {
           if (_UseAuxText)
-            AuxText = AuxTextHandler.GetAuxText(DefaultSets[i].Config);
+            auxText = AuxTextHandler.GetAuxText(DefaultSets[i].Config);
 
-          Control.Items.Add(new ParamSetComboBoxItem(i.ToString(), "(" + DefaultSets[i].DisplayName + ")", DefaultSets[i].ImageKey, null, GroupDefault, DefaultSets[i].MD5Sum, AuxText));
+          Control.Items.Add(new ParamSetComboBoxItem(i.ToString(), "(" + DefaultSets[i].DisplayName + ")", DefaultSets[i].ImageKey, null, GroupDefault, DefaultSets[i].MD5Sum, auxText));
         }
 
         #endregion
@@ -611,9 +611,9 @@ namespace FreeLibSet.Forms
         int cnt = 0;
         for (int i = _TableHist.DefaultView.Count - 1; i >= 0; i--)
         {
-          DataRow Row = _TableHist.DefaultView[i].Row;
-          string Code = DataTools.GetString(Row, "Code");
-          DateTime? dt = DataTools.GetNullableDateTime(Row, "Time");
+          DataRow row = _TableHist.DefaultView[i].Row;
+          string code = DataTools.GetString(row, "Code");
+          DateTime? dt = DataTools.GetNullableDateTime(row, "Time");
           cnt++;
           string Name;
           switch (cnt)
@@ -632,16 +632,16 @@ namespace FreeLibSet.Forms
 
           if (_UseAuxText)
           {
-            EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName, ParamsCategory, Code);
+            EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, ParamsCategory, code);
             CfgPart cfgData;
-            using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfgData))
+            using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgData))
             {
-              AuxText = AuxTextHandler.GetAuxText(cfgData);
+              auxText = AuxTextHandler.GetAuxText(cfgData);
             }
           }
 
-          Control.Items.Add(new ParamSetComboBoxItem(Code, Name, "Time", dt, GroupHist,
-          DataTools.GetString(Row, "MD5"), AuxText));
+          Control.Items.Add(new ParamSetComboBoxItem(code, Name, "Time", dt, GroupHist,
+          DataTools.GetString(row, "MD5"), auxText));
         }
 
         #endregion
@@ -656,10 +656,10 @@ namespace FreeLibSet.Forms
 
     private void SaveSetsTables()
     {
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
         HistoryCategory, String.Empty);
       CfgPart cfgHist;
-      using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfgHist))
+      using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgHist))
       {
         cfgHist.Clear();
         foreach (DataRowView drv in _TableHist.DefaultView)
@@ -686,17 +686,17 @@ namespace FreeLibSet.Forms
     {
       if (args.Item.Group == GroupDefault)
       {
-        int DefIndex = int.Parse(args.Item.Code);
+        int defIndex = int.Parse(args.Item.Code);
         // Выбран набор по умолчанию
-        ConfigToControls(DefaultSets[DefIndex].Config);
+        ConfigToControls(DefaultSets[defIndex].Config);
       }
       else
       {
-        string UserSetName = args.Item.Code;
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
-          ParamsCategory, UserSetName);
+        string userSetName = args.Item.Code;
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
+          ParamsCategory, userSetName);
         CfgPart cfgData;
-        using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfgData))
+        using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgData))
         {
           ConfigToControls(cfgData);
         }
@@ -720,10 +720,10 @@ namespace FreeLibSet.Forms
       if (!BaseProvider.FormProvider.ValidateForm())
         return;
 
-      ParamSetComboBoxItem OldItem = Control.Items.FindDisplayName(args.DisplayName);
-      if (OldItem != null)
+      ParamSetComboBoxItem oldItem = Control.Items.FindDisplayName(args.DisplayName);
+      if (oldItem != null)
       {
-        if (!OldItem.Code.StartsWith("User"))
+        if (!oldItem.Code.StartsWith("User"))
         {
           EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы");
           return;
@@ -740,39 +740,39 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      string UserSetName;
-      if (OldItem != null)
+      string userSetName;
+      if (oldItem != null)
       {
-        UserSetName = OldItem.Code;
-        Control.Items.Remove(OldItem);
+        userSetName = oldItem.Code;
+        Control.Items.Remove(oldItem);
       }
       else
       {
         int cnt = 1;
         while (true)
         {
-          UserSetName = "User" + cnt.ToString();
-          if (_TableUser.Rows.Find(UserSetName) == null)
+          userSetName = "User" + cnt.ToString();
+          if (_TableUser.Rows.Find(userSetName) == null)
             break;
           cnt++;
         }
       }
 
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
-        ParamsCategory, UserSetName);
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
+        ParamsCategory, userSetName);
       CfgPart cfgData;
-      using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfgData))
+      using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgData))
       {
         cfgData.Clear();
         ConfigFromControls(cfgData);
 
-        string AuxText = null;
+        string auxText = null;
         if (_UseAuxText)
         {
           AuxTextHandler.BeginGetAuxText();
           try
           {
-            AuxText = AuxTextHandler.GetAuxText(cfgData);
+            auxText = AuxTextHandler.GetAuxText(cfgData);
           }
           finally
           {
@@ -780,43 +780,43 @@ namespace FreeLibSet.Forms
           }
         }
 
-        ParamSetComboBoxItem NewItem = new ParamSetComboBoxItem(UserSetName, args.DisplayName, "User", null, GroupUser, cfgData.MD5Sum(), AuxText);
-        Control.Items.Insert(0, NewItem);
-        Control.SelectedItem = NewItem;
-        DataRow Row = DataTools.FindOrAddPrimaryKeyRow(_TableUser, UserSetName);
-        Row["Name"] = args.DisplayName;
-        Row["Time"] = DateTime.Now;
-        Row["MD5"] = NewItem.MD5Sum;
+        ParamSetComboBoxItem newItem = new ParamSetComboBoxItem(userSetName, args.DisplayName, "User", null, GroupUser, cfgData.MD5Sum(), auxText);
+        Control.Items.Insert(0, newItem);
+        Control.SelectedItem = newItem;
+        DataRow row = DataTools.FindOrAddPrimaryKeyRow(_TableUser, userSetName);
+        row["Name"] = args.DisplayName;
+        row["Time"] = DateTime.Now;
+        row["MD5"] = newItem.MD5Sum;
         SaveSetsTables();
       }
     }
 
     void SetComboBox_DeleteClick(object sender, ParamSetComboBoxItemEventArgs args)
     {
-      DataTable Table;
+      DataTable table;
       if (args.Item.Code.StartsWith("User"))
-        Table = _TableUser;
+        table = _TableUser;
       else if (args.Item.Code.StartsWith("Hist"))
-        Table = _TableHist;
+        table = _TableHist;
       else
       {
         EFPApp.ErrorMessageBox("Этот набор нельзя удалить", "Удаление готового набора");
         return;
       }
 
-      DataRow Row = Table.Rows.Find(args.Item.Code);
-      if (Row == null)
+      DataRow row = table.Rows.Find(args.Item.Code);
+      if (row == null)
       {
-        BugException Ex = new BugException("Набор с кодом \"" + args.Item.Code + "\" не найден");
-        Ex.Data["Item"] = args.Item;
-        throw Ex;
+        BugException ex = new BugException("Набор с кодом \"" + args.Item.Code + "\" не найден");
+        ex.Data["Item"] = args.Item;
+        throw ex;
       }
 
       if (EFPApp.MessageBox("Удалить набор \"" + args.Item.DisplayName + "\"?",
         "Подтверждение удаления набора", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         return;
 
-      Table.Rows.Remove(Row);
+      table.Rows.Remove(row);
       SaveSetsTables();
 
       Control.Items.Remove(args.Item);
@@ -860,45 +860,45 @@ namespace FreeLibSet.Forms
       if (_TableHist == null)
         return; // 10.03.2016
 
-      bool Found = false;
+      bool found = false;
       foreach (DataRowView drv in _TableHist.DefaultView)
       {
         if (DataTools.GetString(drv.Row, "MD5") == md5Sum)
         {
           drv.Row["Time"] = DateTime.Now;
           drv.Row["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
-          Found = true;
+          found = true;
           break;
         }
       }
 
-      if (!Found)
+      if (!found)
       {
         // Новые данные записываем в другую секцию
-        DataRow ResRow = null;
+        DataRow resRow = null;
         if (_TableHist.DefaultView.Count >= 9) // все позиции заняты
-          ResRow = _TableHist.DefaultView[0].Row;
+          resRow = _TableHist.DefaultView[0].Row;
         else
         {
           for (int i = 1; i <= 9; i++)
           {
-            if (DataTools.FindOrAddPrimaryKeyRow(_TableHist, "Hist" + i.ToString(), out ResRow))
+            if (DataTools.FindOrAddPrimaryKeyRow(_TableHist, "Hist" + i.ToString(), out resRow))
               break;
           }
         }
-        string UserSetName = DataTools.GetString(ResRow, "Code");
-        ResRow["Time"] = DateTime.Now;
-        ResRow["MD5"] = md5Sum;
+        string userSetName = DataTools.GetString(resRow, "Code");
+        resRow["Time"] = DateTime.Now;
+        resRow["MD5"] = md5Sum;
         if (_TableHist.Rows.Count > 0)
-          ResRow["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
+          resRow["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
         else
-          ResRow["Order"] = 1;
+          resRow["Order"] = 1;
 
 
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
-          ParamsCategory, UserSetName);
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
+          ParamsCategory, userSetName);
         CfgPart cfgData;
-        using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfgData))
+        using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgData))
         {
           cfgData.Clear();
           ConfigFromControls(cfgData);

@@ -204,7 +204,6 @@ namespace FreeLibSet.Controls
       _EditButtonKind = UserComboBoxEditButtonKind.Edit;
 
       #endregion
-
     }
 
     #endregion
@@ -341,9 +340,9 @@ namespace FreeLibSet.Controls
       base.ForeColor = MainControl.ForeColor;
     }
 
-    protected override void OnEnabledChanged(EventArgs e)
+    protected override void OnEnabledChanged(EventArgs args)
     {
-      base.OnEnabledChanged(e);
+      base.OnEnabledChanged(args);
 
       // 22.11.2021
       if (Enabled)
@@ -416,7 +415,6 @@ namespace FreeLibSet.Controls
     {
       return false;
     }
-
 
     #endregion
 
@@ -1013,7 +1011,6 @@ namespace FreeLibSet.Controls
     }
 
     #endregion
-
   }
 
   /// <summary>
@@ -1044,9 +1041,9 @@ namespace FreeLibSet.Controls
     private static Control CreateMainControl()
     {
 #if !XXXXX
-      TextBox MainControl = new TextBox();
-      MainControl.ReadOnly = true;
-      return MainControl;
+      TextBox mainControl = new TextBox();
+      mainControl.ReadOnly = true;
+      return mainControl;
 #else
         RichTextBox MainControl = new RichTextBox();
         MainControl.Multiline = false;
@@ -1697,26 +1694,26 @@ namespace FreeLibSet.Controls
 
     private static DataGridView CreateMainControl()
     {
-      DataGridView Control = new DataGridView();
-      Control.RowCount = 2;
-      Control.ColumnCount = 1;
-      Control.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      Control.ScrollBars = ScrollBars.None;
-      Control.RowHeadersVisible = false;
-      Control.ColumnHeadersVisible = false;
-      Control.AllowUserToAddRows = false;
-      Control.AllowUserToDeleteRows = false;
-      Control.AllowUserToOrderColumns = false;
-      Control.AllowUserToResizeColumns = false;
-      Control.AllowUserToResizeRows = false;
-      Control.ReadOnly = true;
-      Control.Resize += Control_Resize;
+      DataGridView control = new DataGridView();
+      control.RowCount = 2;
+      control.ColumnCount = 1;
+      control.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+      control.ScrollBars = ScrollBars.None;
+      control.RowHeadersVisible = false;
+      control.ColumnHeadersVisible = false;
+      control.AllowUserToAddRows = false;
+      control.AllowUserToDeleteRows = false;
+      control.AllowUserToOrderColumns = false;
+      control.AllowUserToResizeColumns = false;
+      control.AllowUserToResizeRows = false;
+      control.ReadOnly = true;
+      control.Resize += Control_Resize;
       //Control.BorderStyle = BorderStyle.None;
-      Control.CellBorderStyle = DataGridViewCellBorderStyle.None;
-      Control.ShowCellToolTips = false;
-      Control_Resize(Control, null);
+      control.CellBorderStyle = DataGridViewCellBorderStyle.None;
+      control.ShowCellToolTips = false;
+      Control_Resize(control, null);
 
-      return Control;
+      return control;
     }
 
     static void Control_Resize(object sender, EventArgs args)

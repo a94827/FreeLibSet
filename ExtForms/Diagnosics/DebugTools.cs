@@ -107,9 +107,9 @@ namespace FreeLibSet.Forms.Diagnostics
         if (ShowExceptionEnabled)
         {
           // Записываем исключение в logout
-          AbsPath LogFilePath = AbsPath.Empty;
+          AbsPath logFilePath = AbsPath.Empty;
           if (e != null && useLogout)
-            LogFilePath = LogoutTools.LogoutExceptionToFile(e, title);
+            logFilePath = LogoutTools.LogoutExceptionToFile(e, title);
 
           // Показываем форму
           if (!_InsideShowException)
@@ -119,14 +119,14 @@ namespace FreeLibSet.Forms.Diagnostics
             {
               try
               {
-                ShowExceptionForm.ShowException(e, title, null, LogFilePath);
+                ShowExceptionForm.ShowException(e, title, null, logFilePath);
               }
               catch (Exception e2)
               {
-                AbsPath LogFilePath2 = AbsPath.Empty;
+                AbsPath logFilePath2 = AbsPath.Empty;
                 try
                 {
-                  LogFilePath2 = LogoutTools.LogoutExceptionToFile(e2, "Ошибка при выводе отладочного окна просмотра ошибки");
+                  logFilePath2 = LogoutTools.LogoutExceptionToFile(e2, "Ошибка при выводе отладочного окна просмотра ошибки");
                 }
                 catch { }
                 StringBuilder sb = new StringBuilder();
@@ -140,17 +140,17 @@ namespace FreeLibSet.Forms.Diagnostics
                 }
                 sb.Append(Environment.NewLine);
                 sb.Append("Log-файл: ");
-                sb.Append(LogFilePath.Path);
+                sb.Append(logFilePath.Path);
                 sb.Append(Environment.NewLine);
                 sb.Append(Environment.NewLine);
                 sb.Append("Ошибка вывода окна: ");
                 sb.Append(e2.Message);
                 sb.Append(Environment.NewLine);
                 sb.Append("Log-файл: ");
-                if (LogFilePath2.IsEmpty)
+                if (logFilePath2.IsEmpty)
                   sb.Append("Не создан");
                 else
-                  sb.Append(LogFilePath2.Path);
+                  sb.Append(logFilePath2.Path);
 
                 MessageBox.Show(sb.ToString(), "Не удалось показать окно ошибки", MessageBoxButtons.OK, MessageBoxIcon.Error);
               }
@@ -197,30 +197,30 @@ namespace FreeLibSet.Forms.Diagnostics
       res.Columns.Add("ProcessorArchitecture", typeof(string));
       res.Columns.Add("Location", typeof(string));
       res.Columns.Add("GAC", typeof(bool));
-      Assembly[] asses = AppDomain.CurrentDomain.GetAssemblies();
-      for (int i = 0; i < asses.Length; i++)
+      Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+      for (int i = 0; i < asms.Length; i++)
       {
         if (!includeGAC)
         {
-          if (asses[i].GlobalAssemblyCache)
+          if (asms[i].GlobalAssemblyCache)
             continue; // не мое
         }
-        AddAssemblyInfo(res, asses[i]);
+        AddAssemblyInfo(res, asms[i]);
       }
       return res;
     }
 
     private static void AddAssemblyInfo(DataTable table, Assembly assm)
     {
-      DataRow Row = table.NewRow();
+      DataRow row = table.NewRow();
 
-      string Name = assm.FullName;
-      int p = Name.IndexOf(',');
+      string name = assm.FullName;
+      int p = name.IndexOf(',');
       if (p >= 0)
-        Name = Name.Substring(0, p);
-      Row["Name"] = Name;
+        name = name.Substring(0, p);
+      row["Name"] = name;
 
-      Row["Version"] = assm.GetName().Version.ToString();
+      row["Version"] = assm.GetName().Version.ToString();
       //AssemblyVersionAttribute attrVersion = (AssemblyVersionAttribute)Attribute.GetCustomAttribute(a, typeof(AssemblyVersionAttribute));
       //if (attrVersion != null)
       //  Row["Version"] = attrVersion.Version;
@@ -229,34 +229,34 @@ namespace FreeLibSet.Forms.Diagnostics
 
       ProcessorArchitecture pa = assm.GetName().ProcessorArchitecture;
       if (pa == ProcessorArchitecture.MSIL)
-        Row["ProcessorArchitecture"] = "Any CPU";
+        row["ProcessorArchitecture"] = "Any CPU";
       else
-        Row["ProcessorArchitecture"] = pa.ToString();
+        row["ProcessorArchitecture"] = pa.ToString();
 
-      string FileName = assm.ManifestModule.FullyQualifiedName;
-      if (File.Exists(FileName))
-        Row["CreationTime"] = File.GetLastWriteTime(FileName);
+      string fileName = assm.ManifestModule.FullyQualifiedName;
+      if (File.Exists(fileName))
+        row["CreationTime"] = File.GetLastWriteTime(fileName);
 
       DebuggableAttribute attrDebug = (DebuggableAttribute)Attribute.GetCustomAttribute(assm, typeof(DebuggableAttribute));
       if (attrDebug != null)
       {
         if (attrDebug.IsJITTrackingEnabled)
-          Row["Debug"] = true; // не очень хорошо, но ладно
+          row["Debug"] = true; // не очень хорошо, но ладно
       }
 
       AssemblyDescriptionAttribute attrDescr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assm, typeof(AssemblyDescriptionAttribute));
       if (attrDescr != null)
-        Row["Description"] = attrDescr.Description;
+        row["Description"] = attrDescr.Description;
 
       AssemblyCopyrightAttribute attrCopyright = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assm, typeof(AssemblyCopyrightAttribute));
       if (attrCopyright != null)
-        Row["Copyright"] = attrCopyright.Copyright;
+        row["Copyright"] = attrCopyright.Copyright;
 
-      DataTools.SetString(Row, "Location", assm.Location);
+      DataTools.SetString(row, "Location", assm.Location);
 
-      Row["GAC"] = assm.GlobalAssemblyCache;
+      row["GAC"] = assm.GlobalAssemblyCache;
 
-      table.Rows.Add(Row);
+      table.Rows.Add(row);
     }
 
     /// <summary>
@@ -265,10 +265,10 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="title">Заголовок сообщения</param>
     public static void DebugAssemblies(string title)
     {
-      Assembly[] asses = AppDomain.CurrentDomain.GetAssemblies();
+      Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
       string s = "Загруженные сборки для домена " + AppDomain.CurrentDomain.ToString() + "\n";
-      foreach (Assembly ass in asses)
-        s += ass.FullName + "\n";
+      foreach (Assembly asm in asms)
+        s += asm.FullName + "\n";
       MessageBox.Show(s, title);
     }
 
@@ -403,15 +403,15 @@ namespace FreeLibSet.Forms.Diagnostics
         frm.MinimizeBox = false;
         frm.ShowIcon = false;
 
-        TextBox TheTB = new TextBox();
-        TheTB.Dock = DockStyle.Fill;
-        TheTB.Multiline = true;
-        TheTB.ScrollBars = ScrollBars.Both;
-        TheTB.WordWrap = false;
-        TheTB.Font = EFPApp.CreateMonospaceFont();
-        TheTB.ReadOnly = true;
-        frm.Controls.Add(TheTB);
-        TheTB.Text = s;
+        TextBox theTB = new TextBox();
+        theTB.Dock = DockStyle.Fill;
+        theTB.Multiline = true;
+        theTB.ScrollBars = ScrollBars.Both;
+        theTB.WordWrap = false;
+        theTB.Font = EFPApp.CreateMonospaceFont();
+        theTB.ReadOnly = true;
+        frm.Controls.Add(theTB);
+        theTB.Text = s;
 
         Label lblLen = new Label();
         lblLen.AutoSize = false;
@@ -438,48 +438,48 @@ namespace FreeLibSet.Forms.Diagnostics
         frm.MinimizeBox = false;
         frm.ShowIcon = false;
 
-        DataGridView DictGrid = new DataGridView();
-        DictGrid.Dock = DockStyle.Fill;
-        frm.Controls.Add(DictGrid);
+        DataGridView dictGrid = new DataGridView();
+        dictGrid.Dock = DockStyle.Fill;
+        frm.Controls.Add(dictGrid);
 
-        DataGridViewTextBoxColumn Col;
-        Col = new DataGridViewTextBoxColumn();
-        Col.HeaderText = "Index";
-        Col.Width = 100;
-        Col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-        Col.SortMode = DataGridViewColumnSortMode.NotSortable;
-        DictGrid.Columns.Add(Col);
+        DataGridViewTextBoxColumn col;
+        col = new DataGridViewTextBoxColumn();
+        col.HeaderText = "Index";
+        col.Width = 100;
+        col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+        col.SortMode = DataGridViewColumnSortMode.NotSortable;
+        dictGrid.Columns.Add(col);
 
-        Col = new DataGridViewTextBoxColumn();
-        Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        Col.HeaderText = "Key";
-        Col.FillWeight = 40;
-        Col.SortMode = DataGridViewColumnSortMode.NotSortable;
-        DictGrid.Columns.Add(Col);
+        col = new DataGridViewTextBoxColumn();
+        col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        col.HeaderText = "Key";
+        col.FillWeight = 40;
+        col.SortMode = DataGridViewColumnSortMode.NotSortable;
+        dictGrid.Columns.Add(col);
 
-        Col = new DataGridViewTextBoxColumn();
-        Col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        Col.HeaderText = "Value";
-        Col.FillWeight = 40;
-        Col.SortMode = DataGridViewColumnSortMode.NotSortable;
-        DictGrid.Columns.Add(Col);
+        col = new DataGridViewTextBoxColumn();
+        col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        col.HeaderText = "Value";
+        col.FillWeight = 40;
+        col.SortMode = DataGridViewColumnSortMode.NotSortable;
+        dictGrid.Columns.Add(col);
 
-        DictGrid.Tag = dictionary;
-        DictGrid.VirtualMode = true;
-        DictGrid.RowCount = dictionary.Count;
-        DictGrid.CellValueNeeded += new DataGridViewCellValueEventHandler(DictGrid_CellValueNeeded);
+        dictGrid.Tag = dictionary;
+        dictGrid.VirtualMode = true;
+        dictGrid.RowCount = dictionary.Count;
+        dictGrid.CellValueNeeded += new DataGridViewCellValueEventHandler(DictGrid_CellValueNeeded);
         int cnt = 0;
-        foreach (DictionaryEntry Pair in dictionary)
+        foreach (DictionaryEntry pair in dictionary)
         {
-          DictGrid[1, cnt].Tag = Pair.Key;
-          DictGrid[2, cnt].Tag = Pair.Value;
+          dictGrid[1, cnt].Tag = pair.Key;
+          dictGrid[2, cnt].Tag = pair.Value;
           cnt++;
         }
 
-        DictGrid.ReadOnly = true;
-        DictGrid.AllowUserToAddRows = false;
-        DictGrid.AllowUserToOrderColumns = false;
-        DictGrid.CellDoubleClick += new DataGridViewCellEventHandler(DictGrid_CellDoubleClick);
+        dictGrid.ReadOnly = true;
+        dictGrid.AllowUserToAddRows = false;
+        dictGrid.AllowUserToOrderColumns = false;
+        dictGrid.CellDoubleClick += new DataGridViewCellEventHandler(DictGrid_CellDoubleClick);
 
         frm.ShowDialog();
       }
@@ -499,12 +499,12 @@ namespace FreeLibSet.Forms.Diagnostics
 
       try
       {
-        DataGridView DictGrid = (DataGridView)sender;
-        object Obj = DictGrid[args.ColumnIndex, args.RowIndex].Tag;
-        if (Obj == null)
+        DataGridView dictGrid = (DataGridView)sender;
+        object obj = dictGrid[args.ColumnIndex, args.RowIndex].Tag;
+        if (obj == null)
           args.Value = "null";
         else
-          args.Value = Obj.ToString();
+          args.Value = obj.ToString();
       }
       catch (Exception e)
       {
@@ -523,17 +523,17 @@ namespace FreeLibSet.Forms.Diagnostics
       try
       {
 
-        DataGridView DictGrid = (DataGridView)sender;
-        object Obj = DictGrid[args.ColumnIndex, args.RowIndex].Tag;
-        string Suffix;
+        DataGridView dictGrid = (DataGridView)sender;
+        object obj = dictGrid[args.ColumnIndex, args.RowIndex].Tag;
+        string suffix;
         if (args.ColumnIndex == 1)
-          Suffix = "Keys[" + args.RowIndex + "]";
+          suffix = "Keys[" + args.RowIndex + "]";
         else
         {
-          object Key = DictGrid[1, args.RowIndex].Tag;
-          Suffix = "[" + Key.ToString() + "]"; // Key не может быть null
+          object key = dictGrid[1, args.RowIndex].Tag;
+          suffix = "[" + key.ToString() + "]"; // Key не может быть null
         }
-        DebugObject(Obj, DictGrid.FindForm().Text + " - " + Suffix);
+        DebugObject(obj, dictGrid.FindForm().Text + " - " + suffix);
       }
       catch (Exception e)
       {
@@ -557,60 +557,60 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
       }
 
-      Form Form = new Form();
-      Form.ShowIcon = false;
-      Form.Text = "Отладка Control";
-      SplitContainer Cont = new SplitContainer();
-      Cont.Dock = DockStyle.Fill;
-      Form.Controls.Add(Cont);
+      Form frm = new Form();
+      frm.ShowIcon = false;
+      frm.Text = "Отладка Control";
+      SplitContainer splControl = new SplitContainer();
+      splControl.Dock = DockStyle.Fill;
+      frm.Controls.Add(splControl);
 
-      TreeView TheTV = new TreeView();
-      TheTV.Dock = DockStyle.Fill;
-      Cont.Panel1.Controls.Add(TheTV);
+      TreeView theTV = new TreeView();
+      theTV.Dock = DockStyle.Fill;
+      splControl.Panel1.Controls.Add(theTV);
 
-      PropertyGrid TheGrid = new PropertyGrid();
-      TheGrid.Dock = DockStyle.Fill;
-      Cont.Panel2.Controls.Add(TheGrid);
+      PropertyGrid theGrid = new PropertyGrid();
+      theGrid.Dock = DockStyle.Fill;
+      splControl.Panel2.Controls.Add(theGrid);
 
       // Заполняем дерево
-      AddControlToTV(/*TheTV, */rootControl, TheTV.Nodes);
-      TheTV.Tag = TheGrid;
-      TheTV.AfterSelect += new TreeViewEventHandler(TheTV_AfterSelect);
+      AddControlToTV(/*TheTV, */rootControl, theTV.Nodes);
+      theTV.Tag = theGrid;
+      theTV.AfterSelect += new TreeViewEventHandler(TheTV_AfterSelect);
 
-      Form.WindowState = FormWindowState.Maximized;
-      Form.ShowDialog();
-      Form.Dispose();
+      frm.WindowState = FormWindowState.Maximized;
+      frm.ShowDialog();
+      frm.Dispose();
 
     }
 
     private static void AddControlToTV(/*TreeView theTV, */Control control, TreeNodeCollection nodes)
     {
-      string Text;
+      string text;
       if (control == null)
-        Text = "[ null ]";
+        text = "[ null ]";
       else
-        Text = control.ToString();
-      TreeNode Node = nodes.Add(Text);
-      Node.Tag = control;
+        text = control.ToString();
+      TreeNode node = nodes.Add(text);
+      node.Tag = control;
 
       if (control != null) // 27.12.2020
       {
         if (control.HasChildren)
         {
           for (int i = 0; i < control.Controls.Count; i++)
-            AddControlToTV(/*theTV, */control.Controls[i], Node.Nodes);
+            AddControlToTV(/*theTV, */control.Controls[i], node.Nodes);
         }
       }
     }
 
     static void TheTV_AfterSelect(object sender, TreeViewEventArgs args)
     {
-      TreeView TheTV = (TreeView)sender;
-      PropertyGrid TheGrid = (PropertyGrid)(TheTV.Tag);
+      TreeView theTV = (TreeView)sender;
+      PropertyGrid theGrid = (PropertyGrid)(theTV.Tag);
       if (args.Node == null)
-        TheGrid.SelectedObject = null;
+        theGrid.SelectedObject = null;
       else
-        TheGrid.SelectedObject = args.Node.Tag;
+        theGrid.SelectedObject = args.Node.Tag;
     }
 
     #endregion
@@ -633,34 +633,34 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
       }
 
-      Form TheForm = new Form();
+      Form frm = new Form();
       //AccDepClientExec.InitForm(TheForm);
       //TheForm.Icon = EFPApp.MainImageIcon("Debug");
-      TheForm.ShowIcon = false;
-      TheForm.Text = title;
-      TheForm.WindowState = FormWindowState.Maximized;
-      TheForm.MinimizeBox = false;
+      frm.ShowIcon = false;
+      frm.Text = title;
+      frm.WindowState = FormWindowState.Maximized;
+      frm.MinimizeBox = false;
 
-      TabControl TheTabControl = new TabControl();
-      TheTabControl.Dock = DockStyle.Fill;
-      TheForm.Controls.Add(TheTabControl);
+      TabControl theTabControl = new TabControl();
+      theTabControl.Dock = DockStyle.Fill;
+      frm.Controls.Add(theTabControl);
       for (int i = 0; i < ds.Tables.Count; i++)
       {
-        TabPage Page = new TabPage(ds.Tables[i].TableName);
-        TheTabControl.Controls.Add(Page);
-        AddDebugDataTable(ds.Tables[i], Page);
+        TabPage page = new TabPage(ds.Tables[i].TableName);
+        theTabControl.Controls.Add(page);
+        AddDebugDataTable(ds.Tables[i], page);
       }
 
       TabPage tpProps = new TabPage("Свойства DataSet");
-      TheTabControl.TabPages.Add(tpProps);
+      theTabControl.TabPages.Add(tpProps);
 
       PropertyGrid pg = new PropertyGrid();
       pg.Dock = DockStyle.Fill;
       tpProps.Controls.Add(pg);
       pg.SelectedObject = ds;
 
-      TheForm.ShowDialog();
-      TheForm.Dispose();
+      frm.ShowDialog();
+      frm.Dispose();
     }
 
     /// <summary>
@@ -679,16 +679,16 @@ namespace FreeLibSet.Forms.Diagnostics
       if (title == null)
         title = table.TableName;
 
-      Form form = new Form();
-      form.ShowIcon = false;
+      Form frm = new Form();
+      frm.ShowIcon = false;
       //TheForm.Icon = EFPApp.MainImageIcon("Debug");
       //AccDepClientExec.InitForm(TheForm);
-      AddDebugDataTable(table, form);
-      form.Text = title;
-      form.WindowState = FormWindowState.Maximized;
-      form.MinimizeBox = false;
-      form.ShowDialog();
-      form.Close();
+      AddDebugDataTable(table, frm);
+      frm.Text = title;
+      frm.WindowState = FormWindowState.Maximized;
+      frm.MinimizeBox = false;
+      frm.ShowDialog();
+      frm.Close();
     }
 
     private static void AddDebugDataTable(DataTable table, Control parent)
@@ -697,19 +697,19 @@ namespace FreeLibSet.Forms.Diagnostics
         MessageBox.Show("Предупреждение. У таблицы " + table.ToString() +
           " установлен RowFilter=" + table.DefaultView.RowFilter.ToString(), "Отладка таблицы");
 
-      TabControl TheTabControl = new TabControl();
-      TheTabControl.Dock = DockStyle.Fill;
-      TheTabControl.Alignment = TabAlignment.Bottom;
-      parent.Controls.Add(TheTabControl);
+      TabControl theTabControl = new TabControl();
+      theTabControl.Dock = DockStyle.Fill;
+      theTabControl.Alignment = TabAlignment.Bottom;
+      parent.Controls.Add(theTabControl);
 
       TabPage tpTable = new TabPage("Rows (" + table.Rows.Count.ToString() + ")");
-      TheTabControl.TabPages.Add(tpTable);
+      theTabControl.TabPages.Add(tpTable);
 
       DataGridView grid1 = CreateDebugGrid(tpTable, table, false);
       grid1.RowCount = table.Rows.Count; // должно быть после инициализации столбцов
 
       TabPage tpProps1 = new TabPage("Свойства DataTable");
-      TheTabControl.TabPages.Add(tpProps1);
+      theTabControl.TabPages.Add(tpProps1);
 
       PropertyGrid pg1 = new PropertyGrid();
       pg1.Dock = DockStyle.Fill;
@@ -717,12 +717,12 @@ namespace FreeLibSet.Forms.Diagnostics
       pg1.SelectedObject = table;
 
       TabPage tpDV = new TabPage("DefaultView (" + table.DefaultView.Count.ToString() + ")");
-      TheTabControl.TabPages.Add(tpDV);
+      theTabControl.TabPages.Add(tpDV);
       DataGridView grid2 = CreateDebugGrid(tpDV, table, true);
       grid2.DataSource = table.DefaultView;
 
       TabPage tpProps2 = new TabPage("Свойства DefaultView");
-      TheTabControl.TabPages.Add(tpProps2);
+      theTabControl.TabPages.Add(tpProps2);
 
       PropertyGrid pg2 = new PropertyGrid();
       pg2.Dock = DockStyle.Fill;
@@ -802,7 +802,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
     static void DebugTableGrid_CellValueNeeded(object sender, DataGridViewCellValueEventArgs args)
     {
-      DataGridView Grid = (DataGridView)sender;
+      DataGridView grid = (DataGridView)sender;
       if (args.RowIndex < 0)
         return;
 
@@ -811,8 +811,8 @@ namespace FreeLibSet.Forms.Diagnostics
 
       try
       {
-        DataTable Table = (DataTable)(Grid.Tag);
-        DataRowState RowState = Table.Rows[args.RowIndex].RowState;
+        DataTable table = (DataTable)(grid.Tag);
+        DataRowState rowState = table.Rows[args.RowIndex].RowState;
 
         switch (args.ColumnIndex)
         {
@@ -821,33 +821,34 @@ namespace FreeLibSet.Forms.Diagnostics
               return;
             if (!EFPApp.IsMainThread)
               return;
-            string ImageKey;
-            switch (RowState)
+
+            string imageKey;
+            switch (rowState)
             {
-              case DataRowState.Added: ImageKey = "Insert"; break;
-              case DataRowState.Deleted: ImageKey = "Delete"; break;
-              case DataRowState.Modified: ImageKey = "Edit"; break;
-              case DataRowState.Unchanged: ImageKey = "View"; break;
-              default: ImageKey = "UnknownState"; break;
+              case DataRowState.Added: imageKey = "Insert"; break;
+              case DataRowState.Deleted: imageKey = "Delete"; break;
+              case DataRowState.Modified: imageKey = "Edit"; break;
+              case DataRowState.Unchanged: imageKey = "View"; break;
+              default: imageKey = "UnknownState"; break;
             }
-            args.Value = EFPApp.MainImages.Images[ImageKey];
+            args.Value = EFPApp.MainImages.Images[imageKey];
             break;
           case 1:
             args.Value = args.RowIndex;
             break;
           case 2:
-            args.Value = RowState.ToString();
+            args.Value = rowState.ToString();
             break;
           default:
-            if (Grid.DataSource == null)
+            if (grid.DataSource == null)
             {
               // Просмотр таблицы, а не DefaultView
-              switch (RowState)
+              switch (rowState)
               {
                 case DataRowState.Added:
                 case DataRowState.Unchanged:
                 case DataRowState.Modified:
-                  object x = Table.Rows[args.RowIndex][args.ColumnIndex - 3, DataRowVersion.Current];
+                  object x = table.Rows[args.RowIndex][args.ColumnIndex - 3, DataRowVersion.Current];
                   args.Value = x;
                   /*
                   if (RowState == DataRowState.Modified)
@@ -859,7 +860,7 @@ namespace FreeLibSet.Forms.Diagnostics
                    * */
                   break;
                 case DataRowState.Deleted:
-                  args.Value = Table.Rows[args.RowIndex][args.ColumnIndex - 3, DataRowVersion.Original];
+                  args.Value = table.Rows[args.RowIndex][args.ColumnIndex - 3, DataRowVersion.Original];
                   break;
               }
             }
@@ -898,24 +899,24 @@ namespace FreeLibSet.Forms.Diagnostics
           title += " (Не присоединена)";
       }
 
-      Form TheForm = new Form();
-      TheForm.ShowIcon = false;
+      Form frm = new Form();
+      frm.ShowIcon = false;
       //TheForm.Icon = EFPApp.MainImageIcon("Debug");
       //AccDepClientExec.InitForm(TheForm);
-      Screen scr = Screen.FromControl(TheForm);
-      TheForm.Size = new System.Drawing.Size(scr.Bounds.Width / 2, scr.Bounds.Height - 100);
-      TheForm.MinimizeBox = false;
-      TheForm.Text = title;
+      Screen scr = Screen.FromControl(frm);
+      frm.Size = new System.Drawing.Size(scr.Bounds.Width / 2, scr.Bounds.Height - 100);
+      frm.MinimizeBox = false;
+      frm.Text = title;
       //TheForm.WindowState = FormWindowState.Maximized;
 
 
-      TabControl TheTabControl = new TabControl();
-      TheTabControl.Dock = DockStyle.Fill;
-      TheTabControl.Alignment = TabAlignment.Bottom;
-      TheForm.Controls.Add(TheTabControl);
+      TabControl theTabControl = new TabControl();
+      theTabControl.Dock = DockStyle.Fill;
+      theTabControl.Alignment = TabAlignment.Bottom;
+      frm.Controls.Add(theTabControl);
 
       TabPage tpData = new TabPage("Данные");
-      TheTabControl.TabPages.Add(tpData);
+      theTabControl.TabPages.Add(tpData);
 
       DataGridView grid = new DataGridView();
       grid.Dock = DockStyle.Fill;
@@ -950,15 +951,15 @@ namespace FreeLibSet.Forms.Diagnostics
       tpData.Controls.Add(grid);
 
       TabPage tpProps = new TabPage("Свойства DataRow");
-      TheTabControl.TabPages.Add(tpProps);
+      theTabControl.TabPages.Add(tpProps);
 
       PropertyGrid pg = new PropertyGrid();
       pg.Dock = DockStyle.Fill;
       tpProps.Controls.Add(pg);
       pg.SelectedObject = row;
 
-      TheForm.ShowDialog();
-      TheForm.Dispose();
+      frm.ShowDialog();
+      frm.Dispose();
     }
 
     /// <summary>
@@ -978,21 +979,21 @@ namespace FreeLibSet.Forms.Diagnostics
         title = "DataView для " + dv.Table.TableName;
 
 
-      Form TheForm = new Form();
-      TheForm.ShowIcon = false;
+      Form frm = new Form();
+      frm.ShowIcon = false;
       //TheForm.Icon = EFPApp.MainImageIcon("Debug");
       //AccDepClientExec.InitForm(TheForm);
-      TheForm.Text = title;
-      TheForm.WindowState = FormWindowState.Maximized;
-      TheForm.MinimizeBox = false;
+      frm.Text = title;
+      frm.WindowState = FormWindowState.Maximized;
+      frm.MinimizeBox = false;
 
-      TabControl TheTabControl = new TabControl();
-      TheTabControl.Dock = DockStyle.Fill;
-      TheTabControl.Alignment = TabAlignment.Bottom;
-      TheForm.Controls.Add(TheTabControl);
+      TabControl theTabControl = new TabControl();
+      theTabControl.Dock = DockStyle.Fill;
+      theTabControl.Alignment = TabAlignment.Bottom;
+      frm.Controls.Add(theTabControl);
 
       TabPage tpData = new TabPage("Данные");
-      TheTabControl.TabPages.Add(tpData);
+      theTabControl.TabPages.Add(tpData);
 
       DataGridView grid = new DataGridView();
       grid.Dock = DockStyle.Fill;
@@ -1005,15 +1006,15 @@ namespace FreeLibSet.Forms.Diagnostics
       grid.DataSource = dv;
 
       TabPage tpProps = new TabPage("Свойства DataView");
-      TheTabControl.TabPages.Add(tpProps);
+      theTabControl.TabPages.Add(tpProps);
 
       PropertyGrid pg = new PropertyGrid();
       pg.Dock = DockStyle.Fill;
       tpProps.Controls.Add(pg);
       pg.SelectedObject = dv;
 
-      TheForm.ShowDialog();
-      TheForm.Close();
+      frm.ShowDialog();
+      frm.Close();
     }
 
     #endregion
@@ -1027,22 +1028,22 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="title">Заголовок окна</param>
     public static void DebugChangeInfo(DepChangeInfo changeInfo, string title)
     {
-      Form Form = new Form();
+      Form frm = new Form();
       if (String.IsNullOrEmpty(title))
-        Form.Text = "Просмотр изменений";
+        frm.Text = "Просмотр изменений";
       else
-        Form.Text = title;
-      Form.Icon = EFPApp.MainImageIcon("Debug");
-      EFPFormProvider efpForm = new EFPFormProvider(Form);
-      EFPApp.SetFormSize(Form, 50, 75);
+        frm.Text = title;
+      frm.Icon = EFPApp.MainImageIcon("Debug");
+      EFPFormProvider efpForm = new EFPFormProvider(frm);
+      EFPApp.SetFormSize(frm, 50, 75);
 
       TreeView tv = new TreeView();
       tv.Dock = DockStyle.Fill;
-      Form.Controls.Add(tv);
+      frm.Controls.Add(tv);
       tv.ImageList = EFPApp.MainImages;
       AddDebugChangeInfo(tv.Nodes, changeInfo, 0);
       tv.ExpandAll();
-      EFPApp.ShowDialog(Form, true);
+      EFPApp.ShowDialog(frm, true);
     }
 
     private static void AddDebugChangeInfo(TreeNodeCollection nodes, DepChangeInfo changeInfo, int level)
@@ -1063,12 +1064,12 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       else
       {
-        string DisplayName = changeInfo.DisplayName;
-        if (String.IsNullOrEmpty(DisplayName))
-          DisplayName = "[ Баз заголовка ]";
+        string displayName = changeInfo.DisplayName;
+        if (String.IsNullOrEmpty(displayName))
+          displayName = "[ Баз заголовка ]";
         if (changeInfo.Changed)
-          DisplayName = "(*) " + DisplayName;
-        TreeNode node = nodes.Add(DisplayName);
+          displayName = "(*) " + displayName;
+        TreeNode node = nodes.Add(displayName);
         if (changeInfo.Changed)
           node.ImageKey = "Warning";
         else
@@ -1083,17 +1084,17 @@ namespace FreeLibSet.Forms.Diagnostics
             s = "null";
           else
             s = ci.OriginalValue.ToString();
-          TreeNode NodeSrc = node.Nodes.Add(null, "Исходное значение: " + s, "View");
-          NodeSrc.ImageKey = "EmptyImage"; // NodeSrc.Parent.ImageKey;
-          NodeSrc.SelectedImageKey = "EmptyImage"; //NodeSrc.Parent.SelectedImageKey;
+          TreeNode nodeSrc = node.Nodes.Add(null, "Исходное значение: " + s, "View");
+          nodeSrc.ImageKey = "EmptyImage"; // NodeSrc.Parent.ImageKey;
+          nodeSrc.SelectedImageKey = "EmptyImage"; //NodeSrc.Parent.SelectedImageKey;
 
           if (ci.CurrentValue == null)
             s = "null";
           else
             s = ci.CurrentValue.ToString();
-          TreeNode NodeCurr = node.Nodes.Add(null, "Текущее значение : " + s, "View");
-          NodeCurr.ImageKey = "EmptyImage"; //NodeCurr.Parent.ImageKey;
-          NodeCurr.SelectedImageKey = "EmptyImage"; //NodeCurr.Parent.SelectedImageKey;
+          TreeNode nodeCurr = node.Nodes.Add(null, "Текущее значение : " + s, "View");
+          nodeCurr.ImageKey = "EmptyImage"; //NodeCurr.Parent.ImageKey;
+          nodeCurr.SelectedImageKey = "EmptyImage"; //NodeCurr.Parent.SelectedImageKey;
         }
         else if (changeInfo is DepChangeInfoList)
         {
@@ -1134,19 +1135,19 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
       }
 
-      Form Form = new Form();
-      Form.Text = title;
-      Form.Icon = EFPApp.MainImageIcon("Debug");
-      EFPFormProvider efpForm = new EFPFormProvider(Form);
-      EFPApp.SetFormSize(Form, 50, 75);
+      Form frm = new Form();
+      frm.Text = title;
+      frm.Icon = EFPApp.MainImageIcon("Debug");
+      EFPFormProvider efpForm = new EFPFormProvider(frm);
+      EFPApp.SetFormSize(frm, 50, 75);
 
       TreeView tv = new TreeView();
       tv.Dock = DockStyle.Fill;
-      Form.Controls.Add(tv);
+      frm.Controls.Add(tv);
       tv.ImageList = EFPApp.MainImages;
       AddDebugBaseProvider(tv.Nodes, baseProvider, 0);
       tv.ExpandAll();
-      EFPApp.ShowDialog(Form, true);
+      EFPApp.ShowDialog(frm, true);
     }
 
     private static void AddDebugBaseProvider(TreeNodeCollection nodes, EFPBaseProvider baseProvider, int level)
@@ -1239,25 +1240,25 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <returns></returns>
     public static DataTable CreateFormsTable()
     {
-      DataTable Table = new DataTable();
-      Table.Columns.Add("Handle", typeof(Int64));
-      Table.Columns.Add("ClassName", typeof(string));
-      Table.Columns.Add("Caption", typeof(string));
-      Table.Columns.Add("Visible", typeof(bool));
-      Table.Columns.Add("Enabled", typeof(bool));
-      Table.Columns.Add("Modal", typeof(bool));
-      Table.Columns.Add("WindowState", typeof(string));
-      Table.Columns.Add("OwnerHandle", typeof(Int64));
-      Table.Columns.Add("ParentHandle", typeof(Int64));
-      Table.Columns.Add("TopLevel", typeof(bool));
-      Table.Columns.Add("TopMost", typeof(bool));
-      Table.Columns.Add("Icon", typeof(byte[]));
-      DataTools.SetPrimaryKey(Table, "Handle");
+      DataTable table = new DataTable();
+      table.Columns.Add("Handle", typeof(Int64));
+      table.Columns.Add("ClassName", typeof(string));
+      table.Columns.Add("Caption", typeof(string));
+      table.Columns.Add("Visible", typeof(bool));
+      table.Columns.Add("Enabled", typeof(bool));
+      table.Columns.Add("Modal", typeof(bool));
+      table.Columns.Add("WindowState", typeof(string));
+      table.Columns.Add("OwnerHandle", typeof(Int64));
+      table.Columns.Add("ParentHandle", typeof(Int64));
+      table.Columns.Add("TopLevel", typeof(bool));
+      table.Columns.Add("TopMost", typeof(bool));
+      table.Columns.Add("Icon", typeof(byte[]));
+      DataTools.SetPrimaryKey(table, "Handle");
 
-      foreach (Form Form in Application.OpenForms)
-        AddFormInfoToTable(Table, Form);
+      foreach (Form form in Application.OpenForms)
+        AddFormInfoToTable(table, form);
 
-      return Table;
+      return table;
     }
 
     private static void AddFormInfoToTable(DataTable table, Form form)
@@ -1270,20 +1271,20 @@ namespace FreeLibSet.Forms.Diagnostics
       if (table.Rows.Find(form.Handle.ToInt64()) != null)
         return; // повторный вызов
 
-      DataRow Row = table.NewRow();
-      Row["ClassName"] = form.GetType().ToString();
-      Row["Caption"] = form.Text;
-      Row["Handle"] = form.Handle.ToInt64();
-      Row["Visible"] = form.Visible;
-      Row["Enabled"] = form.Enabled;
-      Row["Modal"] = form.Modal;
-      Row["WindowState"] = form.WindowState.ToString();
+      DataRow row = table.NewRow();
+      row["ClassName"] = form.GetType().ToString();
+      row["Caption"] = form.Text;
+      row["Handle"] = form.Handle.ToInt64();
+      row["Visible"] = form.Visible;
+      row["Enabled"] = form.Enabled;
+      row["Modal"] = form.Modal;
+      row["WindowState"] = form.WindowState.ToString();
       if (form.Owner != null)
-        Row["OwnerHandle"] = form.Owner.Handle.ToInt64();
+        row["OwnerHandle"] = form.Owner.Handle.ToInt64();
       if (form.ParentForm != null)
-        Row["ParentHandle"] = form.ParentForm.Handle.ToInt64();
-      Row["TopLevel"] = form.TopLevel;
-      Row["TopMost"] = form.TopMost;
+        row["ParentHandle"] = form.ParentForm.Handle.ToInt64();
+      row["TopLevel"] = form.TopLevel;
+      row["TopMost"] = form.TopMost;
       if (form.ShowIcon && form.FormBorderStyle != FormBorderStyle.None &&
         form.FormBorderStyle != FormBorderStyle.FixedToolWindow &&
         form.FormBorderStyle != FormBorderStyle.SizableToolWindow)
@@ -1292,14 +1293,14 @@ namespace FreeLibSet.Forms.Diagnostics
         try
         {
           form.Icon.Save(stm);
-          Row["Icon"] = stm.ToArray();
+          row["Icon"] = stm.ToArray();
         }
         finally
         {
           stm.Dispose();
         }
       }
-      table.Rows.Add(Row);
+      table.Rows.Add(row);
 
       // Добавляем соседние формы
       if (form.Owner != null)
@@ -1426,13 +1427,13 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="title">Заголовок окна</param>
     public static void ShowText(string text, string title)
     {
-      Form TheForm = new Form();
+      Form frm = new Form();
       if (String.IsNullOrEmpty(text))
-        TheForm.Text = "Отладочная информация";
+        frm.Text = "Отладочная информация";
       else
-        TheForm.Text = title;
-      TheForm.ShowIcon = false;
-      TheForm.WindowState = FormWindowState.Maximized;
+        frm.Text = title;
+      frm.ShowIcon = false;
+      frm.WindowState = FormWindowState.Maximized;
 
       TextBox edText = new TextBox();
       edText.Multiline = true;
@@ -1440,14 +1441,14 @@ namespace FreeLibSet.Forms.Diagnostics
       edText.Dock = DockStyle.Fill;
       edText.Font = EFPApp.CreateMonospaceFont();
       edText.ScrollBars = ScrollBars.Both;
-      TheForm.Controls.Add(edText);
+      frm.Controls.Add(edText);
       if (!String.IsNullOrEmpty(text))
         edText.Text = text;
       edText.WordWrap = false;
       edText.Select(0, 0);
 
-      TheForm.ShowDialog();
-      TheForm.Close();
+      frm.ShowDialog();
+      frm.Close();
     }
 
     #endregion
@@ -1461,16 +1462,16 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="title">Заголовок окна</param>
     public static void DebugXml(XmlDocument xmlDoc, string title)
     {
-      string XmlText;
+      string xmlText;
       StringWriter wrt1 = new StringWriter();
       try
       {
-        XmlWriterSettings Settings = new XmlWriterSettings();
-        Settings.Indent = true;
-        XmlWriter wrt2 = XmlWriter.Create(wrt1, Settings);
+        XmlWriterSettings settings = new XmlWriterSettings();
+        settings.Indent = true;
+        XmlWriter wrt2 = XmlWriter.Create(wrt1, settings);
         xmlDoc.WriteTo(wrt2);
         wrt2.Close();
-        XmlText = wrt1.ToString();
+        xmlText = wrt1.ToString();
       }
       finally
       {
@@ -1478,7 +1479,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
 
       // Что получили, то и выводим
-      ShowText(XmlText, title);
+      ShowText(xmlText, title);
     }
 
     #endregion
@@ -1493,16 +1494,16 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="expression"></param>
     public static void DebugParsingData(ParsingData parsingData, string title, IExpression expression)
     {
-      DebugParsingForm Form = new DebugParsingForm();
+      DebugParsingForm frm = new DebugParsingForm();
       if (String.IsNullOrEmpty(title))
-        Form.Text = "Парсинг";
+        frm.Text = "Парсинг";
       else
-        Form.Text = title;
+        frm.Text = title;
 
-      Form.ParsingData = parsingData;
-      Form.Expression = expression;
+      frm.ParsingData = parsingData;
+      frm.Expression = expression;
 
-      EFPApp.ShowDialog(Form, true);
+      EFPApp.ShowDialog(frm, true);
     }
 
     /// <summary>
@@ -1513,10 +1514,10 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="title">Заголовок окна</param>
     public static void DebugParsingData(ParsingData parsingData, string title)
     {
-      IExpression Expr = null;
+      IExpression expr = null;
       if (parsingData.Parsers != null)
-        Expr = parsingData.Parsers.CreateExpression(parsingData, false);
-      DebugParsingData(parsingData, title, Expr);
+        expr = parsingData.Parsers.CreateExpression(parsingData, false);
+      DebugParsingData(parsingData, title, expr);
     }
 
     #endregion
@@ -1692,22 +1693,22 @@ namespace FreeLibSet.Forms.Diagnostics
       args.WritePair("ShowAutoCalcSums", EFPApp.ShowAutoCalcSums.ToString());
       args.IndentLevel--;
 
-      IEFPAppTimeHandler[] TimeHandlers = EFPApp.Timers.ToArray();
-      args.WritePair("EFPApp.Timers", TimeHandlers.Length.ToString());
+      IEFPAppTimeHandler[] timeHandlers = EFPApp.Timers.ToArray();
+      args.WritePair("EFPApp.Timers", timeHandlers.Length.ToString());
       args.IndentLevel++;
       // LogoutTools.LogoutObject(Args, TimeHandlers);
       // 31.10.2018 Подробные сведения излишни
-      for (int i = 0; i < TimeHandlers.Length; i++)
-        args.WritePair("[" + i.ToString() + "]", TimeHandlers[i].GetType().ToString());
+      for (int i = 0; i < timeHandlers.Length; i++)
+        args.WritePair("[" + i.ToString() + "]", timeHandlers[i].GetType().ToString());
       args.IndentLevel--;
 
-      IEFPAppIdleHandler[] IdleHandlers = EFPApp.IdleHandlers.ToArray();
-      args.WritePair("EFPApp.IdleHandlers", IdleHandlers.Length.ToString());
+      IEFPAppIdleHandler[] idleHandlers = EFPApp.IdleHandlers.ToArray();
+      args.WritePair("EFPApp.IdleHandlers", idleHandlers.Length.ToString());
       args.IndentLevel++;
       //LogoutTools.LogoutObject(Args, IdleHandlers);
       // 31.10.2018 Подробные сведения излишни
-      for (int i = 0; i < IdleHandlers.Length; i++)
-        args.WritePair("[" + i.ToString() + "]", IdleHandlers[i].GetType().ToString());
+      for (int i = 0; i < idleHandlers.Length; i++)
+        args.WritePair("[" + i.ToString() + "]", idleHandlers[i].GetType().ToString());
       args.IndentLevel--;
 
       if (EFPApp.IsMainThread)
@@ -1715,11 +1716,11 @@ namespace FreeLibSet.Forms.Diagnostics
         args.WritePair("AsyncProcList", "Count=" + EFPApp.ExecProcCallCount.ToString());
         if (EFPApp.ExecProcCallCount > 0)
         {
-          FreeLibSet.Remoting.IExecProc[] Procs = EFPApp.ExecProcList.ToArray();
+          FreeLibSet.Remoting.IExecProc[] procs = EFPApp.ExecProcList.ToArray();
           args.IndentLevel++;
           try
           {
-            LogoutTools.LogoutObject(args, Procs);
+            LogoutTools.LogoutObject(args, procs);
           }
           catch (Exception e)
           {
@@ -1731,13 +1732,13 @@ namespace FreeLibSet.Forms.Diagnostics
         args.WritePair("RemoteUICallBacks", "Count=" + EFPApp.RemoteUICallBackCount.ToString());
         if (EFPApp.RemoteUICallBackCount > 0)
         {
-          FreeLibSet.Remoting.IExecProcCallBack[] Procs = new FreeLibSet.Remoting.IExecProcCallBack[EFPApp.RemoteUICallBacks.Count];
-          EFPApp.RemoteUICallBacks.CopyTo(Procs, 0);
+          FreeLibSet.Remoting.IExecProcCallBack[] procs = new FreeLibSet.Remoting.IExecProcCallBack[EFPApp.RemoteUICallBacks.Count];
+          EFPApp.RemoteUICallBacks.CopyTo(procs, 0);
 
           args.IndentLevel++;
           try
           {
-            LogoutTools.LogoutObject(args, Procs);
+            LogoutTools.LogoutObject(args, procs);
           }
           catch (Exception e)
           {
@@ -1759,14 +1760,14 @@ namespace FreeLibSet.Forms.Diagnostics
 
       #region EFPFormProvider' s
 
-      EFPFormProvider[] FormProviders = EFPFormProvider.GetAllFormProviders();
-      args.WriteLine("Объекты EFPFormProvider (" + FormProviders.Length.ToString() + ")");
+      EFPFormProvider[] formProviders = EFPFormProvider.GetAllFormProviders();
+      args.WriteLine("Объекты EFPFormProvider (" + formProviders.Length.ToString() + ")");
       args.IndentLevel++;
-      for (int i = 0; i < FormProviders.Length; i++)
+      for (int i = 0; i < formProviders.Length; i++)
       {
         StringBuilder sb = new StringBuilder();
-        sb.Append(FormProviders[i].ToString());
-        Form frm = FormProviders[i].Form;
+        sb.Append(formProviders[i].ToString());
+        Form frm = formProviders[i].Form;
         if (frm.IsDisposed)
           sb.Append(", Disposed");
         if (frm.Visible)

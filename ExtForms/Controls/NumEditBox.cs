@@ -632,15 +632,15 @@ namespace FreeLibSet.Controls
     [DefaultValue(typeof(Color), "Window")]
     public override Color BackColor
     {
-      get      {        return base.BackColor;      }
-      set      {        base.BackColor = value;      }
+      get { return base.BackColor; }
+      set { base.BackColor = value; }
     }
 
     [DefaultValue(typeof(Color), "WindowText")]
     public override Color ForeColor
     {
-      get      {        return base.ForeColor;      }
-      set      {        base.ForeColor = value;      }
+      get { return base.ForeColor; }
+      set { base.ForeColor = value; }
     }
 
     public override void ResetBackColor()

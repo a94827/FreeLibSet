@@ -339,8 +339,8 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      IEFPGridFilter Filter = (IEFPGridFilter)(Control.Rows[FilterIndex].Tag);
-      MainControlProvider.ShowFilterDialog(Filter.Code);
+      IEFPGridFilter gridFilter = (IEFPGridFilter)(Control.Rows[FilterIndex].Tag);
+      MainControlProvider.ShowFilterDialog(gridFilter.Code);
     }
 
     #endregion

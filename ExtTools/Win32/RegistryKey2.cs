@@ -273,12 +273,12 @@ namespace FreeLibSet.Win32
       if (writable)
         access |= OpenRegKeyWrite;
 
-      IntPtr ChildHandle;
+      IntPtr childHandle;
       int result = NativeMethods.RegOpenKeyEx(_Handle,
           name,
           IntPtr.Zero,
           access | (int)View,
-          out ChildHandle);
+          out childHandle);
 
       // TODO: В Windows-98 ChildHandle=0 (11.12.2018)
 
@@ -299,7 +299,7 @@ namespace FreeLibSet.Win32
         }
       }
 
-      return new RegistryKey2(this.Name + "\\" + name, ChildHandle, true, View);
+      return new RegistryKey2(this.Name + "\\" + name, childHandle, true, View);
     }
 
     /// <summary>
@@ -309,7 +309,7 @@ namespace FreeLibSet.Win32
     /// <returns>Созданный узел</returns>
     public RegistryKey2 CreateSubKey(string name)
     {
-      IntPtr ChildHandle;
+      IntPtr childHandle;
       int disposition;
 
       int result = NativeMethods.RegCreateKeyEx(_Handle,
@@ -319,7 +319,7 @@ namespace FreeLibSet.Win32
           0, // options
           OpenRegKeyWrite | (int)View, // access
           IntPtr.Zero, // securityAttrs
-          out ChildHandle, out disposition);
+          out childHandle, out disposition);
 
       if (result != Win32ResultCode.Success)
       {
@@ -333,7 +333,7 @@ namespace FreeLibSet.Win32
           throw;
         }
       }
-      return new RegistryKey2(this.Name + "\\" + name, ChildHandle, true, View);
+      return new RegistryKey2(this.Name + "\\" + name, childHandle, true, View);
     }
 
     /// <summary>

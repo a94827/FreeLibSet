@@ -59,13 +59,13 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        FileAssociations FAItems;
-        if (!_FADict.TryGetValue(fileExt, out FAItems))
+        FileAssociations faItems;
+        if (!_FADict.TryGetValue(fileExt, out faItems))
         {
-          FAItems = FileAssociations.FromFileExtension(fileExt);
-          _FADict.Add(fileExt, FAItems);
+          faItems = FileAssociations.FromFileExtension(fileExt);
+          _FADict.Add(fileExt, faItems);
         }
-        return FAItems;
+        return faItems;
       }
     }
 
@@ -77,13 +77,13 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        FileAssociations FA = _ShowDirectory;
-        if (FA == null)
+        FileAssociations faItems = _ShowDirectory;
+        if (faItems == null)
         {
-          FA = FileAssociations.FromDirectory();
-          _ShowDirectory = FA;
+          faItems = FileAssociations.FromDirectory();
+          _ShowDirectory = faItems;
         }
-        return FA;
+        return faItems;
       }
     }
     private FileAssociations _ShowDirectory;
@@ -125,13 +125,13 @@ namespace FreeLibSet.Forms
     /// <returns>Значок или null</returns>
     public Image GetIconImage(AbsPath filePath, int iconIndex, bool smallIcon)
     {
-      string Key = filePath.Path + ";" + iconIndex.ToString() + ";" + smallIcon.ToString();
-      Image Image;
-      if (!_IconImageDict.TryGetValue(Key, out Image))
+      string key = filePath.Path + ";" + iconIndex.ToString() + ";" + smallIcon.ToString();
+      Image image;
+      if (!_IconImageDict.TryGetValue(key, out image))
       {
         try
         {
-          Image = WinFormsTools.ExtractIconImage(filePath, iconIndex, smallIcon);
+          image = WinFormsTools.ExtractIconImage(filePath, iconIndex, smallIcon);
         }
         catch (Exception e)
         {
@@ -139,11 +139,11 @@ namespace FreeLibSet.Forms
           e.Data["IconIndex"] = iconIndex;
           e.Data["SmallIcon"] = smallIcon;
           LogoutTools.LogoutException(e, "Ошибка извлечения значка из файла");
-          Image = null;
+          image = null;
         }
-        _IconImageDict.Add(Key, Image);
+        _IconImageDict.Add(key, image);
       }
-      return Image;
+      return image;
     }
 
     #endregion
@@ -158,11 +158,11 @@ namespace FreeLibSet.Forms
       _FADict.Clear();
       _ShowDirectory = null;
 
-      foreach (Image Image in _IconImageDict.Values)
+      foreach (Image image in _IconImageDict.Values)
       {
         try
         {
-          Image.Dispose();
+          image.Dispose();
         }
         catch { }
       }

@@ -181,11 +181,11 @@ namespace FreeLibSet.Forms
       if (s2 == Control.Text)
         return;
 
-      int OldSS = Control.SelectionStart;
-      int OldSL = Control.SelectionLength;
+      int oldSS = Control.SelectionStart;
+      int oldSL = Control.SelectionLength;
       Control.Text = s2;
-      Control.SelectionStart = OldSS;
-      Control.SelectionLength = OldSL;
+      Control.SelectionStart = oldSS;
+      Control.SelectionLength = oldSL;
 
       // при вставке из буфера обмена выделение все равно не сохраняется
     }
@@ -474,9 +474,9 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        string ErrorText;
-        if (!MaskProvider.Test(ControlText, out ErrorText))
-          SetError(ErrorText);
+        string errorText;
+        if (!MaskProvider.Test(ControlText, out errorText))
+          SetError(errorText);
       }
     }
 
@@ -1016,10 +1016,10 @@ namespace FreeLibSet.Forms
     /// <returns>Числовое значение</returns>
     public int TextToValue(string text)
     {
-      int Value;
-      if (!TryTextToValue(text, out Value))
+      int value;
+      if (!TryTextToValue(text, out value))
         throw new InvalidCastException("Нельзя преобразовать \"" + text + "\" в целое число");
-      return Value;
+      return value;
     }
 
     /// <summary>
@@ -1060,9 +1060,9 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        int Res;
-        if (TryTextToValue(Control.Text, out Res))
-          return Res;
+        int res;
+        if (TryTextToValue(Control.Text, out res))
+          return res;
         else
           return 0; // 11.01.2018
       }

@@ -462,22 +462,22 @@ namespace FreeLibSet.Forms.Docs
 
     public void ReadValues()
     {
-      throw new NotImplementedException("The method or operation is not implemented.");
+      throw new NotImplementedException();
     }
 
     public void AfterReadValues()
     {
-      throw new NotImplementedException("The method or operation is not implemented.");
+      throw new NotImplementedException();
     }
 
     public void WriteValues()
     {
-      throw new NotImplementedException("The method or operation is not implemented.");
+      throw new NotImplementedException();
     }
 
     public DepChangeInfo ChangeInfo
     {
-      get { throw new NotImplementedException("The method or operation is not implemented."); }
+      get { throw new NotImplementedException(); }
     }
     private DepChangeInfoList FChangeInfo;
 

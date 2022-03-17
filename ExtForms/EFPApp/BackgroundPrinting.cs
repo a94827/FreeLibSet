@@ -192,7 +192,7 @@ namespace FreeLibSet.Forms
     {
       while (true)
       {
-        PrintDocument Document;
+        PrintDocument document;
         lock (_TheQueue)
         {
           if (_TheQueue.Count == 0 || _Worker.CancellationPending)
@@ -201,10 +201,10 @@ namespace FreeLibSet.Forms
             break;
           }
           _InProgress = true; // Говорим, что у нас есть работа
-          Document = _TheQueue.Dequeue();
+          document = _TheQueue.Dequeue();
         }
 
-        PrintOneDocument(Document);
+        PrintOneDocument(document);
       }
     }
 
@@ -250,16 +250,16 @@ namespace FreeLibSet.Forms
 
     void Document_PrintPage(object sender, PrintPageEventArgs args)
     {
-      PrintDocument Document = (PrintDocument)sender;
+      PrintDocument document = (PrintDocument)sender;
       if (args.HasMorePages)
       {
         _CurrentPage++;
-        _Worker.ReportProgress(0, new StatusInfo(Document.DocumentName, _CurrentPage));
+        _Worker.ReportProgress(0, new StatusInfo(document.DocumentName, _CurrentPage));
         if (_Worker.CancellationPending)
           args.HasMorePages = false; // ?? Может быть нужно предупреждение
       }
       else
-        _Worker.ReportProgress(0, new StatusInfo(Document.DocumentName, -1));
+        _Worker.ReportProgress(0, new StatusInfo(document.DocumentName, -1));
     }
 
     /// <summary>

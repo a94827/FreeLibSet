@@ -694,11 +694,11 @@ namespace FreeLibSet.Forms
           return _TextSearchEnabled.Value;
         else
         {
-          IEFPTextBoxWithStatusBar SB = this as IEFPTextBoxWithStatusBar;
-          if (SB == null)
+          IEFPTextBoxWithStatusBar sb = this as IEFPTextBoxWithStatusBar;
+          if (sb == null)
             return false;
           else
-            return SB.IsMultiLine;
+            return sb.IsMultiLine;
         }
       }
       set
@@ -931,8 +931,8 @@ namespace FreeLibSet.Forms
         _NotReadOnlySync = new DepInput<bool>(true, null);
         _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
 
-        DepOr ReadOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
-        _ReadOnlyEx.Source = ReadOnlyOr;
+        DepOr readOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
+        _ReadOnlyEx.Source = readOnlyOr;
       }
     }
     /// <summary>
@@ -952,11 +952,6 @@ namespace FreeLibSet.Forms
     {
       ReadOnly = _ReadOnlyEx.Value;
     }
-
-    #endregion
-
-    #region Свойство DisabledText
-
 
     #endregion
   }
@@ -1149,28 +1144,26 @@ namespace FreeLibSet.Forms
       GetCurrentRC(Control.Text, Control.SelectionStart, out row, out column);
     }
 
-    /// <summary>
-    /// 02.09.2015
-    /// Проверяем все сепараторы новой строки, а не только Environment.NewLine.
-    /// Сначала длинные, затем, короткие
-    /// </summary>
-    private static readonly string[] NewLineSeps = new string[] { "\r\n", "\r\n", "\n", "\r" };
-
     internal static void GetCurrentRC(string text, int pos, out int row, out int column)
     {
       // Находим все символы переноса строки
+
+      // 02.09.2015
+      // Проверяем все сепараторы новой строки, а не только Environment.NewLine.
+      // Сначала длинные, затем, короткие
+
       int p = 0;
       row = 1;
       while (p < pos)
       {
         bool Found = false;
-        for (int i = 0; i < NewLineSeps.Length; i++)
+        for (int i = 0; i < DataTools.AllPossibleLineSeparators.Length; i++)
         {
-          int p2 = text.IndexOf(NewLineSeps[i], p, pos - p, StringComparison.Ordinal);
+          int p2 = text.IndexOf(DataTools.AllPossibleLineSeparators[i], p, pos - p, StringComparison.Ordinal);
           if (p2 < 0)
             continue;
           row++;
-          p = p2 + NewLineSeps[i].Length;
+          p = p2 + DataTools.AllPossibleLineSeparators[i].Length;
           Found = true;
           break;
         }
@@ -1235,9 +1228,9 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        string ErrorText;
-        if (!MaskProvider.Test(ControlText, out ErrorText))
-          SetError(ErrorText);
+        string errorText;
+        if (!MaskProvider.Test(ControlText, out errorText))
+          SetError(errorText);
       }
     }
 
@@ -2010,11 +2003,11 @@ namespace FreeLibSet.Forms
 
       #region Undo
 
-      bool UndoSupported = false;
+      bool undoSupported = false;
       if (owner is IEFPTextBox)
-        UndoSupported = ((IEFPTextBox)owner).UndoSupported;
+        undoSupported = ((IEFPTextBox)owner).UndoSupported;
 
-      if (UndoSupported)
+      if (undoSupported)
       {
         ciUndo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Undo);
         ciUndo.ShortCutToRightText();
@@ -2324,61 +2317,61 @@ namespace FreeLibSet.Forms
     /// </summary>
     public virtual void InitEnabled()
     {
-      IEFPTextBox Owner2 = Owner as IEFPTextBox;
-      bool IsPasswordInput = false;
-      bool CanUndo = false; // выделено 27.12.2020
-      bool IsMultiLine = false; // выделено 27.12.2020
-      bool AcceptsReturn = false; // выделено 27.12.2020
-      if (Owner2 != null)
+      IEFPTextBox owner2 = Owner as IEFPTextBox;
+      bool isPasswordInput = false;
+      bool canUndo = false; // выделено 27.12.2020
+      bool isMultiLine = false; // выделено 27.12.2020
+      bool acceptsReturn = false; // выделено 27.12.2020
+      if (owner2 != null)
       {
-        IsPasswordInput = Owner2.IsPasswordInput;
-        CanUndo = Owner2.CanUndo;
-        IsMultiLine = Owner2.IsMultiLine;
-        AcceptsReturn = Owner2.AcceptsReturn;
+        isPasswordInput = owner2.IsPasswordInput;
+        canUndo = owner2.CanUndo;
+        isMultiLine = owner2.IsMultiLine;
+        acceptsReturn = owner2.AcceptsReturn;
       }
 
-      int TextLength = Owner.TextLength;
-      int SelectionLength = Owner.SelectionLength;
+      int textLength = Owner.TextLength;
+      int selectionLength = Owner.SelectionLength;
 
       if (ciUndo != null)
-        ciUndo.Enabled = (Owner.Editable && CanUndo);
+        ciUndo.Enabled = (Owner.Editable && canUndo);
       if (ciCut != null)
-        ciCut.Enabled = (Owner.Editable && SelectionLength > 0) &&
-          (!IsPasswordInput); // 24.01.2019
+        ciCut.Enabled = (Owner.Editable && selectionLength > 0) &&
+          (!isPasswordInput); // 24.01.2019
       if (ciCopy != null)
-        ciCopy.Enabled = (SelectionLength > 0) &&
-          (!IsPasswordInput); // 24.01.2019
+        ciCopy.Enabled = (selectionLength > 0) &&
+          (!isPasswordInput); // 24.01.2019
       if (ciPaste != null)
         ciPaste.Enabled = Owner.Editable; // !!! проверка буфера обмена
       //ciDelete.EnabledEx=((!Control.DataReadOnly) && Control.SelectionLength>0);
-      ciSelectAll.Enabled = (SelectionLength < TextLength);
+      ciSelectAll.Enabled = (selectionLength < textLength);
       if (ciCase != null)
       {
-        ciCase.Visible = !IsPasswordInput; // 24.01.2019
+        ciCase.Visible = !isPasswordInput; // 24.01.2019
 
-        ciUpperCase.Enabled = Owner.Editable && (TextLength > 0) /*&& ControlCanChangeCase*/;
+        ciUpperCase.Enabled = Owner.Editable && (textLength > 0) /*&& ControlCanChangeCase*/;
         ciLowerCase.Enabled = ciUpperCase.Enabled;
         ciChangeCase.Enabled = ciUpperCase.Enabled;
-        ciRusLat.Enabled = Owner.Editable && (TextLength > 0);
+        ciRusLat.Enabled = Owner.Editable && (textLength > 0);
         ciCase.Enabled = Owner.Editable;
       }
 
       if (ciNewLine != null)
       {
-        ciNewLine.Visible = IsMultiLine;
+        ciNewLine.Visible = isMultiLine;
         ciNewLine.Enabled = Owner.Editable;
-        ciNewLine.MenuRightText = EFPCommandItem.GetShortCutText(AcceptsReturn ? Keys.Enter :
+        ciNewLine.MenuRightText = EFPCommandItem.GetShortCutText(acceptsReturn ? Keys.Enter :
           Keys.Control | Keys.Enter);
       }
 
       if (ciSendToMicrosoftWord != null)
-        ciSendToMicrosoftWord.Visible = EFPApp.MicrosoftWordVersion.Major > 0 && IsMultiLine;
+        ciSendToMicrosoftWord.Visible = EFPApp.MicrosoftWordVersion.Major > 0 && isMultiLine;
       if (ciSendToOpenOfficeWriter != null)
-        ciSendToOpenOfficeWriter.Visible = EFPApp.OpenOfficeKind != OpenOfficeKind.Unknown && IsMultiLine;
+        ciSendToOpenOfficeWriter.Visible = EFPApp.OpenOfficeKind != OpenOfficeKind.Unknown && isMultiLine;
 
       if (_FileAssociationsHandler != null)
-        _FileAssociationsHandler.Visible = (!IsPasswordInput) && // 24.01.2019
-                                             IsMultiLine; // 30.07.2020
+        _FileAssociationsHandler.Visible = (!isPasswordInput) && // 24.01.2019
+                                             isMultiLine; // 30.07.2020
 
       InitStatusBar();
     }
@@ -2521,12 +2514,12 @@ namespace FreeLibSet.Forms
 
     private void RefreshSearchItems()
     {
-      IEFPTextBox Owner2 = Owner as IEFPTextBox;
-      if (Owner2 == null)
+      IEFPTextBox owner2 = Owner as IEFPTextBox;
+      if (owner2 == null)
         return;
-      if (Owner2.TextSearchContext == null)
+      if (owner2.TextSearchContext == null)
         return;
-      ciFindNext.Enabled = Owner2.TextSearchContext.ContinueEnabled;
+      ciFindNext.Enabled = owner2.TextSearchContext.ContinueEnabled;
     }
 
     #endregion
@@ -2654,8 +2647,8 @@ namespace FreeLibSet.Forms
 
     private void SendToMicrosoftWord(object sender, EventArgs args)
     {
-      string Text = Owner.Text;
-      if (String.IsNullOrEmpty(Text))
+      string text = Owner.Text;
+      if (String.IsNullOrEmpty(text))
       {
         EFPApp.ShowTempMessage("Текст не введен");
         return;
@@ -2663,11 +2656,11 @@ namespace FreeLibSet.Forms
 
       try
       {
-        using (FreeLibSet.OLE.Word.WordHelper Helper = new OLE.Word.WordHelper())
+        using (FreeLibSet.OLE.Word.WordHelper helper = new OLE.Word.WordHelper())
         {
-          FreeLibSet.OLE.Word.Document Doc = Helper.Application.Documents.Add();
-          Doc.Range().InsertAfter(Text);
-          Doc.Saved = true;
+          FreeLibSet.OLE.Word.Document doc = helper.Application.Documents.Add();
+          doc.Range().InsertAfter(text);
+          doc.Saved = true;
         }
       }
       catch (Exception e)
@@ -2678,16 +2671,16 @@ namespace FreeLibSet.Forms
 
     private void SendToOpenOfficeWriter(object sender, EventArgs args)
     {
-      string Text = Owner.Text;
-      if (String.IsNullOrEmpty(Text))
+      string text = Owner.Text;
+      if (String.IsNullOrEmpty(text))
       {
         EFPApp.ShowTempMessage("Текст не введен");
         return;
       }
 
-      string TempFileName = EFPApp.SharedTempDir.GetTempFileName("TXT").Path;
-      System.IO.File.WriteAllText(TempFileName, Text, Encoding.Default);
-      EFPApp.UsedOpenOffice.OpenWithWriter(new AbsPath(TempFileName), true);
+      string tempFileName = EFPApp.SharedTempDir.GetTempFileName("TXT").Path;
+      System.IO.File.WriteAllText(tempFileName, text, Encoding.Default);
+      EFPApp.UsedOpenOffice.OpenWithWriter(new AbsPath(tempFileName), true);
     }
 
     #endregion
@@ -2714,10 +2707,10 @@ namespace FreeLibSet.Forms
       IEFPTextBoxWithStatusBar tb = (IEFPTextBoxWithStatusBar)Owner;
 
       ciStatusRow.Visible = tb.IsMultiLine && UseStatusBarRC /* 21.02.2020 */;
-      int CurrRow, CurrCol;
-      tb.GetCurrentRC(out CurrRow, out CurrCol);
-      ciStatusRow.StatusBarText = "Строка " + CurrRow.ToString();
-      ciStatusColumn.StatusBarText = "Столбец " + CurrCol.ToString();
+      int currRow, currCol;
+      tb.GetCurrentRC(out currRow, out currCol);
+      ciStatusRow.StatusBarText = "Строка " + currRow.ToString();
+      ciStatusColumn.StatusBarText = "Столбец " + currCol.ToString();
     }
 
     #endregion

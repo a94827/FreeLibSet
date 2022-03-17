@@ -94,14 +94,14 @@ namespace FreeLibSet.Forms
 #endif
       #region Порядок строк
 
-      MenuSort = new EFPCommandItem("Edit", "MenuOrder");
-      MenuSort.MenuText = "Порядок строк";
-      MenuSort.ImageKey = "OrderAZ";
-      MenuSort.Usage = EFPCommandItemUsage.Menu;
-      Add(MenuSort);
+      _MenuSort = new EFPCommandItem("Edit", "MenuOrder");
+      _MenuSort.MenuText = "Порядок строк";
+      _MenuSort.ImageKey = "OrderAZ";
+      _MenuSort.Usage = EFPCommandItemUsage.Menu;
+      Add(_MenuSort);
 
       ciSortMoveUp = new EFPCommandItem("Edit", "MoveUp");
-      ciSortMoveUp.Parent = MenuSort;
+      ciSortMoveUp.Parent = _MenuSort;
       ciSortMoveUp.MenuText = "Переместить вверх";
       ciSortMoveUp.ImageKey = "ArrowUp";
       ciSortMoveUp.ShortCut = Keys.Alt | Keys.Up;
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms
       Add(ciSortMoveUp);
 
       ciSortMoveDown = new EFPCommandItem("Edit", "MoveDown");
-      ciSortMoveDown.Parent = MenuSort;
+      ciSortMoveDown.Parent = _MenuSort;
       ciSortMoveDown.MenuText = "Переместить вниз";
       ciSortMoveDown.ImageKey = "ArrowDown";
       ciSortMoveDown.ShortCut = Keys.Alt | Keys.Down;
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms
       Add(ciSortMoveDown);
 
       ciSortRestore = new EFPCommandItem("Edit", "RestoreOrder");
-      ciSortRestore.Parent = MenuSort;
+      ciSortRestore.Parent = _MenuSort;
       ciSortRestore.MenuText = "Восстановить порядок по умолчанию";
       ciSortRestore.ImageKey = "ВосстановитьПорядокСтрок";
       ciSortRestore.GroupBegin = true; // !!!
@@ -130,7 +130,7 @@ namespace FreeLibSet.Forms
       ciSortRestore.Usage = EFPCommandItemUsage.None; // включим, когда надо
       Add(ciSortRestore);
 
-      OrderItems = null; // Потом
+      _OrderItems = null; // Потом
 
       #endregion
 
@@ -209,7 +209,7 @@ namespace FreeLibSet.Forms
 
       if (String.IsNullOrEmpty(ManualOrderColumn) && (!ManualOrderRows))
       {
-        MenuSort.Usage = EFPCommandItemUsage.None;
+        _MenuSort.Usage = EFPCommandItemUsage.None;
         ciSortMoveDown.Usage = EFPCommandItemUsage.None;
         ciSortMoveUp.Usage = EFPCommandItemUsage.None;
         ciSortRestore.Usage = EFPCommandItemUsage.None;
@@ -232,13 +232,13 @@ namespace FreeLibSet.Forms
       if (Owner.OrderCount > 0 || (Owner.GridProducer != null && Owner.GridProducer.OrderCount > 0))
       {
         // Команды сортировки строк существуют или могут появиться в будущем
-        MenuSort.Usage = EFPCommandItemUsage.Everywhere | EFPCommandItemUsage.DisableRightTextInToolTip;
-        OrderItems = new EFPCommandItem[9];
-        for (int i = 0; i < OrderItems.Length; i++)
+        _MenuSort.Usage = EFPCommandItemUsage.Everywhere | EFPCommandItemUsage.DisableRightTextInToolTip;
+        _OrderItems = new EFPCommandItem[9];
+        for (int i = 0; i < _OrderItems.Length; i++)
         {
           EFPCommandItem ci1 = new EFPCommandItem("View", "Order" + (i + 1).ToString());
           ci1.MenuText = (i + 1).ToString();
-          ci1.Parent = MenuSort;
+          ci1.Parent = _MenuSort;
           ci1.GroupBegin = (i == 0);
           //ci1.ImageKey = "Item";
           ci1.ShortCut = Keys.Control | (Keys)(((int)Keys.D1) + i);
@@ -246,11 +246,11 @@ namespace FreeLibSet.Forms
           ci1.Tag = i;
           ci1.Click += new EventHandler(SelectOrder_Click);
           Add(ci1);
-          OrderItems[i] = ci1;
+          _OrderItems[i] = ci1;
         }
         ciOrderMore = new EFPCommandItem("View", "OrderDialog");
         ciOrderMore.MenuText = "&Еще ...";
-        ciOrderMore.Parent = MenuSort;
+        ciOrderMore.Parent = _MenuSort;
         ciOrderMore.GroupBegin = true;
         ciOrderMore.ShortCut = Keys.Control | Keys.D0;
         ciOrderMore.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
@@ -307,14 +307,14 @@ namespace FreeLibSet.Forms
 
     #region Команды сортировки строк
 
-    private EFPCommandItem MenuSort;
+    private EFPCommandItem _MenuSort;
 
     #region Сортировка путем выбора порядка сортировки
 
     /// <summary>
     /// Девять команд задания порядка сортировки строк (в том числе недействующие сейчас)
     /// </summary>
-    private EFPCommandItem[] OrderItems;
+    private EFPCommandItem[] _OrderItems;
 
     /// <summary>
     /// Команда "Еще" для дополнительных порядков сортировки (больше 9)
@@ -326,20 +326,20 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void RefreshOrderItems()
     {
-      if (OrderItems == null)
+      if (_OrderItems == null)
         return;
       int n = Owner.OrderCount;
-      for (int i = 0; i < OrderItems.Length; i++)
+      for (int i = 0; i < _OrderItems.Length; i++)
       {
-        OrderItems[i].Visible = (i < n);
+        _OrderItems[i].Visible = (i < n);
         if (i < n)
         {
-          OrderItems[i].MenuText = (i + 1).ToString() + ". " + Owner.Orders[i].DisplayName;
-          OrderItems[i].ImageKey = Owner.Orders[i].ImageKey;
+          _OrderItems[i].MenuText = (i + 1).ToString() + ". " + Owner.Orders[i].DisplayName;
+          _OrderItems[i].ImageKey = Owner.Orders[i].ImageKey;
         }
       }
-      ciOrderMore.Visible = (n > OrderItems.Length);
-      MenuSort.Enabled = (n > 0);
+      ciOrderMore.Visible = (n > _OrderItems.Length);
+      _MenuSort.Enabled = (n > 0);
       InitCurentOrder();
     }
 
@@ -350,18 +350,18 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal void InitCurentOrder()
     {
-      if (OrderItems == null)
+      if (_OrderItems == null)
         return;
 
-      for (int i = 0; i < OrderItems.Length; i++)
-        OrderItems[i].Checked = (Owner.CurrentOrderIndex == i);
+      for (int i = 0; i < _OrderItems.Length; i++)
+        _OrderItems[i].Checked = (Owner.CurrentOrderIndex == i);
       string s;
       if (Owner.CurrentOrderIndex < 0 || Owner.CurrentOrderIndex >= Owner.OrderCount)
         s = "Не задан";
       else
         s = Owner.Orders[Owner.CurrentOrderIndex].DisplayName;
-      MenuSort.MenuRightText = s;
-      MenuSort.ToolTipText = "Порядок строк (" + s + ")";
+      _MenuSort.MenuRightText = s;
+      _MenuSort.ToolTipText = "Порядок строк (" + s + ")";
 
       Owner.InitColumnHeaderTriangles();
     }
@@ -374,9 +374,9 @@ namespace FreeLibSet.Forms
     void SelectOrder_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
-      int Order = (int)(ci.Tag);
-      if (Order < Owner.OrderCount)
-        Owner.CurrentOrderIndex = Order;
+      int order = (int)(ci.Tag);
+      if (order < Owner.OrderCount)
+        Owner.CurrentOrderIndex = order;
     }
 
     /// <summary>
@@ -414,18 +414,18 @@ namespace FreeLibSet.Forms
         return;
       } */
 
-      int OldColIdx = Owner.CurrentColumnIndex;
+      int oldColIdx = Owner.CurrentColumnIndex;
 
-      bool Changed;
+      bool changed;
       if (ManualOrderRows)
-        Changed = DoReorderRows(down);
+        changed = DoReorderRows(down);
       else
-        Changed = DoReorderColumn(down);
+        changed = DoReorderColumn(down);
 
       // 9. Обновляем табличный просмотр
-      if (Changed)
+      if (changed)
       {
-        Owner.CurrentColumnIndex = OldColIdx;
+        Owner.CurrentColumnIndex = oldColIdx;
 
         if (ManualOrderChanged != null)
           ManualOrderChanged(this, EventArgs.Empty);
@@ -439,8 +439,8 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     private bool DoReorderColumn(bool down)
     {
-      IDataTableTreeModel Model = Owner.Control.Model as IDataTableTreeModel;
-      if (Model == null)
+      IDataTableTreeModel model = Owner.Control.Model as IDataTableTreeModel;
+      if (model == null)
         throw new NullReferenceException("Модель данных не является IDataTableTreeModel");
 
       int i;
@@ -455,37 +455,37 @@ namespace FreeLibSet.Forms
         throw new InvalidDataSourceException("Нельзя получить DataView");
 
       // 1. Загружаем полный список строк DataRow в массив
-      DataRow[] Rows1 = DataTools.GetDataViewRows(dv);
+      DataRow[] rows1 = DataTools.GetDataViewRows(dv);
 
       // 2. Загружаем выбранные строки
-      DataRow[] SelRows = Owner.SelectedDataRows;
-      if (SelRows.Length == 0)
+      DataRow[] selRows = Owner.SelectedDataRows;
+      if (selRows.Length == 0)
       {
         EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
         return false;
       }
 
       // 3. Получаем позиции выбранных строк в массиве всех строк
-      int[] SelPoss = new int[SelRows.Length];
-      for (i = 0; i < SelRows.Length; i++)
-        SelPoss[i] = Array.IndexOf<DataRow>(Rows1, SelRows[i]);
+      int[] selPoss = new int[selRows.Length];
+      for (i = 0; i < selRows.Length; i++)
+        selPoss[i] = Array.IndexOf<DataRow>(rows1, selRows[i]);
 
       // 4. Проверяем, что не уперлись в границы списка
       bool lBound = false;
       if (down)
       {
-        if (SelPoss[SelPoss.Length - 1] == Rows1.Length - 1)
+        if (selPoss[selPoss.Length - 1] == rows1.Length - 1)
           lBound = true;
       }
       else
       {
-        if (SelPoss[0] == 0)
+        if (selPoss[0] == 0)
           lBound = true;
       }
       if (lBound)
       {
         string msg = "Нельзя передвинуть ";
-        if (SelRows.Length > 1)
+        if (selRows.Length > 1)
           msg += "выбранные строки ";
         else
           msg += "выбранную строку ";
@@ -499,48 +499,48 @@ namespace FreeLibSet.Forms
 
       // 5. Подготавливаем массив строк для их размещения в новом порядке
       // Значения null в этом массиве означают временно пустые позиции
-      DataRow[] Rows2 = new DataRow[Rows1.Length];
+      DataRow[] rows2 = new DataRow[rows1.Length];
 
       // 6. Копируем в Rows2 строки из Rows1 со сдвигом для позиций, существующих
       // в SelRows.
       // В процессе перемещения будем очищать массив Rows1
-      int Delta = down ? 1 : -1; // значение смещения
-      for (i = 0; i < SelPoss.Length; i++)
+      int delta = down ? 1 : -1; // значение смещения
+      for (i = 0; i < selPoss.Length; i++)
       {
-        int ThisPos = SelPoss[i];
-        Rows2[ThisPos + Delta] = Rows1[ThisPos];
-        Rows1[ThisPos] = null;
+        int thisPos = selPoss[i];
+        rows2[thisPos + delta] = rows1[thisPos];
+        rows1[thisPos] = null;
       }
 
       // 7. Перебираем исходный массив и оставшиеся непустые строки размещаем в
       // новом массиве, отыскивая пустые места. Для этого используем переменную FreePos
       // для указания на очередную пустую позицию второго массива
-      int FreePos = 0;
-      for (i = 0; i < Rows1.Length; i++)
+      int freePos = 0;
+      for (i = 0; i < rows1.Length; i++)
       {
-        if (Rows1[i] == null) // перемещенная позиция
+        if (rows1[i] == null) // перемещенная позиция
           continue;
         // Поиск места
-        while (Rows2[FreePos] != null)
-          FreePos++;
+        while (rows2[freePos] != null)
+          freePos++;
         // Нашли дырку
-        Rows2[FreePos] = Rows1[i];
-        FreePos++;
+        rows2[freePos] = rows1[i];
+        freePos++;
       }
 
       // 8. Записываем номера строк в поле согласно новому порядку в Rows2
-      bool Changed = false;
-      for (i = 0; i < Rows2.Length; i++)
+      bool changed = false;
+      for (i = 0; i < rows2.Length; i++)
       {
-        if (DataTools.GetInt(Rows2[i], ManualOrderColumn) != (i + 1))
+        if (DataTools.GetInt(rows2[i], ManualOrderColumn) != (i + 1))
         {
-          Rows2[i][ManualOrderColumn] = i + 1;
-          Changed = true;
+          rows2[i][ManualOrderColumn] = i + 1;
+          changed = true;
         }
       }
 
       // 9. Обновляем просмотр
-      if (Changed)
+      if (changed)
       {
         Owner.PerformRefresh();
         //Model.Refresh();
@@ -556,7 +556,7 @@ namespace FreeLibSet.Forms
         }
       } */
 
-      return Changed;
+      return changed;
     }
 
     /// <summary>
@@ -652,18 +652,18 @@ return true;                          */
 
     void ciSortRestore_Click(object Sender, EventArgs Args)
     {
-      int OldColIdx = Owner.CurrentColumnIndex;
+      int oldColIdx = Owner.CurrentColumnIndex;
 
-      bool Changed;
+      bool changed;
       if (ManualOrderRows)
-        Changed = DoSortRestoreRows();
+        changed = DoSortRestoreRows();
       else
-        Changed = DoSortRestoreColumn();
+        changed = DoSortRestoreColumn();
 
       // Обновляем табличный просмотр
-      if (Changed)
+      if (changed)
       {
-        Owner.CurrentColumnIndex = OldColIdx;
+        Owner.CurrentColumnIndex = oldColIdx;
 
         if (ManualOrderChanged != null)
           ManualOrderChanged(this, EventArgs.Empty);
@@ -687,26 +687,26 @@ return true;                          */
         throw new InvalidDataSourceException("Нельзя получить DataView");
 
       // 1. Загружаем полный список строк DataRow в массив
-      DataRow[] Rows1 = DataTools.GetDataViewRows(dv);
+      DataRow[] rows1 = DataTools.GetDataViewRows(dv);
 
       // 2. Загружаем выбранные строки
-      DataRow[] SelRows = Owner.SelectedDataRows;
+      DataRow[] selRows = Owner.SelectedDataRows;
 
 
       // 3. Копируем значения поля сортировки по умолчанию
-      bool Changed = false;
-      for (i = 0; i < Rows1.Length; i++)
+      bool changed = false;
+      for (i = 0; i < rows1.Length; i++)
       {
-        int OldOrder = DataTools.GetInt(Rows1[i], ManualOrderColumn);
-        int NewOrder = DataTools.GetInt(Rows1[i], DefaultManualOrderColumn);
-        if (NewOrder != OldOrder)
+        int oldOrder = DataTools.GetInt(rows1[i], ManualOrderColumn);
+        int newOrder = DataTools.GetInt(rows1[i], DefaultManualOrderColumn);
+        if (newOrder != oldOrder)
         {
-          Rows1[i][ManualOrderColumn] = NewOrder;
-          Changed = true;
+          rows1[i][ManualOrderColumn] = newOrder;
+          changed = true;
         }
       }
 
-      if (!Changed)
+      if (!changed)
         return false;
 
       // 4. Обновляем просмотр

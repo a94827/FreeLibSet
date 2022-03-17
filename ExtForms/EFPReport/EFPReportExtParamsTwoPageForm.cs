@@ -69,9 +69,9 @@ namespace FreeLibSet.Forms
 
     void FormProvider_Shown(object sender, EventArgs args)
     {
-      int PageIndex;
-      if (_LastSelectedPageIndices.TryGetValue(this.GetType(), out PageIndex))
-        TheTabControl.SelectedIndex = PageIndex;
+      int pageIndex;
+      if (_LastSelectedPageIndices.TryGetValue(this.GetType(), out pageIndex))
+        TheTabControl.SelectedIndex = pageIndex;
     }
 
     void FormProvider_Hidden(object sender, EventArgs args)

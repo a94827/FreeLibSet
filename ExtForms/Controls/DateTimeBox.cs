@@ -276,12 +276,12 @@ namespace FreeLibSet.Controls
         return;
 
       // При каждом изменении текста пытаемся установить свойство NValue
-      DateTime? NewVal = _Formatter.ToNValue(MainControl.Text, DefaultYear);
-      if (NewVal == _NValue)
+      DateTime? newVal = _Formatter.ToNValue(MainControl.Text, DefaultYear);
+      if (newVal == _NValue)
         return;
 
       // Свойство изменилось
-      _NValue = NewVal;
+      _NValue = newVal;
       OnValueChanged();
     }
 
@@ -668,8 +668,8 @@ namespace FreeLibSet.Controls
 
       if (form.CancelButton == null)
       {
-        FormButtonStub Stub = new FormButtonStub(form, DialogResult.Cancel);
-        form.CancelButton = Stub;
+        FormButtonStub stub = new FormButtonStub(form, DialogResult.Cancel);
+        form.CancelButton = stub;
         return true;
       }
       else
@@ -685,8 +685,8 @@ namespace FreeLibSet.Controls
 
       if (form.AcceptButton == null)
       {
-        FormButtonStub Stub = new FormButtonStub(form, DialogResult.OK);
-        form.AcceptButton = Stub;
+        FormButtonStub stub = new FormButtonStub(form, DialogResult.OK);
+        form.AcceptButton = stub;
         return true;
       }
       else

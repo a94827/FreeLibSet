@@ -336,9 +336,9 @@ namespace FreeLibSet.Forms
     /// <returns>Созданная команда без обработчика</returns>
     public static EFPCommandItem CreateStdCommand(EFPAppStdCommandItems stdItem)
     {
-      string Category, Name;
-      GetStdCommandCategoryAndName(stdItem, out Category, out Name);
-      EFPCommandItem ci = new EFPCommandItem(Category, Name);
+      string category, name;
+      GetStdCommandCategoryAndName(stdItem, out category, out name);
+      EFPCommandItem ci = new EFPCommandItem(category, name);
 
       switch (stdItem)
       {
@@ -843,9 +843,9 @@ namespace FreeLibSet.Forms
     /// <returns>Найденное перечислимое значение</returns>
     public static EFPAppStdCommandItems GetStdCommand(string category, string name)
     {
-      EFPAppStdCommandItems Res;
-      if (FindStdCommand(category, name, out Res))
-        return Res;
+      EFPAppStdCommandItems res;
+      if (FindStdCommand(category, name, out res))
+        return res;
       else
         throw new ArgumentException("Неизвестная стандартная команда с категорией \"" + category + "\" и именем \"" + name + "\"");
     }
@@ -911,20 +911,20 @@ namespace FreeLibSet.Forms
         "Help|About"
       };
 
-      MinMax<int> Range = DataTools.GetEnumRange(typeof(EFPAppStdCommandItems));
+      MinMax<int> range = DataTools.GetEnumRange(typeof(EFPAppStdCommandItems));
 
 #if DEBUG
-      if (Range.MaxValue != (a.Length - 1))
+      if (range.MaxValue != (a.Length - 1))
         throw new BugException("Неправильный список");
 #endif
 
-      BidirectionalDictionary<EFPAppStdCommandItems, string> Dict = new BidirectionalDictionary<EFPAppStdCommandItems, string>(a.Length);
+      BidirectionalDictionary<EFPAppStdCommandItems, string> dict = new BidirectionalDictionary<EFPAppStdCommandItems, string>(a.Length);
       for (int i = 0; i < a.Length; i++)
       {
-        Dict.Add((EFPAppStdCommandItems)i, a[i]);
+        dict.Add((EFPAppStdCommandItems)i, a[i]);
       }
 
-      return Dict;
+      return dict;
     }
 
     /// <summary>
@@ -951,8 +951,8 @@ namespace FreeLibSet.Forms
     /// <returns>true, если команда является стандартной</returns>
     public static bool IsStdCommandItem(EFPCommandItem commandItem)
     {
-      EFPAppStdCommandItems StdItem;
-      return IsStdCommandItem(commandItem, out StdItem);
+      EFPAppStdCommandItems stdItem;
+      return IsStdCommandItem(commandItem, out stdItem);
     }
 
     #endregion

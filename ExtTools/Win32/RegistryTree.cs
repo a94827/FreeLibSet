@@ -125,9 +125,9 @@ namespace FreeLibSet.Win32
       {
         CheckNotDisposed();
 
-        RegistryKey Item;
-        if (_Items.TryGetValue(keyName, out Item))
-          return Item; // узел уже был найден
+        RegistryKey item;
+        if (_Items.TryGetValue(keyName, out item))
+          return item; // узел уже был найден
 
         if (String.IsNullOrEmpty(keyName))
           throw new ArgumentNullException("keyName");
@@ -135,27 +135,27 @@ namespace FreeLibSet.Win32
         int p = keyName.LastIndexOf('\\');
         if (p < 0)
         {
-          RegistryKey Root = GetRootKey(keyName);
-          if (Root == null)
+          RegistryKey root = GetRootKey(keyName);
+          if (root == null)
             throw new ArgumentException("Неизвестный корневной узел реестра \"" + keyName + "\"", "keyName");
-          return Root;
+          return root;
         }
 
         // Запрошен составной узел
-        string ParentKeyName = keyName.Substring(0, p);
-        RegistryKey ParentKey = this[ParentKeyName]; // рекурсивный вызов
-        if (ParentKey == null)
+        string parentKeyName = keyName.Substring(0, p);
+        RegistryKey parentKey = this[parentKeyName]; // рекурсивный вызов
+        if (parentKey == null)
           return null;
 
         string SubName = keyName.Substring(p + 1);
-        Item = ParentKey.OpenSubKey(SubName, !IsReadOnly);
+        item = parentKey.OpenSubKey(SubName, !IsReadOnly);
 
-        if (Item == null && (!IsReadOnly))
-          Item = ParentKey.CreateSubKey(SubName);
+        if (item == null && (!IsReadOnly))
+          item = parentKey.CreateSubKey(SubName);
 
         // Добавляем узел в коллекцию
-        _Items.Add(keyName, Item);
-        return Item;
+        _Items.Add(keyName, item);
+        return item;
       }
     }
 
@@ -213,12 +213,12 @@ namespace FreeLibSet.Win32
       if (IsDisposed)
         return;
 
-      foreach (RegistryKey Item in _Items.Values)
+      foreach (RegistryKey item in _Items.Values)
       {
         try
         {
-          if (Item != null)
-            Item.Close();
+          if (item != null)
+            item.Close();
         }
         catch { }
       }
@@ -245,22 +245,22 @@ namespace FreeLibSet.Win32
       if (p < 0)
         return GetRootKey(keyName) != null;
 
-      string ParentKeyName = keyName.Substring(0, p);
+      string parentKeyName = keyName.Substring(0, p);
 
-      if (!Exists(ParentKeyName)) // рекурсивный вызов
+      if (!Exists(parentKeyName)) // рекурсивный вызов
         return false;
 
       // Нужен родительский узел
-      RegistryKey ParentKey = this[ParentKeyName];
-      if (ParentKey == null)
+      RegistryKey parentKey = this[parentKeyName];
+      if (parentKey == null)
         return false; // 21.02.2020
-      string SubName = keyName.Substring(p + 1);
+      string subName = keyName.Substring(p + 1);
 
-      RegistryKey SubKey = ParentKey.OpenSubKey(SubName, !IsReadOnly);
-      if (SubKey == null)
+      RegistryKey subKey = parentKey.OpenSubKey(subName, !IsReadOnly);
+      if (subKey == null)
         return false;
 
-      _Items.Add(keyName, SubKey);
+      _Items.Add(keyName, subKey);
       return true;
     }
 
@@ -277,11 +277,11 @@ namespace FreeLibSet.Win32
     /// <returns>Значение</returns>
     public object GetValue(string keyName, string valueName)
     {
-      RegistryKey Key = this[keyName];
-      if (Key == null)
+      RegistryKey key = this[keyName];
+      if (key == null)
         return null;
       else
-        return Key.GetValue(valueName);
+        return key.GetValue(valueName);
     }
 
     /// <summary>
@@ -490,51 +490,51 @@ namespace FreeLibSet.Win32
     /// <returns>Объект для использования в цикле foreach</returns>
     public IEnumerable<EnumRegistryEntry> Enumerate(string keyName, bool enumerateValues)
     {
-      RegistryKey StartKey = this[keyName];
-      if (StartKey == null)
+      RegistryKey startKey = this[keyName];
+      if (startKey == null)
         yield break;
 
-      Stack<EnumInfo> Stack = new Stack<EnumInfo>();
-      Stack.Push(new EnumInfo(StartKey, enumerateValues));
-      while (Stack.Count > 0)
+      Stack<EnumInfo> stack = new Stack<EnumInfo>();
+      stack.Push(new EnumInfo(startKey, enumerateValues));
+      while (stack.Count > 0)
       {
-        EnumInfo CurrInfo = Stack.Peek();
-        if (CurrInfo.SubKeyIndex < 0)
+        EnumInfo currInfo = stack.Peek();
+        if (currInfo.SubKeyIndex < 0)
         {
           // первый такт цикла
 
           // Для ключа реестра
-          yield return new EnumRegistryEntry(CurrInfo.CurrKey, Stack.Count - 1, String.Empty);
+          yield return new EnumRegistryEntry(currInfo.CurrKey, stack.Count - 1, String.Empty);
 
           // Для значений
           if (enumerateValues)
           {
             while (true)
             {
-              CurrInfo.ValueIndex++;
-              if (CurrInfo.ValueIndex >= CurrInfo.ValueNames.Length)
+              currInfo.ValueIndex++;
+              if (currInfo.ValueIndex >= currInfo.ValueNames.Length)
                 break;
-              if (String.IsNullOrEmpty(CurrInfo.ValueNames[CurrInfo.ValueIndex]))
+              if (String.IsNullOrEmpty(currInfo.ValueNames[currInfo.ValueIndex]))
                 continue; // значение по умолчанию не перечисляем
-              yield return new EnumRegistryEntry(CurrInfo.CurrKey, Stack.Count - 1, CurrInfo.ValueNames[CurrInfo.ValueIndex]);
+              yield return new EnumRegistryEntry(currInfo.CurrKey, stack.Count - 1, currInfo.ValueNames[currInfo.ValueIndex]);
 
             }
           }
         }
 
-        CurrInfo.SubKeyIndex++;
-        if (CurrInfo.SubKeyIndex < CurrInfo.SubKeyNames.Length)
+        currInfo.SubKeyIndex++;
+        if (currInfo.SubKeyIndex < currInfo.SubKeyNames.Length)
         {
-          string nm = CurrInfo.SubKeyNames[CurrInfo.SubKeyIndex];
-          string ChildKeyName = CurrInfo.CurrKey.Name + "\\" + nm;
-          RegistryKey ChildKey = this[ChildKeyName];
-          if (ChildKey != null) // вдруг нет прав доступа?
-            Stack.Push(new EnumInfo(ChildKey, enumerateValues));
+          string nm = currInfo.SubKeyNames[currInfo.SubKeyIndex];
+          string childKeyName = currInfo.CurrKey.Name + "\\" + nm;
+          RegistryKey childKey = this[childKeyName];
+          if (childKey != null) // вдруг нет прав доступа?
+            stack.Push(new EnumInfo(childKey, enumerateValues));
           continue;
         }
 
         // больше нет дочерних разделов
-        Stack.Pop();
+        stack.Pop();
       }
     }
 
@@ -696,10 +696,10 @@ namespace FreeLibSet.Win32
     /// <returns>Объект для использования в цикле foreach</returns>
     public static IEnumerable<EnumRegistryEntry> StaticEnumerate(string keyName, bool enumerateValues)
     {
-      EnumarableProxy Proxy = new EnumarableProxy();
-      Proxy.KeyName = keyName;
-      Proxy.EnumerateValues = enumerateValues;
-      return Proxy;
+      EnumarableProxy proxy = new EnumarableProxy();
+      proxy.KeyName = keyName;
+      proxy.EnumerateValues = enumerateValues;
+      return proxy;
     }
 
     #endregion

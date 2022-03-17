@@ -197,11 +197,11 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnClick()
     {
-      Point StartPos = new Point(Control.Width, Control.Height);
+      Point startPos = new Point(Control.Width, Control.Height);
       if (Control.ContextMenuStrip != null)
-        Control.ContextMenuStrip.Show(Control, StartPos);
+        Control.ContextMenuStrip.Show(Control, startPos);
       else if (Control.ContextMenu != null)
-        Control.ContextMenu.Show(Control, StartPos);
+        Control.ContextMenu.Show(Control, startPos);
       else
         base.OnClick();
     }

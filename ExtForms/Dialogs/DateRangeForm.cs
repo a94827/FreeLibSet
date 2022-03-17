@@ -280,17 +280,17 @@ namespace FreeLibSet.Forms
     /// <returns>Результат выполнения</returns>
     public override DialogResult ShowDialog()
     {
-      DateRangeForm form = new DateRangeForm();
-      base.InitFormTitle(form);
-      form.FormProvider.HelpContext = HelpContext;
-      form.MainLabel.Text = Prompt;
+      DateRangeForm frm = new DateRangeForm();
+      base.InitFormTitle(frm);
+      frm.FormProvider.HelpContext = HelpContext;
+      frm.MainLabel.Text = Prompt;
 
-      form.TheDateRangeBox.First.CanBeEmptyMode = CanBeEmptyMode;
-      form.TheDateRangeBox.Last.CanBeEmptyMode = CanBeEmptyMode;
-      form.TheDateRangeBox.First.Minimum = Minimum;
-      form.TheDateRangeBox.Last.Minimum = Minimum;
-      form.TheDateRangeBox.First.Maximum = Maximum;
-      form.TheDateRangeBox.Last.Maximum = Maximum;
+      frm.TheDateRangeBox.First.CanBeEmptyMode = CanBeEmptyMode;
+      frm.TheDateRangeBox.Last.CanBeEmptyMode = CanBeEmptyMode;
+      frm.TheDateRangeBox.First.Minimum = Minimum;
+      frm.TheDateRangeBox.Last.Minimum = Minimum;
+      frm.TheDateRangeBox.First.Maximum = Maximum;
+      frm.TheDateRangeBox.Last.Maximum = Maximum;
 
       if (HasConfig)
       {
@@ -298,18 +298,18 @@ namespace FreeLibSet.Forms
         _NLastDate = ConfigPart.GetNullableDate(ConfigName + "-LastDate");
       }
 
-      form.TheDateRangeBox.First.NValue = _NFirstDate;
-      form.TheDateRangeBox.Last.NValue = _NLastDate;
+      frm.TheDateRangeBox.First.NValue = _NFirstDate;
+      frm.TheDateRangeBox.Last.NValue = _NLastDate;
 
-      EFPFormCheck fc = new EFPFormCheck(form.FormProvider);
+      EFPFormCheck fc = new EFPFormCheck(frm.FormProvider);
       fc.Validating += FormCheck;
-      fc.Tag = form;
+      fc.Tag = frm;
 
-      if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
+      if (EFPApp.ShowDialog(frm, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      _NFirstDate = form.TheDateRangeBox.First.NValue;
-      _NLastDate = form.TheDateRangeBox.Last.NValue;
+      _NFirstDate = frm.TheDateRangeBox.First.NValue;
+      _NLastDate = frm.TheDateRangeBox.Last.NValue;
 
       if (HasConfig)
       {
@@ -322,10 +322,10 @@ namespace FreeLibSet.Forms
 
     private void FormCheck(object sender, UIValidatingEventArgs args)
     {
-      EFPFormCheck FormCheck = (EFPFormCheck)sender;
-      DateRangeForm Form = (DateRangeForm)(FormCheck.Tag);
-      NFirstDate = Form.TheDateRangeBox.First.NValue;
-      NLastDate = Form.TheDateRangeBox.Last.NValue;
+      EFPFormCheck formCheck = (EFPFormCheck)sender;
+      DateRangeForm form = (DateRangeForm)(formCheck.Tag);
+      NFirstDate = form.TheDateRangeBox.First.NValue;
+      NLastDate = form.TheDateRangeBox.Last.NValue;
 
       if (HasValidators)
         Validators.Validate(args);

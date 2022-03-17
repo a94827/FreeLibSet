@@ -362,7 +362,7 @@ namespace FreeLibSet.Drawing
           {
             // Пытаемся перебрать все варианты стилей
             // Сначала меняем по одному атрибуту, потом по два, потом - три, потом - все четыре
-            int[] Keys = new int[15]{
+            int[] keys = new int[15]{
               0x1, 0x2, 0x4, 0x8,
               0x3, 0x5, 0x6, 0x9, 0xA, 0xC,
               0x7, 0xB, 0xD, 0xE,
@@ -372,14 +372,14 @@ namespace FreeLibSet.Drawing
             for (int i = 0; i < 15; i++)
             {
               st = st1;
-              int Key = Keys[i];
-              if ((Key & 0x1) != 0)
+              int key = keys[i];
+              if ((key & 0x1) != 0)
                 st = InvStyle(st, FontStyle.Italic);
-              if ((Key & 0x2) != 0)
+              if ((key & 0x2) != 0)
                 st = InvStyle(st, FontStyle.Bold);
-              if ((Key & 0x4) != 0)
+              if ((key & 0x4) != 0)
                 st = InvStyle(st, FontStyle.Underline);
-              if ((Key & 0x8) != 0)
+              if ((key & 0x8) != 0)
                 st = InvStyle(st, FontStyle.Strikeout);
 
               if (TryCreateFont(st))
@@ -622,7 +622,7 @@ namespace FreeLibSet.Drawing
     public void DrawString(string text, RectangleF rc)
     {
       ReadyMatrix();
-      Matrix OrgMatrix = _Graphics.Transform;
+      Matrix orgMatrix = _Graphics.Transform;
       _Graphics.Transform = _CurrentMatrix;
       try
       {
@@ -638,7 +638,7 @@ namespace FreeLibSet.Drawing
       }
       finally
       {
-        _Graphics.Transform = OrgMatrix;
+        _Graphics.Transform = orgMatrix;
       }
     }
 
@@ -661,7 +661,7 @@ namespace FreeLibSet.Drawing
     public void DrawString(string text, PointF pt)
     {
       ReadyMatrix();
-      Matrix OrgMatrix = _Graphics.Transform;
+      Matrix orgMatrix = _Graphics.Transform;
       _Graphics.Transform = _CurrentMatrix;
       try
       {
@@ -670,7 +670,7 @@ namespace FreeLibSet.Drawing
       }
       finally
       {
-        _Graphics.Transform = OrgMatrix;
+        _Graphics.Transform = orgMatrix;
       }
     }
 
@@ -686,7 +686,7 @@ namespace FreeLibSet.Drawing
       if (rc.Width <= 0f || rc.Height <= 0f)
         return; // негде рисовать
 
-      float MaxW = 0f;
+      float maxW = 0f;
       // Размеры всех строк по вертикали
       SizeF sz1;
       float lh;
@@ -694,71 +694,71 @@ namespace FreeLibSet.Drawing
       sz1 = PointsToPageUnits(sz1);
       lh = sz1.Height;
 
-      float WholeH = lines.Length * lh;
+      float wholeH = lines.Length * lh;
 
       int i;
       for (i = 0; i < lines.Length; i++)
       {
         SizeF sz = MeasureString(lines[i]);
-        MaxW = Math.Max(MaxW, sz.Width);
+        maxW = Math.Max(maxW, sz.Width);
       }
       // Прежде, чем уменьшать размер шрифта, пытаемся уменьшить межстрочный интервал
-      if (WholeH > rc.Height)
+      if (wholeH > rc.Height)
       {
-        float ScaleY1 = rc.Height / WholeH;
-        if (LineHeight * ScaleY1 < FontHeight)
-          ScaleY1 = FontHeight / LineHeight;
-        lh = lh * ScaleY1;
-        WholeH = lines.Length * lh;
+        float scaleY1 = rc.Height / wholeH;
+        if (LineHeight * scaleY1 < FontHeight)
+          scaleY1 = FontHeight / LineHeight;
+        lh = lh * scaleY1;
+        wholeH = lines.Length * lh;
       }
 
       // Дополнительные размерные множители, если текст не помещается
-      float OrgFontHeight = FontHeight;
-      float OrgFontWidth = FontWidth;
+      float orgFontHeight = FontHeight;
+      float orgFontWidth = FontWidth;
       try
       {
-        float ScaleY2 = 1f;
-        if (WholeH > rc.Height)
+        float scaleY2 = 1f;
+        if (wholeH > rc.Height)
         {
-          ScaleY2 = rc.Height / WholeH;
-          FontHeight = FontHeight * ScaleY2;
+          scaleY2 = rc.Height / wholeH;
+          FontHeight = FontHeight * scaleY2;
         }
-        float ScaleX2 = 1f;
-        if (MaxW > rc.Width)
+        float scaleX2 = 1f;
+        if (maxW > rc.Width)
         {
-          ScaleX2 = rc.Width / MaxW;
-          FontWidth = FontWidth * ScaleX2;
+          scaleX2 = rc.Width / maxW;
+          FontWidth = FontWidth * scaleX2;
         }
 
 
         // По вертикали исходный прямоугольник требуется пересчитывать, т.к.
         // вертикальное выравнивание работать не будет
-        float YOff;
+        float yOff;
         switch (StringFormat.LineAlignment)
         {
           case StringAlignment.Far:
-            YOff = rc.Height - WholeH * ScaleY2;
+            yOff = rc.Height - wholeH * scaleY2;
             break;
           case StringAlignment.Center:
-            YOff = (rc.Height - WholeH * ScaleY2) / 2f;
+            yOff = (rc.Height - wholeH * scaleY2) / 2f;
             break;
           default:
-            YOff = 0f;
+            yOff = 0f;
             break;
         }
         for (i = 0; i < lines.Length; i++)
         {
           RectangleF rc1 = rc;
-          rc1.Y += YOff;
-          rc1.Y += lh * ScaleY2 * i;
-          rc1.Height = lh * ScaleY2;
+          rc1.Y += yOff;
+          rc1.Y += lh * scaleY2 * i;
+          rc1.Height = lh * scaleY2;
           DrawString(lines[i], rc1);
         }
       }
       finally
       {
-        FontHeight = OrgFontHeight;
-        FontWidth = OrgFontWidth;
+        FontHeight = orgFontHeight;
+        FontWidth = orgFontWidth;
       }
     }
 
@@ -784,7 +784,7 @@ namespace FreeLibSet.Drawing
     private PointF PointsToPageUnits(PointF pt)
     {
       _Point1Array[0] = pt;
-      GraphicsUnit OldPU = Graphics.PageUnit;
+      GraphicsUnit oldPU = Graphics.PageUnit;
       try
       {
         Graphics.PageUnit = GraphicsUnit.Point;
@@ -792,7 +792,7 @@ namespace FreeLibSet.Drawing
       }
       finally
       {
-        Graphics.PageUnit = OldPU;
+        Graphics.PageUnit = oldPU;
       }
       Graphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device, _Point1Array);
       return _Point1Array[0];
@@ -966,15 +966,15 @@ namespace FreeLibSet.Drawing
 #if DEBUG
       CheckGraphics();
 #endif
-      float ScaleX = FontWidth / DefaultFontWidth;
-      float ScaleY = FontHeight / DefaultFontHeight;
+      float scaleX = FontWidth / DefaultFontWidth;
+      float scaleY = FontHeight / DefaultFontHeight;
 
       _CurrentMatrix = Graphics.Transform.Clone();
-      _CurrentMatrix.Scale(ScaleX, ScaleY);
+      _CurrentMatrix.Scale(scaleX, scaleY);
       if (_CoordMatrix != null)
         _CoordMatrix.Dispose();
       _CoordMatrix = new Matrix();
-      _CoordMatrix.Scale(1.0f / ScaleX, 1.0f / ScaleY);
+      _CoordMatrix.Scale(1.0f / scaleX, 1.0f / scaleY);
     }
 
     private PointF[] _TrPoint = new PointF[2]; // чтобы не создавать каждый раз

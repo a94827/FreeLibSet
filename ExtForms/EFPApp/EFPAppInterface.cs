@@ -190,11 +190,11 @@ namespace FreeLibSet.Forms
       {
         if (EFPApp.DefaultScreen != null) // на всякий случай
         {
-          int Delta = SystemInformation.CaptionHeight + 2 * SystemInformation.BorderSize.Width;
-          Size Offset = new Size(Delta * (_TotalMainWindowCount % 5), Delta * (_TotalMainWindowCount % 5));
+          int delta = SystemInformation.CaptionHeight + 2 * SystemInformation.BorderSize.Width;
+          Size offset = new Size(delta * (_TotalMainWindowCount % 5), delta * (_TotalMainWindowCount % 5));
 
           layout.MainWindow.StartPosition = FormStartPosition.Manual;
-          layout.MainWindow.Location = EFPApp.DefaultScreen.WorkingArea.Location + Offset;
+          layout.MainWindow.Location = EFPApp.DefaultScreen.WorkingArea.Location + offset;
           layout.MainWindow.Size = new System.Drawing.Size(EFPApp.DefaultScreen.WorkingArea.Width * 2 / 3,
             EFPApp.DefaultScreen.WorkingArea.Height * 2 / 3);
         }
@@ -268,18 +268,18 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal protected virtual void InitMainWindowTitles()
     {
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(false);
-      if (Layouts.Length == 1)
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
+      if (layouts.Length == 1)
       {
-        Layouts[0].MainWindowNumberText = String.Empty;
-        Layouts[0].MainWindow.Text = EFPApp.MainWindowTitle;
+        layouts[0].MainWindowNumberText = String.Empty;
+        layouts[0].MainWindow.Text = EFPApp.MainWindowTitle;
       }
       else
       {
-        for (int i = 0; i < Layouts.Length; i++)
+        for (int i = 0; i < layouts.Length; i++)
         {
-          Layouts[i].MainWindowNumberText = " #" + (i + 1).ToString();
-          Layouts[i].MainWindow.Text = EFPApp.MainWindowTitle + " " + Layouts[i].MainWindowNumberText;
+          layouts[i].MainWindowNumberText = " #" + (i + 1).ToString();
+          layouts[i].MainWindow.Text = EFPApp.MainWindowTitle + " " + layouts[i].MainWindowNumberText;
         }
       }
     }
@@ -293,10 +293,10 @@ namespace FreeLibSet.Forms
       if (!CloseAllChildren())
         return false;
 
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(false);
-      for (int i = 0; i < Layouts.Length; i++)
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
+      for (int i = 0; i < layouts.Length; i++)
       {
-        if (!Layouts[i].CloseMainWindow())
+        if (!layouts[i].CloseMainWindow())
           return false;
       }
       return true;
@@ -318,11 +318,11 @@ namespace FreeLibSet.Forms
     /// <returns>Массив форм</returns>
     public Form[] GetChildForms(bool useZOrder)
     {
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(useZOrder);
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(useZOrder);
       List<Form> Forms = new List<Form>();
-      for (int i = 0; i < Layouts.Length; i++)
+      for (int i = 0; i < layouts.Length; i++)
       {
-        Form[] a = Layouts[i].GetChildForms(useZOrder);
+        Form[] a = layouts[i].GetChildForms(useZOrder);
         Forms.AddRange(a);
       }
       return Forms.ToArray();
@@ -439,10 +439,10 @@ namespace FreeLibSet.Forms
       if (form == null)
         return null;
 
-      foreach (EFPAppMainWindowLayout Layout in _MainWindows)
+      foreach (EFPAppMainWindowLayout layout in _MainWindows)
       {
-        if (Layout.ContainsForm(form))
-          return Layout;
+        if (layout.ContainsForm(form))
+          return layout;
       }
       return null;
     }
@@ -456,12 +456,12 @@ namespace FreeLibSet.Forms
     /// <returns>Найденная форма или null</returns>
     public Form FindChildForm(Type formType)
     {
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(false);
-      for (int i = 0; i < Layouts.Length; i++)
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
+      for (int i = 0; i < layouts.Length; i++)
       {
-        Form Form = Layouts[i].FindChildForm(formType);
-        if (Form != null)
-          return Form;
+        Form form = layouts[i].FindChildForm(formType);
+        if (form != null)
+          return form;
       }
       return null;
     }
@@ -475,12 +475,12 @@ namespace FreeLibSet.Forms
     public T FindChildForm<T>()
       where T : Form
     {
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(false);
-      for (int i = 0; i < Layouts.Length; i++)
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
+      for (int i = 0; i < layouts.Length; i++)
       {
-        T Form = Layouts[i].FindChildForm<T>();
-        if (Form != null)
-          return Form;
+        T form = layouts[i].FindChildForm<T>();
+        if (form != null)
+          return form;
       }
       return null;
     }
@@ -492,15 +492,15 @@ namespace FreeLibSet.Forms
     /// <returns>Массив форм</returns>
     public Form[] FindChildForms(Type formType)
     {
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(false);
-      if (Layouts.Length == 1)
-        return Layouts[0].FindChildForms(formType);
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
+      if (layouts.Length == 1)
+        return layouts[0].FindChildForms(formType);
       else
       {
-        List<Form> List = new List<Form>();
-        for (int i = 0; i < Layouts.Length; i++)
-          Layouts[i].FindChildFormsInternal(List, formType);
-        return List.ToArray();
+        List<Form> lst = new List<Form>();
+        for (int i = 0; i < layouts.Length; i++)
+          layouts[i].FindChildFormsInternal(lst, formType);
+        return lst.ToArray();
       }
     }
 
@@ -512,15 +512,15 @@ namespace FreeLibSet.Forms
     public T[] FindChildForms<T>()
       where T : Form
     {
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(false);
-      if (Layouts.Length == 1)
-        return Layouts[0].FindChildForms<T>();
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
+      if (layouts.Length == 1)
+        return layouts[0].FindChildForms<T>();
       else
       {
-        List<T> List = new List<T>();
-        for (int i = 0; i < Layouts.Length; i++)
-          Layouts[i].FindChildFormsInternal<T>(List);
-        return List.ToArray();
+        List<T> lst = new List<T>();
+        for (int i = 0; i < layouts.Length; i++)
+          layouts[i].FindChildFormsInternal<T>(lst);
+        return lst.ToArray();
       }
     }
 
@@ -580,10 +580,10 @@ namespace FreeLibSet.Forms
     /// </returns>
     public bool CloseAllChildren()
     {
-      EFPAppMainWindowLayout[] Layouts = GetMainWindowLayouts(true); // в Z-порядке
-      for (int i = 0; i < Layouts.Length; i++)
+      EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(true); // в Z-порядке
+      for (int i = 0; i < layouts.Length; i++)
       {
-        if (!Layouts[i].CloseAllChildren())
+        if (!layouts[i].CloseAllChildren())
           return false;
       }
       return true;
@@ -660,68 +660,68 @@ namespace FreeLibSet.Forms
     private void DoSaveComposition(CfgPart cfg)
     {
       cfg.SetString("InterfaceType", this.Name);
-      EFPAppMainWindowLayout[] Layouts = null;
-      int CurrWindowIndex;
+      EFPAppMainWindowLayout[] layouts = null;
+      int currWindowIndex;
       if (!IsSDI)
       {
         // Главные окна
-        Layouts = GetMainWindowLayouts(false); // в том порядке, как открыты
-        cfg.SetInt("MainWindowCount", Layouts.Length);
-        CurrWindowIndex = -1;
-        for (int i = 0; i < Layouts.Length; i++)
+        layouts = GetMainWindowLayouts(false); // в том порядке, как открыты
+        cfg.SetInt("MainWindowCount", layouts.Length);
+        currWindowIndex = -1;
+        for (int i = 0; i < layouts.Length; i++)
         {
           CfgPart cfgMainWindow = cfg.GetChild("MainWindow" + (i + 1).ToString(), true);
-          Layouts[i].Bounds.FromControl(Layouts[i].MainWindow);
+          layouts[i].Bounds.FromControl(layouts[i].MainWindow);
           CfgPart cfgBounds = cfgMainWindow.GetChild("Bounds", true);
-          Layouts[i].Bounds.WriteConfig(cfgBounds);
-          Layouts[i].WriteLayoutConfig(cfgMainWindow);
+          layouts[i].Bounds.WriteConfig(cfgBounds);
+          layouts[i].WriteLayoutConfig(cfgMainWindow);
 
-          if (Object.ReferenceEquals(Layouts[i], CurrentMainWindowLayout))
-            CurrWindowIndex = i;
+          if (Object.ReferenceEquals(layouts[i], CurrentMainWindowLayout))
+            currWindowIndex = i;
         }
-        if (CurrWindowIndex >= 0)
-          cfg.SetInt("CurrentMainWindow", CurrWindowIndex + 1);
+        if (currWindowIndex >= 0)
+          cfg.SetInt("CurrentMainWindow", currWindowIndex + 1);
       }
 
-      Form[] ChildForms = GetChildForms(false); // в порядке создания, а не Z-Order
+      Form[] childForms = GetChildForms(false); // в порядке создания, а не Z-Order
       //Part.SetInt("FormCount", ChildForms.Length);
       cfg.SetInt("FormCount", 0); // резервируем место 
       int cnt = 0; // некоторые окна могут не сохраняться
-      CurrWindowIndex = -1;
-      Form CurrForm = this.CurrentChildForm;
-      for (int i = 0; i < ChildForms.Length; i++)
+      currWindowIndex = -1;
+      Form currForm = this.CurrentChildForm;
+      for (int i = 0; i < childForms.Length; i++)
       {
-        if (!EFPApp.FormWantsSaveComposition(ChildForms[i]))
+        if (!EFPApp.FormWantsSaveComposition(childForms[i]))
           continue;
 
         cnt++;
 
-        EFPAppMainWindowLayout Layout = FindMainWindowLayout(ChildForms[i]);
-        if (Layout == null)
-          throw new BugException("Не нашли EFPAppMainWindowLayout для дочерней формы " + ChildForms[i].ToString());
+        EFPAppMainWindowLayout layout = FindMainWindowLayout(childForms[i]);
+        if (layout == null)
+          throw new BugException("Не нашли EFPAppMainWindowLayout для дочерней формы " + childForms[i].ToString());
         CfgPart cfgForm = cfg.GetChild("Form" + cnt.ToString(), true);
-        if (Layouts != null)
+        if (layouts != null)
         {
           // 27.12.2020 Лишняя проверка
           //          if (Layout != null)
           //          {
-          int p = Array.IndexOf<EFPAppMainWindowLayout>(Layouts, Layout);
+          int p = Array.IndexOf<EFPAppMainWindowLayout>(layouts, layout);
           cfgForm.SetInt("MainWindow", p + 1);
           //          }
         }
         else
-          Layout.WriteLayoutConfig(cfgForm);
+          layout.WriteLayoutConfig(cfgForm);
 
-        EFPFormProvider FormProvider = EFPFormProvider.FindFormProviderRequired(ChildForms[i]);
-        FormProvider.WriteComposition(cfgForm);
+        EFPFormProvider formProvider = EFPFormProvider.FindFormProviderRequired(childForms[i]);
+        formProvider.WriteComposition(cfgForm);
 
-        if (Object.ReferenceEquals(ChildForms[i], CurrForm))
-          CurrWindowIndex = cnt - 1;
+        if (Object.ReferenceEquals(childForms[i], currForm))
+          currWindowIndex = cnt - 1;
       }
 
       cfg.SetInt("FormCount", cnt);
-      if (CurrWindowIndex >= 0)
-        cfg.SetInt("CurrentForm", CurrWindowIndex + 1);
+      if (currWindowIndex >= 0)
+        cfg.SetInt("CurrentForm", currWindowIndex + 1);
 
       //// Превью
       //try
@@ -790,9 +790,9 @@ namespace FreeLibSet.Forms
 
       if (!IsSDI)
       {
-        int MainWindowCount = cfg.GetInt("MainWindowCount");
-        int CurrMainWindowIndex = cfg.GetInt("CurrentMainWindow") - 1;
-        for (int i = 0; i < MainWindowCount; i++)
+        int mainWindowCount = cfg.GetInt("MainWindowCount");
+        int currMainWindowIndex = cfg.GetInt("CurrentMainWindow") - 1;
+        for (int i = 0; i < mainWindowCount; i++)
         {
           EFPAppMainWindowLayout mwl = ShowMainWindow();
           mwls.Add(mwl);
@@ -820,44 +820,44 @@ namespace FreeLibSet.Forms
           mwls.Add(mwl);
         }
 
-        if (CurrMainWindowIndex >= 0 && CurrMainWindowIndex < mwls.Count)
-          mwls[CurrMainWindowIndex].MainWindow.Select();
+        if (currMainWindowIndex >= 0 && currMainWindowIndex < mwls.Count)
+          mwls[currMainWindowIndex].MainWindow.Select();
       }
 
-      int ChildFormCount = cfg.GetInt("FormCount");
-      int CurrChildFormIndex = cfg.GetInt("CurrentForm") - 1;
-      Form CurrForm = null;
-      for (int i = 0; i < ChildFormCount; i++)
+      int childFormCount = cfg.GetInt("FormCount");
+      int currChildFormIndex = cfg.GetInt("CurrentForm") - 1;
+      Form currForm = null;
+      for (int i = 0; i < childFormCount; i++)
       {
         CfgPart cfgForm = cfg.GetChild("Form" + (i + 1).ToString(), false);
         if (cfgForm != null)
         {
-          EFPFormCreatorParams Params = new EFPFormCreatorParams(cfgForm);
+          EFPFormCreatorParams creatorParams = new EFPFormCreatorParams(cfgForm);
           try
           {
-            Form Form;
+            Form form;
             try
             {
-              Form = EFPApp.CreateForm(Params);
+              form = EFPApp.CreateForm(creatorParams);
             }
             catch (Exception e)
             {
-              EFPApp.ErrorMessageBox(e.Message, "Возникла ошибка при восстановлении формы \"" + Params.Title + "\"");
+              EFPApp.ErrorMessageBox(e.Message, "Возникла ошибка при восстановлении формы \"" + creatorParams.Title + "\"");
               continue;
             }
-            if (Form == null)
+            if (form == null)
               continue;
 
-            EFPFormProvider FormProvider = EFPFormProvider.FindFormProviderRequired(Form);
-            if (FormProvider.HasBeenShown)
-              throw new BugException("При восстановлении формы \"" + Form.ToString() + "\" она была досрочно выведена на экран");
+            EFPFormProvider formProvider = EFPFormProvider.FindFormProviderRequired(form);
+            if (formProvider.HasBeenShown)
+              throw new BugException("При восстановлении формы \"" + form.ToString() + "\" она была досрочно выведена на экран");
 
             if (!IsSDI)
             {
               EFPAppMainWindowLayout mwl = mwls[0];
-              int MainWindow = cfgForm.GetInt("MainWindow");
-              if (MainWindow > 0 && MainWindow <= mwls.Count)
-                mwl = mwls[MainWindow - 1];
+              int mainWindow = cfgForm.GetInt("MainWindow");
+              if (mainWindow > 0 && mainWindow <= mwls.Count)
+                mwl = mwls[mainWindow - 1];
 
               mwl.MainWindow.Select();
               mwl.ReadLayoutConfig(cfgForm);
@@ -865,9 +865,9 @@ namespace FreeLibSet.Forms
 
             try
             {
-              PrepareChildForm(Form);
+              PrepareChildForm(form);
               // лишнее if (FormProvider != null)
-              FormProvider.ReadComposition(cfgForm);
+              formProvider.ReadComposition(cfgForm);
 
               if (IsSDI)
               {
@@ -875,24 +875,24 @@ namespace FreeLibSet.Forms
                 mwl.ReadLayoutConfig(cfgForm);
               }
 
-              ShowChildForm(Form);
-              if (i == CurrChildFormIndex)
-                CurrForm = Form;
+              ShowChildForm(form);
+              if (i == currChildFormIndex)
+                currForm = form;
             }
             catch (Exception e)
             {
-              EFPApp.ShowException(e, "Не удалось показать форму \"" + Params.Title + "\"");
+              EFPApp.ShowException(e, "Не удалось показать форму \"" + creatorParams.Title + "\"");
             }
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Возникла неизвестная ошибка при восстановлении формы №" + (i + 1).ToString() + " \"" + Params.Title + "\"");
+            EFPApp.ShowException(e, "Возникла неизвестная ошибка при восстановлении формы №" + (i + 1).ToString() + " \"" + creatorParams.Title + "\"");
           }
         }
       } // цикл по дочерним формам
 
-      if (CurrForm != null)
-        CurrForm.Select();
+      if (currForm != null)
+        currForm.Select();
 
       //if (IsSDI && ChildFormCount==0)
       //  EFPApp.def
@@ -939,8 +939,8 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("cfg");
 #endif
 
-      foreach (EFPAppMainWindowLayout Layout in this)
-        Layout.ReadLayoutConfig(cfg);
+      foreach (EFPAppMainWindowLayout layout in this)
+        layout.ReadLayoutConfig(cfg);
 
       EFPApp.SetInterfaceChanged(); // требуется принудительное обновление меню
     }

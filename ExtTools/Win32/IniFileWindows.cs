@@ -106,9 +106,8 @@ namespace FreeLibSet.Win32
                                                           string lpKeyName,
                                                           string lpString,
                                                           string lpFileName);
-
-
     }
+
     #endregion
 
     #region Конструктор

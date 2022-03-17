@@ -118,32 +118,32 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public EFPDataGridViewConfig Clone(IEFPGridControl controlProvider)
     {
-      EFPDataGridViewConfig Res = new EFPDataGridViewConfig();
+      EFPDataGridViewConfig res = new EFPDataGridViewConfig();
 
-      EFPDataViewColumnInfo[] RealColInfos = controlProvider.GetVisibleColumnsInfo();
+      EFPDataViewColumnInfo[] realColInfos = controlProvider.GetVisibleColumnsInfo();
 
-      for (int i = 0; i < RealColInfos.Length; i++)
+      for (int i = 0; i < realColInfos.Length; i++)
       {
-        if (RealColInfos[i].ColumnProducer == null) // чужой столбец
+        if (realColInfos[i].ColumnProducer == null) // чужой столбец
           continue;
-        EFPDataGridViewConfigColumn Col2 = new EFPDataGridViewConfigColumn(RealColInfos[i].Name); // ??
-        controlProvider.InitColumnConfig(Col2);
+        EFPDataGridViewConfigColumn col2 = new EFPDataGridViewConfigColumn(realColInfos[i].Name); // ??
+        controlProvider.InitColumnConfig(col2);
 
-        if (Res.Columns.Contains(Col2.ColumnName))
+        if (res.Columns.Contains(col2.ColumnName))
           continue; // бяка - два одинаковых столбца
-        Res.Columns.Add(Col2);
+        res.Columns.Add(col2);
       }
       // Не учитываем количество замороженных столбцов в просмотре. Там могут быть
       // лишние столбцы. Берем количество из текущей настройки
       //Res.FrozenColumns = DocGridHandler.FrozenColumns;
-      Res.FrozenColumns = FrozenColumns;
-      Res.StartColumnName = StartColumnName;
+      res.FrozenColumns = FrozenColumns;
+      res.StartColumnName = StartColumnName;
 
       // Всплывающие подсказки просто копируются
-      Res.CurrentCellToolTip = CurrentCellToolTip;
+      res.CurrentCellToolTip = CurrentCellToolTip;
       for (int i = 0; i < ToolTips.Count; i++)
-        Res.ToolTips.Add(ToolTips[i]);
-      return Res;
+        res.ToolTips.Add(ToolTips[i]);
+      return res;
     }
 
     #endregion
@@ -230,25 +230,25 @@ namespace FreeLibSet.Forms
 #endif
 
       Columns.Clear();
-      string VisibleCols = cfg.GetString("VisibleColumns");
-      string[] a = VisibleCols.Split(',');
+      string visibleCols = cfg.GetString("VisibleColumns");
+      string[] a = visibleCols.Split(',');
       CfgPart cfg2 = cfg.GetChild("Columns", true);
       for (int i = 0; i < a.Length; i++)
       {
-        string ColumnName = a[i].Trim();
-        if (String.IsNullOrEmpty(ColumnName))
+        string columnName = a[i].Trim();
+        if (String.IsNullOrEmpty(columnName))
           continue;
-        EFPDataGridViewConfigColumn Col = new EFPDataGridViewConfigColumn(ColumnName);
-        CfgPart cfg3 = cfg2.GetChild(ColumnName, false);
+        EFPDataGridViewConfigColumn col = new EFPDataGridViewConfigColumn(columnName);
+        CfgPart cfg3 = cfg2.GetChild(columnName, false);
         if (cfg3 != null)
         {
-          Col.Width = cfg3.GetInt("Width");
-          Col.FillMode = cfg3.GetBool("FillMode");
+          col.Width = cfg3.GetInt("Width");
+          col.FillMode = cfg3.GetBool("FillMode");
           int x = cfg3.GetInt("FillWeight");
           if (x > 0)
-            Col.FillWeight = x;
+            col.FillWeight = x;
         }
-        Columns.Add(Col);
+        Columns.Add(col);
       }
       if (Columns.Count == 0)
         throw new InvalidOperationException("В конфигурации не задано ни одного столбца");
@@ -257,11 +257,11 @@ namespace FreeLibSet.Forms
       StartColumnName = cfg.GetString("StartColumn");
 
       CurrentCellToolTip = !cfg.GetBool("NoCurrentCellToolTip");
-      string ToolTipNames = cfg.GetString("ToolTips");
+      string toolTipNames = cfg.GetString("ToolTips");
       ToolTips.Clear();
-      if (!String.IsNullOrEmpty(ToolTipNames))
+      if (!String.IsNullOrEmpty(toolTipNames))
       {
-        a = ToolTipNames.Split(',');
+        a = toolTipNames.Split(',');
         for (int i = 0; i < a.Length; i++)
           ToolTips.Add(a[i].Trim());
       }
@@ -305,13 +305,13 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public EFPDataGridViewConfig Clone()
     {
-      EFPDataGridViewConfig Res = new EFPDataGridViewConfig();
-      Columns.CopyTo(Res.Columns);
-      Res.FrozenColumns = FrozenColumns;
-      Res.StartColumnName = StartColumnName;
-      Res.CurrentCellToolTip = CurrentCellToolTip;
-      ToolTips.CopyTo(Res.ToolTips);
-      return Res;
+      EFPDataGridViewConfig res = new EFPDataGridViewConfig();
+      Columns.CopyTo(res.Columns);
+      res.FrozenColumns = FrozenColumns;
+      res.StartColumnName = StartColumnName;
+      res.CurrentCellToolTip = CurrentCellToolTip;
+      ToolTips.CopyTo(res.ToolTips);
+      return res;
     }
 
     object ICloneable.Clone()
@@ -358,9 +358,9 @@ namespace FreeLibSet.Forms
     {
       CheckNotReadOnly();
 
-      EFPDataGridViewConfigColumn Item = new EFPDataGridViewConfigColumn(columnName);
-      Add(Item);
-      return Item;
+      EFPDataGridViewConfigColumn item = new EFPDataGridViewConfigColumn(columnName);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -373,11 +373,11 @@ namespace FreeLibSet.Forms
     {
       CheckNotReadOnly();
 
-      EFPDataGridViewConfigColumn Item = new EFPDataGridViewConfigColumn(columnName);
-      Item.FillMode = true;
-      Item.FillWeight = fillWeight;
-      Add(Item);
-      return Item;
+      EFPDataGridViewConfigColumn item = new EFPDataGridViewConfigColumn(columnName);
+      item.FillMode = true;
+      item.FillWeight = fillWeight;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -493,11 +493,11 @@ namespace FreeLibSet.Forms
     /// <returns>Новый объект EFPDataGridViewConfigColumn</returns>
     public EFPDataGridViewConfigColumn Clone()
     {
-      EFPDataGridViewConfigColumn NewCol = new EFPDataGridViewConfigColumn(ColumnName);
-      NewCol.Width = Width;
-      NewCol.FillMode = FillMode;
-      NewCol.FillWeight = FillWeight;
-      return NewCol;
+      EFPDataGridViewConfigColumn newCol = new EFPDataGridViewConfigColumn(ColumnName);
+      newCol.Width = Width;
+      newCol.FillMode = FillMode;
+      newCol.FillWeight = FillWeight;
+      return newCol;
     }
 
     object ICloneable.Clone()
@@ -770,20 +770,20 @@ namespace FreeLibSet.Forms
       if (Value == null)
         Value = new EFPDataGridViewConfig(); // пустышка. Может
 
-      GridConfigForm Form = new GridConfigForm(CallerControlProvider, ConfigCategory, HistoryCategory);
-      Form.Editor = GridProducer.CreateEditor(Form.MainPanel, Form.FormProvider, CallerControlProvider);
+      GridConfigForm form = new GridConfigForm(CallerControlProvider, ConfigCategory, HistoryCategory);
+      form.Editor = GridProducer.CreateEditor(form.MainPanel, form.FormProvider, CallerControlProvider);
 
-      Form.FillSetItems();
+      form.FillSetItems();
 
       // Существующие данные 
-      Form.Editor.WriteFormValues(Value);
-      TempCfg OriginalConfigSection = new TempCfg();
-      Value.WriteConfig(OriginalConfigSection);
-      Form.SetComboBox.SelectedMD5Sum = OriginalConfigSection.MD5Sum(); // выбираем подходящий набор, если есть
+      form.Editor.WriteFormValues(Value);
+      TempCfg originalConfigSection = new TempCfg();
+      Value.WriteConfig(originalConfigSection);
+      form.SetComboBox.SelectedMD5Sum = originalConfigSection.MD5Sum(); // выбираем подходящий набор, если есть
 
-      DialogResult res = EFPApp.ShowDialog(Form, true);
+      DialogResult res = EFPApp.ShowDialog(form, true);
       if (res == DialogResult.OK)
-        Value = Form.ResultConfig;
+        Value = form.ResultConfig;
       return res;
     }
 

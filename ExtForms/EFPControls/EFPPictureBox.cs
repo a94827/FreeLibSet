@@ -181,9 +181,9 @@ namespace FreeLibSet.Forms
       }
 
 
-      Size NewSize;
-      if (ImagingTools.IsImageShrinkNeeded(value, MaxMainImageSize, out NewSize))
-        MainImage = new Bitmap(value, NewSize);
+      Size newSize;
+      if (ImagingTools.IsImageShrinkNeeded(value, MaxMainImageSize, out newSize))
+        MainImage = new Bitmap(value, newSize);
       else
         MainImage = new Bitmap(value); // копия
     }
@@ -322,7 +322,6 @@ namespace FreeLibSet.Forms
       }
     }
     private Size _MaxThumbnailSize;
-
 
     #endregion
 
@@ -623,17 +622,17 @@ namespace FreeLibSet.Forms
       }
 
 #else
-      EFPTwainHandler Handler = new EFPTwainHandler();
+      EFPTwainHandler handler = new EFPTwainHandler();
       try
       {
-        Bitmap[] bmps = Handler.Acqiire();
+        Bitmap[] bmps = handler.Acqiire();
         if (bmps.Length > 0)
           Owner.SetMainImage(bmps[0]);
         // Уничтожением Bitmap занимается EFPTwainHandler 
       }
       finally
       {
-        Handler.Dispose();
+        handler.Dispose();
       }
 #endif
     }
@@ -695,12 +694,12 @@ namespace FreeLibSet.Forms
     {
       base.AfterControlAssigned();
 
-      string AuxText = String.Empty;
+      string auxText = String.Empty;
       if (_Owner.MaxMainImageSize.Width != int.MaxValue)
-        AuxText = ". Изображение будет уменьшено до размера " + _Owner.MaxMainImageSize.Width.ToString() +
+        auxText = ". Изображение будет уменьшено до размера " + _Owner.MaxMainImageSize.Width.ToString() +
           "x" + _Owner.MaxMainImageSize.Height.ToString() + " пикселей";
-      ciOpen.ToolTipText = "Загрузить изображение из файла" + AuxText;
-      ciPaste.ToolTipText = "Вставить изображение из буфера обмена" + AuxText;
+      ciOpen.ToolTipText = "Загрузить изображение из файла" + auxText;
+      ciPaste.ToolTipText = "Вставить изображение из буфера обмена" + auxText;
 
       PerformRefreshItems();
     }

@@ -231,10 +231,10 @@ namespace FreeLibSet.Forms.Diagnostics
 
       if (_Expression == null)
       {
-        TreeNode DummyNode = new TreeNode("Разбор выражения не выполнен");
-        tvExpr.Nodes.Add(DummyNode);
-        DummyNode.ImageKey = "No";
-        DummyNode.SelectedImageKey = DummyNode.ImageKey;
+        TreeNode dummyNode = new TreeNode("Разбор выражения не выполнен");
+        tvExpr.Nodes.Add(dummyNode);
+        dummyNode.ImageKey = "No";
+        dummyNode.SelectedImageKey = dummyNode.ImageKey;
         return;
       }
 
@@ -250,48 +250,48 @@ namespace FreeLibSet.Forms.Diagnostics
       if (s2 != s)
         s += " [" + s2 + "]";
        * */
-      TreeNode Node = new TreeNode(s);
-      Node.Tag = expression;
-      Node.ToolTipText = s + Environment.NewLine+"[" + expression.GetType().ToString() + "]";
-      nodes.Add(Node);
+      TreeNode node = new TreeNode(s);
+      node.Tag = expression;
+      node.ToolTipText = s + Environment.NewLine+"[" + expression.GetType().ToString() + "]";
+      nodes.Add(node);
 
-      List<IExpression> Children = new List<IExpression>();
-      expression.GetChildExpressions(Children);
-      for (int i = 0; i < Children.Count; i++)
-        AddExprNode(Node.Nodes, Children[i]);
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
+        AddExprNode(node.Nodes, children[i]);
 
 
-      ErrorMessageList Errors = ParsingData.GetErrorMessages(expression);
-      switch (Errors.Severity)
+      ErrorMessageList errors = ParsingData.GetErrorMessages(expression);
+      switch (errors.Severity)
       {
         case ErrorMessageKind.Error:
-          Node.ImageKey = "Error";
-          Node.SelectedImageKey = Node.ImageKey;
+          node.ImageKey = "Error";
+          node.SelectedImageKey = node.ImageKey;
           break;
         case ErrorMessageKind.Warning:
-          Node.ImageKey = "Warning";
-          Node.SelectedImageKey = Node.ImageKey;
+          node.ImageKey = "Warning";
+          node.SelectedImageKey = node.ImageKey;
           break;
         default:
-          if (Children.Count == 0)
+          if (children.Count == 0)
           {
-            Node.ImageKey = "Item";
-            Node.SelectedImageKey = Node.ImageKey;
+            node.ImageKey = "Item";
+            node.SelectedImageKey = node.ImageKey;
           }
           else
           {
-            Node.ImageKey = "TreeViewClosedFolder";
-            Node.SelectedImageKey = "TreeViewOpenFolder";
+            node.ImageKey = "TreeViewClosedFolder";
+            node.SelectedImageKey = "TreeViewOpenFolder";
           }
           break;
       }
 
-      List<Token> Tokens = new List<Token>();
-      expression.GetTokens(Tokens);
-      for (int i = 0; i < Tokens.Count; i++)
+      List<Token> tokens = new List<Token>();
+      expression.GetTokens(tokens);
+      for (int i = 0; i < tokens.Count; i++)
       {
-        if (!_TokenIndexExprNodes.ContainsKey(Tokens[i]))
-          _TokenIndexExprNodes.Add(Tokens[i], Node);
+        if (!_TokenIndexExprNodes.ContainsKey(tokens[i]))
+          _TokenIndexExprNodes.Add(tokens[i], node);
       }
     }
 
@@ -325,9 +325,9 @@ namespace FreeLibSet.Forms.Diagnostics
 
     private void EditError(object sender, ErrorMessageItemEventArgs args)
     {
-      ParsingErrorItemData Data = (ParsingErrorItemData)(args.Item.Tag);
+      ParsingErrorItemData data = (ParsingErrorItemData)(args.Item.Tag);
       efpTokens.SetFocus();
-      efpTokens.CurrentRowIndex = Data.TokenIndex;
+      efpTokens.CurrentRowIndex = data.TokenIndex;
     }
 
     #endregion

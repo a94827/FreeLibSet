@@ -68,15 +68,15 @@ namespace FreeLibSet.Forms
           n = 500;
 
         int dx = 0;
-        Control MainC = this.MainPanel.Controls[0];
+        Control mainControl = this.MainPanel.Controls[0];
         try
         {
           using (Graphics gr = this.CreateGraphics())
           {
             gr.PageUnit = GraphicsUnit.Pixel;
             string test = new string('0', n);
-            SizeF sz = gr.MeasureString(test, MainC.Font);
-            dx = (int)(sz.Width) - MainC.ClientSize.Width;
+            SizeF sz = gr.MeasureString(test, mainControl.Font);
+            dx = (int)(sz.Width) - mainControl.ClientSize.Width;
             if (dx < 0)
               dx = 0;
           }
@@ -437,11 +437,11 @@ namespace FreeLibSet.Forms
       form.MaxTextLength = MaxLength;
       form.MainLabel.Text = Prompt;
 
-      TextBox Control = new TextBox();
-      Control.Dock = DockStyle.Top;
-      form.MainPanel.Controls.Add(Control);
+      TextBox control = new TextBox();
+      control.Dock = DockStyle.Top;
+      form.MainPanel.Controls.Add(control);
 
-      EFPTextBox efpText = new EFPTextBox(form.FormProvider, Control);
+      EFPTextBox efpText = new EFPTextBox(form.FormProvider, control);
       efpText.Label = form.MainLabel;
       efpText.Validating += new UIValidatingEventHandler(efpText_Validating);
 
@@ -449,9 +449,9 @@ namespace FreeLibSet.Forms
         efpText.MaxLength = MaxLength;
 
       efpText.CanBeEmptyMode = CanBeEmptyMode;
-      Control.CharacterCasing = CharacterCasing;
+      control.CharacterCasing = CharacterCasing;
       if (IsPassword)
-        Control.UseSystemPasswordChar = true;
+        control.UseSystemPasswordChar = true;
 
       if (HasConfig)
       {
@@ -513,10 +513,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вход и выход: редактируемое значение
     /// </summary>
-    public string Text 
-    { 
-      get { return _Text; } 
-      set 
+    public string Text
+    {
+      get { return _Text; }
+      set
       {
         if (value == null)
           value = String.Empty;
@@ -525,9 +525,9 @@ namespace FreeLibSet.Forms
           _TextEx.OwnerSetValue(value);
         if (_IsNotEmptyEx != null)
           _IsNotEmptyEx.OwnerSetValue(!String.IsNullOrEmpty(value));
-      } 
+      }
     }
-           private string _Text;
+    private string _Text;
 
     /// <summary>
     /// Управляемое свойство для Text
@@ -604,15 +604,15 @@ namespace FreeLibSet.Forms
     /// Список строк, из которых можно выбрать значение.
     /// Пользователь может вводить строки не из списка, это не считается ошибкой.
     /// </summary>
-    public string[] Items 
-    { 
-      get { return _Items; } 
-      set 
+    public string[] Items
+    {
+      get { return _Items; }
+      set
       {
         if (value == null)
           _Items = DataTools.EmptyStrings;
         else
-          _Items = value; 
+          _Items = value;
       }
     }
     private string[] _Items;
@@ -633,13 +633,13 @@ namespace FreeLibSet.Forms
       form.MaxTextLength = MaxLength;
       form.MainLabel.Text = Prompt;
 
-      ComboBox Control = new ComboBox();
-      Control.Dock = DockStyle.Top;
-      Control.DropDownStyle = ComboBoxStyle.DropDown;
-      form.MainPanel.Controls.Add(Control);
-      Control.Items.AddRange(Items);
+      ComboBox control = new ComboBox();
+      control.Dock = DockStyle.Top;
+      control.DropDownStyle = ComboBoxStyle.DropDown;
+      form.MainPanel.Controls.Add(control);
+      control.Items.AddRange(Items);
 
-      EFPTextComboBox efpText = new EFPTextComboBox(form.FormProvider, Control);
+      EFPTextComboBox efpText = new EFPTextComboBox(form.FormProvider, control);
       efpText.Label = form.MainLabel;
       efpText.Validating += new UIValidatingEventHandler(efpText_Validating);
 
@@ -699,7 +699,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
-
 
     #region Text
 
@@ -819,12 +818,12 @@ namespace FreeLibSet.Forms
       form.FormProvider.HelpContext = HelpContext;
       form.MainLabel.Text = Prompt;
 
-      MaskedTextBox Control = new MaskedTextBox();
-      Control.Dock = DockStyle.Top;
+      MaskedTextBox control = new MaskedTextBox();
+      control.Dock = DockStyle.Top;
 
-      form.MainPanel.Controls.Add(Control);
+      form.MainPanel.Controls.Add(control);
 
-      EFPMaskedTextBox efpText = new EFPMaskedTextBox(form.FormProvider, Control);
+      EFPMaskedTextBox efpText = new EFPMaskedTextBox(form.FormProvider, control);
       efpText.Label = form.MainLabel;
 
       efpText.Mask = Mask;
@@ -895,10 +894,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вход и выход: редактируемое значение с поддержкой null
     /// </summary>
-    public T? NValue 
-    { get { return _NValue; } 
-      set 
-      { 
+    public T? NValue
+    {
+      get { return _NValue; }
+      set
+      {
         _NValue = value;
         if (_NValueEx != null)
           _NValueEx.OwnerSetValue(value);
@@ -1428,11 +1428,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вход и выход: редактируемое значение с поддержкой null
     /// </summary>
-    public DateTime? NValue 
-    { 
-      get { return _NValue; } 
-      set 
-      { 
+    public DateTime? NValue
+    {
+      get { return _NValue; }
+      set
+      {
         _NValue = value;
 
         if (_NValueEx != null)
@@ -1659,18 +1659,18 @@ namespace FreeLibSet.Forms
       if (UseCalendar)
       {
         form.FixedSize = true;
-        MonthCalendar Control = new MonthCalendar();
-        int dw = Control.Width - form.MainPanel.ClientSize.Width;
-        int dh = Control.Height - form.MainPanel.ClientSize.Height;
-        Control.Dock = DockStyle.Top;
-        form.MainPanel.Controls.Add(Control);
+        MonthCalendar control = new MonthCalendar();
+        int dw = control.Width - form.MainPanel.ClientSize.Width;
+        int dh = control.Height - form.MainPanel.ClientSize.Height;
+        control.Dock = DockStyle.Top;
+        form.MainPanel.Controls.Add(control);
         form.Width += dw;
         form.MinimumSize = new Size(form.MinimumSize.Width + dw, form.MinimumSize.Height + dh);
         form.btnNo.Visible = CanBeEmpty; // 27.10.2016
         //if (dh > 0)
         //  form.Height += dh;
 
-        EFPMonthCalendarSingleDay efpValue = new EFPMonthCalendarSingleDay(form.FormProvider, Control);
+        EFPMonthCalendarSingleDay efpValue = new EFPMonthCalendarSingleDay(form.FormProvider, control);
         efpValue.Label = form.MainLabel;
         efpValue.Minimum = Minimum;
         efpValue.Maximum = Maximum;
@@ -1696,12 +1696,12 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        DateTimeBox Control = new DateTimeBox();
-        Control.Dock = DockStyle.Top;
+        DateTimeBox control = new DateTimeBox();
+        control.Dock = DockStyle.Top;
 
-        form.MainPanel.Controls.Add(Control);
+        form.MainPanel.Controls.Add(control);
 
-        EFPDateTimeBox efpValue = new EFPDateTimeBox(form.FormProvider, Control);
+        EFPDateTimeBox efpValue = new EFPDateTimeBox(form.FormProvider, control);
         efpValue.Label = form.MainLabel;
         efpValue.Control.Formatter = Formatter;
         efpValue.CanBeEmptyMode = CanBeEmptyMode;
@@ -1770,8 +1770,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вход и выход: редактируемый текст. Разделитель - Environment.NewLine
     /// </summary>
-    public string Text 
-    { 
+    public string Text
+    {
       get { return _Text; }
       set
       {

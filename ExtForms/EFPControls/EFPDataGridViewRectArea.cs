@@ -114,11 +114,11 @@ namespace FreeLibSet.Forms
       if (Control.SelectedRows != null && Control.SelectedRows.Count > 0)
       {
         List<int> lst = new List<int>();
-        int CurrIdx = Control.Rows.GetFirstRow(DataGridViewElementStates.Visible | DataGridViewElementStates.Selected);
-        while (CurrIdx >= 0)
+        int currIdx = Control.Rows.GetFirstRow(DataGridViewElementStates.Visible | DataGridViewElementStates.Selected);
+        while (currIdx >= 0)
         {
-          lst.Add(CurrIdx);
-          CurrIdx = Control.Rows.GetNextRow(CurrIdx, DataGridViewElementStates.Visible | DataGridViewElementStates.Selected);
+          lst.Add(currIdx);
+          currIdx = Control.Rows.GetNextRow(currIdx, DataGridViewElementStates.Visible | DataGridViewElementStates.Selected);
         }
         _RowIndices = lst.ToArray();
 
@@ -160,13 +160,13 @@ namespace FreeLibSet.Forms
           if (!Control.SelectedCells[i].Visible)
             continue; // скрытая строка или столбец
 
-          int RowIndex = Control.SelectedCells[i].RowIndex;
-          int ColumnIndex = Control.SelectedCells[i].ColumnIndex;
+          int rowIndex = Control.SelectedCells[i].RowIndex;
+          int columnIndex = Control.SelectedCells[i].ColumnIndex;
 
-          if (lstRows.IndexOf(RowIndex) < 0)
-            lstRows.Add(RowIndex);
-          if (lstCols.IndexOf(Control.Columns[ColumnIndex]) < 0)
-            lstCols.Add(Control.Columns[ColumnIndex]);
+          if (lstRows.IndexOf(rowIndex) < 0)
+            lstRows.Add(rowIndex);
+          if (lstCols.IndexOf(Control.Columns[columnIndex]) < 0)
+            lstCols.Add(Control.Columns[columnIndex]);
         }
 
         lstRows.Sort();
@@ -201,11 +201,11 @@ namespace FreeLibSet.Forms
     private void InitVisibleRows()
     {
       List<int> lst = new List<int>();
-      int CurrIdx = Control.Rows.GetFirstRow(DataGridViewElementStates.Visible);
-      while (CurrIdx >= 0)
+      int currIdx = Control.Rows.GetFirstRow(DataGridViewElementStates.Visible);
+      while (currIdx >= 0)
       {
-        lst.Add(CurrIdx);
-        CurrIdx = Control.Rows.GetNextRow(CurrIdx, DataGridViewElementStates.Visible);
+        lst.Add(currIdx);
+        currIdx = Control.Rows.GetNextRow(currIdx, DataGridViewElementStates.Visible);
       }
 
       _RowIndices = lst.ToArray();
@@ -337,8 +337,8 @@ namespace FreeLibSet.Forms
       {
         get
         {
-          int RowIndex = _Owner.RowIndices[rowOffset];
-          return _Owner.Control.Rows[RowIndex];
+          int rowIndex = _Owner.RowIndices[rowOffset];
+          return _Owner.Control.Rows[rowIndex];
         }
       }
 
@@ -547,9 +547,9 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        int ColumnIndex = ColumnIndices[columnOffset];
-        int RowIndex = RowIndices[rowOffset];
-        return Control[ColumnIndex, RowIndex];
+        int columnIndex = ColumnIndices[columnOffset];
+        int rowIndex = RowIndices[rowOffset];
+        return Control[columnIndex, rowIndex];
       }
     }
 
@@ -566,10 +566,10 @@ namespace FreeLibSet.Forms
       {
         for (int i = 0; i < RowIndices.Length; i++)
         {
-          DataGridViewRow Row = Control.Rows.SharedRow(RowIndices[i]);
+          DataGridViewRow row = Control.Rows.SharedRow(RowIndices[i]);
           for (int j = 0; j < ColumnIndices.Length; j++)
           {
-            if (!Row.Cells[ColumnIndices[j]].Selected)
+            if (!row.Cells[ColumnIndices[j]].Selected)
               return false;
           }
         }

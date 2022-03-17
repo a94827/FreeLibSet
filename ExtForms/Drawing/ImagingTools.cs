@@ -26,29 +26,29 @@ namespace FreeLibSet.Drawing
     /// <returns></returns>
     public static int GetNearestColorIndex(Color[] array, Color color)
     {
-      int ResIndex = -1;
-      int MinDiff = 1000;
+      int resIndex = -1;
+      int minDiff = 1000;
 
       for (int i = 0; i < array.Length; i++)
       {
-        Color ThisColor = array[i];
+        Color thisColor = array[i];
 
-        int ThisDiff = 
-          Math.Abs(ThisColor.R - color.R) + 
-          Math.Abs(ThisColor.G - color.G) + 
-          Math.Abs(ThisColor.B - color.B);
+        int thisDiff = 
+          Math.Abs(thisColor.R - color.R) + 
+          Math.Abs(thisColor.G - color.G) + 
+          Math.Abs(thisColor.B - color.B);
 
-        if (ThisDiff < MinDiff)
+        if (thisDiff < minDiff)
         {
-          if (ThisDiff == 0)
+          if (thisDiff == 0)
             return i; // точное совпадение
 
-          ResIndex = i;
-          MinDiff = ThisDiff;
+          resIndex = i;
+          minDiff = thisDiff;
         }
       }
 
-      return ResIndex;
+      return resIndex;
     }
 
     #endregion
@@ -86,97 +86,97 @@ namespace FreeLibSet.Drawing
 
       Dictionary<Color, int> colorIndices = new Dictionary<Color, int>();
 
-      Bitmap Res;
+      Bitmap res;
 
       Rectangle rc = new Rectangle(0, 0, source.Width, source.Height);
-      BitmapData SrcData = source.LockBits(rc, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+      BitmapData srcData = source.LockBits(rc, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
       try
       {
-        Res = new Bitmap(source.Width, source.Height, resFormat);
+        res = new Bitmap(source.Width, source.Height, resFormat);
         try
         {
-          ColorPalette Palette = Res.Palette;
+          ColorPalette palette = res.Palette;
 
-          BitmapData ResData = Res.LockBits(rc, ImageLockMode.ReadWrite, resFormat);
+          BitmapData resData = res.LockBits(rc, ImageLockMode.ReadWrite, resFormat);
           try
           {
-            byte[] SrcA = new byte[SrcData.Height * SrcData.Stride];
-            byte[] ResA = new byte[ResData.Height * ResData.Stride];
-            DataTools.FillArray<byte>(ResA, 0);
-            Marshal.Copy(SrcData.Scan0, SrcA, 0, SrcA.Length);
+            byte[] srcA = new byte[srcData.Height * srcData.Stride];
+            byte[] resA = new byte[resData.Height * resData.Stride];
+            DataTools.FillArray<byte>(resA, 0);
+            Marshal.Copy(srcData.Scan0, srcA, 0, srcA.Length);
 
             for (int i = 0; i < source.Height; i++)
             {
-              int SrcStartIndex = SrcData.Stride * i;
-              int ResStartIndex = ResData.Stride * i;
+              int srcStartIndex = srcData.Stride * i;
+              int resStartIndex = resData.Stride * i;
 
-              for (int j = 0; j < SrcData.Width; j++)
+              for (int j = 0; j < srcData.Width; j++)
               {
-                int SrcIdx = SrcStartIndex + 3 * j;
-                Color SrcColor = Color.FromArgb(SrcA[SrcIdx + 2], SrcA[SrcIdx + 1], SrcA[SrcIdx + 0]);
+                int srcIdx = srcStartIndex + 3 * j;
+                Color srcColor = Color.FromArgb(srcA[srcIdx + 2], srcA[srcIdx + 1], srcA[srcIdx + 0]);
 
-                int ResColorIndex;
-                if (!colorIndices.TryGetValue(SrcColor, out ResColorIndex))
+                int resColorIndex;
+                if (!colorIndices.TryGetValue(srcColor, out resColorIndex))
                 {
                   // Находим ближайший цвет
-                  ResColorIndex = GetNearestColorIndex(Palette.Entries, SrcColor);
+                  resColorIndex = GetNearestColorIndex(palette.Entries, srcColor);
                   // Запоминаем для будущего использования
-                  colorIndices.Add(SrcColor, ResColorIndex);
+                  colorIndices.Add(srcColor, resColorIndex);
                 }
 
                 switch (resFormat)
                 {
                   case PixelFormat.Format1bppIndexed:
-                    if (ResColorIndex == 1)
+                    if (resColorIndex == 1)
                     {
-                      int ResIdx = ResStartIndex + (j / 8);
+                      int ResIdx = resStartIndex + (j / 8);
                       int Pix = j % 8;
-                      int b = ResA[ResIdx];
+                      int b = resA[ResIdx];
                       int v = 0x80 >> Pix;
                       b = b | v;
-                      ResA[ResIdx] = (byte)b;
+                      resA[ResIdx] = (byte)b;
                     }
                     break;
 
                   case PixelFormat.Format4bppIndexed:
-                    if (ResColorIndex != 0)
+                    if (resColorIndex != 0)
                     {
-                      int ResIdx = ResStartIndex + (j / 2);
-                      int b = ResA[ResIdx];
-                      int v = ResColorIndex;
+                      int ResIdx = resStartIndex + (j / 2);
+                      int b = resA[ResIdx];
+                      int v = resColorIndex;
                       if ((j % 2) == 0)
                         v = v << 4;
                       b = b | v;
-                      ResA[ResIdx] = (byte)b;
+                      resA[ResIdx] = (byte)b;
                     }
                     break;
 
                   case PixelFormat.Format8bppIndexed:
-                    ResA[ResStartIndex + j] = (byte)ResColorIndex;
+                    resA[resStartIndex + j] = (byte)resColorIndex;
                     break;
                 }
               }
             }
 
-            Marshal.Copy(ResA, 0, ResData.Scan0, ResA.Length);
+            Marshal.Copy(resA, 0, resData.Scan0, resA.Length);
           }
           finally
           {
-            Res.UnlockBits(ResData);
+            res.UnlockBits(resData);
           }
         }
         catch
         {
-          Res.Dispose();
+          res.Dispose();
           throw;
         }
       }
       finally
       {
-        source.UnlockBits(SrcData);
+        source.UnlockBits(srcData);
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -246,14 +246,14 @@ namespace FreeLibSet.Drawing
 
     private static Dictionary<Guid, ImageCodecInfo> CreateFormatDict()
     {
-      Dictionary<Guid, ImageCodecInfo> Dict = new Dictionary<Guid, ImageCodecInfo>();
+      Dictionary<Guid, ImageCodecInfo> dict = new Dictionary<Guid, ImageCodecInfo>();
       ImageCodecInfo[] icis = ImageCodecInfo.GetImageDecoders();
       for (int i = 0; i < icis.Length; i++)
       {
-        if (!Dict.ContainsKey(icis[i].FormatID))
-          Dict.Add(icis[i].FormatID, icis[i]);
+        if (!dict.ContainsKey(icis[i].FormatID))
+          dict.Add(icis[i].FormatID, icis[i]);
       }
-      return Dict;
+      return dict;
     }
 
     /// <summary>

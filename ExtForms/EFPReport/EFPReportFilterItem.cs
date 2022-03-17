@@ -342,10 +342,10 @@ namespace FreeLibSet.Forms
     /// <returns>true, если строка была найдена</returns>
     public bool Remove(EFPReportFilterItem item)
     {
-      bool Res = _Items.Remove(item);
-      if (Res)
+      bool res = _Items.Remove(item);
+      if (res)
         OnChanged();
-      return Res;
+      return res;
     }
 
 

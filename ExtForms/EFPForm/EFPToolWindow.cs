@@ -59,7 +59,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void UserShow()
     {
-      bool OldVisible = Visible;
+      bool oldVisible = Visible;
 
       //if (EFPApp.ActiveDialog != null)
       //  Owner = EFPApp.ActiveDialog;
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms
       Show();
       Activate();
 
-      if (!OldVisible)
+      if (!oldVisible)
         OnUserShow();
     }
 
@@ -97,8 +97,8 @@ namespace FreeLibSet.Forms
       /// <param name="form">Форма</param>
       public ScreenInfo(Form form)
       {
-        Screen Scr = Screen.FromControl(form);
-        _ScreenSize = Scr.Bounds.Size;
+        Screen scr = Screen.FromControl(form);
+        _ScreenSize = scr.Bounds.Size;
       }
 
       #endregion

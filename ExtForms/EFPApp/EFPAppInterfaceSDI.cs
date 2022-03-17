@@ -64,25 +64,25 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public override EFPAppMainWindowLayout ShowMainWindow()
     {
-      Form DummyForm = new Form();
-      DummyForm.StartPosition = FormStartPosition.WindowsDefaultBounds;
-      ToolStripContainer StripContainer = new ToolStripContainer();
-      StripContainer.Dock = DockStyle.Fill;
-      StripContainer.ContentPanel.BackColor = SystemColors.AppWorkspace;
+      Form dummyForm = new Form();
+      dummyForm.StartPosition = FormStartPosition.WindowsDefaultBounds;
+      ToolStripContainer stripContainer = new ToolStripContainer();
+      stripContainer.Dock = DockStyle.Fill;
+      stripContainer.ContentPanel.BackColor = SystemColors.AppWorkspace;
 
       StatusStrip TheStatusBar = new System.Windows.Forms.StatusStrip();
-      StripContainer.BottomToolStripPanel.Controls.Add(TheStatusBar);
+      stripContainer.BottomToolStripPanel.Controls.Add(TheStatusBar);
 
-      _CascadeHelper.SetStartPosition(DummyForm, EFPApp.DefaultScreen.WorkingArea);  // обязательно до AddMainWindow()
+      _CascadeHelper.SetStartPosition(dummyForm, EFPApp.DefaultScreen.WorkingArea);  // обязательно до AddMainWindow()
 
-      EFPAppMainWindowLayoutSDI Layout = new EFPAppMainWindowLayoutSDI(DummyForm, false);
-      base.AddMainWindow(Layout);
+      EFPAppMainWindowLayoutSDI layout = new EFPAppMainWindowLayoutSDI(dummyForm, false);
+      base.AddMainWindow(layout);
 
-      Layout.MainWindow.Show();
+      layout.MainWindow.Show();
 
       // Пустышка не попадает в список дочерних окон
 
-      return Layout;
+      return layout;
     }
 
 

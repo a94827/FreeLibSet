@@ -41,11 +41,11 @@ namespace FreeLibSet.Forms
       {
         // Если какой-либо параметр не указан - берем данные от предыдущего уровня
 
-        WaitInfo PrevObj = _WaitInfoStack.Peek();
+        WaitInfo prevObj = _WaitInfoStack.Peek();
         if (String.IsNullOrEmpty(message))
-          message = PrevObj.Message;
+          message = prevObj.Message;
         if (imageIndex < 0)
-          imageIndex = PrevObj.ImageIndex;
+          imageIndex = prevObj.ImageIndex;
       }
       else
       {
@@ -106,7 +106,6 @@ namespace FreeLibSet.Forms
       {
         LogBeginEndWaitException(e);
       }
-
     }
 
     #endregion

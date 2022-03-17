@@ -190,7 +190,7 @@ namespace FreeLibSet.Forms
     /// <returns>Текст из буфера обмена или пустая строка</returns>
     public string GetText(TextDataFormat format, bool messageIfEmpty)
     {
-      string Res = String.Empty;
+      string res = String.Empty;
       EFPApp.BeginWait("Извлечение текста из буфера обмена", "Paste");
       try
       {
@@ -199,9 +199,9 @@ namespace FreeLibSet.Forms
         {
           try
           {
-            Res = Clipboard.GetText(format);
-            if (Res == null)
-              Res = String.Empty; // на всякий случай
+            res = Clipboard.GetText(format);
+            if (res == null)
+              res = String.Empty; // на всякий случай
             _HasError = false;
             break;
           }
@@ -223,10 +223,10 @@ namespace FreeLibSet.Forms
         EFPApp.EndWait();
       }
 
-      if (Res.Length == 0 && messageIfEmpty)
+      if (res.Length == 0 && messageIfEmpty)
         EFPApp.ErrorMessageBox("Буфер обмена не содержит текста");
 
-      return Res;
+      return res;
     }
 
 

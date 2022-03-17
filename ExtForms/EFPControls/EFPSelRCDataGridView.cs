@@ -319,18 +319,18 @@ namespace FreeLibSet.Forms
         args.ResultValue = null;
       else
       {
-        DateTime Value;
+        DateTime value;
         string s = args.SourceData;
         //if (!DataConv.TryDateFromStr10(s, out dt))
         //{
-        if (!DateTime.TryParse(s, out Value))
+        if (!DateTime.TryParse(s, out value))
         {
           args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в дату");
           return;
         }
         //}
-        args.ResultValue = Value;
-        ValidateValue(args, Value);
+        args.ResultValue = value;
+        ValidateValue(args, value);
       }
       base.PerformValidating(args);
     }
@@ -404,16 +404,16 @@ namespace FreeLibSet.Forms
         args.ResultValue = 0m;
       else
       {
-        int Value;
+        int value;
         string s = args.SourceData;
         WinFormsTools.CorrectNumberString(ref s);
-        if (!Int32.TryParse(s, out Value))
+        if (!Int32.TryParse(s, out value))
         {
           args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в целое число");
           return;
         }
-        args.ResultValue = Value;
-        ValidateValue(args, Value);
+        args.ResultValue = value;
+        ValidateValue(args, value);
       }
       base.PerformValidating(args);
     }
@@ -487,16 +487,16 @@ namespace FreeLibSet.Forms
         args.ResultValue = 0m;
       else
       {
-        float Value;
+        float value;
         string s = args.SourceData;
         WinFormsTools.CorrectNumberString(ref s);
-        if (!Single.TryParse(s, out Value))
+        if (!Single.TryParse(s, out value))
         {
           args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
           return;
         }
-        args.ResultValue = Value;
-        ValidateValue(args, Value);
+        args.ResultValue = value;
+        ValidateValue(args, value);
       }
       base.PerformValidating(args);
     }
@@ -570,16 +570,16 @@ namespace FreeLibSet.Forms
         args.ResultValue = 0m;
       else
       {
-        double Value;
+        double value;
         string s = args.SourceData;
         WinFormsTools.CorrectNumberString(ref s);
-        if (!Double.TryParse(s, out Value))
+        if (!Double.TryParse(s, out value))
         {
           args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
           return;
         }
-        args.ResultValue = Value;
-        ValidateValue(args, Value);
+        args.ResultValue = value;
+        ValidateValue(args, value);
       }
       base.PerformValidating(args);
     }
@@ -653,16 +653,16 @@ namespace FreeLibSet.Forms
         args.ResultValue = 0m;
       else
       {
-        decimal Value;
+        decimal value;
         string s = args.SourceData;
         WinFormsTools.CorrectNumberString(ref s);
-        if (!decimal.TryParse(s, out Value))
+        if (!decimal.TryParse(s, out value))
         {
           args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
           return;
         }
-        args.ResultValue = Value;
-        ValidateValue(args, Value);
+        args.ResultValue = value;
+        ValidateValue(args, value);
       }
       base.PerformValidating(args);
     }
@@ -761,9 +761,9 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          T Value = (T)(Enum.ToObject(typeof(T), p));
-          args.ResultValue = Value;
-          ValidateValue(args, Value);
+          T value = (T)(Enum.ToObject(typeof(T), p));
+          args.ResultValue = value;
+          ValidateValue(args, value);
         }
       }
       base.PerformValidating(args);
@@ -853,11 +853,11 @@ namespace FreeLibSet.Forms
         args.ResultValue = null;
       else
       {
-        T Value;
-        if (TextValues.TryGetValue(args.SourceData, out Value))
+        T value;
+        if (TextValues.TryGetValue(args.SourceData, out value))
         {
-          args.ResultValue = Value;
-          ValidateValue(args, Value);
+          args.ResultValue = value;
+          ValidateValue(args, value);
         }
         else
         {
@@ -1012,31 +1012,31 @@ namespace FreeLibSet.Forms
       Columns.LastAdded.GridColumn.ToolTipText = "Использование строки";
       Columns.LastAdded.GridColumn.DividerWidth = 1; // 12.01.2022
 
-      string[] DisplayNames = new string[AllColumns.Length + 1];
-      DisplayNames[0] = NoneColText;
+      string[] displayNames = new string[AllColumns.Length + 1];
+      displayNames[0] = NoneColText;
       for (int i = 0; i < AllColumns.Length; i++)
-        DisplayNames[i + 1] = AllColumns[i].DisplayName;
-      int DropDownWidth = CalcDropDownWidth(DisplayNames);
+        displayNames[i + 1] = AllColumns[i].DisplayName;
+      int dropDownWidth = CalcDropDownWidth(displayNames);
 
       for (int i = 0; i < SelColumns.Length; i++)
       {
-        DataGridViewComboBoxColumn Col = new DataGridViewComboBoxColumn();
-        Col.Name = "Col" + (i + 1).ToString(); // 12.01.2022
-        Col.HeaderText = (i + 1).ToString();
+        DataGridViewComboBoxColumn col = new DataGridViewComboBoxColumn();
+        col.Name = "Col" + (i + 1).ToString(); // 12.01.2022
+        col.HeaderText = (i + 1).ToString();
         //Col.DropDownWidth = Math.Max(DropDownWidth, Col.Width);
-        Col.DropDownWidth = DropDownWidth; // расширение до столбца выполняется автоматически
-        Col.Items.AddRange(DisplayNames);
-        Control.Columns.Add(Col);
+        col.DropDownWidth = dropDownWidth; // расширение до столбца выполняется автоматически
+        col.Items.AddRange(displayNames);
+        Control.Columns.Add(col);
 
-        int MaxLen = 7; // нужно место для стрелочки выпадающего списка
+        int maxLen = 7; // нужно место для стрелочки выпадающего списка
         for (int j = 0; j < SelRows.Length; j++)
         {
           string s = DataTools.GetString(SourceData[j, i]);
-          MaxLen = Math.Max(s.Length, MaxLen);
+          maxLen = Math.Max(s.Length, maxLen);
         }
-        MaxLen = Math.Min(MaxLen, 30);
+        maxLen = Math.Min(maxLen, 30);
 
-        Columns[Col].TextWidth = MaxLen;
+        Columns[col].TextWidth = maxLen;
       }
 
       Control.RowCount = SelRows.Length + 1;
@@ -1067,20 +1067,20 @@ namespace FreeLibSet.Forms
     /// </summary>
     private void InitDefaultColumns()
     {
-      List<EFPSelRCColumn> Cols2 = new List<EFPSelRCColumn>(AllColumns);
+      List<EFPSelRCColumn> cols2 = new List<EFPSelRCColumn>(AllColumns);
 
-      EFPSelRCValidatingEventArgs VArgs = new EFPSelRCValidatingEventArgs();
+      EFPSelRCValidatingEventArgs args = new EFPSelRCValidatingEventArgs();
 
       for (int i = 0; i < SelColumns.Length; i++)
       {
-        for (int j = 0; j < Cols2.Count; j++)
+        for (int j = 0; j < cols2.Count; j++)
         {
           bool IsOK = true;
           for (int k = 0; k < SelRows.Length; k++)
           {
-            VArgs.InitSourceData(SourceData[k, i]);
-            Cols2[j].PerformValidating(VArgs);
-            if (VArgs.ValidateState != UIValidateState.Ok)
+            args.InitSourceData(SourceData[k, i]);
+            cols2[j].PerformValidating(args);
+            if (args.ValidateState != UIValidateState.Ok)
             {
               IsOK = false;
               break;
@@ -1090,8 +1090,8 @@ namespace FreeLibSet.Forms
           if (IsOK)
           {
             // Столбец подходит
-            SelColumns[i] = Cols2[j];
-            Cols2.RemoveAt(j);
+            SelColumns[i] = cols2[j];
+            cols2.RemoveAt(j);
             break;
           }
         }
@@ -1226,25 +1226,25 @@ namespace FreeLibSet.Forms
 
     private int CalcDropDownWidth(string[] displayNames)
     {
-      int MaxW = 0;
+      int maxW = 0;
       Graphics gr = Control.CreateGraphics();
       try
       {
         for (int i = 0; i < displayNames.Length; i++)
         {
           int w = (int)(gr.MeasureString(displayNames[i], Control.Font).Width);
-          MaxW = Math.Max(MaxW, w);
+          maxW = Math.Max(maxW, w);
         }
       }
       finally
       {
         gr.Dispose();
       }
-      MaxW += SystemInformation.VerticalScrollBarWidth;
-      MaxW += 4; // для рамочек
+      maxW += SystemInformation.VerticalScrollBarWidth;
+      maxW += 4; // для рамочек
       Screen scr = Screen.FromControl(Control);
-      MaxW = Math.Min(MaxW, scr.WorkingArea.Width);
-      return MaxW;
+      maxW = Math.Min(maxW, scr.WorkingArea.Width);
+      return maxW;
     }
 
     void Control_CellValueNeeded(object sender, DataGridViewCellValueEventArgs args)
@@ -1291,23 +1291,23 @@ namespace FreeLibSet.Forms
 
         if (args.ColumnIndex > 0 && args.RowIndex == 0)
         {
-          string DisplayName = DataTools.GetString(args.Value);
-          if (DisplayName == NoneColText)
+          string displayName = DataTools.GetString(args.Value);
+          if (displayName == NoneColText)
             SelColumns[args.ColumnIndex - 1] = null;
           else
           {
-            bool Found = false;
+            bool found = false;
             for (int i = 0; i < AllColumns.Length; i++)
             {
-              if (AllColumns[i].DisplayName == DisplayName)
+              if (AllColumns[i].DisplayName == displayName)
               {
                 SelColumns[args.ColumnIndex - 1] = AllColumns[i];
-                Found = true;
+                found = true;
                 break;
               }
             }
-            if (!Found)
-              throw new InvalidOperationException("Не найден столбец с названием \"" + DisplayName + "\"");
+            if (!found)
+              throw new InvalidOperationException("Не найден столбец с названием \"" + displayName + "\"");
           }
 
           Control.InvalidateColumn(args.ColumnIndex);
@@ -1405,12 +1405,12 @@ namespace FreeLibSet.Forms
         base.SetError("Свойства AllColumns и SourceData должны быть установлены");
         return;
       }
-      bool HasCol = false;
+      bool hasCol = false;
       for (int i = 0; i < SelColumns.Length; i++)
       {
         if (SelColumns[i] != null)
         {
-          HasCol = true;
+          hasCol = true;
           for (int j = 0; j < i; j++)
           {
             if (SelColumns[j] == SelColumns[i])
@@ -1422,19 +1422,19 @@ namespace FreeLibSet.Forms
           }
         }
       }
-      if (!HasCol)
+      if (!hasCol)
       {
         base.SetError("Не выбрано ни одного столбца");
         return;
       }
 
       // Проверяем наличие выбранных строк и корректность данных
-      bool HasRows = false;
+      bool hasRows = false;
       for (int i = 0; i < SelRows.Length; i++)
       {
         if (SelRows[i])
         {
-          HasRows = true;
+          hasRows = true;
 
           for (int j = 0; j < SelColumns.Length; j++)
           {
@@ -1461,7 +1461,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      if (!HasRows)
+      if (!hasRows)
       {
         this.CurrentColumnIndex = 0;
         //EFPApp.ShowTempMessage("Нет ни одной выбранной строки данных");
@@ -1502,11 +1502,11 @@ namespace FreeLibSet.Forms
     /// <returns>Значение ячйки</returns>
     public object GetResultValue(int rowIndex, string columnCode)
     {
-      int ColumnIndex = IndexOfSelColumn(columnCode);
-      if (ColumnIndex < 0)
+      int columnIndex = IndexOfSelColumn(columnCode);
+      if (columnIndex < 0)
         return null;
       else
-        return GetResultValue(rowIndex, ColumnIndex);
+        return GetResultValue(rowIndex, columnIndex);
     }
 
     #region Получение типизированных значений
@@ -1631,9 +1631,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает список команд
     /// </summary>
-    /// <param name="Owner">Провайдер табличного просмотра</param>
-    public EFPSelRCDataGridViewCommandItems(EFPSelRCDataGridView Owner)
-      : base(Owner)
+    /// <param name="owner">Провайдер табличного просмотра</param>
+    public EFPSelRCDataGridViewCommandItems(EFPSelRCDataGridView owner)
+      : base(owner)
     {
       ciClearColumns = new EFPCommandItem("Edit", "CleraColumnRefs");
       ciClearColumns.MenuText = "Очистить привязку столбцов";
@@ -1660,7 +1660,7 @@ namespace FreeLibSet.Forms
 
     EFPCommandItem ciClearColumns;
 
-    void ciClearColumns_Click(object Sender, EventArgs Args)
+    void ciClearColumns_Click(object sender, EventArgs args)
     {
       for (int i = 0; i < Owner.SelColumns.Length; i++)
         Owner.SetSelColumn(i, null);

@@ -74,10 +74,10 @@ namespace FreeLibSet.OLE
       if (_MainObj != null)
         throw new InvalidOperationException("Повторное создание объекта");
 
-      Type MainObjType = Type.GetTypeFromProgID(progId);
-      if (MainObjType == null)
+      Type mainObjType = Type.GetTypeFromProgID(progId);
+      if (mainObjType == null)
         throw new ArgumentException("Неизвестный тип объекта ProgId=\"" + progId + "\"", "progId");
-      _MainObj = Activator.CreateInstance(MainObjType);
+      _MainObj = Activator.CreateInstance(mainObjType);
     }
 
     /// <summary>
@@ -408,14 +408,14 @@ namespace FreeLibSet.OLE
       string s;
       try
       {
-        string KeyName = "HKEY_CLASSES_ROOT\\CLSID\\" + clsID.ToString("B") + "\\LocalServer32";
-        s = (string)(Microsoft.Win32.Registry.GetValue(KeyName, String.Empty, String.Empty));
+        string keyName = "HKEY_CLASSES_ROOT\\CLSID\\" + clsID.ToString("B") + "\\LocalServer32";
+        s = (string)(Microsoft.Win32.Registry.GetValue(keyName, String.Empty, String.Empty));
         if (String.IsNullOrEmpty(s))
         {
           // 11.01.2013
           // Для 64-битной версии Windows и 32-разрядной версии Office
-          KeyName = "HKEY_CLASSES_ROOT\\Wow6432Node\\CLSID\\" + clsID.ToString("B") + "\\LocalServer32";
-          s = (string)(Microsoft.Win32.Registry.GetValue(KeyName, String.Empty, String.Empty));
+          keyName = "HKEY_CLASSES_ROOT\\Wow6432Node\\CLSID\\" + clsID.ToString("B") + "\\LocalServer32";
+          s = (string)(Microsoft.Win32.Registry.GetValue(keyName, String.Empty, String.Empty));
           if (String.IsNullOrEmpty(s))
             return AbsPath.Empty;
         }
@@ -439,10 +439,10 @@ namespace FreeLibSet.OLE
     /// <returns>Путь к серверу</returns>
     public static AbsPath GetLocalServer32Path(string progID)
     {
-      Guid ClsID;
-      if (!GetClsIDForProgID(progID, out ClsID))
+      Guid clsID;
+      if (!GetClsIDForProgID(progID, out clsID))
         return AbsPath.Empty;
-      return GetLocalServer32Path(ClsID);
+      return GetLocalServer32Path(clsID);
     }
 
     /// <summary>

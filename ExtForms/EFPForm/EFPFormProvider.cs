@@ -478,12 +478,12 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          foreach (Form ToolForm in EFPApp.ToolFormsForDialogs)
+          foreach (Form toolForm in EFPApp.ToolFormsForDialogs)
           {
-            if (ToolForm.IsDisposed)
+            if (toolForm.IsDisposed)
               continue;
-            ToolForm.Owner = _Form;
-            ToolForm.Visible = true;
+            toolForm.Owner = _Form;
+            toolForm.Visible = true;
           }
         }
         catch (Exception e)
@@ -545,12 +545,12 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          foreach (Form ToolForm in EFPApp.ToolFormsForDialogs)
+          foreach (Form toolForm in EFPApp.ToolFormsForDialogs)
           {
-            if (ToolForm.IsDisposed)
+            if (toolForm.IsDisposed)
               continue;
-            ToolForm.Visible = false;
-            ToolForm.Owner = null;
+            toolForm.Visible = false;
+            toolForm.Owner = null;
           }
         }
         catch (Exception e)
@@ -563,9 +563,9 @@ namespace FreeLibSet.Forms
       {
         if (_StartBounds != null)
         {
-          EFPFormBounds CurrBounds = new EFPFormBounds();
-          CurrBounds.FromControl(Form);
-          if (!EFPFormBounds.Equals(CurrBounds, _StartBounds, EFPFormBounds.GetParts(Form)))
+          EFPFormBounds currBounds = new EFPFormBounds();
+          currBounds.FromControl(Form);
+          if (!EFPFormBounds.Equals(currBounds, _StartBounds, EFPFormBounds.GetParts(Form)))
             ConfigHandler.Changed[EFPConfigCategories.FormBounds] = true;
         }
 
@@ -770,11 +770,11 @@ namespace FreeLibSet.Forms
 
       if (ErrorCount > 0)
       {
-        EFPErrorInfo Info = GetFirstError();
-        if (Info == null)
+        EFPErrorInfo info = GetFirstError();
+        if (info == null)
           throw new BugException("Потеряно сообщение об ошибке");
-        WinFormsTools.FocusToControl(Info.FocusedControl);
-        EFPApp.ShowTempMessage(Info.Message);
+        WinFormsTools.FocusToControl(info.FocusedControl);
+        EFPApp.ShowTempMessage(info.Message);
         return false;
       }
       return true;
@@ -790,14 +790,14 @@ namespace FreeLibSet.Forms
         _TheErrorProvider = new ErrorProvider(Form);
       _TheErrorProvider.Clear();
 
-      List<EFPErrorInfo> ErrorList = new List<EFPErrorInfo>();
-      GetErrorMessages(ErrorList);
+      List<EFPErrorInfo> errorList = new List<EFPErrorInfo>();
+      GetErrorMessages(errorList);
 
-      for (int i = 0; i < ErrorList.Count; i++)
+      for (int i = 0; i < errorList.Count; i++)
       {
-        if (ErrorList[i].FocusedControl != null)
+        if (errorList[i].FocusedControl != null)
         {
-          _TheErrorProvider.SetError(ErrorList[i].FocusedControl, ErrorList[i].Message);
+          _TheErrorProvider.SetError(errorList[i].FocusedControl, errorList[i].Message);
         }
       }
     }
@@ -810,12 +810,12 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public EFPErrorInfo GetFirstError()
     {
-      List<EFPErrorInfo> ErrorList = new List<EFPErrorInfo>();
-      GetErrorMessages(ErrorList);
-      for (int i = 0; i < ErrorList.Count; i++)
+      List<EFPErrorInfo> errorList = new List<EFPErrorInfo>();
+      GetErrorMessages(errorList);
+      for (int i = 0; i < errorList.Count; i++)
       {
-        if (ErrorList[i].IsError)
-          return ErrorList[i];
+        if (errorList[i].IsError)
+          return errorList[i];
       }
       return null;
     }
@@ -832,9 +832,9 @@ namespace FreeLibSet.Forms
       if (validating == null)
         throw new ArgumentNullException("validating");
 #endif
-      EFPFormCheck Check = new EFPFormCheck(this);
-      Check.Validating += validating;
-      Check.FocusControl = focusControl;
+      EFPFormCheck chk = new EFPFormCheck(this);
+      chk.Validating += validating;
+      chk.FocusControl = focusControl;
     }
 
     /// <summary>
@@ -1269,19 +1269,19 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void PerformCallHelp()
     {
-      Control Ctrl = _Form.ActiveControl;
-      if (Ctrl == null)
-        Ctrl = _Form;
-      if (Ctrl is TabControl)
+      Control ctrl = _Form.ActiveControl;
+      if (ctrl == null)
+        ctrl = _Form;
+      if (ctrl is TabControl)
       {
         // Если активен сам управляющий элемент с закладками, то надо выбрать 
         // текущую страницу. Так бывает, когда фокус ввода имеет непосредственно 
         // корешок закладки
-        TabControl TabCtrl = (TabControl)Ctrl;
-        if (TabCtrl.TabPages.Count > 0)
-          Ctrl = TabCtrl.SelectedTab;
+        TabControl tabCtrl = (TabControl)ctrl;
+        if (tabCtrl.TabPages.Count > 0)
+          ctrl = tabCtrl.SelectedTab;
       }
-      string ctx = GetHelpContext(Ctrl);
+      string ctx = GetHelpContext(ctrl);
       EFPApp.ShowHelp(ctx);
     }
 
@@ -1310,8 +1310,8 @@ namespace FreeLibSet.Forms
 
     static void TabControl_MouseClick(object sender, MouseEventArgs args)
     {
-      TabControl TheControl = (TabControl)sender;
-      WinFormsTools.CorrectTabControlActivation(TheControl);
+      TabControl theControl = (TabControl)sender;
+      WinFormsTools.CorrectTabControlActivation(theControl);
     }
 
     #endregion
@@ -1469,8 +1469,8 @@ namespace FreeLibSet.Forms
       {
         case DialogResult.OK:
         case DialogResult.Yes:
-          bool Res = ValidateForm(EFPFormValidateReason.Closing);
-          if (!Res)
+          bool res = ValidateForm(EFPFormValidateReason.Closing);
+          if (!res)
           {
             args.Cancel = true;
             Form.DialogResult = DialogResult.None;
@@ -1500,21 +1500,21 @@ namespace FreeLibSet.Forms
           // 20.03.2018
           // Если в данный момент обрабатывается событие EFPApp.Closing, то вместо CloseReason.UserClosing
           // надо использовать ApplicationExitCall
-          CloseReason Reason = args.CloseReason;
-          if (Reason == CloseReason.UserClosing && EFPApp.IsClosing)
-            Reason = CloseReason.ApplicationExitCall;
-          FormClosingEventArgs Args2 = new FormClosingEventArgs(Reason, false);
+          CloseReason reason = args.CloseReason;
+          if (reason == CloseReason.UserClosing && EFPApp.IsClosing)
+            reason = CloseReason.ApplicationExitCall;
+          FormClosingEventArgs args2 = new FormClosingEventArgs(reason, false);
 
           _InsideFormClosing2 = true;
           try
           {
-            OnFormClosing(Args2);
+            OnFormClosing(args2);
           }
           finally
           {
             _InsideFormClosing2 = false;
           }
-          if (Args2.Cancel)
+          if (args2.Cancel)
           {
             Form.DialogResult = DialogResult.None; // 19.09.2017
             args.Cancel = true;
@@ -1562,15 +1562,15 @@ namespace FreeLibSet.Forms
           // 20.03.2018
           // Если в данный момент обрабатывается событие EFPApp.Closing, то вместо CloseReason.UserClosing
           // надо использовать ApplicationExitCall
-          CloseReason Reason = args.CloseReason;
-          if (Reason == CloseReason.UserClosing && EFPApp.IsClosing)
-            Reason = CloseReason.ApplicationExitCall;
-          FormClosedEventArgs Args2 = new FormClosedEventArgs(Reason);
+          CloseReason reason = args.CloseReason;
+          if (reason == CloseReason.UserClosing && EFPApp.IsClosing)
+            reason = CloseReason.ApplicationExitCall;
+          FormClosedEventArgs args2 = new FormClosedEventArgs(reason);
 
           _InsideFormClosed = true;
           try
           {
-            OnFormClosed(Args2);
+            OnFormClosed(args2);
           }
           finally
           {
@@ -1645,14 +1645,12 @@ namespace FreeLibSet.Forms
         if (_ChangeInfo != null)
         {
           // Отсоединяем обработчик
-          _ChangeInfo.ChangedChanged -= _EHChangeInfo_ChangedChanged;
+          _ChangeInfo.ChangedChanged -= ChangeInfo_ChangedChanged;
         }
         _ChangeInfo = value;
         if (value != null)
         {
-          if (_EHChangeInfo_ChangedChanged == null)
-            _EHChangeInfo_ChangedChanged = new EventHandler(ChangeInfo_ChangedChanged);
-          value.ChangedChanged += _EHChangeInfo_ChangedChanged;
+          value.ChangedChanged += ChangeInfo_ChangedChanged;
         }
 
         if (_ChangeInfo == null)
@@ -1662,8 +1660,6 @@ namespace FreeLibSet.Forms
       }
     }
     private DepChangeInfo _ChangeInfo;
-
-    private EventHandler _EHChangeInfo_ChangedChanged;
 
     private void ChangeInfo_ChangedChanged(object sender, EventArgs args)
     {
@@ -1851,17 +1847,17 @@ namespace FreeLibSet.Forms
     /// <param name="rwMode"></param>
     private void PreloadConfigSections(EFPConfigMode rwMode)
     {
-      SingleScopeList<EFPConfigSectionInfo> ConfigInfos = new SingleScopeList<EFPConfigSectionInfo>();
-      ConfigHandler.GetPreloadConfigSections(ConfigInfos, rwMode);
+      SingleScopeList<EFPConfigSectionInfo> configInfos = new SingleScopeList<EFPConfigSectionInfo>();
+      ConfigHandler.GetPreloadConfigSections(configInfos, rwMode);
 
       foreach (EFPControlBase controlProvider in GetAllControlProviders())
       {
         if (controlProvider.ConfigHandler != null)
-          controlProvider.ConfigHandler.GetPreloadConfigSections(ConfigInfos, rwMode);
+          controlProvider.ConfigHandler.GetPreloadConfigSections(configInfos, rwMode);
       }
 
-      if (ConfigInfos.Count >= 2) // иначе смысла нет
-        ConfigManager.Preload(ConfigInfos.ToArray(), rwMode);
+      if (configInfos.Count >= 2) // иначе смысла нет
+        ConfigManager.Preload(configInfos.ToArray(), rwMode);
     }
 
     #endregion
@@ -1987,29 +1983,29 @@ namespace FreeLibSet.Forms
     {
       if (category == EFPConfigCategories.FormBounds)
       {
-        EFPFormBounds Bounds = new EFPFormBounds();
-        Bounds.FromControl(Form);
+        EFPFormBounds bounds = new EFPFormBounds();
+        bounds.FromControl(Form);
         if (actionInfo.Purpose == EFPConfigPurpose.Composition)
-          Bounds.WriteConfig(cfg);
+          bounds.WriteConfig(cfg);
         else
         {
           EFPFormBoundsPart WantedParts = GetWantedFormBoundsParts(EFPConfigMode.Write);
           CfgPart cfg2 = cfg.GetChild(Modal ? "Dialog" : "Form", true);
           if ((WantedParts & EFPFormBoundsPart.WindowState) != 0)
-            cfg2.SetEnum<FormWindowState>("State", Bounds.WindowState);
-          if (Bounds.WindowState != FormWindowState.Maximized) // 13.09.2021
+            cfg2.SetEnum<FormWindowState>("State", bounds.WindowState);
+          if (bounds.WindowState != FormWindowState.Maximized) // 13.09.2021
           {
             CfgPart cfg3 = cfg2.GetChild(ScreenSubSectionName, true);
             if ((WantedParts & EFPFormBoundsPart.Size) != 0)
             {
-              cfg3.SetInt("Width", Bounds.Bounds.Width);
-              cfg3.SetInt("Height", Bounds.Bounds.Height);
+              cfg3.SetInt("Width", bounds.Bounds.Width);
+              cfg3.SetInt("Height", bounds.Bounds.Height);
             }
             if ((WantedParts & EFPFormBoundsPart.Location) != 0)
             {
               // Середина окна
-              int cx = Bounds.Bounds.Left + Bounds.Bounds.Width / 2;
-              int cy = Bounds.Bounds.Top + Bounds.Bounds.Height / 2;
+              int cx = bounds.Bounds.Left + bounds.Bounds.Width / 2;
+              int cy = bounds.Bounds.Top + bounds.Bounds.Height / 2;
 
               if (EFPApp.MainWindow == null)
               {
@@ -2063,37 +2059,37 @@ namespace FreeLibSet.Forms
           CfgPart cfg2 = cfg.GetChild(Modal ? "Dialog" : "Form", false);
           if (cfg2 != null)
           {
-            EFPFormBoundsPart WantedParts = GetWantedFormBoundsParts(EFPConfigMode.Read); // исправлено 13.09.2021
-            EFPFormBoundsPart RealParts = EFPFormBoundsPart.None;
-            EFPFormBounds Bounds = new EFPFormBounds();
-            Bounds.FromControl(Form);
+            EFPFormBoundsPart wantedParts = GetWantedFormBoundsParts(EFPConfigMode.Read); // исправлено 13.09.2021
+            EFPFormBoundsPart realParts = EFPFormBoundsPart.None;
+            EFPFormBounds bounds = new EFPFormBounds();
+            bounds.FromControl(Form);
 
-            if ((WantedParts & EFPFormBoundsPart.WindowState) != 0)
+            if ((wantedParts & EFPFormBoundsPart.WindowState) != 0)
             {
               FormWindowState ws = FormWindowState.Normal;
               if (cfg2.GetEnum<FormWindowState>("State", ref ws))
               {
-                Bounds.WindowState = ws;
-                RealParts |= EFPFormBoundsPart.WindowState;
+                bounds.WindowState = ws;
+                realParts |= EFPFormBoundsPart.WindowState;
               }
             }
             CfgPart cfg3 = cfg2.GetChild(ScreenSubSectionName, false);
             {
               if (cfg3 != null)
               {
-                if ((WantedParts & EFPFormBoundsPart.Size) != 0)
+                if ((wantedParts & EFPFormBoundsPart.Size) != 0)
                 {
                   int w = cfg3.GetInt("Width");
                   int h = cfg3.GetInt("Height");
                   if (w > 0 && h > 0)
-                    RealParts |= EFPFormBoundsPart.Size;
+                    realParts |= EFPFormBoundsPart.Size;
                   else
                   {
-                    w = Bounds.Bounds.Width;
-                    h = Bounds.Bounds.Height;
+                    w = bounds.Bounds.Width;
+                    h = bounds.Bounds.Height;
                   }
 
-                  if ((WantedParts & EFPFormBoundsPart.Location) != 0) // только если размеры тоже прочитали
+                  if ((wantedParts & EFPFormBoundsPart.Location) != 0) // только если размеры тоже прочитали
                   {
 
                     string prefix = EFPApp.MainWindow == null ? "ScreenCenter" : "MainWindowCenter";
@@ -2108,18 +2104,18 @@ namespace FreeLibSet.Forms
 
                     int left = cx - w / 2;
                     int top = cy - h / 2;
-                    Bounds.Bounds = new Rectangle(left, top, w, h);
+                    bounds.Bounds = new Rectangle(left, top, w, h);
                     if (_DialogPosition == null)
-                      RealParts |= EFPFormBoundsPart.Location;
+                      realParts |= EFPFormBoundsPart.Location;
                   }
                   else // !Location
                   {
-                    Bounds.Bounds = new Rectangle(Bounds.Bounds.Left, Bounds.Bounds.Top, w, h);
+                    bounds.Bounds = new Rectangle(bounds.Bounds.Left, bounds.Bounds.Top, w, h);
                   }
                 }
               }
             }
-            _ReadConfigFormBoundsParts = Bounds.ToControl(Form, RealParts);
+            _ReadConfigFormBoundsParts = bounds.ToControl(Form, realParts);
           }
         }
       }
@@ -2369,17 +2365,17 @@ namespace FreeLibSet.Forms
 
     private bool GetDefaultOwnStatusBar()
     {
-      bool Res;
+      bool res;
       try
       {
-        Res = DoGetDefaultOwnStatusBar();
+        res = DoGetDefaultOwnStatusBar();
       }
       catch (Exception e) // 23.11.2018
       {
         LogoutTools.LogoutException(e, "EFPFormProvider.GetDefaultOwnStatusBar()");
-        Res = false;
+        res = false;
       }
-      return Res;
+      return res;
     }
 
     private bool DoGetDefaultOwnStatusBar()
@@ -2411,16 +2407,16 @@ namespace FreeLibSet.Forms
           }
         }
 
-        bool IsMaximized;
+        bool isMaximized;
         //EFPFormBounds Bounds = GetSavedBounds();
         //if (Bounds != null)
         //  IsMaximized = (Bounds.WindowState == FormWindowState.Maximized); // исправлено 06.12.2018
         //else
-        IsMaximized = _Form.WindowState == FormWindowState.Maximized;
+        isMaximized = _Form.WindowState == FormWindowState.Maximized;
 
-        bool IsFullScreenModal = Modal && IsMaximized;
+        bool isFullScreenModal = Modal && isMaximized;
 
-        if (!IsFullScreenModal)
+        if (!isFullScreenModal)
         {
           if (EFPApp.StatusBar != null) // 23.11.2018
           {
@@ -2646,10 +2642,10 @@ namespace FreeLibSet.Forms
     {
       if (form == null)
         return null;
-      foreach (EFPFormProvider Provider in _ProviderList)
+      foreach (EFPFormProvider provider in _ProviderList)
       {
-        if (Object.ReferenceEquals(Provider.Form, form))
-          return Provider;
+        if (Object.ReferenceEquals(provider.Form, form))
+          return provider;
       }
       return null;
     }
@@ -2930,12 +2926,12 @@ namespace FreeLibSet.Forms
       get { return (_PeriodDivider + 1) * 1000; }
       set
       {
-        int NewPeriodDivider = value / 1000 - 1;
-        if (NewPeriodDivider < 0)
-          NewPeriodDivider = 0;
-        if (NewPeriodDivider == _PeriodDivider)
+        int newPeriodDivider = value / 1000 - 1;
+        if (newPeriodDivider < 0)
+          newPeriodDivider = 0;
+        if (newPeriodDivider == _PeriodDivider)
           return;
-        _PeriodDivider = NewPeriodDivider;
+        _PeriodDivider = newPeriodDivider;
         OnIntervalChanged(EventArgs.Empty);
       }
     }

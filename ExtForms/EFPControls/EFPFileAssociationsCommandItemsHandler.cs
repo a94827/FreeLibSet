@@ -48,15 +48,15 @@ namespace FreeLibSet.Forms
 
       try
       {
-        FileAssociations FAItems;
+        FileAssociations faItems;
         if (EFPApp.FileExtAssociations.IsSupported)
-          FAItems = EFPApp.FileExtAssociations[fileExt];
+          faItems = EFPApp.FileExtAssociations[fileExt];
         else
-          FAItems = FileAssociations.Empty;
+          faItems = FileAssociations.Empty;
 
-        if (FAItems.OpenItem != null)
+        if (faItems.OpenItem != null)
         {
-          EFPCommandItem ci = CreateCommandItem(FAItems.OpenItem);
+          EFPCommandItem ci = CreateCommandItem(faItems.OpenItem);
           ci.MenuText = "Открыть";
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;
           if (ci.HasImage)
@@ -69,14 +69,14 @@ namespace FreeLibSet.Forms
         {
           EFPCommandItem ci = new EFPCommandItem("File", "OpenNowhere");
           ci.MenuText = "Открыть";
-          if (FAItems.Exception == null)
+          if (faItems.Exception == null)
           {
             ci.ToolTipText = "Нет приложения, которое может открывать файлы с расширением \"" + fileExt + "\"";
             ci.ImageKey = "UnknownState";
           }
           else
           {
-            ci.ToolTipText = "Возикла ошибка при получении файловых ассоциаций. " + FAItems.Exception.Message;
+            ci.ToolTipText = "Возикла ошибка при получении файловых ассоциаций. " + faItems.Exception.Message;
             ci.ImageKey = "Error";
           }
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;
@@ -91,18 +91,18 @@ namespace FreeLibSet.Forms
         commandItems.Add(smOpenWith);
         _AllCommands.Add(smOpenWith);
 
-        if (FAItems.OpenWithItems.Count > 0)
+        if (faItems.OpenWithItems.Count > 0)
         {
-          for (int i = 0; i < FAItems.OpenWithItems.Count; i++)
+          for (int i = 0; i < faItems.OpenWithItems.Count; i++)
           {
-            EFPCommandItem ci = CreateCommandItem(FAItems.OpenWithItems[i]);
+            EFPCommandItem ci = CreateCommandItem(faItems.OpenWithItems[i]);
             ci.Parent = smOpenWith;
             ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
             commandItems.Add(ci);
             _AllCommands.Add(ci);
           }
         }
-        else if (FAItems.Exception == null)
+        else if (faItems.Exception == null)
         {
           EFPCommandItem ci = new EFPCommandItem("File", "OpenWithNone");
           ci.Parent = smOpenWith;
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms
           ci.ImageKey = "Error";
           ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
           ci.Enabled = true;
-          ci.Tag = FAItems.Exception;
+          ci.Tag = faItems.Exception;
           ci.Click += new EventHandler(ciOpenWithError_Click);
           commandItems.Add(ci);
           _AllCommands.Add(ci);
@@ -134,13 +134,13 @@ namespace FreeLibSet.Forms
 
         // Исключение показываем один раз, дальше только выводим в log-файл
 
-        string Title = "Ошибка инициализации EFPFileAssociationsCommandItemsHandler";
+        string title = "Ошибка инициализации EFPFileAssociationsCommandItemsHandler";
         if (_ExceptionShown)
-          LogoutTools.LogoutException(e, Title);
+          LogoutTools.LogoutException(e, title);
         else
         {
           _ExceptionShown = false;
-          EFPApp.ShowException(e, Title);
+          EFPApp.ShowException(e, title);
         }
       }
 
@@ -196,9 +196,9 @@ namespace FreeLibSet.Forms
     {
       if (FileNeeded != null)
       {
-        CancelEventArgs Args = new CancelEventArgs();
-        FileNeeded(this, Args);
-        if (Args.Cancel)
+        CancelEventArgs args = new CancelEventArgs();
+        FileNeeded(this, args);
+        if (args.Cancel)
           return false;
       }
       if (FilePath.IsEmpty)
@@ -237,16 +237,16 @@ namespace FreeLibSet.Forms
     private void OpenFile_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
-      FileAssociationItem FA = (FileAssociationItem)(ci.Tag);
+      FileAssociationItem fa = (FileAssociationItem)(ci.Tag);
       if (!PrepareFile())
         return;
       try
       {
-        FA.Execute(FilePath);
+        fa.Execute(FilePath);
       }
       catch (Exception e)
       {
-        e.Data["FileAssociationItem"] = FA;
+        e.Data["FileAssociationItem"] = fa;
         e.Data["FilePath"] = FilePath;
         throw;
       }

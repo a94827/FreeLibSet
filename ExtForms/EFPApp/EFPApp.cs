@@ -366,10 +366,10 @@ namespace FreeLibSet.Forms
           }
         }
          * */
-        EFPAppMainWindowLayout[] Layouts = EFPApp.Interface.GetMainWindowLayouts(false);
-        for (int i = 0; i < Layouts.Length; i++)
+        EFPAppMainWindowLayout[] layouts = EFPApp.Interface.GetMainWindowLayouts(false);
+        for (int i = 0; i < layouts.Length; i++)
         {
-          if (!Layouts[i].CloseMainWindow())
+          if (!layouts[i].CloseMainWindow())
           {
             args.Cancel = true;
             return;
@@ -380,7 +380,7 @@ namespace FreeLibSet.Forms
       #region Закрытие немодальных форм
 
       // 13.04.2018
-      List<Form> Forms2 = new List<Form>();
+      List<Form> forms2 = new List<Form>();
       foreach (Form frm in Application.OpenForms)
       {
         if (object.ReferenceEquals(frm, MainWindow))
@@ -391,13 +391,13 @@ namespace FreeLibSet.Forms
           continue;
         if (!frm.Visible)
           continue;
-        Forms2.Add(frm);
+        forms2.Add(frm);
       }
-      for (int i = 0; i < Forms2.Count; i++)
+      for (int i = 0; i < forms2.Count; i++)
       {
-        Forms2[i].Activate();
-        Forms2[i].Close();
-        if (Forms2[i].Visible)
+        forms2[i].Activate();
+        forms2[i].Close();
+        if (forms2[i].Visible)
         {
           args.Cancel = true;
           return;
@@ -477,22 +477,22 @@ namespace FreeLibSet.Forms
 
       _ExitCount++;
 
-      CancelEventArgs Args = new CancelEventArgs();
-      OnClosing(Args/*, true*/);
-      if (Args.Cancel)
+      CancelEventArgs args = new CancelEventArgs();
+      OnClosing(args/*, true*/);
+      if (args.Cancel)
         return false;
 
       _IsClosing = true;
       try
       {
-        Application.Exit(Args);
+        Application.Exit(args);
       }
       finally
       {
         _IsClosing = false;
       }
 
-      if (!Args.Cancel)
+      if (!args.Cancel)
       {
         if (StatusBar != null)
           StatusBar.StatusStripControl = null;
@@ -508,7 +508,7 @@ namespace FreeLibSet.Forms
         OnClosed();
       }
 
-      return !Args.Cancel;
+      return !args.Cancel;
     }
 
     /// <summary>
@@ -716,11 +716,11 @@ namespace FreeLibSet.Forms
             // 21.12.2018
             // Свойство Form.ActiveForm может меняться асинхронно.
             // Фиксируем ссылку на форму для выполнения проверок с ней.
-            Form AF = Form.ActiveForm;
-            if (AF != null && (!AF.InvokeRequired))
+            Form af = Form.ActiveForm;
+            if (af != null && (!af.InvokeRequired))
             {
-              if (AF.Visible)
-                return AF;
+              if (af.Visible)
+                return af;
             }
             return null;
           }
@@ -1258,8 +1258,8 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          EFPFormCreatorParams Params = new EFPFormCreatorParams(CfgPart.Empty);
-          Form frm = sdiFormCreator.CreateForm(Params);
+          EFPFormCreatorParams creatorParams = new EFPFormCreatorParams(CfgPart.Empty);
+          Form frm = sdiFormCreator.CreateForm(creatorParams);
           EFPApp.Interface.ShowChildForm(frm);
           return;
         }
@@ -1308,19 +1308,19 @@ namespace FreeLibSet.Forms
       if (name == EFPApp.InterfaceName)
         return; // ничего делать не надо
 
-      TempCfg TempCfg = null;
+      TempCfg tempCfg = null;
       if (!Object.ReferenceEquals(Interface, null))
       {
         try
         {
           // Установка с восстановлением конфигурации
-          TempCfg = new TempCfg();
-          Interface.SaveComposition(TempCfg);
+          tempCfg = new TempCfg();
+          Interface.SaveComposition(tempCfg);
         }
         catch (Exception e)
         {
           EFPApp.ShowException(e, "Не удалось сохранить существующую композицию окон");
-          TempCfg = null;
+          tempCfg = null;
         }
       }
 
@@ -1335,19 +1335,17 @@ namespace FreeLibSet.Forms
           "\". Будет использован интерфейс \"" + AvailableInterfaces[0].Name + "\"");
         Interface = AvailableInterfaces[0];
       }
-      if (TempCfg != null)
+      if (tempCfg != null)
       {
         try
         {
-          Interface.LoadComposition(TempCfg);
+          Interface.LoadComposition(tempCfg);
         }
         catch (Exception e)
         {
           EFPApp.ShowException(e, "Не удалось восстановить композицию окон");
         }
       }
-
-
     }
 
     #region Событие InterfaceStateChanged
@@ -1403,13 +1401,13 @@ namespace FreeLibSet.Forms
       if (_UpdateInterfaceCount > 0)
         return;
 
-      EFPAppInterfaceState NewState = new EFPAppInterfaceState();
+      EFPAppInterfaceState newState = new EFPAppInterfaceState();
       //System.Diagnostics.Trace.WriteLine("TestInterfaceChanged: " + (NewState == FInterfaceState).ToString(), "CurrentChildForm=" + DataTools.GetString(NewState.CurrentChildForm));
 
-      if ((NewState == _InterfaceState) && (!_InterfaceChangedFlag)) // проверяем наличие изменений
+      if ((newState == _InterfaceState) && (!_InterfaceChangedFlag)) // проверяем наличие изменений
         return;
 
-      _InterfaceState = NewState;
+      _InterfaceState = newState;
       _InterfaceChangedFlag = false;
       OnInterfaceChanged(); // вызов события
     }
@@ -1500,10 +1498,10 @@ namespace FreeLibSet.Forms
     /// </summary>
     public static void LoadComposition()
     {
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(CompositionConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(CompositionConfigSectionName,
         EFPConfigCategories.UI, String.Empty);
       CfgPart cfg;
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfg))
+      using (EFPApp.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfg))
       {
         LoadComposition(cfg);
       }
@@ -1533,15 +1531,15 @@ namespace FreeLibSet.Forms
       {
         if (AvailableInterfaces != null)
         {
-          string InterfaceType = cfg.GetString("InterfaceType");
-          if (String.IsNullOrEmpty(InterfaceType))
+          string interfaceType = cfg.GetString("InterfaceType");
+          if (String.IsNullOrEmpty(interfaceType))
             EFPApp.Interface = AvailableInterfaces[0];
           else
           {
             int p = -1;
             for (int i = 0; i < AvailableInterfaces.Length; i++)
             {
-              if (AvailableInterfaces[i].Name == InterfaceType)
+              if (AvailableInterfaces[i].Name == interfaceType)
               {
                 p = i;
                 break;
@@ -1551,7 +1549,7 @@ namespace FreeLibSet.Forms
               EFPApp.Interface = AvailableInterfaces[p];
             else
             {
-              EFPApp.WarningMessageBox("Интефрейс типа \"" + InterfaceType + "\" недоступен. Будет использован интерфейс \"" + AvailableInterfaces[0].Name + "\"", "Восстановление интерфейса");
+              EFPApp.WarningMessageBox("Интефрейс типа \"" + interfaceType + "\" недоступен. Будет использован интерфейс \"" + AvailableInterfaces[0].Name + "\"", "Восстановление интерфейса");
               EFPApp.Interface = AvailableInterfaces[0];
             }
           }
@@ -1587,13 +1585,13 @@ namespace FreeLibSet.Forms
         return;
 
       // Записываем во временную секцию
-      TempCfg Temp = new TempCfg();
-      Interface.SaveComposition(Temp);
+      TempCfg tmp = new TempCfg();
+      Interface.SaveComposition(tmp);
 
-      Bitmap Snapshot = null;
+      Bitmap snapshot = null;
       try
       {
-        Snapshot = EFPApp.CreateSnapshot(true);
+        snapshot = EFPApp.CreateSnapshot(true);
       }
       catch { }
 
@@ -1601,22 +1599,22 @@ namespace FreeLibSet.Forms
       try
       {
         if (EFPApp.CompositionHistoryCount > 0)
-          EFPAppCompositionHistoryHandler.SaveHistory(Temp, Snapshot);
+          EFPAppCompositionHistoryHandler.SaveHistory(tmp, snapshot);
 
         #region Основная секция UI
 
-        EFPConfigSectionInfo ConfigInfoUI = new EFPConfigSectionInfo(CompositionConfigSectionName,
+        EFPConfigSectionInfo configInfoUI = new EFPConfigSectionInfo(CompositionConfigSectionName,
           EFPConfigCategories.UI, String.Empty);
         CfgPart cfgUI;
-        using (ConfigManager.GetConfig(ConfigInfoUI, EFPConfigMode.Write, out cfgUI))
+        using (ConfigManager.GetConfig(configInfoUI, EFPConfigMode.Write, out cfgUI))
         {
           cfgUI.Clear();
-          Temp.CopyTo(cfgUI);
+          tmp.CopyTo(cfgUI);
         }
 
-        EFPConfigSectionInfo ConfigInfoSnapshot = new EFPConfigSectionInfo(CompositionConfigSectionName,
+        EFPConfigSectionInfo configInfoSnapshot = new EFPConfigSectionInfo(CompositionConfigSectionName,
           EFPConfigCategories.UISnapshot, String.Empty);
-        EFPApp.SnapshotManager.SaveSnapshot(ConfigInfoSnapshot, Snapshot);
+        EFPApp.SnapshotManager.SaveSnapshot(configInfoSnapshot, snapshot);
 
         #endregion
       }
@@ -1691,22 +1689,22 @@ namespace FreeLibSet.Forms
 
       #region В списке FormCreators
 
-      foreach (IEFPFormCreator Creator in FormCreators)
+      foreach (IEFPFormCreator creator in FormCreators)
       {
-        Form Res = Creator.CreateForm(creatorParams);
-        if (Res != null)
-          return Res;
+        Form res = creator.CreateForm(creatorParams);
+        if (res != null)
+          return res;
       }
 
       #endregion
 
       #region С помощью конструктора по умолчанию
 
-      Assembly[] Asms = AppDomain.CurrentDomain.GetAssemblies();
+      Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
       Type t = null;
-      for (int i = 0; i < Asms.Length; i++)
+      for (int i = 0; i < asms.Length; i++)
       {
-        t = Asms[i].GetType(creatorParams.ClassName);
+        t = asms[i].GetType(creatorParams.ClassName);
         if (t != null)
           break;
       }
@@ -1777,18 +1775,18 @@ namespace FreeLibSet.Forms
     {
       if (form == null)
         return false;
-      EFPFormProvider FormProvider = EFPFormProvider.FindFormProvider(form);
-      if (FormProvider == null)
+      EFPFormProvider formProvider = EFPFormProvider.FindFormProvider(form);
+      if (formProvider == null)
         return false; // этого не должно быть
 
-      if (FormProvider.ConfigClassName.Length == 0)
+      if (formProvider.ConfigClassName.Length == 0)
         return false; // не сохраняется
 
       // Может не быть класса-наследника формы, если есть подходящий IEFPFormCreator.
       // if (form.GetType() == typeof(Form))
       //   return false; 
 
-      if (String.IsNullOrEmpty(FormProvider.ConfigSectionName))
+      if (String.IsNullOrEmpty(formProvider.ConfigSectionName))
         return false; // 20.09.2018 Не все формы корректно восстанавливаются
 
       return true;
@@ -1815,10 +1813,10 @@ namespace FreeLibSet.Forms
       if (ConfigManager == null)
         throw new NullReferenceException("Свойство ConfigManager не установлено");
 
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(MainWindowConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(MainWindowConfigSectionName,
         EFPConfigCategories.MainWindow, String.Empty);
       CfgPart cfg;
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
+      using (EFPApp.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfg))
       {
         EFPApp.Interface.SaveMainWindowLayout(cfg);
       }
@@ -1839,10 +1837,10 @@ namespace FreeLibSet.Forms
       if (ConfigManager == null)
         throw new NullReferenceException("Свойство ConfigManager не установлено");
 
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(MainWindowConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(MainWindowConfigSectionName,
         EFPConfigCategories.MainWindow, String.Empty);
       CfgPart cfg;
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfg))
+      using (EFPApp.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfg))
       {
         EFPApp.Interface.LoadMainWindowLayout(cfg);
       }
@@ -1882,12 +1880,12 @@ namespace FreeLibSet.Forms
         lo.ToolBars = tb2;
         lo.StatusBar = sb2;
 
-        FormToolStripInfo Info = new FormToolStripInfo(lo.MainWindow);
+        FormToolStripInfo info = new FormToolStripInfo(lo.MainWindow);
 
         //foreach (EFPAppToolBar tb in tb2)
         //  tb.Info = new FormToolStripInfo(lo.MainWindow);
 
-        sb2.StatusStripControl = Info.StatusBar;
+        sb2.StatusStripControl = info.StatusBar;
       }
     }
 
@@ -2044,7 +2042,7 @@ namespace FreeLibSet.Forms
 
     /*
      *     /// Свойство нельзя использовать для размещения формы из обработчика Form.OnLoad(),
-    /// т.к. оно моэет вернуть экран, на котором размещена 
+    /// т.к. оно может вернуть экран, на котором размещена 
 
      * */
 
@@ -2127,7 +2125,6 @@ namespace FreeLibSet.Forms
     {
       WinFormsTools.PlaceFormInScreenCenter(form, DefaultScreen);
     }
-
 
     #endregion
 
@@ -2235,7 +2232,6 @@ namespace FreeLibSet.Forms
     private static bool _OwnStatusBarsIfNeeded = true;
 
     #endregion
-
 
     /// <summary>
     /// Это событие вызывается перед событием EFPCommandItem.Click для любой команды главного или локального меню, панели инструментов или статусной строки.
@@ -2370,16 +2366,16 @@ namespace FreeLibSet.Forms
 
       if (String.IsNullOrEmpty(imageKey))
         return null;
-      Icon Res;
-      if (!_MainImageIcons.TryGetValue(imageKey, out Res))
+      Icon res;
+      if (!_MainImageIcons.TryGetValue(imageKey, out res))
       {
-        Bitmap Bmp = MainImages.Images[imageKey] as Bitmap;
-        if (Bmp == null)
+        Bitmap bmp = MainImages.Images[imageKey] as Bitmap;
+        if (bmp == null)
           return null;
-        Res = Icon.FromHandle(Bmp.GetHicon());
-        _MainImageIcons.Add(imageKey, Res);
+        res = Icon.FromHandle(bmp.GetHicon());
+        _MainImageIcons.Add(imageKey, res);
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -2466,33 +2462,33 @@ namespace FreeLibSet.Forms
 
       if (control is Button)
       {
-        string ImageName;
+        string imageKey;
         switch (((Button)control).DialogResult)
         {
-          case DialogResult.OK: ImageName = "Ok"; break;
+          case DialogResult.OK: imageKey = "Ok"; break;
           case DialogResult.Cancel:
             // Форма может иметь единственную кнопку закрытия с
             // DialogResult.Cancel. В этом случае рисуется значок от
             // кнопки <OK>
             if (control.FindForm().AcceptButton == (Button)control)
-              ImageName = "Ok";
+              imageKey = "Ok";
             else
-              ImageName = "Cancel";
+              imageKey = "Cancel";
             break;
-          case DialogResult.Yes: ImageName = "Yes"; break;
-          case DialogResult.No: ImageName = "No"; break;
+          case DialogResult.Yes: imageKey = "Yes"; break;
+          case DialogResult.No: imageKey = "No"; break;
           default: return;
         }
         ((Button)control).ImageList = MainImages;
-        ((Button)control).ImageKey = ImageName;
+        ((Button)control).ImageKey = imageKey;
         ((Button)control).ImageAlign = ContentAlignment.MiddleLeft;
       }
       else
       {
         if (control.HasChildren)
         {
-          foreach (Control ChildControl in control.Controls)
-            InitControlImages(ChildControl); // рекурсивная процедура
+          foreach (Control childControl in control.Controls)
+            InitControlImages(childControl); // рекурсивная процедура
         }
       }
     }
@@ -2539,8 +2535,8 @@ namespace FreeLibSet.Forms
       if (ControlCommandItemsNeeded == null)
         return;
 
-      EFPControlCommandItemsNeededEventArgs Args = new EFPControlCommandItemsNeededEventArgs(controlProvider);
-      ControlCommandItemsNeeded(null, Args);
+      EFPControlCommandItemsNeededEventArgs args = new EFPControlCommandItemsNeededEventArgs(controlProvider);
+      ControlCommandItemsNeeded(null, args);
     }
 
     #endregion
@@ -2562,17 +2558,17 @@ namespace FreeLibSet.Forms
     {
       if (isOKCancelForm)
       {
-        OKCancelForm Form = new OKCancelForm();
-        formProvider = Form.FormProvider;
-        mainPanel = Form.MainPanel;
-        return Form;
+        OKCancelForm form = new OKCancelForm();
+        formProvider = form.FormProvider;
+        mainPanel = form.MainPanel;
+        return form;
       }
       else
       {
-        Form Form = new Form();
-        formProvider = new EFPFormProvider(Form);
-        mainPanel = Form;
-        return Form;
+        Form form = new Form();
+        formProvider = new EFPFormProvider(form);
+        mainPanel = form;
+        return form;
       }
     }
 
@@ -2586,19 +2582,18 @@ namespace FreeLibSet.Forms
     /// <returns>Созданный объект Form</returns>
     public static Form CreateTabControlForm(bool isOKCancelForm, out EFPFormProvider formProvider, out TabControl theTabControl)
     {
-      Control MainPanel;
-      Form Form = CreateForm(isOKCancelForm, out formProvider, out MainPanel);
+      Control mainPanel;
+      Form form = CreateForm(isOKCancelForm, out formProvider, out mainPanel);
       theTabControl = new TabControl();
       theTabControl.Dock = DockStyle.Fill;
       theTabControl.ImageList = EFPApp.MainImages;
-      MainPanel.Controls.Add(theTabControl);
-      return Form;
+      mainPanel.Controls.Add(theTabControl);
+      return form;
     }
 
     #endregion
 
     #region Немодальные формы
-
 
 #if XXX
     /// <summary>
@@ -2912,16 +2907,16 @@ namespace FreeLibSet.Forms
 
       EFPFormProvider formProvider = EFPFormProvider.FindFormProviderRequired(form);
 
-      bool CenterInScreen = true;
+      bool centerInScreen = true;
       if (position != null && (!IgnoreDialogPosition))
       {
         if ((!position.PopupOwnerBounds.IsEmpty) || position.PopupOwnerControl != null)
         {
           formProvider.DialogPosition = position;
-          CenterInScreen = false;
+          centerInScreen = false;
         }
       }
-      return ShowDialog(form, dispose, CenterInScreen);
+      return ShowDialog(form, dispose, centerInScreen);
     }
 
     /// <summary>
@@ -2995,27 +2990,27 @@ namespace FreeLibSet.Forms
         EFPApp.ShowException(e, "Ошибка определения позиции блока диалога");
       }
 
-      IWin32Window CurrDialogOwnerWindow = EFPApp.DialogOwnerWindow; // запоминаем до очистки ExternalDialogOwnerWindow
+      IWin32Window currDialogOwnerWindow = EFPApp.DialogOwnerWindow; // запоминаем до очистки ExternalDialogOwnerWindow
 
-      DialogRunner Runner = new DialogRunner();
+      DialogRunner runner = new DialogRunner();
       DialogResult res;
-      Runner.Attach(form);
-      Runner.PrevExternalDialogOwnerWindowSetFlag = _ExternalDialogOwnerWindowSetFlag;
+      runner.Attach(form);
+      runner.PrevExternalDialogOwnerWindowSetFlag = _ExternalDialogOwnerWindowSetFlag;
       _ExternalDialogOwnerWindowSetFlag = false;
 
 
-      Form LastActiveForm = Form.ActiveForm;
+      Form lastActiveForm = Form.ActiveForm;
 
       // Отцепляем и прячем окна типа калькулятора
-      Form LastToolFormOwner = null;
+      Form lastToolFormOwner = null;
       try
       {
-        foreach (Form ToolForm in ToolFormsForDialogs)
+        foreach (Form toolForm in ToolFormsForDialogs)
         {
-          if (LastToolFormOwner == null)
-            LastToolFormOwner = ToolForm.Owner;
-          ToolForm.Visible = false;
-          ToolForm.Owner = null;
+          if (lastToolFormOwner == null)
+            lastToolFormOwner = toolForm.Owner;
+          toolForm.Visible = false;
+          toolForm.Owner = null;
         }
       }
       catch (Exception e)
@@ -3042,14 +3037,14 @@ namespace FreeLibSet.Forms
         //Form.ShowDialog();
         try
         {
-          form.ShowDialog(CurrDialogOwnerWindow); // 05.04.2014
+          form.ShowDialog(currDialogOwnerWindow); // 05.04.2014
         }
         catch (Exception e)
         {
           if (CanRepeatShowDialogAfterError(e))
           {
             form.ShowDialog(); // 12.03.2018
-            Runner.PrevExternalDialogOwnerWindowSetFlag = false; // чтобы ExternalDialogOwnerWindow не восстанавливалось
+            runner.PrevExternalDialogOwnerWindowSetFlag = false; // чтобы ExternalDialogOwnerWindow не восстанавливалось
           }
           else
             throw;
@@ -3062,7 +3057,7 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          Runner.Detach(form);
+          runner.Detach(form);
         }
         catch (Exception e) // 13.04.2018
         {
@@ -3084,27 +3079,27 @@ namespace FreeLibSet.Forms
         }
 #endif
 
-        _ExternalDialogOwnerWindowSetFlag = Runner.PrevExternalDialogOwnerWindowSetFlag;
+        _ExternalDialogOwnerWindowSetFlag = runner.PrevExternalDialogOwnerWindowSetFlag;
         if (dispose)
           form.Dispose();
 
         // Включаем обратно окна
         try
         {
-          foreach (Form ToolForm in ToolFormsForDialogs)
+          foreach (Form toolForm in ToolFormsForDialogs)
           {
-            if (LastToolFormOwner == null)
-              ToolForm.Owner = MainWindow;
+            if (lastToolFormOwner == null)
+              toolForm.Owner = MainWindow;
             else
               //ToolForm.Owner = FDialogStack.Peek();
               // 14.03.2010
               // Если предыдущий блок диалога в стеке был вызван без EFPFormProvider,
               // то его нельзя делать владельцем для панелек. Иначе когда этот диалог
               // тоже будет закрыт, панельки будут уничтожены
-              ToolForm.Owner = LastToolFormOwner;
-            ToolForm.Visible = true;
-            if (ToolForm.Owner != null) // 27.12.2020 вдруг MainWindow=null?
-              ToolForm.Owner.Activate(); // иначе будет активной форма инструментов
+              toolForm.Owner = lastToolFormOwner;
+            toolForm.Visible = true;
+            if (toolForm.Owner != null) // 27.12.2020 вдруг MainWindow=null?
+              toolForm.Owner.Activate(); // иначе будет активной форма инструментов
           }
         }
         catch (Exception e)
@@ -3118,10 +3113,10 @@ namespace FreeLibSet.Forms
         //    LastActiveForm.Activate();
         //}
 
-        if (CurrDialogOwnerWindow is Form)
-          ((Form)(CurrDialogOwnerWindow)).Activate(); // 14.03.2017
-        else if (LastActiveForm != null && LastActiveForm.Visible)
-          LastActiveForm.Activate();
+        if (currDialogOwnerWindow is Form)
+          ((Form)(currDialogOwnerWindow)).Activate(); // 14.03.2017
+        else if (lastActiveForm != null && lastActiveForm.Visible)
+          lastActiveForm.Activate();
 
         if (IsMainThread && _ExecProcList != null)
         {
@@ -3315,11 +3310,11 @@ namespace FreeLibSet.Forms
 
       if (EFPApp.Interface != null)
       {
-        TForm Form = EFPApp.Interface.FindChildForm<TForm>();
-        if (Form != null)
+        TForm form = EFPApp.Interface.FindChildForm<TForm>();
+        if (form != null)
         {
-          Activate(Form); // 07.06.2021
-          return Form;
+          Activate(form); // 07.06.2021
+          return form;
         }
       }
 
@@ -3445,7 +3440,6 @@ namespace FreeLibSet.Forms
       return false;
     }
 
-
     #endregion
 
     #endregion
@@ -3470,7 +3464,7 @@ namespace FreeLibSet.Forms
       CheckMainThread();
 #endif
 
-      bool Vertical = parentPanel.Dock == DockStyle.Left || parentPanel.Dock == DockStyle.Right;
+      bool isVertical = parentPanel.Dock == DockStyle.Left || parentPanel.Dock == DockStyle.Right;
 
       Button btn = new Button();
       btn.Text = text;
@@ -3480,7 +3474,7 @@ namespace FreeLibSet.Forms
 
       if (parentPanel.Controls.Count == 0)
       {
-        if (Vertical)
+        if (isVertical)
           parentPanel.Width = 88 + 16;
         else
           parentPanel.Height = 24 + 16;
@@ -3489,15 +3483,15 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        Control Last = parentPanel.Controls[parentPanel.Controls.Count - 1];
-        if (Vertical)
-          btn.Location = new Point(8, Last.Top + Last.Height + 8);
+        Control last = parentPanel.Controls[parentPanel.Controls.Count - 1];
+        if (isVertical)
+          btn.Location = new Point(8, last.Top + last.Height + 8);
         else
-          btn.Location = new Point(Last.Left + Last.Width + 8);
+          btn.Location = new Point(last.Left + last.Width + 8);
       }
 
       int w = 88;
-      if (!Vertical)
+      if (!isVertical)
       {
         int n = WinFormsTools.RemoveMnemonic(text).Length;
         if (n > 7)
@@ -3657,9 +3651,9 @@ namespace FreeLibSet.Forms
       if (scrPercentHeight < 1 || scrPercentHeight > 100)
         throw new ArgumentOutOfRangeException("scrPercentHeight");
 
-      Screen Scr = Screen.PrimaryScreen;
-      form.Size = new Size(Scr.Bounds.Width * scrPercentWidth / 100,
-        Scr.Bounds.Height * scrPercentHeight / 100);
+      Screen scr = Screen.PrimaryScreen;
+      form.Size = new Size(scr.Bounds.Width * scrPercentWidth / 100,
+        scr.Bounds.Height * scrPercentHeight / 100);
     }
 
     #endregion
@@ -3686,8 +3680,8 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      Form[] Forms = EFPApp.Interface.GetChildForms(false);
-      Form Curr = EFPApp.Interface.CurrentChildForm;
+      Form[] forms = EFPApp.Interface.GetChildForms(false);
+      Form curr = EFPApp.Interface.CurrentChildForm;
 #if XXX
       ListSelectDialog dlg = new ListSelectDialog();
       dlg.Title = "Выбрать окно";
@@ -3707,20 +3701,20 @@ namespace FreeLibSet.Forms
       Forms[dlg.SelectedIndex].Activate();
 #endif
 
-      using (OKCancelGridForm Form = new OKCancelGridForm())
+      using (OKCancelGridForm form = new OKCancelGridForm())
       {
         //SetFormSize(Form, 50, 50);
-        Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
-        Form.Text = "Выбрать окно";
-        Form.Icon = EFPApp.MainImageIcon("WindowList");
-        Form.FormProvider.OwnStatusBar = true;
-        Form.FormProvider.ConfigSectionName = "ChildFormListDialog";
+        form.StartPosition = FormStartPosition.WindowsDefaultBounds;
+        form.Text = "Выбрать окно";
+        form.Icon = EFPApp.MainImageIcon("WindowList");
+        form.FormProvider.OwnStatusBar = true;
+        form.FormProvider.ConfigSectionName = "ChildFormListDialog";
 
         //bool ShowMainWindowNo = false;
         //if (!EFPApp.Interface.IsSDI)
         //  ShowMainWindowNo = EFPApp.Interface.MainWindowCount > 1;
 
-        EFPDataGridView gh = new EFPDataGridView(Form.ControlWithToolBar);
+        EFPDataGridView gh = new EFPDataGridView(form.ControlWithToolBar);
         gh.Control.AutoGenerateColumns = false;
         if (EFPApp.ShowListImages)
           gh.Columns.AddImage("Image");
@@ -3741,29 +3735,29 @@ namespace FreeLibSet.Forms
         gh.Control.ReadOnly = true;
         gh.CanView = false;
         gh.CommandItems.EnterAsOk = true;
-        gh.Control.RowCount = Forms.Length;
-        for (int i = 0; i < Forms.Length; i++)
+        gh.Control.RowCount = forms.Length;
+        for (int i = 0; i < forms.Length; i++)
         {
-          gh.Control.Rows[i].Tag = Forms[i];
+          gh.Control.Rows[i].Tag = forms[i];
           gh.Control["Order", i].Value = i + 1;
-          string txt = Forms[i].Text;
-          if (EFPApp.IsMinimized(Forms[i]))
+          string txt = forms[i].Text;
+          if (EFPApp.IsMinimized(forms[i]))
             txt += " (свернуто)";
           if (debugShowHWND)
-            txt += " (HWND=" + Forms[i].Handle.ToString() + ")";
+            txt += " (HWND=" + forms[i].Handle.ToString() + ")";
           gh.Control["Text", i].Value = txt;
-          if (Object.ReferenceEquals(Forms[i], Curr))
+          if (Object.ReferenceEquals(forms[i], curr))
             gh.CurrentRowIndex = i;
           if (useNumberText)
-            gh.Control["MainWindow", i].Value = EFPApp.GetMainWindowNumberText(Forms[i]);
+            gh.Control["MainWindow", i].Value = EFPApp.GetMainWindowNumberText(forms[i]);
         }
 
         gh.CurrentColumnName = "Text";
 
-        if (EFPApp.ShowDialog(Form, false, true) == DialogResult.OK)
+        if (EFPApp.ShowDialog(form, false, true) == DialogResult.OK)
         {
           if (gh.CurrentRowIndex >= 0)
-            Activate(Forms[gh.CurrentRowIndex]); // 07.06.2021
+            Activate(forms[gh.CurrentRowIndex]); // 07.06.2021
         }
       }
     }
@@ -3775,12 +3769,12 @@ namespace FreeLibSet.Forms
         return;
 
 
-      Form Form = (Form)(gh.Control.Rows[args.RowIndex].Tag);
+      Form form = (Form)(gh.Control.Rows[args.RowIndex].Tag);
 
       switch (args.ColumnName)
       {
         case "Image":
-          args.Value = EFPApp.GetFormIconImage(Form);
+          args.Value = EFPApp.GetFormIconImage(form);
           break;
         //case "Order":
         //  Args.Value = Args.RowIndex + 1;
@@ -3936,22 +3930,22 @@ namespace FreeLibSet.Forms
 
         // 28.11.2018
 
-        MessageBoxBaseForm BaseForm = new MessageBoxBaseForm();
+        MessageBoxBaseForm baseForm = new MessageBoxBaseForm();
         try
         {
-          BaseForm.Text = String.Empty;
-          BaseForm.FormBorderStyle = FormBorderStyle.None;
-          BaseForm.Size = new Size(1, 1);
-          BaseForm.StartPosition = FormStartPosition.CenterScreen;
-          BaseForm.HelpContext = helpContext;
-          EFPApp.ShowFormInternal(BaseForm);
-          res = System.Windows.Forms.MessageBox.Show(BaseForm,
+          baseForm.Text = String.Empty;
+          baseForm.FormBorderStyle = FormBorderStyle.None;
+          baseForm.Size = new Size(1, 1);
+          baseForm.StartPosition = FormStartPosition.CenterScreen;
+          baseForm.HelpContext = helpContext;
+          EFPApp.ShowFormInternal(baseForm);
+          res = System.Windows.Forms.MessageBox.Show(baseForm,
             text, caption, buttons, icon, defaultButton, (MessageBoxOptions)0, helpContext);
-          BaseForm.Hide();
+          baseForm.Hide();
         }
         finally
         {
-          BaseForm.Dispose();
+          baseForm.Dispose();
         }
       }
       return res;
@@ -4228,9 +4222,9 @@ namespace FreeLibSet.Forms
       {
         if (ExceptionShowing != null)
         {
-          EFPAppExceptionEventArgs Args = new EFPAppExceptionEventArgs(exception, title);
-          ExceptionShowing(null, Args);
-          if (!Args.Handled)
+          EFPAppExceptionEventArgs args = new EFPAppExceptionEventArgs(exception, title);
+          ExceptionShowing(null, args);
+          if (!args.Handled)
           {
             if (LogoutTools.GetException<UserCancelException>(exception) != null)
               return;
@@ -4406,14 +4400,14 @@ namespace FreeLibSet.Forms
 
       Splash spl = null;
 
-      object Res = null;
+      object res = null;
       try
       {
         while (true)
         {
           try
           {
-            Res = action.DynamicInvoke(args);
+            res = action.DynamicInvoke(args);
           }
           catch (Exception e)
           {
@@ -4440,7 +4434,7 @@ namespace FreeLibSet.Forms
           spl.Close();
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -4470,16 +4464,16 @@ namespace FreeLibSet.Forms
     /// <param name="isModal">Если true, то окно выводится в модальном режиме. Иначе режим зависит от текущего состояния программы (наличия открытых блоков диалога)</param>
     public static void ShowTextView(string text, string title, bool isModal)
     {
-      SimpleForm<TextBox> Form = new SimpleForm<TextBox>();
+      SimpleForm<TextBox> frm = new SimpleForm<TextBox>();
       try
       {
-        Form.Text = title;
+        frm.Text = title;
         if (EFPApp.IsMainThread)
-          Form.Icon = EFPApp.MainImageIcon("Notepad");
+          frm.Icon = EFPApp.MainImageIcon("Notepad");
         // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         if (isModal) // 31.08.2016 
-          Form.WindowState = FormWindowState.Maximized;
-        TextBox tb = Form.ControlWithToolBar.Control;
+          frm.WindowState = FormWindowState.Maximized;
+        TextBox tb = frm.ControlWithToolBar.Control;
         tb.Multiline = true;
         tb.ScrollBars = ScrollBars.Both;
         tb.ReadOnly = true;
@@ -4489,22 +4483,22 @@ namespace FreeLibSet.Forms
 
         if (EFPApp.IsMainThread)
         {
-          EFPTextBox efpTB = new EFPTextBox(Form.ControlWithToolBar);
+          EFPTextBox efpTB = new EFPTextBox(frm.ControlWithToolBar);
 
           if (isModal)
-            ShowDialog(Form, true);
+            ShowDialog(frm, true);
           else
-            EFPApp.ShowFormOrDialog(Form);
+            EFPApp.ShowFormOrDialog(frm);
         }
         else // 12.05.2016
         {
-          Form.ShowDialog();
-          Form.Dispose();
+          frm.ShowDialog();
+          frm.Dispose();
         }
       }
       catch
       {
-        Form.Dispose(); // 06.04.2018
+        frm.Dispose(); // 06.04.2018
         throw;
       }
     }
@@ -4545,28 +4539,28 @@ namespace FreeLibSet.Forms
     /// Файл не обязан реально существовать.</param>
     public static void ShowXmlView(XmlDocument xmlDoc, string title, bool isModal, string fileName)
     {
-      SimpleForm<XmlViewBox> Form = new SimpleForm<XmlViewBox>();
+      SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>();
       try
       {
-        Form.Text = title;
-        Form.Icon = EFPApp.MainImageIcon("XML");
+        frm.Text = title;
+        frm.Icon = EFPApp.MainImageIcon("XML");
         // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         if (isModal) // 31.08.2016 
-          Form.WindowState = FormWindowState.Maximized;
+          frm.WindowState = FormWindowState.Maximized;
 
-        EFPXmlViewBox efpVB = new EFPXmlViewBox(Form.ControlWithToolBar);
+        EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
 
         efpVB.XmlDocument = xmlDoc;
         efpVB.FileName = fileName;
 
         if (isModal)
-          ShowDialog(Form, true);
+          ShowDialog(frm, true);
         else
-          EFPApp.ShowFormOrDialog(Form);
+          EFPApp.ShowFormOrDialog(frm);
       }
       catch
       {
-        Form.Dispose(); // 06.04.2018
+        frm.Dispose(); // 06.04.2018
         throw;
       }
     }
@@ -4604,27 +4598,27 @@ namespace FreeLibSet.Forms
     /// Иначе режим зависит от текущего состояния программы (наличия открытых блоков диалога)</param>
     public static void ShowXmlView(AbsPath filePath, string title, bool isModal)
     {
-      SimpleForm<XmlViewBox> Form = new SimpleForm<XmlViewBox>();
+      SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>();
       try
       {
-        Form.Text = title;
-        Form.Icon = EFPApp.MainImageIcon("XML");
+        frm.Text = title;
+        frm.Icon = EFPApp.MainImageIcon("XML");
         // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         if (isModal) // 31.08.2016 
-          Form.WindowState = FormWindowState.Maximized;
+          frm.WindowState = FormWindowState.Maximized;
 
-        EFPXmlViewBox efpVB = new EFPXmlViewBox(Form.ControlWithToolBar);
+        EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
 
         efpVB.Control.XmlFilePath = filePath.Path;
 
         if (isModal)
-          ShowDialog(Form, true);
+          ShowDialog(frm, true);
         else
-          EFPApp.ShowFormOrDialog(Form);
+          EFPApp.ShowFormOrDialog(frm);
       }
       catch
       {
-        Form.Dispose(); // 06.04.2018
+        frm.Dispose(); // 06.04.2018
         throw;
       }
     }
@@ -5068,15 +5062,15 @@ namespace FreeLibSet.Forms
           int p = helpContext.IndexOf("::", StringComparison.Ordinal);
           if (p < 0)
             throw new ArgumentException("Неправильный контекст справки: \"" + helpContext + "\"", "helpContext");
-          string FileName = helpContext.Substring(0, p);
-          string Topic = helpContext.Substring(p + 2);
-          Help.ShowHelp(null, FileName, HelpNavigator.Topic, Topic);
+          string fileName = helpContext.Substring(0, p);
+          string topic = helpContext.Substring(p + 2);
+          Help.ShowHelp(null, fileName, HelpNavigator.Topic, topic);
         }
       }
       else
       {
-        EFPHelpContextEventArgs Args = new EFPHelpContextEventArgs(helpContext);
-        ShowHelpNeeded(null, Args);
+        EFPHelpContextEventArgs args = new EFPHelpContextEventArgs(helpContext);
+        ShowHelpNeeded(null, args);
       }
     }
 
@@ -5198,18 +5192,18 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      bool Res;
+      bool res;
       _InsideShowWindowsExplorer = true;
       try
       {
-        Res = DoShowWindowsExplorer(dir);
+        res = DoShowWindowsExplorer(dir);
       }
       finally
       {
         _InsideShowWindowsExplorer = false;
       }
 
-      return Res;
+      return res;
     }
 
     private static bool _InsideShowWindowsExplorer = false;
@@ -5278,13 +5272,13 @@ namespace FreeLibSet.Forms
 
       if (IsWindowsExplorerSupported)
       {
-        FreeLibSet.Shell.FileAssociationItem FA = EFPApp.FileExtAssociations.ShowDirectory.OpenItem;
+        FreeLibSet.Shell.FileAssociationItem faItem = EFPApp.FileExtAssociations.ShowDirectory.OpenItem;
         try
         {
-          EFPApp.BeginWait("Запуск " + FA.DisplayName, "WindowsExplorer");
+          EFPApp.BeginWait("Запуск " + faItem.DisplayName, "WindowsExplorer");
           try
           {
-            FA.Execute(dir);
+            faItem.Execute(dir);
           }
           finally
           {
@@ -5295,7 +5289,7 @@ namespace FreeLibSet.Forms
         catch (Exception e)
         {
           e.Data["Dir"] = dir.Path;
-          EFPApp.ShowException(e, "Ошибка запуска " + FA.DisplayName);
+          EFPApp.ShowException(e, "Ошибка запуска " + faItem.DisplayName);
           return false;
         }
       }
@@ -5373,18 +5367,18 @@ namespace FreeLibSet.Forms
     /// <returns>Наличие каталога</returns>
     public static bool DirectoryExists(AbsPath dir)
     {
-      bool Res;
+      bool res;
       EFPApp.BeginWait("Определение существования каталога", "Open");
       try
       {
-        Res = Directory.Exists(dir.Path);
+        res = Directory.Exists(dir.Path);
       }
       finally
       {
         EFPApp.EndWait();
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -5394,18 +5388,18 @@ namespace FreeLibSet.Forms
     /// <returns>Наличие файла</returns>
     public static bool FileExists(AbsPath filePath)
     {
-      bool Res;
+      bool res;
       EFPApp.BeginWait("Определение существования файла", "Open");
       try
       {
-        Res = File.Exists(filePath.Path);
+        res = File.Exists(filePath.Path);
       }
       finally
       {
         EFPApp.EndWait();
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -5862,15 +5856,15 @@ namespace FreeLibSet.Forms
 
     private static void DoProcessUICallBack(IExecProcCallBack callBack)
     {
-      NamedValues Args = callBack.GetSuspended();
-      if (Args != null)
+      NamedValues args = callBack.GetSuspended();
+      if (args != null)
       {
-        NamedValues Res = null;
+        NamedValues res = null;
         using (FreeLibSet.RI.RIExecProc proc = new FreeLibSet.RI.RIExecProc(RemoteInterface))
         {
           try
           {
-            Res = proc.Execute(Args);
+            res = proc.Execute(args);
           }
           catch (Exception e) // 10.04.2018
           {
@@ -5878,8 +5872,8 @@ namespace FreeLibSet.Forms
             callBack.SetException(e);
           }
         }
-        if (Res != null)
-          callBack.Resume(Res);
+        if (res != null)
+          callBack.Resume(res);
       }
     }
 
@@ -5954,73 +5948,73 @@ namespace FreeLibSet.Forms
 
       // Выделяем место под все окна, невзирая на ForComposition
 
-      Rectangle WholeArea = Rectangle.Empty;
-      EFPAppMainWindowLayout[] Layouts = EFPApp.Interface.GetMainWindowLayouts(true); // порядок окон важен
+      Rectangle wholeArea = Rectangle.Empty;
+      EFPAppMainWindowLayout[] layouts = EFPApp.Interface.GetMainWindowLayouts(true); // порядок окон важен
 
-      if (Layouts.Length == 0)
+      if (layouts.Length == 0)
         return new Bitmap(1, 1); // пустышка
 
-      for (int i = 0; i < Layouts.Length; i++)
+      for (int i = 0; i < layouts.Length; i++)
       {
-        Rectangle Bounds;
-        if (Layouts[i].MainWindow.WindowState == FormWindowState.Minimized)
-          Bounds = Layouts[i].MainWindow.RestoreBounds;
+        Rectangle bounds;
+        if (layouts[i].MainWindow.WindowState == FormWindowState.Minimized)
+          bounds = layouts[i].MainWindow.RestoreBounds;
         else
-          Bounds = Layouts[i].MainWindow.Bounds;
+          bounds = layouts[i].MainWindow.Bounds;
         if (i == 0)
-          WholeArea = Bounds;
+          wholeArea = bounds;
         else
-          WholeArea = Rectangle.Union(WholeArea, Bounds);
+          wholeArea = Rectangle.Union(wholeArea, bounds);
       }
 
       #endregion
 
       #region Копирование изображений
 
-      Bitmap bmp = new Bitmap(WholeArea.Width, WholeArea.Height);
+      Bitmap bmp = new Bitmap(wholeArea.Width, wholeArea.Height);
 
       using (Graphics g = Graphics.FromImage(bmp))
       {
-        g.FillRectangle(new SolidBrush(/*SystemColors.Desktop*/ Color.Gray), new Rectangle(0, 0, WholeArea.Width, WholeArea.Height));
+        g.FillRectangle(new SolidBrush(/*SystemColors.Desktop*/ Color.Gray), new Rectangle(0, 0, wholeArea.Width, wholeArea.Height));
       }
 
-      for (int i = Layouts.Length - 1; i >= 0; i--)
+      for (int i = layouts.Length - 1; i >= 0; i--)
       {
         if (forComposition && EFPApp.Interface.IsSDI)
         {
-          if (Layouts[i].ChildFormCount == 0)
+          if (layouts[i].ChildFormCount == 0)
             continue; // пустышка
 
-          if (!FormWantsSaveComposition(Layouts[i].CurrentChildForm))
+          if (!FormWantsSaveComposition(layouts[i].CurrentChildForm))
             continue;
         }
 
         Rectangle rc; // координаты относительно экрана
-        if (Layouts[i].MainWindow.WindowState == FormWindowState.Minimized)
-          rc = Layouts[i].MainWindow.RestoreBounds;
+        if (layouts[i].MainWindow.WindowState == FormWindowState.Minimized)
+          rc = layouts[i].MainWindow.RestoreBounds;
         else
-          rc = Layouts[i].MainWindow.Bounds;
-        rc.Offset(-WholeArea.Left, -WholeArea.Top);
+          rc = layouts[i].MainWindow.Bounds;
+        rc.Offset(-wholeArea.Left, -wholeArea.Top);
 
-        if (Layouts[i].MainWindow.WindowState == FormWindowState.Minimized)
+        if (layouts[i].MainWindow.WindowState == FormWindowState.Minimized)
         {
           // Временно восстанавливаем окно
-          Layouts[i].MainWindow.WindowState = FormWindowState.Normal;
-          Layouts[i].DrawMainWindowSnapshot(bmp, rc, forComposition);
-          Layouts[i].MainWindow.WindowState = FormWindowState.Minimized;
+          layouts[i].MainWindow.WindowState = FormWindowState.Normal;
+          layouts[i].DrawMainWindowSnapshot(bmp, rc, forComposition);
+          layouts[i].MainWindow.WindowState = FormWindowState.Minimized;
         }
         else
-          Layouts[i].DrawMainWindowSnapshot(bmp, rc, forComposition);
+          layouts[i].DrawMainWindowSnapshot(bmp, rc, forComposition);
       }
 
       #endregion
 
       #region Уменьшаем изображение
 
-      Size NewSize;
-      if (ImagingTools.IsImageShrinkNeeded(bmp, SnapshotSize, out NewSize))
+      Size newSize;
+      if (ImagingTools.IsImageShrinkNeeded(bmp, SnapshotSize, out newSize))
       {
-        Bitmap bmp2 = new Bitmap(bmp, NewSize);
+        Bitmap bmp2 = new Bitmap(bmp, newSize);
         bmp.Dispose();
         bmp = bmp2;
       }

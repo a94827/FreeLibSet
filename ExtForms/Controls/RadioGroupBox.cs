@@ -309,11 +309,11 @@ namespace FreeLibSet.Controls
 
     void btn_CheckedChanged(object sender, EventArgs args)
     {
-      int NewSelectedIndex = this.SelectedIndex;
-      if (NewSelectedIndex == _PrevSelectedIndex)
+      int newSelectedIndex = this.SelectedIndex;
+      if (newSelectedIndex == _PrevSelectedIndex)
         return; // не изменилось
 
-      _PrevSelectedIndex = NewSelectedIndex;
+      _PrevSelectedIndex = newSelectedIndex;
       OnSelectedIndexChanged(EventArgs.Empty);
     }
 
@@ -343,18 +343,18 @@ namespace FreeLibSet.Controls
 
     internal void InitImagesVisible()
     {
-      bool HasImage = false;
+      bool hasImage = false;
       for (int i = 0; i < _Buttons.Length; i++)
       {
         if (_ImageLabels[i].Image != null)
-          HasImage = true;
+          hasImage = true;
         else if ((_ImageLabels[i].ImageIndex >= 0 || (!String.IsNullOrEmpty(_ImageLabels[i].ImageKey))) && _ImageList != null)
-          HasImage = true;
-        if (HasImage)
+          hasImage = true;
+        if (hasImage)
           break;
       }
 
-      if (HasImage)
+      if (hasImage)
         _Panel.ColumnStyles[0] = new ColumnStyle(SizeType.AutoSize);
       else
         _Panel.ColumnStyles[0] = new ColumnStyle(SizeType.Absolute, 0);

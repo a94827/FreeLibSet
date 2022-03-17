@@ -167,10 +167,10 @@ namespace FreeLibSet.Forms
       if (form == null)
         throw new ArgumentNullException("form");
 
-      EFPFormBoundsPart ResParts = EFPFormBoundsPart.None;
+      EFPFormBoundsPart resParts = EFPFormBoundsPart.None;
 
       if (IsEmpty)
-        return ResParts;
+        return resParts;
 
       CorrectBounds(form);
 
@@ -185,7 +185,7 @@ namespace FreeLibSet.Forms
         form.StartPosition = FormStartPosition.Manual;
       }
 
-      FormWindowState OrgState = form.WindowState;
+      FormWindowState orgState = form.WindowState;
 
       EFPFormBoundsPart boundsparts = parts & (EFPFormBoundsPart.Location | EFPFormBoundsPart.Size);
 
@@ -203,19 +203,19 @@ namespace FreeLibSet.Forms
               form.Location = Bounds.Location;
             else
               form.Size = Bounds.Size;
-            ResParts |= boundsparts;
+            resParts |= boundsparts;
             break;
           default: // только положение, но не размеры
             if ((parts & EFPFormBoundsPart.Location) != 0)
             {
               form.Location = Bounds.Location;
-              ResParts |= EFPFormBoundsPart.Location;
+              resParts |= EFPFormBoundsPart.Location;
             }
             break;
         }
       }
 
-      bool StateSetFlag = false;
+      bool stateSetFlag = false;
 
       if ((parts & EFPFormBoundsPart.WindowState) != 0)
       {
@@ -224,26 +224,26 @@ namespace FreeLibSet.Forms
           if (WindowState == FormWindowState.Maximized && form.MaximizeBox)
           {
             form.WindowState = FormWindowState.Maximized;
-            StateSetFlag = true;
-            ResParts |= EFPFormBoundsPart.WindowState;
+            stateSetFlag = true;
+            resParts |= EFPFormBoundsPart.WindowState;
           }
           else if (WindowState == FormWindowState.Minimized && form.MinimizeBox)
           {
             form.WindowState = FormWindowState.Minimized;
-            StateSetFlag = true;
-            ResParts |= EFPFormBoundsPart.WindowState;
+            stateSetFlag = true;
+            resParts |= EFPFormBoundsPart.WindowState;
           }
           else
           {
             form.WindowState = FormWindowState.Normal;
-            StateSetFlag = true;
+            stateSetFlag = true;
           }
         }
       }
-      if (!StateSetFlag)
-        form.WindowState = OrgState;
+      if (!stateSetFlag)
+        form.WindowState = orgState;
 
-      return ResParts;
+      return resParts;
     }
 
     #endregion
@@ -295,38 +295,38 @@ namespace FreeLibSet.Forms
 
     private void CorrectBounds(Form form)
     {
-      Size MinSize;
+      Size minSize;
       switch (form.FormBorderStyle)
       {
         case FormBorderStyle.Sizable:
         case FormBorderStyle.SizableToolWindow:
-          MinSize = WinFormsTools.Max(form.MinimumSize, SystemInformation.MinimumWindowSize);
+          minSize = WinFormsTools.Max(form.MinimumSize, SystemInformation.MinimumWindowSize);
           break;
         default:
-          MinSize = form.Size;
+          minSize = form.Size;
           break;
       }
 
       if (form.MdiParent != null)
       {
-        Rectangle Area = WinFormsTools.GetMdiContainerArea(form.MdiParent);
-        Bounds = WinFormsTools.PlaceRectangle(Bounds, Area, MinSize);
+        Rectangle area = WinFormsTools.GetMdiContainerArea(form.MdiParent);
+        Bounds = WinFormsTools.PlaceRectangle(Bounds, area, minSize);
       }
       else if (form.Parent != null)
       {
-        Rectangle Area = WinFormsTools.GetControlDockFillArea(form.Parent);
-        Bounds = WinFormsTools.PlaceRectangle(Bounds, Area, MinSize);
+        Rectangle area = WinFormsTools.GetControlDockFillArea(form.Parent);
+        Bounds = WinFormsTools.PlaceRectangle(Bounds, area, minSize);
       }
       else
       {
-        Screen Screen = Screen.FromRectangle(Bounds);
-        if (Screen == null)
+        Screen screen = Screen.FromRectangle(Bounds);
+        if (screen == null)
         {
-          Screen = EFPApp.DefaultScreen;
-          if (Screen == null)
-            Screen = Screen.PrimaryScreen;
+          screen = EFPApp.DefaultScreen;
+          if (screen == null)
+            screen = Screen.PrimaryScreen;
         }
-        Bounds = WinFormsTools.PlaceRectangle(Bounds, Screen.WorkingArea, MinSize);
+        Bounds = WinFormsTools.PlaceRectangle(Bounds, screen.WorkingArea, minSize);
       }
     }
 

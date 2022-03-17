@@ -793,9 +793,9 @@ namespace FreeLibSet.Forms
         throw new ArgumentOutOfRangeException("minTextWidth", minTextWidth,
           "Минимальная ширина столбца (" + minTextWidth.ToString() + ") не может быть больше, чем устанавливаемая (" + textWidth.ToString() + ")");
 
-      TreeColumn Column = new TreeColumn(headerText, textWidth * 10);
-      Column.MinColumnWidth = minTextWidth * 10;
-      ControlProvider.Control.Columns.Add(Column);
+      TreeColumn column = new TreeColumn(headerText, textWidth * 10);
+      column.MinColumnWidth = minTextWidth * 10;
+      ControlProvider.Control.Columns.Add(column);
 
       NodeTextBox tb = new NodeTextBox();
       tb.TextAlign = alignment;
@@ -807,7 +807,7 @@ namespace FreeLibSet.Forms
         tb.DataPropertyName = columnName;
         tb.ValueNeeded += tb_ValueNeeded;
       }
-      tb.ParentColumn = Column;
+      tb.ParentColumn = column;
       ControlProvider.Control.NodeControls.Add(tb);
 
       return tb;
@@ -816,10 +816,10 @@ namespace FreeLibSet.Forms
     void tb_ValueNeeded(object sender, NodeControlValueEventArgs args)
     {
       NodeTextBox tb = sender as NodeTextBox;
-      DataRow Row = args.Node.Tag as DataRow;
-      if (Row != null)
+      DataRow row = args.Node.Tag as DataRow;
+      if (row != null)
       {
-        args.Value = Row[tb.DataPropertyName];
+        args.Value = row[tb.DataPropertyName];
       }
     }
 

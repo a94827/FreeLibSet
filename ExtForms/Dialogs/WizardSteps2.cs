@@ -160,13 +160,13 @@ namespace FreeLibSet.Forms
       {
         if (value == _Icon)
           return;
-        Icon NewIcon = WinFormsTools.GetSystemIcon(value);
-        if (NewIcon == null)
+        Icon newIcon = WinFormsTools.GetSystemIcon(value);
+        if (newIcon == null)
           _ThePicture.Visible = false;
         else
         {
-          _ThePicture.Image = NewIcon.ToBitmap();
-          NewIcon.Dispose();
+          _ThePicture.Image = newIcon.ToBitmap();
+          newIcon.Dispose();
           _ThePicture.Width = _ThePicture.Image.Width + 8;
           _ThePicture.Visible = true;
         }
@@ -198,11 +198,11 @@ namespace FreeLibSet.Forms
       if (items.Length == 0)
         throw new ArgumentException("Список строк пустой", "items");
 
-      TableLayoutPanel Panel = new TableLayoutPanel();
-      Panel.RowCount = items.Length;
-      Panel.ColumnCount = 1;
-      Panel.Dock = DockStyle.Fill;
-      TheGroupBox.Controls.Add(Panel);
+      TableLayoutPanel panel = new TableLayoutPanel();
+      panel.RowCount = items.Length;
+      panel.ColumnCount = 1;
+      panel.Dock = DockStyle.Fill;
+      TheGroupBox.Controls.Add(panel);
       RadioButton[] btns = new RadioButton[items.Length];
       for (int i = 0; i < items.Length; i++)
       {
@@ -211,7 +211,7 @@ namespace FreeLibSet.Forms
         btns[i].Text = items[i];
         // btns[i].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
         btns[i].AutoSize = true;
-        Panel.Controls.Add(btns[i], 0, i);
+        panel.Controls.Add(btns[i], 0, i);
       }
 
       _TheButtons = new EFPRadioButtons(BaseProvider, btns);
@@ -260,24 +260,24 @@ namespace FreeLibSet.Forms
     /// <param name="items">Строки для списка</param>
     public WizardStepWithListView(string[] items)
     {
-      ListView Control = new ListView();
-      Control.Dock = DockStyle.Fill;
-      Control.View = View.Details;
-      Control.HeaderStyle = ColumnHeaderStyle.None;
-      Control.Columns.Add("Item");
-      Control.Columns[0].Width = -1;
-      Control.SmallImageList = EFPApp.MainImages;
-      Control.LabelEdit = false;
-      Control.FullRowSelect = true;
-      Control.HideSelection = false;
-      TheGroupBox.Controls.Add(Control);
+      ListView control = new ListView();
+      control.Dock = DockStyle.Fill;
+      control.View = View.Details;
+      control.HeaderStyle = ColumnHeaderStyle.None;
+      control.Columns.Add("Item");
+      control.Columns[0].Width = -1;
+      control.SmallImageList = EFPApp.MainImages;
+      control.LabelEdit = false;
+      control.FullRowSelect = true;
+      control.HideSelection = false;
+      TheGroupBox.Controls.Add(control);
 
       _Items = items;
       for (int i = 0; i < items.Length; i++)
-        Control.Items.Add(items[i]);
+        control.Items.Add(items[i]);
 
-      _TheListView = new EFPListView(BaseProvider, Control);
-      Control.Resize += new EventHandler(Control_Resize);
+      _TheListView = new EFPListView(BaseProvider, control);
+      control.Resize += new EventHandler(Control_Resize);
     }
 
 

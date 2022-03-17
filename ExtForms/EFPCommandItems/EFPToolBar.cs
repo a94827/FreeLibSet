@@ -98,17 +98,17 @@ namespace FreeLibSet.Forms
           cddm.Attach(tdd);
         }
         Bar.Items.Add(tdd);
-        EFPUIToolBarButtonObj UIObj = new EFPUIToolBarButtonObj(this, item, tdd);
-        UIObj.DropDownMenu = cddm; // чтобы было разрушено
-        UIObj.SetAll();
+        EFPUIToolBarButtonObj uiObj = new EFPUIToolBarButtonObj(this, item, tdd);
+        uiObj.DropDownMenu = cddm; // чтобы было разрушено
+        uiObj.SetAll();
       }
       else
       {
         ToolStripButton tbb = new ToolStripButton();
         //tbb.Tag=Item;
         Bar.Items.Add(tbb);
-        EFPUIToolBarButtonObj UIObj = new EFPUIToolBarButtonObj(this, item, tbb);
-        UIObj.SetAll();
+        EFPUIToolBarButtonObj uiObj = new EFPUIToolBarButtonObj(this, item, tbb);
+        uiObj.SetAll();
       }
       if (item.GroupEnd)
         AddSeparator();
@@ -121,10 +121,10 @@ namespace FreeLibSet.Forms
     /// <param name="items">Список команд</param>
     public void Add(EFPCommandItems items)
     {
-      foreach (EFPCommandItem Item in items)
+      foreach (EFPCommandItem item in items)
       {
-        if (Item.Parent == null)
-          AddOne(Item);
+        if (item.Parent == null)
+          AddOne(item);
       }
     }
 
@@ -135,13 +135,13 @@ namespace FreeLibSet.Forms
         // Если есть дети, то обычно они отображаются в панели инструментов.
         // Но если ни один из них не хочет отображаться, то отображается 
         // родительская команда
-        bool ChildrenInToolBar = false;
+        bool childrenInToolBar = false;
         for (int i = 0; i < item.Children.Count; i++)
         {
           if (AddOne(item.Children[i]))
-            ChildrenInToolBar = true;
+            childrenInToolBar = true;
         }
-        if (ChildrenInToolBar)
+        if (childrenInToolBar)
           return true;
       }
       if (!item.ToolBarUsage)
@@ -426,10 +426,10 @@ namespace FreeLibSet.Forms
       {
         if (Bar.Parent != null)
         {
-          ToolStripPanel Panel = (ToolStripPanel)(Bar.Parent);
-          for (int i = 0; i < Panel.Rows.Length; i++)
+          ToolStripPanel panel = (ToolStripPanel)(Bar.Parent);
+          for (int i = 0; i < panel.Rows.Length; i++)
           {
-            foreach (Control ctrl in Panel.Rows[i].Controls)
+            foreach (Control ctrl in panel.Rows[i].Controls)
             {
               if (ctrl == Bar)
                 return i;
@@ -673,8 +673,8 @@ namespace FreeLibSet.Forms
     public void Attach()
     {
       // Отцепляем все объектв
-      foreach (EFPAppToolBar ToolBar in this)
-        ToolBar.Bar.Parent = null;
+      foreach (EFPAppToolBar toolBar in this)
+        toolBar.Bar.Parent = null;
 
       // Сортируем список панелей
       EFPAppToolBar[] a = base.ToArray();
@@ -715,12 +715,12 @@ namespace FreeLibSet.Forms
       if (toolBar.Info != null)
         return;
 
-      EFPAppInterfaceMDI OldMdi = EFPApp.Interface as EFPAppInterfaceMDI;
-      if (OldMdi != null)
+      EFPAppInterfaceMDI oldMDI = EFPApp.Interface as EFPAppInterfaceMDI;
+      if (oldMDI != null)
       {
-        if (OldMdi.ObsoleteMode)
+        if (oldMDI.ObsoleteMode)
         {
-          toolBar.Info = new FormToolStripInfo(OldMdi.CurrentMainWindowLayout.MainWindow);
+          toolBar.Info = new FormToolStripInfo(oldMDI.CurrentMainWindowLayout.MainWindow);
           return;
         }
       }
@@ -736,33 +736,33 @@ namespace FreeLibSet.Forms
       // 3-по порядку добавления панелей в список
 
       // 1
-      int RowIndex1 = b1.RowIndex;
-      int RowIndex2 = b2.RowIndex;
-      if (RowIndex1 < RowIndex2)
+      int rowIndex1 = b1.RowIndex;
+      int rowIndex2 = b2.RowIndex;
+      if (rowIndex1 < rowIndex2)
         return -1;
-      if (RowIndex1 > RowIndex2)
+      if (rowIndex1 > rowIndex2)
         return 1;
 
       // 2
-      int Coord1, Coord2;
+      int coord1, coord2;
       if (b1.Dock == DockStyle.Left || b1.Dock == DockStyle.Right)
-        Coord1 = b1.Location.Y;
+        coord1 = b1.Location.Y;
       else
-        Coord1 = b1.Location.X;
+        coord1 = b1.Location.X;
       if (b2.Dock == DockStyle.Left || b2.Dock == DockStyle.Right)
-        Coord2 = b2.Location.Y;
+        coord2 = b2.Location.Y;
       else
-        Coord2 = b2.Location.X;
+        coord2 = b2.Location.X;
 
-      if (Coord1 < Coord2)
+      if (coord1 < coord2)
         return 1;
-      if (Coord1 > Coord2)
+      if (coord1 > coord2)
         return -1;
 
       // 3
-      int BarIndex1 = base.IndexOf(b1);
-      int BarIndex2 = base.IndexOf(b2);
-      if (BarIndex1 > BarIndex2)
+      int barIndex1 = base.IndexOf(b1);
+      int barIndex2 = base.IndexOf(b2);
+      if (barIndex1 > barIndex2)
         return -1;
       else
         return 1;
@@ -905,17 +905,17 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        Control UserPanel = Bar.Parent;
-        if (UserPanel == null)
+        Control userPanel = Bar.Parent;
+        if (userPanel == null)
           return false;
 
         //        if (UserPanel.Parent.Controls.IndexOf(UserPanel) != 0)
         //          return false;
-        if (UserPanel.Parent.Controls.Count != 2)
+        if (userPanel.Parent.Controls.Count != 2)
           return false;
-        int PanelIndex = UserPanel.Parent.Controls.IndexOf(UserPanel);
-        int MainControlIndex = 1 - PanelIndex;
-        if (UserPanel.Parent.Controls[MainControlIndex].Dock != DockStyle.Fill)
+        int panelIndex = userPanel.Parent.Controls.IndexOf(userPanel);
+        int mainControlIndex = 1 - panelIndex;
+        if (userPanel.Parent.Controls[mainControlIndex].Dock != DockStyle.Fill)
           return false;
         return true;
       }

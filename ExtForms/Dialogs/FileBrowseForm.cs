@@ -129,8 +129,8 @@ namespace FreeLibSet.Forms
       get { return HistList.Top; }
       set
       {
-        AbsPath Path = new AbsPath(value);
-        HistList = HistList.Add(Path.SlashedPath, MaxHistLength);
+        AbsPath path = new AbsPath(value);
+        HistList = HistList.Add(path.SlashedPath, MaxHistLength);
       }
     }
 
@@ -267,15 +267,15 @@ namespace FreeLibSet.Forms
     {
       if (_TheForm.DialogResult != DialogResult.OK)
         return;
-      AbsPath Path = new AbsPath(_TheForm.efpMainCB.Text);
-      _TheForm.efpMainCB.Text = Path.SlashedPath;
+      AbsPath path = new AbsPath(_TheForm.efpMainCB.Text);
+      _TheForm.efpMainCB.Text = path.SlashedPath;
 
 
       if (Mode == FileDialogMode.Write)
       {
         try
         {
-          FileTools.ForceDirs(Path);
+          FileTools.ForceDirs(path);
         }
         catch (Exception e)
         {
@@ -286,7 +286,7 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        if (!Directory.Exists(Path.Path))
+        if (!Directory.Exists(path.Path))
         {
           EFPApp.ShowTempMessage("Каталог не существует");
           _TheForm.DialogResult = DialogResult.Cancel;

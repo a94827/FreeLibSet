@@ -112,31 +112,31 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        bool PrevIsEmpty = true;
+        bool prevIsEmpty = true;
         if (_ErrorMessages != null)
-          PrevIsEmpty = _ErrorMessages.Count == 0;
+          prevIsEmpty = _ErrorMessages.Count == 0;
 
         _ErrorMessages = value;
 
-        bool ThisIsEmpty = true;
+        bool thisIsEmpty = true;
         if (value != null)
-          ThisIsEmpty = value.Count == 0; // 27.12.2020
+          thisIsEmpty = value.Count == 0; // 27.12.2020
 
         if (HasEditMessageHandler)
-          base.ReadOnly = ThisIsEmpty;
+          base.ReadOnly = thisIsEmpty;
 
 
-        bool NeedsUpdate = true;
+        bool needsUpdate = true;
         if (!_FirstFlag)
         {
-          if (ThisIsEmpty && PrevIsEmpty)
-            NeedsUpdate = false;
+          if (thisIsEmpty && prevIsEmpty)
+            needsUpdate = false;
         }
         _FirstFlag = false;
 
-        if (NeedsUpdate)
+        if (needsUpdate)
         {
-          if (ThisIsEmpty)
+          if (thisIsEmpty)
           {
             Control.RowCount = 1;
             Control[0, 0].Value = null;
@@ -155,27 +155,27 @@ namespace FreeLibSet.Forms
             for (int i = 0; i < value.Count; i++)
             {
               //          Image img;
-              string KindText;
+              string kindText;
               switch (value[i].Kind)
               {
                 case ErrorMessageKind.Error:
                   //              img = EFPApp.MainImages.Images["Error"];
-                  KindText = "Ош.";
+                  kindText = "Ош.";
                   break;
                 case ErrorMessageKind.Warning:
                   //              img = EFPApp.MainImages.Images["Warning"];
-                  KindText = "Пр.";
+                  kindText = "Пр.";
                   break;
                 case ErrorMessageKind.Info:
                   //              img = EFPApp.MainImages.Images["Information"];
-                  KindText = "Инфо";
+                  kindText = "Инфо";
                   break;
                 default:
                   throw new BugException("Неизвестный тип сообщения");
               }
               //          TheHandler.MainGrid[0, i].ValueEx = img;
               Control[0, i].Value = i + 1;
-              Control[1, i].Value = KindText;
+              Control[1, i].Value = kindText;
               Control[2, i].Value = value[i].Code;
               Control[3, i].Value = value[i].Text;
               Control.Rows[i].Tag = value[i].Kind;
@@ -238,13 +238,13 @@ namespace FreeLibSet.Forms
         if (value < 0 || value > 20)
           throw new ArgumentException("Недопустимая ширина колонки \"Код\": " + CodeWidth);
 #endif
-        int CodeWidth2 = value;
-        if (CodeWidth2 == 0)
-          CodeWidth2 = 1; // колонка не должна быть нулевой ширины
+        int codeWidth2 = value;
+        if (codeWidth2 == 0)
+          codeWidth2 = 1; // колонка не должна быть нулевой ширины
         _CodeWidth = value;
 
         Columns["Code"].GridColumn.Visible = value > 0;
-        Columns["Code"].TextWidth = CodeWidth2;
+        Columns["Code"].TextWidth = codeWidth2;
       }
     }
     private int _CodeWidth;
@@ -281,11 +281,11 @@ namespace FreeLibSet.Forms
     /// <param name="args">Аргументы события GetRowAttributes</param>
     protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
     {
-      DataGridViewRow Row = args.Control.Rows[args.RowIndex];
-      if (Row.Tag != null)
+      DataGridViewRow row = args.Control.Rows[args.RowIndex];
+      if (row.Tag != null)
       {
-        ErrorMessageKind Kind = (ErrorMessageKind)(Row.Tag);
-        switch (Kind)
+        ErrorMessageKind kind = (ErrorMessageKind)(row.Tag);
+        switch (kind)
         {
           case ErrorMessageKind.Error:
             args.AddRowError("Ошибка");
@@ -333,10 +333,10 @@ namespace FreeLibSet.Forms
         return true;
       }
 
-      ErrorMessageItemEventArgs EditArgs = new ErrorMessageItemEventArgs(ErrorMessages,
+      ErrorMessageItemEventArgs editArgs = new ErrorMessageItemEventArgs(ErrorMessages,
         CurrentRowIndex);
 
-      EditMessage(this, EditArgs);
+      EditMessage(this, editArgs);
 
       return true;
     }

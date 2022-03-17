@@ -61,15 +61,15 @@ namespace FreeLibSet.Controls
       const DataGridViewPaintParts Parts2Mask = DataGridViewPaintParts.ContentForeground;
       const DataGridViewPaintParts Parts3Mask = DataGridViewPaintParts.ErrorIcon | DataGridViewPaintParts.Focus;
 
-      DataGridViewPaintParts Parts1 = paintParts & Parts1Mask;
-      DataGridViewPaintParts Parts2 = paintParts & Parts2Mask;
-      DataGridViewPaintParts Parts3 = paintParts & Parts3Mask;
+      DataGridViewPaintParts parts1 = paintParts & Parts1Mask;
+      DataGridViewPaintParts parts2 = paintParts & Parts2Mask;
+      DataGridViewPaintParts parts3 = paintParts & Parts3Mask;
 
       // 1. Фон
-      if (Parts1 != DataGridViewPaintParts.None)
-        base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, Parts1);
+      if (parts1 != DataGridViewPaintParts.None)
+        base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, parts1);
       // 2. Содержание
-      if (Parts2 != DataGridViewPaintParts.None)
+      if (parts2 != DataGridViewPaintParts.None)
       {
 #if XXXX
         bool ManualPrint = false;
@@ -150,13 +150,13 @@ namespace FreeLibSet.Controls
         }
         else
 #endif
-          base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, Parts2);
+          base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, parts2);
       }
 
 
       // 3. Сверху
-      if (Parts3 != DataGridViewPaintParts.None)
-        base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, Parts3);
+      if (parts3 != DataGridViewPaintParts.None)
+        base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, parts3);
     }
   }
 }

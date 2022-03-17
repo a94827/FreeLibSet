@@ -190,9 +190,9 @@ namespace FreeLibSet.Forms
         return false;
       if (form == _MainWindow)
         return true;
-      foreach (Form Child in _ChildForms)
+      foreach (Form child in _ChildForms)
       {
-        if (form == Child)
+        if (form == child)
           return true;
       }
       return false;
@@ -206,11 +206,11 @@ namespace FreeLibSet.Forms
     /// <returns>Найденная форма или null</returns>
     public Form FindChildForm(Type formType)
     {
-      Form[] Forms = GetChildForms(false);
-      for (int i = 0; i < Forms.Length; i++)
+      Form[] forms = GetChildForms(false);
+      for (int i = 0; i < forms.Length; i++)
       {
-        if (Forms[i].GetType() == formType)
-          return Forms[i];
+        if (forms[i].GetType() == formType)
+          return forms[i];
       }
       return null;
     }
@@ -224,11 +224,11 @@ namespace FreeLibSet.Forms
     public T FindChildForm<T>()
       where T : Form
     {
-      Form[] Forms = GetChildForms(false);
-      for (int i = 0; i < Forms.Length; i++)
+      Form[] forms = GetChildForms(false);
+      for (int i = 0; i < forms.Length; i++)
       {
-        if (Forms[i] is T)
-          return (T)(Forms[i]);
+        if (forms[i] is T)
+          return (T)(forms[i]);
       }
       return null;
     }
@@ -240,18 +240,18 @@ namespace FreeLibSet.Forms
     /// <returns>Массив форм</returns>
     public Form[] FindChildForms(Type formType)
     {
-      List<Form> List = new List<Form>();
-      FindChildFormsInternal(List, formType);
-      return List.ToArray();
+      List<Form> list = new List<Form>();
+      FindChildFormsInternal(list, formType);
+      return list.ToArray();
     }
 
     internal void FindChildFormsInternal(List<Form> list, Type formType)
     {
-      Form[] Forms = GetChildForms(false);
-      for (int i = 0; i < Forms.Length; i++)
+      Form[] forms = GetChildForms(false);
+      for (int i = 0; i < forms.Length; i++)
       {
-        if (Forms[i].GetType() == formType)
-          list.Add(Forms[i]);
+        if (forms[i].GetType() == formType)
+          list.Add(forms[i]);
       }
     }
 
@@ -263,19 +263,19 @@ namespace FreeLibSet.Forms
     public T[] FindChildForms<T>()
       where T : Form
     {
-      List<T> List = new List<T>();
-      FindChildFormsInternal<T>(List);
-      return List.ToArray();
+      List<T> list = new List<T>();
+      FindChildFormsInternal<T>(list);
+      return list.ToArray();
     }
 
     internal void FindChildFormsInternal<T>(List<T> list)
       where T : Form
     {
-      Form[] Forms = GetChildForms(false);
-      for (int i = 0; i < Forms.Length; i++)
+      Form[] forms = GetChildForms(false);
+      for (int i = 0; i < forms.Length; i++)
       {
-        if (Forms[i] is T)
-          list.Add((T)(Forms[i]));
+        if (forms[i] is T)
+          list.Add((T)(forms[i]));
       }
     }
 
@@ -306,13 +306,11 @@ namespace FreeLibSet.Forms
       if (Interface == null)
         return; // 10.06.2021, чтобы не зацикливалось при ошибочном вызове
 
-      Form Form = (Form)sender;
-      if (Interface.CurrentChildForm == Form)
+      Form form = (Form)sender;
+      if (Interface.CurrentChildForm == form)
         return; // не изменилось
 
-
-
-      _ChildForms.Touch(Form);
+      _ChildForms.Touch(form);
       Interface.MainWindowActivated(this); // иначе EFPApp получит неверную текущую форму
 
       //System.Diagnostics.Trace.WriteLine("Activated для формы " + Form.Text);
@@ -325,15 +323,15 @@ namespace FreeLibSet.Forms
       if (Interface == null)
         return; // 10.06.2021, чтобы не зацикливалось при ошибочном вызове
 
-      Form Form = (Form)sender;
-      if (Form.Visible)
+      Form form = (Form)sender;
+      if (form.Visible)
       {
-        if (!_ChildForms.Contains(Form))
-          _ChildForms.Add(Form);
+        if (!_ChildForms.Contains(form))
+          _ChildForms.Add(form);
       }
       else
       {
-        _ChildForms.Remove(Form);
+        _ChildForms.Remove(form);
       }
       EFPApp.TestInterfaceChanged();
     }
@@ -356,27 +354,27 @@ namespace FreeLibSet.Forms
     /// false, если пользователь отказался закрывать одно из окон</returns>
     public bool CloseAllChildren()
     {
-      bool Res;
+      bool res;
       EFPApp.BeginUpdateInterface(); // Исправлено 13.09.2021
       try
       {
-        Res = DoCloseAllChildren();
+        res = DoCloseAllChildren();
       }
       finally
       {
         EFPApp.EndUpdateInterface();
       }
-      return Res;
+      return res;
     }
 
     private bool DoCloseAllChildren()
     {
-      Form[] Forms = GetChildForms(true);
+      Form[] forms = GetChildForms(true);
 
-      for (int i = 0; i < Forms.Length; i++)
+      for (int i = 0; i < forms.Length; i++)
       {
-        Forms[i].Close();
-        if (Forms[i].Visible)
+        forms[i].Close();
+        if (forms[i].Visible)
           return false;
       }
       return true;
@@ -393,16 +391,16 @@ namespace FreeLibSet.Forms
     protected static void DecorateMainWindow(Form mainWindow)
     {
       // Create ToolStripPanel controls.
-      ToolStripPanel StripPanelTop = new ToolStripPanel();
-      ToolStripPanel StripPanelBottom = new ToolStripPanel();
-      ToolStripPanel StripPanelLeft = new ToolStripPanel();
-      ToolStripPanel StripPanelRight = new ToolStripPanel();
+      ToolStripPanel stripPanelTop = new ToolStripPanel();
+      ToolStripPanel stripPanelBottom = new ToolStripPanel();
+      ToolStripPanel stripPanelLeft = new ToolStripPanel();
+      ToolStripPanel stripPanelRight = new ToolStripPanel();
 
       // Dock the ToolStripPanel controls to the edges of the TheForm.
-      StripPanelTop.Dock = DockStyle.Top;
-      StripPanelBottom.Dock = DockStyle.Bottom;
-      StripPanelLeft.Dock = DockStyle.Left;
-      StripPanelRight.Dock = DockStyle.Right;
+      stripPanelTop.Dock = DockStyle.Top;
+      stripPanelBottom.Dock = DockStyle.Bottom;
+      stripPanelLeft.Dock = DockStyle.Left;
+      stripPanelRight.Dock = DockStyle.Right;
 
       /*
       if (EnvironmentTools.IsMono)
@@ -414,14 +412,14 @@ namespace FreeLibSet.Forms
       } */
 
       // Add the ToolStripPanels to the TheForm in reverse order.
-      mainWindow.Controls.Add(StripPanelRight);
-      mainWindow.Controls.Add(StripPanelLeft);
-      mainWindow.Controls.Add(StripPanelBottom);
-      mainWindow.Controls.Add(StripPanelTop);
+      mainWindow.Controls.Add(stripPanelRight);
+      mainWindow.Controls.Add(stripPanelLeft);
+      mainWindow.Controls.Add(stripPanelBottom);
+      mainWindow.Controls.Add(stripPanelTop);
 
-      StatusStrip TheStatusBar = new System.Windows.Forms.StatusStrip();
-      EFPApp.SetStatusStripHeight(TheStatusBar, mainWindow); // 16.06.2021
-      mainWindow.Controls.Add(TheStatusBar);
+      StatusStrip theStatusBar = new System.Windows.Forms.StatusStrip();
+      EFPApp.SetStatusStripHeight(theStatusBar, mainWindow); // 16.06.2021
+      mainWindow.Controls.Add(theStatusBar);
     }
 
     #endregion
@@ -445,8 +443,8 @@ namespace FreeLibSet.Forms
       if (EFPApp.Interface == this.Interface && (!EFPApp.InsideInterfaceAssignation))
       {
         // Закрываем последнее главное окно?
-        bool CloseApp = (EFPApp.Interface.MainWindowCount == 1) && (!InsideCloseMainWindow);
-        if ((!CloseApp) && (!Interface.IsSDI) && (!InsideCloseMainWindow))
+        bool closeApp = (EFPApp.Interface.MainWindowCount == 1) && (!InsideCloseMainWindow);
+        if ((!closeApp) && (!Interface.IsSDI) && (!InsideCloseMainWindow))
         {
           RadioSelectDialog dlg = new RadioSelectDialog();
           dlg.Title = "Закрытие окна " + this.MainWindow.Text;
@@ -460,10 +458,10 @@ namespace FreeLibSet.Forms
             return;
           }
           if (dlg.SelectedIndex == 1)
-            CloseApp = true;
+            closeApp = true;
         }
 
-        if (CloseApp)
+        if (closeApp)
         {
           //EFPApp.OnClosing(Args, false);
           // 21.09.2018
@@ -579,26 +577,26 @@ namespace FreeLibSet.Forms
         {
           EFPAppToolBarCommandItems Src = EFPApp.ToolBars[i];
 
-          EFPAppToolBar Res = new EFPAppToolBar(Src.Name);
-          Res.Info = new FormToolStripInfo(MainWindow);
-          Res.DisplayName = Src.DisplayName;
-          Res.Add(Src);
+          EFPAppToolBar res = new EFPAppToolBar(Src.Name);
+          res.Info = new FormToolStripInfo(MainWindow);
+          res.DisplayName = Src.DisplayName;
+          res.Add(Src);
 
-          EFPAppToolBar CurrTB = null;
+          EFPAppToolBar currTB = null;
           if (Interface.CurrentMainWindowLayout != null)
-            CurrTB = Interface.CurrentMainWindowLayout.ToolBars[Src.Name];
-          if (CurrTB == null)
+            currTB = Interface.CurrentMainWindowLayout.ToolBars[Src.Name];
+          if (currTB == null)
           {
-            Res.Visible = Src.DefaultVisible;
-            Res.Dock = Src.DefaultDock;
+            res.Visible = Src.DefaultVisible;
+            res.Dock = Src.DefaultDock;
           }
           else
           {
-            Res.Visible = CurrTB.Visible;
-            Res.Dock = CurrTB.Dock;
+            res.Visible = currTB.Visible;
+            res.Dock = currTB.Dock;
           }
 
-          _ToolBars.Add(Res);
+          _ToolBars.Add(res);
         }
 
         // 22.11.2018
@@ -617,9 +615,9 @@ namespace FreeLibSet.Forms
 
         _StatusBar = new EFPAppStatusBar();
 
-        FormToolStripInfo Info = new FormToolStripInfo(MainWindow);
+        FormToolStripInfo info = new FormToolStripInfo(MainWindow);
 
-        _StatusBar.StatusStripControl = Info.StatusBar;
+        _StatusBar.StatusStripControl = info.StatusBar;
 
         if (Interface.CurrentMainWindowLayout == null)
           _StatusBar.Visible = true; // ??
@@ -641,11 +639,11 @@ namespace FreeLibSet.Forms
     {
       for (int i = 0; i < EFPApp.ToolBars.Count; i++)
       {
-        EFPAppToolBarCommandItems Src = EFPApp.ToolBars[i];
+        EFPAppToolBarCommandItems src = EFPApp.ToolBars[i];
 
-        EFPAppToolBar Res = ToolBars[Src.Name];
-        Res.Visible = Src.DefaultVisible;
-        Res.Dock = Src.DefaultDock;
+        EFPAppToolBar res = ToolBars[src.Name];
+        res.Visible = src.DefaultVisible;
+        res.Dock = src.DefaultDock;
       }
     }
 
@@ -658,19 +656,19 @@ namespace FreeLibSet.Forms
       CfgPart cfgToolBars = cfg.GetChild("ToolBars", true);
       for (int i = 0; i < ToolBars.Count; i++)
       {
-        EFPAppToolBar ToolBar = ToolBars[i];
-        CfgPart cfgOneTB = cfgToolBars.GetChild(ToolBar.Name, true);
-        cfgOneTB.SetBool("Visible", ToolBar.Visible);
-        cfgOneTB.SetEnum<DockStyle>("Dock", ToolBar.Dock);
-        if (ToolBar.UseLocation)
+        EFPAppToolBar toolBar = ToolBars[i];
+        CfgPart cfgOneTB = cfgToolBars.GetChild(toolBar.Name, true);
+        cfgOneTB.SetBool("Visible", toolBar.Visible);
+        cfgOneTB.SetEnum<DockStyle>("Dock", toolBar.Dock);
+        if (toolBar.UseLocation)
         {
-          cfgOneTB.SetInt("Left", ToolBar.Location.X);
-          cfgOneTB.SetInt("Top", ToolBar.Location.Y);
+          cfgOneTB.SetInt("Left", toolBar.Location.X);
+          cfgOneTB.SetInt("Top", toolBar.Location.Y);
           cfgOneTB.Remove("RowIndex");
         }
         else
         {
-          cfgOneTB.SetInt("RowIndex", ToolBar.RowIndex);
+          cfgOneTB.SetInt("RowIndex", toolBar.RowIndex);
           cfgOneTB.Remove("Left");
           cfgOneTB.Remove("Top");
         }
@@ -687,19 +685,19 @@ namespace FreeLibSet.Forms
       {
         for (int i = 0; i < ToolBars.Count; i++)
         {
-          EFPAppToolBar ToolBar = ToolBars[i];
+          EFPAppToolBar toolBar = ToolBars[i];
           // Список панелей инструментов мог поменяться и в секции конфигурации записаны не все панели
           // Для отсутствующих секций оставляем параметры панелей "как есть".
-          CfgPart cfgOneTB = cfgToolBars.GetChild(ToolBar.Name, false);
+          CfgPart cfgOneTB = cfgToolBars.GetChild(toolBar.Name, false);
           if (cfgOneTB != null)
           {
-            ToolBar.Visible = cfgOneTB.GetBoolDef("Visible", ToolBar.Visible);
-            ToolBar.Dock = cfgOneTB.GetEnumDef<DockStyle>("Dock", ToolBar.Dock);
+            toolBar.Visible = cfgOneTB.GetBoolDef("Visible", toolBar.Visible);
+            toolBar.Dock = cfgOneTB.GetEnumDef<DockStyle>("Dock", toolBar.Dock);
             if (cfgOneTB.HasValue("RowIndex"))
-              ToolBar.RowIndex = cfgOneTB.GetInt("RowIndex");
+              toolBar.RowIndex = cfgOneTB.GetInt("RowIndex");
             else
             {
-              ToolBar.Location = new System.Drawing.Point(cfgOneTB.GetInt("Left"),
+              toolBar.Location = new System.Drawing.Point(cfgOneTB.GetInt("Left"),
                 cfgOneTB.GetInt("Top"));
             }
           }
@@ -802,9 +800,9 @@ namespace FreeLibSet.Forms
       if (form == null)
         throw new ArgumentNullException();
 
-      foreach (Control Control in form.Controls)
+      foreach (Control control in form.Controls)
       {
-        ToolStripPanel tsp = Control as ToolStripPanel;
+        ToolStripPanel tsp = control as ToolStripPanel;
         if (tsp != null)
         {
           switch (tsp.Dock)
@@ -817,7 +815,7 @@ namespace FreeLibSet.Forms
           continue;
         }
 
-        ToolStripContainer tsc = Control as ToolStripContainer;
+        ToolStripContainer tsc = control as ToolStripContainer;
         if (tsc != null)
         {
           _StripPanelTop = tsc.TopToolStripPanel;

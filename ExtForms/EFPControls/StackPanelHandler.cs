@@ -151,18 +151,18 @@ namespace FreeLibSet.Forms
     public StackPanelRadioButtons(StackPanelHandler handler, string[] items)
       :base(handler)
     {
-      RadioButton[] Buttons=new RadioButton[items.Length];
+      RadioButton[] buttons=new RadioButton[items.Length];
       for (int i = 0; i < items.Length; i++)
       {
-        Buttons[i] = new RadioButton();
-        Buttons[i].AutoSize = true;
-        Buttons[i].Text = items[i];
-        Buttons[i].Location = new Point(3,
-          16 + Buttons[i].Height * i);
-        TheGroupBox.Control.Controls.Add(Buttons[i]);
+        buttons[i] = new RadioButton();
+        buttons[i].AutoSize = true;
+        buttons[i].Text = items[i];
+        buttons[i].Location = new Point(3,
+          16 + buttons[i].Height * i);
+        TheGroupBox.Control.Controls.Add(buttons[i]);
       }
 
-      _TheButtons = new EFPRadioButtons(handler.BaseProvider, Buttons);
+      _TheButtons = new EFPRadioButtons(handler.BaseProvider, buttons);
     }
 
     #endregion
@@ -185,25 +185,25 @@ namespace FreeLibSet.Forms
     {
       _ControlProvider = controlProvider;
 
-      TableLayoutPanel Panel = (TableLayoutPanel)(base.ItemControl);
-      Panel.AutoSize = true;
-      Panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+      TableLayoutPanel panel = (TableLayoutPanel)(base.ItemControl);
+      panel.AutoSize = true;
+      panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-      Panel.RowCount = 1;
-      Panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+      panel.RowCount = 1;
+      panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-      Panel.ColumnCount = 2;
-      Panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
-      Panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+      panel.ColumnCount = 2;
+      panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
+      panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
       _TheLabel = new Label();
       _TheLabel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
       _TheLabel.TextAlign = ContentAlignment.MiddleLeft;
-      Panel.Controls.Add(_TheLabel, 0, 0);
+      panel.Controls.Add(_TheLabel, 0, 0);
 
       _ControlProvider.Label = _TheLabel;
       _ControlProvider.Control.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-      Panel.Controls.Add(_ControlProvider.Control, 1, 0);
+      panel.Controls.Add(_ControlProvider.Control, 1, 0);
 
     }
 

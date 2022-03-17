@@ -195,9 +195,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private bool InsideSelectedIndexChanged;
-
-
+    private bool _InsideSelectedIndexChanged;
 
     /// <summary>
     /// Вызывается, когда изменятся значение в управляющем элементе
@@ -206,16 +204,16 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        if (!InsideSelectedIndexChanged)
+        if (!_InsideSelectedIndexChanged)
         {
-          InsideSelectedIndexChanged = true;
+          _InsideSelectedIndexChanged = true;
           try
           {
             OnSelectedIndexChanged();
           }
           finally
           {
-            InsideSelectedIndexChanged = false;
+            _InsideSelectedIndexChanged = false;
           }
         }
       }
@@ -246,7 +244,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получение и установка выбранной позиции в реальном управляющем элементе
     /// </summary>
-    protected abstract int ControlSelectedIndex { get;set;}
+    protected abstract int ControlSelectedIndex { get; set; }
 
 
     /// <summary>
@@ -277,7 +275,7 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedIndexEx == null)
       {
-        _SelectedIndexEx = new DepInput<int>(SelectedIndex,SelectedIndexEx_ValueChanged);
+        _SelectedIndexEx = new DepInput<int>(SelectedIndex, SelectedIndexEx_ValueChanged);
         _SelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "SelectedIndexEx");
       }
     }
@@ -358,7 +356,7 @@ namespace FreeLibSet.Forms
     {
       if (_DisabledSelectedIndexEx == null)
       {
-        _DisabledSelectedIndexEx = new DepInput<int>(DisabledSelectedIndex,DisabledSelectedIndexEx_ValueChanged);
+        _DisabledSelectedIndexEx = new DepInput<int>(DisabledSelectedIndex, DisabledSelectedIndexEx_ValueChanged);
         _DisabledSelectedIndexEx.OwnerInfo = new DepOwnerInfo(this, "DisabledSelectedIndexEx");
       }
     }
@@ -499,7 +497,7 @@ namespace FreeLibSet.Forms
           return;
         if (value == null)
           value = String.Empty;
-        SelectedIndex= Array.IndexOf<string>(Codes, value);
+        SelectedIndex = Array.IndexOf<string>(Codes, value);
       }
     }
 
@@ -525,14 +523,14 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedCodeEx == null)
       {
-        _SelectedCodeEx = new DepInput<string>(SelectedCode,SelectedCodeEx_ValueChanged);
+        _SelectedCodeEx = new DepInput<string>(SelectedCode, SelectedCodeEx_ValueChanged);
         _SelectedCodeEx.OwnerInfo = new DepOwnerInfo(this, "SelectedCodeEx");
       }
     }
 
     private DepInput<string> _SelectedCodeEx;
 
-    void SelectedCodeEx_ValueChanged(object sender, EventArgs e)
+    void SelectedCodeEx_ValueChanged(object sender, EventArgs args)
     {
       SelectedCode = _SelectedCodeEx.Value;
     }
@@ -784,7 +782,7 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedItemStringEx == null)
       {
-        _SelectedItemStringEx = new DepInput<string>(SelectedItemString,SelectedItemStringEx_ValueChanged);
+        _SelectedItemStringEx = new DepInput<string>(SelectedItemString, SelectedItemStringEx_ValueChanged);
         _SelectedItemStringEx.OwnerInfo = new DepOwnerInfo(this, "SelectedItemStringEx");
       }
     }
@@ -944,7 +942,7 @@ namespace FreeLibSet.Forms
     {
       if (_SelectedItemStringEx == null)
       {
-        _SelectedItemStringEx = new DepInput<string>(SelectedItemString,SelectedItemStringEx_ValueChanged);
+        _SelectedItemStringEx = new DepInput<string>(SelectedItemString, SelectedItemStringEx_ValueChanged);
         _SelectedItemStringEx.OwnerInfo = new DepOwnerInfo(this, "SelectedItemStringEx");
       }
     }
@@ -1031,10 +1029,10 @@ namespace FreeLibSet.Forms
       {
         if (value == ControlSelectedIndex)
           return;
-        ListViewItem[] CurrSels = new ListViewItem[Control.SelectedItems.Count];
-        Control.SelectedItems.CopyTo(CurrSels, 0);
-        for (int i = 0; i < CurrSels.Length; i++)
-          CurrSels[i].Selected = false;
+        ListViewItem[] currSels = new ListViewItem[Control.SelectedItems.Count];
+        Control.SelectedItems.CopyTo(currSels, 0);
+        for (int i = 0; i < currSels.Length; i++)
+          currSels[i].Selected = false;
         if (value >= 0)
         {
           Control.Items[value].Selected = true;

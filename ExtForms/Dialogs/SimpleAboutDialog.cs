@@ -67,25 +67,25 @@ namespace FreeLibSet.Forms
           frm.WindowState = FormWindowState.Maximized;
           EFPFormProvider efpForm = new EFPFormProvider(frm);
 
-          TabControl TheTabControl = new TabControl();
-          TheTabControl.Dock = DockStyle.Fill;
-          frm.Controls.Add(TheTabControl);
+          TabControl theTabControl = new TabControl();
+          theTabControl.Dock = DockStyle.Fill;
+          frm.Controls.Add(theTabControl);
 
           TabPage tpMain = new TabPage("Основные модули");
-          TheTabControl.TabPages.Add(tpMain);
+          theTabControl.TabPages.Add(tpMain);
           EFPDataGridView ghMain = InitModulesPage(efpForm, tpMain);
 
           TabPage tpGAC = new TabPage("Из глобального кэша сборок");
-          TheTabControl.TabPages.Add(tpGAC);
+          theTabControl.TabPages.Add(tpGAC);
           EFPDataGridView ghGAC = InitModulesPage(efpForm, tpGAC);
 
-          DataTable Table = FreeLibSet.Forms.Diagnostics.DebugTools.GetAssembliesInfo(true);
+          DataTable table = FreeLibSet.Forms.Diagnostics.DebugTools.GetAssembliesInfo(true);
 
-          DataView dvMain = new DataView(Table);
+          DataView dvMain = new DataView(table);
           dvMain.RowFilter = "GAC=FALSE";
           ghMain.Control.DataSource = dvMain;
 
-          DataView dvGAC = new DataView(Table);
+          DataView dvGAC = new DataView(table);
           dvGAC.RowFilter = "GAC=TRUE";
           ghGAC.Control.DataSource = dvGAC;
         }
@@ -105,14 +105,14 @@ namespace FreeLibSet.Forms
 
     private static EFPDataGridView InitModulesPage(EFPBaseProvider baseProvider, TabPage tp)
     {
-      DataGridView Grid = new DataGridView();
-      Grid.Dock = DockStyle.Fill;
-      tp.Controls.Add(Grid);
-      Grid.ReadOnly = true;
-      Grid.AllowUserToAddRows = false;
-      Grid.AllowUserToDeleteRows = false;
-      Grid.AutoGenerateColumns = false;
-      EFPDataGridView Handler = new EFPDataGridView(baseProvider, Grid);
+      DataGridView grid = new DataGridView();
+      grid.Dock = DockStyle.Fill;
+      tp.Controls.Add(grid);
+      grid.ReadOnly = true;
+      grid.AllowUserToAddRows = false;
+      grid.AllowUserToDeleteRows = false;
+      grid.AutoGenerateColumns = false;
+      EFPDataGridView Handler = new EFPDataGridView(baseProvider, grid);
       Handler.Columns.AddText("Name", true, "Имя сборки", 20);
       Handler.Columns.LastAdded.CanIncSearch = true;
       Handler.Columns.AddText("Version", true, "Версия", 12);
@@ -188,8 +188,8 @@ namespace FreeLibSet.Forms
 
       try
       {
-        string ProgName = assembly.FullName;
-        AssemblyName an = new AssemblyName(ProgName);
+        string progName = assembly.FullName;
+        AssemblyName an = new AssemblyName(progName);
 
         AppName = GetAppName(assembly);
         Version = an.Version.ToString();
@@ -296,7 +296,7 @@ namespace FreeLibSet.Forms
     /// <returns>Результат не имеет значения</returns>
     public DialogResult ShowDialog()
     {
-      using (SimpleAboutDialogForm Form = new SimpleAboutDialogForm())
+      using (SimpleAboutDialogForm frm = new SimpleAboutDialogForm())
       {
         if (AppIcon != null)
         {
@@ -304,18 +304,18 @@ namespace FreeLibSet.Forms
           {
             Bitmap bmp = AppIcon.ToBitmap();
             bmp.MakeTransparent(Color.FromArgb(13, 11, 12)); // см. справку к Icon.ToBitmap()
-            Form.pbIcon.Image = bmp;
+            frm.pbIcon.Image = bmp;
           }
           catch { } // проглатываем ошибку
         }
-        Form.Text = Title;
+        frm.Text = Title;
 
-        Form.lblTitle.Text = AppName;
+        frm.lblTitle.Text = AppName;
         if (!String.IsNullOrEmpty(Version))
-          Form.lblVersion.Text = "Версия " + Version;
-        Form.lblCopyright.Text = Copyright;
+          frm.lblVersion.Text = "Версия " + Version;
+        frm.lblCopyright.Text = Copyright;
 
-        return EFPApp.ShowDialog(Form, false);
+        return EFPApp.ShowDialog(frm, false);
       }
     }
 

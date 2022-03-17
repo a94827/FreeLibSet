@@ -149,13 +149,13 @@ namespace FreeLibSet.Forms.RI
       if (dialog == null)
         throw new ArgumentNullException("dialog");
 
-      IEFPAppRIFormItem RIItem = EFPApp.RICreators.Create(dialog, null) as IEFPAppRIFormItem;
-      RIItem.WriteValues();
+      IEFPAppRIFormItem riItem = EFPApp.RICreators.Create(dialog, null) as IEFPAppRIFormItem;
+      riItem.WriteValues();
       if (!String.IsNullOrEmpty(dialog.ErrorMessage))
         EFPApp.ErrorMessageBox(dialog.ErrorMessage, dialog.Title);
-      DialogResult Res = (DialogResult)(int)EFPApp.ShowDialog(RIItem.FormProvider.Form, true);
-      RIItem.ReadValues();
-      return Res;
+      DialogResult res = (DialogResult)(int)EFPApp.ShowDialog(riItem.FormProvider.Form, true);
+      riItem.ReadValues();
+      return res;
     }
 
     /// <summary>
@@ -168,13 +168,13 @@ namespace FreeLibSet.Forms.RI
       if (dialog == null)
         throw new ArgumentNullException("dialog");
 
-      IEFPAppRIStandardDialogItem RIItem = EFPApp.RICreators.Create(dialog, null) as IEFPAppRIStandardDialogItem;
-      RIItem.WriteValues();
+      IEFPAppRIStandardDialogItem riItem = EFPApp.RICreators.Create(dialog, null) as IEFPAppRIStandardDialogItem;
+      riItem.WriteValues();
       if (!String.IsNullOrEmpty(dialog.ErrorMessage))
         EFPApp.ErrorMessageBox(dialog.ErrorMessage, dialog.Title); // 06.12.2021
-      DialogResult Res = RIItem.ShowDialog();
-      RIItem.ReadValues();
-      return Res;
+      DialogResult res = riItem.ShowDialog();
+      riItem.ReadValues();
+      return res;
     }
 
     #endregion
@@ -439,8 +439,8 @@ namespace FreeLibSet.Forms.RI
         // Максимальный размер формы
         System.Drawing.Size MaxSize = System.Windows.Forms.Screen.FromControl(this).WorkingArea.Size;
 
-        int ExtWidth = base.Width - MainPanel.ClientSize.Width - MainPanel.Margin.Size.Width;
-        base.Width = Math.Min(Math.Max(_BandPanel.Width + _BandPanel.Padding.Size.Width + ExtWidth,
+        int extWidth = base.Width - MainPanel.ClientSize.Width - MainPanel.Margin.Size.Width;
+        base.Width = Math.Min(Math.Max(_BandPanel.Width + _BandPanel.Padding.Size.Width + extWidth,
           base.MinimumSize.Width),
           MaxSize.Width);
         _BandPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -449,8 +449,8 @@ namespace FreeLibSet.Forms.RI
         _BandPanel.FinishLoad();
         //BandPanel.PerformLayout();
 
-        int ExtHeight = base.Height - MainPanel.ClientSize.Height + MainPanel.Margin.Size.Height;
-        base.Height = Math.Min(_BandPanel.Height + _BandPanel.Padding.Size.Height + ExtHeight,
+        int extHeight = base.Height - MainPanel.ClientSize.Height + MainPanel.Margin.Size.Height;
+        base.Height = Math.Min(_BandPanel.Height + _BandPanel.Padding.Size.Height + extHeight,
           MaxSize.Height);
         _BandPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 
@@ -495,7 +495,7 @@ namespace FreeLibSet.Forms.RI
 
       public BandPanelItem(Band band, EFPBaseProvider baseProvider)
       {
-        Children = new List<IEFPAppRIItem>();
+        _Children = new List<IEFPAppRIItem>();
 
         foreach (Control ctrl in band)
           Add(ctrl, baseProvider);
@@ -505,38 +505,38 @@ namespace FreeLibSet.Forms.RI
 
       #region Список элементов
 
-      private List<IEFPAppRIItem> Children;
+      private List<IEFPAppRIItem> _Children;
 
       internal void Add(Control ctrl, EFPBaseProvider baseProvider)
       {
-        IEFPAppRIItem Item = EFPApp.RICreators.Create(ctrl, baseProvider);
-        Children.Add(Item);
-        ControlWithLabelItem cwli = Item as ControlWithLabelItem;
+        IEFPAppRIItem item = EFPApp.RICreators.Create(ctrl, baseProvider);
+        _Children.Add(item);
+        ControlWithLabelItem cwli = item as ControlWithLabelItem;
         if (cwli != null)
         {
-          EFPControlBase CP = cwli.ControlItem as EFPControlBase;
-          BandPanelStripe Stripe = new BandPanelStripe(cwli.LabelText, CP.Control);
-          base.Stripes.Add(Stripe);
-          if (CP.LabelNeeded)
-            CP.Label = Stripe.Label;
+          EFPControlBase cp = cwli.ControlItem as EFPControlBase;
+          BandPanelStripe stripe = new BandPanelStripe(cwli.LabelText, cp.Control);
+          base.Stripes.Add(stripe);
+          if (cp.LabelNeeded)
+            cp.Label = stripe.Label;
           return;
         }
-        if (Item is EFPControlBase)
+        if (item is EFPControlBase)
         {
-          EFPControlBase CP = (EFPControlBase)Item;
-          BandPanelStripe Stripe = new BandPanelStripe(String.Empty, CP.Control);
-          base.Stripes.Add(Stripe);
-          if (CP.LabelNeeded && base.Stripes.Count >= 2)
+          EFPControlBase cp = (EFPControlBase)item;
+          BandPanelStripe stripe = new BandPanelStripe(String.Empty, cp.Control);
+          base.Stripes.Add(stripe);
+          if (cp.LabelNeeded && base.Stripes.Count >= 2)
           {
             // Проверяем, что в предыдущей строке не сидит одна метка
-            BandPanelStripe PrevStripe = base.Stripes[base.Stripes.Count - 2];
-            if (PrevStripe.Label == null && PrevStripe.Control is System.Windows.Forms.Label)
-              CP.Label = PrevStripe.Control;
+            BandPanelStripe prevStripe = base.Stripes[base.Stripes.Count - 2];
+            if (prevStripe.Label == null && prevStripe.Control is System.Windows.Forms.Label)
+              cp.Label = prevStripe.Control;
           }
           return;
         }
 
-        throw new InvalidOperationException("Элемент \"" + Item.ToString() + "\" нельзя добавить к полосе управляющих элементов");
+        throw new InvalidOperationException("Элемент \"" + item.ToString() + "\" нельзя добавить к полосе управляющих элементов");
       }
 
       #endregion
@@ -545,11 +545,11 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        for (int i = 0; i < Children.Count; i++)
+        for (int i = 0; i < _Children.Count; i++)
         {
           try
           {
-            Children[i].WriteValues();
+            _Children[i].WriteValues();
           }
           catch (Exception e)
           {
@@ -560,8 +560,8 @@ namespace FreeLibSet.Forms.RI
 
       public void ReadValues()
       {
-        for (int i = 0; i < Children.Count; i++)
-          Children[i].ReadValues();
+        for (int i = 0; i < _Children.Count; i++)
+          _Children[i].ReadValues();
       }
 
       #endregion

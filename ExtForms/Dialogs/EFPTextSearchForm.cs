@@ -268,11 +268,11 @@ namespace FreeLibSet.Forms
       const string SimilarCharsSrc = "АаВвЕеКкМмНнОоРрСсТтУуХх"; // Русские
       const string SimilarCharsDst = "AaBbEeKkMmHhOoPpCcTtYyXx"; // Латинские
 
-      Dictionary<char, char> Dict = new Dictionary<char, char>(SimilarCharsSrc.Length);
+      Dictionary<char, char> dict = new Dictionary<char, char>(SimilarCharsSrc.Length);
       for (int i = 0; i < SimilarCharsSrc.Length; i++)
-        Dict.Add(SimilarCharsSrc[i], SimilarCharsDst[i]);
+        dict.Add(SimilarCharsSrc[i], SimilarCharsDst[i]);
 
-      return Dict;
+      return dict;
     }
 
     // Нормализация текста в соответствии с условиями
@@ -448,18 +448,18 @@ namespace FreeLibSet.Forms
       if (!SearchInfo.SimilarCharsDiff)
         _SearchCopy = DataTools.ReplaceChars(_SearchCopy, EFPTextSearchInfo.SimilarCharDict);
 
-      int StartPos;
+      int startPos;
       if (SearchInfo.FromCurrent)
-        StartPos = Owner.SelectionStart;
+        startPos = Owner.SelectionStart;
       else
       {
         if (SearchInfo.Backward)
-          StartPos = Owner.Text.Length - SearchInfo.Text.Length;
+          startPos = Owner.Text.Length - SearchInfo.Text.Length;
         else
-          StartPos = 0;
+          startPos = 0;
       }
 
-      DoSearch(StartPos, true);
+      DoSearch(startPos, true);
     }
 
     /// <summary>
@@ -469,15 +469,15 @@ namespace FreeLibSet.Forms
     /// <returns>true, если пользователь нажал кнопку "ОК"</returns>
     protected virtual bool QueryParams(EFPTextSearchInfo searchInfo)
     {
-      using (EFPTextSearchForm Form = new EFPTextSearchForm())
+      using (EFPTextSearchForm frm = new EFPTextSearchForm())
       {
-        Form.efpWhere.Visible = false;
-        Form.grpWhere.Visible = false;
-        Form.SetValues(searchInfo);
-        if (EFPApp.ShowDialog(Form, false) != DialogResult.OK)
+        frm.efpWhere.Visible = false;
+        frm.grpWhere.Visible = false;
+        frm.SetValues(searchInfo);
+        if (EFPApp.ShowDialog(frm, false) != DialogResult.OK)
           return false;
 
-        Form.GetValues(searchInfo);
+        frm.GetValues(searchInfo);
       }
       return true;
     }
@@ -522,7 +522,7 @@ namespace FreeLibSet.Forms
       if (!firstSearch)
         MoveNext(ref startPos);
 
-      bool Found = false;
+      bool found = false;
       Splash spl = new Splash("Поиск текста");
       spl.AllowCancel = true;
 
@@ -535,7 +535,7 @@ namespace FreeLibSet.Forms
           if (String.Compare(_TextCopy, startPos, _SearchCopy, 0, _SearchCopy.Length, StringComparison.Ordinal) == 0) // TODO: Equals()
           {
             Owner.Select(startPos, _SearchCopy.Length);
-            Found = true;
+            found = true;
             break;
           }
           MoveNext(ref startPos);
@@ -545,7 +545,7 @@ namespace FreeLibSet.Forms
       {
         spl.Close();
       }
-      if (!Found)
+      if (!found)
         EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
     }
 
@@ -622,35 +622,35 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      DataGridViewRow Row;
+      DataGridViewRow row;
       if (SearchInfo.FromCurrent)
-        Row = Owner.CurrentGridRow;
+        row = Owner.CurrentGridRow;
       else
       {
         if (SearchInfo.Backward)
-          Row = Owner.Control.Rows[Owner.Control.RowCount - 1];
+          row = Owner.Control.Rows[Owner.Control.RowCount - 1];
         else
-          Row = Owner.Control.Rows[0];
+          row = Owner.Control.Rows[0];
       }
 
-      DataGridViewColumn[] VisibleColumns = WinFormsTools.GetOrderedVisibleColumns(Owner.Control);
-      if (VisibleColumns.Length == 0)
+      DataGridViewColumn[] visibleColumns = WinFormsTools.GetOrderedVisibleColumns(Owner.Control);
+      if (visibleColumns.Length == 0)
       {
         EFPApp.ShowTempMessage("Табличный просмотр не содержит видимых столбцов");
         return;
       }
 
-      int ColumnIndex = -1;
+      int columnIndex = -1;
       if (SearchInfo.CurrentColumn)
-        ColumnIndex = Owner.CurrentColumnIndex;
-      if (ColumnIndex < 0)
+        columnIndex = Owner.CurrentColumnIndex;
+      if (columnIndex < 0)
       {
         if (SearchInfo.Backward)
-          ColumnIndex = VisibleColumns[VisibleColumns.Length - 1].Index; // 17.05.2016
+          columnIndex = visibleColumns[visibleColumns.Length - 1].Index; // 17.05.2016
         else
-          ColumnIndex = VisibleColumns[0].Index;
+          columnIndex = visibleColumns[0].Index;
       }
-      DoSearch(Row, ColumnIndex, true);
+      DoSearch(row, columnIndex, true);
     }
 
     /// <summary>
@@ -660,13 +660,13 @@ namespace FreeLibSet.Forms
     /// <returns>true, если пользователь нажал кнопку "ОК"</returns>
     protected virtual bool QueryParams(EFPTextSearchInfo searchInfo)
     {
-      using (EFPTextSearchForm Form = new EFPTextSearchForm())
+      using (EFPTextSearchForm frm = new EFPTextSearchForm())
       {
-        Form.SetValues(searchInfo);
-        if (EFPApp.ShowDialog(Form, false) != DialogResult.OK)
+        frm.SetValues(searchInfo);
+        if (EFPApp.ShowDialog(frm, false) != DialogResult.OK)
           return false;
 
-        Form.GetValues(searchInfo);
+        frm.GetValues(searchInfo);
       }
       return true;
     }
@@ -687,10 +687,10 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      int ColumnIndex = Owner.CurrentColumnIndex;
-      if (ColumnIndex < 0)
-        ColumnIndex = Owner.Control.FirstDisplayedCell.ColumnIndex;
-      DoSearch(Owner.Control.CurrentRow, ColumnIndex, false);
+      int columnIndex = Owner.CurrentColumnIndex;
+      if (columnIndex < 0)
+        columnIndex = Owner.Control.FirstDisplayedCell.ColumnIndex;
+      DoSearch(Owner.Control.CurrentRow, columnIndex, false);
     }
 
     private void DoSearch(DataGridViewRow row, int columnIndex, bool firstSearch)
@@ -698,7 +698,7 @@ namespace FreeLibSet.Forms
       if (!firstSearch)
         MoveNext(ref row, ref columnIndex);
 
-      bool Found = false;
+      bool found = false;
       Splash spl = new Splash("Поиск текста");
       spl.AllowCancel = true;
       if (row != null)
@@ -719,12 +719,12 @@ namespace FreeLibSet.Forms
           {
             Owner.CurrentGridRow = row;
             Owner.CurrentColumnIndex = columnIndex;
-            Found = true;
+            found = true;
             break;
           }
-          DataGridViewRow PrevRow = row;
+          DataGridViewRow prevRow = row;
           MoveNext(ref row, ref columnIndex);
-          if (row != PrevRow)
+          if (row != prevRow)
           {
             spl.IncPercent();
             if (row != null)
@@ -736,7 +736,7 @@ namespace FreeLibSet.Forms
       {
         spl.Close();
       }
-      if (!Found)
+      if (!found)
         EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
     }
 
@@ -759,8 +759,8 @@ namespace FreeLibSet.Forms
       // 25.03.2015
       // Не работал поиск по вычисляемым полям
 
-      EFPDataGridViewCellAttributesEventArgs CellArgs = Owner.DoGetCellAttributes(columnIndex);
-      object v = CellArgs.FormattedValue;
+      EFPDataGridViewCellAttributesEventArgs cellArgs = Owner.DoGetCellAttributes(columnIndex);
+      object v = cellArgs.FormattedValue;
       string s;
       if (v == null)
         s = String.Empty;
@@ -779,13 +779,13 @@ namespace FreeLibSet.Forms
       // 17.05.2016
       // В mono не реализованы методы DataGridViewColumnCollection.GetXXXColumn().
       // Методы в DataGridViewRowCollection реализованы
-      DataGridViewColumn[] VisibleColumns = WinFormsTools.GetOrderedVisibleColumns(Owner.Control);
+      DataGridViewColumn[] visibleColumns = WinFormsTools.GetOrderedVisibleColumns(Owner.Control);
 
 
       if (!SearchInfo.CurrentColumn)
       {
         // Разрешено перемещение между столбами
-        DataGridViewColumn Col = Owner.Control.Columns[columnIndex];
+        DataGridViewColumn col = Owner.Control.Columns[columnIndex];
 
         /*
         if (SearchInfo.Backward)
@@ -802,22 +802,22 @@ namespace FreeLibSet.Forms
         }
          */
 
-        int ViewIndex = Array.IndexOf<DataGridViewColumn>(VisibleColumns, Col);
+        int viewIndex = Array.IndexOf<DataGridViewColumn>(visibleColumns, col);
         if (SearchInfo.Backward)
         {
-          if (ViewIndex >= 1)
+          if (viewIndex >= 1)
           {
-            Col = VisibleColumns[ViewIndex - 1];
-            columnIndex = Col.Index;
+            col = visibleColumns[viewIndex - 1];
+            columnIndex = col.Index;
             return;
           }
         }
         else
         {
-          if (ViewIndex < (VisibleColumns.Length - 1))
+          if (viewIndex < (visibleColumns.Length - 1))
           {
-            Col = VisibleColumns[ViewIndex + 1];
-            columnIndex = Col.Index;
+            col = visibleColumns[viewIndex + 1];
+            columnIndex = col.Index;
             return;
           }
         }
@@ -825,7 +825,7 @@ namespace FreeLibSet.Forms
       // Нужен переход на другую строку
       if (!SearchInfo.CurrentColumn)
       {
-        DataGridViewColumn Col;
+        DataGridViewColumn col;
         /*
         if (SearchInfo.Backward)
           Col = Owner.Control.Columns.GetLastColumn(DataGridViewElementStates.Visible, DataGridViewElementStates.None);
@@ -833,23 +833,22 @@ namespace FreeLibSet.Forms
           Col = Owner.Control.Columns.GetFirstColumn(DataGridViewElementStates.Visible, DataGridViewElementStates.None);
          * */
         if (SearchInfo.Backward)
-          Col = VisibleColumns[VisibleColumns.Length - 1];
+          col = visibleColumns[visibleColumns.Length - 1];
         else
-          Col = VisibleColumns[0];
-        columnIndex = Col.Index;
+          col = visibleColumns[0];
+        columnIndex = col.Index;
       }
 
-      int RowIndex = row.Index;
+      int rowIndex = row.Index;
       if (SearchInfo.Backward)
-        RowIndex = Owner.Control.Rows.GetPreviousRow(RowIndex, DataGridViewElementStates.Visible);
+        rowIndex = Owner.Control.Rows.GetPreviousRow(rowIndex, DataGridViewElementStates.Visible);
       else
-        RowIndex = Owner.Control.Rows.GetNextRow(RowIndex, DataGridViewElementStates.Visible);
-      if (RowIndex >= 0)
-        row = Owner.Control.Rows[RowIndex];
+        rowIndex = Owner.Control.Rows.GetNextRow(rowIndex, DataGridViewElementStates.Visible);
+      if (rowIndex >= 0)
+        row = Owner.Control.Rows[rowIndex];
       else
         row = null;
     }
-
 
     #endregion
 
@@ -871,24 +870,24 @@ namespace FreeLibSet.Forms
         for (int i = 0; i < Owner.Control.RowCount; i++)
         {
           Owner.DoGetRowAttributes(i, EFPDataGridViewAttributesReason.View);
-          bool Flag;
+          bool flag;
           if (SearchInfo.CurrentColumn)
-            Flag = TestCell(Owner.Control.Rows[i], Owner.CurrentColumnIndex);
+            flag = TestCell(Owner.Control.Rows[i], Owner.CurrentColumnIndex);
           else
           {
-            Flag = false;
-            DataGridViewColumn Col = Owner.Control.Columns.GetFirstColumn(DataGridViewElementStates.Visible, DataGridViewElementStates.None);
-            while (Col != null)
+            flag = false;
+            DataGridViewColumn col = Owner.Control.Columns.GetFirstColumn(DataGridViewElementStates.Visible, DataGridViewElementStates.None);
+            while (col != null)
             {
-              if (TestCell(Owner.Control.Rows[i], Col.Index))
+              if (TestCell(Owner.Control.Rows[i], col.Index))
               {
-                Flag = true;
+                flag = true;
                 break;
               }
-              Col = Owner.Control.Columns.GetNextColumn(Col, DataGridViewElementStates.Visible, DataGridViewElementStates.None);
+              col = Owner.Control.Columns.GetNextColumn(col, DataGridViewElementStates.Visible, DataGridViewElementStates.None);
             }
           }
-          if (Flag)
+          if (flag)
             rowIndices.Add(i);
 
           spl.IncPercent();
@@ -962,18 +961,18 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      TreeNode Node;
+      TreeNode node;
       if (SearchInfo.FromCurrent)
-        Node = Owner.Control.SelectedNode;
+        node = Owner.Control.SelectedNode;
       else
       {
         if (SearchInfo.Backward)
-          Node = Owner.LastTreeNode;
+          node = Owner.LastTreeNode;
         else
-          Node = Owner.FirstTreeNode;
+          node = Owner.FirstTreeNode;
       }
 
-      DoSearch(Node, true);
+      DoSearch(node, true);
     }
 
     /// <summary>
@@ -983,15 +982,15 @@ namespace FreeLibSet.Forms
     /// <returns>true, если пользователь нажал кнопку "ОК"</returns>
     protected virtual bool QueryParams(EFPTextSearchInfo searchInfo)
     {
-      using (EFPTextSearchForm Form = new EFPTextSearchForm())
+      using (EFPTextSearchForm frm = new EFPTextSearchForm())
       {
-        Form.efpWhere.Visible = false;
-        Form.grpWhere.Visible = false;
-        Form.SetValues(searchInfo);
-        if (EFPApp.ShowDialog(Form, false) != DialogResult.OK)
+        frm.efpWhere.Visible = false;
+        frm.grpWhere.Visible = false;
+        frm.SetValues(searchInfo);
+        if (EFPApp.ShowDialog(frm, false) != DialogResult.OK)
           return false;
 
-        Form.GetValues(searchInfo);
+        frm.GetValues(searchInfo);
       }
       return true;
     }
@@ -1020,7 +1019,7 @@ namespace FreeLibSet.Forms
       if (!firstSearch)
         MoveNext(ref node);
 
-      bool Found = false;
+      bool found = false;
       Splash spl = new Splash("Поиск текста");
       spl.AllowCancel = true;
 
@@ -1034,7 +1033,7 @@ namespace FreeLibSet.Forms
           if (TestCell(node))
           {
             Owner.Control.SelectedNode = node;
-            Found = true;
+            found = true;
             break;
           }
           MoveNext(ref node);
@@ -1044,7 +1043,7 @@ namespace FreeLibSet.Forms
       {
         spl.Close();
       }
-      if (!Found)
+      if (!found)
         EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
     }
 
@@ -1095,10 +1094,10 @@ namespace FreeLibSet.Forms
         // spl.PercentMax = Owner.Control.Nod;
         spl.AllowCancel = true;
 
-        for (TreeNode Node = Owner.FirstTreeNode; Node != null; Node = Owner.GetNextTreeNode(Node))
+        for (TreeNode node = Owner.FirstTreeNode; node != null; node = Owner.GetNextTreeNode(node))
         {
-          if (TestCell(Node))
-            lst.Add(Node);
+          if (TestCell(node))
+            lst.Add(node);
 
           //spl.IncPercent();
         }
@@ -1173,18 +1172,18 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      TreeNodeAdv Node;
+      TreeNodeAdv node;
       if (SearchInfo.FromCurrent)
-        Node = Owner.Control.CurrentNode;
+        node = Owner.Control.CurrentNode;
       else
       {
         if (SearchInfo.Backward)
-          Node = Owner.LastTreeNode;
+          node = Owner.LastTreeNode;
         else
-          Node = Owner.FirstTreeNode;
+          node = Owner.FirstTreeNode;
       }
 
-      DoSearch(Node, true);
+      DoSearch(node, true);
     }
 
     /// <summary>
@@ -1194,15 +1193,15 @@ namespace FreeLibSet.Forms
     /// <returns>true, если пользователь нажал кнопку "ОК"</returns>
     protected virtual bool QueryParams(EFPTextSearchInfo searchInfo)
     {
-      using (EFPTextSearchForm Form = new EFPTextSearchForm())
+      using (EFPTextSearchForm frm = new EFPTextSearchForm())
       {
-        Form.efpWhere.Visible = false;
-        Form.grpWhere.Visible = false;
-        Form.SetValues(searchInfo);
-        if (EFPApp.ShowDialog(Form, false) != DialogResult.OK)
+        frm.efpWhere.Visible = false;
+        frm.grpWhere.Visible = false;
+        frm.SetValues(searchInfo);
+        if (EFPApp.ShowDialog(frm, false) != DialogResult.OK)
           return false;
 
-        Form.GetValues(searchInfo);
+        frm.GetValues(searchInfo);
       }
       return true;
     }
@@ -1231,7 +1230,7 @@ namespace FreeLibSet.Forms
       if (!firstSearch)
         MoveNext(ref node);
 
-      bool Found = false;
+      bool found = false;
       Splash spl = new Splash("Поиск текста");
       spl.AllowCancel = true;
 
@@ -1245,7 +1244,7 @@ namespace FreeLibSet.Forms
           if (TestCell(node))
           {
             Owner.Control.SelectedNode = node;
-            Found = true;
+            found = true;
             break;
           }
           MoveNext(ref node);
@@ -1255,7 +1254,7 @@ namespace FreeLibSet.Forms
       {
         spl.Close();
       }
-      if (!Found)
+      if (!found)
         EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
     }
 
@@ -1321,10 +1320,10 @@ namespace FreeLibSet.Forms
         // spl.PercentMax = Owner.Control.Nod;
         spl.AllowCancel = true;
 
-        foreach (TreeNodeAdv Node in Owner.Control.AllNodes)
+        foreach (TreeNodeAdv node in Owner.Control.AllNodes)
         {
-          if (TestCell(Node))
-            lst.Add(Node);
+          if (TestCell(node))
+            lst.Add(node);
 
           //spl.IncPercent();
         }

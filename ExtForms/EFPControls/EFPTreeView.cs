@@ -435,12 +435,12 @@ namespace FreeLibSet.Forms
       {
         if (Control.Nodes.Count > 0)
         {
-          TreeNode Node = Control.Nodes[Control.Nodes.Count - 1];
+          TreeNode node = Control.Nodes[Control.Nodes.Count - 1];
           while (true)
           {
-            if (Node.GetNodeCount(false) == 0)
-              return Node;
-            Node = Node.Nodes[Node.Nodes.Count - 1];
+            if (node.GetNodeCount(false) == 0)
+              return node;
+            node = node.Nodes[node.Nodes.Count - 1];
           }
         }
         else

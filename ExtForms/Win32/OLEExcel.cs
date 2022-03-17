@@ -517,18 +517,18 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        string VerStr = VersionStr;
-        int Bld = Build;
+        string verStr = VersionStr;
+        int bld = Build;
 
         //MessageBox.Show("VerStr=\""+VerStr+"\", Build="+Bld.ToString());
 
-        Version Ver = FileTools.GetVersionFromStr(VerStr);
-        if (Ver != null) // 27.12.2020
+        Version ver = FileTools.GetVersionFromStr(verStr);
+        if (ver != null) // 27.12.2020
         {
-          if (Ver.Build <= 0)
-            Ver = new Version(Ver.Major, Ver.Major, Bld, 0);
+          if (ver.Build <= 0)
+            ver = new Version(ver.Major, ver.Major, bld, 0);
         }
-        return Ver;
+        return ver;
       }
     }
 
@@ -843,16 +843,16 @@ namespace FreeLibSet.OLE.Excel
     {
       if (heights == null || heights.Length == 0)
         return;
-      int FirstPos = 0;
-      while (FirstPos < heights.Length)
+      int firstPos = 0;
+      while (firstPos < heights.Length)
       {
-        int h = heights[FirstPos];
-        int LastPos = FirstPos + 1;
-        while (LastPos < heights.Length && heights[LastPos] == h)
-          LastPos++;
-        LastPos--;
-        SetRowHeightsLM(h, firstRowIndex + FirstPos, LastPos - FirstPos + 1);
-        FirstPos = LastPos + 1;
+        int h = heights[firstPos];
+        int lastPos = firstPos + 1;
+        while (lastPos < heights.Length && heights[lastPos] == h)
+          lastPos++;
+        lastPos--;
+        SetRowHeightsLM(h, firstRowIndex + firstPos, lastPos - firstPos + 1);
+        firstPos = lastPos + 1;
       }
     }
 
@@ -874,15 +874,15 @@ namespace FreeLibSet.OLE.Excel
     /// <summary>
     /// Установить ширину столбцов в единицах 0.1 мм
     /// </summary>
-    /// <param name="widthes"></param>
-    public void SetColumnWidthesLM(int[] widthes)
+    /// <param name="widths"></param>
+    public void SetColumnWidthsLM(int[] widths)
     {
-      SetColumnWidthesLM(widthes, 1);
+      SetColumnWidthsLM(widths, 1);
     }
 
-    private void SetColumnWidthesLM(int[] widthes, int firstColumnIndex)
+    private void SetColumnWidthsLM(int[] widths, int firstColumnIndex)
     {
-      if (widthes == null || widthes.Length == 0)
+      if (widths == null || widths.Length == 0)
         return;
       double WidthScale = GetColumnWidthScale();
 
@@ -891,21 +891,21 @@ namespace FreeLibSet.OLE.Excel
 
       // На сколько пунктов надо уменьшить ширину каждого столбца
       //double stdsz = Sheet.Application.StandardFontSize;
-      double ColumnSmaller = 0;//1.6; // / stdsz * 10;
-      double CS2 = ColumnSmaller / 72.0 * 254.0; // в единицах 0.1 мм
+      double columnSmaller = 0;//1.6; // / stdsz * 10;
+      double cs2 = columnSmaller / 72.0 * 254.0; // в единицах 0.1 мм
 
-      double PrevErr = 0.0; // ошибка от предыдущих шагов в единицах 0.1 мм
-      for (int i = 0; i < widthes.Length; i++)
+      double prevErr = 0.0; // ошибка от предыдущих шагов в единицах 0.1 мм
+      for (int i = 0; i < widths.Length; i++)
       {
-        Range ColRange = Cells[1, firstColumnIndex + i];
-        double WantedW = (double)widthes[i] - PrevErr; // в единицах 0.1 мм с учетом ошибки
-        if (WantedW < CS2)
-          WantedW = CS2;
-        double ColWPt = MySetColumnWidth(ColRange, WidthScale, WantedW / 254.0 * 72.0);
-        double RealW = ColWPt / 72.0 * 254.0 + CS2; // Реальная ширина в единицах 0.1 мм
-        WantedW = (double)widthes[i] - PrevErr; // еще раз
-        PrevErr = RealW - WantedW;
-        if (Math.Abs(PrevErr) > 20.0)
+        Range colRange = Cells[1, firstColumnIndex + i];
+        double wantedW = (double)widths[i] - prevErr; // в единицах 0.1 мм с учетом ошибки
+        if (wantedW < cs2)
+          wantedW = cs2;
+        double colWPt = MySetColumnWidth(colRange, WidthScale, wantedW / 254.0 * 72.0);
+        double realW = colWPt / 72.0 * 254.0 + cs2; // Реальная ширина в единицах 0.1 мм
+        wantedW = (double)widths[i] - prevErr; // еще раз
+        prevErr = realW - wantedW;
+        if (Math.Abs(prevErr) > 20.0)
           throw new BugException("Не удалось установить ширину столбца с приемлемой точностью");
       }
     }
@@ -936,21 +936,21 @@ namespace FreeLibSet.OLE.Excel
     /// <summary>
     /// Установить ширину столбцов в единицах ширины шрифта
     /// </summary>
-    /// <param name="widthes"></param>
-    public void SetColumnTextWidthes(double[] widthes)
+    /// <param name="widths"></param>
+    public void SetColumnTextWidths(double[] widths)
     {
-      SetColumnTextWidthes(widthes, 1);
+      SetColumnTextWidths(widths, 1);
     }
 
-    private void SetColumnTextWidthes(double[] widthes, int firstColumnIndex)
+    private void SetColumnTextWidths(double[] widths, int firstColumnIndex)
     {
-      if (widthes == null || widthes.Length == 0)
+      if (widths == null || widths.Length == 0)
         return;
 
-      for (int i = 0; i < widthes.Length; i++)
+      for (int i = 0; i < widths.Length; i++)
       {
-        Range ColRange = Cells[1, firstColumnIndex + i];
-        ColRange.ColumnWidth = widthes[i];
+        Range colRange = Cells[1, firstColumnIndex + i];
+        colRange.ColumnWidth = widths[i];
       }
     }
 
@@ -1015,8 +1015,7 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        Worksheet Sheet = new Worksheet(new ObjBase(Base.Helper.GetIndexProp(Base.Obj, "[DispID=0]", sheetIndex), Base.Helper));
-        return Sheet;
+        return new Worksheet(new ObjBase(Base.Helper.GetIndexProp(Base.Obj, "[DispID=0]", sheetIndex), Base.Helper));
       }
     }
 
@@ -1044,12 +1043,12 @@ namespace FreeLibSet.OLE.Excel
 
     public void Add(int sheetCount)
     {
-      object LastObj;
+      object lastObj;
       int n = this.Count;
       if (n == 0)
-        LastObj = Missing.Value;
+        lastObj = Missing.Value;
       else
-        LastObj = this[n].Base.Obj;
+        lastObj = this[n].Base.Obj;
 
       // Если добавить листы так, то они будут поименованы задом наперед
       //AnyDocType.Helper.Call(AnyDocType.Obj, "[DispID=181]",
@@ -1057,8 +1056,8 @@ namespace FreeLibSet.OLE.Excel
       for (int i = 0; i < sheetCount; i++)
       {
         Base.Helper.Call(Base.Obj, "[DispID=181]",
-          Missing.Value, LastObj, 1, XlSheetType.xlWorksheet);
-        LastObj = this[n + i + 1].Base.Obj;
+          Missing.Value, lastObj, 1, XlSheetType.xlWorksheet);
+        lastObj = this[n + i + 1].Base.Obj;
       }
     }
 
@@ -1245,9 +1244,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        string Res;
-        GetNumberFormat(out Res);
-        return Res;
+        string res;
+        GetNumberFormat(out res);
+        return res;
       }
       set
       {
@@ -1345,9 +1344,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        bool Res;
-        GetWrapText(out Res);
-        return Res;
+        bool res;
+        GetWrapText(out res);
+        return res;
       }
       set
       {
@@ -1381,9 +1380,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        int Res;
-        GetIndentLevel(out Res);
-        return Res;
+        int res;
+        GetIndentLevel(out res);
+        return res;
       }
       set
       {
@@ -1470,9 +1469,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        double Value;
-        GetRowHeight(out Value);
-        return Value;
+        double value;
+        GetRowHeight(out value);
+        return value;
       }
       set { SetRowHeight(value); }
     }
@@ -1507,9 +1506,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        double Value;
-        GetColumnWidth(out Value);
-        return Value;
+        double value;
+        GetColumnWidth(out value);
+        return value;
       }
       set { SetColumnWidth(value); }
     }
@@ -1671,9 +1670,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        XlBorderWeight Value;
-        GetWeight(out Value);
-        return Value;
+        XlBorderWeight value;
+        GetWeight(out value);
+        return value;
       }
       set
       {
@@ -1711,9 +1710,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        Int32 Value;
-        GetColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetColorInt(out value);
+        return value;
       }
       set
       {
@@ -1748,10 +1747,10 @@ namespace FreeLibSet.OLE.Excel
 
     public bool GetColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetColorInt(out IntValue);
-      value = ExcelHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetColorInt(out intValue);
+      value = ExcelHelper.RgbToColor(intValue);
+      return res;
     }
 
     public void SetColor(Color value)
@@ -1892,9 +1891,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        Int32 Value;
-        GetColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetColorInt(out value);
+        return value;
       }
       set
       {
@@ -1930,10 +1929,10 @@ namespace FreeLibSet.OLE.Excel
 
     public bool GetColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetColorInt(out IntValue);
-      value = ExcelHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetColorInt(out intValue);
+      value = ExcelHelper.RgbToColor(intValue);
+      return res;
     }
 
     public void SetColor(Color value)
@@ -1972,9 +1971,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        string Value;
-        GetName(out Value);
-        return Value;
+        string value;
+        GetName(out value);
+        return value;
       }
       set { SetName(value); }
     }
@@ -2012,9 +2011,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        double Value;
-        GetSize(out Value);
-        return Value;
+        double value;
+        GetSize(out value);
+        return value;
       }
       set { SetSize(value); }
     }
@@ -2049,9 +2048,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        bool Value;
-        GetBold(out Value);
-        return Value;
+        bool value;
+        GetBold(out value);
+        return value;
       }
       set { SetBold(value); }
     }
@@ -2080,9 +2079,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        bool Value;
-        GetItalic(out Value);
-        return Value;
+        bool value;
+        GetItalic(out value);
+        return value;
       }
       set { SetItalic(value); }
     }
@@ -2111,9 +2110,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        bool Value;
-        GetUnderline(out Value);
-        return Value;
+        bool value;
+        GetUnderline(out value);
+        return value;
       }
       set { SetUnderline(value); }
     }
@@ -2142,9 +2141,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        bool Value;
-        GetStrikeout(out Value);
-        return Value;
+        bool value;
+        GetStrikeout(out value);
+        return value;
       }
       set { SetStrikeout(value); }
     }
@@ -2180,9 +2179,9 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        Int32 Value;
-        GetColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetColorInt(out value);
+        return value;
       }
       set
       {
@@ -2218,10 +2217,10 @@ namespace FreeLibSet.OLE.Excel
 
     public bool GetColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetColorInt(out IntValue);
-      value = ExcelHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetColorInt(out intValue);
+      value = ExcelHelper.RgbToColor(intValue);
+      return res;
     }
 
     public void SetColor(Color value)

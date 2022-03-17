@@ -375,7 +375,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public static bool GetColorIntValue(Int32 x, out Int32 value)
-    { 
+    {
       // ?? Не знаю, как обрабатываются смешанные цвета
       value = x;
       return true;
@@ -472,8 +472,8 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        string BldStr = BuildStr;
-        return FileTools.GetVersionFromStr(BldStr);
+        string bldStr = BuildStr;
+        return FileTools.GetVersionFromStr(bldStr);
       }
     }
 
@@ -571,8 +571,8 @@ namespace FreeLibSet.OLE.Word
     public PageSetup PageSetup
     {
       get
-      { 
-      //global::Word.Document
+      {
+        //global::Word.Document
         if (_PageSetup.Base.IsEmpty)
           _PageSetup = new PageSetup(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=1101]"), Base.Helper));
         return _PageSetup;
@@ -1042,7 +1042,7 @@ namespace FreeLibSet.OLE.Word
 
     public Find Find
     {
-      get 
+      get
       {
         return new Find(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=262]"), Base.Helper));
       }
@@ -1086,9 +1086,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        string Value;
-        GetName(out Value);
-        return Value;
+        string value;
+        GetName(out value);
+        return value;
       }
       set { SetName(value); }
     }
@@ -1126,9 +1126,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        float Value;
-        GetSize(out Value);
-        return Value;
+        float value;
+        GetSize(out value);
+        return value;
       }
       set { SetSize(value); }
     }
@@ -1164,9 +1164,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        bool Value;
-        GetBold(out Value);
-        return Value;
+        bool value;
+        GetBold(out value);
+        return value;
       }
       set { SetBold(value); }
     }
@@ -1186,9 +1186,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        bool Value;
-        GetItalic(out Value);
-        return Value;
+        bool value;
+        GetItalic(out value);
+        return value;
       }
       set { SetItalic(value); }
     }
@@ -1208,9 +1208,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdUnderline Value;
-        GetUnderline(out Value);
-        return Value;
+        WdUnderline value;
+        GetUnderline(out value);
+        return value;
       }
       set { SetUnderline(value); }
     }
@@ -1236,9 +1236,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        bool Value;
-        GetStrikeout(out Value);
-        return Value;
+        bool value;
+        GetStrikeout(out value);
+        return value;
       }
       set { SetStrikeout(value); }
     }
@@ -1265,9 +1265,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        Int32 Value;
-        GetColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetColorInt(out value);
+        return value;
       }
       set
       {
@@ -1294,10 +1294,10 @@ namespace FreeLibSet.OLE.Word
 
     public bool GetColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetColorInt(out IntValue);
-      value = WordHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetColorInt(out intValue);
+      value = WordHelper.RgbToColor(intValue);
+      return res;
     }
 
     public void SetColor(Color value)
@@ -1315,7 +1315,7 @@ namespace FreeLibSet.OLE.Word
   #region Абзац
 
   public struct ParagraphFormat
-  { 
+  {
     #region Конструктор
 
     public ParagraphFormat(ObjBase theBase)
@@ -1339,9 +1339,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdParagraphAlignment Value;
-        GetAlignment(out Value);
-        return Value;
+        WdParagraphAlignment value;
+        GetAlignment(out value);
+        return value;
       }
       set
       {
@@ -1468,9 +1468,9 @@ namespace FreeLibSet.OLE.Word
       if (lastColumn < firstColumn)
         throw new ArgumentOutOfRangeException("lastColumn", lastColumn, "Неправильный номер последнего столбца");
 #endif
-      Range r1=Cell(firstRow, firstColumn).Range;
-      Range r2=Cell(lastRow, lastColumn).Range;
-      Range r3=document.Range(r1.Start, r2.End);
+      Range r1 = Cell(firstRow, firstColumn).Range;
+      Range r2 = Cell(lastRow, lastColumn).Range;
+      Range r3 = document.Range(r1.Start, r2.End);
       return r3.Cells;
     }
 
@@ -1669,7 +1669,7 @@ namespace FreeLibSet.OLE.Word
     /// <returns></returns>
     public Table Add(Range range, int numRows, int numColumns)
     {
-      return new Table(new ObjBase(Base.Helper.Call(Base.Obj, "[DispID=200]", 
+      return new Table(new ObjBase(Base.Helper.Call(Base.Obj, "[DispID=200]",
         range.Base.Obj, numRows, numColumns), Base.Helper));
     }
 
@@ -1868,11 +1868,11 @@ namespace FreeLibSet.OLE.Word
     /// </summary>
     public float Height
     {
-      get 
+      get
       {
-        float Value;
-        GetHeight(out Value);
-        return Value;
+        float value;
+        GetHeight(out value);
+        return value;
       }
       set { SetHeight(value); }
     }
@@ -1880,9 +1880,9 @@ namespace FreeLibSet.OLE.Word
     public bool GetHeight(out float value)
     {
       value = (float)(Base.Helper.GetProp(Base.Obj, "[DispID=7]"));
-      if (value==WordHelper.wdUndefined)
+      if (value == WordHelper.wdUndefined)
       {
-        value=0f;
+        value = 0f;
         return false;
       }
       return true;
@@ -1898,11 +1898,11 @@ namespace FreeLibSet.OLE.Word
     /// </summary>
     public WdRowHeightRule HeightRule
     {
-      get 
+      get
       {
-        WdRowHeightRule Value;
-        GetHeightRule(out Value);
-        return Value;
+        WdRowHeightRule value;
+        GetHeightRule(out value);
+        return value;
       }
       set { SetHeightRule(value); }
     }
@@ -1932,7 +1932,7 @@ namespace FreeLibSet.OLE.Word
     {
       SetHeightRule(WdRowHeightRule.wdRowHeightExactly);
       for (int i = 0; i < heights.Length; i++)
-        this[i+1].SetHeight((float)heights[i] / 254f * 72f);
+        this[i + 1].SetHeight((float)heights[i] / 254f * 72f);
     }
 
     #endregion
@@ -2035,8 +2035,8 @@ namespace FreeLibSet.OLE.Word
 
     public void SetWidth(float value)
     {
-//      if (ValueEx < 20f)
-//        ValueEx = 20f;
+      //      if (ValueEx < 20f)
+      //        ValueEx = 20f;
       Base.Helper.SetProp(Base.Obj, "[DispID=3]", value);
     }
 
@@ -2051,7 +2051,7 @@ namespace FreeLibSet.OLE.Word
 
     public float GetWidthLM()
     {
-      return GetWidth() / 72f * 254f; 
+      return GetWidth() / 72f * 254f;
     }
 
     public void SetWidthLM(float value)
@@ -2186,11 +2186,11 @@ namespace FreeLibSet.OLE.Word
     /// </summary>
     public float Width
     {
-      get 
+      get
       {
-        float Value;
-        GetWidth(out Value);
-        return Value;
+        float value;
+        GetWidth(out value);
+        return value;
       }
       set { SetWidth(value); }
     }
@@ -2204,7 +2204,7 @@ namespace FreeLibSet.OLE.Word
         return false;
       }
       return true;
-    }       
+    }
 
     public void SetWidth(float value)
     {
@@ -2235,9 +2235,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        float Value;
-        GetPreferredWidth(out Value);
-        return Value;
+        float value;
+        GetPreferredWidth(out value);
+        return value;
       }
       set { SetPreferredWidth(value); }
     }
@@ -2261,12 +2261,12 @@ namespace FreeLibSet.OLE.Word
     /// <summary>
     /// Групповая установка ширины столбцов в единицах 0.1 мм
     /// </summary>
-    /// <param name="widthes"></param>
-    public void SetWidthLM(int[] widthes)
+    /// <param name="widths"></param>
+    public void SetWidthLM(int[] widths)
     {
       SetPreferredWidthType(WdPreferredWidthType.wdPreferredWidthPoints);
-      for (int i = 0; i < widthes.Length; i++)
-        this[i+1].SetPreferredWidth((float)(widthes[i]) / 254f * 72f);
+      for (int i = 0; i < widths.Length; i++)
+        this[i + 1].SetPreferredWidth((float)(widths[i]) / 254f * 72f);
     }
 
     #endregion
@@ -2346,9 +2346,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdCellVerticalAlignment Value;
-        GetVerticalAlignment(out Value);
-        return Value;
+        WdCellVerticalAlignment value;
+        GetVerticalAlignment(out value);
+        return value;
       }
       set
       {
@@ -2580,9 +2580,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdCellVerticalAlignment Value;
-        GetVerticalAlignment(out Value);
-        return Value;
+        WdCellVerticalAlignment value;
+        GetVerticalAlignment(out value);
+        return value;
       }
       set
       {
@@ -2897,9 +2897,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdVerticalAlignment Value;
-        GetVerticalAlignment(out Value);
-        return Value;
+        WdVerticalAlignment value;
+        GetVerticalAlignment(out value);
+        return value;
       }
       set
       {
@@ -2965,7 +2965,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetLineStyle(out WdLineStyle value)
     {
       value = (WdLineStyle)Base.Helper.GetProp(Base.Obj, "[DispID=3]");
-      if ((int)value==WordHelper.wdUndefined)
+      if ((int)value == WordHelper.wdUndefined)
       {
         value = WdLineStyle.wdLineStyleNone;
         return false;
@@ -2989,9 +2989,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdLineWidth Value;
-        GetLineWidth(out Value);
-        return Value;
+        WdLineWidth value;
+        GetLineWidth(out value);
+        return value;
       }
       set
       {
@@ -3026,9 +3026,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        Int32 Value;
-        GetColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetColorInt(out value);
+        return value;
       }
       set
       {
@@ -3055,10 +3055,10 @@ namespace FreeLibSet.OLE.Word
 
     public bool GetColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetColorInt(out IntValue);
-      value = WordHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetColorInt(out intValue);
+      value = WordHelper.RgbToColor(intValue);
+      return res;
     }
 
     public void SetColor(Color value)
@@ -3084,7 +3084,7 @@ namespace FreeLibSet.OLE.Word
     private ObjBase _Base;
 
     #endregion
-          
+
     #region Общие свойства
 
     public Border this[WdBorderType Index]
@@ -3105,9 +3105,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdLineStyle Value;
-        GetInsideLineStyle(out Value);
-        return Value;
+        WdLineStyle value;
+        GetInsideLineStyle(out value);
+        return value;
       }
       set
       {
@@ -3141,9 +3141,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdLineWidth Value;
-        GetInsideLineWidth(out Value);
-        return Value;
+        WdLineWidth value;
+        GetInsideLineWidth(out value);
+        return value;
       }
       set
       {
@@ -3177,9 +3177,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        Int32 Value;
-        GetInsideColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetInsideColorInt(out value);
+        return value;
       }
       set
       {
@@ -3206,15 +3206,15 @@ namespace FreeLibSet.OLE.Word
 
     public bool GetInsideColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetInsideColorInt(out IntValue);
-      value = WordHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetInsideColorInt(out intValue);
+      value = WordHelper.RgbToColor(intValue);
+      return res;
     }
 
-    public void SetInsideColor(Color Value)
+    public void SetInsideColor(Color value)
     {
-      SetInsideColorInt(WordHelper.ColorToRgb(Value));
+      SetInsideColorInt(WordHelper.ColorToRgb(value));
     }
 
     #endregion
@@ -3266,9 +3266,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        WdLineWidth Value;
-        GetOutsideLineWidth(out Value);
-        return Value;
+        WdLineWidth value;
+        GetOutsideLineWidth(out value);
+        return value;
       }
       set
       {
@@ -3303,9 +3303,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        Int32 Value;
-        GetOutsideColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetOutsideColorInt(out value);
+        return value;
       }
       set
       {
@@ -3332,10 +3332,10 @@ namespace FreeLibSet.OLE.Word
 
     public bool GetOutsideColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetOutsideColorInt(out IntValue);
-      value = WordHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetOutsideColorInt(out intValue);
+      value = WordHelper.RgbToColor(intValue);
+      return res;
     }
 
     public void SetOutsideColor(Color value)
@@ -3377,9 +3377,9 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        Int32 Value;
-        GetBackgroundPatternColorInt(out Value);
-        return Value;
+        Int32 value;
+        GetBackgroundPatternColorInt(out value);
+        return value;
       }
       set
       {
@@ -3389,7 +3389,7 @@ namespace FreeLibSet.OLE.Word
 
     public bool GetBackgroundPatternColorInt(out Int32 value)
     {
-      Int32 x= (Int32)(Base.Helper.GetProp(Base.Obj, "[DispID=5]"));
+      Int32 x = (Int32)(Base.Helper.GetProp(Base.Obj, "[DispID=5]"));
       return WordHelper.GetColorIntValue(x, out value);
     }
 
@@ -3406,10 +3406,10 @@ namespace FreeLibSet.OLE.Word
 
     public bool GetBackgroundPatternColor(out Color value)
     {
-      Int32 IntValue;
-      bool Res = GetBackgroundPatternColorInt(out IntValue);
-      value = WordHelper.RgbToColor(IntValue);
-      return Res;
+      Int32 intValue;
+      bool res = GetBackgroundPatternColorInt(out intValue);
+      value = WordHelper.RgbToColor(intValue);
+      return res;
     }
 
     public void SetBackgroundPatternColor(Color value)
@@ -3488,12 +3488,12 @@ namespace FreeLibSet.OLE.Word
 
     public void Replace(string oldText, string newText)
     {
-      object[] Args = new object[11];
-      DataTools.FillArray<object>(Args, Missing.Value);
-      Args[0] = oldText;
-      Args[9] = newText;
-      Args[10] = WdReplace.wdReplaceAll;
-      Base.Helper.CallWithArgs(Base.Obj, "[DispID=444]", Args);
+      object[] args = new object[11];
+      DataTools.FillArray<object>(args, Missing.Value);
+      args[0] = oldText;
+      args[9] = newText;
+      args[10] = WdReplace.wdReplaceAll;
+      Base.Helper.CallWithArgs(Base.Obj, "[DispID=444]", args);
     }
 
     #endregion

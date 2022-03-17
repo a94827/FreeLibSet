@@ -1247,7 +1247,7 @@ namespace FreeLibSet.Data.Docs
 
     //string IObjectWithCode.Code
     //{
-    //  get { throw new Exception("The method or operation is not implemented."); }
+    //  get { throw new NotImplemntedException(); }
     //}
 
     //#endregion

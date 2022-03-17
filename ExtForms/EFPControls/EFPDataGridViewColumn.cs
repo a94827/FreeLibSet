@@ -235,11 +235,11 @@ namespace FreeLibSet.Forms
         return true;
       }
 
-      DataView OrgView = ControlProvider.SourceAsDataView;
+      DataView orgView = ControlProvider.SourceAsDataView;
       if (ControlProvider.IncSearchDataView == null)
       {
         ControlProvider.IncSearchDataViewIsManual = false;
-        if (OrgView == null)
+        if (orgView == null)
           ControlProvider.IncSearchDataViewIsManual = true;
         else
         {
@@ -247,7 +247,7 @@ namespace FreeLibSet.Forms
             ControlProvider.IncSearchDataViewIsManual = true; // динамически вычисляемый столбец
           else
           {
-            if (!OrgView.Table.Columns.Contains(Name))
+            if (!orgView.Table.Columns.Contains(Name))
               ControlProvider.IncSearchDataViewIsManual = true; // динамически вычисляемый столбец, отсутствующий в
             // исходном набор
           }
@@ -259,19 +259,19 @@ namespace FreeLibSet.Forms
           EFPApp.BeginWait("Загрузка данных столбца для поиска по первым буквам");
           try
           {
-            DataTable TempTable = new DataTable();
-            TempTable.Columns.Add(Name, typeof(string));
+            DataTable tempTable = new DataTable();
+            tempTable.Columns.Add(Name, typeof(string));
             for (int i = 0; i < ControlProvider.Control.RowCount; i++)
             {
               ControlProvider.DoGetRowAttributes(i, EFPDataGridViewAttributesReason.View);
               EFPDataGridViewCellAttributesEventArgs CellArgs = ControlProvider.DoGetCellAttributes(GridColumn.Index);
               object v = CellArgs.Value;
               if (v == null || v is DBNull)
-                TempTable.Rows.Add(String.Empty);
+                tempTable.Rows.Add(String.Empty);
               else
-                TempTable.Rows.Add(v.ToString());
+                tempTable.Rows.Add(v.ToString());
             }
-            ControlProvider.IncSearchDataView = TempTable.DefaultView;
+            ControlProvider.IncSearchDataView = tempTable.DefaultView;
           }
           finally
           {
@@ -281,75 +281,75 @@ namespace FreeLibSet.Forms
         else
         {
 #if DEBUG
-          if (OrgView == null)
+          if (orgView == null)
             throw new BugException("OrgView==null");
 #endif
-          ControlProvider.IncSearchDataView = new DataView(OrgView.Table);
-          ControlProvider.IncSearchDataView.Sort = OrgView.Sort;
+          ControlProvider.IncSearchDataView = new DataView(orgView.Table);
+          ControlProvider.IncSearchDataView.Sort = orgView.Sort;
         }
 
         nextSearch = false; // некуда продолжать
       }
 
-      DataRow FoundRow; // Строка в EFPDataGridView.IncSearchDataView, на которую надо позиционироваться
+      DataRow foundRow; // Строка в EFPDataGridView.IncSearchDataView, на которую надо позиционироваться
       if (nextSearch)
       {
         if (ControlProvider.IncSearchDataView.Count < 2)
           return false; // некуда переходить
 
-        DataRow CurrRow;
+        DataRow currRow;
         if (ControlProvider.IncSearchDataViewIsManual)
-          CurrRow = ControlProvider.IncSearchDataView.Table.Rows[ControlProvider.CurrentRowIndex];
+          currRow = ControlProvider.IncSearchDataView.Table.Rows[ControlProvider.CurrentRowIndex];
         else
-          CurrRow = ControlProvider.CurrentDataRow;
-        int CurrIdx = DataTools.FindDataRowViewIndex(ControlProvider.IncSearchDataView, CurrRow);
-        if (CurrIdx < 0)
+          currRow = ControlProvider.CurrentDataRow;
+        int currIdx = DataTools.FindDataRowViewIndex(ControlProvider.IncSearchDataView, currRow);
+        if (currIdx < 0)
           // Переместились на какую-то строку, которая не соответствует условию
           // Возвращаемся на первую подходящую (как если начать поиск)
-          FoundRow = ControlProvider.IncSearchDataView[0].Row;
+          foundRow = ControlProvider.IncSearchDataView[0].Row;
         else
         {
-          if (CurrIdx == ControlProvider.IncSearchDataView.Count - 1)
+          if (currIdx == ControlProvider.IncSearchDataView.Count - 1)
             // Были на последней строке - переходим к первой
-            FoundRow = ControlProvider.IncSearchDataView[0].Row;
+            foundRow = ControlProvider.IncSearchDataView[0].Row;
           else
-            FoundRow = ControlProvider.IncSearchDataView[CurrIdx + 1].Row;
+            foundRow = ControlProvider.IncSearchDataView[currIdx + 1].Row;
         }
       }
       else //!NextSearch
       {
         // Устанавливаем фильтр
         // Исходный фильтр:
-        string OrgViewRowFilter = ControlProvider.IncSearchDataViewIsManual ? String.Empty : OrgView.RowFilter;
-        string PrevSearchFilter = ControlProvider.IncSearchDataView.RowFilter; // если не найдем - вернем обратно
+        string orgViewRowFilter = ControlProvider.IncSearchDataViewIsManual ? String.Empty : orgView.RowFilter;
+        string prevSearchFilter = ControlProvider.IncSearchDataView.RowFilter; // если не найдем - вернем обратно
         string s1;
         if (ControlProvider.IncSearchDataView.Table.Columns[Name].DataType == typeof(string))
           s1 = "[" + Name + "] " + DataTools.GetDataViewLikeExpressionString(searchStr);
         else
           s1 = "CONVERT([" + Name + "], 'System.String') " + DataTools.GetDataViewLikeExpressionString(searchStr);
-        if (String.IsNullOrEmpty(OrgViewRowFilter))
+        if (String.IsNullOrEmpty(orgViewRowFilter))
           ControlProvider.IncSearchDataView.RowFilter = s1;
         else
-          ControlProvider.IncSearchDataView.RowFilter = "(" + OrgViewRowFilter + ") AND " + s1;
+          ControlProvider.IncSearchDataView.RowFilter = "(" + orgViewRowFilter + ") AND " + s1;
 
         // Позиционируемся на первую строку в выбранном подмножестве
         if (ControlProvider.IncSearchDataView.Count == 0)
         {
-          ControlProvider.IncSearchDataView.RowFilter = PrevSearchFilter;
+          ControlProvider.IncSearchDataView.RowFilter = prevSearchFilter;
           return false;
         }
         else
-          FoundRow = ControlProvider.IncSearchDataView[0].Row;
+          foundRow = ControlProvider.IncSearchDataView[0].Row;
       }
 
       // Выполняем позиционирование
       if (ControlProvider.IncSearchDataViewIsManual)
       {
-        int p = ControlProvider.IncSearchDataView.Table.Rows.IndexOf(FoundRow);
+        int p = ControlProvider.IncSearchDataView.Table.Rows.IndexOf(foundRow);
         ControlProvider.CurrentRowIndex = p;
       }
       else
-        ControlProvider.CurrentDataRow = FoundRow;
+        ControlProvider.CurrentDataRow = foundRow;
 
       return true;
     }
@@ -416,15 +416,15 @@ namespace FreeLibSet.Forms
         return;
       for (int i = 0; i < ControlProvider.Columns.Count; i++)
       {
-        EFPDataGridViewColumn ThisCol = ControlProvider.Columns[i];
-        if (ThisCol == this)
+        EFPDataGridViewColumn thisCol = ControlProvider.Columns[i];
+        if (thisCol == this)
           continue;
-        if (ThisCol.SizeGroup == SizeGroup)
+        if (thisCol.SizeGroup == SizeGroup)
         {
-          if (ThisCol.GridColumn.InheritedAutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+          if (thisCol.GridColumn.InheritedAutoSizeMode != DataGridViewAutoSizeColumnMode.None)
             continue; // 29.03.2013
 
-          ThisCol.GridColumn.Width = GridColumn.Width;
+          thisCol.GridColumn.Width = GridColumn.Width;
         }
       }
     }
@@ -1167,20 +1167,20 @@ namespace FreeLibSet.Forms
     /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах, включая знак числа и десятичную точку</param>
-    /// <param name="DecimalPlaces">Количество знаков после десятичной точки</param>
+    /// <param name="decimalPlaces">Количество знаков после десятичной точки</param>
     /// <param name="sizeGroup">Группа столбцов, имеющих одинаковую ширину.
     /// См. описание свойства EFPDataGridViewColumn.SizeGroup.</param>
     /// <returns>Объект столбца табличного просмотра (а не EFPDataGrodViewColumn)</returns>
-    public DataGridViewTextBoxColumn AddFixedPoint(string columnName, bool isDataColumn, string headerText, int textWidth, int DecimalPlaces, string sizeGroup)
+    public DataGridViewTextBoxColumn AddFixedPoint(string columnName, bool isDataColumn, string headerText, int textWidth, int decimalPlaces, string sizeGroup)
     {
 #if DEBUG
-      if (DecimalPlaces < 0)
+      if (decimalPlaces < 0)
         throw new ArgumentException("Количество знаков после запятой не может быть отрицательным", "DecimalPlaces");
 #endif
-      DataGridViewTextBoxColumn col = AddText(columnName, isDataColumn, headerText, textWidth, DecimalPlaces + 2);
+      DataGridViewTextBoxColumn col = AddText(columnName, isDataColumn, headerText, textWidth, decimalPlaces + 2);
       col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-      if (DecimalPlaces > 0)
-        col.DefaultCellStyle.Format = "0." + new string('0', DecimalPlaces);
+      if (decimalPlaces > 0)
+        col.DefaultCellStyle.Format = "0." + new string('0', decimalPlaces);
       else
         col.DefaultCellStyle.Format = "0";
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
@@ -1461,7 +1461,7 @@ namespace FreeLibSet.Forms
     public virtual void Clear()
     {
       ControlProvider.Control.CancelEdit();
-      object OldDS = ControlProvider.Control.DataSource;
+      object oldDS = ControlProvider.Control.DataSource;
       ControlProvider.Control.DataSource = null;
       try
       {
@@ -1470,7 +1470,7 @@ namespace FreeLibSet.Forms
       }
       finally
       {
-        ControlProvider.Control.DataSource = OldDS;
+        ControlProvider.Control.DataSource = oldDS;
       }
     }
 
@@ -1628,12 +1628,12 @@ namespace FreeLibSet.Forms
 
     IEnumerator<EFPDataGridViewColumn> IEnumerable<EFPDataGridViewColumn>.GetEnumerator()
     {
-      throw new Exception("The method or operation is not implemented.");
+      return new Enumerator(this);
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-      throw new Exception("The method or operation is not implemented.");
+      return new Enumerator(this);
     }
 
     #endregion

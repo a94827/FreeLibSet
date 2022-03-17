@@ -99,14 +99,8 @@ namespace FreeLibSet.Controls
     [DefaultValue(typeof(Color), "Info")]
     public override Color BackColor
     {
-      get
-      {
-        return base.BackColor;
-      }
-      set
-      {
-        base.BackColor = value;
-      }
+      get { return base.BackColor; }
+      set { base.BackColor = value; }
     }
 
     public override void ResetBackColor()

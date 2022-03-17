@@ -53,7 +53,6 @@ namespace FreeLibSet.Forms
       InitControlCheckState();
     }
 
-
     #endregion
 
     #region Свойство CanBeEmpty
@@ -431,17 +430,17 @@ namespace FreeLibSet.Forms
 
       public void ContrtolProvider_Validating(object sender, UIValidatingEventArgs args)
       {
-        bool HasChecked = false;
+        bool hasChecked = false;
         for (int i = 0; i < ControlProviders.Length; i++)
         {
           if (ControlProviders[i].Checked)
           {
-            HasChecked = true;
+            hasChecked = true;
             break;
           }
         }
 
-        if (!HasChecked)
+        if (!hasChecked)
           args.SetError("Должен быть установлен хотя бы один флажок");
       }
 

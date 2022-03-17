@@ -305,14 +305,14 @@ namespace FreeLibSet.Forms
         if (_Owner.ReportCreated)
         {
           PrepareTheTabControl();
-          TabPage TheTabPage = new TabPage();
-          page.TabPage = TheTabPage;
-          _Owner._TheTabControl.TabPages.Add(TheTabPage);
-          page.AssignParentControl(TheTabPage);
+          TabPage theTabPage = new TabPage();
+          page.TabPage = theTabPage;
+          _Owner._TheTabControl.TabPages.Add(theTabPage);
+          page.AssignParentControl(theTabPage);
           if (!_Owner.InsideBuildReport) // 29.07.2012 - но не во время нажатия F5
             page.DataReady = true;
           if (_Owner._TheForm != null)
-            _Owner._TheForm.FormProvider.SetHelpContext(TheTabPage, page.HelpContext);
+            _Owner._TheForm.FormProvider.SetHelpContext(theTabPage, page.HelpContext);
           if (activate && (!_Owner.InsideBuildReport))  // 12.08.2012 - но не во время нажатия F5
           {
             page.Select(); // 24.10.2016
@@ -342,12 +342,12 @@ namespace FreeLibSet.Forms
 
           if (_Owner._TheMainPanel2 != null)
           {
-            TabPage FirstPage = new TabPage();
-            _Items[0].TabPage = FirstPage;
-            _Owner._TheTabControl.TabPages.Add(FirstPage);
+            TabPage firstPage = new TabPage();
+            _Items[0].TabPage = firstPage;
+            _Owner._TheTabControl.TabPages.Add(firstPage);
 
             // Переносим существующую панель на закладку
-            FirstPage.Controls.Add(_Owner._TheMainPanel2);
+            firstPage.Controls.Add(_Owner._TheMainPanel2);
           }
           // Присоединяем TabControl
           _Owner._TheMainPanel.Controls.Add(_Owner._TheTabControl);
@@ -384,17 +384,17 @@ namespace FreeLibSet.Forms
         if (pageIndex < 0 || pageIndex >= Count)
           throw new ArgumentOutOfRangeException("pageIndex", pageIndex, "Недопустимый индекс страницы");
 
-        EFPReportPage Page = _Items[pageIndex];
-        Page.BaseProvider.Parent = null; // 06.07.2021
+        EFPReportPage page = _Items[pageIndex];
+        page.BaseProvider.Parent = null; // 06.07.2021
 
         //if (FOwner.ReportCreated)
         //  PrepareTheTabControl();
 
         if (_Owner._TheTabControl != null) // теоретически, метод RemoveAt() может быть вызван до показа отчета
         {
-          TabPage ThePage = _Owner._TheTabControl.TabPages[pageIndex];
-          _Owner._TheTabControl.TabPages.Remove(ThePage);
-          ThePage.Dispose();
+          TabPage thePage = _Owner._TheTabControl.TabPages[pageIndex];
+          _Owner._TheTabControl.TabPages.Remove(thePage);
+          thePage.Dispose();
         }
         else if (_Owner._TheMainPanel2 != null)
         {
@@ -409,8 +409,8 @@ namespace FreeLibSet.Forms
 
 
         _Items.RemoveAt(pageIndex);
-        if (Page.IsExtraPage)
-          _ExtraPages.RemoveValue(Page);
+        if (page.IsExtraPage)
+          _ExtraPages.RemoveValue(page);
         _Owner.ReportCommandItems.InitCloseCommands();
       }
 
@@ -470,9 +470,9 @@ namespace FreeLibSet.Forms
           if (_ExtraPages == null)
             return null;
 
-          EFPReportPage Page;
-          if (_ExtraPages.TryGetValue(extraPageKey, out Page))
-            return Page;
+          EFPReportPage page;
+          if (_ExtraPages.TryGetValue(extraPageKey, out page))
+            return page;
           else
             return null;
         }
@@ -491,10 +491,10 @@ namespace FreeLibSet.Forms
 
         if (_ExtraPages == null)
           return false;
-        EFPReportPage Page;
-        if (!_ExtraPages.TryGetValue(extraPageKey, out Page))
+        EFPReportPage page;
+        if (!_ExtraPages.TryGetValue(extraPageKey, out page))
           return false;
-        Page.Select(); // 24.10.2016
+        page.Select(); // 24.10.2016
         return true;
       }
 
@@ -732,10 +732,10 @@ namespace FreeLibSet.Forms
 
       try
       {
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
         EFPConfigCategories.ReportParams, String.Empty);
         CfgPart cfg;
-        using (ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfg))
+        using (ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfg))
         {
 
           //TheForm.StartPosition = FormStartPosition.WindowsDefaultLocation;
@@ -862,13 +862,13 @@ namespace FreeLibSet.Forms
         {
           for (int i = 0; i < Pages.Count; i++)
           {
-            TabPage TheTabPage = new TabPage();
-            Pages[i].TabPage = TheTabPage;
+            TabPage theTabPage = new TabPage();
+            Pages[i].TabPage = theTabPage;
             //TheTabPage.MouseClick += new MouseEventHandler(TabPage_MouseClick);
-            _TheTabControl.TabPages.Add(TheTabPage);
-            Pages[i].AssignParentControl(TheTabPage);
+            _TheTabControl.TabPages.Add(theTabPage);
+            Pages[i].AssignParentControl(theTabPage);
             if (_TheForm != null)
-              _TheForm.FormProvider.SetHelpContext(TheTabPage, Pages[i].HelpContext);
+              _TheForm.FormProvider.SetHelpContext(theTabPage, Pages[i].HelpContext);
           }
           if (Pages.Count > 0)
           {
@@ -952,8 +952,8 @@ namespace FreeLibSet.Forms
 
       try
       {
-        EFPReportPage Page = Pages[_TheTabControl.SelectedIndex];
-        Page.OnPageSelected();
+        EFPReportPage page = Pages[_TheTabControl.SelectedIndex];
+        page.OnPageSelected();
       }
       catch (Exception e)
       {
@@ -1044,10 +1044,10 @@ namespace FreeLibSet.Forms
     /// <returns>Возвращает true, если настройки для всех вкладок были успешно сохранены.</returns>
     protected virtual bool SaveViewConfig()
     {
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
         EFPConfigCategories.ReportParams, String.Empty);
       CfgPart cfg;
-      using (ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
+      using (ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfg))
       {
         // Убрано 14.09.2021. cfg.SetBool("Maximized", _TheForm.WindowState == FormWindowState.Maximized);
         for (int i = 0; i < Pages.Count; i++)
@@ -1142,10 +1142,10 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     private bool PerformQueryNormParams()
     {
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
         EFPConfigCategories.ReportParams, String.Empty);
       CfgPart cfg;
-      using (ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
+      using (ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfg))
       {
         if (!cfg.IsEmpty) // 31.08.2015
           SafeReadConfig(cfg);
@@ -1276,14 +1276,14 @@ namespace FreeLibSet.Forms
       DoBuildReport();
 
       // Текущей странице отчета посылаем PageSelected
-      int CurrPageIndex;
+      int currPageIndex;
       if (_TheTabControl == null)
-        CurrPageIndex = 0;
+        currPageIndex = 0;
       else
-        CurrPageIndex = _TheTabControl.SelectedIndex;
-      if (CurrPageIndex < Pages.Count)
+        currPageIndex = _TheTabControl.SelectedIndex;
+      if (currPageIndex < Pages.Count)
       {
-        Pages[CurrPageIndex].OnPageSelected();
+        Pages[currPageIndex].OnPageSelected();
 
         //// 30.08.2017
         //Pages[CurrPageIndex].ParentControl.Visible = false;
@@ -1518,14 +1518,14 @@ namespace FreeLibSet.Forms
     /// <returns>Объект отчета, если он был найден</returns>
     public static EFPReport FindAndActivate(string configSectionName, bool refresh)
     {
-      EFPReport Report = FindReport(configSectionName);
-      if (Report != null)
+      EFPReport report = FindReport(configSectionName);
+      if (report != null)
       {
-        EFPApp.Activate(Report._TheForm);
+        EFPApp.Activate(report._TheForm);
         if (refresh)
-          Report.RefreshReport();
+          report.RefreshReport();
       }
-      return Report;
+      return report;
     }
 
     /// <summary>
@@ -1538,14 +1538,14 @@ namespace FreeLibSet.Forms
     /// <returns>Объект отчета, если он был найден</returns>
     public static EFPReport FindAndActivate(Type gridReportType, bool refresh)
     {
-      EFPReport Report = FindReport(gridReportType);
-      if (Report != null)
+      EFPReport report = FindReport(gridReportType);
+      if (report != null)
       {
-        EFPApp.Activate(Report._TheForm);
+        EFPApp.Activate(report._TheForm);
         if (refresh)
-          Report.RefreshReport();
+          report.RefreshReport();
       }
-      return Report;
+      return report;
     }
 
     /// <summary>
@@ -1558,11 +1558,11 @@ namespace FreeLibSet.Forms
       // Ищем уже существующую форму
       if (EFPApp.Interface == null)
         return null;
-      InternalReportForm[] Forms = EFPApp.Interface.FindChildForms<InternalReportForm>();
-      for (int i = 0; i < Forms.Length; i++)
+      InternalReportForm[] forms = EFPApp.Interface.FindChildForms<InternalReportForm>();
+      for (int i = 0; i < forms.Length; i++)
       {
-        if (Forms[i].Report.ConfigSectionName == configSectionName)
-          return Forms[i].Report;
+        if (forms[i].Report.ConfigSectionName == configSectionName)
+          return forms[i].Report;
       }
       return null;
     }
@@ -1577,11 +1577,11 @@ namespace FreeLibSet.Forms
       // Ищем уже существующую форму
       if (EFPApp.Interface == null)
         return null;
-      InternalReportForm[] Forms = EFPApp.Interface.FindChildForms<InternalReportForm>();
-      for (int i = 0; i < Forms.Length; i++)
+      InternalReportForm[] forms = EFPApp.Interface.FindChildForms<InternalReportForm>();
+      for (int i = 0; i < forms.Length; i++)
       {
-        if (Forms[i].Report.GetType() == gridReportType)
-          return Forms[i].Report;
+        if (forms[i].Report.GetType() == gridReportType)
+          return forms[i].Report;
       }
       return null;
     }
@@ -1875,10 +1875,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
-
-    #endregion
-
     #region Переопределенные методы
 
     /// <summary>
@@ -2166,11 +2162,11 @@ namespace FreeLibSet.Forms
 
         // 19.02.2015
         // Рекурсивная установка свойства
-        EFPReportTabControlPage ThisTabControlPage = this as EFPReportTabControlPage;
-        if (ThisTabControlPage != null)
+        EFPReportTabControlPage thisTabControlPage = this as EFPReportTabControlPage;
+        if (thisTabControlPage != null)
         {
-          if (ThisTabControlPage.SelectedPage != null)
-            ThisTabControlPage.SelectedPage.OnPageSelected();
+          if (thisTabControlPage.SelectedPage != null)
+            thisTabControlPage.SelectedPage.OnPageSelected();
         }
         else
         {
@@ -2296,12 +2292,12 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        EFPBaseProvider Provider = BaseProvider.Parent;
-        while (Provider != null)
+        EFPBaseProvider baseProvider = BaseProvider.Parent;
+        while (baseProvider != null)
         {
-          if (Provider is EFPReport.EFPReportRootProvider)
-            return ((EFPReport.EFPReportRootProvider)Provider).OwnerReport;
-          Provider = Provider.Parent;
+          if (baseProvider is EFPReport.EFPReportRootProvider)
+            return ((EFPReport.EFPReportRootProvider)baseProvider).OwnerReport;
+          baseProvider = baseProvider.Parent;
         }
         return null;
       }
@@ -2401,12 +2397,12 @@ namespace FreeLibSet.Forms
       if (_ParentControl.HasChildren)
         return; // уже создан
 
-      Panel Panel2 = new Panel();
-      Panel2.Dock = DockStyle.Fill;
-      Panel2.TabIndex = 2;
-      _ParentControl.Controls.Add(Panel2);
+      Panel panel2 = new Panel();
+      panel2.Dock = DockStyle.Fill;
+      panel2.TabIndex = 2;
+      _ParentControl.Controls.Add(panel2);
       // Вызываем виртуальный метод
-      CreatePage(Panel2);
+      CreatePage(panel2);
 
       // Присоединяем дополнительные панели
       if (AuxTopPanel != null)
@@ -2478,7 +2474,7 @@ namespace FreeLibSet.Forms
       if (OwnerReport == null)
         throw new InvalidOperationException("Страница не присоединена к отчету");
 
-      string Prefix;
+      string prefix;
 
       if (String.IsNullOrEmpty(Name))
       {
@@ -2490,7 +2486,7 @@ namespace FreeLibSet.Forms
           int p = OwnerReport.Pages.IndexOf(this);
           if (p < 0)
             throw new BugException();
-          Prefix = "Page" + (p + 1).ToString();
+          prefix = "Page" + (p + 1).ToString();
         }
         else
         {
@@ -2502,9 +2498,9 @@ namespace FreeLibSet.Forms
         }
       }
       else
-        Prefix = Name;
+        prefix = Name;
 
-      controlProvider.Control.Name = Prefix + "_" + nameSuffix;
+      controlProvider.Control.Name = prefix + "_" + nameSuffix;
     }
 
     #endregion
@@ -2831,12 +2827,12 @@ namespace FreeLibSet.Forms
       /// <returns>true, если страница была удалена, false, если страница не является дочерней для данной страницы</returns>
       public bool Remove(EFPReportPage page)
       {
-        int Index = IndexOf(page);
-        if (Index < 0)
+        int index = IndexOf(page);
+        if (index < 0)
           return false;
         else
         {
-          RemoveAt(Index);
+          RemoveAt(index);
           return true;
         }
       }
@@ -2981,11 +2977,11 @@ namespace FreeLibSet.Forms
 
     private void DoCreatePage(int pageIndex)
     {
-      EFPReportPage Page = Pages[pageIndex];
-      TabPage NewPage = new TabPage();
-      Page.TabPage = NewPage;
-      _TheTabControl.TabPages.Add(NewPage);
-      Page.AssignParentControl(NewPage);
+      EFPReportPage page = Pages[pageIndex];
+      TabPage newPage = new TabPage();
+      page.TabPage = newPage;
+      _TheTabControl.TabPages.Add(newPage);
+      page.AssignParentControl(newPage);
     }
 
 
@@ -3068,8 +3064,8 @@ namespace FreeLibSet.Forms
     {
       if (_AutoInitStateImageKey)
       {
-        EFPDataGridViewImageKind Kind2 = EFPDataGridViewImageKind.None;
-        bool HasUnknownState = false;
+        EFPDataGridViewImageKind kind2 = EFPDataGridViewImageKind.None;
+        bool hasUnknownState = false;
         for (int i = 0; i < Pages.Count; i++)
         {
           EFPDataGridViewImageKind Kind1;
@@ -3079,19 +3075,19 @@ namespace FreeLibSet.Forms
             case "Warning": Kind1 = EFPDataGridViewImageKind.Warning; break;
             case "Information": Kind1 = EFPDataGridViewImageKind.Information; break;
             case "UnknownState":
-              HasUnknownState = true;
+              hasUnknownState = true;
               continue;
             default:
               continue;
           }
-          if (Kind1 > Kind2)
-            Kind2 = Kind1;
+          if (Kind1 > kind2)
+            kind2 = Kind1;
         }
 
-        if (Kind2 == EFPDataGridViewImageKind.None && HasUnknownState)
+        if (kind2 == EFPDataGridViewImageKind.None && hasUnknownState)
           base.ImageKey = "UnknownState";
         else
-          base.InitStateImageKey(Kind2);
+          base.InitStateImageKey(kind2);
       }
 
       if (ChildImageKeyChanged != null)

@@ -381,24 +381,24 @@ CommandItems.PerformRefreshItems();
       TempCfg cfgOriginal = new TempCfg();
       Filters.WriteConfig(cfgOriginal);
 
-      bool Res;
+      bool res;
       Filters.BeginUpdate();
       try
       {
-        GridFilterForm Form = new GridFilterForm(this, _DefaultFilterCfg, cfgOriginal);
-        Form.SetStartFilter(startFilter);
-        if (EFPApp.ShowDialog(Form, true) == DialogResult.OK)
+        GridFilterForm form = new GridFilterForm(this, _DefaultFilterCfg, cfgOriginal);
+        form.SetStartFilter(startFilter);
+        if (EFPApp.ShowDialog(form, true) == DialogResult.OK)
         {
           // Вызываем виртуальный метод
           CallOnFilterChanged();
-          Res = true;
+          res = true;
         }
         else
         {
           // Выполняем откат редактирования
           Filters.ClearAllFilters();
           Filters.ReadConfig(cfgOriginal);
-          Res = false;
+          res = false;
         }
       }
       finally
@@ -406,7 +406,7 @@ CommandItems.PerformRefreshItems();
         Filters.EndUpdate();
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>

@@ -211,7 +211,7 @@ namespace FreeLibSet.Forms
     {
       MemoryStream strm = new MemoryStream();
       StreamWriter wrt = new StreamWriter(strm, settings.Encoding);
-      byte[] Buffer = null;
+      byte[] buffer = null;
       try
       {
         if (useFragment)
@@ -222,14 +222,14 @@ namespace FreeLibSet.Forms
           strm.SetLength(0);
         }
         WriteHtml(controlProvider, wrt, strm, settings, useFragment);
-        Buffer = strm.ToArray();
+        buffer = strm.ToArray();
       }
       finally
       {
         wrt.Dispose();
         strm.Dispose();
       }
-      return Buffer;
+      return buffer;
     }
 
     //public string GetHtmlText(Encoding Encoding, bool UseFragment)
@@ -251,7 +251,7 @@ namespace FreeLibSet.Forms
       const int PosWrStartFragment = 70;
       const int PosWrEndFragment = 93;
 
-      EFPDataGridViewRectArea Area = controlProvider.GetRectArea(settings.RangeMode);
+      EFPDataGridViewRectArea area = controlProvider.GetRectArea(settings.RangeMode);
 
       wrt.Flush();
       strm.Flush();
@@ -268,13 +268,13 @@ namespace FreeLibSet.Forms
         wrt.WriteLine();
       }
 
-      EFPDocumentProperties Props = controlProvider.DocumentProperties;
+      EFPDocumentProperties docProps = controlProvider.DocumentProperties;
 
-      int OffStartHtml = GetHtmlOff(wrt, strm);
+      int offStartHtml = GetHtmlOff(wrt, strm);
       wrt.WriteLine("<HTML>");
       wrt.WriteLine("<HEAD>");
-      if (!String.IsNullOrEmpty(Props.Title))
-        wrt.WriteLine("<title>" + MakeHtmlSpc(Props.Title) + "</title>");
+      if (!String.IsNullOrEmpty(docProps.Title))
+        wrt.WriteLine("<title>" + MakeHtmlSpc(docProps.Title) + "</title>");
       // Если есть строка, то IE показывает бяку при кодировке DOS и KOI8
       // (Word и Excel работают)
       //Writer.WriteLine("  <META NAME=GENERATOR CONTENT=\"CS1 by Ageyev A.V.\"");
@@ -285,9 +285,9 @@ namespace FreeLibSet.Forms
 
       if (!useFragment) // 01.10.2020
       {
-        if (!String.IsNullOrEmpty(Props.Title))
+        if (!String.IsNullOrEmpty(docProps.Title))
         {
-          wrt.WriteLine("<P NOWARP ALIGN=CENTER><TT>" + MakeHtmlSpc(Props.Title));
+          wrt.WriteLine("<P NOWARP ALIGN=CENTER><TT>" + MakeHtmlSpc(docProps.Title));
         }
       }
 
@@ -296,33 +296,33 @@ namespace FreeLibSet.Forms
 
       // define table display format (border and cell look)
       // and structure (number of columns)
-      wrt.WriteLine("<TABLE BORDER=1 CellPadding=4 CellSpacing=2 COLS=" + Area.ColumnCount.ToString() + ">");
+      wrt.WriteLine("<TABLE BORDER=1 CellPadding=4 CellSpacing=2 COLS=" + area.ColumnCount.ToString() + ">");
 
       if (useFragment)
         wrt.WriteLine("<!--StartFragment-->");
       int OffStartFragment = GetHtmlOff(wrt, strm);
 
       // Ширина столбцов
-      for (int j = 0; j < Area.ColumnCount; j++)
+      for (int j = 0; j < area.ColumnCount; j++)
       {
-        DataGridViewColumn Column = Area.Columns[j];
-        wrt.WriteLine("<col width=" + Column.Width.ToString() + ">");
+        DataGridViewColumn gridCol = area.Columns[j];
+        wrt.WriteLine("<col width=" + gridCol.Width.ToString() + ">");
       }
       wrt.WriteLine();
 
       // Многострочные заголовки
       if (settings.ShowColumnHeaders)
       {
-        EFPDataGridViewColumnHeaderArray HeaderArray = controlProvider.GetColumnHeaderArray(Area);
+        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
-        for (int i = 0; i < HeaderArray.RowCount; i++)
+        for (int i = 0; i < headerArray.RowCount; i++)
         {
           wrt.WriteLine("<TR>");
-          for (int j = 0; j < HeaderArray.ColumnCount; j++)
+          for (int j = 0; j < headerArray.ColumnCount; j++)
           {
-            if (HeaderArray.RowSpan[i, j] == 0)
+            if (headerArray.RowSpan[i, j] == 0)
               continue; // не первая строка объединения
-            string txt = HeaderArray.Text[i, j];
+            string txt = headerArray.Text[i, j];
             if (String.IsNullOrEmpty(txt))
               txt = "&nbsp";
             else
@@ -330,15 +330,15 @@ namespace FreeLibSet.Forms
             txt = "<TT>" + txt;
             //string cBkColor=" BGCOLOR=\""+GetHtmlColor(Column.HeaderCell.InheritedStyle.BackColor)+"\"";
             wrt.Write("<TH");
-            if (HeaderArray.RowSpan[i, j] > 1)
+            if (headerArray.RowSpan[i, j] > 1)
             {
               wrt.Write(" ROWSPAN=");
-              wrt.Write(HeaderArray.RowSpan[i, j].ToString());
+              wrt.Write(headerArray.RowSpan[i, j].ToString());
             }
-            if (HeaderArray.ColumnSpan[i, j] > 1)
+            if (headerArray.ColumnSpan[i, j] > 1)
             {
               wrt.Write(" COLSPAN=");
-              wrt.Write(HeaderArray.ColumnSpan[i, j].ToString());
+              wrt.Write(headerArray.ColumnSpan[i, j].ToString());
             }
             wrt.Write(">");
             wrt.Write(txt);
@@ -350,10 +350,10 @@ namespace FreeLibSet.Forms
       }
 
       // Перебираем строки таблицы
-      for (int i = 0; i < Area.RowCount; i++)
-        WriteHtmlRow(wrt, Area.RowIndices[i], controlProvider, Area/*, settings*/);
+      for (int i = 0; i < area.RowCount; i++)
+        WriteHtmlRow(wrt, area.RowIndices[i], controlProvider, area/*, settings*/);
 
-      int OffEndFragment = GetHtmlOff(wrt, strm);
+      int offEndFragment = GetHtmlOff(wrt, strm);
       if (useFragment)
         wrt.WriteLine("<!--EndFragment-->");
 
@@ -368,10 +368,10 @@ namespace FreeLibSet.Forms
       strm.Flush();
       if (useFragment)
       {
-        WriteHtmlOff(strm, PosWrStartHtml + PosOff, OffStartHtml - PosOff);
+        WriteHtmlOff(strm, PosWrStartHtml + PosOff, offStartHtml - PosOff);
         WriteHtmlOff(strm, PosWrEndHtml + PosOff, OffEndHtml - PosOff);
         WriteHtmlOff(strm, PosWrStartFragment + PosOff, OffStartFragment - PosOff);
-        WriteHtmlOff(strm, PosWrEndFragment + PosOff, OffEndFragment - PosOff);
+        WriteHtmlOff(strm, PosWrEndFragment + PosOff, offEndFragment - PosOff);
       }
     }
 
@@ -386,11 +386,11 @@ namespace FreeLibSet.Forms
     {
       if (!strm.CanSeek)
         throw new NotSupportedException("Поток не поддерживает Seek");
-      string Text = value.ToString("d10");
+      string text = value.ToString("d10");
       strm.Seek(posWr, SeekOrigin.Begin);
-      for (int i = 0; i < Text.Length; i++)
+      for (int i = 0; i < text.Length; i++)
       {
-        byte b = (byte)(Text[i]);
+        byte b = (byte)(text[i]);
         strm.WriteByte(b);
       }
     }
@@ -409,8 +409,8 @@ namespace FreeLibSet.Forms
       controlProvider.DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.View);
       for (int j = 0; j < area.ColumnCount; j++)
       {
-        int ColumnIndex = area.ColumnIndices[j];
-        EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(ColumnIndex);
+        int columnIndex = area.ColumnIndices[j];
+        EFPDataGridViewCellAttributesEventArgs cellArgs = controlProvider.DoGetCellAttributes(columnIndex);
 
         // 06.01.2014 - убрано
         // if (Selection && !GridHandler.IsCellSelected(RowIndex, ColumnIndex))
@@ -422,45 +422,45 @@ namespace FreeLibSet.Forms
 
         string sFormat = String.Empty;
         string sNum = String.Empty;
-        if (!String.IsNullOrEmpty(CellArgs.CellStyle.Format))
-          sFormat = " STYLE=\"vnd.ms-excel.numberformat:" + CellArgs.CellStyle.Format + "\"";
+        if (!String.IsNullOrEmpty(cellArgs.CellStyle.Format))
+          sFormat = " STYLE=\"vnd.ms-excel.numberformat:" + cellArgs.CellStyle.Format + "\"";
 
         string txt;
-        if (CellArgs.Value == null ||
-          CellArgs.Value is Image ||
-          (!CellArgs.ContentVisible)) // 24.08.2015
+        if (cellArgs.Value == null ||
+          cellArgs.Value is Image ||
+          (!cellArgs.ContentVisible)) // 24.08.2015
           txt = "&nbsp";
         else
         {
-          if (CellArgs.Value is Boolean)
+          if (cellArgs.Value is Boolean)
           {
-            if ((bool)(CellArgs.Value))
+            if ((bool)(cellArgs.Value))
               txt = "[x]";
             else
               txt = "[&nbsp]";
           }
           else
           {
-            txt = CellArgs.Value.ToString().Trim();
+            txt = cellArgs.Value.ToString().Trim();
             if (String.IsNullOrEmpty(txt))
               txt = "&nbsp";
             else
             {
               txt = MakeHtmlSpc(txt);
-              if (CellArgs.OriginalValue != null)
+              if (cellArgs.OriginalValue != null)
               {
-                if (CellArgs.OriginalValue is String)
+                if (cellArgs.OriginalValue is String)
                   sFormat = " STYLE=\"vnd.ms-excel.numberformat:@\"";
-                if (DataTools.IsIntegerType(CellArgs.OriginalValue.GetType()) ||
-                  DataTools.IsFloatType(CellArgs.OriginalValue.GetType()))
-                  sNum = " x:num=\"" + Convert.ToString(CellArgs.OriginalValue, StdConvert.NumberFormat) + "\"";
+                if (DataTools.IsIntegerType(cellArgs.OriginalValue.GetType()) ||
+                  DataTools.IsFloatType(cellArgs.OriginalValue.GetType()))
+                  sNum = " x:num=\"" + Convert.ToString(cellArgs.OriginalValue, StdConvert.NumberFormat) + "\"";
               }
             }
           }
         }
         string sHAlign;
         string sStyle = String.Empty;
-        switch (CellArgs.CellStyle.Alignment)
+        switch (cellArgs.CellStyle.Alignment)
         {
           case DataGridViewContentAlignment.TopCenter:
           case DataGridViewContentAlignment.MiddleCenter:
@@ -477,7 +477,7 @@ namespace FreeLibSet.Forms
             break;
         }
         string sVAlign;
-        switch (CellArgs.CellStyle.Alignment)
+        switch (cellArgs.CellStyle.Alignment)
         {
           case DataGridViewContentAlignment.TopLeft:
           case DataGridViewContentAlignment.TopCenter:
@@ -497,41 +497,41 @@ namespace FreeLibSet.Forms
             break;
         }
 
-        if (CellArgs.IndentLevel > 0)
+        if (cellArgs.IndentLevel > 0)
         {
-          if (CellArgs.CellStyle.Alignment == DataGridViewContentAlignment.TopRight ||
-            CellArgs.CellStyle.Alignment == DataGridViewContentAlignment.MiddleRight ||
-            CellArgs.CellStyle.Alignment == DataGridViewContentAlignment.BottomRight)
+          if (cellArgs.CellStyle.Alignment == DataGridViewContentAlignment.TopRight ||
+            cellArgs.CellStyle.Alignment == DataGridViewContentAlignment.MiddleRight ||
+            cellArgs.CellStyle.Alignment == DataGridViewContentAlignment.BottomRight)
           {
             //sStyle += "padding-left:" + (12 * CellArgs.IndentLevel).ToString() + "px;";
-            sStyle += "padding-right:" + (12 * CellArgs.IndentLevel).ToString() + "px;"; // 27.12.2020. Хотя вряд ли выравнивание по правому краю с отступом встретится
+            sStyle += "padding-right:" + (12 * cellArgs.IndentLevel).ToString() + "px;"; // 27.12.2020. Хотя вряд ли выравнивание по правому краю с отступом встретится
           }
           else
           {
-            sStyle += "padding-left:" + (12 * CellArgs.IndentLevel).ToString() + "px;";
-            sStyle += "mso-char-indent-count:" + CellArgs.IndentLevel.ToString() + ";";
+            sStyle += "padding-left:" + (12 * cellArgs.IndentLevel).ToString() + "px;";
+            sStyle += "mso-char-indent-count:" + cellArgs.IndentLevel.ToString() + ";";
           }
         }
         if (!String.IsNullOrEmpty(sStyle))
           sStyle = " style='" + sStyle + "'";
 
-        Color BackColor, ForeColor;
-        EFPDataGridView.SetCellAttr(CellArgs.ColorType, CellArgs.Grayed, CellArgs.ContentVisible, out BackColor, out ForeColor);
+        Color backColor, foreColor;
+        EFPDataGridView.SetCellAttr(cellArgs.ColorType, cellArgs.Grayed, cellArgs.ContentVisible, out backColor, out foreColor);
         string cBkColor;
-        if (BackColor.IsEmpty)
+        if (backColor.IsEmpty)
           cBkColor = String.Empty;
         else
-          cBkColor = " BGCOLOR=\"" + GetHtmlColor(BackColor) + "\"";
+          cBkColor = " BGCOLOR=\"" + GetHtmlColor(backColor) + "\"";
 
         string cFont1, cFont2;
-        if (ForeColor.IsEmpty)
+        if (foreColor.IsEmpty)
         {
           cFont1 = String.Empty;
           cFont2 = String.Empty;
         }
         else
         {
-          cFont1 = "<FONT COLOR=\"" + GetHtmlColor(ForeColor) + "\">";
+          cFont1 = "<FONT COLOR=\"" + GetHtmlColor(foreColor) + "\">";
           cFont2 = "</FONT>";
         }
 

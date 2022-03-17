@@ -98,14 +98,14 @@ namespace FreeLibSet.Forms
           throw new ArgumentNullException();
 #endif
 
-        Control ParentControl = null;
+        Control parentControl = null;
         if (base.PageCreated)
         {
 #if DEBUG
           if (_Control == null)
             throw new BugException("Control==null при PageCreated==true");
 #endif
-          ParentControl = _Control.Parent;
+          parentControl = _Control.Parent;
         }
 
         if (_Control != null)
@@ -119,7 +119,7 @@ namespace FreeLibSet.Forms
         if (base.PageCreated)
         {
           _Control.Dock = DockStyle.Fill;
-          ParentControl.Controls.Add(_Control);
+          parentControl.Controls.Add(_Control);
         }
       }
     }
@@ -198,7 +198,7 @@ namespace FreeLibSet.Forms
     /// <param name="parent"></param>
     protected override void CreatePage(Panel parent)
     {
-      bool IsEmpty2 = IsEmpty;
+      bool isEmpty2 = IsEmpty;
 
       EFPControlWithToolBar<TextBox> cwt = new EFPControlWithToolBar<TextBox>(BaseProvider, parent);
       cwt.Control.Multiline = true;
@@ -207,7 +207,7 @@ namespace FreeLibSet.Forms
       cwt.Control.ReadOnly = true;
       _TheTextBox = new EFPTextBox(cwt);
 
-      if (!IsEmpty2)
+      if (!isEmpty2)
         _TheTextBox.Control.Text = _Text;
 
       _Text = null;
@@ -440,12 +440,12 @@ namespace FreeLibSet.Forms
     /// <param name="parent"></param>
     protected override void CreatePage(Panel parent)
     {
-      bool IsEmpty2 = IsEmpty;
+      bool isEmpty2 = IsEmpty;
 
       EFPControlWithToolBar<XmlViewBox> cwt = new EFPControlWithToolBar<XmlViewBox>(BaseProvider, parent);
       _XmlView = new EFPXmlViewBox(cwt);
 
-      if (!IsEmpty2)
+      if (!isEmpty2)
       {
         EFPApp.BeginWait("Загрузка XML-просмотра", "XML");
         try

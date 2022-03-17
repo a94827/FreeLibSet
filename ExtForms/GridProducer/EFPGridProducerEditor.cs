@@ -154,11 +154,11 @@ namespace FreeLibSet.Forms
     private void WriteFormColumns(EFPDataGridViewConfig config)
     {
       // Строки таблицы столбцов, соответствующие объявлениям в GridProducer
-      DataGridViewRow[] OrdRows = new DataGridViewRow[_GridProducer.Columns.Count];
+      DataGridViewRow[] ordRows = new DataGridViewRow[_GridProducer.Columns.Count];
 
-      int CurrentColumnIndex = _TheControlProvider.CurrentColumnIndex; // чтобы не вычислять в цикле
-      DataGridViewRow StartRow1 = null; // строка, соответствующая активному столбцу в просмотре
-      DataGridViewRow StartRow2 = null; // первая строка, содержащая "галочку"
+      int currentColumnIndex = _TheControlProvider.CurrentColumnIndex; // чтобы не вычислять в цикле
+      DataGridViewRow startRow1 = null; // строка, соответствующая активному столбцу в просмотре
+      DataGridViewRow startRow2 = null; // первая строка, содержащая "галочку"
 
       ghColumns.BeginUpdate();
       try
@@ -169,27 +169,27 @@ namespace FreeLibSet.Forms
         //int cntFrozen = 0;
         for (int i = 0; i < config.Columns.Count; i++)
         {
-          EFPDataGridViewConfigColumn Column = config.Columns[i];
+          EFPDataGridViewConfigColumn column = config.Columns[i];
 
-          EFPGridProducerColumn ColumnProducer = _GridProducer.Columns[Column.ColumnName];
-          if (ColumnProducer == null)
+          EFPGridProducerColumn columnProducer = _GridProducer.Columns[column.ColumnName];
+          if (columnProducer == null)
             continue;
 
 
-          int ColWidth = Column.Width;
-          if (ColWidth == 0)
-            ColWidth = ColumnProducer.GetWidth(_TheControlProvider.Measures); // 30.03.2017
+          int colWidth = column.Width;
+          if (colWidth == 0)
+            colWidth = columnProducer.GetWidth(_TheControlProvider.Measures); // 30.03.2017
 
           grColumns.Rows.Add(true,
-            ColumnProducer.DisplayName,
-            ColWidth,
-            Column.FillMode ?
-              (object)(int)(Column.FillWeight) : null);
-          int ColumnProducerIndex = _GridProducer.Columns.IndexOf(Column.ColumnName);
-          OrdRows[ColumnProducerIndex] = grColumns.Rows[grColumns.Rows.Count - 1];
+            columnProducer.DisplayName,
+            colWidth,
+            column.FillMode ?
+              (object)(int)(column.FillWeight) : null);
+          int columnProducerIndex = _GridProducer.Columns.IndexOf(column.ColumnName);
+          ordRows[columnProducerIndex] = grColumns.Rows[grColumns.Rows.Count - 1];
 
-          DataGridViewRow Row = grColumns.Rows[grColumns.RowCount - 1];
-          Row.Tag = _GridProducer.Columns[ColumnProducerIndex];
+          DataGridViewRow row = grColumns.Rows[grColumns.RowCount - 1];
+          row.Tag = _GridProducer.Columns[columnProducerIndex];
           /*
           if (GridProducer.UI.DebugShowIds)
           {
@@ -200,54 +200,54 @@ namespace FreeLibSet.Forms
           } */
           //if (Column.GridColumn.Frozen)
           //  cntFrozen++;
-          if (CurrentColumnIndex == i)
-            StartRow1 = Row;
-          if (StartRow2 == null) // Исправлено 05.01.2021
-            StartRow2 = Row;
+          if (currentColumnIndex == i)
+            startRow1 = row;
+          if (startRow2 == null) // Исправлено 05.01.2021
+            startRow2 = row;
         }
 
         // Теперь перебираем столбцы из GridProducer
         for (int i = 0; i < _GridProducer.Columns.Count; i++)
         {
-          EFPGridProducerColumn Column = _GridProducer.Columns[i];
-          if (OrdRows[i] != null)
+          EFPGridProducerColumn column = _GridProducer.Columns[i];
+          if (ordRows[i] != null)
             continue; // Столбец уже был добавлен
 
-          EFPDataGridViewConfigColumn ColumnConfig = null;
+          EFPDataGridViewConfigColumn columnConfig = null;
           //        if (TheHandler.CurrentGridConfig != null)
           //          ColumnConfig = TheHandler.CurrentGridConfig.Columns[Column.ColumnName];
 
           int w = 0;
-          bool FillMode = false;
-          int FillWeight = 100;
-          if (ColumnConfig != null)
+          bool fillMode = false;
+          int fillWeight = 100;
+          if (columnConfig != null)
           {
-            w = ColumnConfig.Width;
-            FillMode = ColumnConfig.FillMode;
-            FillWeight = ColumnConfig.FillWeight;
+            w = columnConfig.Width;
+            fillMode = columnConfig.FillMode;
+            fillWeight = columnConfig.FillWeight;
           }
           if (w == 0)
             //w = TheControlProvider.Measures.GetTextColumnWidth(Column.TextWidth);
-            w = Column.GetWidth(_TheControlProvider.Measures);
+            w = column.GetWidth(_TheControlProvider.Measures);
 
-          int NextIndex;
+          int nextIndex;
           if (i > 0)
-            NextIndex = OrdRows[i - 1].Index + 1;
+            nextIndex = ordRows[i - 1].Index + 1;
           else
-            NextIndex = 0;
+            nextIndex = 0;
 
-          if (NextIndex >= grColumns.Rows.Count)
+          if (nextIndex >= grColumns.Rows.Count)
             grColumns.Rows.Add();
           else
-            grColumns.Rows.Insert(NextIndex, 1);
-          DataGridViewRow Row = grColumns.Rows[NextIndex];
-          OrdRows[i] = Row;
-          Row.Tag = Column;
-          Row.Cells[0].Value = false;
-          Row.Cells[1].Value = Column.DisplayName;
-          Row.Cells[2].Value = w;
-          if (FillMode)
-            Row.Cells[3].Value = FillWeight;
+            grColumns.Rows.Insert(nextIndex, 1);
+          DataGridViewRow row = grColumns.Rows[nextIndex];
+          ordRows[i] = row;
+          row.Tag = column;
+          row.Cells[0].Value = false;
+          row.Cells[1].Value = column.DisplayName;
+          row.Cells[2].Value = w;
+          if (fillMode)
+            row.Cells[3].Value = fillWeight;
           /*
           if (TheControlProvider.UI.DebugShowIds)
           {
@@ -262,15 +262,15 @@ namespace FreeLibSet.Forms
       {
         ghColumns.EndUpdate();
       }
-      ghColumns.CommandItems.DefaultManualOrderRows = OrdRows; // востановление порядка по умолчанию
+      ghColumns.CommandItems.DefaultManualOrderRows = ordRows; // востановление порядка по умолчанию
 
       // Активируем строку, соответствующую текущему столбцу в просмотре или с первой отметкой
-      if (StartRow1 != null)
-        ghColumns.CurrentGridRow = StartRow1;
+      if (startRow1 != null)
+        ghColumns.CurrentGridRow = startRow1;
       else
       {
-        if (StartRow2 != null)
-          ghColumns.CurrentGridRow = StartRow2;
+        if (startRow2 != null)
+          ghColumns.CurrentGridRow = startRow2;
       }
     }
 
@@ -286,19 +286,19 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < grColumns.Rows.Count; i++)
       {
-        DataGridViewRow Row = grColumns.Rows[i];
-        if (!DataTools.GetBool(Row.Cells[0].Value))
+        DataGridViewRow row = grColumns.Rows[i];
+        if (!DataTools.GetBool(row.Cells[0].Value))
           continue;
-        EFPGridProducerColumn ColDef = GetProducerColumn(Row);
-        EFPDataGridViewConfigColumn ColumnCfg = new EFPDataGridViewConfigColumn(ColDef.Name);
-        ColumnCfg.Width = DataTools.GetInt(Row.Cells[2].Value);
-        int Percent = DataTools.GetInt(Row.Cells[3].Value);
-        if (Percent > 0)
+        EFPGridProducerColumn colDef = GetProducerColumn(row);
+        EFPDataGridViewConfigColumn columnCfg = new EFPDataGridViewConfigColumn(colDef.Name);
+        columnCfg.Width = DataTools.GetInt(row.Cells[2].Value);
+        int percent = DataTools.GetInt(row.Cells[3].Value);
+        if (percent > 0)
         {
-          ColumnCfg.FillMode = true;
-          ColumnCfg.FillWeight = Percent;
+          columnCfg.FillMode = true;
+          columnCfg.FillWeight = percent;
         }
-        config.Columns.Add(ColumnCfg);
+        config.Columns.Add(columnCfg);
       }
       if (config.Columns.Count == 0)
       {
@@ -306,7 +306,6 @@ namespace FreeLibSet.Forms
         ghColumns.SetFocus();
         return false;
       }
-
 
       errorText = null;
       return true;
@@ -323,17 +322,17 @@ namespace FreeLibSet.Forms
       {
         case 2: // ширина
         case 3: // процент
-          DataGridViewRow Row = grColumns.Rows[args.RowIndex];
-          EFPGridProducerColumn ColProd = GetProducerColumn(Row);
-          if (ColProd == null)
+          DataGridViewRow row = grColumns.Rows[args.RowIndex];
+          EFPGridProducerColumn colProd = GetProducerColumn(row);
+          if (colProd == null)
             return;
 
 
-          if (!ColProd.Resizable)
+          if (!colProd.Resizable)
           {
             args.Grayed = true;
             args.ReadOnly = true;
-            args.ReadOnlyMessage = "Для столбца \"" + ColProd.DisplayName + "\" нельзя менять ширину";
+            args.ReadOnlyMessage = "Для столбца \"" + colProd.DisplayName + "\" нельзя менять ширину";
           }
           break;
       }
@@ -409,24 +408,24 @@ namespace FreeLibSet.Forms
     /// </summary>
     private void InitStartColumnList()
     {
-      List<string> Codes = new List<string>();
-      List<string> Names = new List<string>();
+      List<string> codes = new List<string>();
+      List<string> names = new List<string>();
 
-      Codes.Add(String.Empty);
+      codes.Add(String.Empty);
       //Names.Add("[ Авто ]");
-      Names.Add("[ Нет ]"); // 19.05.2021
+      names.Add("[ Нет ]"); // 19.05.2021
 
-      string CurrCode = efpStartColumn.SelectedCode;
+      string currCode = efpStartColumn.SelectedCode;
 
       for (int i = 0; i < ghColumns.Control.RowCount; i++)
       {
-        DataGridViewRow Row = ghColumns.Control.Rows[i];
-        bool Flag = DataTools.GetBool(Row.Cells[0].Value);
-        if (Flag)
+        DataGridViewRow row = ghColumns.Control.Rows[i];
+        bool flag = DataTools.GetBool(row.Cells[0].Value);
+        if (flag)
         {
-          EFPGridProducerColumn Col = GetProducerColumn(Row);
-          Codes.Add(Col.Name);
-          Names.Add(Col.DisplayName);
+          EFPGridProducerColumn col = GetProducerColumn(row);
+          codes.Add(col.Name);
+          names.Add(col.DisplayName);
         }
       }
 
@@ -435,10 +434,10 @@ namespace FreeLibSet.Forms
       {
         // Сначала - Items, затем - Codes
         cbStartColumn.Items.Clear();
-        cbStartColumn.Items.AddRange(Names.ToArray());
-        efpStartColumn.Codes = Codes.ToArray();
-        if (Codes.Contains(CurrCode))
-          efpStartColumn.SelectedCode = CurrCode;
+        cbStartColumn.Items.AddRange(names.ToArray());
+        efpStartColumn.Codes = codes.ToArray();
+        if (codes.Contains(currCode))
+          efpStartColumn.SelectedCode = currCode;
         else
           efpStartColumn.SelectedCode = String.Empty;
       }
@@ -459,7 +458,7 @@ namespace FreeLibSet.Forms
     private void WriteFormToolTips(EFPDataGridViewConfig config)
     {
       // Строки таблицы подсказок, соответствующие объявлениям в GridProducer
-      DataGridViewRow[] OrdRows = new DataGridViewRow[_GridProducer.ToolTips.Count];
+      DataGridViewRow[] ordRows = new DataGridViewRow[_GridProducer.ToolTips.Count];
 
       // Сначала добавляем подсказки из текущей конфигурации
       cbCurrentCellToolTip.Checked = config.CurrentCellToolTip;
@@ -473,15 +472,15 @@ namespace FreeLibSet.Forms
 
           for (int i = 0; i < config.ToolTips.Count; i++)
           {
-            string Name = config.ToolTips[i].ToolTipName;
-            EFPGridProducerToolTip ToolTip = _GridProducer.ToolTips[Name];
-            if (ToolTip == null)
+            string name = config.ToolTips[i].ToolTipName;
+            EFPGridProducerToolTip toolTip = _GridProducer.ToolTips[name];
+            if (toolTip == null)
               continue; // неизвестно, что
 
-            grToolTips.Rows.Add(true, ToolTip.DisplayName);
+            grToolTips.Rows.Add(true, toolTip.DisplayName);
 
-            DataGridViewRow Row = grToolTips.Rows[grToolTips.RowCount - 1];
-            Row.Tag = ToolTip;
+            DataGridViewRow row = grToolTips.Rows[grToolTips.RowCount - 1];
+            row.Tag = toolTip;
             /*
             if (TheControlProvider.UI.DebugShowIds)
             {
@@ -491,31 +490,31 @@ namespace FreeLibSet.Forms
               Row.Cells[3].Value = String.Join(", ", List.ToArray());
             } */
 
-            OrdRows[_GridProducer.ToolTips.IndexOf(ToolTip)] = Row;
+            ordRows[_GridProducer.ToolTips.IndexOf(toolTip)] = row;
           }
 
           // Теперь перебираем подсказки из GridProducer
           for (int i = 0; i < _GridProducer.ToolTips.Count; i++)
           {
-            if (OrdRows[i] != null)
+            if (ordRows[i] != null)
               continue; // Подсказка уже была добавлена
-            EFPGridProducerToolTip ToolTip = _GridProducer.ToolTips[i];
+            EFPGridProducerToolTip toolTip = _GridProducer.ToolTips[i];
 
-            int NextIndex;
+            int nextIndex;
             if (i > 0)
-              NextIndex = OrdRows[i - 1].Index + 1;
+              nextIndex = ordRows[i - 1].Index + 1;
             else
-              NextIndex = 0;
+              nextIndex = 0;
 
-            if (NextIndex >= grToolTips.Rows.Count)
+            if (nextIndex >= grToolTips.Rows.Count)
               grToolTips.Rows.Add();
             else
-              grToolTips.Rows.Insert(NextIndex, 1);
-            DataGridViewRow Row = grToolTips.Rows[NextIndex];
-            OrdRows[i] = Row;
-            Row.Tag = ToolTip;
-            Row.Cells[0].Value = false;
-            Row.Cells[1].Value = ToolTip.DisplayName;
+              grToolTips.Rows.Insert(nextIndex, 1);
+            DataGridViewRow row = grToolTips.Rows[nextIndex];
+            ordRows[i] = row;
+            row.Tag = toolTip;
+            row.Cells[0].Value = false;
+            row.Cells[1].Value = toolTip.DisplayName;
             /*
             if (TheControlProvider.UI.DebugShowIds)
             {
@@ -531,7 +530,7 @@ namespace FreeLibSet.Forms
           ghToolTips.EndUpdate();
         }
 
-        ghToolTips.CommandItems.DefaultManualOrderRows = OrdRows;
+        ghToolTips.CommandItems.DefaultManualOrderRows = ordRows;
 
         panGrToolTips.Visible = _GridProducer.ToolTips.Count > 0; // 11.10.2016
       }
@@ -544,11 +543,11 @@ namespace FreeLibSet.Forms
         config.CurrentCellToolTip = cbCurrentCellToolTip.Checked;
         for (int i = 0; i < grToolTips.Rows.Count; i++)
         {
-          DataGridViewRow Row = grToolTips.Rows[i];
-          if (!DataTools.GetBool(Row.Cells[0].Value))
+          DataGridViewRow row = grToolTips.Rows[i];
+          if (!DataTools.GetBool(row.Cells[0].Value))
             continue;
-          EFPGridProducerToolTip ToolTip = (EFPGridProducerToolTip)(Row.Tag);
-          config.ToolTips.Add(ToolTip.Name);
+          EFPGridProducerToolTip toolTip = (EFPGridProducerToolTip)(row.Tag);
+          config.ToolTips.Add(toolTip.Name);
         }
       }
       else
@@ -618,19 +617,19 @@ namespace FreeLibSet.Forms
 
     public void GetDefaultConfigs(out string[] defaultConfigCodes, out EFPDataGridViewConfig[] defaultConfigs)
     {
-      string[] FixedNames = _GridProducer.GetNamedConfigNames();
-      defaultConfigCodes = new string[FixedNames.Length + 1];
-      defaultConfigs = new EFPDataGridViewConfig[FixedNames.Length + 1];
+      string[] fixedNames = _GridProducer.GetNamedConfigNames();
+      defaultConfigCodes = new string[fixedNames.Length + 1];
+      defaultConfigs = new EFPDataGridViewConfig[fixedNames.Length + 1];
       defaultConfigCodes[0] = String.Empty;
       if (_GridProducer.DefaultConfig == null)
         defaultConfigs[0] = _GridProducer.CreateDefaultConfig();
       else
         defaultConfigs[0] = _GridProducer.DefaultConfig;
 
-      for (int i = 0; i < FixedNames.Length; i++)
+      for (int i = 0; i < fixedNames.Length; i++)
       {
-        defaultConfigCodes[i + 1] = FixedNames[i];
-        defaultConfigs[i + 1] = _GridProducer.GetNamedConfig(FixedNames[i]);
+        defaultConfigCodes[i + 1] = fixedNames[i];
+        defaultConfigs[i + 1] = _GridProducer.GetNamedConfig(fixedNames[i]);
       }
     }
 

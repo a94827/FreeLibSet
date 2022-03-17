@@ -305,8 +305,8 @@ namespace FreeLibSet.Forms
     {
       if (!(controlProvider is EFPConfigurableDataGridView))
         throw new ArgumentException("Ожидался EFPConfigurableDataGridView", "controlProvider");
-      List<string> DummyColumns = new List<string>();
-      InitGridView((EFPConfigurableDataGridView)controlProvider, reInit, controlProvider.CurrentConfig, DummyColumns);
+      List<string> dummyColumns = new List<string>();
+      InitGridView((EFPConfigurableDataGridView)controlProvider, reInit, controlProvider.CurrentConfig, dummyColumns);
     }
 
     /// <summary>
@@ -379,49 +379,49 @@ namespace FreeLibSet.Forms
 
       #region Добавление столбцов в просмотр
 
-      int MaxTextRowHeight = 1;
+      int maxTextRowHeight = 1;
       for (int i = 0; i < config.Columns.Count; i++)
       {
-        string ColumnName = config.Columns[i].ColumnName;
-        EFPGridProducerColumn ColDef = Columns[ColumnName];
-        if (ColDef == null)
+        string columnName = config.Columns[i].ColumnName;
+        EFPGridProducerColumn colDef = Columns[columnName];
+        if (colDef == null)
           // Нет в с списке доступных столбцов
           continue;
-        DataGridViewColumn Col = ColDef.CreateColumn();
-        ColDef.ApplyConfig(Col, config.Columns[i], controlProvider);
-        controlProvider.Control.Columns.Add(Col);
+        DataGridViewColumn gridCol = colDef.CreateColumn();
+        colDef.ApplyConfig(gridCol, config.Columns[i], controlProvider);
+        controlProvider.Control.Columns.Add(gridCol);
         // Запоминаем поля, которые нужны
-        ColDef.GetColumnNames(usedColumns);
+        colDef.GetColumnNames(usedColumns);
 
-        EFPDataGridViewColumn Col2 = controlProvider.Columns[Col];
-        Col2.ColumnProducer = ColDef;
-        Col2.SizeGroup = ColDef.SizeGroup;
-        Col2.CanIncSearch = ColDef.CanIncSearch;
-        Col2.MaskProvider = ColDef.MaskProvider;
-        Col2.DbfInfo = ColDef.DbfInfo;
-        Col2.PrintHeaders = ColDef.PrintHeaders;
-        Col2.ColorType = ColDef.ColorType;
-        Col2.Grayed = ColDef.Grayed;
-        Col2.CustomOrderColumnName = ColDef.CustomOrderSourceColumnName;
+        EFPDataGridViewColumn col2 = controlProvider.Columns[gridCol];
+        col2.ColumnProducer = colDef;
+        col2.SizeGroup = colDef.SizeGroup;
+        col2.CanIncSearch = colDef.CanIncSearch;
+        col2.MaskProvider = colDef.MaskProvider;
+        col2.DbfInfo = colDef.DbfInfo;
+        col2.PrintHeaders = colDef.PrintHeaders;
+        col2.ColorType = colDef.ColorType;
+        col2.Grayed = colDef.Grayed;
+        col2.CustomOrderColumnName = colDef.CustomOrderSourceColumnName;
 
-        MaxTextRowHeight = Math.Max(MaxTextRowHeight, ColDef.TextRowHeight);
+        maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
 
       if (config.FrozenColumns > 0 && config.FrozenColumns < config.Columns.Count)
         controlProvider.Control.Columns[config.FrozenColumns - 1].Frozen = true;
 
-      controlProvider.TextRowHeight = MaxTextRowHeight;
+      controlProvider.TextRowHeight = maxTextRowHeight;
 
       if (!String.IsNullOrEmpty(config.StartColumnName))
       {
-        int StartColumnIndex = controlProvider.Columns.IndexOf(config.StartColumnName);
+        int startColumnIndex = controlProvider.Columns.IndexOf(config.StartColumnName);
         //else
         //  // Активируем первый столбец с автоинкрементом
         //  16.05.2018
         //  Не надо. Активация нужного столбца перенесена в EFPDataGridView
         //  StartColumnIndex = ControlProvider.FirstIncSearchColumnIndex;
 
-        controlProvider.CurrentColumnIndex = StartColumnIndex;
+        controlProvider.CurrentColumnIndex = startColumnIndex;
         controlProvider.SaveCurrentColumnAllowed = false; // чтобы не восстанавливался столбец из сохраненной секции конфигурации
       }
       else
@@ -437,10 +437,10 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < config.ToolTips.Count; i++)
       {
-        EFPGridProducerToolTip Item = ToolTips[config.ToolTips[i].ToolTipName];
-        if (Item == null)
+        EFPGridProducerToolTip item = ToolTips[config.ToolTips[i].ToolTipName];
+        if (item == null)
           continue;
-        Item.GetColumnNames(usedColumns);
+        item.GetColumnNames(usedColumns);
       }
 
       #endregion
@@ -501,7 +501,7 @@ namespace FreeLibSet.Forms
       if (args.Value != null)
         return; // уже определено
 
-      DataRow SourceRow = controlProvider.GetDataRow(args.RowIndex);
+      DataRow sourceRow = controlProvider.GetDataRow(args.RowIndex);
 
       try
       {
@@ -539,13 +539,13 @@ namespace FreeLibSet.Forms
       List<string> lst2 = new List<string>();
       for (int i = 0; i < controlProvider.CurrentConfig.ToolTips.Count; i++)
       {
-        EFPGridProducerToolTip ToolTip = this.ToolTips[controlProvider.CurrentConfig.ToolTips[i].ToolTipName];
-        if (ToolTip == null)
+        EFPGridProducerToolTip toolTip = this.ToolTips[controlProvider.CurrentConfig.ToolTips[i].ToolTipName];
+        if (toolTip == null)
           continue; // ерунда какая-то
 
         // Если в подсказки входит столбец, на который наведена мышь, то пропускаем подсказку
         List<string> lst1 = new List<string>();
-        ToolTip.GetColumnNames(lst1);
+        toolTip.GetColumnNames(lst1);
         if (lst1.Contains(args.ColumnName))
           continue;
 
@@ -553,12 +553,12 @@ namespace FreeLibSet.Forms
         try
         {
           EFPDataViewRowInfo rowInfo = controlProvider.GetRowInfo(args.RowIndex);
-          s = ToolTip.GetToolTipText(rowInfo);
+          s = toolTip.GetToolTipText(rowInfo);
           controlProvider.FreeRowInfo(rowInfo);
         }
         catch (Exception e)
         {
-          s = ToolTip.DisplayName + ": Ошибка! " + e.Message;
+          s = toolTip.DisplayName + ": Ошибка! " + e.Message;
         }
         if (!String.IsNullOrEmpty(s))
           lst2.Add(s);
@@ -573,10 +573,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-      #endregion
+    #endregion
 
     #region Инициализация древовидного просмотра
-
 
     /// <summary>
     /// Инициализация иерархического просмотра
@@ -588,10 +587,9 @@ namespace FreeLibSet.Forms
     {
       if (!(controlProvider is EFPConfigurableDataTreeView))
         throw new ArgumentException("Ожидался EFPConfigurableDataTreeView", "controlProvider");
-      List<string> DummyColumns = new List<string>();
-      InitTreeView((EFPConfigurableDataTreeView)controlProvider, reInit, controlProvider.CurrentConfig, DummyColumns);
+      List<string> dummyColumns = new List<string>();
+      InitTreeView((EFPConfigurableDataTreeView)controlProvider, reInit, controlProvider.CurrentConfig, dummyColumns);
     }
-
 
     /// <summary>
     /// Инициализация иерархического просмотра
@@ -659,30 +657,30 @@ namespace FreeLibSet.Forms
       foreach (string fixedName in FixedColumns)
         usedColumns.Add(fixedName);
 
-      int MaxTextRowHeight = 1;
+      int maxTextRowHeight = 1;
       for (int i = 0; i < config.Columns.Count; i++)
       {
-        string ColumnName = config.Columns[i].ColumnName;
-        EFPGridProducerColumn ColDef = this.Columns[ColumnName];
-        if (ColDef == null)
+        string columnName = config.Columns[i].ColumnName;
+        EFPGridProducerColumn colDef = this.Columns[columnName];
+        if (colDef == null)
           // Нет в с списке доступных столбцов
           continue;
         // Создаем объект TreeColumn
-        TreeColumn tc = ColDef.CreateTreeColumn(config.Columns[i]);
+        TreeColumn tc = colDef.CreateTreeColumn(config.Columns[i]);
         controlProvider.Control.Columns.Add(tc);
 
         // Создаем объект NodeControl
-        BindableControl bc = ColDef.CreateNodeControl();
-        ColDef.ApplyConfig(bc, config.Columns[i], controlProvider);
+        BindableControl bc = colDef.CreateNodeControl();
+        colDef.ApplyConfig(bc, config.Columns[i], controlProvider);
         bc.VirtualMode = true;
-        bc.DataPropertyName = ColDef.Name;
+        bc.DataPropertyName = colDef.Name;
         bc.ParentColumn = controlProvider.Control.Columns[controlProvider.Control.Columns.Count - 1];
         controlProvider.Control.NodeControls.Add(bc);
 
 
 
         // Запоминаем поля, которые нужны
-        ColDef.GetColumnNames(usedColumns);
+        colDef.GetColumnNames(usedColumns);
         /*
         EFPDataGridViewColumn Col2 = ControlProvider.Columns[Col];
         Col2.ColumnProducer = ColDef;
@@ -692,7 +690,7 @@ namespace FreeLibSet.Forms
         Col2.DbfInfo = ColDef.DbfInfo;
         Col2.PrintHeaders = ColDef.PrintHeaders;
                                                                             */
-        MaxTextRowHeight = Math.Max(MaxTextRowHeight, ColDef.TextRowHeight);
+        maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
 
       //if (Config.FrozenColumns > 0 && Config.FrozenColumns < Config.Columns.Count)
@@ -733,9 +731,9 @@ namespace FreeLibSet.Forms
       }
 
       // Попытаемся сохранить старый порядок сортировки
-      string OrgOrderDisplayName = String.Empty;
+      string orgOrderDisplayName = String.Empty;
       if (reInit && controlProvider.CurrentOrder != null)
-        OrgOrderDisplayName = controlProvider.CurrentOrder.DisplayName;
+        orgOrderDisplayName = controlProvider.CurrentOrder.DisplayName;
 
       if (controlProvider.OrderCount > 0)
         controlProvider.Orders.Clear();
@@ -800,12 +798,12 @@ namespace FreeLibSet.Forms
     /// <returns>Новая конфигурация</returns>
     public EFPDataGridViewConfig CreateDefaultConfig()
     {
-      EFPDataGridViewConfig Config = new EFPDataGridViewConfig();
+      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
       for (int i = 0; i < Columns.Count; i++)
-        Config.Columns.Add(Columns[i].Name);
+        config.Columns.Add(Columns[i].Name);
       for (int i = 0; i < ToolTips.Count; i++)
-        Config.ToolTips.Add(ToolTips[i].Name);
-      return Config;
+        config.ToolTips.Add(ToolTips[i].Name);
+      return config;
     }
 
     /// <summary>
@@ -822,9 +820,9 @@ namespace FreeLibSet.Forms
 
       if (_NamedConfigs == null)
         _NamedConfigs = new Dictionary<string, EFPDataGridViewConfig>();
-      EFPDataGridViewConfig Config = new EFPDataGridViewConfig();
-      _NamedConfigs.Add(fixedName, Config);
-      return Config;
+      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      _NamedConfigs.Add(fixedName, config);
+      return config;
     }
 
     /// <summary>
@@ -842,9 +840,9 @@ namespace FreeLibSet.Forms
       if (_NamedConfigs == null)
         return null;
 
-      EFPDataGridViewConfig Config;
-      if (_NamedConfigs.TryGetValue(fixedName, out Config))
-        return Config;
+      EFPDataGridViewConfig config;
+      if (_NamedConfigs.TryGetValue(fixedName, out config))
+        return config;
       else
         throw new ArgumentException("Фиксированная настройка табличного просмотра с именем \"" + fixedName +
           "\" не была объявлена в генераторе табличного просмотра", "fixedName");
@@ -901,11 +899,11 @@ namespace FreeLibSet.Forms
     /// <returns>Загруженная секция или DefaultConfig</returns>
     public EFPDataGridViewConfig LoadConfig(string configSectionName, string defaultConfigName)
     {
-      string CfgName = GetCurrentConfigName(configSectionName);
-      EFPDataGridViewConfig Config = LoadConfig(configSectionName, defaultConfigName, CfgName);
-      if (Config == null)
-        Config = DefaultConfig;
-      return Config;
+      string cfgName = GetCurrentConfigName(configSectionName);
+      EFPDataGridViewConfig config = LoadConfig(configSectionName, defaultConfigName, cfgName);
+      if (config == null)
+        config = DefaultConfig;
+      return config;
     }
 
     /// <summary>
@@ -941,25 +939,24 @@ namespace FreeLibSet.Forms
       if (config != null)
       {
         // Столбцы
-        int i;
-        for (i = 0; i < config.Columns.Count; i++)
+        for (int i = 0; i < config.Columns.Count; i++)
         {
-          string ColumnName = config.Columns[i].ColumnName;
-          EFPGridProducerColumn ColDef = Columns[ColumnName];
-          if (ColDef == null)
+          string columnName = config.Columns[i].ColumnName;
+          EFPGridProducerColumn colDef = Columns[columnName];
+          if (colDef == null)
             // Нет в с списке доступных столбцов
             continue;
           // Запоминаем поля, которые нужны
-          ColDef.GetColumnNames(usedColumns);
+          colDef.GetColumnNames(usedColumns);
         }
 
         // Всплывающие подсказки
-        for (i = 0; i < config.ToolTips.Count; i++)
+        for (int i = 0; i < config.ToolTips.Count; i++)
         {
-          EFPGridProducerToolTip Item = ToolTips[config.ToolTips[i].ToolTipName];
-          if (Item == null)
+          EFPGridProducerToolTip item = ToolTips[config.ToolTips[i].ToolTipName];
+          if (item == null)
             continue;
-          Item.GetColumnNames(usedColumns);
+          item.GetColumnNames(usedColumns);
         }
       }
     }
@@ -979,8 +976,7 @@ namespace FreeLibSet.Forms
     private EFPDataGridViewConfig MakeDefaultConfig()
     {
       EFPDataGridViewConfig res = new EFPDataGridViewConfig();
-      int i;
-      for (i = 0; i < Columns.Count; i++)
+      for (int i = 0; i < Columns.Count; i++)
       {
         res.Columns.Add(new EFPDataGridViewConfigColumn(Columns[i].Name));
         // Если определен только один столбец - делаем его с заполнением
@@ -988,7 +984,7 @@ namespace FreeLibSet.Forms
           res.Columns[0].FillMode = true;
       }
 
-      for (i = 0; i < ToolTips.Count; i++)
+      for (int i = 0; i < ToolTips.Count; i++)
         res.ToolTips.Add(ToolTips[i].Name);
 
       res.SetReadOnly();
@@ -1010,9 +1006,9 @@ namespace FreeLibSet.Forms
     /// <returns>Интерфейс объекта редактора</returns>
     public IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPGridControl callerControlProvider)
     {
-      EFPGridProducerEditor Form = new EFPGridProducerEditor(this, callerControlProvider, baseProvider);
-      parentControl.Controls.Add(Form.TheTabControl);
-      return Form;
+      EFPGridProducerEditor form = new EFPGridProducerEditor(this, callerControlProvider, baseProvider);
+      parentControl.Controls.Add(form.TheTabControl);
+      return form;
     }
 
     #endregion
@@ -1073,55 +1069,55 @@ namespace FreeLibSet.Forms
     protected virtual void Validate()
     {
       // Полный список имен полей, которые должны быть в базе данных
-      SingleScopeStringList SrcColumnNames = new SingleScopeStringList(true); // без учета регистра
+      SingleScopeStringList srcColumnNames = new SingleScopeStringList(true); // без учета регистра
       foreach (EFPGridProducerColumn col in Columns)
       {
         ValidateItemBase(col);
-        col.GetColumnNames(SrcColumnNames);
+        col.GetColumnNames(srcColumnNames);
       }
       foreach (EFPGridProducerToolTip tt in ToolTips)
       {
         ValidateItemBase(tt);
-        tt.GetColumnNames(SrcColumnNames);
+        tt.GetColumnNames(srcColumnNames);
       }
 
-      SingleScopeStringList CalcColumnNames = new SingleScopeStringList(true); // для проверки порядков сортировки
+      SingleScopeStringList calcColumnNames = new SingleScopeStringList(true); // для проверки порядков сортировки
 
       // проверяем, что они не совпадают с именами вычисляемых полей
       foreach (EFPGridProducerColumn col in Columns)
       {
         if (col.SourceColumnNames != null)
         {
-          if (SrcColumnNames.Contains(col.Name))
+          if (srcColumnNames.Contains(col.Name))
             throw new EFPGridProducerValidationException("Неправильное имя вычисляемого столбца \"" + col.Name + "\", так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer");
-          CalcColumnNames.Add(col.Name);
+          calcColumnNames.Add(col.Name);
         }
       }
       foreach (EFPGridProducerToolTip tt in ToolTips)
       {
         if (tt.SourceColumnNames != null)
         {
-          if (SrcColumnNames.Contains(tt.Name))
+          if (srcColumnNames.Contains(tt.Name))
             throw new EFPGridProducerValidationException("Неправильное имя вычисляемой всплывающей подсказки \"" + tt.Name + "\", так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer");
 
           // имена вычисляемых подсказок не интересны для порядка сортировки
         }
       }
 
-      List<string> OrderColumnNames = new List<string>();
+      List<string> orderColumnNames = new List<string>();
       foreach (EFPDataViewOrder order in Orders)
       {
-        OrderColumnNames.Clear();
-        order.GetColumnNames(OrderColumnNames);
-        for (int i = 0; i < OrderColumnNames.Count; i++)
+        orderColumnNames.Clear();
+        order.GetColumnNames(orderColumnNames);
+        for (int i = 0; i < orderColumnNames.Count; i++)
         {
-          if (!CalcColumnNames.Contains(OrderColumnNames[i])) // сортировка по вычисляемому столбцу
+          if (!calcColumnNames.Contains(orderColumnNames[i])) // сортировка по вычисляемому столбцу
           {
             // сортировка по реальному столбцу из базы данных
 
             string errorText;
-            if (!IsValidSourceColumnName(OrderColumnNames[i], out errorText))
-              throw new EFPGridProducerValidationException("Неправильное имя исходного столбца \"" + CalcColumnNames + "\", используемого в порядке сортировки \"" + order.Name + "\". " + errorText);
+            if (!IsValidSourceColumnName(orderColumnNames[i], out errorText))
+              throw new EFPGridProducerValidationException("Неправильное имя исходного столбца \"" + calcColumnNames + "\", используемого в порядке сортировки \"" + order.Name + "\". " + errorText);
           }
         }
       }

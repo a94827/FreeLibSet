@@ -58,8 +58,8 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       try
       {
-        AbsPath Path = new AbsPath(_LogFilePath);
-        EFPApp.ShowWindowsExplorer(Path.ParentDir);
+        AbsPath path = new AbsPath(_LogFilePath);
+        EFPApp.ShowWindowsExplorer(path.ParentDir);
       }
       catch (Exception e)
       {
@@ -82,42 +82,42 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       try
       {
-        FileAssociations FAs = FileAssociations.FromFileExtension(".txt");
+        FileAssociations faItems = FileAssociations.FromFileExtension(".txt");
 
         #region Открыть с помощью
 
-        if (FAs.OpenWithItems.Count > 0)
+        if (faItems.OpenWithItems.Count > 0)
         {
-          foreach (FileAssociationItem FA in FAs.OpenWithItems)
+          foreach (FileAssociationItem faItem in faItems.OpenWithItems)
           {
-            ToolStripMenuItem FAMenuItem = new ToolStripMenuItem();
-            FAMenuItem.Text = FA.DisplayName;
+            ToolStripMenuItem faMenuItem = new ToolStripMenuItem();
+            faMenuItem.Text = faItem.DisplayName;
             try
             {
-              FAMenuItem.Image = WinFormsTools.ExtractIconImage(FA, true);
+              faMenuItem.Image = WinFormsTools.ExtractIconImage(faItem, true);
             }
             catch { }
-            FAMenuItem.Tag = FA;
-            FAMenuItem.Click += FAMenuItem_Click;
+            faMenuItem.Tag = faItem;
+            faMenuItem.Click += FAMenuItem_Click;
 
-            OpenWithMenu.Items.Add(FAMenuItem);
+            OpenWithMenu.Items.Add(faMenuItem);
           }
 
           OpenWithMenu.Items.Add("-");
         }
 
         // Команда для показа в окне
-        ToolStripMenuItem ViewMenuItem = new ToolStripMenuItem();
-        ViewMenuItem.Text = "Встроенный просмотр";
-        ViewMenuItem.Image = btnEdit.Image;
-        ViewMenuItem.Click += new EventHandler(ViewMenuItem_Click);
-        OpenWithMenu.Items.Add(ViewMenuItem);
+        ToolStripMenuItem viewMenuItem = new ToolStripMenuItem();
+        viewMenuItem.Text = "Встроенный просмотр";
+        viewMenuItem.Image = btnEdit.Image;
+        viewMenuItem.Click += new EventHandler(ViewMenuItem_Click);
+        OpenWithMenu.Items.Add(viewMenuItem);
 
-        ToolStripMenuItem CopyMenuItem = new ToolStripMenuItem();
-        CopyMenuItem.Text = "Копировать";
-        CopyMenuItem.Image = TheImageList.Images["Copy"];
-        CopyMenuItem.Click += new EventHandler(CopyMenuItem_Click);
-        OpenWithMenu.Items.Add(CopyMenuItem);
+        ToolStripMenuItem copyMenuItem = new ToolStripMenuItem();
+        copyMenuItem.Text = "Копировать";
+        copyMenuItem.Image = TheImageList.Images["Copy"];
+        copyMenuItem.Click += new EventHandler(CopyMenuItem_Click);
+        OpenWithMenu.Items.Add(copyMenuItem);
 
         btnOpenWith.Click += new EventHandler(btnOpenWith_Click);
 
@@ -125,14 +125,14 @@ namespace FreeLibSet.Forms.Diagnostics
 
         #region Основная кнопка "Отчет"
 
-        if (FAs.OpenItem == null)
+        if (faItems.OpenItem == null)
           btnEdit.Click += new EventHandler(ViewMenuItem_Click);
         else
         {
           try
           {
-            btnEdit.Image = WinFormsTools.ExtractIconImage(FAs.OpenItem, true);
-            btnEdit.Tag = FAs.OpenItem;
+            btnEdit.Image = WinFormsTools.ExtractIconImage(faItems.OpenItem, true);
+            btnEdit.Tag = faItems.OpenItem;
             btnEdit.Click += new EventHandler(FAMenuItem_Click);
           }
           catch { }
@@ -151,23 +151,23 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="args"></param>
     void FAMenuItem_Click(object sender, EventArgs args)
     {
-      FileAssociationItem FA;
+      FileAssociationItem faItem;
       if (sender is Button)
-        FA = (FileAssociationItem)(((Button)sender).Tag);
+        faItem = (FileAssociationItem)(((Button)sender).Tag);
       else
-        FA = (FileAssociationItem)(((ToolStripMenuItem)sender).Tag);
-      if (FA == null)
+        faItem = (FileAssociationItem)(((ToolStripMenuItem)sender).Tag);
+      if (faItem == null)
         MessageBox.Show("Нет файловой ассоциации", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
       else
       {
         try
         {
-          FA.Execute(new AbsPath(_LogFilePath));
+          faItem.Execute(new AbsPath(_LogFilePath));
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка запуска " + FA.DisplayName);
-          MessageBox.Show(e.Message, "Ошибка запуска " + FA.DisplayName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          LogoutTools.LogoutException(e, "Ошибка запуска " + faItem.DisplayName);
+          MessageBox.Show(e.Message, "Ошибка запуска " + faItem.DisplayName, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
     }
@@ -181,8 +181,8 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       try
       {
-        string Text = System.IO.File.ReadAllText(_LogFilePath, LogoutTools.LogEncoding);
-        EFPApp.ShowTextView(Text, _LogFilePath);
+        string text = System.IO.File.ReadAllText(_LogFilePath, LogoutTools.LogEncoding);
+        EFPApp.ShowTextView(text, _LogFilePath);
       }
       catch (Exception e)
       {
@@ -225,8 +225,8 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       try
       {
-        string Text = System.IO.File.ReadAllText(_LogFilePath, LogoutTools.LogEncoding);
-        Clipboard.SetText(Text);
+        string text = System.IO.File.ReadAllText(_LogFilePath, LogoutTools.LogEncoding);
+        Clipboard.SetText(text);
       }
       catch (Exception e)
       {
@@ -251,9 +251,9 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
       try
       {
-        DataGridViewRow Row = grData.Rows[args.RowIndex];
-        string Name = Row.Cells[0].Value.ToString();
-        DebugTools.DebugObject(Row.Tag, Name);
+        DataGridViewRow row = grData.Rows[args.RowIndex];
+        string name = row.Cells[0].Value.ToString();
+        DebugTools.DebugObject(row.Tag, name);
       }
       catch (Exception e)
       {
@@ -306,36 +306,36 @@ namespace FreeLibSet.Forms.Diagnostics
       EFPApp.SuspendIdle(); // 18.08.2021
       try
       {
-        using (ShowExceptionForm Form1 = new ShowExceptionForm())
+        using (ShowExceptionForm frm1 = new ShowExceptionForm())
         {
           if (prevForm != null)
           {
-            Form1.StartPosition = FormStartPosition.Manual;
+            frm1.StartPosition = FormStartPosition.Manual;
             Point pos = prevForm.Location;
             pos.Offset(16, 16);
-            Form1.Location = pos;
+            frm1.Location = pos;
           }
           if (!String.IsNullOrEmpty(title))
-            Form1.Text = title;
-          Form1.panStopShow.Visible = (prevForm == null);
+            frm1.Text = title;
+          frm1.panStopShow.Visible = (prevForm == null);
 
-          Form1._LogFilePath = logFilePath.Path;
+          frm1._LogFilePath = logFilePath.Path;
           if (logFilePath.IsEmpty)
-            Form1.panLog.Visible = false;
+            frm1.panLog.Visible = false;
           else
           {
-            Form1.edLogPath.Text = logFilePath.Path;
-            Form1.InitEditButtons();
+            frm1.edLogPath.Text = logFilePath.Path;
+            frm1.InitEditButtons();
           }
 
-          Form1._ThisObj = e;
+          frm1._ThisObj = e;
 
-          Form1.edType.Text = e.GetType().ToString();
-          Form1.edMessage.Text = e.Message;
+          frm1.edType.Text = e.GetType().ToString();
+          frm1.edMessage.Text = e.Message;
 
           try
           {
-            Form1.pg1.SelectedObject = e;
+            frm1.pg1.SelectedObject = e;
           }
           catch { }
 
@@ -344,17 +344,17 @@ namespace FreeLibSet.Forms.Diagnostics
           try
           {
             if (String.IsNullOrEmpty(e.StackTrace))
-              Form1.grStack.Rows.Add("Стек вызовов недоступен");
+              frm1.grStack.Rows.Add("Стек вызовов недоступен");
             else
             {
               string[] a = e.StackTrace.Split(DataTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
               for (int i = 0; i < a.Length; i++)
-                Form1.grStack.Rows.Add(a[i]);
+                frm1.grStack.Rows.Add(a[i]);
             }
           }
           catch
           {
-            Form1.grStack.Rows.Add("Не удалось получить стек вызовов");
+            frm1.grStack.Rows.Add("Не удалось получить стек вызовов");
           }
 
           #endregion
@@ -365,32 +365,32 @@ namespace FreeLibSet.Forms.Diagnostics
           {
             if (e.Data != null)
             {
-              foreach (DictionaryEntry Entry in e.Data)
+              foreach (DictionaryEntry pair in e.Data)
               {
-                string Name = Entry.Key.ToString();
-                object Value = Entry.Value;
-                Form1.grData.RowCount++;
-                DataGridViewRow Row = Form1.grData.Rows[Form1.grData.RowCount - 1];
-                Row.Cells[0].Value = Name;
+                string name = pair.Key.ToString();
+                object value = pair.Value;
+                frm1.grData.RowCount++;
+                DataGridViewRow row = frm1.grData.Rows[frm1.grData.RowCount - 1];
+                row.Cells[0].Value = name;
 
-                if (Value != null)
+                if (value != null)
                 {
                   try
                   {
-                    Row.Cells[1].Value = Value.ToString();
-                    Row.Cells[2].ToolTipText = "Тип: " + Value.GetType().ToString();
+                    row.Cells[1].Value = value.ToString();
+                    row.Cells[2].ToolTipText = "Тип: " + value.GetType().ToString();
                   }
                   catch (Exception e2)
                   {
-                    Row.Cells[1].Value = e2.Message;
+                    row.Cells[1].Value = e2.Message;
                   }
                 }
                 else
                 {
-                  Row.Cells[1].Value = "null";
-                  Row.Cells[2].ToolTipText = "null";
+                  row.Cells[1].Value = "null";
+                  row.Cells[2].ToolTipText = "null";
                 }
-                Row.Tag = Value;
+                row.Tag = value;
               }
             }
           }
@@ -398,8 +398,8 @@ namespace FreeLibSet.Forms.Diagnostics
           {
           }
 
-          if (Form1.grData.RowCount == 0)
-            Form1.TheTabControl.TabPages.Remove(Form1.tpData);
+          if (frm1.grData.RowCount == 0)
+            frm1.TheTabControl.TabPages.Remove(frm1.tpData);
 
           #endregion
 
@@ -407,22 +407,22 @@ namespace FreeLibSet.Forms.Diagnostics
 
           try
           {
-            Form1.cbInner.Enabled = e.InnerException != null;
+            frm1.cbInner.Enabled = e.InnerException != null;
           }
           catch
           {
-            Form1.cbInner.Text = "Нет доступа к InnerException";
-            Form1.cbInner.Enabled = false;
+            frm1.cbInner.Text = "Нет доступа к InnerException";
+            frm1.cbInner.Enabled = false;
           }
 
           #endregion
 
           if (useDialogOwnerWindow && EFPApp.DialogOwnerWindow != null)
-            Form1.ShowDialog(EFPApp.DialogOwnerWindow);
+            frm1.ShowDialog(EFPApp.DialogOwnerWindow);
           else
-            Form1.ShowDialog();
+            frm1.ShowDialog();
 
-          if (Form1.cbStopShow.Checked)
+          if (frm1.cbStopShow.Checked)
           {
             DebugTools.ShowExceptionEnabled = false; // 31.01.2020
             MessageBox.Show("Вывод сообщений об ошибках отключен. Завершите работу программы как можно быстрее", "Отключение вывода сообщений", MessageBoxButtons.OK, MessageBoxIcon.Stop);

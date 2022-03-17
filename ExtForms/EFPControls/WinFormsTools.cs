@@ -64,9 +64,9 @@ namespace FreeLibSet.Forms
       if (mainImage == null)
         mainImage = EFPApp.MainImages.Images["EmptyImage"];
 
-      Size NewSize;
-      ImagingTools.IsImageShrinkNeeded(mainImage, maxThumbnailSize, out NewSize);
-      return new Bitmap(mainImage, NewSize);
+      Size newSize;
+      ImagingTools.IsImageShrinkNeeded(mainImage, maxThumbnailSize, out newSize);
+      return new Bitmap(mainImage, newSize);
     }
 
     #endregion
@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms
 
       #region Сдвиг
 
-      int NewX;
+      int newX;
       if (area.Width > 0) // 15.05.2019
       {
         int dx = 0;
@@ -172,12 +172,12 @@ namespace FreeLibSet.Forms
           dx = area.Right - rect.Right; // отрицательное
         else if (rect.Left < area.Left)
           dx = area.Left - rect.Left; // положительное
-        NewX = rect.Left + dx;
+        newX = rect.Left + dx;
       }
       else
-        NewX = area.Left;
+        newX = area.Left;
 
-      int NewY;
+      int newY;
       if (area.Height >= 0) // 15.05.2019
       {
         int dy = 0;
@@ -185,12 +185,12 @@ namespace FreeLibSet.Forms
           dy = area.Bottom - rect.Bottom; // отрицательное
         else if (rect.Top < area.Top)
           dy = area.Top - rect.Top; // положительное
-        NewY = rect.Top + dy;
+        newY = rect.Top + dy;
       }
       else
-        NewY = area.Top;
+        newY = area.Top;
 
-      rect.Location = new Point(NewX, NewY);
+      rect.Location = new Point(newX, newY);
 
       #endregion
 
@@ -291,17 +291,17 @@ namespace FreeLibSet.Forms
          oldControl.Width, oldControl.Height);
       newControl.TabIndex = oldControl.TabIndex;
 
-      Control Parent = oldControl.Parent;
-      int p = Parent.Controls.GetChildIndex(oldControl);
+      Control parent = oldControl.Parent;
+      int p = parent.Controls.GetChildIndex(oldControl);
 
-      if (Parent is TableLayoutPanel)
-        DoReplaceTLP((TableLayoutPanel)Parent, oldControl, newControl);
+      if (parent is TableLayoutPanel)
+        DoReplaceTLP((TableLayoutPanel)parent, oldControl, newControl);
       else
       {
-        Parent.Controls.Remove(oldControl);
-        Parent.Controls.Add(newControl);
+        parent.Controls.Remove(oldControl);
+        parent.Controls.Add(newControl);
       }
-      Parent.Controls.SetChildIndex(newControl, p);
+      parent.Controls.SetChildIndex(newControl, p);
     }
 
     private static void DoReplaceTLP(TableLayoutPanel parent, Control oldControl, Control newControl)
@@ -344,10 +344,10 @@ namespace FreeLibSet.Forms
       if (resParentControl == null)
         throw new ArgumentNullException("resParentControl");
 #endif
-      Control[] Controls = new Control[srcParentControl.Controls.Count];
-      srcParentControl.Controls.CopyTo(Controls, 0);
-      for (int i = 0; i < Controls.Length; i++)
-        Controls[i].Parent = resParentControl;
+      Control[] controls = new Control[srcParentControl.Controls.Count];
+      srcParentControl.Controls.CopyTo(controls, 0);
+      for (int i = 0; i < controls.Length; i++)
+        controls[i].Parent = resParentControl;
     }
 
 
@@ -389,10 +389,10 @@ namespace FreeLibSet.Forms
       {
         // Для радиокнопки установка методом Select приводит к появлению точки
         // на этом элементе
-        bool OldAutoCheck = ((RadioButton)control).AutoCheck;
+        bool oldAutoCheck = ((RadioButton)control).AutoCheck;
         ((RadioButton)control).AutoCheck = false;
         control.Select();
-        ((RadioButton)control).AutoCheck = OldAutoCheck;
+        ((RadioButton)control).AutoCheck = oldAutoCheck;
       }
       else
         control.Select();
@@ -477,14 +477,14 @@ namespace FreeLibSet.Forms
     /// <param name="child">Добавляемый управляющий элемент</param>
     public static void AddControlAndScale(Control newParent, Control child)
     {
-      Form OldForm = child.FindForm();
-      Form NewForm = newParent.FindForm();
+      Form oldForm = child.FindForm();
+      Form newForm = newParent.FindForm();
       child.Parent = null;
-      if (OldForm != null && OldForm != NewForm && (!OldForm.Visible) && NewForm.Visible)
+      if (oldForm != null && oldForm != newForm && (!oldForm.Visible) && newForm.Visible)
       {
         // Выполняем масштабирование
-        SizeF sz1 = OldForm.AutoScaleDimensions;
-        SizeF sz2 = NewForm.CurrentAutoScaleDimensions;
+        SizeF sz1 = oldForm.AutoScaleDimensions;
+        SizeF sz2 = newForm.CurrentAutoScaleDimensions;
         if (sz1.Width > 0 && sz1.Height > 0 && sz2.Width > 0 && sz2.Height > 0) // перестраховка
         {
           SizeF Factor = new SizeF(sz2.Width / sz1.Width, sz2.Height / sz1.Height);
@@ -560,32 +560,32 @@ namespace FreeLibSet.Forms
     {
       if (control == null)
         throw new ArgumentNullException("control");
-      int Left = control.ClientRectangle.Left + control.Padding.Left;
-      int Right = control.ClientRectangle.Right - control.Padding.Right; // 09.06.2021
-      int Top = control.ClientRectangle.Top + control.Padding.Top;
-      int Bottom = control.ClientRectangle.Bottom - control.Padding.Bottom; // 09.06.2021
-      foreach (Control Child in control.Controls)
+      int left = control.ClientRectangle.Left + control.Padding.Left;
+      int right = control.ClientRectangle.Right - control.Padding.Right; // 09.06.2021
+      int top = control.ClientRectangle.Top + control.Padding.Top;
+      int bottom = control.ClientRectangle.Bottom - control.Padding.Bottom; // 09.06.2021
+      foreach (Control child in control.Controls)
       {
-        if (!Child.Visible)
+        if (!child.Visible)
           continue;
-        switch (Child.Dock)
+        switch (child.Dock)
         {
           case DockStyle.Left:
-            Left = Math.Max(Left, Child.Right + Child.Margin.Right);
+            left = Math.Max(left, child.Right + child.Margin.Right);
             break;
           case DockStyle.Right:
-            Right = Math.Min(Right, Child.Left - Child.Margin.Left);
+            right = Math.Min(right, child.Left - child.Margin.Left);
             break;
           case DockStyle.Top:
-            Top = Math.Max(Top, Child.Bottom + Child.Margin.Bottom);
+            top = Math.Max(top, child.Bottom + child.Margin.Bottom);
             break;
           case DockStyle.Bottom:
-            Bottom = Math.Min(Bottom, Child.Top - Child.Margin.Top);
+            bottom = Math.Min(bottom, child.Top - child.Margin.Top);
             break;
         }
       }
 
-      return new Rectangle(Left, Top, Right - Left, Bottom - Top);
+      return new Rectangle(left, top, right - left, bottom - top);
     }
 
     /// <summary>
@@ -659,14 +659,14 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < control.Controls.Count; i++)
       {
-        T Child = control.Controls[i] as T;
-        if (Child != null)
-          return Child;
+        T child = control.Controls[i] as T;
+        if (child != null)
+          return child;
         if (recurse)
         {
-          T Res = DoFindControlWithinChildren<T>(control.Controls[i], true);
-          if (Res != null)
-            return Res;
+          T res = DoFindControlWithinChildren<T>(control.Controls[i], true);
+          if (res != null)
+            return res;
         }
       }
 
@@ -737,12 +737,12 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < control.Controls.Count; i++)
       {
-        T Child = control.Controls[i] as T;
-        if (Child != null)
+        T child = control.Controls[i] as T;
+        if (child != null)
         {
           if (lst == null)
             lst = new List<T>();
-          lst.Add(Child);
+          lst.Add(child);
         }
         if (recurse)
           DoGetChildControls<T>(ref lst, control.Controls[i], true);
@@ -811,14 +811,14 @@ namespace FreeLibSet.Forms
         return Size.Empty;
 
       Size sz = Size.Empty;
-      int R = parent.ClientRectangle.Right - parent.Padding.Right;
-      int B = parent.ClientRectangle.Bottom - parent.Padding.Bottom;
+      int right = parent.ClientRectangle.Right - parent.Padding.Right;
+      int bottom = parent.ClientRectangle.Bottom - parent.Padding.Bottom;
 
       for (int i = 0; i < parent.Controls.Count; i++)
       {
         Rectangle rc2 = parent.Controls[i].Bounds;
-        int dx = rc2.Right - R;
-        int dy = rc2.Bottom - B;
+        int dx = rc2.Right - right;
+        int dy = rc2.Bottom - bottom;
         if (dx < 0)
           dx = 0;
         if (dy < 0)
@@ -956,14 +956,14 @@ namespace FreeLibSet.Forms
 
       control.FixedPanel = FixedPanel.None;
 
-      int WholeSize;
+      int wholeSize;
       if (control.Orientation == Orientation.Horizontal)
         // верхняя и нижняя панели
-        WholeSize = control.ClientSize.Height - control.SplitterWidth;
+        wholeSize = control.ClientSize.Height - control.SplitterWidth;
       else
-        WholeSize = control.ClientSize.Width - control.SplitterWidth;
+        wholeSize = control.ClientSize.Width - control.SplitterWidth;
 
-      SetSplitContainerDistance(control, WholeSize * percent / 100);
+      SetSplitContainerDistance(control, wholeSize * percent / 100);
     }
 
 
@@ -976,17 +976,17 @@ namespace FreeLibSet.Forms
     /// <returns>Процентное значение размера верхней или левой панели (от 0 до 100)</returns>
     public static int GetSplitContainerDistancePercent(SplitContainer control)
     {
-      int WholeSize;
+      int wholeSize;
       if (control.Orientation == Orientation.Horizontal)
         // верхняя и нижняя панели
-        WholeSize = control.ClientSize.Height - control.SplitterWidth;
+        wholeSize = control.ClientSize.Height - control.SplitterWidth;
       else
-        WholeSize = control.ClientSize.Width - control.SplitterWidth;
+        wholeSize = control.ClientSize.Width - control.SplitterWidth;
 
-      if (WholeSize < 1)
+      if (wholeSize < 1)
         return 0;
 
-      return control.SplitterDistance * 100 / WholeSize;
+      return control.SplitterDistance * 100 / wholeSize;
     }
 
 
@@ -1007,25 +1007,25 @@ namespace FreeLibSet.Forms
 
     internal static void CorrectTabControlActivation(TabControl control)
     {
-      Form TheForm = control.FindForm();
-      if (TheForm == null)
+      Form form = control.FindForm();
+      if (form == null)
         return;
       control.Focus(); // 24.08.2016
 
       while (true)
       {
-        TabPage FirstControl = control.SelectedTab;
-        if (FirstControl == null)
+        TabPage firstControl = control.SelectedTab;
+        if (firstControl == null)
         {
           if (control.TabPages.Count > 0)
-            FirstControl = control.TabPages[0]; // 24.08.2016
+            firstControl = control.TabPages[0]; // 24.08.2016
           else
             return; // окно не имеет ни одной закладки
         }
-        FirstControl.SelectNextControl(null, true, true, true, false);
-        Control NewControl = TheForm.ActiveControl;
-        if (NewControl is TabControl && NewControl != control)
-          control = (TabControl)NewControl;
+        firstControl.SelectNextControl(null, true, true, true, false);
+        Control newControl = form.ActiveControl;
+        if (newControl is TabControl && newControl != control)
+          control = (TabControl)newControl;
         else
           break;
       }
@@ -1365,19 +1365,19 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("form");
 #endif
 
-      Size MinSize;
+      Size minSize;
       switch (form.FormBorderStyle)
       {
         case FormBorderStyle.Sizable:
         case FormBorderStyle.SizableToolWindow:
-          MinSize = WinFormsTools.Max(form.MinimumSize, SystemInformation.MinimumWindowSize);
+          minSize = WinFormsTools.Max(form.MinimumSize, SystemInformation.MinimumWindowSize);
           break;
         default:
-          MinSize = form.Size;
+          minSize = form.Size;
           break;
       }
 
-      form.Bounds = PlaceRectangle(form.Bounds, area, MinSize);
+      form.Bounds = PlaceRectangle(form.Bounds, area, minSize);
     }
 
     /// <summary>
@@ -1394,8 +1394,8 @@ namespace FreeLibSet.Forms
 #endif
 
       // Область для размещения окна
-      Rectangle Area = Screen.FromControl(form).WorkingArea;
-      form.Bounds = PlaceRectangle(form.Bounds, Area);
+      Rectangle area = Screen.FromControl(form).WorkingArea;
+      form.Bounds = PlaceRectangle(form.Bounds, area);
     }
 
 
@@ -1423,15 +1423,15 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("form");
 #endif
 
-      Screen Scr;
+      Screen scr;
       if (parentForm == null)
-        Scr = Screen.PrimaryScreen;
+        scr = Screen.PrimaryScreen;
       else if (parentForm.IsHandleCreated)
-        Scr = Screen.FromHandle(parentForm.Handle);
+        scr = Screen.FromHandle(parentForm.Handle);
       else
-        Scr = Screen.PrimaryScreen;
+        scr = Screen.PrimaryScreen;
 
-      PlaceFormInScreenCenter(form, Scr, limitSize);  // испр. 17.01.2019
+      PlaceFormInScreenCenter(form, scr, limitSize);  // испр. 17.01.2019
     }
 
     /// <summary>
@@ -1442,13 +1442,13 @@ namespace FreeLibSet.Forms
     /// <param name="parentForm">Форма, экран которой используется для размещения формы. Может быть null. Если форма не задана, используется первичный дисплей</param>
     public static void PlaceFormInScreenCenter(Form form, IWin32Window parentForm)
     {
-      Screen Scr;
+      Screen scr;
       if (parentForm == null)
-        Scr = Screen.PrimaryScreen;
+        scr = Screen.PrimaryScreen;
       else
-        Scr = Screen.FromHandle(parentForm.Handle);
+        scr = Screen.FromHandle(parentForm.Handle);
 
-      PlaceFormInScreenCenter(form, Scr);
+      PlaceFormInScreenCenter(form, scr);
     }
 
     /// <summary>
@@ -1502,10 +1502,10 @@ namespace FreeLibSet.Forms
           form.Height = rcScr.Height;
       }
       Size sz1 = form.Size;
-      int Left = rcScr.Left + (rcScr.Width - sz1.Width) / 2;
-      int Top = rcScr.Top + (rcScr.Height - sz1.Height) / 2;
+      int left = rcScr.Left + (rcScr.Width - sz1.Width) / 2;
+      int top = rcScr.Top + (rcScr.Height - sz1.Height) / 2;
       form.StartPosition = FormStartPosition.Manual;
-      form.Location = new Point(Left, Top);
+      form.Location = new Point(left, top);
 
       PlaceFormInScreen(form);
     }
@@ -1520,8 +1520,8 @@ namespace FreeLibSet.Forms
       if (ownerControl == null)
         throw new ArgumentNullException("ownerControl");
       Rectangle rc = new Rectangle(0, 0, ownerControl.Width, ownerControl.Height);
-      Rectangle OwnerRect = ownerControl.RectangleToScreen(rc);
-      PlacePopupForm(form, OwnerRect);
+      Rectangle ownerRect = ownerControl.RectangleToScreen(rc);
+      PlacePopupForm(form, ownerRect);
     }
 
     /// <summary>
@@ -1554,21 +1554,21 @@ namespace FreeLibSet.Forms
 
       #region Снизу или сверху?
 
-      int DH1 = ownerRect.Top - wholeRect.Top; // место над элементом
-      int DH2 = wholeRect.Bottom - ownerRect.Bottom; // место под элементов
+      int dh1 = ownerRect.Top - wholeRect.Top; // место над элементом
+      int dh2 = wholeRect.Bottom - ownerRect.Bottom; // место под элементов
 
-      bool Below;
-      if (DH2 >= form.Height)
-        Below = true;
-      else if (DH1 >= form.Height)
-        Below = false;
+      bool below;
+      if (dh2 >= form.Height)
+        below = true;
+      else if (dh1 >= form.Height)
+        below = false;
       else
-        Below = true;
+        below = true;
 
       #endregion
 
       form.StartPosition = FormStartPosition.Manual;
-      if (Below)
+      if (below)
         form.Top = ownerRect.Bottom;
       else
         form.Top = ownerRect.Top - form.Height;
@@ -1612,20 +1612,20 @@ namespace FreeLibSet.Forms
     {
       if (form == null)
         throw new ArgumentNullException("form");
-      DialogResult OldRes = form.DialogResult;
+      DialogResult oldRes = form.DialogResult;
       form.DialogResult = dialogResult;
-      bool Success = false;
+      bool success = false;
       try
       {
         form.Close();
-        Success = (!form.Visible) || (dialogResult != DialogResult.None);
+        success = (!form.Visible) || (dialogResult != DialogResult.None);
       }
       finally
       {
-        if (!Success)
-          form.DialogResult = OldRes;
+        if (!success)
+          form.DialogResult = oldRes;
       }
-      return Success;
+      return success;
     }
 
     /// <summary>
@@ -1642,22 +1642,22 @@ namespace FreeLibSet.Forms
 
       if (!mdiContainer.IsMdiContainer)
         throw new ArgumentException("Свойство Form.IsMdiContainer не установлено", "mdiContainer");
-      Rectangle Area;
-      FormWindowState OldState = mdiContainer.WindowState;
+      Rectangle area;
+      FormWindowState oldState = mdiContainer.WindowState;
       try
       {
         if (mdiContainer.WindowState == FormWindowState.Minimized)
           mdiContainer.WindowState = FormWindowState.Normal; // 15.05.2019
-        Area = GetControlDockFillArea(mdiContainer);
-        Area.Location = new Point(0, 0); // при размещении в MDI-контейнере координаты считаются от свободной области
-        Area.Width -= SystemInformation.FrameBorderSize.Width; // почему нужен такой большой зазор - не знаю. Исправлено 09.06.2021
-        Area.Height -= SystemInformation.FrameBorderSize.Height;
+        area = GetControlDockFillArea(mdiContainer);
+        area.Location = new Point(0, 0); // при размещении в MDI-контейнере координаты считаются от свободной области
+        area.Width -= SystemInformation.FrameBorderSize.Width; // почему нужен такой большой зазор - не знаю. Исправлено 09.06.2021
+        area.Height -= SystemInformation.FrameBorderSize.Height;
       }
       finally
       {
-        mdiContainer.WindowState = OldState;
+        mdiContainer.WindowState = oldState;
       }
-      return Area;
+      return area;
     }
 
     /// <summary>
@@ -2381,7 +2381,7 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        Icon Res;
+        Icon res;
         lock (WinFormsTools.InternalSyncRoot)
         {
           if (!_AppIconDefined)
@@ -2397,9 +2397,9 @@ namespace FreeLibSet.Forms
             {
             }
           }
-          Res = _AppIcon;
+          res = _AppIcon;
         }
-        return Res;
+        return res;
       }
     }
     private static Icon _AppIcon = null;
@@ -2451,31 +2451,31 @@ namespace FreeLibSet.Forms
           return null;
       }
 
-      IntPtr HIcon;
+      IntPtr hIcon;
       if (smallIcon)
       {
-        HIcon = DoExtractSmallIcon(filePath, iconIndex);
-        if (HIcon == IntPtr.Zero)
-          HIcon = DoExtractLargeIcon(filePath, iconIndex);
+        hIcon = DoExtractSmallIcon(filePath, iconIndex);
+        if (hIcon == IntPtr.Zero)
+          hIcon = DoExtractLargeIcon(filePath, iconIndex);
       }
       else
       {
-        HIcon = DoExtractLargeIcon(filePath, iconIndex);
-        if (HIcon == IntPtr.Zero)
-          HIcon = DoExtractSmallIcon(filePath, iconIndex);
+        hIcon = DoExtractLargeIcon(filePath, iconIndex);
+        if (hIcon == IntPtr.Zero)
+          hIcon = DoExtractSmallIcon(filePath, iconIndex);
       }
-      if (HIcon == IntPtr.Zero)
+      if (hIcon == IntPtr.Zero)
         return null;
 
       // К сожалению, нельзя вернуть значок, чтобы Net Framework отвечал за вызов DestroyIcon,
       // т.к. соответствующий конструктор защищенный.
       // Надо клонировать
 
-      Icon Icon1 = Icon.FromHandle(HIcon);
-      Icon Icon2 = Icon1.Clone() as Icon;
-      Icon1.Dispose();
-      NativeMethods.DestroyIcon(HIcon);
-      return Icon2;
+      Icon icon1 = Icon.FromHandle(hIcon);
+      Icon icon2 = icon1.Clone() as Icon;
+      icon1.Dispose();
+      NativeMethods.DestroyIcon(hIcon);
+      return icon2;
     }
 
     private static IntPtr DoExtractLargeIcon(AbsPath filePath, int iconIndex)
@@ -2485,9 +2485,9 @@ namespace FreeLibSet.Forms
 
     private static IntPtr DoExtractSmallIcon(AbsPath filePath, int iconIndex)
     {
-      IntPtr[] SmallIcons = new IntPtr[1] { IntPtr.Zero };
-      NativeMethods.ExtractIconEx(filePath.Path, iconIndex, null, SmallIcons, 1);
-      return SmallIcons[0];
+      IntPtr[] smallIcons = new IntPtr[1] { IntPtr.Zero };
+      NativeMethods.ExtractIconEx(filePath.Path, iconIndex, null, smallIcons, 1);
+      return smallIcons[0];
     }
 
     private static class NativeMethods
@@ -2539,7 +2539,7 @@ namespace FreeLibSet.Forms
       if (filePath.IsEmpty)
         return null;
 
-      Size MaxSize = smallIcon ? new Size(16, 16) : new Size(32, 32);
+      Size maxSize = smallIcon ? new Size(16, 16) : new Size(32, 32);
 
       switch (filePath.Extension.ToUpperInvariant())
       {
@@ -2552,15 +2552,15 @@ namespace FreeLibSet.Forms
         case ".GIF":
           // ?? другие типы файлов
           Image img = Image.FromFile(filePath.Path);
-          return CreateThumbnailImage(img, MaxSize);
+          return CreateThumbnailImage(img, maxSize);
       }
 
-      Icon Icon = ExtractIcon(filePath, iconIndex, smallIcon);
-      if (Icon == null)
+      Icon icon = ExtractIcon(filePath, iconIndex, smallIcon);
+      if (icon == null)
         return null;
 
-      Image img2 = CreateThumbnailImage(Icon.ToBitmap(), MaxSize);
-      Icon.Dispose();
+      Image img2 = CreateThumbnailImage(icon.ToBitmap(), maxSize);
+      icon.Dispose();
       return img2;
     }
 
@@ -2787,12 +2787,12 @@ namespace FreeLibSet.Forms
         return String.Empty;
 
       //                <   Ряд 1  ><  Ряд 2  >< Ряд 3  >
-      string ConvS1 = "`qwertyuiop[]asdfghjkl;'zxcvbnm,./" +
+      string convS1 = "`qwertyuiop[]asdfghjkl;'zxcvbnm,./" +
                       "~QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>" +
                       "ёйцукенгшщзхъфывапролджэячсмитьбю." +
                       "ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,";
 
-      string ConvS2 = "ёйцукенгшщзхъфывапролджэячсмитьбю." +
+      string convS2 = "ёйцукенгшщзхъфывапролджэячсмитьбю." +
                       "ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ," +
                       "`qwertyuiop[]asdfghjkl;'zxcvbnm,./" +
                       "~QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>";
@@ -2800,9 +2800,9 @@ namespace FreeLibSet.Forms
       char[] a = new char[s.Length];
       for (int i = 0; i < s.Length; i++)
       {
-        int p = ConvS1.IndexOf(s[i]);
+        int p = convS1.IndexOf(s[i]);
         if (p >= 0)
-          a[i] = ConvS2[p];
+          a[i] = convS2[p];
         else
           a[i] = s[i];
       }

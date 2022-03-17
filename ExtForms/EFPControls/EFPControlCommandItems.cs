@@ -146,11 +146,11 @@ namespace FreeLibSet.Forms
           _IsModalForm = Control.FindForm().Modal;
 
         _Active = value;
-        foreach (EFPCommandItem Item in this)
+        foreach (EFPCommandItem item in this)
         {
-          if (_IsModalForm && (Item.Master != null) && Item.Master.IsGlobalItem)
+          if (_IsModalForm && (item.Master != null) && item.Master.IsGlobalItem)
             continue;
-          Item.MasterActive = value;
+          item.MasterActive = value;
         }
         if (value)
           AddFocus();

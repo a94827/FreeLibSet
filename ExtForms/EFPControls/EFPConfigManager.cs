@@ -9,7 +9,7 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
-  #region ПеречислениеEFPConfigMode
+  #region Перечисление EFPConfigMode
 
   /// <summary>
   /// Зачем выполняется загрузка секции конфигурации - для чтения или для записи
@@ -539,13 +539,13 @@ namespace FreeLibSet.Forms
     /// <returns>Фиктивный объект DisposableObject</returns>
     public IDisposable GetConfig(EFPConfigSectionInfo configInfo, EFPConfigMode rwMode, out CfgPart cfg)
     {
-      TempCfg Cfg2;
-      if (!_Dict.TryGetValue(configInfo, out Cfg2))
+      TempCfg cfg2;
+      if (!_Dict.TryGetValue(configInfo, out cfg2))
       {
-        Cfg2 = new TempCfg();
-        _Dict.Add(configInfo, Cfg2);
+        cfg2 = new TempCfg();
+        _Dict.Add(configInfo, cfg2);
       }
-      cfg = Cfg2;
+      cfg = cfg2;
       return new SimpleDisposableObject(); // 03.01.2021
     }
 
@@ -608,15 +608,15 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public IDisposable GetConfig(EFPConfigSectionInfo configInfo, EFPConfigMode rwMode, out CfgPart cfg)
     {
-      string ThisKeyName = KeyName + "\\" + configInfo.ConfigSectionName + "\\" + configInfo.Category;
+      string thisKeyName = KeyName + "\\" + configInfo.ConfigSectionName + "\\" + configInfo.Category;
       if (String.IsNullOrEmpty(configInfo.UserSetName))
-        ThisKeyName += "\\Default";
+        thisKeyName += "\\Default";
       else
-        ThisKeyName += "\\UserSets\\" + configInfo.UserSetName;
+        thisKeyName += "\\UserSets\\" + configInfo.UserSetName;
 
-      RegistryCfg RegCfg = new RegistryCfg(ThisKeyName, rwMode == EFPConfigMode.Read);
-      cfg = RegCfg;
-      return RegCfg;
+      RegistryCfg regCfg = new RegistryCfg(thisKeyName, rwMode == EFPConfigMode.Read);
+      cfg = regCfg;
+      return regCfg;
     }
 
     /// <summary>

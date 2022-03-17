@@ -81,19 +81,19 @@ namespace FreeLibSet.Forms
       {
         // Нельзя использовать цикл for, так как в процессе расчета может меняться высота строк и,
         // соответственно, число отображаемых строк.
-        int RowIndex = Control.FirstDisplayedScrollingRowIndex;
-        if (RowIndex < 0)
-          RowIndex = 0;
-        while (RowIndex < Control.RowCount)
+        int rowIndex = Control.FirstDisplayedScrollingRowIndex;
+        if (rowIndex < 0)
+          rowIndex = 0;
+        while (rowIndex < Control.RowCount)
         {
-          DataGridViewRow Row = Control.Rows[RowIndex];
-          if ((Row.State & DataGridViewElementStates.Displayed) == 0)
+          DataGridViewRow row = Control.Rows[rowIndex];
+          if ((row.State & DataGridViewElementStates.Displayed) == 0)
             break;
 
-          int H = Row.GetPreferredHeight(RowIndex, DataGridViewAutoSizeRowMode.AllCells, true);
-          Row.Height = H;
+          int h = row.GetPreferredHeight(rowIndex, DataGridViewAutoSizeRowMode.AllCells, true);
+          row.Height = h;
 
-          RowIndex++;
+          rowIndex++;
         }
       }
       catch (Exception e)

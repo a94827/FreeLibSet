@@ -679,14 +679,14 @@ namespace FreeLibSet.Forms
         if (_DelayedToolTips.ContainsKey(control))
           _DelayedToolTips.Remove(control);
 
-        SetToolTipInfo Info = new SetToolTipInfo();
-        Info.Title = title;
-        Info.MainInfo = mainInfo;
-        Info.ValueInfo = valueInfo;
-        Info.State = state;
-        Info.ErrorMessage = errorMessage;
+        SetToolTipInfo info = new SetToolTipInfo();
+        info.Title = title;
+        info.MainInfo = mainInfo;
+        info.ValueInfo = valueInfo;
+        info.State = state;
+        info.ErrorMessage = errorMessage;
 
-        _DelayedToolTips.Add(control, Info);
+        _DelayedToolTips.Add(control, info);
       }
     }
 

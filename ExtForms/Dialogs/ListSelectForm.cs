@@ -112,13 +112,13 @@ namespace FreeLibSet.Forms
 
     #region Изменение размеров формы
 
-    private bool InsideResize = false;
+    private bool _InsideResize = false;
     public void TheLV_Resize(object sender, EventArgs args)
     {
-      if (InsideResize)
+      if (_InsideResize)
         return;
 
-      InsideResize = true;
+      _InsideResize = true;
       try
       {
         if (_SubColumn == null)
@@ -131,7 +131,7 @@ namespace FreeLibSet.Forms
       }
       finally
       {
-        InsideResize = false;
+        _InsideResize = false;
       }
     }
 
@@ -376,9 +376,9 @@ namespace FreeLibSet.Forms
 
         WinFormsTools.SetTextMatrix(dobj, a);
 
-        byte[] Buffer = CreateHtmlFormat(a);
+        byte[] buffer = CreateHtmlFormat(a);
         //System.IO.File.WriteAllBytes(@"d:\temp\table.html", Buffer);
-        dobj.SetData(DataFormats.Html, false, new MemoryStream(Buffer));
+        dobj.SetData(DataFormats.Html, false, new MemoryStream(buffer));
 
         EFPApp.Clipboard.SetDataObject(dobj, true);
       }
@@ -396,7 +396,7 @@ namespace FreeLibSet.Forms
       const int PosWrEndFragment = 93;
 
 
-      byte[] Buffer;
+      byte[] buffer;
       using (MemoryStream strm = new MemoryStream())
       {
         using (StreamWriter wrt = new StreamWriter(strm, Encoding.UTF8))
@@ -457,10 +457,10 @@ namespace FreeLibSet.Forms
           WriteHtmlOff(strm, PosWrStartFragment + PosOff, OffStartFragment - PosOff);
           WriteHtmlOff(strm, PosWrEndFragment + PosOff, OffEndFragment - PosOff);
 
-          Buffer = strm.ToArray();
+          buffer = strm.ToArray();
         }
       }
-      return Buffer;
+      return buffer;
     }
 
 
@@ -475,11 +475,11 @@ namespace FreeLibSet.Forms
     {
       if (!strm.CanSeek)
         throw new NotSupportedException("Поток не поддерживает Seek");
-      string Text = value.ToString("d10");
+      string text = value.ToString("d10");
       strm.Seek(posWr, SeekOrigin.Begin);
-      for (int i = 0; i < Text.Length; i++)
+      for (int i = 0; i < text.Length; i++)
       {
-        byte b = (byte)(Text[i]);
+        byte b = (byte)(text[i]);
         strm.WriteByte(b);
       }
     }
@@ -916,19 +916,19 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < Items.Length; i++)
       {
-        string ThisImageKey;
+        string thisImageKey;
         if (EFPApp.ShowListImages)
         {
-          ThisImageKey = ImageKey;
+          thisImageKey = ImageKey;
           if (_ImageKeys != null)
           {
             if (!String.IsNullOrEmpty(_ImageKeys[i]))
-              ThisImageKey = _ImageKeys[i];
+              thisImageKey = _ImageKeys[i];
           }
         }
         else
-          ThisImageKey = String.Empty;
-        ListViewItem li = form.TheLV.Items.Add(Items[i], ThisImageKey);
+          thisImageKey = String.Empty;
+        ListViewItem li = form.TheLV.Items.Add(Items[i], thisImageKey);
         if (SubItems != null)
           li.SubItems.Add(SubItems[i]);
         if (MultiSelect)
@@ -1288,19 +1288,19 @@ namespace FreeLibSet.Forms
       int i;
       for (i = 0; i < Codes.Length; i++)
       {
-        string ThisImageKey;
+        string thisImageKey;
         if (EFPApp.ShowListImages)
         {
-          ThisImageKey = ImageKey;
+          thisImageKey = ImageKey;
           if (_ImageKeys != null)
           {
             if (!String.IsNullOrEmpty(_ImageKeys[i]))
-              ThisImageKey = _ImageKeys[i];
+              thisImageKey = _ImageKeys[i];
           }
         }
         else
-          ThisImageKey = String.Empty;
-        ListViewItem li = form.TheLV.Items.Add(Items[i], ThisImageKey);
+          thisImageKey = String.Empty;
+        ListViewItem li = form.TheLV.Items.Add(Items[i], thisImageKey);
         if (SubItems != null)
           li.SubItems.Add(SubItems[i]);
         if (SelectedCodes != null)
@@ -1320,12 +1320,12 @@ namespace FreeLibSet.Forms
         if (SelectedCodes.Length > 0)
         {
           // Позионируемся на первый выбранный элемент
-          int StartIndex = Array.IndexOf<string>(Codes, SelectedCodes[0]);// !!!
-          if (StartIndex >= 0)
+          int startIndex = Array.IndexOf<string>(Codes, SelectedCodes[0]);// !!!
+          if (startIndex >= 0)
           {
-            form.TheLV.Items[StartIndex].Focused = true;
-            form.TheLV.Items[StartIndex].Selected = true;
-            form.TheLV.EnsureVisible(StartIndex);
+            form.TheLV.Items[startIndex].Focused = true;
+            form.TheLV.Items[startIndex].Selected = true;
+            form.TheLV.EnsureVisible(startIndex);
           }
         }
       }
@@ -1338,17 +1338,17 @@ namespace FreeLibSet.Forms
       if (EFPApp.ShowDialog(form, false, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      List<string> a = new List<string>();
+      List<string> lst = new List<string>();
       foreach (ListViewItem li in form.TheLV.Items)
       {
         if (li.Checked)
         {
           string Code = (string)(li.Tag);
-          a.Add(Code);
+          lst.Add(Code);
         }
       }
 
-      SelectedCodes = a.ToArray();
+      SelectedCodes = lst.ToArray();
 
       return DialogResult.OK;
     }

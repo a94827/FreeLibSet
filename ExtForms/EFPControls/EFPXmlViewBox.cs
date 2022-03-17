@@ -368,9 +368,9 @@ namespace FreeLibSet.Forms
 
         if (Control.SourceKind == XmlViewBoxSourceKind.File)
         {
-          AbsPath Path1 = new AbsPath(Control.XmlFilePath);
-          AbsPath Path2 = Path1.ParentDir + _FileName;
-          return Path1 == Path2; // с учетом регистра
+          AbsPath path1 = new AbsPath(Control.XmlFilePath);
+          AbsPath path2 = path1.ParentDir + _FileName;
+          return path1 == path2; // с учетом регистра
         }
 
         return false;
@@ -405,7 +405,7 @@ namespace FreeLibSet.Forms
       if (Control.SourceKind == XmlViewBoxSourceKind.File && IsDefaultFileName)
         return new AbsPath(Control.XmlFilePath);
 
-      AbsPath Res = EFPApp.SharedTempDir.GetFixedTempFileName(FileName); // используем временную переменную Res на случай исключения
+      AbsPath res = EFPApp.SharedTempDir.GetFixedTempFileName(FileName); // используем временную переменную Res на случай исключения
 
       switch (Control.SourceKind)
       {
@@ -414,7 +414,7 @@ namespace FreeLibSet.Forms
           if (Control.XmlBytes == null)
             throw new BugException("Control.XmlBytes==null");
 #endif
-          File.WriteAllBytes(Res.Path, Control.XmlBytes);
+          File.WriteAllBytes(res.Path, Control.XmlBytes);
           break;
 
         case XmlViewBoxSourceKind.XmlDocument:
@@ -422,14 +422,14 @@ namespace FreeLibSet.Forms
           if (Control.XmlDocument == null)
             throw new BugException("Control.XmlDocument==null");
 #endif
-          FileTools.WriteXmlDocument(Res, Control.XmlDocument);
+          FileTools.WriteXmlDocument(res, Control.XmlDocument);
           break;
 
         default:
           throw new NotSupportedException("Неизвестное значение XmlViewBox.SourceKind=" + Control.SourceKind.ToString());
       }
 
-      _TempFilePath = Res; // запоминаем для повторного использования
+      _TempFilePath = res; // запоминаем для повторного использования
       return _TempFilePath;
     }
 
@@ -630,8 +630,8 @@ namespace FreeLibSet.Forms
     /// <param name="args">Не используется</param>
     protected virtual void SendToMicrosoftWord(object sender, EventArgs args)
     {
-      string FileName = CreateTempFile();
-      if (FileName != null)
+      string fileName = CreateTempFile();
+      if (fileName != null)
       {
         /*
         ProcessStartInfo psi = new ProcessStartInfo();
@@ -649,7 +649,7 @@ namespace FreeLibSet.Forms
 
         try
         {
-          MicrosoftOfficeTools.OpenWithWord(new AbsPath(FileName), true);
+          MicrosoftOfficeTools.OpenWithWord(new AbsPath(fileName), true);
         }
         catch (Exception e)
         {
@@ -665,12 +665,12 @@ namespace FreeLibSet.Forms
     /// <param name="args">Не используется</param>
     protected virtual void SendToOpenOfficeWriter(object sender, EventArgs args)
     {
-      string FileName = CreateTempFile();
-      if (FileName != null)
+      string fileName = CreateTempFile();
+      if (fileName != null)
       {
         try
         {
-          EFPApp.UsedOpenOffice.OpenWithWriter(new AbsPath(FileName), true);
+          EFPApp.UsedOpenOffice.OpenWithWriter(new AbsPath(fileName), true);
         }
         catch (Exception e)
         {
@@ -741,16 +741,16 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          WebBrowser NewControl = new WebBrowser();
-          NewControl.Dock = DockStyle.Fill;
-          NewControl.AllowNavigation = false;
-          NewControl.AllowWebBrowserDrop = false;
-          NewControl.WebBrowserShortcutsEnabled = false;
-          NewControl.IsWebBrowserContextMenuEnabled = false;
-          frm.Controls.Add(NewControl);
-          NewControl.DocumentStream = Owner.Control.DocumentStream;
+          WebBrowser newControl = new WebBrowser();
+          newControl.Dock = DockStyle.Fill;
+          newControl.AllowNavigation = false;
+          newControl.AllowWebBrowserDrop = false;
+          newControl.WebBrowserShortcutsEnabled = false;
+          newControl.IsWebBrowserContextMenuEnabled = false;
+          frm.Controls.Add(newControl);
+          newControl.DocumentStream = Owner.Control.DocumentStream;
 
-          efpNewControl = new EFPWebBrowser(efpForm, NewControl);
+          efpNewControl = new EFPWebBrowser(efpForm, newControl);
         }
         ((EFPWebBrowserCommandItems)(efpNewControl.CommandItems)).IsFullScreen = true;
 
@@ -830,11 +830,11 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      AbsPath FilePath = Owner.GetFilePath();
+      AbsPath filePath = Owner.GetFilePath();
 
       try
       {
-        EFPApp.UsedOpenOffice.OpenWithWriter(FilePath, true);
+        EFPApp.UsedOpenOffice.OpenWithWriter(filePath, true);
       }
       catch (Exception e)
       {

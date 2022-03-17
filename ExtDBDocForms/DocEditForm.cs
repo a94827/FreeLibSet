@@ -221,7 +221,7 @@ namespace FreeLibSet.Forms.Docs
 
     private static Dictionary<string, string> _SelectedTabs = new Dictionary<string, string>();
 
-    void FormProvider_Shown(object sender, EventArgs e)
+    void FormProvider_Shown(object sender, EventArgs args)
     {
       string text;
       if (!_SelectedTabs.TryGetValue(FormProvider.ConfigSectionName, out text))
@@ -246,7 +246,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
 
-    void FormProvider_Hidden(object sender, EventArgs e)
+    void FormProvider_Hidden(object sender, EventArgs args)
     {
       if (MainTabControl.SelectedTab != null)
         _SelectedTabs[FormProvider.ConfigSectionName] = MainTabControl.SelectedTab.Text;

@@ -454,7 +454,6 @@ namespace FreeLibSet.Forms
           return; // 09.07.2021
       }
 
-
       switch (ProviderState)
       {
         case EFPControlProviderState.Attached:
@@ -474,7 +473,6 @@ namespace FreeLibSet.Forms
           throw new BugException("ProviderState=" + ProviderState.ToString());
       }
     }
-
 
     /// <summary>
     /// Отложенный вызов UpdateFormProviderState() инициированный в конструкторе
@@ -916,13 +914,13 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        EFPFormProvider FormProvider = BaseProvider.FormProvider;
-        if (FormProvider == null)
+        EFPFormProvider formProvider = BaseProvider.FormProvider;
+        if (formProvider == null)
           return; // 09.06.2021. До присоединения к форме - игнорируем
 
-        if (ControlVisible && FormProvider.Form.Visible /* 09.06.2021 */)
+        if (ControlVisible && formProvider.Form.Visible /* 09.06.2021 */)
         {
-          FormProvider.FirstReadConfig(); // 04.10.2018. Выполняем предзагрузку секций конфигурации.
+          formProvider.FirstReadConfig(); // 04.10.2018. Выполняем предзагрузку секций конфигурации.
           // 15.10.2018  Но делаем это не из метода OnShown(), так как
           //             чтение конфигурации может сделать элемент невидимым и получится,
           //             что Control.Visible=false в процессе OnShown(), что может привести к сбою
@@ -1259,23 +1257,23 @@ namespace FreeLibSet.Forms
       if (Control.Parent == null)
         return;
 
-      Control PrevControl = Control.Parent.GetNextControl(Control, false);
+      Control prevControl = Control.Parent.GetNextControl(Control, false);
 
-      if (PrevControl == null)
+      if (prevControl == null)
       {
         if (Control.Parent is GroupBox)
           Label = Control.Parent;
         return;
       }
-      if (PrevControl is Label)
+      if (prevControl is Label)
       {
-        if (((Label)PrevControl).UseMnemonic) // 22.03.2016
-          Label = PrevControl;
+        if (((Label)prevControl).UseMnemonic) // 22.03.2016
+          Label = prevControl;
         return;
       }
 
       // 02.03.2013
-      if ((PrevControl is Panel) && (Control.Parent is GroupBox) && (Control.Dock == DockStyle.Fill))
+      if ((prevControl is Panel) && (Control.Parent is GroupBox) && (Control.Dock == DockStyle.Fill))
         Label = Control.Parent;
     }
 
@@ -1633,21 +1631,21 @@ namespace FreeLibSet.Forms
           _ContextMenuWasInit = true;
 
           // Присоединяем команды
-          bool ToolBarControllable = false;
+          bool toolBarControllable = false;
           if (ToolBar != null)
-            ToolBarControllable = ToolBar.PanelCommandItems != null;
+            toolBarControllable = ToolBar.PanelCommandItems != null;
 
-          List<EFPCommandItems> List = new List<EFPCommandItems>();
+          List<EFPCommandItems> list = new List<EFPCommandItems>();
           if (CommandItems.Count > 0)
-            List.Add(CommandItems);
+            list.Add(CommandItems);
           if (BaseCommandItemsNeeded) // 28.09.2018
-            BaseProvider.InitCommandItemList(List);
+            BaseProvider.InitCommandItemList(list);
 
-          if (List.Count > 0 || ToolBarControllable)
+          if (list.Count > 0 || toolBarControllable)
           {
             EFPContextMenu ccm = new EFPContextMenu();
-            for (int i = 0; i < List.Count; i++)
-              ccm.Add(List[i]);
+            for (int i = 0; i < list.Count; i++)
+              ccm.Add(list[i]);
 
             //if (ToolBarControllable)
             //{
@@ -1663,8 +1661,8 @@ namespace FreeLibSet.Forms
 
             if (Control is UserControl)
             {
-              foreach (Control ChildControl in Control.Controls)
-                ChildControl.ContextMenuStrip = Control.ContextMenuStrip;
+              foreach (Control childControl in Control.Controls)
+                childControl.ContextMenuStrip = Control.ContextMenuStrip;
             }
 
             //CommandItems.Active = true; // ?? Control.ContainsFocus;
@@ -1773,17 +1771,17 @@ namespace FreeLibSet.Forms
       CommandItems.CallBeforeControlAssigned();
 
       // Статусная строка должна быть собрана заранее, до установки Control
-      bool SBFlag = false;
-      foreach (EFPCommandItem Item in CommandItems)
+      bool sbFlag = false;
+      foreach (EFPCommandItem item in CommandItems)
       {
-        if (Item.StatusBarUsage)
+        if (item.StatusBarUsage)
         {
-          SBFlag = true;
+          sbFlag = true;
           break;
         }
       }
 
-      if (SBFlag)
+      if (sbFlag)
       {
         EFPStatusBarPanels sbPanels = new EFPStatusBarPanels(this, Control);
         sbPanels.Add(CommandItems);
@@ -1866,9 +1864,9 @@ namespace FreeLibSet.Forms
       if (!frm.Visible)
         return;
 
-      UIValidateState PrevState = _ValidateState;
-      string PrevMessage = _ValidateErrorMessage;
-      string PrevValueToolTipText = _ValueToolTipText;
+      UIValidateState prevState = _ValidateState;
+      string prevMessage = _ValidateErrorMessage;
+      string prevValueToolTipText = _ValueToolTipText;
 
       _ValidateState = UIValidateState.Ok;
       _ValidateErrorMessage = null;
@@ -1895,9 +1893,9 @@ namespace FreeLibSet.Forms
         }
       } // Editable
 
-      if (_ValidateState != PrevState ||
-        _ValidateErrorMessage != PrevMessage ||
-        _ValueToolTipText != PrevValueToolTipText)
+      if (_ValidateState != prevState ||
+        _ValidateErrorMessage != prevMessage ||
+        _ValueToolTipText != prevValueToolTipText)
       {
         // Состояние ошибки изменилось
         if (BaseProvider != null)
@@ -1971,8 +1969,8 @@ namespace FreeLibSet.Forms
     {
       if (ValidateState == UIValidateState.Ok)
         return;
-      EFPErrorInfo Info = new EFPErrorInfo(ValidateErrorMessage, ValidateState == UIValidateState.Error, Control);
-      errorList.Add(Info);
+      EFPErrorInfo info = new EFPErrorInfo(ValidateErrorMessage, ValidateState == UIValidateState.Error, Control);
+      errorList.Add(info);
     }
 
     /// <summary>
@@ -2566,24 +2564,24 @@ namespace FreeLibSet.Forms
       if (control == null)
         return null;
 
-      Control Control2 = control;
+      Control control2 = control;
       do
       {
-        if (Control2 is Form)
+        if (control2 is Form)
         {
-          EFPFormProvider FormProvider = EFPFormProvider.FindFormProvider((Form)Control2);
-          if (FormProvider != null)
+          EFPFormProvider formProvider = EFPFormProvider.FindFormProvider((Form)control2);
+          if (formProvider != null)
           {
-            EFPControlBase Res = FormProvider.FindControlProvider(control); // не Control2!
-            if (Res != null)
-              return Res;
+            EFPControlBase res = formProvider.FindControlProvider(control); // не Control2!
+            if (res != null)
+              return res;
           }
         }
 
         // спускаемся ниже
-        Control2 = Control2.Parent;
+        control2 = control2.Parent;
       }
-      while (Control2 != null);
+      while (control2 != null);
 
       return null;
     }
@@ -2854,14 +2852,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public DepSyncGroup SyncGroup
     {
-      get
-      {
-        return _SyncGroup;
-      }
-      set
-      {
-        _SyncGroup = value;
-      }
+      get { return _SyncGroup; }
+      set { _SyncGroup = value; }
     }
     private DepSyncGroup _SyncGroup;
 
@@ -2869,7 +2861,6 @@ namespace FreeLibSet.Forms
     /// Доступ к синхронизированному значению должен быть определен в классе-наследнике
     /// </summary>
     public abstract object SyncValue { get; set; }
-
 
     #endregion
 

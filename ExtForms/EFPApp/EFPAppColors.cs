@@ -104,11 +104,11 @@ namespace FreeLibSet.Forms
 
       #region 2. Корректировка темного фона
 
-      int SysMax = Math.Max(sysColor.R, Math.Max(sysColor.G, sysColor.B));
+      int sysMax = Math.Max(sysColor.R, Math.Max(sysColor.G, sysColor.B));
       int k = 256;
-      if (SysMax < 32)
+      if (sysMax < 32)
         k = 512;
-      if (SysMax < 16)
+      if (sysMax < 16)
         k = 1024;
       if (dMax * k / 256 > 64)
         k = 64 * 256 / dMax;
@@ -121,56 +121,56 @@ namespace FreeLibSet.Forms
 
       #region 3. Проверяем, что применение затемнения не сделает цвет отрицательным
 
-      int R = sysColor.R;
-      int G = sysColor.G;
-      int B = sysColor.B;
+      int r = sysColor.R;
+      int g = sysColor.G;
+      int b = sysColor.B;
 
-      int Off = 0;
-      if (R - dR < 0)
-        Off = Math.Max(Off, dR - R);
-      if (G - dG < 0)
-        Off = Math.Max(Off, dG - G);
-      if (B - dB < 0)
-        Off = Math.Max(Off, dB - B);
+      int off = 0;
+      if (r - dR < 0)
+        off = Math.Max(off, dR - r);
+      if (g - dG < 0)
+        off = Math.Max(off, dG - g);
+      if (b - dB < 0)
+        off = Math.Max(off, dB - b);
 
       #endregion
 
       #region 4. Сдвигаем системный цвет в сторону белого
 
-      R += Off;
-      G += Off;
-      B += Off;
+      r += off;
+      g += off;
+      b += off;
 
       #endregion
 
       #region 5. Применяем затемнение
 
-      R -= dR;
-      G -= dG;
-      B -= dB;
+      r -= dR;
+      g -= dG;
+      b -= dB;
 
       #endregion
 
       #region 6. Корректировка 0-255
 
-      if (R < 0)
-        R = 0;
-      if (R > 255)
-        R = 255;
+      if (r < 0)
+        r = 0;
+      if (r > 255)
+        r = 255;
 
-      if (G < 0)
-        G = 0;
-      if (G > 255)
-        G = 255;
+      if (g < 0)
+        g = 0;
+      if (g > 255)
+        g = 255;
 
-      if (B < 0)
-        B = 0;
-      if (B > 255)
-        B = 255;
+      if (b < 0)
+        b = 0;
+      if (b > 255)
+        b = 255;
 
       #endregion
 
-      return Color.FromArgb(R, G, B);
+      return Color.FromArgb(r, g, b);
     }
 
     #endregion

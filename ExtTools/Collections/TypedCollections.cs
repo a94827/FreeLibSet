@@ -2409,7 +2409,7 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        throw new NotImplementedException("The method or operation is not implemented.");
+        throw new NotImplementedException();
       }
       set
       {

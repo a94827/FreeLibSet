@@ -891,14 +891,14 @@ namespace FreeLibSet.Forms
         StringBuilder sb = new StringBuilder();
         if (MenuUsage)
         {
-          EFPCommandItem CurrItem = this;
-          while (CurrItem != null)
+          EFPCommandItem currItem = this;
+          while (currItem != null)
           {
             if (sb.Length > 0)
               sb.Insert(0, "-");
-            if (!String.IsNullOrEmpty(CurrItem.MenuText))
-              sb.Insert(0, CurrItem.MenuTextWithoutMnemonic);
-            CurrItem = CurrItem.Parent;
+            if (!String.IsNullOrEmpty(currItem.MenuText))
+              sb.Insert(0, currItem.MenuTextWithoutMnemonic);
+            currItem = currItem.Parent;
           }
         }
         if (ShortCutUsage)
@@ -1259,53 +1259,60 @@ namespace FreeLibSet.Forms
       if ((Usage & EFPCommandItemUsage.ShortCut) == EFPCommandItemUsage.None)
         return false; // заблокирована
 
-      Keys MyKey = ShortCut;
-      if (MyKey == Keys.None)
+      Keys myKey = ShortCut;
+      if (myKey == Keys.None)
         return false;
 
       // 10.11.2012 Альтернативные комбинации для меню "Правка"
       switch (value)
       {
         case Keys.Alt | Keys.Back:
-          if (MyKey == (Keys.Control | Keys.Z))
+          if (myKey == (Keys.Control | Keys.Z))
             return true;
           break;
         case Keys.Alt | Keys.Shift | Keys.Back:
-          if (MyKey == (Keys.Control | Keys.Y))
+          if (myKey == (Keys.Control | Keys.Y))
             return true;
           break;
         case Keys.Control | Keys.Insert:
-          if (MyKey == (Keys.Control | Keys.C))
+          if (myKey == (Keys.Control | Keys.C))
             return true;
           break;
         case Keys.Shift | Keys.Insert:
-          if (MyKey == (Keys.Control | Keys.V))
+          if (myKey == (Keys.Control | Keys.V))
             return true;
           break;
         case Keys.Shift | Keys.Delete:
-          if (MyKey == (Keys.Control | Keys.X))
+          if (myKey == (Keys.Control | Keys.X))
             return true;
           break;
       }
 
       // Сравниваем Ctrl, Alt и Shift
+#if XXX
+      bool hasAlt1 = (value & Keys.Alt) != Keys.None;
+      bool hasAlt2 = (myKey & Keys.Alt) != Keys.None;
 
-      bool HasAlt1 = (value & Keys.Alt) != Keys.None;
-      bool HasAlt2 = (MyKey & Keys.Alt) != Keys.None;
+      bool hasCtrl1 = (value & Keys.Control) != Keys.None;
+      bool hasCtrl2 = (myKey & Keys.Control) != Keys.None;
 
-      bool HasCtrl1 = (value & Keys.Control) != Keys.None;
-      bool HasCtrl2 = (MyKey & Keys.Control) != Keys.None;
+      bool hasShift1 = (value & Keys.Shift) != Keys.None;
+      bool hasShift2 = (myKey & Keys.Shift) != Keys.None;
 
-      bool HasShift1 = (value & Keys.Shift) != Keys.None;
-      bool HasShift2 = (MyKey & Keys.Shift) != Keys.None;
-
-      if (!(HasAlt1 == HasAlt2 && HasCtrl1 == HasCtrl2 && HasShift1 == HasShift2))
+      if (!(hasAlt1 == hasAlt2 && hasCtrl1 == hasCtrl2 && hasShift1 == hasShift2))
+        return false;
+#endif
+      // 17.03.2022. Оптимизация
+      Keys modifiers1 = value & (Keys.Alt | Keys.Control | Keys.Shift);
+      Keys modifiers2 = myKey & (Keys.Alt | Keys.Control | Keys.Shift);
+      if (modifiers1 != modifiers2)
         return false;
 
+
       // Сравниваем код клавиши
-      Keys Code1 = value & Keys.KeyCode;
-      Keys Code2 = MyKey & Keys.KeyCode;
-      return Code1 == Code2;
+      Keys code1 = value & Keys.KeyCode;
+      Keys code2 = myKey & Keys.KeyCode;
+      return code1 == code2;
     }
 
     /// <summary>
@@ -1500,10 +1507,10 @@ namespace FreeLibSet.Forms
 
         if (EFPApp.OnBeforeCommandItemClick(this)) // 15.01.2017
         {
-          bool BeforeClickResult = true;
+          bool beforeClickResult = true;
           if (Owner != null) // 19.03.2021
-            BeforeClickResult = Owner.DoBeforeClick(this);
-          if (BeforeClickResult)
+            beforeClickResult = Owner.DoBeforeClick(this);
+          if (beforeClickResult)
           {
             if (Click != null)
             {
@@ -1634,11 +1641,11 @@ namespace FreeLibSet.Forms
       get
       {
         int n = 0;
-        EFPUIObjBase UIObj = _FirstUIObj;
-        while (UIObj != null)
+        EFPUIObjBase uiObj = _FirstUIObj;
+        while (uiObj != null)
         {
           n++;
-          UIObj = UIObj.NextUIObj;
+          uiObj = uiObj.NextUIObj;
         }
         return n;
       }
@@ -1653,13 +1660,13 @@ namespace FreeLibSet.Forms
     public EFPUIObjBase[] GetUIObjects()
     {
       EFPUIObjBase[] res = new EFPUIObjBase[UIObjectCount];
-      int Index = 0;
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      int index = 0;
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        res[Index] = UIObj;
-        Index++;
-        UIObj = UIObj.NextUIObj;
+        res[index] = uiObj;
+        index++;
+        uiObj = uiObj.NextUIObj;
       }
       return res;
     }
@@ -1765,7 +1772,7 @@ namespace FreeLibSet.Forms
 
       Children.InitMenuVisible(); // рекурсивный вызов
 
-      bool HasVisible = false;
+      bool hasVisible = false;
       for (int i = 0; i < Children.Count; i++)
       {
         if (Children[i].Usage == EFPCommandItemUsage.None)
@@ -1773,12 +1780,12 @@ namespace FreeLibSet.Forms
 
         if (Children[i].Visible)
         {
-          HasVisible = true;
+          hasVisible = true;
           break;
         }
       }
 
-      this.Visible = HasVisible;
+      this.Visible = hasVisible;
     }
 
     #endregion
@@ -1849,10 +1856,10 @@ namespace FreeLibSet.Forms
         _FirstUIObj = uiObj;
       else
       {
-        EFPUIObjBase LastObj = _FirstUIObj;
-        while (LastObj.NextUIObj != null)
-          LastObj = LastObj.NextUIObj;
-        LastObj.NextUIObj = uiObj;
+        EFPUIObjBase lastObj = _FirstUIObj;
+        while (lastObj.NextUIObj != null)
+          lastObj = lastObj.NextUIObj;
+        lastObj.NextUIObj = uiObj;
       }
     }
 
@@ -1862,97 +1869,97 @@ namespace FreeLibSet.Forms
         _FirstUIObj = uiObj.NextUIObj;
       else
       {
-        EFPUIObjBase PrevObj = _FirstUIObj;
-        while (PrevObj.NextUIObj != uiObj)
+        EFPUIObjBase prevObj = _FirstUIObj;
+        while (prevObj.NextUIObj != uiObj)
         {
-          PrevObj = PrevObj.NextUIObj;
+          prevObj = prevObj.NextUIObj;
 #if DEBUG
-          if (PrevObj == null)
+          if (prevObj == null)
             throw new BugException("Потерялся объект UI");
 #endif
         }
-        PrevObj.NextUIObj = uiObj.NextUIObj;
+        prevObj.NextUIObj = uiObj.NextUIObj;
       }
       uiObj.NextUIObj = null;
     }
 
     private void SetMenuText()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetMenuText();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetMenuText();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
     private void SetVisible()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetVisible();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetVisible();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
     private void SetEnabled()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetEnabled();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetEnabled();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
     private void SetChecked()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetChecked();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetChecked();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
     private void SetImage()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetImage();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetImage();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
     private void SetToolTipText()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetToolTipText();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetToolTipText();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
     private void SetStatusBarText()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetStatusBarText();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetStatusBarText();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
     private void SetAll()
     {
-      EFPUIObjBase UIObj = _FirstUIObj;
-      while (UIObj != null)
+      EFPUIObjBase uiObj = _FirstUIObj;
+      while (uiObj != null)
       {
-        UIObj.SetAll();
-        UIObj = UIObj.NextUIObj;
+        uiObj.SetAll();
+        uiObj = uiObj.NextUIObj;
       }
     }
 
@@ -2103,19 +2110,19 @@ namespace FreeLibSet.Forms
       /// <returns></returns>
       protected override IEnumerator<EFPCommandItem> GetNextGroup(int groupIndex)
       {
-        int ItemIndex = groupIndex / 2;
-        bool IsSub = (groupIndex % 2) == 1;
-        if (ItemIndex >= _Items.Count)
+        int itemIndex = groupIndex / 2;
+        bool isSub = (groupIndex % 2) == 1;
+        if (itemIndex >= _Items.Count)
           return null;
-        if (IsSub)
+        if (isSub)
         {
-          if (_Items[ItemIndex].HasChildren)
-            return new RecurseItemEnumerator(_Items[ItemIndex].Children);
+          if (_Items[itemIndex].HasChildren)
+            return new RecurseItemEnumerator(_Items[itemIndex].Children);
           else
             return _Dummy;
         }
         else
-          return new SingleObjectEnumerable<EFPCommandItem>.Enumerator(_Items[ItemIndex]);
+          return new SingleObjectEnumerable<EFPCommandItem>.Enumerator(_Items[itemIndex]);
       }
 
       #endregion
@@ -2218,8 +2225,8 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        string Code = category + "|" + name;
-        return _AllItems[Code];
+        string code = category + "|" + name;
+        return _AllItems[code];
       }
     }
 
@@ -2423,14 +2430,14 @@ namespace FreeLibSet.Forms
       if (baseItem != null)
         movedItem.Parent = baseItem.Parent; // Перенесли в нужный список
 
-      EFPOneLevelCommandItems List = GetOneLevelItems(movedItem);
-      List.Items.Remove(movedItem);
+      EFPOneLevelCommandItems list = GetOneLevelItems(movedItem);
+      list.Items.Remove(movedItem);
       if (baseItem == null)
-        List.Items.Insert(0, movedItem);
+        list.Items.Insert(0, movedItem);
       else
       {
-        int p = List.Items.IndexOf(baseItem);
-        List.Items.Insert(p, movedItem);
+        int p = list.Items.IndexOf(baseItem);
+        list.Items.Insert(p, movedItem);
       }
 
       //if (Owner != null)
@@ -2464,15 +2471,15 @@ namespace FreeLibSet.Forms
       if (baseItem != null)
         movedItem.Parent = baseItem.Parent; // Перенесли в нужный список
 
-      EFPOneLevelCommandItems List = GetOneLevelItems(movedItem);
+      EFPOneLevelCommandItems list = GetOneLevelItems(movedItem);
 
-      List.Items.Remove(movedItem);
+      list.Items.Remove(movedItem);
       if (baseItem == null)
-        List.Items.Add(movedItem);
+        list.Items.Add(movedItem);
       else
       {
-        int p = List.Items.IndexOf(baseItem);
-        List.Items.Insert(p + 1, movedItem);
+        int p = list.Items.IndexOf(baseItem);
+        list.Items.Insert(p + 1, movedItem);
       }
 
       //if (Owner != null)
@@ -2819,15 +2826,15 @@ namespace FreeLibSet.Forms
       if (!TestControlShortcut())
         return false;
 
-      foreach (EFPCommandItems Items in _FocusedObjects)
+      foreach (EFPCommandItems items in _FocusedObjects)
       {
-        if (Items == EFPApp.CommandItems)
+        if (items == EFPApp.CommandItems)
         {
           // Темы главного меню не работают, если есть диалоговое окно
           if (EFPApp.ActiveDialog != null)
             continue;
         }
-        if (Items.PerformShortCut(keyData))
+        if (items.PerformShortCut(keyData))
           return true;
       }
 
@@ -2835,15 +2842,15 @@ namespace FreeLibSet.Forms
       // Глобальные сочетания клавиш
       for (int i = 0; i < EFPApp.CommandItems.GlobalShortCuts.Count; i++)
       {
-        EFPCommandItem Item = EFPApp.CommandItems.GlobalShortCuts[i];
-        if (Item.IsShortCut(keyData))
+        EFPCommandItem item = EFPApp.CommandItems.GlobalShortCuts[i];
+        if (item.IsShortCut(keyData))
         {
-          if (Item.Visible && Item.Enabled)
+          if (item.Visible && item.Enabled)
           {
-            if (Item.InsideClick)
-              EFPApp.ShowTempMessage("Команда " + Item.DisplayName + " в настоящий момент выполняется");
+            if (item.InsideClick)
+              EFPApp.ShowTempMessage("Команда " + item.DisplayName + " в настоящий момент выполняется");
             else
-              Item.PerformClick();
+              item.PerformClick();
           }
           return true;
         }
@@ -2897,15 +2904,15 @@ namespace FreeLibSet.Forms
     /// <returns>true, если комбинация найдена</returns>
     public static bool PerformShortCutKey(Keys keyData)
     {
-      foreach (EFPCommandItems Items in _FocusedObjects)
+      foreach (EFPCommandItems items in _FocusedObjects)
       {
-        if (Items == EFPApp.CommandItems)
+        if (items == EFPApp.CommandItems)
         {
           // Темы главного меню не работают, если есть диалоговое окно
           if (EFPApp.ActiveDialog != null)
             continue;
         }
-        if (Items.PerformShortCut(keyData))
+        if (items.PerformShortCut(keyData))
         {
           return true;
         }
@@ -3030,9 +3037,9 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        string Category, Name;
-        EFPAppCommandItems.GetStdCommandCategoryAndName(stdItem, out Category, out Name);
-        return this[Category, Name];
+        string category, name;
+        EFPAppCommandItems.GetStdCommandCategoryAndName(stdItem, out category, out name);
+        return this[category, name];
       }
     }
 
@@ -3097,9 +3104,9 @@ namespace FreeLibSet.Forms
     {
       if (disposing)
       {
-        foreach (EFPUIObjBase UIObj in _UIObjs)
+        foreach (EFPUIObjBase uiObj in _UIObjs)
         {
-          UIObj.Dispose();
+          uiObj.Dispose();
         }
         _UIObjs = null;
       }
@@ -3171,11 +3178,11 @@ namespace FreeLibSet.Forms
       {
         if (commandItem == null)
           return null;
-        EFPUIObjBase Res = this[commandItem.Category, commandItem.Name];
-        if (Res == null)
+        EFPUIObjBase res = this[commandItem.Category, commandItem.Name];
+        if (res == null)
           return null;
-        if (Object.ReferenceEquals(commandItem, Res.Item))
-          return Res;
+        if (Object.ReferenceEquals(commandItem, res.Item))
+          return res;
         else
           return null;
       }

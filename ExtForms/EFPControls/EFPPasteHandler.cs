@@ -384,16 +384,16 @@ namespace FreeLibSet.Forms
       EFPApp.BeginWait("Вставка из буфера обмена", "Paste");
       try
       {
-        string DataInfoText;
-        if (PerformPaste(data, reason, out DataInfoText))
+        string dataInfoText;
+        if (PerformPaste(data, reason, out dataInfoText))
         {
           if (PasteApplied != null)
             PasteApplied(this, EventArgs.Empty);
         }
         else
         {
-          if (DataInfoText != null)
-            EFPApp.ShowTempMessage(DataInfoText);
+          if (dataInfoText != null)
+            EFPApp.ShowTempMessage(dataInfoText);
         }
       }
       finally
@@ -430,42 +430,42 @@ namespace FreeLibSet.Forms
           // Ищем первый подходящий формат
           for (int i = 0; i < Count; i++)
           {
-            string DataInfoText2;
-            string DataImageKey;
-            if (DoTestFormat(this[i], data, reason, out DataInfoText2, out DataImageKey))
+            string dataInfoText2;
+            string dataImageKey;
+            if (DoTestFormat(this[i], data, reason, out dataInfoText2, out dataImageKey))
             {
               DoPaste(this[i], data, reason);
               return true;
             }
             // Используем сообщение об ошибке для первого формата в списке
             if (dataInfoText == null)
-              dataInfoText = DataInfoText2;
+              dataInfoText = dataInfoText2;
           }
           return false;
 
         case EFPPasteReason.PasteSpecial:
           // Выводим список подходящих форматов
-          List<string> GoodNames = new List<string>();
-          List<string> GoodImageKeys = new List<string>();
-          List<EFPPasteFormat> GoodFormats = new List<EFPPasteFormat>();
-          List<bool> GoodValidFlags = new List<bool>();
-          int SelIdx = 0;
+          List<string> goodNames = new List<string>();
+          List<string> goodImageKeys = new List<string>();
+          List<EFPPasteFormat> goodFormats = new List<EFPPasteFormat>();
+          List<bool> goodValidFlags = new List<bool>();
+          int selIdx = 0;
           for (int i = 0; i < Count; i++)
           {
-            string DataInfoText2;
-            string DataImageKey;
-            bool ValidFlag = DoTestFormat(this[i], data, reason, out DataInfoText2, out DataImageKey);
-            if (ValidFlag || PasteSpecialDebugMode)
+            string dataInfoText2;
+            string dataImageKey;
+            bool validFlag = DoTestFormat(this[i], data, reason, out dataInfoText2, out dataImageKey);
+            if (validFlag || PasteSpecialDebugMode)
             {
-              GoodNames.Add(DataInfoText2);
-              GoodImageKeys.Add(DataImageKey);
-              GoodFormats.Add(this[i]);
-              GoodValidFlags.Add(ValidFlag);
+              goodNames.Add(dataInfoText2);
+              goodImageKeys.Add(dataImageKey);
+              goodFormats.Add(this[i]);
+              goodValidFlags.Add(validFlag);
               if (this[i].DisplayName == _LastSpecialPasteName)
-                SelIdx = GoodNames.Count - 1;
+                selIdx = goodNames.Count - 1;
             }
           }
-          if (GoodNames.Count == 0)
+          if (goodNames.Count == 0)
           {
             dataInfoText = "В буфере обмена нет данных в подходящем формате";
             return false;
@@ -476,39 +476,39 @@ namespace FreeLibSet.Forms
           if (PasteSpecialDebugMode)
             dlg.Title += " (все форматы)";
           dlg.ImageKey = "Paste";
-          dlg.Items = GoodNames.ToArray();
+          dlg.Items = goodNames.ToArray();
           dlg.ListTitle = "Формат данных в буфере обмена";
-          dlg.ImageKeys = GoodImageKeys.ToArray();
+          dlg.ImageKeys = goodImageKeys.ToArray();
           dlg.ConfigSectionName = "SpecialPasteFormatDialog";
 
           if (PasteSpecialDebugMode)
           {
-            dlg.SubItems = new string[GoodNames.Count];
-            for (int i = 0; i < GoodNames.Count; i++)
-              dlg.SubItems[i] = GoodFormats[i].DisplayName;
+            dlg.SubItems = new string[goodNames.Count];
+            for (int i = 0; i < goodNames.Count; i++)
+              dlg.SubItems[i] = goodFormats[i].DisplayName;
           }
 
-          dlg.SelectedIndex = SelIdx;
+          dlg.SelectedIndex = selIdx;
 
           if (dlg.ShowDialog() != DialogResult.OK)
             return false;
 
-          _LastSpecialPasteName = GoodNames[dlg.SelectedIndex];
+          _LastSpecialPasteName = goodNames[dlg.SelectedIndex];
 
-          if (GoodValidFlags[dlg.SelectedIndex])
+          if (goodValidFlags[dlg.SelectedIndex])
           {
             if (PasteSpecialDebugMode)
             {
-              if (!GoodFormats[dlg.SelectedIndex].PerformPreview(data, reason))
+              if (!goodFormats[dlg.SelectedIndex].PerformPreview(data, reason))
                 return false;
             }
-            DoPaste(GoodFormats[dlg.SelectedIndex], data, reason);
+            DoPaste(goodFormats[dlg.SelectedIndex], data, reason);
             return true;
           }
           else
           {
-            EFPApp.ErrorMessageBox("Нельзя выполнить вставку: " + GoodNames[dlg.SelectedIndex],
-              GoodFormats[dlg.SelectedIndex].DisplayName);
+            EFPApp.ErrorMessageBox("Нельзя выполнить вставку: " + goodNames[dlg.SelectedIndex],
+              goodFormats[dlg.SelectedIndex].DisplayName);
             return false;
           }
 
@@ -519,19 +519,19 @@ namespace FreeLibSet.Forms
 
     private bool DoTestFormat(EFPPasteFormat format, IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
     {
-      bool Res;
+      bool res;
 
       CheckNotBusy();
       _TestingFormat = format;
       try
       {
-        Res = format.PerformTestFormat(data, reason, out dataInfoText, out dataImageKey);
+        res = format.PerformTestFormat(data, reason, out dataInfoText, out dataImageKey);
       }
       finally
       {
         _TestingFormat = null;
       }
-      return Res;
+      return res;
     }
 
     private void DoPaste(EFPPasteFormat format, IDataObject data, EFPPasteReason reason)
@@ -687,18 +687,18 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public bool PerformTestFormat(IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
     {
-      bool Res;
+      bool res;
       try
       {
-        Res = OnTestFormat(data, reason, out dataInfoText, out dataImageKey);
+        res = OnTestFormat(data, reason, out dataInfoText, out dataImageKey);
       }
       catch (Exception e)
       {
-        Res = false;
+        res = false;
         dataInfoText = "Ошибка при определении применимости формата. " + e.Message;
         dataImageKey = "Error";
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -724,16 +724,16 @@ namespace FreeLibSet.Forms
       }
       dataInfoText = DisplayName;
       dataImageKey = "Item";
-      bool Appliable = data.GetDataPresent(DataFormat, AutoConvert);
-      if (!Appliable)
+      bool appliable = data.GetDataPresent(DataFormat, AutoConvert);
+      if (!appliable)
       {
         dataInfoText = "Нет данных в формате " + DisplayName;
         dataImageKey = "No";
       }
 
-      OnTestFormatEvent(data, reason, ref Appliable, ref dataInfoText, ref dataImageKey);
+      OnTestFormatEvent(data, reason, ref appliable, ref dataInfoText, ref dataImageKey);
 
-      return Appliable;
+      return appliable;
     }
 
     /// <summary>
@@ -754,16 +754,16 @@ namespace FreeLibSet.Forms
       if (TestFormat == null)
         return;
 
-      EFPTestDataObjectEventArgs Args = new EFPTestDataObjectEventArgs(data, reason);
-      Args.Appliable = appliable;
-      Args.DataInfoText = dataInfoText;
-      Args.DataImageKey = dataImageKey;
-      TestFormat(this, Args);
+      EFPTestDataObjectEventArgs args = new EFPTestDataObjectEventArgs(data, reason);
+      args.Appliable = appliable;
+      args.DataInfoText = dataInfoText;
+      args.DataImageKey = dataImageKey;
+      TestFormat(this, args);
 
-      dataInfoText = Args.DataInfoText;
-      dataImageKey = Args.DataImageKey;
-      appliable = Args.Appliable;
-      if ((!Args.Appliable) && (String.IsNullOrEmpty(dataInfoText)))
+      dataInfoText = args.DataInfoText;
+      dataImageKey = args.DataImageKey;
+      appliable = args.Appliable;
+      if ((!args.Appliable) && (String.IsNullOrEmpty(dataInfoText)))
         dataInfoText = "Формат не применим";
     }
 
@@ -797,15 +797,15 @@ namespace FreeLibSet.Forms
     /// False, если обработчик события Preview установил Cancel=true</returns>
     protected virtual bool OnPreview(IDataObject data, EFPPasteReason reason)
     {
-      EFPPreviewDataObjectEventArgs Args = new EFPPreviewDataObjectEventArgs(this, data, reason);
+      EFPPreviewDataObjectEventArgs args = new EFPPreviewDataObjectEventArgs(this, data, reason);
       if (Preview == null)
       {
-        FreeLibSet.Forms.Diagnostics.DebugTools.DebugObject(Args.GetData(), PreviewTitle);
+        FreeLibSet.Forms.Diagnostics.DebugTools.DebugObject(args.GetData(), PreviewTitle);
         return true;
       }
 
-      Preview(this, Args);
-      return !Args.Cancel;
+      Preview(this, args);
+      return !args.Cancel;
     }
 
     /// <summary>
@@ -850,8 +850,8 @@ namespace FreeLibSet.Forms
       if (Paste == null)
         throw new NullReferenceException("Обработчик события Paste не установлен");
 
-      EFPPasteDataObjectEventArgs Args = new EFPPasteDataObjectEventArgs(this, data, reason);
-      Paste(this, Args);
+      EFPPasteDataObjectEventArgs args = new EFPPasteDataObjectEventArgs(this, data, reason);
+      Paste(this, args);
     }
 
     #endregion
@@ -942,7 +942,7 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      bool Appliable = true;
+      bool appliable = true;
       if (_TextMatrix.GetLength(0) == 1 && _TextMatrix.GetLength(1) == 1)
       {
         dataInfoText = DisplayName;
@@ -954,8 +954,8 @@ namespace FreeLibSet.Forms
         dataImageKey = "Table";
       }
 
-      base.OnTestFormatEvent(data, reason, ref Appliable, ref dataInfoText, ref dataImageKey);
-      return Appliable;
+      base.OnTestFormatEvent(data, reason, ref appliable, ref dataInfoText, ref dataImageKey);
+      return appliable;
     }
 
     /// <summary>

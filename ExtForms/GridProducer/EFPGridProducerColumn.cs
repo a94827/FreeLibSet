@@ -55,14 +55,14 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddText(string columnName, string headerText, int textWidth, int minTextWidth)
     {
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(columnName);
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Left;
-      Item.TextWidth = textWidth;
-      Item.MinTextWidth = minTextWidth;
-      Item.DataType = typeof(string);
-      Add(Item);
-      return Item;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Left;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      item.DataType = typeof(string);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -83,16 +83,16 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Left;
-      Item.TextWidth = textWidth;
-      Item.MinTextWidth = minTextWidth;
-      Item.ValueNeeded += valueNeeded;
-      Item.DataType = typeof(string);
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Left;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      item.ValueNeeded += valueNeeded;
+      item.DataType = typeof(string);
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -105,15 +105,15 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddInt(string columnName, string headerText, int textWidth)
     {
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(columnName);
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Right;
-      Item.TextWidth = textWidth;
-      Item.MinTextWidth = 1;
-      Item.Format = "0";
-      Item.DataType = typeof(int);
-      Add(Item);
-      return Item;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Right;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = 1;
+      item.Format = "0";
+      item.DataType = typeof(int);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -134,18 +134,18 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.ValueNeeded += valueNeeded;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.ValueNeeded += valueNeeded;
 
-      Item.TextAlign = HorizontalAlignment.Right;
-      Item.TextWidth = textWidth;
-      Item.MinTextWidth = 1;
-      Item.Format = "0";
-      Item.DataType = typeof(int);
+      item.TextAlign = HorizontalAlignment.Right;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = 1;
+      item.Format = "0";
+      item.DataType = typeof(int);
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
 
@@ -163,24 +163,24 @@ namespace FreeLibSet.Forms
       if (decimalPlaces < 0)
         throw new ArgumentException("Количество знаков после запятой не может быть отрицательным", "decimalPlaces");
 
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(columnName);
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Right;
-      Item.TextWidth = textWidth;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Right;
+      item.TextWidth = textWidth;
       if (decimalPlaces > 0)
       {
-        Item.Format = "0." + new string('0', decimalPlaces);
-        Item.MinTextWidth = decimalPlaces + 2; // место для точки
+        item.Format = "0." + new string('0', decimalPlaces);
+        item.MinTextWidth = decimalPlaces + 2; // место для точки
       }
       else
       {
-        Item.Format = "0";
-        Item.MinTextWidth = 1;
+        item.Format = "0";
+        item.MinTextWidth = 1;
       }
-      Item.SizeGroup = sizeGroup; // 25.12.2020
-      Item.DataType = typeof(double);
-      Add(Item);
-      return Item;
+      item.SizeGroup = sizeGroup; // 25.12.2020
+      item.DataType = typeof(double);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -202,26 +202,26 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.ValueNeeded += valueNeeded;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.ValueNeeded += valueNeeded;
 
-      Item.TextAlign = HorizontalAlignment.Right;
-      Item.TextWidth = textWidth;
+      item.TextAlign = HorizontalAlignment.Right;
+      item.TextWidth = textWidth;
       if (decimalPlaces > 0)
       {
-        Item.Format = "0." + new string('0', decimalPlaces);
-        Item.MinTextWidth = decimalPlaces + 2; // место для точки
+        item.Format = "0." + new string('0', decimalPlaces);
+        item.MinTextWidth = decimalPlaces + 2; // место для точки
       }
       else
       {
-        Item.Format = "0";
-        Item.MinTextWidth = 1;
+        item.Format = "0";
+        item.MinTextWidth = 1;
       }
-      Item.DataType = typeof(double);
+      item.DataType = typeof(double);
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -285,19 +285,19 @@ namespace FreeLibSet.Forms
     {
       EditableDateTimeFormatter formatter = EditableDateTimeFormatters.Get(kind);
 
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(columnName);
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Center;
-      Item.TextWidth = formatter.TextWidth;
-      Item.MinTextWidth = formatter.TextWidth;
-      Item.SizeGroup = kind.ToString();
-      Item.Format = formatter.Format;
-      Item.FormatProvider = formatter.FormatProvider;
-      Item.MaskProvider = formatter.MaskProvider;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Center;
+      item.TextWidth = formatter.TextWidth;
+      item.MinTextWidth = formatter.TextWidth;
+      item.SizeGroup = kind.ToString();
+      item.Format = formatter.Format;
+      item.FormatProvider = formatter.FormatProvider;
+      item.MaskProvider = formatter.MaskProvider;
       //Item.CanIncSearch = true;
-      Item.DataType = typeof(DateTime);
-      Add(Item);
-      return Item;
+      item.DataType = typeof(DateTime);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -347,22 +347,22 @@ namespace FreeLibSet.Forms
 
       EditableDateTimeFormatter formatter = EditableDateTimeFormatters.Get(kind);
 
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.ValueNeeded += valueNeeded;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.ValueNeeded += valueNeeded;
 
-      Item.TextAlign = HorizontalAlignment.Center;
-      Item.TextWidth = formatter.TextWidth;
-      Item.MinTextWidth = formatter.TextWidth;
-      Item.SizeGroup = kind.ToString();
-      Item.Format = formatter.Format;
-      Item.FormatProvider = formatter.FormatProvider;
-      Item.MaskProvider = formatter.MaskProvider;
+      item.TextAlign = HorizontalAlignment.Center;
+      item.TextWidth = formatter.TextWidth;
+      item.MinTextWidth = formatter.TextWidth;
+      item.SizeGroup = kind.ToString();
+      item.Format = formatter.Format;
+      item.FormatProvider = formatter.FormatProvider;
+      item.MaskProvider = formatter.MaskProvider;
       //Item.CanIncSearch = true;
-      Item.DataType = typeof(DateTime);
+      item.DataType = typeof(DateTime);
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -387,19 +387,19 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddMoney(string columnName, string headerText, bool showPlusSign)
     {
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(columnName);
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Right;
-      Item.TextWidth = 12;
-      Item.MinTextWidth = 8;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Right;
+      item.TextWidth = 12;
+      item.MinTextWidth = 8;
       if (showPlusSign)
-        Item.Format = "+0.00;-0.00;0.00";
+        item.Format = "+0.00;-0.00;0.00";
       else
-        Item.Format = "0.00";
-      Item.SizeGroup = "Money";
-      Item.DataType = typeof(Decimal);
-      Add(Item);
-      return Item;
+        item.Format = "0.00";
+      item.SizeGroup = "Money";
+      item.DataType = typeof(Decimal);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -448,20 +448,20 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn Item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Right;
-      Item.TextWidth = 12;
-      Item.MinTextWidth = 8;
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Right;
+      item.TextWidth = 12;
+      item.MinTextWidth = 8;
       if (showPlusSign)
-        Item.Format = "+0.00;-0.00;0.00";
+        item.Format = "+0.00;-0.00;0.00";
       else
-        Item.Format = "0.00";
-      Item.SizeGroup = "Money";
-      Item.ValueNeeded += valueNeeded;
-      Item.DataType = typeof(Decimal);
-      Add(Item);
-      return Item;
+        item.Format = "0.00";
+      item.SizeGroup = "Money";
+      item.ValueNeeded += valueNeeded;
+      item.DataType = typeof(Decimal);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -476,16 +476,16 @@ namespace FreeLibSet.Forms
     public EFPGridProducerSumColumn AddSumMoney(string name, string sourceColumnNames,
       string headerText)
     {
-      EFPGridProducerSumColumn Item = new EFPGridProducerSumColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Right;
-      Item.TextWidth = 12;
-      Item.MinTextWidth = 8;
-      Item.Format = "0.00";
-      Item.SizeGroup = "Money";
-      Item.DataType = typeof(Decimal);
-      Add(Item);
-      return Item;
+      EFPGridProducerSumColumn item = new EFPGridProducerSumColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Right;
+      item.TextWidth = 12;
+      item.MinTextWidth = 8;
+      item.Format = "0.00";
+      item.SizeGroup = "Money";
+      item.DataType = typeof(Decimal);
+      Add(item);
+      return item;
     }
 
     #endregion
@@ -510,15 +510,15 @@ namespace FreeLibSet.Forms
       string[] textValues,
       string headerText, int textWidth, int minTextWidth)
     {
-      EFPGridProducerEnumColumn Item = new EFPGridProducerEnumColumn(sourceColumnName, textValues);
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Left;
-      Item.TextWidth = textWidth;
-      Item.MinTextWidth = minTextWidth;
-      Item.DataType = typeof(string);
+      EFPGridProducerEnumColumn item = new EFPGridProducerEnumColumn(sourceColumnName, textValues);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Left;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      item.DataType = typeof(string);
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -537,12 +537,12 @@ namespace FreeLibSet.Forms
       string[] imageKeys,
       string headerText)
     {
-      EFPGridProducerEnumImageColumn Item = new EFPGridProducerEnumImageColumn(sourceColumnName, imageKeys);
-      Item.HeaderText = headerText;
-      Item.CustomOrderSourceColumnName = sourceColumnName; // TODO: 05.07.2021. Порядок строк при сортировке столбцов для AddEnumText() и AddEnumImage() не совпадают
+      EFPGridProducerEnumImageColumn item = new EFPGridProducerEnumImageColumn(sourceColumnName, imageKeys);
+      item.HeaderText = headerText;
+      item.CustomOrderSourceColumnName = sourceColumnName; // TODO: 05.07.2021. Порядок строк при сортировке столбцов для AddEnumText() и AddEnumImage() не совпадают
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
     /// <summary>
     /// Добавляет столбец значка для отображения перечислимого значения, которое
@@ -614,10 +614,10 @@ namespace FreeLibSet.Forms
     public EFPGridProducerColumn AddDateRange(string name, string firstColumnName, string lastColumnName,
       string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
-      EFPGridProducerColumn Column = AddDateRange(name, firstColumnName, lastColumnName, headerText, longFormat);
-      Column.TextWidth = textWidth;
-      Column.MinTextWidth = minTextWidth;
-      return Column;
+      EFPGridProducerColumn item = AddDateRange(name, firstColumnName, lastColumnName, headerText, longFormat);
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      return item;
     }
 
     /// <summary>
@@ -636,26 +636,26 @@ namespace FreeLibSet.Forms
     public EFPGridProducerColumn AddDateRange(string name, string firstColumnName, string lastColumnName,
       string headerText, bool longFormat)
     {
-      EFPGridProducerColumn Column = new EFPGridProducerColumn(name, new string[] { firstColumnName, lastColumnName });
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { firstColumnName, lastColumnName });
 
-      Column.HeaderText = headerText;
+      item.HeaderText = headerText;
       if (longFormat)
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(DateRangeColumn_LongValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(DateRangeColumn_LongValueNeeded);
       else
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(DateRangeColumn_ShortValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(DateRangeColumn_ShortValueNeeded);
       // 05.07.2019.
       // Определяем ширину столбца
       if (longFormat)
-        Column.TextWidth = DateRangeFormatter.Default.DateRangeLongTextLength;
+        item.TextWidth = DateRangeFormatter.Default.DateRangeLongTextLength;
       else
-        Column.TextWidth = DateRangeFormatter.Default.DateRangeShortTextLength;
-      Column.MinTextWidth = Column.TextWidth;
-      Column.EmptyValue = DateRangeFormatter.Default.ToString(null, null, longFormat);
+        item.TextWidth = DateRangeFormatter.Default.DateRangeShortTextLength;
+      item.MinTextWidth = item.TextWidth;
+      item.EmptyValue = DateRangeFormatter.Default.ToString(null, null, longFormat);
 
-      Column.SizeGroup = longFormat ? "DateRangeLong" : "DateRangeShort";
-      Column.DataType = typeof(string);
-      Add(Column);
-      return Column;
+      item.SizeGroup = longFormat ? "DateRangeLong" : "DateRangeShort";
+      item.DataType = typeof(string);
+      Add(item);
+      return item;
     }
 
     internal static void DateRangeColumn_LongValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
@@ -669,11 +669,11 @@ namespace FreeLibSet.Forms
     }
     private static void DateRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
     {
-      EFPGridProducerItemBase Column = (EFPGridProducerItemBase)sender;
-      DateTime? FirstDate = args.GetNullableDateTime(Column.SourceColumnNames[0]);
-      DateTime? LastDate = args.GetNullableDateTime(Column.SourceColumnNames[1]);
-      if (FirstDate.HasValue || LastDate.HasValue)
-        args.Value = DateRangeFormatter.Default.ToString(FirstDate, LastDate, longFormat);
+      EFPGridProducerItemBase item = (EFPGridProducerItemBase)sender;
+      DateTime? firstDate = args.GetNullableDateTime(item.SourceColumnNames[0]);
+      DateTime? lastDate = args.GetNullableDateTime(item.SourceColumnNames[1]);
+      if (firstDate.HasValue || lastDate.HasValue)
+        args.Value = DateRangeFormatter.Default.ToString(firstDate, lastDate, longFormat);
     }
 
     /// <summary>
@@ -689,10 +689,10 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddMonthDay(string name, string sourceColumnName, string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
-      EFPGridProducerColumn Column = AddMonthDay(name, sourceColumnName, headerText, longFormat);
-      Column.TextWidth = textWidth;
-      Column.MinTextWidth = minTextWidth;
-      return Column;
+      EFPGridProducerColumn item = AddMonthDay(name, sourceColumnName, headerText, longFormat);
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      return item;
     }
 
     /// <summary>
@@ -707,22 +707,22 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddMonthDay(string name, string sourceColumnName, string headerText, bool longFormat)
     {
-      EFPGridProducerColumn Column = new EFPGridProducerColumn(name, new string[] { sourceColumnName });
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { sourceColumnName });
       if (longFormat)
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayColumn_LongValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayColumn_LongValueNeeded);
       else
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayColumn_ShortValueNeeded);
-      Column.EmptyValue = DateRangeFormatter.Default.ToString(MonthDayRange.Empty, longFormat);
-      Column.HeaderText = headerText;
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayColumn_ShortValueNeeded);
+      item.EmptyValue = DateRangeFormatter.Default.ToString(MonthDayRange.Empty, longFormat);
+      item.HeaderText = headerText;
       if (longFormat)
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayLongTextLength;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayLongTextLength;
       else
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayShortTextLength;
-      Column.MinTextWidth = Column.TextWidth;
-      Column.SizeGroup = longFormat ? "MonthDayLong" : "MonthDayShort";
-      Column.DataType = typeof(string);
-      Add(Column);
-      return Column;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayShortTextLength;
+      item.MinTextWidth = item.TextWidth;
+      item.SizeGroup = longFormat ? "MonthDayLong" : "MonthDayShort";
+      item.DataType = typeof(string);
+      Add(item);
+      return item;
     }
 
     internal static void MonthDayColumn_LongValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
@@ -737,8 +737,8 @@ namespace FreeLibSet.Forms
 
     private static void MonthDayColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
     {
-      EFPGridProducerItemBase Column = (EFPGridProducerItemBase)sender;
-      int v = args.GetInt(Column.SourceColumnNames[0]);
+      EFPGridProducerItemBase item = (EFPGridProducerItemBase)sender;
+      int v = args.GetInt(item.SourceColumnNames[0]);
       if (v == 0)
         return;
       else if (v < 1 || v > 365)
@@ -764,10 +764,10 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddMonthDayRange(string name, string firstDayColumnName, string lastDayColumnName, string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
-      EFPGridProducerColumn Column = AddMonthDayRange(name, firstDayColumnName, lastDayColumnName, headerText, longFormat);
-      Column.TextWidth = textWidth;
-      Column.MinTextWidth = minTextWidth;
-      return Column;
+      EFPGridProducerColumn item = AddMonthDayRange(name, firstDayColumnName, lastDayColumnName, headerText, longFormat);
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      return item;
     }
 
     /// <summary>
@@ -783,21 +783,21 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddMonthDayRange(string name, string firstDayColumnName, string lastDayColumnName, string headerText, bool longFormat)
     {
-      EFPGridProducerColumn Column = new EFPGridProducerColumn(name, new string[] { firstDayColumnName, lastDayColumnName });
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { firstDayColumnName, lastDayColumnName });
       if (longFormat)
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayRangeColumn_LongValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayRangeColumn_LongValueNeeded);
       else
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayRangeColumn_ShortValueNeeded);
-      Column.HeaderText = headerText;
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(MonthDayRangeColumn_ShortValueNeeded);
+      item.HeaderText = headerText;
       if (longFormat)
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayRangeLongTextLength;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayRangeLongTextLength;
       else
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayRangeShortTextLength;
-      Column.MinTextWidth = Column.TextWidth;
-      Column.SizeGroup = longFormat ? "MonthDayRangeLong" : "MonthDayRangeShort";
-      Column.DataType = typeof(string);
-      Add(Column);
-      return Column;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayRangeShortTextLength;
+      item.MinTextWidth = item.TextWidth;
+      item.SizeGroup = longFormat ? "MonthDayRangeLong" : "MonthDayRangeShort";
+      item.DataType = typeof(string);
+      Add(item);
+      return item;
     }
 
     internal static void MonthDayRangeColumn_LongValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
@@ -812,9 +812,9 @@ namespace FreeLibSet.Forms
 
     private static void MonthDayRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
     {
-      EFPGridProducerItemBase Column = (EFPGridProducerItemBase)sender;
-      int v1 = args.GetInt(Column.SourceColumnNames[0]);
-      int v2 = args.GetInt(Column.SourceColumnNames[1]);
+      EFPGridProducerItemBase item = (EFPGridProducerItemBase)sender;
+      int v1 = args.GetInt(item.SourceColumnNames[0]);
+      int v2 = args.GetInt(item.SourceColumnNames[1]);
       if (v1 == 0 && v2 == 0)
         return;
       else if (v1 < 1 || v1 > 365 || v2 < 1 || v2 > 365)
@@ -838,11 +838,11 @@ namespace FreeLibSet.Forms
     /// <returns>Описание столбца</returns>
     public EFPGridProducerCheckBoxColumn AddBool(string columnName, string headerText)
     {
-      EFPGridProducerCheckBoxColumn Item = new EFPGridProducerCheckBoxColumn(columnName);
-      Item.HeaderText = headerText;
-      Item.DataType = typeof(bool);
-      Add(Item);
-      return Item;
+      EFPGridProducerCheckBoxColumn item = new EFPGridProducerCheckBoxColumn(columnName);
+      item.HeaderText = headerText;
+      item.DataType = typeof(bool);
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -861,13 +861,13 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerCheckBoxColumn Item = new EFPGridProducerCheckBoxColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.ValueNeeded += valueNeeded;
-      Item.DataType = typeof(bool);
+      EFPGridProducerCheckBoxColumn item = new EFPGridProducerCheckBoxColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.ValueNeeded += valueNeeded;
+      item.DataType = typeof(bool);
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     #endregion
@@ -890,12 +890,12 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerImageColumn Item = new EFPGridProducerImageColumn(name, sourceColumnNames.Split(','));
-      Item.HeaderText = headerText;
-      Item.ValueNeeded += valueNeeded;
+      EFPGridProducerImageColumn item = new EFPGridProducerImageColumn(name, sourceColumnNames.Split(','));
+      item.HeaderText = headerText;
+      item.ValueNeeded += valueNeeded;
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -1276,9 +1276,9 @@ namespace FreeLibSet.Forms
     /// <returns>Объект столбца, производный от DataGridViewColumn</returns>
     public virtual DataGridViewColumn CreateColumn()
     {
-      DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
-      InitColumn(column);
-      return column;
+      DataGridViewTextBoxColumn gridColumn = new DataGridViewTextBoxColumn();
+      InitColumn(gridColumn);
+      return gridColumn;
     }
 
     /// <summary>
@@ -1361,17 +1361,17 @@ namespace FreeLibSet.Forms
     /// <returns>Столбец TreeViewAdv</returns>
     public virtual TreeColumn CreateTreeColumn(EFPDataGridViewConfigColumn config)
     {
-      TreeColumn Column = new TreeColumn(DisplayName, TextWidth * 10);
+      TreeColumn column = new TreeColumn(DisplayName, TextWidth * 10);
       /*
       if (Config.FillMode)
       {
         Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         Column.FillWeight = Config.FillWeight;
       } */
-      Column.TextAlign = this.TextAlign;
-      Column.TooltipText = HeaderToolTipText;
+      column.TextAlign = this.TextAlign;
+      column.TooltipText = HeaderToolTipText;
 
-      return Column;
+      return column;
     }
 
     /// <summary>
@@ -1807,16 +1807,16 @@ namespace FreeLibSet.Forms
     /// <param name="args"></param>
     protected override void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)
     {
-      object Val = GetSourceValue(args);
-      if (Val is DBNull && (!NullIsZero))
+      object val = GetSourceValue(args);
+      if (val is DBNull && (!NullIsZero))
         args.Value = String.Empty;
       else
       {
-        int SrcVal = DataTools.GetInt(Val);
-        if (SrcVal < 0 || SrcVal >= TextValues.Length)
-          args.Value = "?? " + SrcVal.ToString();
+        int srcVal = DataTools.GetInt(val);
+        if (srcVal < 0 || srcVal >= TextValues.Length)
+          args.Value = "?? " + srcVal.ToString();
         else
-          args.Value = TextValues[SrcVal];
+          args.Value = TextValues[srcVal];
       }
 
       base.OnValueNeeded(args);
@@ -1936,29 +1936,29 @@ namespace FreeLibSet.Forms
     /// <param name="args">Аргументы события</param>
     protected override void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)
     {
-      object Val = GetSourceValue(args);
-      string ImageKey;
-      if (Val is DBNull && (!NullIsZero))
+      object val = GetSourceValue(args);
+      string imageKey;
+      if (val is DBNull && (!NullIsZero))
       {
-        ImageKey = "EmptyImage";
+        imageKey = "EmptyImage";
         args.ToolTipText = EmptyToolTipText;
       }
       else
       {
-        int SrcVal = DataTools.GetInt(Val);
-        if (SrcVal < 0 || SrcVal >= ImageKeys.Length)
+        int srcVal = DataTools.GetInt(val);
+        if (srcVal < 0 || srcVal >= ImageKeys.Length)
         {
-          ImageKey = ErrorImageKey;
-          args.ToolTipText = "Неправильное значение: " + SrcVal.ToString();
+          imageKey = ErrorImageKey;
+          args.ToolTipText = "Неправильное значение: " + srcVal.ToString();
         }
         else
         {
-          ImageKey = ImageKeys[SrcVal];
+          imageKey = ImageKeys[srcVal];
           if (ToolTipTexts != null)
-            args.ToolTipText = ToolTipTexts[SrcVal];
+            args.ToolTipText = ToolTipTexts[srcVal];
         }
       }
-      args.Value = EFPApp.MainImages.Images[ImageKey];
+      args.Value = EFPApp.MainImages.Images[imageKey];
 
       base.OnValueNeeded(args);
     }

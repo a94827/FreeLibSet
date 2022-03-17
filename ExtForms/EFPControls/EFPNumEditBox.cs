@@ -496,8 +496,8 @@ namespace FreeLibSet.Forms
         _NotReadOnlySync = new DepInput<bool>(true, null);
         _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
 
-        DepOr ReadOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
-        _ReadOnlyEx.Source = ReadOnlyOr;
+        DepOr readOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
+        _ReadOnlyEx.Source = readOnlyOr;
       }
     }
     /// <summary>
@@ -606,7 +606,7 @@ namespace FreeLibSet.Forms
 
       base.OnValidate();
 
-      string ErrorMessage = null;
+      string errorMessage = null;
 
       if (NValue.HasValue)
       {
@@ -615,12 +615,12 @@ namespace FreeLibSet.Forms
           if (Maximum.HasValue)
           {
             if (Value.CompareTo(Minimum.Value) < 0 || Value.CompareTo(Maximum.Value) > 0)
-              ErrorMessage = "Значение должно быть в диапазоне от " + Minimum.Value.ToString() + " до " + Maximum.Value.ToString();
+              errorMessage = "Значение должно быть в диапазоне от " + Minimum.Value.ToString() + " до " + Maximum.Value.ToString();
           }
           else
           {
             if (Value.CompareTo(Minimum.Value) < 0)
-              ErrorMessage = "Значение должно быть не меньше " + Minimum.Value.ToString();
+              errorMessage = "Значение должно быть не меньше " + Minimum.Value.ToString();
           }
         }
         else
@@ -628,12 +628,12 @@ namespace FreeLibSet.Forms
           if (Maximum.HasValue)
           {
             if (Value.CompareTo(Maximum.Value) > 0)
-              ErrorMessage = "Значение должно не больше " + Maximum.Value.ToString();
+              errorMessage = "Значение должно не больше " + Maximum.Value.ToString();
           }
         }
 
-        if (ErrorMessage != null)
-          SetError(ErrorMessage);
+        if (errorMessage != null)
+          SetError(errorMessage);
       }
       else
       {

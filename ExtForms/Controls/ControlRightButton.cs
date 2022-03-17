@@ -153,21 +153,21 @@ namespace FreeLibSet.Controls
     {
       if (_ComboBoxButton)
       {
-        bool HasMouse = false;
-        bool MousePressed = false;
+        bool hasMouse = false;
+        bool housePressed = false;
 
         if (Capture)
         {
-          HasMouse = true;
-          MousePressed = true;
+          hasMouse = true;
+          housePressed = true;
         }
         Point pt = base.PointToClient(Cursor.Position);
         if (base.ClientRectangle.Contains(pt))
         {
-          HasMouse = true;
+          hasMouse = true;
         }
         if ((MouseButtons & MouseButtons.Left) != MouseButtons.Left)
-          MousePressed = false;
+          housePressed = false;
 
         if (ComboBoxRenderer.IsSupported /*&&
           Enabled*/) // 26.08.2013, убрано 04.01.2021
@@ -194,9 +194,9 @@ namespace FreeLibSet.Controls
           System.Windows.Forms.VisualStyles.ComboBoxState cbs;
           if (!Enabled)
             cbs = System.Windows.Forms.VisualStyles.ComboBoxState.Disabled; // 04.01.2021: И это нормально рисуется
-          else if (MousePressed)
+          else if (housePressed)
             cbs = System.Windows.Forms.VisualStyles.ComboBoxState.Pressed;
-          else if (HasMouse)
+          else if (hasMouse)
             cbs = System.Windows.Forms.VisualStyles.ComboBoxState.Hot;
           else
             cbs = System.Windows.Forms.VisualStyles.ComboBoxState.Normal;
@@ -211,7 +211,7 @@ namespace FreeLibSet.Controls
             bs |= ButtonState.Inactive;
             bs |= ButtonState.Flat; // 26.08.2016
           }
-          if (MousePressed)
+          if (housePressed)
             bs |= ButtonState.Pushed;
           ControlPaint.DrawComboButton(args.Graphics, ClientRectangle, bs);
         }

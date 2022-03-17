@@ -149,8 +149,8 @@ namespace FreeLibSet.Controls
 
       public void RemoveAt(int index)
       {
-        ParamSetComboBoxItem Item = (ParamSetComboBoxItem)(_Owner.TheCB.Items[index]);
-        if (_Owner.TheCB.Text == Item.DisplayName)
+        ParamSetComboBoxItem item = (ParamSetComboBoxItem)(_Owner.TheCB.Items[index]);
+        if (_Owner.TheCB.Text == item.DisplayName)
           _Owner.TheCB.Text = String.Empty;
         _Owner.TheCB.Items.RemoveAt(index);
       }
@@ -281,11 +281,11 @@ namespace FreeLibSet.Controls
     {
       get
       {
-        ParamSetComboBoxItem Item = SelectedItem;
-        if (Item == null)
+        ParamSetComboBoxItem item = SelectedItem;
+        if (item == null)
           return String.Empty;
         else
-          return Item.Code;
+          return item.Code;
       }
       set
       {
@@ -298,16 +298,16 @@ namespace FreeLibSet.Controls
     {
       get
       {
-        ParamSetComboBoxItem Item = SelectedItem;
-        if (Item == null)
+        ParamSetComboBoxItem item = SelectedItem;
+        if (item == null)
           return String.Empty;
         else
-          return Item.MD5Sum;
+          return item.MD5Sum;
       }
       set
       {
-        ParamSetComboBoxItem Item = Items.FindMD5Sum(value);
-        SelectedItem = Item;
+        ParamSetComboBoxItem item = Items.FindMD5Sum(value);
+        SelectedItem = item;
       }
     }
 
@@ -334,8 +334,8 @@ namespace FreeLibSet.Controls
         EFPApp.ErrorMessageBox("Обработчик ItemSelected не установлен");
         return;
       }
-      ParamSetComboBoxItemEventArgs Args = new ParamSetComboBoxItemEventArgs(item);
-      ItemSelected(this, Args);
+      ParamSetComboBoxItemEventArgs args = new ParamSetComboBoxItemEventArgs(item);
+      ItemSelected(this, args);
     }
 
     public event ParamSetComboBoxSaveEventHandler SaveClick;
@@ -347,8 +347,8 @@ namespace FreeLibSet.Controls
         EFPApp.ErrorMessageBox("Обработчик SaveClick не установлен");
         return;
       }
-      ParamSetComboBoxSaveEventArgs Args = new ParamSetComboBoxSaveEventArgs(displayName);
-      SaveClick(this, Args);
+      ParamSetComboBoxSaveEventArgs args = new ParamSetComboBoxSaveEventArgs(displayName);
+      SaveClick(this, args);
     }
 
     public event ParamSetComboBoxItemEventHandler DeleteClick;
@@ -360,8 +360,8 @@ namespace FreeLibSet.Controls
         EFPApp.ErrorMessageBox("Обработчик DeleteClick не установлен");
         return;
       }
-      ParamSetComboBoxItemEventArgs Args = new ParamSetComboBoxItemEventArgs(item);
-      DeleteClick(this, Args);
+      ParamSetComboBoxItemEventArgs args = new ParamSetComboBoxItemEventArgs(item);
+      DeleteClick(this, args);
     }
 
     public event ParamSetComboBoxItemCancelEventHandler CanDeleteItem;
@@ -370,10 +370,10 @@ namespace FreeLibSet.Controls
     {
       if (CanDeleteItem == null)
         return true;
-      ParamSetComboBoxItemCancelEventArgs Args = new ParamSetComboBoxItemCancelEventArgs(item);
-      Args.Cancel = false;
-      CanDeleteItem(this, Args);
-      return !Args.Cancel;
+      ParamSetComboBoxItemCancelEventArgs args = new ParamSetComboBoxItemCancelEventArgs(item);
+      args.Cancel = false;
+      CanDeleteItem(this, args);
+      return !args.Cancel;
     }
 
     #endregion
@@ -397,59 +397,59 @@ namespace FreeLibSet.Controls
 
     void TheCB_DrawItem(object sender, DrawItemEventArgs args)
     {
-      string Text;
-      string ImageKey;
-      bool SepLine = false; // нужно ли нарисовать горизонтальную линию после текущего элемента списка
-      UIValidateState ValidateState = UIValidateState.Ok;
+      string text;
+      string imageKey;
+      bool sepLine = false; // нужно ли нарисовать горизонтальную линию после текущего элемента списка
+      UIValidateState validateState = UIValidateState.Ok;
       if (args.Index < 0 || args.Index >= _Items.Count)
       {
-        Text = TheCB.Text;
-        ImageKey = "EmptyImage";
+        text = TheCB.Text;
+        imageKey = "EmptyImage";
       }
       else
       {
-        ParamSetComboBoxItem Item = _Items[args.Index];
-        Text = Item.DisplayName;
-        ImageKey = Item.ImageKey;
-        if (Item.WriteTime.HasValue)
+        ParamSetComboBoxItem item = _Items[args.Index];
+        text = item.DisplayName;
+        imageKey = item.ImageKey;
+        if (item.WriteTime.HasValue)
         {
-          Text += " (" + Item.WriteTime.Value.ToString() + ")";
-          if (Item.WriteTime.Value > DateTime.Now)
+          text += " (" + item.WriteTime.Value.ToString() + ")";
+          if (item.WriteTime.Value > DateTime.Now)
           {
-            ValidateState = UIValidateState.Warning;
-            ImageKey = "Warning";
+            validateState = UIValidateState.Warning;
+            imageKey = "Warning";
           }
         }
         //if (AccDepClientExec.DebugShowIds)
         //  Text += " \"" + Item.Code + "\"";
 
-        if (!String.IsNullOrEmpty(Item.AuxText)) // а не UseAuxText
-          Text += Environment.NewLine + Item.AuxText;
+        if (!String.IsNullOrEmpty(item.AuxText)) // а не UseAuxText
+          text += Environment.NewLine + item.AuxText;
 
         if (args.Index < (_Items.Count - 1))
         {
-          if (Item.Group != _Items[args.Index + 1].Group)
-            SepLine = true;
+          if (item.Group != _Items[args.Index + 1].Group)
+            sepLine = true;
         }
       }
 
       if (args.Index < 0)
-        ListControlImagePainter.PerformDrawItem(TheCB, args, Text, ShowImages ? ImageKey : String.Empty, ValidateState);
+        ListControlImagePainter.PerformDrawItem(TheCB, args, text, ShowImages ? imageKey : String.Empty, validateState);
       else
       {
-        bool AlterColor = false;
+        bool alterColor = false;
         if (UseAuxText)
-          AlterColor = (args.Index % 2) == 1;
+          alterColor = (args.Index % 2) == 1;
 
-        ListControlImagePainter.PerformDrawItem(TheCB, args, Text, ShowImages ? ImageKey : String.Empty,
-          AlterColor ? EFPApp.Colors.ListAlter : EFPApp.Colors.ListStateOk);
+        ListControlImagePainter.PerformDrawItem(TheCB, args, text, ShowImages ? imageKey : String.Empty,
+          alterColor ? EFPApp.Colors.ListAlter : EFPApp.Colors.ListStateOk);
       }
 
-      if (SepLine)
+      if (sepLine)
       {
-        Pen LinePen = new Pen(Color.Black, 2);
-        LinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-        args.Graphics.DrawLine(LinePen,
+        Pen linePen = new Pen(Color.Black, 2);
+        linePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+        args.Graphics.DrawLine(linePen,
           args.Bounds.Left + 24, args.Bounds.Bottom - 2, args.Bounds.Right, args.Bounds.Bottom - 2);
       }
     }
@@ -466,10 +466,10 @@ namespace FreeLibSet.Controls
       {
         if (TheCB.SelectedIndex >= 0 && TheCB.SelectedIndex < Items.Count)
         {
-          int Index = TheCB.SelectedIndex;
+          int index = TheCB.SelectedIndex;
           //TheCB.SelectedIndexEx = -1;
           //TheCB.Text = Items[Index].DisplayName;
-          OnItemSelected(Items[Index]);
+          OnItemSelected(Items[index]);
         }
       }
       catch (Exception e)
@@ -489,11 +489,11 @@ namespace FreeLibSet.Controls
       else
       {
         SaveButton.Enabled = true;
-        ParamSetComboBoxItem Item = Items.FindDisplayName(s);
-        if (Item == null)
+        ParamSetComboBoxItem item = Items.FindDisplayName(s);
+        if (item == null)
           DeleteButton.Enabled = false;
         else
-          DeleteButton.Enabled = OnCanDeleteItem(Item);
+          DeleteButton.Enabled = OnCanDeleteItem(item);
       }
     }
 
@@ -538,14 +538,14 @@ namespace FreeLibSet.Controls
       try
       {
         TheCB.Text = TheCB.Text.Trim();
-        ParamSetComboBoxItem Item = Items.FindDisplayName(TheCB.Text);
-        if (Item == null)
+        ParamSetComboBoxItem item = Items.FindDisplayName(TheCB.Text);
+        if (item == null)
         {
           EFPApp.ShowTempMessage("Нет такой строки в списке");
           TheCB.Select();
           return;
         }
-        OnDeleteClick(Item);
+        OnDeleteClick(item);
         TheCB_TextChanged(null, null);
       }
       catch (Exception e)
@@ -631,8 +631,8 @@ namespace FreeLibSet.Controls
     public string AuxText { get { return _AuxText; } }
     private string _AuxText;
 
-    public object Tag { get { return FTag; } set { FTag = value; } }
-    private object FTag;
+    public object Tag { get { return _Tag; } set { _Tag = value; } }
+    private object _Tag;
 
     public override string ToString()
     {

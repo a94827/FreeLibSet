@@ -232,12 +232,12 @@ namespace FreeLibSet.RI
         if (!saver.SupportsCfgType(RIValueCfgType.Default))
           return false; // Обработчик отказался сохранять данные
 
-        bool NeedsDefaultCfg = item.SupportsCfgType(RIValueCfgType.Default);
-        bool NeedsMachineSpecificCfg = item.SupportsCfgType(RIValueCfgType.MachineSpecific);
+        bool needsDefaultCfg = item.SupportsCfgType(RIValueCfgType.Default);
+        bool needsMachineSpecificCfg = item.SupportsCfgType(RIValueCfgType.MachineSpecific);
 
-        if (NeedsDefaultCfg)
+        if (needsDefaultCfg)
         {
-          if (NeedsMachineSpecificCfg)
+          if (needsMachineSpecificCfg)
           {
             // Требуется обе секции
             if (saver.SupportsCfgType(RIValueCfgType.MachineSpecific))
@@ -283,7 +283,7 @@ namespace FreeLibSet.RI
         }
         else
         {
-          if (NeedsMachineSpecificCfg)
+          if (needsMachineSpecificCfg)
           {
             // Требуется только секция машинных данных
             if (saver.SupportsCfgType(RIValueCfgType.MachineSpecific))

@@ -25,9 +25,9 @@ namespace FreeLibSet.Controls.Design
     {
       get
       {
-        SelectionRules Rules = base.SelectionRules;
-        Rules = Rules & (~(System.Windows.Forms.Design.SelectionRules.BottomSizeable | System.Windows.Forms.Design.SelectionRules.TopSizeable));
-        return Rules;
+        SelectionRules rules = base.SelectionRules;
+        rules = rules & (~(System.Windows.Forms.Design.SelectionRules.BottomSizeable | System.Windows.Forms.Design.SelectionRules.TopSizeable));
+        return rules;
       }
     }
 

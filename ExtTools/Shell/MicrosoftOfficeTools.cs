@@ -75,9 +75,9 @@ namespace FreeLibSet.Shell
     /// </summary>
     public const int MicrosoftOffice_2019 = 16;
 
-    private static string GetOfficeTradeVersion(Version Ver)
+    private static string GetOfficeTradeVersion(Version ver)
     {
-      switch (Ver.Major)
+      switch (ver.Major)
       {
         case MicrosoftOffice_95: return "95";
         case MicrosoftOffice_97: return "97";
@@ -92,7 +92,6 @@ namespace FreeLibSet.Shell
         default: return String.Empty;
       }
     }
-
 
     #endregion
 
@@ -227,9 +226,9 @@ namespace FreeLibSet.Shell
           else
             s = ExcelDisplayName + " " + s + " (" + ExcelVersion.ToString() + ")";
 
-          bool? Is64bit = FileTools.Is64bitPE(ExcelPath);
-          if (Is64bit.HasValue)
-            s += Is64bit.Value ? " (64-bit)" : " (32-bit)";
+          bool? is64bit = FileTools.Is64bitPE(ExcelPath);
+          if (is64bit.HasValue)
+            s += is64bit.Value ? " (64-bit)" : " (32-bit)";
           return s;
         }
       }
@@ -280,7 +279,7 @@ namespace FreeLibSet.Shell
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 
-      int ColumnNumber = 0;
+      int columnNumber = 0;
 
       for (int i = 0; i < columnName.Length; i++)
       {
@@ -290,11 +289,11 @@ namespace FreeLibSet.Shell
         int v = (ch - 'A') + 1;
         checked
         {
-          ColumnNumber = ColumnNumber * 26 + v;
+          columnNumber = columnNumber * 26 + v;
         }
       }
 
-      return ColumnNumber;
+      return columnNumber;
     }
 
     /// <summary>
@@ -527,8 +526,7 @@ namespace FreeLibSet.Shell
       {
         get
         {
-          string BldStr = BuildStr;
-          return FileTools.GetVersionFromStr(BldStr);
+          return FileTools.GetVersionFromStr(BuildStr);
         }
       }
 
@@ -544,9 +542,9 @@ namespace FreeLibSet.Shell
         }
       }
 
-      public void SetDisplayAlerts(WdAlertLevel Value)
+      public void SetDisplayAlerts(WdAlertLevel value)
       {
-        Base.Helper.SetProp(Base.Obj, "[DispID=94]", (int)Value);
+        Base.Helper.SetProp(Base.Obj, "[DispID=94]", (int)value);
       }
 
       #endregion
@@ -906,18 +904,18 @@ namespace FreeLibSet.Shell
       {
         get
         {
-          string VerStr = VersionStr;
-          int Bld = Build;
+          string verStr = VersionStr;
+          int bld = Build;
 
           //MessageBox.Show("VerStr=\""+VerStr+"\", Build="+Bld.ToString());
 
-          Version Ver = FileTools.GetVersionFromStr(VerStr);
-          if (Ver != null)
+          Version ver = FileTools.GetVersionFromStr(verStr);
+          if (ver != null)
           {
-            if (Ver.Build <= 0)
-              Ver = new Version(Ver.Major, Ver.Major, Bld, 0);
+            if (ver.Build <= 0)
+              ver = new Version(ver.Major, ver.Major, bld, 0);
           }
-          return Ver;
+          return ver;
         }
       }
 
@@ -1182,8 +1180,7 @@ namespace FreeLibSet.Shell
       {
         get
         {
-          ExcelWorksheet Sheet = new ExcelWorksheet(new ObjBase(Base.Helper.GetIndexProp(Base.Obj, "[DispID=0]", sheetIndex), Base.Helper));
-          return Sheet;
+          return new ExcelWorksheet(new ObjBase(Base.Helper.GetIndexProp(Base.Obj, "[DispID=0]", sheetIndex), Base.Helper));
         }
       }
 
@@ -1211,12 +1208,12 @@ namespace FreeLibSet.Shell
 
       public void Add(int count)
       {
-        object LastObj;
+        object lastObj;
         int n = this.Count;
         if (n == 0)
-          LastObj = Missing.Value;
+          lastObj = Missing.Value;
         else
-          LastObj = this[n].Base.Obj;
+          lastObj = this[n].Base.Obj;
 
         // Если добавить листы так, то они будут поименованы задом наперед
         //AnyDocType.Helper.Call(AnyDocType.Obj, "[DispID=181]",
@@ -1224,8 +1221,8 @@ namespace FreeLibSet.Shell
         for (int i = 0; i < count; i++)
         {
           Base.Helper.Call(Base.Obj, "[DispID=181]",
-            Missing.Value, LastObj, 1, XlSheetType.xlWorksheet);
-          LastObj = this[n + i + 1].Base.Obj;
+            Missing.Value, lastObj, 1, XlSheetType.xlWorksheet);
+          lastObj = this[n + i + 1].Base.Obj;
         }
       }
 
@@ -1258,24 +1255,24 @@ namespace FreeLibSet.Shell
 
       try
       {
-        using (WordHelper Helper = new WordHelper())
+        using (WordHelper helper = new WordHelper())
         {
-          WdAlertLevel OldDisplayAlerts = Helper.Application.DisplayAlerts;
-          Helper.Application.SetDisplayAlerts(WdAlertLevel.wdAlertsNone);
+          WdAlertLevel OldDisplayAlerts = helper.Application.DisplayAlerts;
+          helper.Application.SetDisplayAlerts(WdAlertLevel.wdAlertsNone);
           try
           {
             if (asTemplate)
             {
-              WordDocument doc = Helper.Application.Documents.Add();
+              WordDocument doc = helper.Application.Documents.Add();
               doc.Range().InsertFile(fileName.Path);
               doc.Saved = true;
             }
             else
-              Helper.Application.Documents.Open(fileName.Path);
+              helper.Application.Documents.Open(fileName.Path);
           }
           finally
           {
-            Helper.Application.SetDisplayAlerts(OldDisplayAlerts);
+            helper.Application.SetDisplayAlerts(OldDisplayAlerts);
           }
         }
       }
@@ -1300,16 +1297,16 @@ namespace FreeLibSet.Shell
         throw new FileNotFoundException("Файл не найден: \"" + fileName.Path + "\"", fileName.Path);
       try
       {
-        using (ExcelHelper Helper = new ExcelHelper(true))
+        using (ExcelHelper helper = new ExcelHelper(true))
         {
-          bool OldDisplayAlerts = Helper.Application.DisplayAlerts; // по идее, всегда возвращает true
-          Helper.Application.SetDisplayAlerts(false);
+          bool oldDisplayAlerts = helper.Application.DisplayAlerts; // по идее, всегда возвращает true
+          helper.Application.SetDisplayAlerts(false);
           try
           {
             if (asTemplate)
             {
-              Helper.Application.Workbooks.Open(fileName.Path);
-              ExcelWorkbook wbk1 = Helper.Application.ActiveWorkbook;
+              helper.Application.Workbooks.Open(fileName.Path);
+              ExcelWorkbook wbk1 = helper.Application.ActiveWorkbook;
               string Title = wbk1.Title;
               string Subject = wbk1.Subject;
               string Author = wbk1.Author;
@@ -1317,7 +1314,7 @@ namespace FreeLibSet.Shell
               wbk1.Sheets.Copy();
               wbk1.Close();
 
-              ExcelWorkbook wbk2 = Helper.Application.ActiveWorkbook;
+              ExcelWorkbook wbk2 = helper.Application.ActiveWorkbook;
               wbk2.SetTitle(Title);
               wbk2.SetSubject(Subject);
               wbk2.SetAuthor(Author);
@@ -1326,12 +1323,12 @@ namespace FreeLibSet.Shell
             }
             else
             {
-              Helper.Application.Workbooks.Open(fileName.Path);
+              helper.Application.Workbooks.Open(fileName.Path);
             }
           }
           finally
           {
-            Helper.Application.SetDisplayAlerts(OldDisplayAlerts);
+            helper.Application.SetDisplayAlerts(oldDisplayAlerts);
           }
         }
       }
@@ -1369,10 +1366,10 @@ namespace FreeLibSet.Shell
     {
       string s = culture.DateTimeFormat.ShortDatePattern;
       // строка содержит разделители компонентов даты как литералы ".", а не стандартные разделители "/"
-      string StdSep = culture.DateTimeFormat.DateSeparator;
-      if ((!String.IsNullOrEmpty(StdSep)) && s.IndexOf('/') < 0)
+      string stdSep = culture.DateTimeFormat.DateSeparator;
+      if ((!String.IsNullOrEmpty(stdSep)) && s.IndexOf('/') < 0)
       {
-        s = s.Replace(StdSep, "/");
+        s = s.Replace(stdSep, "/");
       }
 
       return s;
@@ -1400,10 +1397,10 @@ namespace FreeLibSet.Shell
     {
       string s = culture.DateTimeFormat.ShortTimePattern;
       // строка может содержать разделители компонентов времени как литералы, а не стандартные разделители ":"
-      string StdSep = culture.DateTimeFormat.TimeSeparator;
-      if ((!String.IsNullOrEmpty(StdSep)) && s.IndexOf(':') < 0)
+      string stdSep = culture.DateTimeFormat.TimeSeparator;
+      if ((!String.IsNullOrEmpty(stdSep)) && s.IndexOf(':') < 0)
       {
-        s = s.Replace(StdSep, ":");
+        s = s.Replace(stdSep, ":");
       }
 
       return s;
@@ -1649,8 +1646,8 @@ namespace FreeLibSet.Shell
         return false;
       }
 
-      int ColumnNumber;
-      if (!MicrosoftOfficeTools.TryGetExcelColumnNumber(s.Substring(0, nChars), out ColumnNumber))
+      int columnNumber;
+      if (!MicrosoftOfficeTools.TryGetExcelColumnNumber(s.Substring(0, nChars), out columnNumber))
       {
         res = new ExcelRCNumber();
         return false;
@@ -1666,16 +1663,15 @@ namespace FreeLibSet.Shell
       }
 
       // Дальше можно использовать стандартное преобразование
-      int RowNumber;
+      int rowNumber;
       if (!int.TryParse(s.Substring(nChars), System.Globalization.NumberStyles.None,
-        CultureInfo.InvariantCulture, out RowNumber))
+        CultureInfo.InvariantCulture, out rowNumber))
       {
         res = new ExcelRCNumber();
         return false;
       }
 
-
-      res = new ExcelRCNumber(RowNumber, ColumnNumber);
+      res = new ExcelRCNumber(rowNumber, columnNumber);
       return true;
     }
 

@@ -698,16 +698,16 @@ namespace FreeLibSet.Forms
 
     private void AddOneCellErrorMessage(ErrorMessageItem error, string columnName)
     {
-      int ColumnIndex = ControlProvider.Columns.IndexOf(columnName);
-      if (ColumnIndex < 0)
+      int columnIndex = ControlProvider.Columns.IndexOf(columnName);
+      if (columnIndex < 0)
         return; // имя несуществующего столбца
-      ErrorMessageList Errors;
-      if (!CellErrorMessages.TryGetValue(ColumnIndex, out Errors))
+      ErrorMessageList errors;
+      if (!CellErrorMessages.TryGetValue(columnIndex, out errors))
       {
-        Errors = new ErrorMessageList();
-        CellErrorMessages.Add(ColumnIndex, Errors);
+        errors = new ErrorMessageList();
+        CellErrorMessages.Add(columnIndex, errors);
       }
-      Errors.Add(error);
+      errors.Add(error);
     }
 
     private void AddToolTipText(string message)
@@ -820,10 +820,10 @@ namespace FreeLibSet.Forms
       // Эмуляция стандартного поведения DataGridView по обработке DataRow.RowError
       if (ControlProvider.UseRowImagesDataError)
       {
-        DataRow Row = this.DataRow;
-        if (Row != null)
+        DataRow row = this.DataRow;
+        if (row != null)
         {
-          ToolTipText = Row.RowError;
+          ToolTipText = row.RowError;
           if (!String.IsNullOrEmpty(ToolTipText))
             ImageKind = EFPDataGridViewImageKind.Error;
         }
@@ -833,8 +833,8 @@ namespace FreeLibSet.Forms
       ReadOnlyMessage = "Строка предназначена только для просмотра";
       if (reason == EFPDataGridViewAttributesReason.ReadOnly)
       {
-        DataGridViewRow GridRow = ControlProvider.Control.Rows.SharedRow(rowIndex);
-        ReadOnly = (GridRow.GetState(rowIndex) & DataGridViewElementStates.ReadOnly) == DataGridViewElementStates.ReadOnly;
+        DataGridViewRow gridRow = ControlProvider.Control.Rows.SharedRow(rowIndex);
+        ReadOnly = (gridRow.GetState(rowIndex) & DataGridViewElementStates.ReadOnly) == DataGridViewElementStates.ReadOnly;
       }
 
       ControlContentVisible = true;
@@ -902,6 +902,7 @@ namespace FreeLibSet.Forms
       }
     }
     private DataGridViewCellStyle _CellStyle;
+
     /// <summary>
     /// Вместо реального стиля, который можно непосредственно менять, может быть
     /// использован шаблон стиля. В этом случае будет сгенерирован новый объект
@@ -1090,29 +1091,29 @@ namespace FreeLibSet.Forms
       ReadOnlyMessage = "Столбец предназначен только для просмотра";
       if (Reason == EFPDataGridViewAttributesReason.ReadOnly)
       {
-        DataGridViewRow GridRow = ControlProvider.Control.Rows[RowIndex]; // Unshared
-        ReadOnly = GridRow.Cells[columnIndex].ReadOnly;
+        DataGridViewRow gridRow = ControlProvider.Control.Rows[RowIndex]; // Unshared
+        ReadOnly = gridRow.Cells[columnIndex].ReadOnly;
         //  ReadOnly = ControlProvider.Control.Columns[ColumnIndex].ReadOnly;
       }
 
       ContentVisible = true;
       if (!rowArgs.ControlContentVisible)
       {
-        DataGridViewColumn GridCol = Control.Columns[columnIndex];
-        if (GridCol is DataGridViewCheckBoxColumn ||
-          GridCol is DataGridViewButtonColumn ||
-          GridCol is DataGridViewComboBoxColumn)
+        DataGridViewColumn gridCol = Control.Columns[columnIndex];
+        if (gridCol is DataGridViewCheckBoxColumn ||
+          gridCol is DataGridViewButtonColumn ||
+          gridCol is DataGridViewComboBoxColumn)
 
           ContentVisible = false;
       }
 
       _RowToolTipText = rowArgs.ToolTipText;
 
-      ErrorMessageList CellErrors;
-      if (rowArgs.CellErrorMessages.TryGetValue(columnIndex, out CellErrors))
+      ErrorMessageList cellErrors;
+      if (rowArgs.CellErrorMessages.TryGetValue(columnIndex, out cellErrors))
       {
         // if (CellErrors.Count > 0) - можно не проверять
-        switch (CellErrors.Severity)
+        switch (cellErrors.Severity)
         {
           case ErrorMessageKind.Error:
             ColorType = EFPDataGridViewColorType.Error;
@@ -1126,11 +1127,11 @@ namespace FreeLibSet.Forms
 
         if (rowArgs.Reason == EFPDataGridViewAttributesReason.ToolTip)
         {
-          for (int i = 0; i < CellErrors.Count; i++)
+          for (int i = 0; i < cellErrors.Count; i++)
           {
             if (!String.IsNullOrEmpty(_RowToolTipText))
               _RowToolTipText += Environment.NewLine;
-            _RowToolTipText += CellErrors[i];
+            _RowToolTipText += cellErrors[i];
           }
         }
       }
@@ -1478,7 +1479,6 @@ namespace FreeLibSet.Forms
   }
 
   #endregion
-
 
   #region Интерфейс IEFPDataView
 
@@ -2174,42 +2174,42 @@ namespace FreeLibSet.Forms
         switch (ht.Type)
         {
           case DataGridViewHitTestType.Cell:
-            DataGridViewCell Cell = Control.Rows[ht.RowIndex].Cells[ht.ColumnIndex];
-            if (Cell.Selected)
+            DataGridViewCell gridCell = Control.Rows[ht.RowIndex].Cells[ht.ColumnIndex];
+            if (gridCell.Selected)
               return;
             Control.ClearSelection();
-            Cell.Selected = true;
-            Control.CurrentCell = Cell;
+            gridCell.Selected = true;
+            Control.CurrentCell = gridCell;
             break;
           case DataGridViewHitTestType.RowHeader:
-            DataGridViewRow Row = Control.Rows[ht.RowIndex];
-            foreach (DataGridViewCell SelCell in Control.SelectedCells)
+            DataGridViewRow gridRow = Control.Rows[ht.RowIndex];
+            foreach (DataGridViewCell selCell in Control.SelectedCells)
             {
-              if (SelCell.RowIndex == ht.RowIndex)
+              if (selCell.RowIndex == ht.RowIndex)
                 return;
             }
             Control.ClearSelection();
-            Row.Selected = true;
+            gridRow.Selected = true;
             int ColIdx = Control.CurrentCellAddress.X;
             if (ColIdx < 0)
               ColIdx = Control.FirstDisplayedScrollingColumnIndex;
             if (ColIdx >= 0)
-              Control.CurrentCell = Row.Cells[ColIdx];
+              Control.CurrentCell = gridRow.Cells[ColIdx];
             break;
           case DataGridViewHitTestType.ColumnHeader:
-            DataGridViewColumn Column = Control.Columns[ht.ColumnIndex];
-            foreach (DataGridViewCell SelCell in Control.SelectedCells)
+            DataGridViewColumn gridCol = Control.Columns[ht.ColumnIndex];
+            foreach (DataGridViewCell selCell in Control.SelectedCells)
             {
-              if (SelCell.ColumnIndex == ht.ColumnIndex)
+              if (selCell.ColumnIndex == ht.ColumnIndex)
                 return;
             }
             Control.ClearSelection();
-            Column.Selected = true;
-            int RowIdx = Control.CurrentCellAddress.Y;
-            if (RowIdx < 0)
-              RowIdx = Control.FirstDisplayedScrollingRowIndex;
-            if (RowIdx >= 0)
-              Control.CurrentCell = Control.Rows[RowIdx].Cells[ht.ColumnIndex];
+            gridCol.Selected = true;
+            int rowIdx = Control.CurrentCellAddress.Y;
+            if (rowIdx < 0)
+              rowIdx = Control.FirstDisplayedScrollingRowIndex;
+            if (rowIdx >= 0)
+              Control.CurrentCell = Control.Rows[rowIdx].Cells[ht.ColumnIndex];
             break;
           case DataGridViewHitTestType.TopLeftHeader:
             if (Control.MultiSelect)
@@ -2313,7 +2313,6 @@ namespace FreeLibSet.Forms
     }
     private bool _UseGridProducerOrders;
 
-
     #endregion
 
     #region Другие свойства
@@ -2355,8 +2354,7 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        int H = Measures.SetTextRowHeight(value);
-        Control.RowTemplate.Height = H;
+        Control.RowTemplate.Height = Measures.SetTextRowHeight(value);
       }
     }
 
@@ -2692,9 +2690,9 @@ namespace FreeLibSet.Forms
       {
         for (int i = 0; i < Orders.Count; i++)
         {
-          int ColumnIndex = IndexOfUsedColumnName(Orders[i]);
-          if (ColumnIndex >= 0)
-            Control.Columns[ColumnIndex].SortMode = DataGridViewColumnSortMode.Programmatic;
+          int сolumnIndex = IndexOfUsedColumnName(Orders[i]);
+          if (сolumnIndex >= 0)
+            Control.Columns[сolumnIndex].SortMode = DataGridViewColumnSortMode.Programmatic;
         }
       }
     }
@@ -2754,9 +2752,9 @@ namespace FreeLibSet.Forms
       string[] a = columnNames.Split(',');
       for (int i = 0; i < a.Length; i++)
       {
-        EFPDataGridViewColumn Col = Columns[a[i]];
-        if (Col != null)
-          Col.GridColumn.ReadOnly = value;
+        EFPDataGridViewColumn сol = Columns[a[i]];
+        if (сol != null)
+          сol.GridColumn.ReadOnly = value;
       }
     }
 
@@ -2797,23 +2795,23 @@ namespace FreeLibSet.Forms
 
     EFPDataViewColumnInfo[] IEFPGridControl.GetVisibleColumnsInfo()
     {
-      EFPDataGridViewColumn[] RealColumns = VisibleColumns;
-      EFPDataViewColumnInfo[] a = new EFPDataViewColumnInfo[RealColumns.Length];
-      for (int i = 0; i < RealColumns.Length; i++)
-        a[i] = new EFPDataViewColumnInfo(RealColumns[i].Name, RealColumns[i].GridColumn.DataPropertyName, RealColumns[i].ColumnProducer);
+      EFPDataGridViewColumn[] realColumns = VisibleColumns;
+      EFPDataViewColumnInfo[] a = new EFPDataViewColumnInfo[realColumns.Length];
+      for (int i = 0; i < realColumns.Length; i++)
+        a[i] = new EFPDataViewColumnInfo(realColumns[i].Name, realColumns[i].GridColumn.DataPropertyName, realColumns[i].ColumnProducer);
       return a;
     }
 
     bool IEFPGridControl.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
     {
-      EFPDataGridViewColumn Col = Columns[configColumn.ColumnName];
-      if (Col == null)
+      EFPDataGridViewColumn col = Columns[configColumn.ColumnName];
+      if (col == null)
         return false;
 
-      DataGridViewColumn GridCol = Col.GridColumn;
-      configColumn.Width = GridCol.Width;
-      configColumn.FillMode = GridCol.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill;
-      configColumn.FillWeight = (int)(GridCol.FillWeight);
+      DataGridViewColumn gridCol = col.GridColumn;
+      configColumn.Width = gridCol.Width;
+      configColumn.FillMode = gridCol.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill;
+      configColumn.FillWeight = (int)(gridCol.FillWeight);
       return true;
     }
 
@@ -2841,10 +2839,10 @@ namespace FreeLibSet.Forms
           // Иначе придется определять с помощью SelectedCells
           if (Control.SelectedCells.Count > 0)
           {
-            int FirstIndex = Control.SelectedCells[0].RowIndex;
+            int firstIndex = Control.SelectedCells[0].RowIndex;
             for (int i = 1; i < Control.SelectedCells.Count; i++)
             {
-              if (Control.SelectedCells[i].RowIndex != FirstIndex)
+              if (Control.SelectedCells[i].RowIndex != firstIndex)
                 return EFPDataGridViewSelectedRowsState.MultiRows;
             }
             return EFPDataGridViewSelectedRowsState.SingleRow;
@@ -2988,7 +2986,7 @@ namespace FreeLibSet.Forms
           return; // 27.12.2020
         if (value.Length == 0)
           return;
-        bool FirstRowFlag = true;
+        bool firstRowFlag = true;
         switch (Control.SelectionMode)
         {
           case DataGridViewSelectionMode.FullRowSelect:
@@ -2999,10 +2997,10 @@ namespace FreeLibSet.Forms
               //if (value != null)
               if (value[i] != null) // 27.12.2020
               {
-                if (FirstRowFlag)
+                if (firstRowFlag)
                 {
                   CurrentGridRow = value[i];
-                  FirstRowFlag = false;
+                  firstRowFlag = false;
                 }
                 value[i].Selected = true;
               }
@@ -3018,10 +3016,10 @@ namespace FreeLibSet.Forms
               {
                 if (value[i] != null)
                 {
-                  if (FirstRowFlag)
+                  if (firstRowFlag)
                   {
                     CurrentGridRow = value[i];
-                    FirstRowFlag = false;
+                    firstRowFlag = false;
                   }
                   value[i].Selected = true;
                 }
@@ -3035,10 +3033,10 @@ namespace FreeLibSet.Forms
               {
                 for (int i = 0; i < value.Length; i++)
                 {
-                  if (FirstRowFlag)
+                  if (firstRowFlag)
                   {
                     CurrentGridRow = value[i];
-                    FirstRowFlag = false;
+                    firstRowFlag = false;
                   }
                   if (value[i] != null)
                     value[i].Selected = true;
@@ -3081,14 +3079,14 @@ namespace FreeLibSet.Forms
         if (control.SelectedCells.Count > 0)
         {
           // Собираем строки для выбранных ячеек
-          List<DataGridViewRow> Rows = new List<DataGridViewRow>();
-          foreach (DataGridViewCell Cell in control.SelectedCells)
+          List<DataGridViewRow> rows = new List<DataGridViewRow>();
+          foreach (DataGridViewCell gridCell in control.SelectedCells)
           {
-            DataGridViewRow ThisRow = Cell.OwningRow;
-            if (!Rows.Contains(ThisRow))
-              Rows.Add(ThisRow);
+            DataGridViewRow thisRow = gridCell.OwningRow;
+            if (!rows.Contains(thisRow))
+              rows.Add(thisRow);
           }
-          res = Rows.ToArray();
+          res = rows.ToArray();
           _TheRCComparer.SortGridRows(res);
           return res;
         }
@@ -3121,14 +3119,14 @@ namespace FreeLibSet.Forms
             if (Control.SelectedCells.Count > 0)
             {
               // Собираем строки для выбранных ячеек
-              List<DataGridViewRow> Rows = new List<DataGridViewRow>();
-              foreach (DataGridViewCell Cell in Control.SelectedCells)
+              List<DataGridViewRow> rows = new List<DataGridViewRow>();
+              foreach (DataGridViewCell gridCell in Control.SelectedCells)
               {
-                DataGridViewRow ThisRow = Cell.OwningRow;
-                if (!Rows.Contains(ThisRow))
-                  Rows.Add(ThisRow);
+                DataGridViewRow thisRow = gridCell.OwningRow;
+                if (!rows.Contains(thisRow))
+                  rows.Add(thisRow);
               }
-              return Rows.Count;
+              return rows.Count;
             }
           }
           if (Control.CurrentRow == null)
@@ -3156,11 +3154,11 @@ namespace FreeLibSet.Forms
         if (value == null)
           return;
 
-        int ColIdx = CurrentColumnIndex;
+        int colIdx = CurrentColumnIndex;
 
-        if (ColIdx < 0 || ColIdx >= Control.Columns.Count /* 21.11.2018 */)
-          ColIdx = 0;
-        Control.CurrentCell = value.Cells[ColIdx];
+        if (colIdx < 0 || colIdx >= Control.Columns.Count /* 21.11.2018 */)
+          colIdx = 0;
+        Control.CurrentCell = value.Cells[colIdx];
       }
     }
 
@@ -3198,26 +3196,26 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        DataGridViewRow[] Rows = new DataGridViewRow[value.Length];
+        DataGridViewRow[] rows = new DataGridViewRow[value.Length];
         for (int i = 0; i < value.Length; i++)
         {
           if (value[i] >= 0 && value[i] < Control.Rows.Count)
-            Rows[i] = Control.Rows[value[i]];
+            rows[i] = Control.Rows[value[i]];
         }
-        SelectedGridRows = Rows;
+        SelectedGridRows = rows;
       }
     }
 
     private static int[] GetSelectedRowIndices(DataGridView control)
     {
-      DataGridViewRow[] Rows = GetSelectedGridRows(control);
-      int[] res = new int[Rows.Length];
-      for (int i = 0; i < Rows.Length; i++)
+      DataGridViewRow[] rows = GetSelectedGridRows(control);
+      int[] res = new int[rows.Length];
+      for (int i = 0; i < rows.Length; i++)
       {
-        if (Rows[i] == null)
+        if (rows[i] == null)
           res[i] = -1;
         else
-          res[i] = Rows[i].Index;
+          res[i] = rows[i].Index;
       }
       return res;
     }
@@ -3230,11 +3228,11 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        DataGridViewRow Row = CurrentGridRow;
-        if (Row == null)
+        DataGridViewRow row = CurrentGridRow;
+        if (row == null)
           return -1;
         else
-          return Row.Index;
+          return row.Index;
       }
       set
       {
@@ -3302,12 +3300,12 @@ namespace FreeLibSet.Forms
       {
         // Есть отдельные выбранные ячейки
         List<DataGridViewColumn> res = new List<DataGridViewColumn>();
-        foreach (DataGridViewCell Cell in control.SelectedCells)
+        foreach (DataGridViewCell gridCell in control.SelectedCells)
         {
-          DataGridViewColumn Col = control.Columns[Cell.ColumnIndex];
-          if (res.IndexOf(Col) < 0)
+          DataGridViewColumn col = control.Columns[gridCell.ColumnIndex];
+          if (res.IndexOf(col) < 0)
           {
-            res.Add(Col);
+            res.Add(col);
             if (res.Count == control.ColumnCount)
               break; // найдены все столбцы
           }
@@ -3343,10 +3341,10 @@ namespace FreeLibSet.Forms
 
     private static int[] GetSelectedColumnIndices(DataGridView control)
     {
-      DataGridViewColumn[] Cols = GetSelectedGridColumns(control);
-      int[] indices = new int[Cols.Length];
-      for (int i = 0; i < Cols.Length; i++)
-        indices[i] = Cols[i].Index;
+      DataGridViewColumn[] cols = GetSelectedGridColumns(control);
+      int[] indices = new int[cols.Length];
+      for (int i = 0; i < cols.Length; i++)
+        indices[i] = cols[i].Index;
       return indices;
     }
 
@@ -3359,10 +3357,10 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        DataGridViewColumn[] Cols = SelectedGridColumns;
-        EFPDataGridViewColumn[] Cols2 = new EFPDataGridViewColumn[Cols.Length];
-        for (int i = 0; i < Cols.Length; i++)
-          Cols2[i] = Columns[Cols[i]];
+        DataGridViewColumn[] cols = SelectedGridColumns;
+        EFPDataGridViewColumn[] Cols2 = new EFPDataGridViewColumn[cols.Length];
+        for (int i = 0; i < cols.Length; i++)
+          Cols2[i] = Columns[cols[i]];
         return Cols2;
       }
     }
@@ -3390,18 +3388,18 @@ namespace FreeLibSet.Forms
         return true;
       if (Control.SelectedCells != null && Control.SelectedCells.Count > 0)
       {
-        DataGridViewCell Cell = Control[columnIndex, rowIndex];
-        return Control.SelectedCells.Contains(Cell);
+        DataGridViewCell gridCell = Control[columnIndex, rowIndex];
+        return Control.SelectedCells.Contains(gridCell);
       }
       if (Control.SelectedRows != null && Control.SelectedRows.Count > 0)
       {
-        DataGridViewRow Row = Control.Rows[rowIndex];
-        return Control.SelectedRows.Contains(Row);
+        DataGridViewRow row = Control.Rows[rowIndex];
+        return Control.SelectedRows.Contains(row);
       }
       if (Control.SelectedColumns != null && Control.SelectedColumns.Count > 0)
       {
-        DataGridViewColumn Col = Control.Columns[columnIndex];
-        return Control.SelectedColumns.Contains(Col);
+        DataGridViewColumn col = Control.Columns[columnIndex];
+        return Control.SelectedColumns.Contains(col);
       }
 
       return Control.CurrentCellAddress.X == columnIndex && Control.CurrentCellAddress.Y == rowIndex;
@@ -3459,20 +3457,20 @@ namespace FreeLibSet.Forms
       {
         if (Control.AreAllCellsSelected(false))
           return new Rectangle(0, 0, Control.ColumnCount, Control.RowCount);
-        int[] Rows = SelectedRowIndices;
-        int[] Cols = SelectedColumnIndices;
-        if (Rows.Length == 0 || Cols.Length == 0)
+        int[] rows = SelectedRowIndices;
+        int[] cols = SelectedColumnIndices;
+        if (rows.Length == 0 || cols.Length == 0)
           return Rectangle.Empty;
 
-        int x1 = Cols[0];
-        int x2 = Cols[Cols.Length - 1];
-        int y1 = Rows[0];
-        int y2 = Rows[Rows.Length - 1];
+        int x1 = cols[0];
+        int x2 = cols[cols.Length - 1];
+        int y1 = rows[0];
+        int y2 = rows[rows.Length - 1];
         return new Rectangle(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
       }
       set
       {
-        throw new BugException("Не реализовано");
+        throw new NotImplementedException();
       }
     }
 
@@ -3552,15 +3550,15 @@ namespace FreeLibSet.Forms
 
       private IEnumerator<Point> GetAllCellsEnumerator()
       {
-        int[] ColIdxs = EFPDataGridView.GetSelectedColumnIndices(_Control); // все видимые столбцы
+        int[] colIdxs = EFPDataGridView.GetSelectedColumnIndices(_Control); // все видимые столбцы
 
         for (int iRow = 0; iRow < _Control.RowCount; iRow++)
         {
           if (!_Control.Rows.SharedRow(iRow).Visible)
             continue;
 
-          for (int j = 0; j < ColIdxs.Length; j++)
-            yield return new Point(ColIdxs[j], iRow);
+          for (int j = 0; j < colIdxs.Length; j++)
+            yield return new Point(colIdxs[j], iRow);
         }
       }
 
@@ -3572,22 +3570,22 @@ namespace FreeLibSet.Forms
       {
         if (_Control.SelectedRows.Count > 0)
         {
-          int[] ColIdxs = EFPDataGridView.GetSelectedColumnIndices(_Control); // все видимые столбцы
+          int[] colIdxs = EFPDataGridView.GetSelectedColumnIndices(_Control); // все видимые столбцы
 
           for (int i = 0; i < _Control.SelectedRows.Count; i++)
           {
-            for (int j = 0; j < ColIdxs.Length; j++)
-              yield return new Point(ColIdxs[j], _Control.SelectedRows[i].Index);
+            for (int j = 0; j < colIdxs.Length; j++)
+              yield return new Point(colIdxs[j], _Control.SelectedRows[i].Index);
           }
         }
 
         if (_Control.SelectedColumns.Count > 0)
         {
-          int[] RowIdxs = EFPDataGridView.GetSelectedRowIndices(_Control); // все видимые строки
-          for (int i = 0; i < RowIdxs.Length; i++)
+          int[] rowIdxs = EFPDataGridView.GetSelectedRowIndices(_Control); // все видимые строки
+          for (int i = 0; i < rowIdxs.Length; i++)
           {
             for (int j = 0; j < _Control.SelectedColumns.Count; j++)
-              yield return new Point(_Control.SelectedColumns[j].Index, RowIdxs[i]);
+              yield return new Point(_Control.SelectedColumns[j].Index, rowIdxs[i]);
 
           }
         }
@@ -3844,8 +3842,8 @@ namespace FreeLibSet.Forms
     {
       DataView dv = null;
       bool dvDefined = false;
-      DataRow[] Rows = new DataRow[rowIndices.Length];
-      for (int i = 0; i < Rows.Length; i++)
+      DataRow[] rows = new DataRow[rowIndices.Length];
+      for (int i = 0; i < rows.Length; i++)
       {
         if (rowIndices[i] >= 0 && rowIndices[i] < Control.RowCount)
         {
@@ -3853,7 +3851,7 @@ namespace FreeLibSet.Forms
           // Обычно, этот вариант и будет работать, так как, скорее всего, опрашиваются выбранные строки
           DataGridViewRow gridRow = Control.Rows.SharedRow(rowIndices[i]);
           if (gridRow.Index >= 0)
-            Rows[i] = GetDataRow(gridRow);
+            rows[i] = GetDataRow(gridRow);
           else
           {
             if (!dvDefined)
@@ -3862,12 +3860,12 @@ namespace FreeLibSet.Forms
               dv = SourceAsDataView;
             }
             if (rowIndices[i] < dv.Count)
-              Rows[i] = dv[rowIndices[i]].Row;
+              rows[i] = dv[rowIndices[i]].Row;
           }
         }
       }
 
-      return Rows;
+      return rows;
     }
 
     /// <summary>
@@ -3916,19 +3914,19 @@ namespace FreeLibSet.Forms
 
         // Тут несколько гадко
         // Поэтому сначала проверяем, есть ли какие-нибудь изменения
-        DataRow[] OrgRows = SelectedDataRows;
-        if (OrgRows.Length == value.Length)
+        DataRow[] orgRows = SelectedDataRows;
+        if (orgRows.Length == value.Length)
         {
-          bool Differ = false;
+          bool isDiff = false;
           for (int i = 0; i < value.Length; i++)
           {
-            if (value[i] != OrgRows[i])
+            if (value[i] != orgRows[i])
             {
-              Differ = true;
+              isDiff = true;
               break;
             }
           }
-          if (!Differ)
+          if (!isDiff)
             return; // строки не изменились
         }
 
@@ -3956,25 +3954,25 @@ namespace FreeLibSet.Forms
           return;
         }
 
-        DataGridViewRow[] Rows = new DataGridViewRow[value.Length];
+        DataGridViewRow[] gridRows = new DataGridViewRow[value.Length];
         // Производительность будет ужасной, если выбрано много строк в большой таблице
-        int SelCnt = 0; // Вдруг найдем все строки до того, как переберем весь набор данных ?
+        int selCnt = 0; // Вдруг найдем все строки до того, как переберем весь набор данных ?
         for (int j = 0; j < dv.Count; j++)
         {
-          DataRow ThisRow = GetDataRow(j);
+          DataRow thisRow = GetDataRow(j);
           for (int k = 0; k < value.Length; k++)
           {
-            if (value[k] == ThisRow)
+            if (value[k] == thisRow)
             {
-              Rows[k] = Control.Rows[j];
-              SelCnt++;
+              gridRows[k] = Control.Rows[j];
+              selCnt++;
               break;
             }
           }
-          if (SelCnt == value.Length)
+          if (selCnt == value.Length)
             break; // уже все нашли
         }
-        SelectedGridRows = Rows;
+        SelectedGridRows = gridRows;
       }
     }
 
@@ -4039,23 +4037,23 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        DataRow[] Rows = SelectedDataRows;
-        DataTable Table = SourceAsDataTable;
-        if (Table == null)
+        DataRow[] rows = SelectedDataRows;
+        DataTable table = SourceAsDataTable;
+        if (table == null)
           return null;
-        if (Table.PrimaryKey == null || Table.PrimaryKey.Length == 0)
+        if (table.PrimaryKey == null || table.PrimaryKey.Length == 0)
           return null;
-        return DataTools.GetPrimaryKeyValues(Table, Rows);
+        return DataTools.GetPrimaryKeyValues(table, rows);
       }
       set
       {
         if (value == null)
           return;
-        DataTable Table = SourceAsDataTable;
-        if (Table == null)
+        DataTable table = SourceAsDataTable;
+        if (table == null)
           throw new InvalidOperationException("DataGridView.DataSource не является DataTable");
-        DataRow[] Rows = DataTools.GetPrimaryKeyRows(Table, value);
-        SelectedDataRows = Rows;
+        DataRow[] rows = DataTools.GetPrimaryKeyRows(table, value);
+        SelectedDataRows = rows;
       }
     }
 
@@ -4067,22 +4065,22 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        DataRow Row = CurrentDataRow;
-        if (Row == null)
+        DataRow row = CurrentDataRow;
+        if (row == null)
           return null;
-        return DataTools.GetPrimaryKeyValues(Row);
+        return DataTools.GetPrimaryKeyValues(row);
       }
       set
       {
-        DataTable Table = SourceAsDataTable;
-        if (Table == null)
+        DataTable table = SourceAsDataTable;
+        if (table == null)
           throw new InvalidOperationException("DataGridView.DataSource не является DataTable");
         if (value == null)
           return;
-        DataRow Row = Table.Rows.Find(value);
-        if (Row == null)
+        DataRow row = table.Rows.Find(value);
+        if (row == null)
           return;
-        CurrentDataRow = Row;
+        CurrentDataRow = row;
       }
     }
 
@@ -4105,14 +4103,14 @@ namespace FreeLibSet.Forms
         if (String.IsNullOrEmpty(dv.Sort))
           return null;
         string[] flds = DataTools.GetDataViewSortColumnNames(dv.Sort);
-        DataRow[] Rows = SelectedDataRows;
-        object[,] Values = new object[Rows.Length, flds.Length];
-        for (int i = 0; i < Rows.Length; i++)
+        DataRow[] rows = SelectedDataRows;
+        object[,] values = new object[rows.Length, flds.Length];
+        for (int i = 0; i < rows.Length; i++)
         {
           for (int j = 0; j < flds.Length; j++)
-            Values[i, j] = Rows[i][flds[j]];
+            values[i, j] = rows[i][flds[j]];
         }
-        return Values;
+        return values;
       }
       set
       {
@@ -4127,13 +4125,13 @@ namespace FreeLibSet.Forms
         int nRows = value.GetLength(0);
         if (nRows == 0)
           return;
-        object[] Keys = new object[value.GetLength(1)];
+        object[] keys = new object[value.GetLength(1)];
         List<int> rowIndices = new List<int>();
         for (int i = 0; i < nRows; i++)
         {
-          for (int j = 0; j < Keys.Length; j++)
-            Keys[j] = value[i, j];
-          int idx = dv.Find(Keys);
+          for (int j = 0; j < keys.Length; j++)
+            keys[j] = value[i, j];
+          int idx = dv.Find(keys);
           if (idx > 0)
             rowIndices.Add(idx);
         }
@@ -4156,14 +4154,14 @@ namespace FreeLibSet.Forms
         if (String.IsNullOrEmpty(dv.Sort))
           return null;
         string[] flds = DataTools.GetDataViewSortColumnNames(dv.Sort);
-        DataRow Row = CurrentDataRow;
-        object[] Values = new object[flds.Length];
-        if (Row != null)
+        DataRow row = CurrentDataRow;
+        object[] values = new object[flds.Length];
+        if (row != null)
         {
           for (int j = 0; j < flds.Length; j++)
-            Values[j] = Row[flds[j]];
+            values[j] = row[flds[j]];
         }
-        return Values;
+        return values;
       }
       set
       {
@@ -4325,16 +4323,16 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        int FirstRow = Control.FirstDisplayedScrollingRowIndex;
+        int firstRow = Control.FirstDisplayedScrollingRowIndex;
         int n = Control.DisplayedRowCount(true);
-        List<DataRow> Rows = new List<DataRow>(n);
+        List<DataRow> rows = new List<DataRow>(n);
         for (int i = 0; i < n; i++)
         {
-          DataRow Row = GetDataRow(FirstRow + i);
-          if (Row != null)
-            Rows.Add(Row);
+          DataRow row = GetDataRow(firstRow + i);
+          if (row != null)
+            rows.Add(row);
         }
-        return Rows.ToArray();
+        return rows.ToArray();
       }
     }
 
@@ -4439,9 +4437,9 @@ namespace FreeLibSet.Forms
         switch (SelectedRowsMode)
         {
           case EFPDataGridViewSelectedRowsMode.RowIndex:
-            int RowIndex = (int)value;
-            if (RowIndex >= 0 && RowIndex < Control.Rows.Count)
-              CurrentGridRow = Control.Rows[RowIndex];
+            int rowIndex = (int)value;
+            if (rowIndex >= 0 && rowIndex < Control.Rows.Count)
+              CurrentGridRow = Control.Rows[rowIndex];
             break;
           case EFPDataGridViewSelectedRowsMode.DataRow:
             CurrentDataRow = GetSlaveRow((DataRow)value); // 04.07.2021
@@ -4534,12 +4532,12 @@ namespace FreeLibSet.Forms
           return;
         if (!Control.Columns[value].Visible)
           return;
-        int RowIndex = Control.CurrentCellAddress.Y;
-        if (Control.Visible && RowIndex >= 0 && RowIndex < Control.Rows.Count)
+        int rowIndex = Control.CurrentCellAddress.Y;
+        if (Control.Visible && rowIndex >= 0 && rowIndex < Control.Rows.Count)
         {
           try
           {
-            Control.CurrentCell = Control.Rows[RowIndex].Cells[value];
+            Control.CurrentCell = Control.Rows[rowIndex].Cells[value];
           }
           catch
           {
@@ -4588,9 +4586,9 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        EFPDataGridViewColumn Column = Columns[value];
-        if (Column != null)
-          CurrentColumnIndex = Column.GridColumn.Index;
+        EFPDataGridViewColumn column = Columns[value];
+        if (column != null)
+          CurrentColumnIndex = column.GridColumn.Index;
       }
     }
 
@@ -4611,20 +4609,20 @@ namespace FreeLibSet.Forms
       get
       {
         DataGridViewColumn[] a = VisibleGridColumns;
-        int FirstIdx = -1;
+        int firstIdx = -1;
         for (int i = 0; i < a.Length; i++)
         {
           if (a[i] is DataGridViewImageColumn)
             continue;
-          if (FirstIdx < 0)
-            FirstIdx = a[i].Index;
+          if (firstIdx < 0)
+            firstIdx = a[i].Index;
 
-          EFPDataGridViewColumn Col = Columns[a[i]]; // предпочтительный вариант индексированного свойства
-          if (Col.CanIncSearch)
+          EFPDataGridViewColumn col = Columns[a[i]]; // предпочтительный вариант индексированного свойства
+          if (col.CanIncSearch)
             return a[i].Index;
         }
-        if (FirstIdx >= 0)
-          return FirstIdx;
+        if (firstIdx >= 0)
+          return firstIdx;
 
         // Ничего не нашли
         if (a.Length > 0)
@@ -4719,14 +4717,14 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public DataGridViewRow[] GetGridRows(DataGridViewElementStates states)
     {
-      List<DataGridViewRow> Rows = new List<DataGridViewRow>();
-      int RowIndex = Control.Rows.GetFirstRow(states);
-      while (RowIndex >= 0)
+      List<DataGridViewRow> rows = new List<DataGridViewRow>();
+      int rowIndex = Control.Rows.GetFirstRow(states);
+      while (rowIndex >= 0)
       {
-        Rows.Add(Control.Rows[RowIndex]);
-        RowIndex = Control.Rows.GetNextRow(RowIndex, states, DataGridViewElementStates.None);
+        rows.Add(Control.Rows[rowIndex]);
+        rowIndex = Control.Rows.GetNextRow(rowIndex, states, DataGridViewElementStates.None);
       }
-      return Rows.ToArray();
+      return rows.ToArray();
     }
 
     /// <summary>
@@ -4754,7 +4752,6 @@ namespace FreeLibSet.Forms
         int hMax = Screen.FromControl(Control).Bounds.Height;
 
         int h = 0;
-
 
         // рамка
         switch (Control.BorderStyle)
@@ -4814,7 +4811,6 @@ namespace FreeLibSet.Forms
       }
     }
 
-
 #if XXX
     /// <summary>
     /// Обновить все строки табличного просмотра.
@@ -4868,21 +4864,21 @@ namespace FreeLibSet.Forms
       // Выгодно сначала найти все DataRow, которые есть на экране (их немного), 
       // а затем просматривать требуемый список DataRow (может быть длинный)
 
-      int FirstRow = Control.FirstDisplayedScrollingRowIndex;
+      int firstRow = Control.FirstDisplayedScrollingRowIndex;
       int n = Control.DisplayedRowCount(true);
-      Dictionary<DataRow, int> RowIdxs = new Dictionary<DataRow, int>(n);
+      Dictionary<DataRow, int> rowIdxs = new Dictionary<DataRow, int>(n);
       for (int i = 0; i < n; i++)
       {
-        DataRow R = GetDataRow(FirstRow + i);
-        if (R != null)
-          RowIdxs.Add(R, FirstRow + i);
+        DataRow r = GetDataRow(firstRow + i);
+        if (r != null)
+          rowIdxs.Add(r, firstRow + i);
       }
 
       for (int i = 0; i < rows.Length; i++)
       {
-        int RowIdx;
-        if (RowIdxs.TryGetValue(rows[i], out RowIdx))
-          InvalidateRows(new int[1] { RowIdx });
+        int rowIdx;
+        if (rowIdxs.TryGetValue(rows[i], out rowIdx))
+          InvalidateRows(new int[1] { rowIdx });
       }
     }
 
@@ -4895,13 +4891,13 @@ namespace FreeLibSet.Forms
       if (row == null)
         return;
 
-      int FirstRow = Control.FirstDisplayedScrollingRowIndex;
+      int firstRow = Control.FirstDisplayedScrollingRowIndex;
       int n = Control.DisplayedRowCount(true);
       for (int i = 0; i < n; i++)
       {
-        if (GetDataRow(FirstRow + i) == row)
+        if (GetDataRow(firstRow + i) == row)
         {
-          InvalidateRows(new int[1] { FirstRow + i });
+          InvalidateRows(new int[1] { firstRow + i });
           break;
         }
       }
@@ -4968,15 +4964,15 @@ namespace FreeLibSet.Forms
       for (int i = 0; i < dv.Count; i++)
         allRowIndices.Add(dv[i].Row, i);
 
-      List<int> UsedIndices = new List<int>(rows.Length); // некоторых строк может не быть
+      List<int> usedIndices = new List<int>(rows.Length); // некоторых строк может не быть
       for (int i = 0; i < rows.Length; i++)
       {
         int idx;
         if (allRowIndices.TryGetValue(rows[i], out idx))
-          UsedIndices.Add(idx);
+          usedIndices.Add(idx);
       }
 
-      UpdateRows(UsedIndices.ToArray());
+      UpdateRows(usedIndices.ToArray());
     }
 
     /// <summary>
@@ -5080,7 +5076,7 @@ namespace FreeLibSet.Forms
       if (ProviderState != EFPControlProviderState.Attached)
         return;
 
-      EFPDataGridViewSelection OldSel = Selection;
+      EFPDataGridViewSelection oldSel = Selection;
       CommandItems.InitCurentOrder();
       if (WinFormsTools.AreControlAndFormVisible(Control))
       {
@@ -5102,7 +5098,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      Selection = OldSel;
+      Selection = oldSel;
 
       OnCurrentOrderChanged(EventArgs.Empty);
       if (ProviderState == EFPControlProviderState.Attached)
@@ -5612,10 +5608,10 @@ namespace FreeLibSet.Forms
           return false;
         }
       }
-      int OrderIndex = Orders.IndexOfItemForGridColumn(clickedColumnName);
-      if (OrderIndex >= 0)
+      int orderIndex = Orders.IndexOfItemForGridColumn(clickedColumnName);
+      if (orderIndex >= 0)
       {
-        CurrentOrderIndex = OrderIndex;
+        CurrentOrderIndex = orderIndex;
         return true;
       }
 
@@ -5810,8 +5806,8 @@ namespace FreeLibSet.Forms
       if (!UseColumnHeaderClick)
         return;
 
-      foreach (DataGridViewColumn Col in Control.Columns)
-        Col.HeaderCell.SortGlyphDirection = SortOrder.None;
+      foreach (DataGridViewColumn col in Control.Columns)
+        col.HeaderCell.SortGlyphDirection = SortOrder.None;
 
       if (CurrentOrder != null)
       {
@@ -5830,20 +5826,20 @@ namespace FreeLibSet.Forms
           DataTools.GetDataViewSortColumnNames(CurrentOrder.Sort, out columnNames, out directions);
           for (int i = 0; i < columnNames.Length; i++)
           {
-            EFPDataGridViewColumn Col;
-            if (columnsForSort.TryGetValue(columnNames[i], out Col))
+            EFPDataGridViewColumn col;
+            if (columnsForSort.TryGetValue(columnNames[i], out col))
             {
               try
               {
                 if (directions[i] == ListSortDirection.Descending)
-                  Col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Descending;
+                  col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Descending;
                 else
-                  Col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+                  col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
               }
               catch (Exception e)
               {
                 e.Data["DislayName"] = this.DisplayName;
-                e.Data["ColumnName"] = Col.Name;
+                e.Data["ColumnName"] = col.Name;
                 e.Data["CustomOrderActive"] = CustomOrderActive;
                 try
                 {
@@ -5860,20 +5856,20 @@ namespace FreeLibSet.Forms
         }
         else // предопределенная конфигурация
         {
-          EFPDataGridViewColumn Col = GetUsedColumn(CurrentOrder);
-          if (Col != null && Col.GridColumn.SortMode != DataGridViewColumnSortMode.NotSortable)
+          EFPDataGridViewColumn col = GetUsedColumn(CurrentOrder);
+          if (col != null && col.GridColumn.SortMode != DataGridViewColumnSortMode.NotSortable)
           {
             try
             {
               if (CurrentOrder.SortInfo.Direction == ListSortDirection.Descending)
-                Col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Descending;
+                col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Descending;
               else
-                Col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+                col.GridColumn.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
             }
             catch (Exception e)
             {
               e.Data["DislayName"] = this.DisplayName;
-              e.Data["ColumnName"] = Col.Name;
+              e.Data["ColumnName"] = col.Name;
               e.Data["CustomOrderActive"] = CustomOrderActive;
               try
               {
@@ -5941,26 +5937,26 @@ namespace FreeLibSet.Forms
       if (item.SortInfo.IsEmpty)
         return -1;
 
-      int BestColumnIndex = -1;
-      int BestDisplayIndex = -1;
+      int bestColumnIndex = -1;
+      int bestDisplayIndex = -1;
       for (int i = 0; i < item.SortInfo.ClickableColumnNames.Length; i++)
       {
-        int ColumnIndex = Columns.IndexOf(item.SortInfo.ClickableColumnNames[i]);
-        if (ColumnIndex < 0)
+        int columnIndex = Columns.IndexOf(item.SortInfo.ClickableColumnNames[i]);
+        if (columnIndex < 0)
           continue;
-        DataGridViewColumn Col = Control.Columns[ColumnIndex];
-        if (!Col.Visible)
+        DataGridViewColumn col = Control.Columns[columnIndex];
+        if (!col.Visible)
           continue; // скрытые столбцы не считаются
 
-        int DisplayIndex = Col.DisplayIndex;
-        if (BestColumnIndex < 0 || DisplayIndex < BestDisplayIndex)
+        int displayIndex = col.DisplayIndex;
+        if (bestColumnIndex < 0 || displayIndex < bestDisplayIndex)
         {
-          BestColumnIndex = ColumnIndex;
-          BestDisplayIndex = DisplayIndex;
+          bestColumnIndex = columnIndex;
+          bestDisplayIndex = displayIndex;
         }
       }
 
-      return BestColumnIndex;
+      return bestColumnIndex;
     }
 
     /// <summary>
@@ -6061,10 +6057,10 @@ namespace FreeLibSet.Forms
             EFPApp.ShowTempMessage("Ячейка уже редактируется");
             return;
           }
-          string ReadOnlyMessage;
-          if (GetCellReadOnly(Control.CurrentCell, out ReadOnlyMessage))
+          string readOnlyMessage;
+          if (GetCellReadOnly(Control.CurrentCell, out readOnlyMessage))
           {
-            EFPApp.ShowTempMessage(ReadOnlyMessage);
+            EFPApp.ShowTempMessage(readOnlyMessage);
             return;
           }
 
@@ -6073,13 +6069,13 @@ namespace FreeLibSet.Forms
         case EFPDataGridViewState.Delete:
           if (WholeRowsSelected && Control.AllowUserToDeleteRows)
           {
-            DataGridViewRow[] Rows = SelectedGridRows;
-            if (Rows.Length == 0)
+            DataGridViewRow[] rows = SelectedGridRows;
+            if (rows.Length == 0)
               EFPApp.ShowTempMessage("Нет выбранных строк для удаления");
             else
             {
-              for (int i = 0; i < Rows.Length; i++)
-                Control.Rows.Remove(Rows[i]);
+              for (int i = 0; i < rows.Length; i++)
+                Control.Rows.Remove(rows[i]);
             }
           }
           else
@@ -6099,8 +6095,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void ClearSelectedCells()
     {
-      EFPDataGridViewRectArea Area = new EFPDataGridViewRectArea(Control, EFPDataGridViewRectAreaCreation.Selected);
-      ClearCells(Area);
+      EFPDataGridViewRectArea area = new EFPDataGridViewRectArea(Control, EFPDataGridViewRectAreaCreation.Selected);
+      ClearCells(area);
     }
 
     /// <summary>
@@ -6124,22 +6120,22 @@ namespace FreeLibSet.Forms
       {
         for (int j = 0; j < area.ColumnCount; j++)
         {
-          DataGridViewCell Cell = area[j, i];
-          if (!Cell.Selected)
+          DataGridViewCell cell = area[j, i];
+          if (!cell.Selected)
             continue;
 
-          string ErrorText;
-          if (GetCellReadOnly(Cell, out ErrorText))
+          string errorText;
+          if (GetCellReadOnly(cell, out errorText))
           {
-            Control.CurrentCell = Cell;
-            EFPApp.ShowTempMessage(ErrorText);
+            Control.CurrentCell = cell;
+            EFPApp.ShowTempMessage(errorText);
             return;
           }
 
-          if (!TrySetTextValue(Cell, String.Empty, out ErrorText, true, EFPDataGridViewCellFinishedReason.Clear))
+          if (!TrySetTextValue(cell, String.Empty, out errorText, true, EFPDataGridViewCellFinishedReason.Clear))
           {
-            Control.CurrentCell = Cell;
-            EFPApp.ShowTempMessage(ErrorText);
+            Control.CurrentCell = cell;
+            EFPApp.ShowTempMessage(errorText);
             return;
           }
         }
@@ -6153,11 +6149,11 @@ namespace FreeLibSet.Forms
       {
         for (int j = 0; j < area.Columns.Count; j++)
         {
-          DataGridViewCell Cell = area[j, i];
-          if (!Cell.Selected)
+          DataGridViewCell cell = area[j, i];
+          if (!cell.Selected)
             continue;
 
-          SetTextValue(Cell, String.Empty, EFPDataGridViewCellFinishedReason.Edit);
+          SetTextValue(cell, String.Empty, EFPDataGridViewCellFinishedReason.Edit);
         }
       }
 
@@ -6187,7 +6183,6 @@ namespace FreeLibSet.Forms
      * 
      */
 
-
     void Control_CellBeginEdit1(object sender, DataGridViewCellCancelEventArgs args)
     {
       try
@@ -6207,13 +6202,13 @@ namespace FreeLibSet.Forms
         return; // никогда не бывает
 
       string ReadOnlyMessage;
-      bool RO = GetCellReadOnly(args.RowIndex, args.ColumnIndex, out ReadOnlyMessage);
+      bool isRO = GetCellReadOnly(args.RowIndex, args.ColumnIndex, out ReadOnlyMessage);
 
-      if (RO)
+      if (isRO)
       {
         args.Cancel = true;
-        DataGridViewColumn Column = Control.Columns[args.ColumnIndex];
-        if (!(Column is DataGridViewCheckBoxColumn))
+        DataGridViewColumn col = Control.Columns[args.ColumnIndex];
+        if (!(col is DataGridViewCheckBoxColumn))
           EFPApp.ShowTempMessage(ReadOnlyMessage);
       }
     }
@@ -6244,8 +6239,8 @@ namespace FreeLibSet.Forms
       if (args.ColumnIndex < 0)
         return; // никогда не бывает
 
-      DataGridViewColumn Column = Control.Columns[args.ColumnIndex];
-      if (Column is DataGridViewCheckBoxColumn) // 04.11.2009 - для CheckBox-не надо
+      DataGridViewColumn col = Control.Columns[args.ColumnIndex];
+      if (col is DataGridViewCheckBoxColumn) // 04.11.2009 - для CheckBox-не надо
         return;
       _SavedCancelButton = Control.FindForm().CancelButton;
       Control.FindForm().CancelButton = null;
@@ -6309,10 +6304,10 @@ namespace FreeLibSet.Forms
 
       if (Control[args.ColumnIndex, args.RowIndex] is DataGridViewCheckBoxCell)
       {
-        string ReadOnlyMessage;
-        bool RO = GetCellReadOnly(args.RowIndex, args.ColumnIndex, out ReadOnlyMessage);
-        if (RO && GetCellContentVisible(args.RowIndex, args.ColumnIndex))
-          EFPApp.ShowTempMessage(ReadOnlyMessage);
+        string readOnlyMessage;
+        bool isRO = GetCellReadOnly(args.RowIndex, args.ColumnIndex, out readOnlyMessage);
+        if (isRO && GetCellContentVisible(args.RowIndex, args.ColumnIndex))
+          EFPApp.ShowTempMessage(readOnlyMessage);
       }
     }
 
@@ -6328,7 +6323,6 @@ namespace FreeLibSet.Forms
         EFPApp.ShowException(e, "Ошибка обработки события CurrentCellDirtyStateChanged");
       }
     }
-
 
     void Control_CellParsing(object sender, DataGridViewCellParsingEventArgs args)
     {
@@ -6347,8 +6341,8 @@ namespace FreeLibSet.Forms
       if (args.ParsingApplied)
         return;
 
-      DataGridViewCell Cell = Control[args.ColumnIndex, args.RowIndex];
-      if (Cell is DataGridViewTextBoxCell)
+      DataGridViewCell cell = Control[args.ColumnIndex, args.RowIndex];
+      if (cell is DataGridViewTextBoxCell)
       {
         if (args.Value is String)
         {
@@ -6384,10 +6378,10 @@ namespace FreeLibSet.Forms
         return false; // не число с плавающей точкой
 
       WinFormsTools.CorrectNumberString(ref s, args.InheritedCellStyle.FormatProvider);
-      DataGridViewCell Cell = Control[args.ColumnIndex, args.RowIndex];
+      DataGridViewCell cell = Control[args.ColumnIndex, args.RowIndex];
       try
       {
-        args.Value = Cell.ParseFormattedValue(s, args.InheritedCellStyle, null, null);
+        args.Value = cell.ParseFormattedValue(s, args.InheritedCellStyle, null, null);
       }
       catch
       {
@@ -6415,28 +6409,27 @@ namespace FreeLibSet.Forms
       if (args.Cancel)
         return;
 
-      DataGridViewCell Cell = Control[args.ColumnIndex, args.RowIndex];
+      DataGridViewCell cell = Control[args.ColumnIndex, args.RowIndex];
       if (!Control.IsCurrentCellInEditMode)
         return;
 
       // 15.12.2012
       // Проверяем корректность маски
-      IMaskProvider MaskProvider = Columns[args.ColumnIndex].MaskProvider;
-      if (MaskProvider != null && Cell.ValueType == typeof(string))
+      IMaskProvider maskProvider = Columns[args.ColumnIndex].MaskProvider;
+      if (maskProvider != null && cell.ValueType == typeof(string))
       {
         string s = args.FormattedValue.ToString().Trim();
         if (s.Length > 0)
         {
-          string ErrorText;
-          if (!MaskProvider.Test(args.FormattedValue.ToString(), out ErrorText))
+          string errorText;
+          if (!maskProvider.Test(args.FormattedValue.ToString(), out errorText))
           {
-            EFPApp.ShowTempMessage(ErrorText);
+            EFPApp.ShowTempMessage(errorText);
             args.Cancel = true;
           }
         }
       }
     }
-
 
     void Control_CellValueChanged(object sender, DataGridViewCellEventArgs args)
     {
@@ -6450,13 +6443,13 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private bool InsideCellValueChanged = false;
+    private bool _InsideCellValueChanged;
     private void DoControl_CellValueChanged(DataGridViewCellEventArgs Args)
     {
-      if (InsideCellValueChanged)
+      if (_InsideCellValueChanged)
         return;
 
-      InsideCellValueChanged = true;
+      _InsideCellValueChanged = true;
       try
       {
         if (Control.IsCurrentCellInEditMode)
@@ -6470,7 +6463,7 @@ namespace FreeLibSet.Forms
       }
       finally
       {
-        InsideCellValueChanged = false;
+        _InsideCellValueChanged = false;
       }
     }
 
@@ -6498,11 +6491,11 @@ namespace FreeLibSet.Forms
       if (CellFinished == null)
         return;
 
-      EFPDataGridViewCellFinishedEventArgs Args = new EFPDataGridViewCellFinishedEventArgs(this,
+      EFPDataGridViewCellFinishedEventArgs args = new EFPDataGridViewCellFinishedEventArgs(this,
         rowIndex, columnIndex, reason);
       try
       {
-        CellFinished(this, Args);
+        CellFinished(this, args);
       }
       catch (Exception e)
       {
@@ -6591,7 +6584,6 @@ namespace FreeLibSet.Forms
       return DoGetCellAttributes(columnIndex).ContentVisible;
     }
 
-
     #endregion
 
     #region Вставка текста из буфера обмена
@@ -6605,12 +6597,12 @@ namespace FreeLibSet.Forms
     /// <returns>true, если вставка выполнена</returns>
     public bool PerformPasteText(string[,] textArray)
     {
-      string ErrorText;
-      if (DoPasteText(textArray, false, out ErrorText))
+      string errorText;
+      if (DoPasteText(textArray, false, out errorText))
         return true;
       else
       {
-        EFPApp.ShowTempMessage(ErrorText);
+        EFPApp.ShowTempMessage(errorText);
         return false;
       }
     }
@@ -6623,8 +6615,8 @@ namespace FreeLibSet.Forms
     /// <returns>true, если вставка может быть выполнена</returns>
     public bool TestCanPasteText(string[,] textArray)
     {
-      string ErrorText;
-      return TestCanPasteText(textArray, out ErrorText);
+      string errorText;
+      return TestCanPasteText(textArray, out errorText);
     }
 
 
@@ -6671,9 +6663,9 @@ namespace FreeLibSet.Forms
         return false; // 27.12.2020
       }
 
-      Rectangle Rect = SelectedRectAddress;
-      int nX2 = Rect.Width;
-      int nY2 = Rect.Height;
+      Rectangle rect = SelectedRectAddress;
+      int nX2 = rect.Width;
+      int nY2 = rect.Height;
       if (nX2 == 0 || nY2 == 0)
       {
         errorText = "Нет выбранной ячейки";
@@ -6721,8 +6713,8 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        Rect = new Rectangle(Rect.Location, new Size(nX1, nY1));
-        if (((Rect.Bottom - 1) >= Control.RowCount && (!Control.AllowUserToAddRows)) || (Rect.Right - 1) >= Control.ColumnCount)
+        rect = new Rectangle(rect.Location, new Size(nX1, nY1));
+        if (((rect.Bottom - 1) >= Control.RowCount && (!Control.AllowUserToAddRows)) || (rect.Right - 1) >= Control.ColumnCount)
         {
           /*
           EFPApp.ShowTempMessage("Текст в буфере обмена содержит " +
@@ -6735,9 +6727,9 @@ namespace FreeLibSet.Forms
           return false;
         }
 
-        if ((!testOnly) && (Rect.Bottom - 1) >= Control.RowCount)
+        if ((!testOnly) && (rect.Bottom - 1) >= Control.RowCount)
         {
-          int addCount = Rect.Bottom - Control.RowCount + 1;
+          int addCount = rect.Bottom - Control.RowCount + 1;
           //int addCount = Rect.Bottom - Control.RowCount + (Control.AllowUserToAddRows ? 0 : 1); // изм. 11.01.2022
 #if DEBUG
           if (addCount <= 0)
@@ -6753,26 +6745,26 @@ namespace FreeLibSet.Forms
 
       #region Опрос свойства ReadOnly ячеек и возможности вставить значения
 
-      for (int i = Rect.Top; i < Rect.Bottom; i++)
+      for (int i = rect.Top; i < rect.Bottom; i++)
       {
         if (/*testOnly && */i >= Control.RowCount)
           break;
 
-        for (int j = Rect.Left; j < Rect.Right; j++)
+        for (int j = rect.Left; j < rect.Right; j++)
         {
-          DataGridViewCell Cell = Control[j, i];
+          DataGridViewCell cell = Control[j, i];
           if (GetCellReadOnly(i, j, out errorText))
           {
-            Control.CurrentCell = Cell;
+            Control.CurrentCell = cell;
             return false;
           }
 
-          int i1 = (i - Rect.Top) % nY1;
-          int j1 = (j - Rect.Left) % nX1;
+          int i1 = (i - rect.Top) % nY1;
+          int j1 = (j - rect.Left) % nX1;
 
-          if (!TrySetTextValue(Cell, textArray[i1, j1], out errorText, true, EFPDataGridViewCellFinishedReason.Paste))
+          if (!TrySetTextValue(cell, textArray[i1, j1], out errorText, true, EFPDataGridViewCellFinishedReason.Paste))
           {
-            Control.CurrentCell = Cell;
+            Control.CurrentCell = cell;
             return false;
           }
         }
@@ -6789,9 +6781,9 @@ namespace FreeLibSet.Forms
         DataGridViewCell oldCell = Control.CurrentCell;
         bool oldCellInNewRow = Control.AllowUserToAddRows && Control.CurrentCellAddress.Y == (Control.RowCount - 1); // курсор на строке со звездочкой?
 
-        for (int i = Rect.Top; i < Rect.Bottom; i++)
+        for (int i = rect.Top; i < rect.Bottom; i++)
         {
-          int i1 = (i - Rect.Top) % nY1;
+          int i1 = (i - rect.Top) % nY1;
 
           if (bl == null)
           {
@@ -6804,12 +6796,12 @@ namespace FreeLibSet.Forms
               bl.AddNew();
           }
 
-          for (int j = Rect.Left; j < Rect.Right; j++)
+          for (int j = rect.Left; j < rect.Right; j++)
           {
-            DataGridViewCell Cell = Control[j, i];
-            int j1 = (j - Rect.Left) % nX1;
+            DataGridViewCell cell = Control[j, i];
+            int j1 = (j - rect.Left) % nX1;
 
-            SetTextValue(Cell, textArray[i1, j1], EFPDataGridViewCellFinishedReason.Paste);
+            SetTextValue(cell, textArray[i1, j1], EFPDataGridViewCellFinishedReason.Paste);
           }
         }
 
@@ -6904,9 +6896,9 @@ namespace FreeLibSet.Forms
     {
       if (Control.IsDisposed)
         return; // 27.03.2018
-      EFPDataGridViewSelection OldSel = null;
+      EFPDataGridViewSelection oldSel = null;
       if (ProviderState == EFPControlProviderState.Attached) // 04.07.2021
-        OldSel = Selection;
+        oldSel = Selection;
 
 
 #if XXX
@@ -6923,11 +6915,11 @@ namespace FreeLibSet.Forms
 
       IncSearchDataView = null; // больше недействителен (???)
 
-      if (OldSel != null)
+      if (oldSel != null)
       {
         try
         {
-          Selection = OldSel;
+          Selection = oldSel;
         }
         catch (Exception e)
         {
@@ -6966,7 +6958,7 @@ namespace FreeLibSet.Forms
       // Любая операция редактирования останавливает поиск по первым буквам
       CurrentIncSearchColumn = null;
 
-      bool Res;
+      bool res;
       // Пытаемся вызвать специальный обработчик в GridProducerColum
       if (CurrentColumn != null)
       {
@@ -6977,7 +6969,7 @@ namespace FreeLibSet.Forms
           try
           {
             EFPDataViewRowInfo rowInfo = this.GetRowInfo(Control.CurrentCellAddress.Y);
-            Res = CurrentColumn.ColumnProducer.PerformCellEdit(rowInfo, CurrentColumnName);
+            res = CurrentColumn.ColumnProducer.PerformCellEdit(rowInfo, CurrentColumnName);
             FreeRowInfo(rowInfo);
           }
           finally
@@ -6985,7 +6977,7 @@ namespace FreeLibSet.Forms
             _State = EFPDataGridViewState.View;
             _InsideEditData = false;
           }
-          if (Res)
+          if (res)
             return;
         }
       }
@@ -6994,7 +6986,7 @@ namespace FreeLibSet.Forms
       _State = state;
       try
       {
-        Res = OnEditData(EventArgs.Empty);
+        res = OnEditData(EventArgs.Empty);
         if (CommandItems != null)
           CommandItems.PerformRefreshItems();
       }
@@ -7004,7 +6996,7 @@ namespace FreeLibSet.Forms
         _InsideEditData = false;
       }
 
-      if (!Res)
+      if (!res)
         InlineEditData(state);
     }
     /// <summary>
@@ -7025,9 +7017,9 @@ namespace FreeLibSet.Forms
     public void SetTextValue(DataGridViewCell cell, string textValue,
         EFPDataGridViewCellFinishedReason reason)
     {
-      string ErrorText;
-      if (!TrySetTextValue(cell, textValue, out ErrorText, false, reason))
-        throw new InvalidOperationException("Нельзя записать значение \"" + textValue + "\". " + ErrorText);
+      string errorText;
+      if (!TrySetTextValue(cell, textValue, out errorText, false, reason))
+        throw new InvalidOperationException("Нельзя записать значение \"" + textValue + "\". " + errorText);
     }
 
     /// <summary>
@@ -7059,28 +7051,28 @@ namespace FreeLibSet.Forms
         return true;
       }
 
-      Type ValueType;
+      Type valueType;
       if (cell.ValueType != null)
-        ValueType = cell.ValueType;
+        valueType = cell.ValueType;
       else
-        ValueType = typeof(string);
+        valueType = typeof(string);
 
-      IMaskProvider MaskProvider = Columns[cell.ColumnIndex].MaskProvider;
+      IMaskProvider maskProvider = Columns[cell.ColumnIndex].MaskProvider;
 
-      if (DataTools.IsFloatType(ValueType))
+      if (DataTools.IsFloatType(valueType))
         WinFormsTools.CorrectNumberString(ref textValue);
-      else if (ValueType == typeof(string) && MaskProvider != null)
+      else if (valueType == typeof(string) && maskProvider != null)
       {
-        if (!MaskProvider.Test(textValue, out errorText))
+        if (!maskProvider.Test(textValue, out errorText))
           return false;
       }
 
       try
       {
-        object v = Convert.ChangeType(textValue, ValueType);
+        object v = Convert.ChangeType(textValue, valueType);
         if (!testOnly)
         {
-          if (ValueType == typeof(DateTime))
+          if (valueType == typeof(DateTime))
           {
             // 30.03.2021, 13.04.2021
             // Если формат не предусматривает ввода времени, его требуется убрать
@@ -7401,19 +7393,19 @@ namespace FreeLibSet.Forms
       // чтобы он мог вернуть значение ячейки. 
       // И почему нельзя было сделать метод DataGridViewCell.GetValue() общедоступным?
 
-      DataGridViewCell Cell = Control[_ColumnIndex, _GetRowAttributesArgs.RowIndex];
+      DataGridViewCell cell = Control[_ColumnIndex, _GetRowAttributesArgs.RowIndex];
 
       // 30.06.2021
       // Если строкое значение получено из DataRow, которая была загружена из базы данных, 
       // то значение может содержать концевые пробелы
-      string sValue = Cell.Value as String;
+      string sValue = cell.Value as String;
       if (sValue != null)
         _GetCellAttributesArgs.Value = sValue.TrimEnd();
       else
-        _GetCellAttributesArgs.Value = Cell.Value;
+        _GetCellAttributesArgs.Value = cell.Value;
       _GetCellAttributesArgs.FormattingApplied = false;
 
-      CallOnGetCellAttributes(_ColumnIndex, Cell.InheritedStyle, true, _GetCellAttributesArgs.Value);
+      CallOnGetCellAttributes(_ColumnIndex, cell.InheritedStyle, true, _GetCellAttributesArgs.Value);
 
       if (_GetCellAttributesArgs.Reason == EFPDataGridViewAttributesReason.View ||
         _GetCellAttributesArgs.Reason == EFPDataGridViewAttributesReason.Print) // 06.02.2018
@@ -7545,7 +7537,7 @@ namespace FreeLibSet.Forms
         if (sValue != null)
           args.Value = sValue.TrimEnd();
 
-        EFPDataGridViewColumn ColInfo = this.Columns[args.ColumnIndex];
+        EFPDataGridViewColumn colInfo = this.Columns[args.ColumnIndex];
 
         // Форматирование значения и получение цветовых атрибутов
         _GetCellAttributesArgs.Value = args.Value;
@@ -7638,12 +7630,12 @@ namespace FreeLibSet.Forms
       //  // !!! Нужно сделать исходя из текущего цвета ColorWindow
       //  CellStyle.BackColor = ColorEx.FromArgb(244,244,244); 
       //}
-      Color BackColor, ForeColor;
-      SetCellAttr(colorType, grayed, contentVisible, out BackColor, out ForeColor);
-      if (!BackColor.IsEmpty)
-        cellStyle.BackColor = BackColor;
-      if (!ForeColor.IsEmpty)
-        cellStyle.ForeColor = ForeColor;
+      Color backColor, foreColor;
+      SetCellAttr(colorType, grayed, contentVisible, out backColor, out foreColor);
+      if (!backColor.IsEmpty)
+        cellStyle.BackColor = backColor;
+      if (!foreColor.IsEmpty)
+        cellStyle.ForeColor = foreColor;
     }
 
     /// <summary>
@@ -7722,51 +7714,51 @@ namespace FreeLibSet.Forms
     /// <returns>Атрибуnы ячейки для передачи в Excel</returns>
     public static EFPDataGridViewExcelCellAttributes GetExcelCellAttr(EFPDataGridViewColorType colorType, bool grayed)
     {
-      EFPDataGridViewExcelCellAttributes Attr = new EFPDataGridViewExcelCellAttributes();
-      Attr.BackColor = Color.Empty;
-      Attr.ForeColor = Color.Empty;
+      EFPDataGridViewExcelCellAttributes attr = new EFPDataGridViewExcelCellAttributes();
+      attr.BackColor = Color.Empty;
+      attr.ForeColor = Color.Empty;
       switch (colorType)
       {
         case EFPDataGridViewColorType.Header:
-          Attr.ForeColor = Color.Navy;
-          Attr.BackColor = Color.White;
-          Attr.Bold = true;
+          attr.ForeColor = Color.Navy;
+          attr.BackColor = Color.White;
+          attr.Bold = true;
           //Attr.Underline = true;
-          Attr.Italic = true;
+          attr.Italic = true;
           break;
         case EFPDataGridViewColorType.Special:
-          Attr.BackColor = Color.FromArgb(255, 255, 204);
+          attr.BackColor = Color.FromArgb(255, 255, 204);
           break;
         case EFPDataGridViewColorType.Total1:
-          Attr.BackColor = Color.FromArgb(204, 255, 204);
-          Attr.Bold = true;
+          attr.BackColor = Color.FromArgb(204, 255, 204);
+          attr.Bold = true;
           break;
         case EFPDataGridViewColorType.Total2:
           //Attr.BackColor = Color.FromArgb(255, 0, 255); // менее яркого нет
           // 22.06.2016
-          Attr.BackColor = Color.FromArgb(0xFF, 0x99, 0xCC); // ColorIndex=38
-          Attr.Bold = true;
+          attr.BackColor = Color.FromArgb(0xFF, 0x99, 0xCC); // ColorIndex=38
+          attr.Bold = true;
           break;
         case EFPDataGridViewColorType.TotalRow:
-          Attr.BackColor = Color.FromArgb(204, 204, 204);
-          Attr.Bold = true;
+          attr.BackColor = Color.FromArgb(204, 204, 204);
+          attr.Bold = true;
           break;
         case EFPDataGridViewColorType.Error:
-          Attr.BackColor = Color.Red;
-          Attr.Bold = true;
+          attr.BackColor = Color.Red;
+          attr.Bold = true;
           break;
         case EFPDataGridViewColorType.Warning:
-          Attr.BackColor = Color.Yellow;
-          Attr.ForeColor = Color.Red;
-          Attr.Bold = true;
+          attr.BackColor = Color.Yellow;
+          attr.ForeColor = Color.Red;
+          attr.Bold = true;
           break;
         case EFPDataGridViewColorType.Alter:
-          Attr.BackColor = Color.FromArgb(0xCC, 0xFF, 0xFF); // ColorIndex=34
+          attr.BackColor = Color.FromArgb(0xCC, 0xFF, 0xFF); // ColorIndex=34
           break;
       }
       if (grayed)
-        Attr.ForeColor = Color.Gray;
-      return Attr;
+        attr.ForeColor = Color.Gray;
+      return attr;
     }
 
     #endregion
@@ -8174,12 +8166,12 @@ namespace FreeLibSet.Forms
       {
         EFPApp.ShowTempMessage("Просмотр не содержит ни одной строки");
       }
-      int StartRowIndex;
+      int startRowIndex;
       if (fromTableBegin)
-        StartRowIndex = -1;
+        startRowIndex = -1;
       else
-        StartRowIndex = CurrentRowIndex;
-      int NewRowIndex = FindErrorRow(StartRowIndex, forward, imageKind);
+        startRowIndex = CurrentRowIndex;
+      int NewRowIndex = FindErrorRow(startRowIndex, forward, imageKind);
       if (NewRowIndex < 0)
       {
         string msg;
@@ -8261,17 +8253,17 @@ namespace FreeLibSet.Forms
 
     private bool TestRowImageKind(int rowIndex, EFPDataGridViewImageKind imageKind)
     {
-      EFPDataGridViewImageKind ThisKind = GetRowImageKind(rowIndex);
+      EFPDataGridViewImageKind thisKind = GetRowImageKind(rowIndex);
       switch (imageKind)
       {
         case EFPDataGridViewImageKind.None:
-          return ThisKind == EFPDataGridViewImageKind.None;
+          return thisKind == EFPDataGridViewImageKind.None;
         case EFPDataGridViewImageKind.Information:
-          return ThisKind != EFPDataGridViewImageKind.None;
+          return thisKind != EFPDataGridViewImageKind.None;
         case EFPDataGridViewImageKind.Warning:
-          return ThisKind == EFPDataGridViewImageKind.Warning || ThisKind == EFPDataGridViewImageKind.Error;
+          return thisKind == EFPDataGridViewImageKind.Warning || thisKind == EFPDataGridViewImageKind.Error;
         case EFPDataGridViewImageKind.Error:
-          return ThisKind == EFPDataGridViewImageKind.Error;
+          return thisKind == EFPDataGridViewImageKind.Error;
         default:
           throw new ArgumentException("Недопустимый тип изображения строки для поиска:" + imageKind.ToString(), "imageKind");
       }
@@ -8342,20 +8334,20 @@ namespace FreeLibSet.Forms
         cnt == _GetRowAttributesArgs.RowErrorMessages.Count)
       {
         // Признак ошибки установлен, но сообщение не добавлено
-        string Msg;
+        string msg;
         if (String.IsNullOrEmpty(_GetRowAttributesArgs.ToolTipText))
-          Msg = "Сообщение об ошибке отсутствует";
+          msg = "Сообщение об ошибке отсутствует";
         else
-          Msg = _GetRowAttributesArgs.ToolTipText.Replace(Environment.NewLine, " ");
+          msg = _GetRowAttributesArgs.ToolTipText.Replace(Environment.NewLine, " ");
 
-        ErrorMessageKind Kind2;
+        ErrorMessageKind kind2;
         switch (_GetRowAttributesArgs.ImageKind)
         {
-          case EFPDataGridViewImageKind.Error: Kind2 = ErrorMessageKind.Error; break;
-          case EFPDataGridViewImageKind.Warning: Kind2 = ErrorMessageKind.Warning; break;
-          default: Kind2 = ErrorMessageKind.Info; break;
+          case EFPDataGridViewImageKind.Error: kind2 = ErrorMessageKind.Error; break;
+          case EFPDataGridViewImageKind.Warning: kind2 = ErrorMessageKind.Warning; break;
+          default: kind2 = ErrorMessageKind.Info; break;
         }
-        _GetRowAttributesArgs.RowErrorMessages.Add(new ErrorMessageItem(Kind2, Msg, null, rowIndex));
+        _GetRowAttributesArgs.RowErrorMessages.Add(new ErrorMessageItem(kind2, msg, null, rowIndex));
       }
 
       if (useRowIdText && (_GetRowAttributesArgs.RowErrorMessages.Count > cnt))
@@ -8372,12 +8364,12 @@ namespace FreeLibSet.Forms
       if (errorMessages == null)
         throw new ArgumentNullException("errorMessages");
 
-      int[] RowIdxs = SelectedRowIndices;
+      int[] rowIdxs = SelectedRowIndices;
       _GetRowAttributesArgs.RowErrorMessages = errorMessages;
       try
       {
-        for (int i = 0; i < RowIdxs.Length; i++)
-          DoGetRowErrorMessages(RowIdxs[i], useRowIdText);
+        for (int i = 0; i < rowIdxs.Length; i++)
+          DoGetRowErrorMessages(rowIdxs[i], useRowIdText);
       }
       finally
       {
@@ -8395,12 +8387,12 @@ namespace FreeLibSet.Forms
       if (errorMessages == null)
         throw new ArgumentNullException("errorMessages");
 
-      int[] RowIdxs = SelectedRowIndices;
+      int[] rowIdxs = SelectedRowIndices;
       _GetRowAttributesArgs.RowErrorMessages = errorMessages;
       try
       {
-        for (int i = 0; i < RowIdxs.Length; i++)
-          DoGetRowErrorMessages(RowIdxs[i], RowIdxs.Length > 1);
+        for (int i = 0; i < rowIdxs.Length; i++)
+          DoGetRowErrorMessages(rowIdxs[i], rowIdxs.Length > 1);
       }
       finally
       {
@@ -8446,8 +8438,8 @@ namespace FreeLibSet.Forms
       if (!UseRowImages)
         return;
 
-      int ErrorCount = 0;
-      int WarningCount = 0;
+      int errorCount = 0;
+      int warningCount = 0;
       int n = Control.RowCount;
       if (n == 0)
       {
@@ -8459,41 +8451,41 @@ namespace FreeLibSet.Forms
         switch (GetRowImageKind(i))
         {
           case EFPDataGridViewImageKind.Error:
-            ErrorCount++;
+            errorCount++;
             break;
           case EFPDataGridViewImageKind.Warning:
-            WarningCount++;
+            warningCount++;
             break;
         }
       }
 
-      if (ErrorCount == 0 && WarningCount == 0)
+      if (errorCount == 0 && warningCount == 0)
         TopLeftCellToolTipText = "Нет строк с ошибками или предупреждениями";
       else
       {
         StringBuilder sb = new StringBuilder();
-        if (ErrorCount > 0)
+        if (errorCount > 0)
         {
           sb.Append("Есть строки с ошибками (");
-          sb.Append(ErrorCount);
+          sb.Append(errorCount);
           sb.Append(")");
           sb.Append(Environment.NewLine);
         }
-        if (WarningCount > 0)
+        if (warningCount > 0)
         {
           sb.Append("Есть строки с предупреждениями (");
-          sb.Append(WarningCount);
+          sb.Append(warningCount);
           sb.Append(")");
           sb.Append(Environment.NewLine);
         }
         sb.Append("Используйте Ctrl+] и Ctrl+[ для перехода к этим строкам");
         TopLeftCellToolTipText = sb.ToString();
       }
-      if (ErrorCount > 0)
+      if (errorCount > 0)
         TopLeftCellImageKind = EFPDataGridViewImageKind.Error;
       else
       {
-        if (WarningCount > 0)
+        if (warningCount > 0)
           TopLeftCellImageKind = EFPDataGridViewImageKind.Warning;
         else
           TopLeftCellImageKind = EFPDataGridViewImageKind.None;
@@ -8514,20 +8506,20 @@ namespace FreeLibSet.Forms
           n = SourceAsDataView.Count;
       }
 
-      EFPDataGridViewImageKind MaxLevel = EFPDataGridViewImageKind.None;
+      EFPDataGridViewImageKind maxLevel = EFPDataGridViewImageKind.None;
 
       for (int i = 0; i < n; i++)
       {
-        EFPDataGridViewImageKind ThisLevel = GetRowImageKind(i);
+        EFPDataGridViewImageKind thisLevel = GetRowImageKind(i);
 
-        if (ThisLevel > MaxLevel)
+        if (thisLevel > maxLevel)
         {
-          MaxLevel = ThisLevel;
-          if (MaxLevel == EFPDataGridViewImageKind.Error)
+          maxLevel = thisLevel;
+          if (maxLevel == EFPDataGridViewImageKind.Error)
             break;
         }
       }
-      return MaxLevel;
+      return maxLevel;
     }
 
     #endregion
@@ -8619,17 +8611,17 @@ namespace FreeLibSet.Forms
         return null;
       if (_CurrentIncSearchColumn.MaskProvider == null)
         return null;
-      string EditMask = _CurrentIncSearchColumn.MaskProvider.EditMask;
-      if (String.IsNullOrEmpty(EditMask))
+      string editMask = _CurrentIncSearchColumn.MaskProvider.EditMask;
+      if (String.IsNullOrEmpty(editMask))
         return null;
-      MaskedTextProvider Provider = new MaskedTextProvider(EditMask,
+      MaskedTextProvider provider = new MaskedTextProvider(editMask,
         // System.Globalization.CultureInfo.CurrentCulture,
         _CurrentIncSearchColumn.MaskProvider.Culture, // 04.06.2019
         false, (char)0, (char)0, false);
-      Provider.SkipLiterals = true;
-      Provider.ResetOnSpace = false;
-      Provider.Set(_CurrentIncSearchChars);
-      return Provider;
+      provider.SkipLiterals = true;
+      provider.ResetOnSpace = false;
+      provider.Set(_CurrentIncSearchChars);
+      return provider;
     }
 
     void Control_KeyPress(object sender, KeyPressEventArgs args)
@@ -8669,37 +8661,37 @@ namespace FreeLibSet.Forms
       EFPApp.ShowTempMessage(null);
 
       // Под Windows-98 неправильная кодировка русских букв - исправляем
-      char KeyChar = WinFormsTools.CorrectCharWin98(args.KeyChar);
+      char keyChar = WinFormsTools.CorrectCharWin98(args.KeyChar);
 
-      MaskedTextProvider MaskProvider = GetIncSearchMaskProvider();
+      MaskedTextProvider maskProvider = GetIncSearchMaskProvider();
       string s;
-      if (MaskProvider != null)
+      if (maskProvider != null)
       {
         // для столбца задана маска
-        if (!AddCharToIncSearchMask(MaskProvider, KeyChar, out s))
+        if (!AddCharToIncSearchMask(maskProvider, keyChar, out s))
           return;
       }
       else
       {
         // Нет маски
-        s = (CurrentIncSearchChars + KeyChar);
+        s = (CurrentIncSearchChars + keyChar);
       }
 
-      bool Res;
+      bool res;
       EFPApp.BeginWait("Поиск");
       try
       {
         //Res = CurrentColumn.PerformIncSearch(s.ToUpper(), false);
         // 27.12.2020
-        Res = CurrentIncSearchColumn.PerformIncSearch(s.ToUpper(), false);
+        res = CurrentIncSearchColumn.PerformIncSearch(s.ToUpper(), false);
       }
       finally
       {
         EFPApp.EndWait();
       }
-      if (!Res)
+      if (!res)
       {
-        EFPApp.ShowTempMessage("Символ \"" + KeyChar + "\" не может быть добавлен к строке быстрого поиска");
+        EFPApp.ShowTempMessage("Символ \"" + keyChar + "\" не может быть добавлен к строке быстрого поиска");
         return;
       }
 
@@ -8715,20 +8707,20 @@ namespace FreeLibSet.Forms
       string s1 = new string(keyChar, 1);
       s1 = s1.ToUpper();
       keyChar = s1[0];
-      int ResPos;
-      MaskedTextResultHint ResHint;
-      if (!maskProvider.Add(keyChar, out ResPos, out ResHint))
+      int resPos;
+      MaskedTextResultHint resHint;
+      if (!maskProvider.Add(keyChar, out resPos, out resHint))
       {
         // Пытаемся подобрать символ в нижнем регистре
         s1 = s1.ToLower();
-        char KeyChar2 = s1[0];
-        if (!maskProvider.Add(KeyChar2, out ResPos, out ResHint))
+        char keyChar2 = s1[0];
+        if (!maskProvider.Add(keyChar2, out resPos, out resHint))
         {
           // MaskedTextProvider почему-то не пропускает символы-разделители в 
           // качестве ввода, независимо от SkipLiterals
           // Поэтому, если следующим символом ожидается разделитель, то его
           // добавляем к строке поиска вручную
-          if (ResHint != MaskedTextResultHint.UnavailableEditPosition)
+          if (resHint != MaskedTextResultHint.UnavailableEditPosition)
           {
             if ((!maskProvider.IsEditPosition(maskProvider.LastAssignedPosition + 1)) && maskProvider[maskProvider.LastAssignedPosition + 1] == keyChar)
             {
@@ -8736,13 +8728,13 @@ namespace FreeLibSet.Forms
               return true;
             }
           }
-          EFPApp.ShowTempMessage("Нельзя добавить символ \"" + keyChar + "\" для быстрого поиска. " + GetMaskedTextResultHintText(ResHint));
+          EFPApp.ShowTempMessage("Нельзя добавить символ \"" + keyChar + "\" для быстрого поиска. " + GetMaskedTextResultHintText(resHint));
           return false;
         }
       }
-      if (ResHint == MaskedTextResultHint.CharacterEscaped)
+      if (resHint == MaskedTextResultHint.CharacterEscaped)
       {
-        EFPApp.ShowTempMessage("Нельзя добавить символ \"" + keyChar + "\" для быстрого поиска. " + GetMaskedTextResultHintText(ResHint));
+        EFPApp.ShowTempMessage("Нельзя добавить символ \"" + keyChar + "\" для быстрого поиска. " + GetMaskedTextResultHintText(resHint));
         return false;
       }
       s = maskProvider.ToString(0, maskProvider.LastAssignedPosition + 1);
@@ -8787,14 +8779,14 @@ namespace FreeLibSet.Forms
             return;
           }
 
-          MaskedTextProvider MaskProvider = GetIncSearchMaskProvider();
+          MaskedTextProvider maskProvider = GetIncSearchMaskProvider();
           string s;
-          if (MaskProvider != null)
+          if (maskProvider != null)
           {
-            if (_CurrentIncSearchChars.Length == MaskProvider.LastAssignedPosition + 1)
+            if (_CurrentIncSearchChars.Length == maskProvider.LastAssignedPosition + 1)
             {
-              MaskProvider.Remove();
-              s = MaskProvider.ToString(0, MaskProvider.LastAssignedPosition + 1);
+              maskProvider.Remove();
+              s = maskProvider.ToString(0, maskProvider.LastAssignedPosition + 1);
             }
             else
               // Последний символ в строке поиска - разделитель, введенный вручную
@@ -8913,10 +8905,10 @@ namespace FreeLibSet.Forms
           InsideSetCurrentConfig = true;
           try
           {
-            CancelEventArgs Args = new CancelEventArgs();
-            Args.Cancel = false;
-            OnCurrentConfigChanged(Args);
-            if ((!Args.Cancel) && (GridProducer != null))
+            CancelEventArgs args = new CancelEventArgs();
+            args.Cancel = false;
+            OnCurrentConfigChanged(args);
+            if ((!args.Cancel) && (GridProducer != null))
             {
               //Control.Columns.Clear(); // 21.01.2012
               this.Columns.Clear(); // 10.01.2016
@@ -9142,26 +9134,26 @@ namespace FreeLibSet.Forms
       CurrentIncSearchColumn = null;
       Control.EndEdit();
 
-      int ColumnIndex = _MarkRowsGridColumn.Index;
+      int columnIndex = _MarkRowsGridColumn.Index;
       int cnt = 0;
       switch (rows)
       {
         case EFPDataGridViewCheckMarkRows.Selected:
-          int[] SelRows = SelectedRowIndices;
-          for (int i = 0; i < SelRows.Length; i++)
+          int[] selRows = SelectedRowIndices;
+          for (int i = 0; i < selRows.Length; i++)
           {
-            if (CheckMarkRow(SelRows[i], ColumnIndex, action))
+            if (CheckMarkRow(selRows[i], columnIndex, action))
               cnt++;
-            Control.InvalidateCell(ColumnIndex, SelRows[i]);
+            Control.InvalidateCell(columnIndex, selRows[i]);
           }
           break;
         case EFPDataGridViewCheckMarkRows.All:
           for (int i = 0; i < Control.RowCount; i++)
           {
-            if (CheckMarkRow(i, ColumnIndex, action))
+            if (CheckMarkRow(i, columnIndex, action))
               cnt++;
           }
-          Control.InvalidateColumn(ColumnIndex);
+          Control.InvalidateColumn(columnIndex);
           break;
         default:
           throw new ArgumentException("Неивестный Rows=" + rows.ToString(), "rows");
@@ -9171,41 +9163,41 @@ namespace FreeLibSet.Forms
 
     private bool CheckMarkRow(int rowIndex, int columnIndex, EFPDataGridViewCheckMarkAction action)
     {
-      DataGridViewRow Row;
-      Row = Control.Rows.SharedRow(rowIndex);
-      if (Row.Index >= 0)
+      DataGridViewRow row;
+      row = Control.Rows.SharedRow(rowIndex);
+      if (row.Index >= 0)
       {
         // Для разделяемой строки такое действие не допускается
-        if (!Row.Visible)
+        if (!row.Visible)
           return false;
-        if (Row.ReadOnly)
+        if (row.ReadOnly)
           return false;
       }
       /*EFPDataGridViewRowAttributesEventArgs RowArgs = */
       DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.View);
       EFPDataGridViewCellAttributesEventArgs CellArgs = DoGetCellAttributes(columnIndex);
-      bool OrgValue = DataTools.GetBool(CellArgs.Value);
-      bool NewValue;
+      bool orgValue = DataTools.GetBool(CellArgs.Value);
+      bool newValue;
       switch (action)
       {
         case EFPDataGridViewCheckMarkAction.Check:
-          NewValue = true;
+          newValue = true;
           break;
         case EFPDataGridViewCheckMarkAction.Uncheck:
-          NewValue = false;
+          newValue = false;
           break;
         case EFPDataGridViewCheckMarkAction.Invert:
-          NewValue = !OrgValue;
+          newValue = !orgValue;
           break;
         default:
           throw new ArgumentException("Неизвестный Action=" + action.ToString(), "action");
       }
 
-      if (NewValue == OrgValue)
+      if (newValue == orgValue)
         return false;
       // Требуется не Shared-строка
-      Row = Control.Rows[rowIndex];
-      Row.Cells[columnIndex].Value = NewValue;
+      row = Control.Rows[rowIndex];
+      row.Cells[columnIndex].Value = newValue;
 
       // 20.04.2014
       OnCellFinished(rowIndex, columnIndex, EFPDataGridViewCellFinishedReason.MarkRow);
@@ -9372,18 +9364,18 @@ namespace FreeLibSet.Forms
 
       #region Получение массива заголовков столбцов
 
-      string[][] Headers = new string[columns.Length][];
+      string[][] headers = new string[columns.Length][];
 
       for (int i = 0; i < columns.Length; i++)
       {
-        Headers[i] = columns[i].PrintHeaders;
-        if (Headers[i] == null)
-          Headers[i] = new string[] { columns[i].GridColumn.HeaderText };
+        headers[i] = columns[i].PrintHeaders;
+        if (headers[i] == null)
+          headers[i] = new string[] { columns[i].GridColumn.HeaderText };
       }
 
       #endregion
 
-      EFPDataGridViewColumnHeaderArray ha = new EFPDataGridViewColumnHeaderArray(Headers, ColumnHeaderMixedSpanAllowed);
+      EFPDataGridViewColumnHeaderArray ha = new EFPDataGridViewColumnHeaderArray(headers, ColumnHeaderMixedSpanAllowed);
       return ha;
     }
 
@@ -9399,10 +9391,10 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("area");
 #endif
 
-      EFPDataGridViewColumn[] SelCols = new EFPDataGridViewColumn[area.ColumnCount];
+      EFPDataGridViewColumn[] selCols = new EFPDataGridViewColumn[area.ColumnCount];
       for (int i = 0; i < area.ColumnCount; i++)
-        SelCols[i] = Columns[area.ColumnIndices[i]];
-      return GetColumnHeaderArray(SelCols);
+        selCols[i] = Columns[area.ColumnIndices[i]];
+      return GetColumnHeaderArray(selCols);
     }
 
     /// <summary>
@@ -9417,11 +9409,11 @@ namespace FreeLibSet.Forms
 
       get
       {
-        EFPDocumentProperties Props = EFPApp.DefaultDocumentProperties;
+        EFPDocumentProperties docProps = EFPApp.DefaultDocumentProperties;
         //if (String.IsNullOrEmpty(DisplayName))
         try
         {
-          Props.Title = WinFormsTools.GetControlText(Control);
+          docProps.Title = WinFormsTools.GetControlText(Control);
         }
         catch
         {
@@ -9429,7 +9421,7 @@ namespace FreeLibSet.Forms
         //else
         //  Props.Title = DisplayName;
 
-        return Props;
+        return docProps;
       }
     }
 
@@ -9496,8 +9488,8 @@ namespace FreeLibSet.Forms
         int n = Control.RowCount;
         for (int i = 0; i < n; i++)
         {
-          DataGridViewRow Row = Control.Rows.SharedRow(i);
-          if (Row.Index >= 0)
+          DataGridViewRow row = Control.Rows.SharedRow(i);
+          if (row.Index >= 0)
             cnt++;
         }
         return cnt;
@@ -9517,14 +9509,13 @@ namespace FreeLibSet.Forms
         int n = Control.RowCount;
         for (int i = 0; i < n; i++)
         {
-          DataGridViewRow Row = Control.Rows.SharedRow(i);
-          if (Row.Index < 0)
+          DataGridViewRow row = Control.Rows.SharedRow(i);
+          if (row.Index < 0)
             cnt++;
         }
         return cnt;
       }
     }
-
 
     #endregion
 

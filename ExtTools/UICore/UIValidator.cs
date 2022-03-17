@@ -288,7 +288,7 @@ namespace FreeLibSet.UICore
     #region Сравнение двух объектов
 
     /// <summary>
-    ///  Сравнение двух объектов.
+    /// Сравнение двух объектов.
     /// </summary>
     /// <param name="a">Первый сравниваемый объект</param>
     /// <param name="b">Второй сравниваемый объект</param>
@@ -299,7 +299,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    ///  Сравнение двух объектов.
+    /// Сравнение двух объектов.
     /// </summary>
     /// <param name="a">Первый сравниваемый объект</param>
     /// <param name="b">Второй сравниваемый объект</param>
@@ -310,7 +310,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    ///  Сравнение с другим объектом.
+    /// Сравнение с другим объектом.
     /// </summary>
     /// <param name="other">Второй сравниваемый объект</param>
     /// <returns>Результат сравнения</returns>
@@ -320,7 +320,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    ///  Сравнение с другим объектом.
+    /// Сравнение с другим объектом.
     /// </summary>
     /// <param name="other">Второй сравниваемый объект</param>
     /// <returns>Результат сравнения</returns>
@@ -687,7 +687,6 @@ namespace FreeLibSet.UICore
 
     #endregion
   }
-
 
   #region Интерфейсы управляющих элементов
 

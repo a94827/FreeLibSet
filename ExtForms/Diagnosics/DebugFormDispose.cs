@@ -152,17 +152,17 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       get
       {
-        Form[] MainChildren;
+        Form[] mainChildren;
         if (EFPApp.MainWindow == null)
-          MainChildren = new Form[0];
+          mainChildren = new Form[0];
         else
-          MainChildren = EFPApp.MainWindow.MdiChildren;
+          mainChildren = EFPApp.MainWindow.MdiChildren;
         for (int i = 0; i < _List.Count; i++)
         {
           if (_List[i].Persist)
             continue;
           Form frm = _List[i].Form;
-          if (Array.IndexOf<Form>(MainChildren, frm) >= 0)
+          if (Array.IndexOf<Form>(mainChildren, frm) >= 0)
             continue;
           return true;
         }

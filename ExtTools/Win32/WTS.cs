@@ -207,7 +207,7 @@ namespace FreeLibSet.Win32
       else
         _SessionId = sessionId;
 
-      InfoValues = new object[(int)(NativeMethods.WtsInfoClassMaxValue) + 1];
+      _InfoValues = new object[(int)(NativeMethods.WtsInfoClassMaxValue) + 1];
     }
 
     #endregion
@@ -236,7 +236,7 @@ namespace FreeLibSet.Win32
     /// Используем буферизацию. Если одно и тоже свойство запрашивается несколько раз,
     /// не вызывает функции ОС.
     /// </summary>
-    private object[] InfoValues;
+    private object[] _InfoValues;
 
     /// <summary>
     /// Name of the initial program that Remote Desktop Services runs when the user logs on.
@@ -366,34 +366,34 @@ namespace FreeLibSet.Win32
     {
       get
       {
-        IntPtr DummyBuffer;
-        uint DummyCount;
+        IntPtr dummyBuffer;
+        uint dummyCount;
         return NativeMethods.WTSQuerySessionInformation(ServerHandle, SessionId,
-          NativeMethods.WtsInfoClass.WTSIsRemoteSession, out DummyBuffer, out DummyCount);
+          NativeMethods.WtsInfoClass.WTSIsRemoteSession, out dummyBuffer, out dummyCount);
       }
     }
     // не так работает public bool IsRemoteSession { get { return DataTools.GetBool(GetInfoValue(NativeMethods.WtsInfoClass.WTSIsRemoteSession)); } }
 
     private object GetInfoValue(NativeMethods.WtsInfoClass infoClass)
     {
-      if (InfoValues[(int)infoClass] == null)
+      if (_InfoValues[(int)infoClass] == null)
       {
-        IntPtr Buffer;
-        uint ByteCount;
+        IntPtr buffer;
+        uint byteCount;
         if (!NativeMethods.WTSQuerySessionInformation(ServerHandle, SessionId, infoClass,
-          out Buffer, out ByteCount))
+          out buffer, out byteCount))
           ThrowWin32Error();
 
         try
         {
-          InfoValues[(int)infoClass] = DoGetInfoValue(infoClass, Buffer);
+          _InfoValues[(int)infoClass] = DoGetInfoValue(infoClass, buffer);
         }
         finally
         {
-          NativeMethods.WTSFreeMemory(Buffer);
+          NativeMethods.WTSFreeMemory(buffer);
         }
       }
-      return InfoValues[(int)infoClass];
+      return _InfoValues[(int)infoClass];
     }
 
     [DebuggerStepThrough]

@@ -133,23 +133,23 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        int FirstNotEmptyIndex = -1;
+        int firstNotEmptyIndex = -1;
         for (int i = 0; i < Filters.Count; i++)
         {
-          if (FirstNotEmptyIndex < 0 && (!Filters[i].IsEmpty))
-            FirstNotEmptyIndex = i;
+          if (firstNotEmptyIndex < 0 && (!Filters[i].IsEmpty))
+            firstNotEmptyIndex = i;
         }
 
-        int StartIndex = Filters.IndexOf(startFilter);
-        if (StartIndex < 0)
+        int startIndex = Filters.IndexOf(startFilter);
+        if (startIndex < 0)
         {
-          if (FirstNotEmptyIndex < 0)
-            StartIndex = 0;
+          if (firstNotEmptyIndex < 0)
+            startIndex = 0;
           else
-            StartIndex = FirstNotEmptyIndex;
+            startIndex = firstNotEmptyIndex;
         }
 
-        FilterGridProvider.CurrentRowIndex = StartIndex;
+        FilterGridProvider.CurrentRowIndex = startIndex;
       }
       catch
       {
@@ -162,17 +162,17 @@ namespace FreeLibSet.Forms
 
     private void efpCopy_Click(object sender, EventArgs args)
     {
-      TempCfg Sect = new TempCfg();
-      Filters.WriteConfig(Sect);
+      TempCfg sect = new TempCfg();
+      Filters.WriteConfig(sect);
 
-      string[] Codes = new string[Filters.Count];
+      string[] codes = new string[Filters.Count];
       for (int i = 0; i < Filters.Count; i++)
-        Codes[i] = Filters[i].Code;
+        codes[i] = Filters[i].Code;
 
-      FilterClipboardInfo Info = new FilterClipboardInfo(Filters.DBIdentity, Codes, Sect.PartAsXmlText);
+      FilterClipboardInfo info = new FilterClipboardInfo(Filters.DBIdentity, codes, sect.PartAsXmlText);
 
       DataObject dobj = new DataObject();
-      dobj.SetData(Info);
+      dobj.SetData(info);
       Clipboard.SetDataObject(dobj);
     }
 
@@ -185,27 +185,27 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      FilterClipboardInfo FilterInfo = dobj.GetData(typeof(FilterClipboardInfo)) as FilterClipboardInfo;
+      FilterClipboardInfo filterInfo = dobj.GetData(typeof(FilterClipboardInfo)) as FilterClipboardInfo;
 
-      if (FilterInfo == null)
+      if (filterInfo == null)
       {
         // string txtFormats = String.Join(", ", dobj.GetFormats());
         EFPApp.ShowTempMessage("Буфер обмена не содержит фильтров табличного просмотра");
         return;
       }
 
-      if ((FilterInfo.DBIdentity != Filters.DBIdentity) &&
-        (!String.IsNullOrEmpty(FilterInfo.DBIdentity)) &&
+      if ((filterInfo.DBIdentity != Filters.DBIdentity) &&
+        (!String.IsNullOrEmpty(filterInfo.DBIdentity)) &&
         (!String.IsNullOrEmpty(Filters.DBIdentity)))
       {
         EFPApp.ShowTempMessage("Фильтры в буфере обмена относятся к другой базе данных");
         return;
       }
 
-      TempCfg Sect = new TempCfg();
-      Sect.PartAsXmlText = FilterInfo.XmlText;
+      TempCfg sect = new TempCfg();
+      sect.PartAsXmlText = filterInfo.XmlText;
       Filters.ClearAllFilters();
-      Filters.ReadConfig(Sect);
+      Filters.ReadConfig(sect);
       FilterGridProvider.PerformRefresh();
     }
 
@@ -441,15 +441,15 @@ namespace FreeLibSet.Forms
     /// <returns>Возвращает true</returns>
     protected override bool OnEditData(EventArgs args)
     {
-      IEFPGridFilter Filter;
+      IEFPGridFilter filter;
       switch (State)
       {
         case EFPDataGridViewState.Edit:
           EFPDialogPosition dialogPosition = new EFPDialogPosition();
           Rectangle rc = Control.GetCellDisplayRectangle(2, CurrentRowIndex, false);
           dialogPosition.PopupOwnerBounds = Control.RectangleToScreen(rc);
-          Filter = Filters[this.CurrentRowIndex];
-          if (Filter.ShowFilterDialog(dialogPosition))
+          filter = Filters[this.CurrentRowIndex];
+          if (filter.ShowFilterDialog(dialogPosition))
           {
             // 04.07.2007.    
             // Фильтры могут быть взаимозависимыми, например, фильтр по операции импорта
@@ -463,8 +463,8 @@ namespace FreeLibSet.Forms
           int[] filterIndices = this.SelectedRowIndices;
           for (int i = 0; i < filterIndices.Length; i++)
           {
-            Filter = Filters[filterIndices[i]];
-            Filter.Clear();
+            filter = Filters[filterIndices[i]];
+            filter.Clear();
           }
           PerformRefresh();
           break;
@@ -481,64 +481,64 @@ namespace FreeLibSet.Forms
       int[] filterIndices = this.SelectedRowIndices;
       if (filterIndices.Length == 0)
         return;
-      string[] Codes = new string[filterIndices.Length];
-      TempCfg Sect = new TempCfg();
+      string[] codes = new string[filterIndices.Length];
+      TempCfg sect = new TempCfg();
       for (int i = 0; i < filterIndices.Length; i++)
       {
-        IEFPGridFilter Item = Filters[filterIndices[i]];
-        Codes[i] = Item.Code;
-        if (!Item.IsEmpty)
+        IEFPGridFilter item = Filters[filterIndices[i]];
+        codes[i] = item.Code;
+        if (!item.IsEmpty)
         {
-          CfgPart cfg2 = Sect.GetChild(Item.Code, true);
-          Item.WriteConfig(cfg2);
+          CfgPart cfg2 = sect.GetChild(item.Code, true);
+          item.WriteConfig(cfg2);
         }
       }
 
-      FilterClipboardInfo Info = new FilterClipboardInfo(Filters.DBIdentity, Codes, Sect.PartAsXmlText);
-      args.DataObject.SetData(Info);
+      FilterClipboardInfo info = new FilterClipboardInfo(Filters.DBIdentity, codes, sect.PartAsXmlText);
+      args.DataObject.SetData(info);
     }
 
     void fmtFilter_Paste(object sender, EFPPasteDataObjectEventArgs args)
     {
-      FilterClipboardInfo FilterInfo = args.GetData() as FilterClipboardInfo;
-      if (FilterInfo == null)
+      FilterClipboardInfo filterInfo = args.GetData() as FilterClipboardInfo;
+      if (filterInfo == null)
         return;
 
-      if ((FilterInfo.DBIdentity != Filters.DBIdentity) &&
-        (!String.IsNullOrEmpty(FilterInfo.DBIdentity)) &&
+      if ((filterInfo.DBIdentity != Filters.DBIdentity) &&
+        (!String.IsNullOrEmpty(filterInfo.DBIdentity)) &&
         (!String.IsNullOrEmpty(Filters.DBIdentity)))
       {
         EFPApp.ShowTempMessage("Фильтры в буфере обмена относятся к другой базе данных");
         return;
       }
 
-      TempCfg Sect = new TempCfg();
-      Sect.PartAsXmlText = FilterInfo.XmlText;
-      bool Flag = false;
-      for (int i = 0; i < FilterInfo.Names.Length; i++)
+      TempCfg sect = new TempCfg();
+      sect.PartAsXmlText = filterInfo.XmlText;
+      bool flag = false;
+      for (int i = 0; i < filterInfo.Names.Length; i++)
       {
-        int FilterIndex = Filters.IndexOf(FilterInfo.Names[i]);
-        if (FilterIndex >= 0)
+        int filterIndex = Filters.IndexOf(filterInfo.Names[i]);
+        if (filterIndex >= 0)
         {
-          IEFPGridFilter Item = Filters[FilterIndex];
+          IEFPGridFilter item = Filters[filterIndex];
           try
           {
-            CfgPart cfgOne = Sect.GetChild(Item.Code, false);
+            CfgPart cfgOne = sect.GetChild(item.Code, false);
             if (cfgOne == null)
-              Item.Clear();
+              item.Clear();
             else
-              Item.ReadConfig(cfgOne);
+              item.ReadConfig(cfgOne);
 
-            Flag = true;
+            flag = true;
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Ошибка вставки фильтра \"" + Item.DisplayName + "\" из буфера обмена");
+            EFPApp.ShowException(e, "Ошибка вставки фильтра \"" + item.DisplayName + "\" из буфера обмена");
           }
         }
       }
 
-      if (Flag)
+      if (flag)
         PerformRefresh();
       else
         EFPApp.ShowTempMessage("Фильтры в буфере обмена отсутствуют в списке возможных фильтров");
@@ -561,17 +561,17 @@ namespace FreeLibSet.Forms
     {
       CommandItems.PerformCopy();
       int[] filterIndices = SelectedRowIndices;
-      bool Flag = false;
+      bool flag = false;
       for (int i = 0; i < filterIndices.Length; i++)
       {
-        IEFPGridFilter Item = Filters[filterIndices[i]];
-        if (!Item.IsEmpty)
+        IEFPGridFilter item = Filters[filterIndices[i]];
+        if (!item.IsEmpty)
         {
-          Item.Clear();
-          Flag = true;
+          item.Clear();
+          flag = true;
         }
       }
-      if (Flag)
+      if (flag)
         PerformRefresh();
     }
 
@@ -593,9 +593,9 @@ namespace FreeLibSet.Forms
 
     void ciXml_Click(object sender, EventArgs args)
     {
-      TempCfg Sect = new TempCfg();
-      Filters.WriteConfig(Sect);
-      FreeLibSet.Forms.Diagnostics.DebugTools.DebugXml(Sect.Document, "Текущие фильтры");
+      TempCfg sect = new TempCfg();
+      Filters.WriteConfig(sect);
+      FreeLibSet.Forms.Diagnostics.DebugTools.DebugXml(sect.Document, "Текущие фильтры");
     }
 
     #endregion

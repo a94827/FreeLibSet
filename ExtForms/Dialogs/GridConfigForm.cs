@@ -196,25 +196,25 @@ namespace FreeLibSet.Forms
       DataTools.SetPrimaryKey(_TableUser, "Код");
 
       CfgPart cfgHist;
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigSectionName,
         this._ConfigCategory, String.Empty);
-      using (_CallerControlProvider.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfgHist))
+      using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgHist))
       {
         try
         {
-          string[] Names = cfgHist.GetChildNames();
-          for (int i = 0; i < Names.Length; i++)
+          string[] names = cfgHist.GetChildNames();
+          for (int i = 0; i < names.Length; i++)
           {
-            if (Names[i].StartsWith("Hist"))
+            if (names[i].StartsWith("Hist"))
             {
-              CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-              _TableHist.Rows.Add(Names[i], cfgOne.GetNullableDateTime("Time"),
+              CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+              _TableHist.Rows.Add(names[i], cfgOne.GetNullableDateTime("Time"),
                 cfgOne.GetString("MD5"), _TableHist.Rows.Count + 1);
             }
-            if (Names[i].StartsWith("User"))
+            if (names[i].StartsWith("User"))
             {
-              CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-              _TableUser.Rows.Add(Names[i], cfgOne.GetString("Name"), cfgOne.GetNullableDateTime("Time"),
+              CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+              _TableUser.Rows.Add(names[i], cfgOne.GetString("Name"), cfgOne.GetNullableDateTime("Time"),
                 cfgOne.GetString("MD5"));
             }
           }
@@ -252,20 +252,20 @@ namespace FreeLibSet.Forms
       Editor.GetDefaultConfigs(out _DefaultConfigCodes, out _DefaultConfigs);
       for (int i = 0; i < _DefaultConfigCodes.Length; i++)
       {
-        string DisplayName;
-        string ImageKey;
+        string displayName;
+        string imageKey;
         if (String.IsNullOrEmpty(_DefaultConfigCodes[i]))
-          DisplayName = "(По умолчанию)";
+          displayName = "(По умолчанию)";
         else
-          DisplayName = _DefaultConfigCodes[i];
+          displayName = _DefaultConfigCodes[i];
 
-        ImageKey = _DefaultConfigs[i].ImageKey; // 23.11.2016
-        if (String.IsNullOrEmpty(ImageKey))
-          ImageKey = "No";
+        imageKey = _DefaultConfigs[i].ImageKey; // 23.11.2016
+        if (String.IsNullOrEmpty(imageKey))
+          imageKey = "No";
 
-        TempCfg Tmp = new TempCfg();
-        _DefaultConfigs[i].WriteConfig(Tmp);
-        SetComboBox.Items.Add(new ParamSetComboBoxItem(_DefaultConfigCodes[i], DisplayName, ImageKey, null, GroupDefault, Tmp.MD5Sum()));
+        TempCfg tmp = new TempCfg();
+        _DefaultConfigs[i].WriteConfig(tmp);
+        SetComboBox.Items.Add(new ParamSetComboBoxItem(_DefaultConfigCodes[i], displayName, imageKey, null, GroupDefault, tmp.MD5Sum()));
       }
 #if XXX
       // Затем - именованые стандартные настройки
@@ -277,25 +277,25 @@ namespace FreeLibSet.Forms
       int cnt = 0;
       for (int i = _TableHist.DefaultView.Count - 1; i >= 0; i--)
       {
-        DataRow Row = _TableHist.DefaultView[i].Row;
-        DateTime? dt = DataTools.GetNullableDateTime(Row, "Время");
+        DataRow row = _TableHist.DefaultView[i].Row;
+        DateTime? dt = DataTools.GetNullableDateTime(row, "Время");
         cnt++;
-        string Name;
+        string name;
         switch (cnt)
         {
           case 1:
-            Name = "(Последний)";
+            name = "(Последний)";
             break;
           case 2:
-            Name = "(Предпоследний)";
+            name = "(Предпоследний)";
             break;
           default:
-            Name = "(Предыдущий №" + cnt.ToString() + ")";
+            name = "(Предыдущий №" + cnt.ToString() + ")";
             break;
         }
-        SetComboBox.Items.Add(new ParamSetComboBoxItem(DataTools.GetString(Row, "Код"),
-        Name, "Time", dt, GroupHist,
-        DataTools.GetString(Row, "MD5")));
+        SetComboBox.Items.Add(new ParamSetComboBoxItem(DataTools.GetString(row, "Код"),
+        name, "Time", dt, GroupHist,
+        DataTools.GetString(row, "MD5")));
       }
 
     }
@@ -303,10 +303,10 @@ namespace FreeLibSet.Forms
 
     private void SaveSetsTables()
     {
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
         this._HistoryCategory, String.Empty);
       CfgPart cfgHist;
-      using (_CallerControlProvider.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfgHist))
+      using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgHist))
       {
         cfgHist.Clear();
         foreach (DataRowView drv in _TableHist.DefaultView)
@@ -340,20 +340,20 @@ namespace FreeLibSet.Forms
         int p = Array.IndexOf<string>(_DefaultConfigCodes, args.Item.Code);
         if (p < 0)
           throw new BugException("Не нашли стандартную настройку с кодом \"" + args.Item.Code + "\"");
-        EFPDataGridViewConfig Config = _DefaultConfigs[p];
-        Editor.WriteFormValues(Config);
+        EFPDataGridViewConfig config = _DefaultConfigs[p];
+        Editor.WriteFormValues(config);
       }
       else
       {
-        string UserSetName = args.Item.Code;
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
-          this._ConfigCategory, UserSetName);
+        string userSetName = args.Item.Code;
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
+          this._ConfigCategory, userSetName);
         CfgPart cfgData;
-        using (_CallerControlProvider.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfgData))
+        using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgData))
         {
-          EFPDataGridViewConfig Config = new EFPDataGridViewConfig();
-          Config.ReadConfig(cfgData);
-          Editor.WriteFormValues(Config);
+          EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+          config.ReadConfig(cfgData);
+          Editor.WriteFormValues(config);
         }
       }
     }
@@ -375,10 +375,10 @@ namespace FreeLibSet.Forms
       if (!FormProvider.ValidateForm())
         return;
 
-      ParamSetComboBoxItem OldItem = SetComboBox.Items.FindDisplayName(args.DisplayName);
-      if (OldItem != null)
+      ParamSetComboBoxItem oldItem = SetComboBox.Items.FindDisplayName(args.DisplayName);
+      if (oldItem != null)
       {
-        if (!OldItem.Code.StartsWith("User"))
+        if (!oldItem.Code.StartsWith("User"))
         {
           EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы");
           return;
@@ -395,76 +395,76 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      string UserSetName;
-      if (OldItem != null)
+      string userSetName;
+      if (oldItem != null)
       {
-        UserSetName = OldItem.Code;
-        SetComboBox.Items.Remove(OldItem);
+        userSetName = oldItem.Code;
+        SetComboBox.Items.Remove(oldItem);
       }
       else
       {
         int cnt = 1;
         while (true)
         {
-          UserSetName = "User" + cnt.ToString();
-          if (_TableUser.Rows.Find(UserSetName) == null)
+          userSetName = "User" + cnt.ToString();
+          if (_TableUser.Rows.Find(userSetName) == null)
             break;
           cnt++;
         }
       }
 
-      EFPDataGridViewConfig Config = new EFPDataGridViewConfig();
-      string ErrorText;
-      if (!Editor.ReadFormValues(Config, out ErrorText))
+      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      string errorText;
+      if (!Editor.ReadFormValues(config, out errorText))
       {
-        EFPApp.ErrorMessageBox(ErrorText);
+        EFPApp.ErrorMessageBox(errorText);
         return;
       }
       CfgPart cfgData;
-      EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
-        this._ConfigCategory, UserSetName);
-      using (_CallerControlProvider.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfgData))
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
+        this._ConfigCategory, userSetName);
+      using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgData))
       {
         cfgData.Clear();
-        Config.WriteConfig(cfgData);
+        config.WriteConfig(cfgData);
 
-        ParamSetComboBoxItem NewItem = new ParamSetComboBoxItem(UserSetName, args.DisplayName, "User", null, GroupUser, cfgData.MD5Sum());
-        SetComboBox.Items.Insert(0, NewItem);
-        SetComboBox.SelectedItem = NewItem;
-        DataRow Row = DataTools.FindOrAddPrimaryKeyRow(_TableUser, UserSetName);
+        ParamSetComboBoxItem newItem = new ParamSetComboBoxItem(userSetName, args.DisplayName, "User", null, GroupUser, cfgData.MD5Sum());
+        SetComboBox.Items.Insert(0, newItem);
+        SetComboBox.SelectedItem = newItem;
+        DataRow Row = DataTools.FindOrAddPrimaryKeyRow(_TableUser, userSetName);
         Row["Название"] = args.DisplayName;
         Row["Время"] = DateTime.Now;
-        Row["MD5"] = NewItem.MD5Sum;
+        Row["MD5"] = newItem.MD5Sum;
         SaveSetsTables();
       }
     }
 
     void SetComboBox_DeleteClick(object sender, ParamSetComboBoxItemEventArgs args)
     {
-      DataTable Table;
+      DataTable table;
       if (args.Item.Code.StartsWith("User"))
-        Table = _TableUser;
+        table = _TableUser;
       else if (args.Item.Code.StartsWith("Hist"))
-        Table = _TableHist;
+        table = _TableHist;
       else
       {
         EFPApp.ErrorMessageBox("Этот набор нельзя удалить", "Удаление готового набора");
         return;
       }
 
-      DataRow Row = Table.Rows.Find(args.Item.Code);
-      if (Row == null)
+      DataRow row = table.Rows.Find(args.Item.Code);
+      if (row == null)
       {
-        BugException Ex = new BugException("Набор с кодом \"" + args.Item.Code + "\" не найден");
-        Ex.Data["Item"] = args.Item;
-        throw Ex;
+        BugException e = new BugException("Набор с кодом \"" + args.Item.Code + "\" не найден");
+        e.Data["Item"] = args.Item;
+        throw e;
       }
 
       if (EFPApp.MessageBox("Удалить набор \"" + args.Item.DisplayName + "\"?",
         "Подтверждение удаления набора", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         return;
 
-      Table.Rows.Remove(Row);
+      table.Rows.Remove(row);
       SaveSetsTables();
 
       SetComboBox.Items.Remove(args.Item);
@@ -484,32 +484,32 @@ namespace FreeLibSet.Forms
 
     void efpDefault_Click(object sender, EventArgs args)
     {
-      string[] DefaultConfigCodes;
-      EFPDataGridViewConfig[] DefaultConfigs;
-      Editor.GetDefaultConfigs(out DefaultConfigCodes, out DefaultConfigs);
-      switch (DefaultConfigCodes.Length)
+      string[] defaultConfigCodes;
+      EFPDataGridViewConfig[] defaultConfigs;
+      Editor.GetDefaultConfigs(out defaultConfigCodes, out defaultConfigs);
+      switch (defaultConfigCodes.Length)
       {
         case 0:
           EFPApp.ShowTempMessage("Настройка по умолчанию не определена");
           break;
         case 1:
-          Editor.WriteFormValues(DefaultConfigs[0]);
+          Editor.WriteFormValues(defaultConfigs[0]);
           break;
         default:
           // Выбираем, какую настройку применить
           ListSelectDialog dlg = new ListSelectDialog();
           dlg.Title = "Выбор настройки по умолчанию";
           dlg.ImageKey = "No";
-          dlg.Items = new string[DefaultConfigCodes.Length];
-          for (int i = 0; i < DefaultConfigCodes.Length; i++)
+          dlg.Items = new string[defaultConfigCodes.Length];
+          for (int i = 0; i < defaultConfigCodes.Length; i++)
           {
             //string ImageKey;
-            if (String.IsNullOrEmpty(DefaultConfigCodes[i]))
+            if (String.IsNullOrEmpty(defaultConfigCodes[i]))
               dlg.Items[i] = "(По умолчанию)";
             else
-              dlg.Items[i] = DefaultConfigCodes[i];
+              dlg.Items[i] = defaultConfigCodes[i];
 
-            dlg.ImageKeys[i] = DefaultConfigs[i].ImageKey;
+            dlg.ImageKeys[i] = defaultConfigs[i].ImageKey;
           }
           dlg.CanBeEmpty = false;
           dlg.ConfigSectionName = "GridConfigSelectDefaultDialog";
@@ -517,7 +517,7 @@ namespace FreeLibSet.Forms
           if (dlg.ShowDialog() != DialogResult.OK)
             return;
 
-          Editor.WriteFormValues(DefaultConfigs[dlg.SelectedIndex]);
+          Editor.WriteFormValues(defaultConfigs[dlg.SelectedIndex]);
           break;
       }
     }
@@ -528,16 +528,16 @@ namespace FreeLibSet.Forms
 
     private void efpCopy_Click(object sender, EventArgs args)
     {
-      EFPDataGridViewConfig Config = new EFPDataGridViewConfig();
-      string ErrorText;
-      if (!Editor.ReadFormValues(Config, out ErrorText))
+      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      string errorText;
+      if (!Editor.ReadFormValues(config, out errorText))
       {
-        EFPApp.ErrorMessageBox(ErrorText);
+        EFPApp.ErrorMessageBox(errorText);
         return;
       }
 
       DataObject dobj = new DataObject();
-      dobj.SetData(Config);
+      dobj.SetData(config);
       Clipboard.SetDataObject(dobj);
     }
 
@@ -550,14 +550,14 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      EFPDataGridViewConfig Config = dobj.GetData(typeof(EFPDataGridViewConfig)) as EFPDataGridViewConfig;
-      if (Config == null)
+      EFPDataGridViewConfig config = dobj.GetData(typeof(EFPDataGridViewConfig)) as EFPDataGridViewConfig;
+      if (config == null)
       {
         // string txtFormats = String.Join(", ", dobj.GetFormats());
         EFPApp.ShowTempMessage("Буфер обмена не содержит настроек табличного просмотра");
         return;
       }
-      Editor.WriteFormValues(Config);
+      Editor.WriteFormValues(config);
     }
 
     #endregion
@@ -576,57 +576,57 @@ namespace FreeLibSet.Forms
         return;
 
       ResultConfig = new EFPDataGridViewConfig();
-      string ErrorText;
-      if (!Editor.ReadFormValues(ResultConfig, out ErrorText))
+      string errorText;
+      if (!Editor.ReadFormValues(ResultConfig, out errorText))
       {
-        args.SetError(ErrorText);
+        args.SetError(errorText);
         return;
       }
 
-      TempCfg TempSectData = new TempCfg();
-      ResultConfig.WriteConfig(TempSectData);
-      string MD5Sum = TempSectData.MD5Sum();
+      TempCfg tempSectData = new TempCfg();
+      ResultConfig.WriteConfig(tempSectData);
+      string md5Sum = tempSectData.MD5Sum();
 
       if (UseHistory)
       {
-        bool Found = false;
+        bool found = false;
         foreach (DataRowView drv in _TableHist.DefaultView)
         {
-          if (DataTools.GetString(drv.Row, "MD5") == MD5Sum)
+          if (DataTools.GetString(drv.Row, "MD5") == md5Sum)
           {
             drv.Row["Время"] = DateTime.Now;
             drv.Row["NPop"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "NPop") + 1;
-            Found = true;
+            found = true;
             break;
           }
         }
 
-        if (!Found)
+        if (!found)
         {
           // Новые данные записываем в другую секцию
-          DataRow ResRow = null;
+          DataRow resRow = null;
           if (_TableHist.DefaultView.Count >= 9) // все позиции заняты
-            ResRow = _TableHist.DefaultView[0].Row;
+            resRow = _TableHist.DefaultView[0].Row;
           else
           {
             for (int i = 1; i <= 9; i++)
             {
-              if (DataTools.FindOrAddPrimaryKeyRow(_TableHist, "Hist" + i.ToString(), out ResRow))
+              if (DataTools.FindOrAddPrimaryKeyRow(_TableHist, "Hist" + i.ToString(), out resRow))
                 break;
             }
           }
-          string UserSetName = DataTools.GetString(ResRow, "Код");
-          ResRow["Время"] = DateTime.Now;
-          ResRow["MD5"] = MD5Sum;
+          string userSetName = DataTools.GetString(resRow, "Код");
+          resRow["Время"] = DateTime.Now;
+          resRow["MD5"] = md5Sum;
           if (_TableHist.Rows.Count > 0)
-            ResRow["NPop"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "NPop") + 1;
+            resRow["NPop"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "NPop") + 1;
           else
-            ResRow["NPop"] = 1;
+            resRow["NPop"] = 1;
 
-          EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
-            this._ConfigCategory, UserSetName);
+          EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
+            this._ConfigCategory, userSetName);
           CfgPart cfgData;
-          using (_CallerControlProvider.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfgData))
+          using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgData))
           {
             cfgData.Clear();
             ResultConfig.WriteConfig(cfgData);

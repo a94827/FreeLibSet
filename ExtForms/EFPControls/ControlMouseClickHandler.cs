@@ -146,24 +146,24 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        DateTime ThisTime = DateTime.Now;
+        DateTime thisTime = DateTime.Now;
         if (_ClickCount > 0)
         {
-          TimeSpan Span = ThisTime - _LastClickTime;
+          TimeSpan span = thisTime - _LastClickTime;
           int dx = Math.Abs(args.Location.X - _LastClickLocation.X);
           int dy = Math.Abs(args.Location.Y - _LastClickLocation.Y);
-          if (args.Button != _LastClickButton || Span.TotalMilliseconds > SystemInformation.DoubleClickTime ||
+          if (args.Button != _LastClickButton || span.TotalMilliseconds > SystemInformation.DoubleClickTime ||
             dx > SystemInformation.DoubleClickSize.Width || dy > SystemInformation.DoubleClickSize.Height)
 
             _ClickCount = 0;
         }
         _ClickCount++;
-        _LastClickTime = ThisTime;
+        _LastClickTime = thisTime;
         _LastClickButton = args.Button;
         _LastClickLocation = args.Location;
 
-        MouseEventArgs Args2 = new MouseEventArgs(args.Button, _ClickCount, args.X, args.Y, args.Delta);
-        OnMouseDown(Args2);
+        MouseEventArgs args2 = new MouseEventArgs(args.Button, _ClickCount, args.X, args.Y, args.Delta);
+        OnMouseDown(args2);
       }
       catch (Exception e)
       {
@@ -181,16 +181,16 @@ namespace FreeLibSet.Forms
 
         if (_ClickCount > 0)
         {
-          MouseEventArgs Args2 = new MouseEventArgs(args.Button, _ClickCount, args.X, args.Y, args.Delta);
+          MouseEventArgs args2 = new MouseEventArgs(args.Button, _ClickCount, args.X, args.Y, args.Delta);
           if (_ClickCount == 1)
-            OnMouseClick(Args2);
+            OnMouseClick(args2);
           else
-            OnMouseDoubleClick(Args2);
+            OnMouseDoubleClick(args2);
         }
 
         // В событии Up не меняется зарегистрированное число Click'ов, сколько бы не прошло времени
-        MouseEventArgs Args3 = new MouseEventArgs(args.Button, _ClickCount, args.X, args.Y, args.Delta);
-        OnMouseUp(Args3);
+        MouseEventArgs args3 = new MouseEventArgs(args.Button, _ClickCount, args.X, args.Y, args.Delta);
+        OnMouseUp(args3);
       }
       catch (Exception e)
       {

@@ -77,7 +77,6 @@ namespace FreeLibSet.Forms
       ciFindNext.GroupEnd = true;
       Add(ciFindNext);
 
-
       #endregion
 
       #region Установка отметок
@@ -123,9 +122,9 @@ namespace FreeLibSet.Forms
     {
       base.BeforeControlAssigned();
 
-      EFPCommandItemUsage ClipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
+      EFPCommandItemUsage clipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
       if (ClipboardInToolBar)
-        ClipboardUsage |= EFPCommandItemUsage.ToolBar;
+        clipboardUsage |= EFPCommandItemUsage.ToolBar;
 
       if (Cut == null)
       {
@@ -133,9 +132,9 @@ namespace FreeLibSet.Forms
         ciCut.Usage = EFPCommandItemUsage.None;
       }
       else
-        ciCut.Usage = ClipboardUsage;
+        ciCut.Usage = clipboardUsage;
 
-      ciCopy.Usage = ClipboardUsage;
+      ciCopy.Usage = clipboardUsage;
 
 
       // Добавляем форматы вставки текста после пользовательских форматов
@@ -251,8 +250,8 @@ namespace FreeLibSet.Forms
         try
         {
           DataObject dobj2 = new DataObject();
-          DataObjectEventArgs Args = new DataObjectEventArgs(dobj2);
-          OnAddCopyFormats(Args);
+          DataObjectEventArgs args = new DataObjectEventArgs(dobj2);
+          OnAddCopyFormats(args);
 
           EFPApp.Clipboard.SetDataObject(dobj2, true);
         }

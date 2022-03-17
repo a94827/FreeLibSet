@@ -7747,8 +7747,8 @@ namespace FreeLibSet.RI
       {
         if (_Items[i].HasChanges)
         {
-          CfgPart Part2 = part.GetChild("C" + i.ToString(), true);
-          _Items[i].WriteChanges(Part2);
+          CfgPart part2 = part.GetChild("C" + i.ToString(), true);
+          _Items[i].WriteChanges(part2);
         }
       }
     }
@@ -7763,9 +7763,9 @@ namespace FreeLibSet.RI
     {
       for (int i = 0; i < _Items.Count; i++)
       {
-        CfgPart Part2 = part.GetChild("C" + i.ToString(), false);
-        if (Part2 != null)
-          _Items[i].ReadChanges(Part2);
+        CfgPart part2 = part.GetChild("C" + i.ToString(), false);
+        if (part2 != null)
+          _Items[i].ReadChanges(part2);
       }
     }
 

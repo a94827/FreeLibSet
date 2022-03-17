@@ -247,23 +247,23 @@ namespace FreeLibSet.Forms
       //      base.OnMouseWheel(Args);
       _WheelAcc += args.Delta;
 
-      bool IsControl = (Control.ModifierKeys & Keys.Control) == Keys.Control;
-      bool IsShift = (Control.ModifierKeys & Keys.Shift) == Keys.Shift;
+      bool isControl = (Control.ModifierKeys & Keys.Control) == Keys.Control;
+      bool isShift = (Control.ModifierKeys & Keys.Shift) == Keys.Shift;
 
       while (_WheelAcc > WHEEL_DELTA)
       {
-        if (IsControl)
+        if (isControl)
           OnWheelZoom(ZoomDirection.ZoomIn);
         else
-          DoWheelScroll(true, IsShift);
+          DoWheelScroll(true, isShift);
         _WheelAcc -= WHEEL_DELTA;
       }
       while (_WheelAcc < -WHEEL_DELTA)
       {
-        if (IsControl)
+        if (isControl)
           OnWheelZoom(ZoomDirection.ZoomOut);
         else
-          DoWheelScroll(false, IsShift);
+          DoWheelScroll(false, isShift);
         _WheelAcc += WHEEL_DELTA;
       }
     }
@@ -293,8 +293,8 @@ namespace FreeLibSet.Forms
     {
       if (WheelZoom != null)
       {
-        ZoomDirectionEventArgs Args = new ZoomDirectionEventArgs(direction);
-        WheelZoom(this, Args);
+        ZoomDirectionEventArgs args = new ZoomDirectionEventArgs(direction);
+        WheelZoom(this, args);
       }
     }
 

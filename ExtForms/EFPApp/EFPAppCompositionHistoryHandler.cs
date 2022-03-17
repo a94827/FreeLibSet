@@ -125,27 +125,27 @@ namespace FreeLibSet.Forms
     public static EFPAppCompositionHistoryItem[] GetHistoryItems()
     {
       // Требуется промежуточная таблица для сортировки записей
-      DataTable Table = new DataTable();
-      Table.Columns.Add("UserSetName", typeof(string)); // "Hist1", "Hist2", ...
-      Table.Columns.Add("Time", typeof(DateTime));
-      Table.Columns.Add("MD5", typeof(string));
-      DataTools.SetPrimaryKey(Table, "UserSetName");
+      DataTable table = new DataTable();
+      table.Columns.Add("UserSetName", typeof(string)); // "Hist1", "Hist2", ...
+      table.Columns.Add("Time", typeof(DateTime));
+      table.Columns.Add("MD5", typeof(string));
+      DataTools.SetPrimaryKey(table, "UserSetName");
 
       #region Чтение данных
 
-      EFPConfigSectionInfo ConfigInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+      EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIHistory, String.Empty);
       CfgPart cfgHist;
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfoHist, EFPConfigMode.Read, out cfgHist))
+      using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Read, out cfgHist))
       {
-        string[] Names = cfgHist.GetChildNames();
+        string[] names = cfgHist.GetChildNames();
 
-        for (int i = 0; i < Names.Length; i++)
+        for (int i = 0; i < names.Length; i++)
         {
-          if (Names[i].StartsWith("Hist"))
+          if (names[i].StartsWith("Hist"))
           {
-            CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-            /*DataRow Row = */ Table.Rows.Add(Names[i], cfgOne.GetDateTime("Time"),
+            CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+            /*DataRow Row = */ table.Rows.Add(names[i], cfgOne.GetDateTime("Time"),
               cfgOne.GetString("MD5"));
           }
         }
@@ -153,37 +153,37 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      Table.DefaultView.Sort = "Time DESC"; // по убыванию
+      table.DefaultView.Sort = "Time DESC"; // по убыванию
 
       #region Создание записей
 
-      EFPAppCompositionHistoryItem[] Items = new EFPAppCompositionHistoryItem[Table.DefaultView.Count];
-      for (int i = 0; i < Table.DefaultView.Count; i++)
+      EFPAppCompositionHistoryItem[] items = new EFPAppCompositionHistoryItem[table.DefaultView.Count];
+      for (int i = 0; i < table.DefaultView.Count; i++)
       {
-        DataRow Row = Table.DefaultView[i].Row;
-        Items[i] = CreateHistItem(i, Row["UserSetName"].ToString(),
-          (DateTime)(Row["Time"]),
-          Row["MD5"].ToString());
+        DataRow row = table.DefaultView[i].Row;
+        items[i] = CreateHistItem(i, row["UserSetName"].ToString(),
+          (DateTime)(row["Time"]),
+          row["MD5"].ToString());
       }
 
       #endregion
 
-      return Items;
+      return items;
     }
 
     private static EFPAppCompositionHistoryItem CreateHistItem(int itemIndex, string userSetName, DateTime time, string md5)
     {
-      string Prefix;
+      string prefix;
       switch (itemIndex)
       {
-        case 0: Prefix = "Последняя"; break;
-        case 1: Prefix = "Предпоследняя"; break;
-        default: Prefix = "Предыдущая №" + (itemIndex + 1).ToString(); break;
+        case 0: prefix = "Последняя"; break;
+        case 1: prefix = "Предпоследняя"; break;
+        default: prefix = "Предыдущая №" + (itemIndex + 1).ToString(); break;
       }
 
       return new EFPAppCompositionHistoryItem(EFPAppCompositionHistoryItemKind.History,
         userSetName,
-        "[ " + Prefix + " " + time.ToString("g") + " ]",
+        "[ " + prefix + " " + time.ToString("g") + " ]",
         time, md5);
     }
 
@@ -195,28 +195,28 @@ namespace FreeLibSet.Forms
     public static EFPAppCompositionHistoryItem[] GetUserItems()
     {
       // Требуется промежуточная таблица для сортировки записей
-      DataTable Table = new DataTable();
-      Table.Columns.Add("UserSetName", typeof(string)); // "User1", "User2", ...
-      Table.Columns.Add("Name", typeof(string)); // имя, заданное пользователем
-      Table.Columns.Add("Time", typeof(DateTime));
-      Table.Columns.Add("MD5", typeof(string));
-      DataTools.SetPrimaryKey(Table, "UserSetName");
+      DataTable table = new DataTable();
+      table.Columns.Add("UserSetName", typeof(string)); // "User1", "User2", ...
+      table.Columns.Add("Name", typeof(string)); // имя, заданное пользователем
+      table.Columns.Add("Time", typeof(DateTime));
+      table.Columns.Add("MD5", typeof(string));
+      DataTools.SetPrimaryKey(table, "UserSetName");
 
       #region Чтение данных
 
-      EFPConfigSectionInfo ConfigInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+      EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIUserHistory, String.Empty);
       CfgPart cfgHist;
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfoHist, EFPConfigMode.Read, out cfgHist))
+      using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Read, out cfgHist))
       {
-        string[] Names = cfgHist.GetChildNames();
+        string[] names = cfgHist.GetChildNames();
 
-        for (int i = 0; i < Names.Length; i++)
+        for (int i = 0; i < names.Length; i++)
         {
-          if (Names[i].StartsWith("User"))
+          if (names[i].StartsWith("User"))
           {
-            CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-            /*DataRow Row = */Table.Rows.Add(Names[i], cfgOne.GetString("Name"),
+            CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+            /*DataRow Row = */table.Rows.Add(names[i], cfgOne.GetString("Name"),
               cfgOne.GetDateTime("Time"),
               cfgOne.GetString("MD5"));
           }
@@ -225,23 +225,23 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      Table.DefaultView.Sort = "Name";
+      table.DefaultView.Sort = "Name";
 
       #region Создание записей
 
-      EFPAppCompositionHistoryItem[] Items = new EFPAppCompositionHistoryItem[Table.DefaultView.Count];
-      for (int i = 0; i < Table.DefaultView.Count; i++)
+      EFPAppCompositionHistoryItem[] items = new EFPAppCompositionHistoryItem[table.DefaultView.Count];
+      for (int i = 0; i < table.DefaultView.Count; i++)
       {
-        DataRow Row = Table.DefaultView[i].Row;
-        Items[i] = CreateUserItem(Row["UserSetName"].ToString(),
-          Row["Name"].ToString(),
-          (DateTime)(Row["Time"]),
-          Row["MD5"].ToString());
+        DataRow row = table.DefaultView[i].Row;
+        items[i] = CreateUserItem(row["UserSetName"].ToString(),
+          row["Name"].ToString(),
+          (DateTime)(row["Time"]),
+          row["MD5"].ToString());
       }
 
       #endregion
 
-      return Items;
+      return items;
     }
 
     private static EFPAppCompositionHistoryItem CreateUserItem(string userSetName, string name, DateTime time, string md5)
@@ -264,24 +264,24 @@ namespace FreeLibSet.Forms
 
       #region Чтение данных
 
-      EFPAppCompositionHistoryItem Item = null;
+      EFPAppCompositionHistoryItem item = null;
 
-      EFPConfigSectionInfo ConfigInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+      EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIUserHistory, String.Empty);
       CfgPart cfgHist;
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfoHist, EFPConfigMode.Read, out cfgHist))
+      using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Read, out cfgHist))
       {
-        string[] Names = cfgHist.GetChildNames();
+        string[] names = cfgHist.GetChildNames();
 
-        for (int i = 0; i < Names.Length; i++)
+        for (int i = 0; i < names.Length; i++)
         {
-          if (Names[i].StartsWith("User"))
+          if (names[i].StartsWith("User"))
           {
-            CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
+            CfgPart cfgOne = cfgHist.GetChild(names[i], false);
             string UserName = cfgOne.GetString("Name");
             if (UserName == name)
             {
-              Item = CreateUserItem(Names[i], UserName, cfgOne.GetDateTime("Time"),
+              item = CreateUserItem(names[i], UserName, cfgOne.GetDateTime("Time"),
                 cfgOne.GetString("MD5"));
               break;
             }
@@ -291,7 +291,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      return Item;
+      return item;
     }
 
     /// <summary>
@@ -356,83 +356,83 @@ namespace FreeLibSet.Forms
       if (EFPApp.CompositionHistoryCount == 0)
         throw new InvalidOperationException("EFPApp.CompositionHistoryCount=0");
 
-      string MD5 = cfg.MD5Sum();
+      string md5 = cfg.MD5Sum();
 
-      string UserSetName = null; // Название набора для секции истории. 
+      string userSetName = null; // Название набора для секции истории. 
       // Если не надо добавлять секцию, остается null.
 
-      EFPAppCompositionHistoryItem Item = null;
+      EFPAppCompositionHistoryItem item = null;
 
       #region Секция UIHistory
 
-      EFPConfigSectionInfo ConfigInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+      EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIHistory, String.Empty);
       CfgPart cfgHist;
-      int CurrentIndex = -1; // поиск совпадения по MD5
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfoHist, EFPConfigMode.Write, out cfgHist))
+      int currentIndex = -1; // поиск совпадения по MD5
+      using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Write, out cfgHist))
       {
-        string[] Names = cfgHist.GetChildNames();
+        string[] names = cfgHist.GetChildNames();
 
-        DataTable Table = new DataTable();
-        Table.Columns.Add("UserSetName", typeof(string)); // "Hist1", "Hist2", ...
-        Table.Columns.Add("Time", typeof(DateTime));
-        Table.Columns.Add("MD5", typeof(string));
-        DataTools.SetPrimaryKey(Table, "UserSetName");
+        DataTable table = new DataTable();
+        table.Columns.Add("UserSetName", typeof(string)); // "Hist1", "Hist2", ...
+        table.Columns.Add("Time", typeof(DateTime));
+        table.Columns.Add("MD5", typeof(string));
+        DataTools.SetPrimaryKey(table, "UserSetName");
 
-        DateTime Time = DateTime.Now;
+        DateTime time = DateTime.Now;
 
-        for (int i = 0; i < Names.Length; i++)
+        for (int i = 0; i < names.Length; i++)
         {
-          if (Names[i].StartsWith("Hist"))
+          if (names[i].StartsWith("Hist"))
           {
-            CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-            DataRow Row = Table.Rows.Add(Names[i], cfgOne.GetDateTime("Time"),
+            CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+            DataRow row = table.Rows.Add(names[i], cfgOne.GetDateTime("Time"),
               cfgOne.GetString("MD5"));
-            if (Row["MD5"].ToString() == MD5)
+            if (row["MD5"].ToString() == md5)
             {
-              CurrentIndex = i;
-              cfgOne.SetDateTime("Time", Time); // просто заменяем
-              Item = CreateHistItem(0, Names[i], Time, MD5);
+              currentIndex = i;
+              cfgOne.SetDateTime("Time", time); // просто заменяем
+              item = CreateHistItem(0, names[i], time, md5);
             }
             // перебираем все break;
           }
         }
 
-        if (CurrentIndex < 0)
+        if (currentIndex < 0)
         {
           // Требуется добавить новую запись в историю
           // Убираем самую старую секцию
-          Table.DefaultView.Sort = "Time"; // по возрастанию
-          while (Table.DefaultView.Count >= EFPApp.CompositionHistoryCount)
-            Table.DefaultView[0].Row.Delete();
+          table.DefaultView.Sort = "Time"; // по возрастанию
+          while (table.DefaultView.Count >= EFPApp.CompositionHistoryCount)
+            table.DefaultView[0].Row.Delete();
 
           // Придумываем новое имя секции
           for (int i = 1; i <= EFPApp.CompositionHistoryCount; i++)
           {
             string UserSetName2 = "Hist" + i.ToString();
-            if (Table.Rows.Find(UserSetName2) == null)
+            if (table.Rows.Find(UserSetName2) == null)
             {
-              UserSetName = UserSetName2;
+              userSetName = UserSetName2;
               break;
             }
           }
 
-          if (UserSetName == null)
+          if (userSetName == null)
             throw new BugException("Не нашли имени набора для записи истории");
-          Table.Rows.Add(UserSetName, DateTime.Now, MD5);
-          Table.AcceptChanges();
+          table.Rows.Add(userSetName, DateTime.Now, md5);
+          table.AcceptChanges();
 
           // Заново записываем всю секцию
           cfgHist.Clear();
-          foreach (DataRow Row in Table.Rows)
+          foreach (DataRow row in table.Rows)
           {
-            string UserSetName2 = Row["UserSetName"].ToString();
-            CfgPart cfgOne = cfgHist.GetChild(UserSetName2, true);
-            cfgOne.SetDateTime("Time", (DateTime)(Row["Time"]));
-            cfgOne.SetString("MD5", Row["MD5"].ToString());
+            string userSetName2 = row["UserSetName"].ToString();
+            CfgPart cfgOne = cfgHist.GetChild(userSetName2, true);
+            cfgOne.SetDateTime("Time", (DateTime)(row["Time"]));
+            cfgOne.SetString("MD5", row["MD5"].ToString());
           }
 
-          Item = CreateHistItem(0, UserSetName, Time, MD5);
+          item = CreateHistItem(0, userSetName, time, md5);
         } // CurrentIndex<0
       } // SectHist
 
@@ -440,12 +440,12 @@ namespace FreeLibSet.Forms
 
       #region Секция UI для истории
 
-      if (UserSetName != null)
+      if (userSetName != null)
       {
-        EFPConfigSectionInfo ConfigInfo2 = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
-          EFPConfigCategories.UI, UserSetName);
+        EFPConfigSectionInfo configInfo2 = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+          EFPConfigCategories.UI, userSetName);
         CfgPart cfg2;
-        using (EFPApp.ConfigManager.GetConfig(ConfigInfo2, EFPConfigMode.Write, out cfg2))
+        using (EFPApp.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Write, out cfg2))
         {
           cfg2.Clear();
           cfg.CopyTo(cfg2);
@@ -457,13 +457,13 @@ namespace FreeLibSet.Forms
       #region Snapshot
 
       // Записываем Snapshot, только если секция новая
-      if (UserSetName != null)
+      if (userSetName != null)
       {
         try
         {
-          EFPConfigSectionInfo ConfigInfoSnapshot = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
-            EFPConfigCategories.UISnapshot, UserSetName);
-          EFPApp.SnapshotManager.SaveSnapshot(ConfigInfoSnapshot, snapshot);
+          EFPConfigSectionInfo configInfoSnapshot = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+            EFPConfigCategories.UISnapshot, userSetName);
+          EFPApp.SnapshotManager.SaveSnapshot(configInfoSnapshot, snapshot);
         }
         catch (Exception e)
         {
@@ -474,11 +474,11 @@ namespace FreeLibSet.Forms
       #endregion
 
 #if DEBUG
-      if (Item == null)
+      if (item == null)
         throw new BugException("Item=null");
 #endif
 
-      return Item;
+      return item;
     }
 
     /// <summary>
@@ -498,81 +498,81 @@ namespace FreeLibSet.Forms
       if (cfg.IsEmpty)
         throw new ArgumentException("Композиция не записана", "cfg");
 
-      string MD5 = cfg.MD5Sum();
+      string md5 = cfg.MD5Sum();
 
-      string UserSetName = null; // Название набора для секции истории. 
+      string userSetName = null; // Название набора для секции истории. 
 
-      EFPAppCompositionHistoryItem Item = null;
+      EFPAppCompositionHistoryItem item = null;
 
       #region Секция UIHistory
 
-      EFPConfigSectionInfo ConfigInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+      EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIUserHistory, String.Empty);
       CfgPart cfgHist;
-      int CurrentIndex = -1; // поиск совпадения по имени
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfoHist, EFPConfigMode.Write, out cfgHist))
+      int currentIndex = -1; // поиск совпадения по имени
+      using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Write, out cfgHist))
       {
-        string[] Names = cfgHist.GetChildNames();
+        string[] names = cfgHist.GetChildNames();
 
-        DataTable Table = new DataTable();
-        Table.Columns.Add("UserSetName", typeof(string)); // "User1", "User2", ...
-        Table.Columns.Add("Name", typeof(string)); // пользовательское имя
-        Table.Columns.Add("Time", typeof(DateTime));
-        Table.Columns.Add("MD5", typeof(string));
-        DataTools.SetPrimaryKey(Table, "UserSetName");
+        DataTable table = new DataTable();
+        table.Columns.Add("UserSetName", typeof(string)); // "User1", "User2", ...
+        table.Columns.Add("Name", typeof(string)); // пользовательское имя
+        table.Columns.Add("Time", typeof(DateTime));
+        table.Columns.Add("MD5", typeof(string));
+        DataTools.SetPrimaryKey(table, "UserSetName");
 
-        DateTime Time = DateTime.Now;
+        DateTime time = DateTime.Now;
 
-        for (int i = 0; i < Names.Length; i++)
+        for (int i = 0; i < names.Length; i++)
         {
-          if (Names[i].StartsWith("User"))
+          if (names[i].StartsWith("User"))
           {
-            CfgPart cfgOne = cfgHist.GetChild(Names[i], false);
-            DataRow Row = Table.Rows.Add(Names[i],
+            CfgPart cfgOne = cfgHist.GetChild(names[i], false);
+            DataRow row = table.Rows.Add(names[i],
               cfgOne.GetString("Name"),
               cfgOne.GetDateTime("Time"),
               cfgOne.GetString("MD5"));
-            if (String.Equals(Row["Name"].ToString(), name, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(row["Name"].ToString(), name, StringComparison.OrdinalIgnoreCase))
             {
-              CurrentIndex = i;
-              cfgOne.SetDateTime("Time", Time); // просто заменяем
-              Item = CreateUserItem(Names[i], Row["Name"].ToString(), Time, MD5);
-              UserSetName = Names[i];
+              currentIndex = i;
+              cfgOne.SetDateTime("Time", time); // просто заменяем
+              item = CreateUserItem(names[i], row["Name"].ToString(), time, md5);
+              userSetName = names[i];
             }
             // перебираем все break;
           }
         }
 
-        if (CurrentIndex < 0)
+        if (currentIndex < 0)
         {
           // Придумываем новое имя секции
           for (int i = 1; i <= int.MaxValue; i++)
           {
-            string UserSetName2 = "User" + i.ToString();
-            if (Table.Rows.Find(UserSetName2) == null)
+            string userSetName2 = "User" + i.ToString();
+            if (table.Rows.Find(userSetName2) == null)
             {
-              UserSetName = UserSetName2;
+              userSetName = userSetName2;
               break;
             }
           }
-          if (UserSetName == null)
+          if (userSetName == null)
             throw new BugException("Не нашли имени набора для записи истории");
 
-          Table.Rows.Add(UserSetName, name, DateTime.Now, MD5);
-          Table.AcceptChanges();
+          table.Rows.Add(userSetName, name, DateTime.Now, md5);
+          table.AcceptChanges();
 
           // Заново записываем всю секцию
           cfgHist.Clear();
-          foreach (DataRow Row in Table.Rows)
+          foreach (DataRow row in table.Rows)
           {
-            string UserSetName2 = Row["UserSetName"].ToString();
-            CfgPart cfgOne = cfgHist.GetChild(UserSetName2, true);
-            cfgOne.SetString("Name", Row["Name"].ToString());
-            cfgOne.SetDateTime("Time", (DateTime)(Row["Time"]));
-            cfgOne.SetString("MD5", Row["MD5"].ToString());
+            string userSetName2 = row["UserSetName"].ToString();
+            CfgPart cfgOne = cfgHist.GetChild(userSetName2, true);
+            cfgOne.SetString("Name", row["Name"].ToString());
+            cfgOne.SetDateTime("Time", (DateTime)(row["Time"]));
+            cfgOne.SetString("MD5", row["MD5"].ToString());
           }
 
-          Item = CreateUserItem(UserSetName, name, Time, MD5);
+          item = CreateUserItem(userSetName, name, time, md5);
         } // CurrentIndex<0
       } // SectHist
 
@@ -580,10 +580,10 @@ namespace FreeLibSet.Forms
 
       #region Секция UI для истории
 
-      EFPConfigSectionInfo ConfigInfo2 = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
-        EFPConfigCategories.UIUser, UserSetName);
+      EFPConfigSectionInfo configInfo2 = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+        EFPConfigCategories.UIUser, userSetName);
       CfgPart cfg2;
-      using (EFPApp.ConfigManager.GetConfig(ConfigInfo2, EFPConfigMode.Write, out cfg2))
+      using (EFPApp.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Write, out cfg2))
       {
         cfg2.Clear();
         cfg.CopyTo(cfg2);
@@ -596,9 +596,9 @@ namespace FreeLibSet.Forms
       // Записываем Snapshot, только если секция новая
       try
       {
-        EFPConfigSectionInfo ConfigInfoSnapshot = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
-          EFPConfigCategories.UIUserSnapshot, UserSetName);
-        EFPApp.SnapshotManager.SaveSnapshot(ConfigInfoSnapshot, snapshot);
+        EFPConfigSectionInfo configInfoSnapshot = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+          EFPConfigCategories.UIUserSnapshot, userSetName);
+        EFPApp.SnapshotManager.SaveSnapshot(configInfoSnapshot, snapshot);
       }
       catch (Exception e)
       {
@@ -608,11 +608,11 @@ namespace FreeLibSet.Forms
       #endregion
 
 #if DEBUG
-      if (Item == null)
+      if (item == null)
         throw new BugException("Item=null");
 #endif
 
-      return Item;
+      return item;
     }
 
     /// <summary>
@@ -626,23 +626,23 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("item");
 #endif
 
-      EFPConfigSectionInfo ConfigInfoHist;
+      EFPConfigSectionInfo configInfoHist;
       CfgPart cfgHist;
       switch (item.Kind)
       {
         case EFPAppCompositionHistoryItemKind.History:
-          ConfigInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+          configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
           EFPConfigCategories.UIHistory, String.Empty);
-          using (EFPApp.ConfigManager.GetConfig(ConfigInfoHist, EFPConfigMode.Write, out cfgHist))
+          using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Write, out cfgHist))
           {
             cfgHist.Remove(item.UserSetName);
           }
           break;
 
         case EFPAppCompositionHistoryItemKind.User:
-          ConfigInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
+          configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
           EFPConfigCategories.UIUserHistory, String.Empty);
-          using (EFPApp.ConfigManager.GetConfig(ConfigInfoHist, EFPConfigMode.Write, out cfgHist))
+          using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Write, out cfgHist))
           {
             cfgHist.Remove(item.UserSetName);
           }

@@ -111,25 +111,25 @@ namespace FreeLibSet.Forms
       if (ItemDict.ContainsKey(item.CategoryAndName))
         return; // повторное добавление темы
 
-      ToolStripItemCollection ParentItems; // куда будем добавлять
+      ToolStripItemCollection parentItems; // куда будем добавлять
       if (parent == null)
-        ParentItems = _Menu.Items;
+        parentItems = _Menu.Items;
       else
       {
         if (!ItemDict.ContainsKey(parent.CategoryAndName))
           throw new InvalidOperationException("Родительская команда " + parent.ToString() + " не была добавлен в меню");
-        ParentItems = ItemDict[parent.CategoryAndName].DropDownItems;
+        parentItems = ItemDict[parent.CategoryAndName].DropDownItems;
       }
 
       if (item.GroupBegin)
-        AddSeparator(ParentItems);
-      ToolStripMenuItem ThisMenuItem = new ToolStripMenuItem();
-      ItemDict.Add(item.CategoryAndName, ThisMenuItem);
-      EFPUIMenuItemObj UIObj = new EFPUIMenuItemObj(this, item, ThisMenuItem);
-      UIObj.SetAll();
-      ParentItems.Add(ThisMenuItem);
+        AddSeparator(parentItems);
+      ToolStripMenuItem thisMenuItem = new ToolStripMenuItem();
+      ItemDict.Add(item.CategoryAndName, thisMenuItem);
+      EFPUIMenuItemObj uiObj = new EFPUIMenuItemObj(this, item, thisMenuItem);
+      uiObj.SetAll();
+      parentItems.Add(thisMenuItem);
       if (item.GroupEnd)
-        AddSeparator(ParentItems);
+        AddSeparator(parentItems);
     }
 
     /// <summary>
@@ -142,13 +142,13 @@ namespace FreeLibSet.Forms
     /// <param name="item">Добавляемая команда меню</param>
     public void Add(EFPCommandItem item)
     {
-      EFPCommandItem Parent = item.Parent;
-      if (Parent != null)
+      EFPCommandItem parent = item.Parent;
+      if (parent != null)
       {
-        if (!ItemDict.ContainsKey(Parent.CategoryAndName))
-          Add(Parent);
+        if (!ItemDict.ContainsKey(parent.CategoryAndName))
+          Add(parent);
       }
-      Add(item, Parent);
+      Add(item, parent);
     }
 
     /// <summary>
@@ -185,33 +185,33 @@ namespace FreeLibSet.Forms
 
       while (true)
       {
-        bool HasDelayed = false;
-        foreach (EFPCommandItem Item in items)
+        bool hasDelayed = false;
+        foreach (EFPCommandItem item in items)
         {
-          if (Item.MenuUsage)
+          if (item.MenuUsage)
           {
-            if (ItemDict.ContainsKey(Item.CategoryAndName))
+            if (ItemDict.ContainsKey(item.CategoryAndName))
               continue; // уже добавили на предыдущем проходе
-            if (Item.Parent != null)
+            if (item.Parent != null)
             {
-              if (!Item.Parent.MenuUsage)
-                throw new InvalidOperationException("Нельзя присоединить команду \"" + Item.ToString() +
-                  "\" к меню, потому что ее родительская команда \"" + Item.Parent.ToString() +
+              if (!item.Parent.MenuUsage)
+                throw new InvalidOperationException("Нельзя присоединить команду \"" + item.ToString() +
+                  "\" к меню, потому что ее родительская команда \"" + item.Parent.ToString() +
                   "\" не относится к меню");
-              if (!items.Contains(Item.Parent))
-                throw new InvalidOperationException("Нельзя присоединить команду \"" + Item.ToString() +
-                  "\" к меню, потому что ее родительская команда \"" + Item.Parent.ToString() +
+              if (!items.Contains(item.Parent))
+                throw new InvalidOperationException("Нельзя присоединить команду \"" + item.ToString() +
+                  "\" к меню, потому что ее родительская команда \"" + item.Parent.ToString() +
                   "\" не входит в список команд");
-              if (!ItemDict.ContainsKey(Item.Parent.CategoryAndName))
+              if (!ItemDict.ContainsKey(item.Parent.CategoryAndName))
               {
-                HasDelayed = true;
+                hasDelayed = true;
                 continue;
               }
             }
-            Add(Item);
+            Add(item);
           }
         }
-        if (!HasDelayed)
+        if (!hasDelayed)
           break;
       }
     }
@@ -233,43 +233,43 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      EFPCommandItem Parent = item.Parent;
-      if (Parent != null)
+      EFPCommandItem parent = item.Parent;
+      if (parent != null)
       {
-        if (!ItemDict.ContainsKey(Parent.CategoryAndName))
-          Add(Parent);
+        if (!ItemDict.ContainsKey(parent.CategoryAndName))
+          Add(parent);
       }
 
       if (ItemDict.ContainsKey(item.CategoryAndName))
         return; // повторное добавление темы
 
-      ToolStripItemCollection ParentItems; // куда будем добавлять
-      if (Parent == null)
-        ParentItems = _Menu.Items;
+      ToolStripItemCollection parentItems; // куда будем добавлять
+      if (parent == null)
+        parentItems = _Menu.Items;
       else
       {
         //if (ht[Parent] == null)
         //  throw new InvalidOperationException("Родительская команда " + Parent.ToString() + " не была добавлен в меню");
-        ParentItems = ItemDict[Parent.CategoryAndName].DropDownItems;
+        parentItems = ItemDict[parent.CategoryAndName].DropDownItems;
       }
 
-      ToolStripMenuItem BeforeMenuItem;
-      if (!ItemDict.TryGetValue(before.CategoryAndName, out BeforeMenuItem))
+      ToolStripMenuItem beforeMenuItem;
+      if (!ItemDict.TryGetValue(before.CategoryAndName, out beforeMenuItem))
         throw new ArgumentException("Команда " + before.ToString() + " не была добавлена в меню", "before");
-      int Index = ParentItems.IndexOf(BeforeMenuItem);
-      if (Index < 0)
+      int index = parentItems.IndexOf(beforeMenuItem);
+      if (index < 0)
         throw new ArgumentException("Команда " + before.ToString() + " располагается в другом меню", "before");
 
       if (item.GroupBegin)
-        InsertSeparator(ParentItems, ref Index);
-      ToolStripMenuItem ThisMenuItem = new ToolStripMenuItem();
-      ItemDict.Add(item.CategoryAndName, ThisMenuItem);
-      EFPUIMenuItemObj UIObj = new EFPUIMenuItemObj(this, item, ThisMenuItem);
-      UIObj.SetAll();
-      ParentItems.Insert(Index, ThisMenuItem);
-      Index++;
+        InsertSeparator(parentItems, ref index);
+      ToolStripMenuItem thisMenuItem = new ToolStripMenuItem();
+      ItemDict.Add(item.CategoryAndName, thisMenuItem);
+      EFPUIMenuItemObj uiObj = new EFPUIMenuItemObj(this, item, thisMenuItem);
+      uiObj.SetAll();
+      parentItems.Insert(index, thisMenuItem);
+      index++;
       if (item.GroupEnd /*|| Before.GroupEnd*/)
-        InsertSeparator(ParentItems, ref Index);
+        InsertSeparator(parentItems, ref index);
     }
 
     #endregion
@@ -360,9 +360,9 @@ namespace FreeLibSet.Forms
 
         if (DefaultCommandItem != null)
         {
-          ToolStripMenuItem Item = ToolStripMenuItems[DefaultCommandItem];
-          if (Item != null)
-            Item.Font = new Font(Item.Font, FontStyle.Bold);
+          ToolStripMenuItem item = ToolStripMenuItems[DefaultCommandItem];
+          if (item != null)
+            item.Font = new Font(item.Font, FontStyle.Bold);
         }
       }
 
@@ -428,7 +428,7 @@ namespace FreeLibSet.Forms
       //  return;
 
 
-      int LastIndex = -1;
+      int lastIndex = -1;
       for (int i = parentItems.Count - 1; i >= 0; i--)
       {
         ToolStripItem mi = parentItems[i];
@@ -441,20 +441,20 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          EFPCommandItem Item = mi.Tag as EFPCommandItem;
-          if (Item != null) // 09.06.2015
+          EFPCommandItem item = mi.Tag as EFPCommandItem;
+          if (item != null) // 09.06.2015
           {
-            if (Item.Visible)
+            if (item.Visible)
             {
-              LastIndex = i - 1;
+              lastIndex = i - 1;
               break;
             }
           }
         }
       }
 
-      bool WantsSep = false;
-      for (int i = 0; i <= LastIndex; i++)
+      bool wantsSep = false;
+      for (int i = 0; i <= lastIndex; i++)
       {
         ToolStripItem mi = parentItems[i];
         if (mi is ToolStripSeparator)
@@ -462,16 +462,16 @@ namespace FreeLibSet.Forms
           if (mi == windowMenuSeparator)
             mi.Visible = true;//EFPApp.Forms.Length > 0;
           else
-            mi.Visible = WantsSep;
-          WantsSep = false;
+            mi.Visible = wantsSep;
+          wantsSep = false;
         }
         else
         {
-          EFPCommandItem Item = mi.Tag as EFPCommandItem;
-          if (Item != null) // 09.06.2015
+          EFPCommandItem item = mi.Tag as EFPCommandItem;
+          if (item != null) // 09.06.2015
           {
-            if (Item.Visible)
-              WantsSep = true;
+            if (item.Visible)
+              wantsSep = true;
           }
         }
       }
@@ -637,11 +637,11 @@ namespace FreeLibSet.Forms
       {
         get
         {
-          EFPUIObjBase Obj = _Owner[commandItem];
-          if (Obj == null)
+          EFPUIObjBase uiObj = _Owner[commandItem];
+          if (uiObj == null)
             return null;
           else
-            return ((EFPUIMenuItemObj)Obj).MenuItem;
+            return ((EFPUIMenuItemObj)uiObj).MenuItem;
         }
       }
 
@@ -656,11 +656,11 @@ namespace FreeLibSet.Forms
       {
         get
         {
-          EFPUIObjBase Obj = _Owner[category, name];
-          if (Obj == null)
+          EFPUIObjBase uiObj = _Owner[category, name];
+          if (uiObj == null)
             return null;
           else
-            return ((EFPUIMenuItemObj)Obj).MenuItem;
+            return ((EFPUIMenuItemObj)uiObj).MenuItem;
         }
       }
 
@@ -688,16 +688,16 @@ namespace FreeLibSet.Forms
           return;
         if (_DefaultCommandItem != null)
         {
-          ToolStripMenuItem Item = ToolStripMenuItems[_DefaultCommandItem];
-          if (Item != null)
-            Item.ResetFont();
+          ToolStripMenuItem item = ToolStripMenuItems[_DefaultCommandItem];
+          if (item != null)
+            item.ResetFont();
         }
         _DefaultCommandItem = value;
         if (_DefaultCommandItem != null)
         {
-          ToolStripMenuItem Item = ToolStripMenuItems[_DefaultCommandItem];
-          if (Item != null)
-            Item.Font = new Font(Item.Font, FontStyle.Bold);
+          ToolStripMenuItem item = ToolStripMenuItems[_DefaultCommandItem];
+          if (item != null)
+            item.Font = new Font(item.Font, FontStyle.Bold);
         }
       }
     }
@@ -740,18 +740,18 @@ namespace FreeLibSet.Forms
       if (windowCommandItem == null)
         throw new ArgumentNullException("windowCommandItem");
 
-      ToolStripMenuItem WindowMenuItem;
-      if (!ItemDict.TryGetValue(windowCommandItem.CategoryAndName, out WindowMenuItem))
+      ToolStripMenuItem windowMenuItem;
+      if (!ItemDict.TryGetValue(windowCommandItem.CategoryAndName, out windowMenuItem))
         throw new ArgumentException("Команда " + windowCommandItem.ToString() + " не была добавлена в меню", "windowCommandItem");
 
-      if (WindowMenuItem.DropDownItems.Count > 0)
+      if (windowMenuItem.DropDownItems.Count > 0)
       {
         // Надо добавить сепаратор
         WindowMenuSeparator = new ToolStripSeparator();
-        WindowMenuItem.DropDownItems.Add(WindowMenuSeparator);
+        windowMenuItem.DropDownItems.Add(WindowMenuSeparator);
       }
 
-      ((MenuStrip)Menu).MdiWindowListItem = (ToolStripMenuItem)WindowMenuItem;
+      ((MenuStrip)Menu).MdiWindowListItem = (ToolStripMenuItem)windowMenuItem;
     }
 
     /// <summary>

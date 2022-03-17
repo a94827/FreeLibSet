@@ -49,10 +49,10 @@ namespace FreeLibSet.Forms
       if (ValidateState == UICore.UIValidateState.Error)
         return;
 
-      YearMonth YM2;
+      YearMonth ym2;
       try
       {
-        YM2 = YM;
+        ym2 = YM;
       }
       catch (Exception e) // 15.04.2019
       {
@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      if (!YM2.IsInRange(Minimum, Maximum))
+      if (!ym2.IsInRange(Minimum, Maximum))
         SetError("Значение должно быть в диапазоне: " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
 
       base.OnValidate();
@@ -326,11 +326,11 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      YearMonth FirstYM2, LastYM2;
+      YearMonth firstYM2, lastYM2;
       try
       {
-        FirstYM2 = FirstYM;
-        LastYM2 = LastYM;
+        firstYM2 = FirstYM;
+        lastYM2 = LastYM;
       }
       catch (Exception e) // 15.04.2019
       {
@@ -338,7 +338,7 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      if (!(FirstYM2.IsInRange(Minimum, Maximum) && LastYM2.IsInRange(Minimum, Maximum)))
+      if (!(firstYM2.IsInRange(Minimum, Maximum) && lastYM2.IsInRange(Minimum, Maximum)))
         SetError("Значение должно быть в диапазоне: " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
 
       base.OnValidate();

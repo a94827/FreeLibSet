@@ -176,11 +176,11 @@ namespace FreeLibSet.Forms
 
       public void ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        int SrcVal = args.GetInt(0);
-        if (SrcVal < 0 || SrcVal >= TextValues.Length)
-          args.Value = "?? " + SrcVal.ToString();
+        int srcVal = args.GetInt(0);
+        if (srcVal < 0 || srcVal >= TextValues.Length)
+          args.Value = "?? " + srcVal.ToString();
         else
-          args.Value = TextValues[SrcVal];
+          args.Value = TextValues[srcVal];
       }
 
       #endregion
@@ -199,10 +199,10 @@ namespace FreeLibSet.Forms
       EFPGridProducerValueNeededEventHandler handler)
     {
       string[] aNames = sourceColumnNames.Split(',');
-      EFPGridProducerToolTip Item = new EFPGridProducerToolTip(name, aNames);
-      Item.ValueNeeded += handler;
-      Add(Item);
-      return Item;
+      EFPGridProducerToolTip item = new EFPGridProducerToolTip(name, aNames);
+      item.ValueNeeded += handler;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -218,9 +218,9 @@ namespace FreeLibSet.Forms
     public EFPGridProducerToolTip AddUserItem(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler handler, string prefixText)
     {
-      EFPGridProducerToolTip Item = AddUserItem(name, sourceColumnNames, handler);
-      InitPrefixText(Item, prefixText);
-      return Item;
+      EFPGridProducerToolTip item = AddUserItem(name, sourceColumnNames, handler);
+      InitPrefixText(item, prefixText);
+      return item;
     }
 
 
@@ -266,8 +266,8 @@ namespace FreeLibSet.Forms
       List<string> lst = null;
       for (int i = 0; i < gridConfig.ToolTips.Count; i++)
       {
-        EFPGridProducerToolTip ToolTip = this[gridConfig.ToolTips[i].ToolTipName];
-        if (ToolTip == null)
+        EFPGridProducerToolTip toolTip = this[gridConfig.ToolTips[i].ToolTipName];
+        if (toolTip == null)
           continue; // ерунда какая-то
 
         //// Если в подсказки входит столбец, на который наведена мышь, то пропускаем подсказку
@@ -279,11 +279,11 @@ namespace FreeLibSet.Forms
         string s;
         try
         {
-          s = ToolTip.GetToolTipText(rowInfo);
+          s = toolTip.GetToolTipText(rowInfo);
         }
         catch (Exception e)
         {
-          s = ToolTip.DisplayName + ": Ошибка! " + e.Message;
+          s = toolTip.DisplayName + ": Ошибка! " + e.Message;
         }
         if (!String.IsNullOrEmpty(s))
         {
@@ -473,14 +473,14 @@ namespace FreeLibSet.Forms
 
     private static IEnumerable<EFPGridProducerToolTip> GetToolTips(EFPGridProducer producer, EFPDataGridViewConfig config)
     {
-      List<EFPGridProducerToolTip> ToolTips = new List<EFPGridProducerToolTip>();
+      List<EFPGridProducerToolTip> toolTips = new List<EFPGridProducerToolTip>();
       for (int i = 0; i < config.ToolTips.Count; i++)
       {
-        EFPGridProducerToolTip ToolTip = producer.ToolTips[config.ToolTips[i].ToolTipName];
-        if (ToolTip != null)
-          ToolTips.Add(ToolTip);
+        EFPGridProducerToolTip item = producer.ToolTips[config.ToolTips[i].ToolTipName];
+        if (item != null)
+          toolTips.Add(item);
       }
-      return ToolTips;
+      return toolTips;
     }
 
     /// <summary>
@@ -555,11 +555,11 @@ namespace FreeLibSet.Forms
 
       EFPDataViewRowInfo ri = new EFPDataViewRowInfo(null, row, _RVA, -1);
 
-      foreach (EFPGridProducerToolTip ToolTip in ToolTips)
+      foreach (EFPGridProducerToolTip toolTip in ToolTips)
       {
         try
         {
-          string s = ToolTip.GetToolTipText(ri);
+          string s = toolTip.GetToolTipText(ri);
           if (String.IsNullOrEmpty(s))
             continue;
           if (_SB.Length > 0)

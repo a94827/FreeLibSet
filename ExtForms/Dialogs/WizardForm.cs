@@ -305,8 +305,8 @@ namespace FreeLibSet.Forms
       }
 
       // Нажата кнопка "Далее"
-      WizardStep NextStep = CurrentStep.OnGetNext();
-      if (NextStep == null)
+      WizardStep nextStep = CurrentStep.OnGetNext();
+      if (nextStep == null)
       {
         CloseAllTempPages(true);
         EFPApp.ShowTempMessage("Следующий кадр не определен");
@@ -316,18 +316,18 @@ namespace FreeLibSet.Forms
       CloseAllTempPages(false);
       CurrentStep.BaseProvider.Parent = null;
 
-      int Pos = TheWizard.Steps.IndexOf(NextStep);
-      if (Pos < 0)
+      int pos = TheWizard.Steps.IndexOf(nextStep);
+      if (pos < 0)
       {
         // Получен новый кадр
-        TheWizard.Steps.Add(NextStep);
+        TheWizard.Steps.Add(nextStep);
         InitStep(WizardAction.Next, true);
       }
       else
       {
         // Возврат к предыдущему шагу
         panMain.Controls.Clear();
-        while (CurrentStepIndex > Pos)
+        while (CurrentStepIndex > pos)
           DeleteLastStep();
         InitStep(WizardAction.CircleNext, true);
       }
@@ -429,11 +429,11 @@ namespace FreeLibSet.Forms
       panMain.Controls.Clear(); // Иначе нельзя разрушать управляющие элементы закладки
       while (TheWizard.TempPage != null)
       {
-        WizardTempPage ThisPage = TheWizard.TempPage;
-        ThisPage.Close();
-        TheWizard._TempPage = ThisPage.PrevTempPage;
-        ThisPage.PrevTempPage = null;
-        ThisPage._Wizard = null;
+        WizardTempPage thisPage = TheWizard.TempPage;
+        thisPage.Close();
+        TheWizard._TempPage = thisPage.PrevTempPage;
+        thisPage.PrevTempPage = null;
+        thisPage._Wizard = null;
       }
       if (restoreCurrStep && CurrentStep != null)
         InitStep(WizardAction.Cancel, false);
@@ -446,11 +446,11 @@ namespace FreeLibSet.Forms
         throw new BugException("Нет временной страницы");
       panMain.Controls.Clear(); // Иначе нельзя разрушать управляющие элементы закладки
 
-      WizardTempPage ThisPage = TheWizard.TempPage;
-      ThisPage.Close();
-      TheWizard._TempPage = ThisPage.PrevTempPage;
-      ThisPage.PrevTempPage = null;
-      ThisPage._Wizard = null;
+      WizardTempPage thisPage = TheWizard.TempPage;
+      thisPage.Close();
+      TheWizard._TempPage = thisPage.PrevTempPage;
+      thisPage.PrevTempPage = null;
+      thisPage._Wizard = null;
 
       if (TheWizard.TempPage == null)
         InitStep(WizardAction.Cancel, false);
@@ -751,9 +751,9 @@ namespace FreeLibSet.Forms
     /// <returns>Интерфейс для управления splash-заставкой</returns>
     public ISplash BeginTempPage(string[] items)
     {
-      WizardSplashPage Page = new WizardSplashPage(items);
-      BeginTempPage(Page);
-      return Page.Splash;
+      WizardSplashPage page = new WizardSplashPage(items);
+      BeginTempPage(page);
+      return page.Splash;
     }
 
     /// <summary>
@@ -798,9 +798,9 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          EFPAppExceptionEventArgs Args = new EFPAppExceptionEventArgs(exception, exceptionTitle);
-          HandleException(this, Args);
-          if (Args.Handled)
+          EFPAppExceptionEventArgs args = new EFPAppExceptionEventArgs(exception, exceptionTitle);
+          HandleException(this, args);
+          if (args.Handled)
             return;
         }
         catch (Exception e2)
@@ -1238,8 +1238,8 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          WizardBeginStepEventArgs Args = new WizardBeginStepEventArgs(Wizard, action);
-          BeginStep(this, Args);
+          WizardBeginStepEventArgs args = new WizardBeginStepEventArgs(Wizard, action);
+          BeginStep(this, args);
         }
         catch (Exception e)
         {
@@ -1267,10 +1267,10 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          WizardEndStepEventArgs Args = new WizardEndStepEventArgs(Wizard, action);
-          Args.Cancel = false;
-          EndStep(this, Args);
-          return !Args.Cancel;
+          WizardEndStepEventArgs args = new WizardEndStepEventArgs(Wizard, action);
+          args.Cancel = false;
+          EndStep(this, args);
+          return !args.Cancel;
         }
         catch (UserCancelException)
         {
@@ -1302,9 +1302,9 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          WizardGetNextEventArgs Args = new WizardGetNextEventArgs(Wizard);
-          GetNext(this, Args);
-          return Args.NextStep;
+          WizardGetNextEventArgs args = new WizardGetNextEventArgs(Wizard);
+          GetNext(this, args);
+          return args.NextStep;
         }
         catch (UserCancelException)
         {

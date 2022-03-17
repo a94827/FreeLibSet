@@ -294,16 +294,15 @@ namespace FreeLibSet.Forms
 
     void InitCommandItemsState(object sender, EventArgs args)
     {
-      EFPDateRangeBoxCommandItems CommandItems2 = CommandItemsIfAssigned as EFPDateRangeBoxCommandItems;
-      if (CommandItems2 != null)
-        CommandItems2.InitCommandItemsState();
+      EFPDateRangeBoxCommandItems commandItems2 = CommandItemsIfAssigned as EFPDateRangeBoxCommandItems;
+      if (commandItems2 != null)
+        commandItems2.InitCommandItemsState();
     }
 
     void Control_MenuButtonClicked(object sender, System.ComponentModel.CancelEventArgs args)
     {
       PrepareContextMenu(); // иначе меню не будет показано
     }
-
 
     #endregion
   }
@@ -418,7 +417,6 @@ namespace FreeLibSet.Forms
       ControlProvider.First.NValue = ControlProvider.Last.NValue;
     }
 
-
     #endregion
 
     #region  оманды установки диапазонов
@@ -442,24 +440,24 @@ namespace FreeLibSet.Forms
 
     private void DoPeriod(int mode)
     {
-      DateTime FirstDateValue, LastDateValue;
-      GetPeriodValues(mode, out FirstDateValue, out LastDateValue);
-      ControlProvider.First.NValue = FirstDateValue;
-      ControlProvider.Last.NValue = LastDateValue;
+      DateTime firstDateValue, lastDateValue;
+      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
+      ControlProvider.First.NValue = firstDateValue;
+      ControlProvider.Last.NValue = lastDateValue;
     }
 
     private void GetPeriodValues(int mode, out DateTime firstDateValue, out DateTime lastDateValue)
     {
-      DateTime Date;
+      DateTime date;
       if (ControlProvider.First.NValue.HasValue)
-        Date = ControlProvider.First.NValue.Value;
+        date = ControlProvider.First.NValue.Value;
       else if (ControlProvider.Last.NValue.HasValue)
-        Date = ControlProvider.Last.NValue.Value;
+        date = ControlProvider.Last.NValue.Value;
       else
-        Date = DateTime.Today;
+        date = DateTime.Today;
 
-      int m1 = Date.Month;
-      int m2 = Date.Month;
+      int m1 = date.Month;
+      int m2 = date.Month;
 
       switch (mode)
       {
@@ -477,8 +475,8 @@ namespace FreeLibSet.Forms
           m2 = 12;
           break;
       }
-      firstDateValue = new DateTime(Date.Year, m1, 1);
-      lastDateValue = new DateTime(Date.Year, m2, DateTime.DaysInMonth(Date.Year, m2));
+      firstDateValue = new DateTime(date.Year, m1, 1);
+      lastDateValue = new DateTime(date.Year, m2, DateTime.DaysInMonth(date.Year, m2));
     }
 
     #endregion
@@ -499,12 +497,12 @@ namespace FreeLibSet.Forms
 
     private void ShiftYear(bool forward)
     {
-      DateTime? FirstDate = ControlProvider.First.NValue;
-      DateTime? LastDate = ControlProvider.Last.NValue;
-      if (UITools.ShiftDateRangeYear(ref FirstDate, ref LastDate, forward))
+      DateTime? firstDate = ControlProvider.First.NValue;
+      DateTime? lastDate = ControlProvider.Last.NValue;
+      if (UITools.ShiftDateRangeYear(ref firstDate, ref lastDate, forward))
       {
-        ControlProvider.First.NValue = FirstDate;
-        ControlProvider.Last.NValue = LastDate;
+        ControlProvider.First.NValue = firstDate;
+        ControlProvider.Last.NValue = lastDate;
       }
       else
         EFPApp.ShowTempMessage("Ќельз€ изменить год");
@@ -516,29 +514,29 @@ namespace FreeLibSet.Forms
 
     public void InitCommandItemsState()
     {
-      DateRangeFormatter Formatter = ControlProvider.Control.Formatter;
+      DateRangeFormatter formatter = ControlProvider.Control.Formatter;
 
-      SetMenuRightText(ciToday, Formatter.ToString(DateTime.Today, false));
+      SetMenuRightText(ciToday, formatter.ToString(DateTime.Today, false));
 
-      bool RangeEnabled = ControlProvider.First.Editable && ControlProvider.Last.Editable;
+      bool rangeEnabled = ControlProvider.First.Editable && ControlProvider.Last.Editable;
 
-      ci1To2.Enabled = RangeEnabled;
-      ci2To1.Enabled = RangeEnabled;
-      ciMonth.Enabled = RangeEnabled;
-      ciQuarter.Enabled = RangeEnabled;
-      ciYear.Enabled = RangeEnabled;
+      ci1To2.Enabled = rangeEnabled;
+      ci2To1.Enabled = rangeEnabled;
+      ciMonth.Enabled = rangeEnabled;
+      ciQuarter.Enabled = rangeEnabled;
+      ciYear.Enabled = rangeEnabled;
 
-      if (RangeEnabled)
+      if (rangeEnabled)
       {
         if (ControlProvider.First.NValue.HasValue)
-          SetMenuRightText(ci1To2, Formatter.ToString(ControlProvider.First.NValue.Value, false));
+          SetMenuRightText(ci1To2, formatter.ToString(ControlProvider.First.NValue.Value, false));
         else
         {
           SetMenuRightText(ci1To2, String.Empty);
           ci1To2.Enabled = false;
         }
         if (ControlProvider.Last.NValue.HasValue)
-          SetMenuRightText(ci2To1, Formatter.ToString(ControlProvider.Last.NValue.Value, false));
+          SetMenuRightText(ci2To1, formatter.ToString(ControlProvider.Last.NValue.Value, false));
         else
         {
           SetMenuRightText(ci2To1, String.Empty);
@@ -603,9 +601,9 @@ namespace FreeLibSet.Forms
 
     private string GetPeriodText(int mode)
     {
-      DateTime FirstDateValue, LastDateValue;
-      GetPeriodValues(mode, out FirstDateValue, out LastDateValue);
-      return ControlProvider.Control.Formatter.ToString(FirstDateValue, LastDateValue, false);
+      DateTime firstDateValue, lastDateValue;
+      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
+      return ControlProvider.Control.Formatter.ToString(firstDateValue, lastDateValue, false);
     }
 
     internal static void SetMenuRightText(EFPCommandItem ci, string text)
@@ -761,11 +759,11 @@ namespace FreeLibSet.Forms
     {
       public EFPDateOrRangeBox Owner;
 
-      protected override void OnDateSelected(DateRangeEventArgs drevent)
+      protected override void OnDateSelected(DateRangeEventArgs drEvent)
       {
         try
         {
-          base.OnDateSelected(drevent);
+          base.OnDateSelected(drEvent);
           Owner.DateRange = new DateRange(SelectionStart);
           //Owner.MainControl.SelectAll();
           FindForm().Hide();
@@ -1374,9 +1372,9 @@ namespace FreeLibSet.Forms
           _LastValueEx.OwnerSetValue(DateRange.LastDate);
       }
 #endif
-      EFPDateOrRangeBoxCommandItems CommandItems2 = CommandItemsIfAssigned as EFPDateOrRangeBoxCommandItems;
-      if (CommandItems2 != null)
-        CommandItems2.InitCommandItemsState(); // 03.06.2019
+      EFPDateOrRangeBoxCommandItems commandItems2 = CommandItemsIfAssigned as EFPDateOrRangeBoxCommandItems;
+      if (commandItems2 != null)
+        commandItems2.InitCommandItemsState(); // 03.06.2019
 
       Validate();
       DoSyncValueChanged();
@@ -1589,8 +1587,8 @@ namespace FreeLibSet.Forms
         _NotReadOnlySync = new DepInput<bool>(true, null);
         _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
 
-        DepOr ReadOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
-        _ReadOnlyEx.Source = ReadOnlyOr;
+        DepOr readOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
+        _ReadOnlyEx.Source = readOnlyOr;
       }
     }
     /// <summary>
@@ -1798,21 +1796,21 @@ namespace FreeLibSet.Forms
 
     private void DoPeriod(int mode)
     {
-      DateTime FirstDateValue, LastDateValue;
-      GetPeriodValues(mode, out FirstDateValue, out LastDateValue);
-      ControlProvider.DateRange = new DateRange(FirstDateValue, LastDateValue);
+      DateTime firstDateValue, lastDateValue;
+      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
+      ControlProvider.DateRange = new DateRange(firstDateValue, lastDateValue);
     }
 
     private void GetPeriodValues(int mode, out DateTime firstDateValue, out DateTime lastDateValue)
     {
-      DateTime Date;
+      DateTime date;
       if (ControlProvider.DateRange.IsEmpty)
-        Date = DateTime.Today;
+        date = DateTime.Today;
       else
-        Date = ControlProvider.DateRange.FirstDate;
+        date = ControlProvider.DateRange.FirstDate;
 
-      int m1 = Date.Month;
-      int m2 = Date.Month;
+      int m1 = date.Month;
+      int m2 = date.Month;
 
       switch (mode)
       {
@@ -1830,8 +1828,8 @@ namespace FreeLibSet.Forms
           m2 = 12;
           break;
       }
-      firstDateValue = new DateTime(Date.Year, m1, 1);
-      lastDateValue = new DateTime(Date.Year, m2, DateTime.DaysInMonth(Date.Year, m2));
+      firstDateValue = new DateTime(date.Year, m1, 1);
+      lastDateValue = new DateTime(date.Year, m2, DateTime.DaysInMonth(date.Year, m2));
     }
 
     #endregion
@@ -1853,9 +1851,9 @@ namespace FreeLibSet.Forms
 
     private string GetPeriodText(int mode)
     {
-      DateTime FirstDateValue, LastDateValue;
-      GetPeriodValues(mode, out FirstDateValue, out LastDateValue);
-      return ControlProvider.Formatter.ToString(FirstDateValue, LastDateValue, false);
+      DateTime firstDateValue, lastDateValue;
+      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
+      return ControlProvider.Formatter.ToString(firstDateValue, lastDateValue, false);
     }
 
     #endregion

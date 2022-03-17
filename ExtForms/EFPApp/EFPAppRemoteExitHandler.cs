@@ -100,18 +100,18 @@ namespace FreeLibSet.Forms
     public void TimerTick()
     {
       TimeSpan ts = DateTime.Now - EFPApp.RemoteExitHandler.StartTime;
-      int RemainderTime = EFPApp.RemoteExitHandler.WaitingTime - (int)ts.TotalMilliseconds;
-      if (RemainderTime < 0)
-        RemainderTime = 0;
-      if (RemainderTime > EFPApp.RemoteExitHandler.WaitingTime)
-        RemainderTime = EFPApp.RemoteExitHandler.WaitingTime;
-      EFPApp.RemoteExitHandler.RemainderTime = RemainderTime;
+      int remainderTime = EFPApp.RemoteExitHandler.WaitingTime - (int)ts.TotalMilliseconds;
+      if (remainderTime < 0)
+        remainderTime = 0;
+      if (remainderTime > EFPApp.RemoteExitHandler.WaitingTime)
+        remainderTime = EFPApp.RemoteExitHandler.WaitingTime;
+      EFPApp.RemoteExitHandler.RemainderTime = remainderTime;
       ThePB.Maximum = EFPApp.RemoteExitHandler.WaitingTime; // вдруг поменялось
-      ThePB.Value = ThePB.Maximum - RemainderTime;
-      lblTime.Text = (RemainderTime / 1000).ToString();
+      ThePB.Value = ThePB.Maximum - remainderTime;
+      lblTime.Text = (remainderTime / 1000).ToString();
 
 
-      if (RemainderTime == 0)
+      if (remainderTime == 0)
       {
         _NewState = EFPAppRemoteExitState.Exiting;
         Hide(); // закрываем форму
@@ -349,9 +349,9 @@ namespace FreeLibSet.Forms
 
       if (BeforeStart != null)
       {
-        CancelEventArgs Args = new CancelEventArgs();
-        BeforeStart(this, Args);
-        if (Args.Cancel)
+        CancelEventArgs args = new CancelEventArgs();
+        BeforeStart(this, args);
+        if (args.Cancel)
         {
           State = EFPAppRemoteExitState.InternalCancelled;
           return;
@@ -414,9 +414,9 @@ namespace FreeLibSet.Forms
       if (BeforeExit == null)
         return true;
 
-      CancelEventArgs Args = new CancelEventArgs();
-      BeforeExit(this, Args);
-      return !Args.Cancel;
+      CancelEventArgs args = new CancelEventArgs();
+      BeforeExit(this, args);
+      return !args.Cancel;
     }
 
     /// <summary>

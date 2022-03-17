@@ -120,33 +120,33 @@ namespace FreeLibSet.Forms
         if (ButtonsPanel == null)
           return base.DefaultMinimumSize;
 
-        int LeftPos = int.MaxValue;
-        int RightPos = 0;
-        bool Flag = false;
+        int leftPos = int.MaxValue;
+        int rightPos = 0;
+        bool flag = false;
         foreach (Control btn in ButtonsPanel.Controls)
         {
           if (btn.Visible)
           {
-            Flag = true;
-            LeftPos = Math.Min(LeftPos, btn.Left);
-            RightPos = Math.Max(RightPos, btn.Right);
+            flag = true;
+            leftPos = Math.Min(leftPos, btn.Left);
+            rightPos = Math.Max(rightPos, btn.Right);
           }
         }
 
-        if (!Flag) // нет ни одной кнопки
+        if (!flag) // нет ни одной кнопки
           return base.DefaultMinimumSize;
 
 
-        int W = RightPos + LeftPos; // отступ в 8 пикселей от правого края кнопки
+        int w = rightPos + leftPos; // отступ в 8 пикселей от правого края кнопки
 
-        int H = base.Height - base.ClientSize.Height + ButtonsPanel.Height;
+        int h = base.Height - base.ClientSize.Height + ButtonsPanel.Height;
         if (TopPanel.Visible)
-          H += TopPanel.Height;
+          h += TopPanel.Height;
         if (BottomPanel.Visible)
-          H += BottomPanel.Height;
+          h += BottomPanel.Height;
 
-        return new Size(W + base.Width - ButtonsPanel.Width,
-          H + 8);
+        return new Size(w + base.Width - ButtonsPanel.Width,
+          h + 8);
       }
     }
 
@@ -201,20 +201,20 @@ namespace FreeLibSet.Forms
       // т.к. они неправильно работают с InfoLabel (это может быть и бяка в InfoLabel)
       // Вместо этого, устанавливаем размеры самостоятельно
 
-      Panel TBPanel = (Panel)sender;
-      TBPanel.Visible = TBPanel.Controls.Count > 0;
-      if (TBPanel.Controls.Count == 0)
+      Panel tbPanel = (Panel)sender;
+      tbPanel.Visible = tbPanel.Controls.Count > 0;
+      if (tbPanel.Controls.Count == 0)
         return;
 
       MinMax<int> mm = new MinMax<int>();
       // Дочерние элементы могут располагаться в любом месте панели, и сверху и снизу.
       // Они получат нормальные координаты только после изменения размеров, а не сейчас
-      foreach (Control child in TBPanel.Controls)
+      foreach (Control child in tbPanel.Controls)
       {
         mm += child.Top;
         mm += child.Bottom;
       }
-      TBPanel.Height = mm.MaxValue - mm.MinValue;
+      tbPanel.Height = mm.MaxValue - mm.MinValue;
     }
 
     private void btn_Click(object sender, EventArgs args)
@@ -367,20 +367,20 @@ namespace FreeLibSet.Forms
       // т.к. они неправильно работают с InfoLabel (это может быть и бяка в InfoLabel)
       // Вместо этого, устанавливаем размеры самостоятельно
 
-      Panel TBPanel = (Panel)sender;
-      TBPanel.Visible = TBPanel.Controls.Count > 0;
-      if (TBPanel.Controls.Count == 0)
+      Panel tbPanel = (Panel)sender;
+      tbPanel.Visible = tbPanel.Controls.Count > 0;
+      if (tbPanel.Controls.Count == 0)
         return;
 
       MinMax<int> mm = new MinMax<int>();
       // Дочерние элементы могут располагаться в любом месте панели, и сверху и снизу.
       // Они получат нормальные координаты только после изменения размеров, а не сейчас
-      foreach (Control child in TBPanel.Controls)
+      foreach (Control child in tbPanel.Controls)
       {
         mm += child.Top;
         mm += child.Bottom;
       }
-      TBPanel.Height = mm.MaxValue - mm.MinValue;
+      tbPanel.Height = mm.MaxValue - mm.MinValue;
     }
 
     #endregion
@@ -536,9 +536,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     public ListViewOKCancelForm()
     {
-      TheGroupBox = new GroupBox();
-      TheGroupBox.Dock = DockStyle.Fill;
-      MainPanel.Controls.Add(TheGroupBox);
+      _TheGroupBox = new GroupBox();
+      _TheGroupBox.Dock = DockStyle.Fill;
+      MainPanel.Controls.Add(_TheGroupBox);
 
       _TheListView = new ListView();
       _TheListView.Dock = DockStyle.Fill;
@@ -546,7 +546,7 @@ namespace FreeLibSet.Forms
       _TheListView.HeaderStyle = ColumnHeaderStyle.None;
       _TheListView.Columns.Add(String.Empty);
       _TheListView.SmallImageList = EFPApp.MainImages;
-      TheGroupBox.Controls.Add(_TheListView);
+      _TheGroupBox.Controls.Add(_TheListView);
       this.Resize += new EventHandler(Form_Resize);
       Form_Resize(null, null);
     }
@@ -566,15 +566,15 @@ namespace FreeLibSet.Forms
     public ListView TheListView { get { return _TheListView; } }
     private ListView _TheListView;
 
-    private GroupBox TheGroupBox;
+    private GroupBox _TheGroupBox;
 
     /// <summary>
     /// Заголовок на рамке, окружающей список
     /// </summary>
     public string GroupTitle
     {
-      get { return TheGroupBox.Text; }
-      set { TheGroupBox.Text = value; }
+      get { return _TheGroupBox.Text; }
+      set { _TheGroupBox.Text = value; }
     }
 
     #endregion

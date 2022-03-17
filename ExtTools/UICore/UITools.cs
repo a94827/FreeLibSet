@@ -72,21 +72,21 @@ namespace FreeLibSet.UICore
     {
       DateTime? dt1 = firstDate;
       DateTime? dt2 = lastDate;
-      bool Res;
+      bool res;
       try
       {
-        Res = DoShiftDateRange(ref dt1, ref dt2, forward);
+        res = DoShiftDateRange(ref dt1, ref dt2, forward);
       }
       catch
       {
-        Res = false;
+        res = false;
       }
-      if (Res)
+      if (res)
       {
         firstDate = dt1;
         lastDate = dt2;
       }
-      return Res;
+      return res;
     }
 
     [DebuggerStepThrough]
@@ -156,21 +156,21 @@ namespace FreeLibSet.UICore
     {
       DateTime? dt1 = firstDate;
       DateTime? dt2 = lastDate;
-      bool Res;
+      bool res;
       try
       {
-        Res = DoShiftDateRangeYear(ref dt1, ref dt2, forward);
+        res = DoShiftDateRangeYear(ref dt1, ref dt2, forward);
       }
       catch
       {
-        Res = false;
+        res = false;
       }
-      if (Res)
+      if (res)
       {
         firstDate = dt1.Value;
         lastDate = dt2.Value;
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -192,47 +192,47 @@ namespace FreeLibSet.UICore
     {
       DateTime? dt1 = firstDate;
       DateTime? dt2 = lastDate;
-      bool Res;
+      bool res;
       try
       {
-        Res = DoShiftDateRangeYear(ref dt1, ref dt2, forward);
+        res = DoShiftDateRangeYear(ref dt1, ref dt2, forward);
       }
       catch
       {
-        Res = false;
+        res = false;
       }
-      if (Res)
+      if (res)
       {
         firstDate = dt1;
         lastDate = dt2;
       }
-      return Res;
+      return res;
     }
 
     [DebuggerStepThrough]
     private static bool DoShiftDateRangeYear(ref DateTime? firstDate, ref DateTime? lastDate, bool forward)
     {
-      bool Res = false;
-      bool IsWholeMonth = false;
+      bool res = false;
+      bool isWholeMonth = false;
       if (firstDate.HasValue && lastDate.HasValue)
       {
         if (DataTools.IsBottomOfMonth(firstDate.Value) && DataTools.IsEndOfMonth(lastDate.Value))
-          IsWholeMonth = true;
+          isWholeMonth = true;
       }
 
       if (firstDate.HasValue)
       {
         firstDate = DataTools.CreateDateTime(firstDate.Value.Year + (forward ? +1 : -1), firstDate.Value.Month, firstDate.Value.Day);
-        Res = true;
+        res = true;
       }
 
       if (lastDate.HasValue)
       {
         lastDate = DataTools.CreateDateTime(lastDate.Value.Year + (forward ? +1 : -1), lastDate.Value.Month,
-          IsWholeMonth ? 31 : lastDate.Value.Day);
-        Res = true;
+          isWholeMonth ? 31 : lastDate.Value.Day);
+        res = true;
       }
-      return Res;
+      return res;
     }
 
     #endregion

@@ -336,23 +336,23 @@ namespace FreeLibSet.Forms
 
       // Вычисляем размер списка и устанавливаем размер формы
       //int FormH = SystemInformation.SizingBorderWidth * 2 + SystemInformation.CaptionHeight; // Заголовок
-      int FormH = Height - ClientSize.Height;
-      FormH += SecondPanel.Size.Height; // нижняя панель
+      int formH = Height - ClientSize.Height;
+      formH += SecondPanel.Size.Height; // нижняя панель
 
       if (PhasesListView.Items.Count > 1) // Когда одна фаза список не показываем
       {
-        FormH += (PhasesListView.GetItemRect(0).Height + 1) * PhasesListView.Items.Count +
+        formH += (PhasesListView.GetItemRect(0).Height + 1) * PhasesListView.Items.Count +
             2 * SystemInformation.Border3DSize.Height;
       }
       else
         PhasesListView.Visible = false;
 
-      int MaxFormH = Screen.FromControl(this).WorkingArea.Height * 3 / 4;
-      if (FormH > MaxFormH)
-        FormH = MaxFormH;
+      int maxFormH = Screen.FromControl(this).WorkingArea.Height * 3 / 4;
+      if (formH > maxFormH)
+        formH = maxFormH;
       else
         PhasesListView.Scrollable = false;
-      Height = FormH;
+      Height = formH;
 
       //StartPosition = FormStartPosition.CenterScreen;
       EFPApp.PlaceFormInScreenCenter(this);

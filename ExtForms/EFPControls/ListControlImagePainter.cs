@@ -49,15 +49,15 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        System.Collections.IList Items;
+        System.Collections.IList items;
         if (_Control is ListBox)
-          Items = ((ListBox)_Control).Items;
+          items = ((ListBox)_Control).Items;
         else
-          Items = ((ComboBox)_Control).Items;
-        if (_ItemIndex < 0 || _ItemIndex >= Items.Count)
+          items = ((ComboBox)_Control).Items;
+        if (_ItemIndex < 0 || _ItemIndex >= items.Count)
           return null;
         else
-          return Items[_ItemIndex];
+          return items[_ItemIndex];
       }
     }
 
@@ -88,7 +88,7 @@ namespace FreeLibSet.Forms
     /// Установка свойств Colors и ValidateState является взаимоисключающей. Если одно свойство устанавливается, то второе сбрасывается в null.
     /// Если оба свойства равны null, используются цвета Control.BackColor и ForeColor.
     /// </summary>
-    public ListItemColors Colors 
+    public ListItemColors Colors
     {
       get { return _Colors; }
       set
@@ -104,14 +104,14 @@ namespace FreeLibSet.Forms
     /// Установка свойств Colors и ValidateState является взаимоисключающей. Если одно свойство устанавливается, то второе сбрасывается в null.
     /// Если оба свойства равны null, используются цвета Control.BackColor и ForeColor.
     /// </summary>
-    public UIValidateState? ValidateState 
-    { 
-      get { return _ValidateState; } 
-      set 
-      { 
+    public UIValidateState? ValidateState
+    {
+      get { return _ValidateState; }
+      set
+      {
         _ValidateState = value;
         _Colors = null;
-      } 
+      }
     }
     private UIValidateState? _ValidateState;
 
@@ -212,9 +212,9 @@ namespace FreeLibSet.Forms
     {
       switch (state)
       {
-        case UIValidateState.Ok: return EFPApp.Colors.ListStateOk; 
-        case UIValidateState.Error: return EFPApp.Colors.ListStateError; 
-        case UIValidateState.Warning: return EFPApp.Colors.ListStateWarning; 
+        case UIValidateState.Ok: return EFPApp.Colors.ListStateOk;
+        case UIValidateState.Error: return EFPApp.Colors.ListStateError;
+        case UIValidateState.Warning: return EFPApp.Colors.ListStateWarning;
         default:
           throw new ArgumentException("Неизвестное значение " + state.ToString(), "state");
       }
@@ -436,7 +436,7 @@ namespace FreeLibSet.Forms
         _Handler(this, _PainterArgs);
 
       // Рисуем
-      if (_PainterArgs.Colors==null)
+      if (_PainterArgs.Colors == null)
         PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.ImageKey, _PainterArgs.ValidateState, _PainterArgs.LeftMargin);
       else
         PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.ImageKey, _PainterArgs.Colors, _PainterArgs.LeftMargin);
@@ -507,16 +507,16 @@ namespace FreeLibSet.Forms
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, UIValidateState? validateState, int leftMargin)
     {
-      Image Image;
+      Image image;
       if (String.IsNullOrEmpty(imageKey))
-        Image = null;
+        image = null;
       else
       {
-        Image = EFPApp.MainImages.Images[imageKey];
-        if (Image == null)
-          Image = EFPApp.MainImages.Images["Error"];
+        image = EFPApp.MainImages.Images[imageKey];
+        if (image == null)
+          image = EFPApp.MainImages.Images["Error"];
       }
-      PerformDrawItem(control, args, text, Image, validateState, leftMargin);
+      PerformDrawItem(control, args, text, image, validateState, leftMargin);
     }
 
 
@@ -549,16 +549,16 @@ namespace FreeLibSet.Forms
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, ListItemColors colors, int leftMargin)
     {
-      Image Image;
+      Image image;
       if (String.IsNullOrEmpty(imageKey))
-        Image = null;
+        image = null;
       else
       {
-        Image = EFPApp.MainImages.Images[imageKey];
-        if (Image == null)
-          Image = EFPApp.MainImages.Images["Error"];
+        image = EFPApp.MainImages.Images[imageKey];
+        if (image == null)
+          image = EFPApp.MainImages.Images["Error"];
       }
-      PerformDrawItem(control, args, text, Image, colors, leftMargin);
+      PerformDrawItem(control, args, text, image, colors, leftMargin);
     }
 
 
@@ -611,13 +611,13 @@ namespace FreeLibSet.Forms
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, UIValidateState? validateState, int leftMargin)
     {
-      ListItemColors Colors;
+      ListItemColors colors;
       if (validateState.HasValue)
-        Colors=ListItemColors.FromValidateState(validateState.Value);
+        colors = ListItemColors.FromValidateState(validateState.Value);
       else
-        Colors = ListItemColors.ControlDefault;
+        colors = ListItemColors.ControlDefault;
 
-      PerformDrawItem(control, args, text, image, Colors, leftMargin);
+      PerformDrawItem(control, args, text, image, colors, leftMargin);
     }
 
     /// <summary>
@@ -655,26 +655,26 @@ namespace FreeLibSet.Forms
         colors = ListItemColors.ControlDefault;
 
       // инвертированный цвет?
-      bool IsSelected = (args.State & DrawItemState.Selected) != 0;
+      bool isSelected = (args.State & DrawItemState.Selected) != 0;
 
-      Color BackColor , ForeColor;
+      Color backColor, foreColor;
       if (control.Enabled)
       {
 
-        BackColor = IsSelected ? colors.SelectedBackColor : colors.BackColor;
-        if (BackColor.IsEmpty)
-          BackColor = args.BackColor;
+        backColor = isSelected ? colors.SelectedBackColor : colors.BackColor;
+        if (backColor.IsEmpty)
+          backColor = args.BackColor;
       }
       else
-        BackColor = SystemColors.Control;
+        backColor = SystemColors.Control;
 
-      ForeColor = IsSelected ? colors.SelectedForeColor : colors.ForeColor;
-      if (ForeColor.IsEmpty)
-        ForeColor = args.ForeColor;
+      foreColor = isSelected ? colors.SelectedForeColor : colors.ForeColor;
+      if (foreColor.IsEmpty)
+        foreColor = args.ForeColor;
 
       #endregion
 
-      args.Graphics.FillRectangle(new SolidBrush(BackColor), args.Bounds);
+      args.Graphics.FillRectangle(new SolidBrush(backColor), args.Bounds);
 
       // Координаты рисования строки
       Rectangle r1 = args.Bounds; // место значка
@@ -702,7 +702,7 @@ namespace FreeLibSet.Forms
       }
 
       if (!String.IsNullOrEmpty(text))
-        args.Graphics.DrawString(text, args.Font, new SolidBrush(ForeColor), r2, _TheStringFormat);
+        args.Graphics.DrawString(text, args.Font, new SolidBrush(foreColor), r2, _TheStringFormat);
 
       args.DrawFocusRectangle();
     }

@@ -198,10 +198,10 @@ namespace FreeLibSet.Forms
       if (_TheTabControl.SelectedIndex != 1)
         return true; // активна страница просмотра
 
-      XmlDocument Doc = new XmlDocument();
+      XmlDocument xmlDoc = new XmlDocument();
       try
       {
-        Doc.LoadXml(_EditBox.Control.Text);
+        xmlDoc.LoadXml(_EditBox.Control.Text);
       }
       catch (Exception e)
       {
@@ -218,12 +218,12 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      Encoding enc = DataTools.GetXmlEncoding(Doc);
+      Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
       _ViewBox.Control.XmlBytes = enc.GetBytes(_EditBox.Control.Text);
 
-      string NewMD5 = DataTools.MD5Sum(_ViewBox.Control.XmlBytes);
+      string newMD5 = DataTools.MD5Sum(_ViewBox.Control.XmlBytes);
 
-      Modified = (NewMD5 != _OrgMD5);
+      Modified = (newMD5 != _OrgMD5);
 
       return true;
     }

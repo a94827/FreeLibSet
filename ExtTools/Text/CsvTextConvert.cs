@@ -320,12 +320,12 @@ namespace FreeLibSet.Text
 
       List<string> lst = new List<string>();
       StringBuilder sb = new StringBuilder();
-      int Phase = PhaseWaitStr;
+      int phase = PhaseWaitStr;
       for (int i = 0; i < s.Length; i++)
       {
         if (s[i] == ' ')
         {
-          switch (Phase)
+          switch (phase)
           {
             case PhaseWaitStr:
             case PhaseWaitSep:
@@ -338,10 +338,10 @@ namespace FreeLibSet.Text
         }
         else if (s[i] == Quote)
         {
-          switch (Phase)
+          switch (phase)
           {
             case PhaseWaitStr:
-              Phase = PhaseInStrQ;
+              phase = PhaseInStrQ;
               break;
             case PhaseWaitSep:
               throw new ParsingException("В позиции " + (i + 1).ToString() + " неожиданный символ \". Ожидался разделитель \"" + FieldDelimiterText + "\"");
@@ -359,27 +359,27 @@ namespace FreeLibSet.Text
               {
                 lst.Add(sb.ToString()); // без обрезки
                 sb.Length = 0;
-                Phase = PhaseWaitSep;
+                phase = PhaseWaitSep;
               }
               break;
           }
         }
         else if (s[i] == FieldDelimiter)
         {
-          switch (Phase)
+          switch (phase)
           {
             case PhaseWaitStr:
               // пустая строка - две запятые подряд
               lst.Add("");
               break;
             case PhaseWaitSep:
-              Phase = PhaseWaitStr;
+              phase = PhaseWaitStr;
               break;
             case PhaseInStrNQ:
               // строка закончена
               lst.Add(sb.ToString().Trim());
               sb.Length = 0;
-              Phase = PhaseWaitStr;
+              phase = PhaseWaitStr;
               break;
             case PhaseInStrQ:
               sb.Append(s[i]);
@@ -388,7 +388,7 @@ namespace FreeLibSet.Text
         }
         else // обычный символ
         {
-          switch (Phase)
+          switch (phase)
           {
             case PhaseWaitStr:
               // 12.11.2021 Не уверен
@@ -398,7 +398,7 @@ namespace FreeLibSet.Text
               //    sb.Append('\r');
               //}
               sb.Append(s[i]);
-              Phase = PhaseInStrNQ;
+              phase = PhaseInStrNQ;
               break;
             case PhaseWaitSep:
               throw new ParsingException("В позиции " + (i + 1).ToString() + " неожиданный символ \"" + s[i] + "\". Ожидался разделитель \"" + FieldDelimiterText + "\"");
@@ -415,7 +415,7 @@ namespace FreeLibSet.Text
           }
         }
       } // конец цикла по буквам
-      switch (Phase)
+      switch (phase)
       {
         case PhaseInStrNQ:
           lst.Add(sb.ToString().Trim());
@@ -499,7 +499,6 @@ namespace FreeLibSet.Text
         a[i] = a[i].Trim();
       return a;
     }
-
 
     #endregion
 

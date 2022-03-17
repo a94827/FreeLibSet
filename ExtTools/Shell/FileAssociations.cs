@@ -51,7 +51,7 @@ namespace FreeLibSet.Shell
         _Arguments = arguments;
 
       if (String.IsNullOrEmpty(displayName))
-        _DisplayName=GetDisplayName(_ProgramPath);
+        _DisplayName = GetDisplayName(_ProgramPath);
       else
         _DisplayName = displayName;
 
@@ -75,17 +75,17 @@ namespace FreeLibSet.Shell
     {
       if (programPath.IsEmpty)
         return String.Empty;
-      string DisplayName = String.Empty;
+      string displayName = String.Empty;
       if (System.IO.File.Exists(programPath.Path))
       {
         System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(programPath.Path);
         if (!String.IsNullOrEmpty(fvi.FileDescription))
-          DisplayName = fvi.FileDescription;
+          displayName = fvi.FileDescription;
       }
-      if (String.IsNullOrEmpty(DisplayName))
-        DisplayName = programPath.FileNameWithoutExtension;
+      if (String.IsNullOrEmpty(displayName))
+        displayName = programPath.FileNameWithoutExtension;
 
-      return DisplayName;
+      return displayName;
     }
 
     #endregion
@@ -377,9 +377,9 @@ namespace FreeLibSet.Shell
     {
       try
       {
-        FileAssociations Items = DoFromFileExtension(fileExt);
-        Items.SetReadOnly();
-        return Items;
+        FileAssociations faItems = DoFromFileExtension(fileExt);
+        faItems.SetReadOnly();
+        return faItems;
       }
       catch (Exception e)
       {
@@ -396,10 +396,10 @@ namespace FreeLibSet.Shell
     /// <returns>Пустой список</returns>
     private static FileAssociations FromError(Exception e)
     {
-      FileAssociations FA = new FileAssociations(false);
-      FA.Exception = e;
-      FA.SetReadOnly();
-      return FA;
+      FileAssociations faItems = new FileAssociations(false);
+      faItems.Exception = e;
+      faItems.SetReadOnly();
+      return faItems;
     }
 
     private static FileAssociations DoFromFileExtension(string fileExt)
@@ -417,11 +417,11 @@ namespace FreeLibSet.Shell
         case PlatformID.Win32Windows:
           return Windows.FromFileExtension(fileExt);
         case PlatformID.Unix:
-          string MimeType = Linux.GetMimeTypeFromFileExtension(fileExt);
-          if (MimeType.Length == 0)
+          string mimeType = Linux.GetMimeTypeFromFileExtension(fileExt);
+          if (mimeType.Length == 0)
             return Empty;
           else
-            return Linux.FromMimeType(MimeType);
+            return Linux.FromMimeType(mimeType);
         default:
           return Empty;
       }
@@ -445,9 +445,9 @@ namespace FreeLibSet.Shell
     {
       try
       {
-        FileAssociations Items = DoFromMimeType(mimeType);
-        Items.SetReadOnly();
-        return Items;
+        FileAssociations faItems = DoFromMimeType(mimeType);
+        faItems.SetReadOnly();
+        return faItems;
       }
       catch (Exception e)
       {
@@ -492,9 +492,9 @@ namespace FreeLibSet.Shell
     {
       try
       {
-        FileAssociations Items = DoFromDirectory();
-        Items.SetReadOnly();
-        return Items;
+        FileAssociations faItems = DoFromDirectory();
+        faItems.SetReadOnly();
+        return faItems;
       }
       catch (Exception e)
       {
@@ -527,94 +527,94 @@ namespace FreeLibSet.Shell
 
       internal static FileAssociations FromFileExtension(string fileExt)
       {
-        FileAssociations FA = new FileAssociations(false);
+        FileAssociations faItems = new FileAssociations(false);
 
-        using (RegistryTree2 Tree = new RegistryTree2(true))
+        using (RegistryTree2 tree = new RegistryTree2(true))
         {
-          FromFileExtensionExplorer(fileExt, FA, Tree);
-          FromFileExtensionsHKCR(fileExt, FA, Tree); 
+          FromFileExtensionExplorer(fileExt, faItems, tree);
+          FromFileExtensionsHKCR(fileExt, faItems, tree);
 
-          if (FA.OpenItem == null && FA.OpenWithItems.Count > 0)
-            FA.OpenItem = FA.OpenWithItems[0];
-          else if (FA.OpenItem != null)
+          if (faItems.OpenItem == null && faItems.OpenWithItems.Count > 0)
+            faItems.OpenItem = faItems.OpenWithItems[0];
+          else if (faItems.OpenItem != null)
           {
-            if (!FA.OpenWithContains(FA.OpenItem))
+            if (!faItems.OpenWithContains(faItems.OpenItem))
               //FA.OpenWithItems.Insert(0, FA.OpenItem);
-              FA.OpenWithItems.Add(FA.OpenItem);
+              faItems.OpenWithItems.Add(faItems.OpenItem);
           }
         }
 
-        return FA;
+        return faItems;
       }
 
-      private static void FromFileExtensionExplorer(string fileExt, FileAssociations fa, RegistryTree2 tree)
+      private static void FromFileExtensionExplorer(string fileExt, FileAssociations faItems, RegistryTree2 tree)
       {
-        RegistryKey2 Key2 = tree[@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + fileExt + @"\UserChoice"];
-        if (Key2 != null)
+        RegistryKey2 key2 = tree[@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + fileExt + @"\UserChoice"];
+        if (key2 != null)
         {
-          FileAssociationItem Item2 = GetProgIdItem(tree, DataTools.GetString(Key2.GetValue("progid")), Key2.Name);
-          if (Item2 != null)
+          FileAssociationItem item2 = GetProgIdItem(tree, DataTools.GetString(key2.GetValue("progid")), key2.Name);
+          if (item2 != null)
           {
-            fa.OpenItem = Item2;
-            if (!fa.OpenWithContains(Item2))
-              fa.OpenWithItems.Insert(0, Item2);
+            faItems.OpenItem = item2;
+            if (!faItems.OpenWithContains(item2))
+              faItems.OpenWithItems.Insert(0, item2);
           }
         }
 
         // Теперь - OpenWithList
-        RegistryKey2 Key3 = tree[@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + fileExt + @"\OpenWithList"];
-        if (Key3 != null)
+        RegistryKey2 key3 = tree[@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + fileExt + @"\OpenWithList"];
+        if (key3 != null)
         {
-          string MRUList = DataTools.GetString(Key3.GetValue("MRUList")); // кодируется отдельными буквами
-          for (int i = 0; i < MRUList.Length; i++)
+          string mruList = DataTools.GetString(key3.GetValue("MRUList")); // кодируется отдельными буквами
+          for (int i = 0; i < mruList.Length; i++)
           {
-            string ValName = new string(MRUList[i], 1); // строка из одной буквы
-            string ProgId3 = DataTools.GetString(Key3.GetValue(ValName));
-            FileAssociationItem Item = GetProgIdItem(tree, ProgId3, Key3.Name);
-            if (Item != null && (!fa.OpenWithContains(Item)))
-              fa._OpenWithItems.Add(Item);
+            string valName = new string(mruList[i], 1); // строка из одной буквы
+            string progId3 = DataTools.GetString(key3.GetValue(valName));
+            FileAssociationItem item = GetProgIdItem(tree, progId3, key3.Name);
+            if (item != null && (!faItems.OpenWithContains(item)))
+              faItems._OpenWithItems.Add(item);
           }
         }
       }
 
-      private static void FromFileExtensionsHKCR(string fileExt, FileAssociations fa, RegistryTree2 tree)
+      private static void FromFileExtensionsHKCR(string fileExt, FileAssociations faItems, RegistryTree2 tree)
       {
-        RegistryKey2 Key1 = tree[@"HKEY_CLASSES_ROOT\" + fileExt];
-        if (Key1 != null)
+        RegistryKey2 key1 = tree[@"HKEY_CLASSES_ROOT\" + fileExt];
+        if (key1 != null)
         {
-          RegistryKey2 KeyOWPI = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithProgIds"];
-          if (KeyOWPI != null)
+          RegistryKey2 keyOWPI = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithProgIds"];
+          if (keyOWPI != null)
           {
-            string[] aProgIds = KeyOWPI.GetValueNames();
+            string[] aProgIds = keyOWPI.GetValueNames();
             for (int i = 0; i < aProgIds.Length; i++)
             {
-              FileAssociationItem Item = GetProgIdItem(tree, aProgIds[i], KeyOWPI.Name);
-              if (Item != null && (!fa.OpenWithContains(Item)))
-                fa._OpenWithItems.Add(Item);
+              FileAssociationItem item = GetProgIdItem(tree, aProgIds[i], keyOWPI.Name);
+              if (item != null && (!faItems.OpenWithContains(item)))
+                faItems._OpenWithItems.Add(item);
             }
           }
-          RegistryKey2 KeyOWL = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithList"];
-          if (KeyOWL != null)
+          RegistryKey2 keyOWL = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithList"];
+          if (keyOWL != null)
           {
-            string[] aProgIds = KeyOWL.GetSubKeyNames(); // а не value names
+            string[] aProgIds = keyOWL.GetSubKeyNames(); // а не value names
             for (int i = 0; i < aProgIds.Length; i++)
             {
-              FileAssociationItem Item = GetProgIdItem(tree, aProgIds[i], KeyOWL.Name);
-              if (Item != null && (!fa.OpenWithContains(Item)))
-                fa._OpenWithItems.Add(Item);
+              FileAssociationItem item = GetProgIdItem(tree, aProgIds[i], keyOWL.Name);
+              if (item != null && (!faItems.OpenWithContains(item)))
+                faItems._OpenWithItems.Add(item);
             }
           }
 
-          FileAssociationItem Item0 = GetProgIdItem(tree, DataTools.GetString(Key1.GetValue(String.Empty)), Key1.Name);
-          if (Item0 != null)
+          FileAssociationItem item0 = GetProgIdItem(tree, DataTools.GetString(key1.GetValue(String.Empty)), key1.Name);
+          if (item0 != null)
           {
-            int p = fa.OpenWithIndexOf(Item0);
+            int p = faItems.OpenWithIndexOf(item0);
             if (p < 0)
             {
-              fa.OpenWithItems.Insert(0, Item0);
+              faItems.OpenWithItems.Insert(0, item0);
               p = 0;
             }
-            fa.OpenItem = fa.OpenWithItems[p]; // а не Item0
+            faItems.OpenItem = faItems.OpenWithItems[p]; // а не Item0
           }
         }
       }
@@ -624,69 +624,69 @@ namespace FreeLibSet.Shell
         if (String.IsNullOrEmpty(progId))
           return null;
 
-        RegistryKey2 KeyProgId = tree[@"HKEY_CLASSES_ROOT\" + progId];
-        if (KeyProgId == null)
+        RegistryKey2 keyProgId = tree[@"HKEY_CLASSES_ROOT\" + progId];
+        if (keyProgId == null)
           return GetProgIdItemForExeFile(tree, progId, infoSourceString);
 
-        return DoGetProgIdItem(tree, progId, KeyProgId, infoSourceString);
+        return DoGetProgIdItem(tree, progId, keyProgId, infoSourceString);
       }
 
       private static FileAssociationItem DoGetProgIdItem(RegistryTree2 tree, string progId, RegistryKey2 keyProgId, string infoSourceString)
       {
-        string Cmd = tree.GetString(keyProgId.Name + @"\shell\open\command", String.Empty);
-        if (String.IsNullOrEmpty(Cmd))
+        string cmd = tree.GetString(keyProgId.Name + @"\shell\open\command", String.Empty);
+        if (String.IsNullOrEmpty(cmd))
           return null;
 
-        if (Cmd.IndexOf(@"%1", StringComparison.Ordinal) < 0)
+        if (cmd.IndexOf(@"%1", StringComparison.Ordinal) < 0)
           // Обмен с помощью DDE не реализован
           return null;
 
-        string FileName, Arguments;
-        if (!SplitFileNameAndArgs(Cmd, out FileName, out Arguments))
+        string fileName, arguments;
+        if (!SplitFileNameAndArgs(cmd, out fileName, out arguments))
           return null;
 
-        FileName = Environment.ExpandEnvironmentVariables(FileName);
-        AbsPath Path = AbsPath.Create(FileName);
-        if (Path.IsEmpty)
+        fileName = Environment.ExpandEnvironmentVariables(fileName);
+        AbsPath path = AbsPath.Create(fileName);
+        if (path.IsEmpty)
           return null; // 25.01.2019
-        if (!System.IO.File.Exists(Path.Path))
+        if (!System.IO.File.Exists(path.Path))
           return null;
 
-        string DisplayName = String.Empty;
+        string displayName = String.Empty;
 
-        if (Path.FileName.ToLowerInvariant() == "rundll32.exe")
+        if (path.FileName.ToLowerInvariant() == "rundll32.exe")
         {
           // 22.09.2019
           // Извлекаем данные из аргументов 
 
-          string FileName2 = GetFileNameFromArgs(Arguments);
-          if (!String.IsNullOrEmpty(FileName2))
-          { 
-            FileName2 = Environment.ExpandEnvironmentVariables(FileName2);
-            AbsPath Path2 = AbsPath.Create(FileName2);
-            if (!Path2.IsEmpty)
-              DisplayName = FileAssociationItem.GetDisplayName(Path2);
+          string fileName2 = GetFileNameFromArgs(arguments);
+          if (!String.IsNullOrEmpty(fileName2))
+          {
+            fileName2 = Environment.ExpandEnvironmentVariables(fileName2);
+            AbsPath path2 = AbsPath.Create(fileName2);
+            if (!path2.IsEmpty)
+              displayName = FileAssociationItem.GetDisplayName(path2);
           }
         }
 
-        AbsPath IconPath = AbsPath.Empty;
-        int IconIndex = 0;
-        RegistryKey2 KeyDefIcon = tree[keyProgId.Name + @"\DefaultIcon"];
-        if (KeyDefIcon != null)
+        AbsPath iconPath = AbsPath.Empty;
+        int iconIndex = 0;
+        RegistryKey2 keyDefIcon = tree[keyProgId.Name + @"\DefaultIcon"];
+        if (keyDefIcon != null)
         {
-          string s = DataTools.GetString(KeyDefIcon.GetValue(String.Empty));
+          string s = DataTools.GetString(keyDefIcon.GetValue(String.Empty));
           if (!(s == "%1" || s == "\"%1\""))
           {
-            ParseIconInfo(s, out IconPath, out IconIndex);
+            ParseIconInfo(s, out iconPath, out iconIndex);
           }
         }
-        if (IconPath.IsEmpty)
+        if (iconPath.IsEmpty)
         {
-          IconPath = Path;
-          IconIndex = 0;
+          iconPath = path;
+          iconIndex = 0;
         }
 
-        return new FileAssociationItem(progId, Path, Arguments, DisplayName, IconPath, IconIndex, false,
+        return new FileAssociationItem(progId, path, arguments, displayName, iconPath, iconIndex, false,
           infoSourceString + Environment.NewLine + keyProgId.Name + @"\shell\open\command");
       }
 
@@ -705,7 +705,7 @@ namespace FreeLibSet.Shell
           // Ищем закрывающую кавычку
           // TODO: Кавычка в имени файла
           string s = arguments.Substring(1);
-          int p=s.IndexOf('\"');
+          int p = s.IndexOf('\"');
           if (p < 0)
             return string.Empty; // ошибка
           else
@@ -728,28 +728,28 @@ namespace FreeLibSet.Shell
         if (!progId.EndsWith(".EXE", StringComparison.OrdinalIgnoreCase))
           return null;
 
-        FileAssociationItem FAItem = GetProgIdItemForExeFileHKCRApplications(tree, progId, infoSourceString);
-        if (FAItem != null)
-          return FAItem;
+        FileAssociationItem faItem = GetProgIdItemForExeFileHKCRApplications(tree, progId, infoSourceString);
+        if (faItem != null)
+          return faItem;
         else
           return GetProgIdItemForExeFileAppPathes(tree, progId, infoSourceString);
       }
 
       private static FileAssociationItem GetProgIdItemForExeFileHKCRApplications(RegistryTree2 tree, string progId, string infoSourceString)
       {
-        RegistryKey2 KeyProgId = tree[@"HKEY_CLASSES_ROOT\Applications\" + progId];
-        if (KeyProgId == null && progId.IndexOf('\\') < 0)
+        RegistryKey2 keyProgId = tree[@"HKEY_CLASSES_ROOT\Applications\" + progId];
+        if (keyProgId == null && progId.IndexOf('\\') < 0)
         {
           // Может быть задано просто имя EXE-файла, например, "notepad.exe", тогда его надо искать
           // в подразделе "Applications"
           // Идентификатор приложения тоже надо изменить, иначе в списке будет два блокнота
           progId = @"Applications\" + progId;
-          KeyProgId = tree[@"HKEY_CLASSES_ROOT\Applications\" + progId];
+          keyProgId = tree[@"HKEY_CLASSES_ROOT\Applications\" + progId];
         }
-        if (KeyProgId == null)
+        if (keyProgId == null)
           return null;
 
-        return DoGetProgIdItem(tree, progId, KeyProgId, infoSourceString);
+        return DoGetProgIdItem(tree, progId, keyProgId, infoSourceString);
       }
 
       private static FileAssociationItem GetProgIdItemForExeFileAppPathes(RegistryTree2 tree, string progId, string infoSourceString)
@@ -757,19 +757,18 @@ namespace FreeLibSet.Shell
         try
         {
           // Последняя попытка - найти путь к приложению
-          string KeyName = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + progId;
-          string FilePath = tree.GetString(KeyName, String.Empty);
-          AbsPath Path = AbsPath.Create(FilePath); // 25.01.2019
-          if (Path.IsEmpty)
+          string keyName = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + progId;
+          string filePath = tree.GetString(keyName, String.Empty);
+          AbsPath path = AbsPath.Create(filePath); // 25.01.2019
+          if (path.IsEmpty)
             return null;
-          if (!System.IO.File.Exists(Path.Path))
+          if (!System.IO.File.Exists(path.Path))
             return null;
 
-
-          return new FileAssociationItem(progId, Path, "\"%1\"", String.Empty,
-            Path, 0,
-            tree.GetBool(KeyName, "useURL"),
-            infoSourceString + Environment.NewLine + KeyName);
+          return new FileAssociationItem(progId, path, "\"%1\"", String.Empty,
+            path, 0,
+            tree.GetBool(keyName, "useURL"),
+            infoSourceString + Environment.NewLine + keyName);
         }
         catch // System.Security.SecurityException
         {
@@ -784,29 +783,29 @@ namespace FreeLibSet.Shell
         if (String.IsNullOrEmpty(iconInfo))
           return;
 
-        string FileName;
+        string fileName;
         int p = iconInfo.LastIndexOf(',');
         if (p >= 0)
         {
-          FileName = iconInfo.Substring(0, p);
+          fileName = iconInfo.Substring(0, p);
           string sIconIndex = iconInfo.Substring(p + 1);
           int.TryParse(sIconIndex, out iconIndex);
         }
         else
         {
-          FileName = iconInfo;
+          fileName = iconInfo;
           iconIndex = 0;
         }
-        FileName = Environment.ExpandEnvironmentVariables(FileName);
-        if (FileName.IndexOf(System.IO.Path.DirectorySeparatorChar) < 0) // имя файла без пути
+        fileName = Environment.ExpandEnvironmentVariables(fileName);
+        if (fileName.IndexOf(System.IO.Path.DirectorySeparatorChar) < 0) // имя файла без пути
         {
           // 13.12.2018 Пытаемся найти в системном каталоге
-          iconPath = AbsPath.Create(AbsPath.Create(Environment.SystemDirectory), FileName);
+          iconPath = AbsPath.Create(AbsPath.Create(Environment.SystemDirectory), fileName);
           //if (!System.IO.File.Exists(IconPath.Path))
           //  IconPath = FileTools.FindExecutableFilePath(FileName); 
         }
         if (iconPath.IsEmpty)
-          iconPath = AbsPath.Create(FileName);
+          iconPath = AbsPath.Create(fileName);
       }
 
       #endregion
@@ -815,40 +814,40 @@ namespace FreeLibSet.Shell
 
       internal static FileAssociations FromMimeType(string mimeType)
       {
-        FileAssociations FA = new FileAssociations(false);
+        FileAssociations faItems = new FileAssociations(false);
 
-        using (RegistryTree2 Tree = new RegistryTree2(true))
+        using (RegistryTree2 tree = new RegistryTree2(true))
         {
-          FromMimeTypeHKCR_MIME(mimeType, FA, Tree);
+          FromMimeTypeHKCR_MIME(mimeType, faItems, tree);
 
-          if (FA.OpenItem == null && FA.OpenWithItems.Count > 0)
-            FA.OpenItem = FA.OpenWithItems[0];
-          else if (FA.OpenItem != null)
+          if (faItems.OpenItem == null && faItems.OpenWithItems.Count > 0)
+            faItems.OpenItem = faItems.OpenWithItems[0];
+          else if (faItems.OpenItem != null)
           {
-            if (!FA.OpenWithContains(FA.OpenItem))
+            if (!faItems.OpenWithContains(faItems.OpenItem))
               //FA.OpenWithItems.Insert(0, FA.OpenItem);
-              FA.OpenWithItems.Add(FA.OpenItem);
+              faItems.OpenWithItems.Add(faItems.OpenItem);
           }
         }
 
-        return FA;
+        return faItems;
       }
 
-      private static void FromMimeTypeHKCR_MIME(string mimeType, FileAssociations fa, RegistryTree2 tree)
+      private static void FromMimeTypeHKCR_MIME(string mimeType, FileAssociations faItems, RegistryTree2 tree)
       {
-        RegistryKey2 Key1 = tree[@"HKEY_CLASSES_ROOT\MIME\Database\Content Type\" + mimeType];
-        if (Key1 != null)
+        RegistryKey2 key1 = tree[@"HKEY_CLASSES_ROOT\MIME\Database\Content Type\" + mimeType];
+        if (key1 != null)
         {
-          string ClsId = DataTools.GetString(Key1.GetValue("CLSID"));
-          if (!String.IsNullOrEmpty(ClsId))
+          string clsId = DataTools.GetString(key1.GetValue("CLSID"));
+          if (!String.IsNullOrEmpty(clsId))
           {
-            RegistryKey2 Key2 = tree[@"HKEY_CLASSES_ROOT\CLSID\" + ClsId + @"\ProgId"];
-            if (Key2 != null)
+            RegistryKey2 key2 = tree[@"HKEY_CLASSES_ROOT\CLSID\" + clsId + @"\ProgId"];
+            if (key2 != null)
             {
-              string ProgId = DataTools.GetString(Key2.GetValue(String.Empty));
-              FileAssociationItem FAItem = GetProgIdItem(tree, ProgId, Key1.Name);
-              if (FAItem != null)
-                fa.OpenWithItems.Add(FAItem);
+              string progId = DataTools.GetString(key2.GetValue(String.Empty));
+              FileAssociationItem faItem = GetProgIdItem(tree, progId, key1.Name);
+              if (faItem != null)
+                faItems.OpenWithItems.Add(faItem);
             }
           }
         }
@@ -862,21 +861,21 @@ namespace FreeLibSet.Shell
       {
         // TODO: поиск замены explorer.exe
 
-        FileAssociations FA = new FileAssociations(false);
-        AbsPath Path = FileTools.FindExecutableFilePath("explorer.exe");
-        if (Path.IsEmpty)
+        FileAssociations faItems = new FileAssociations(false);
+        AbsPath path = FileTools.FindExecutableFilePath("explorer.exe");
+        if (path.IsEmpty)
         {
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("explorer.exe not found");
 #endif
-          return FA;
+          return faItems;
         }
 
-        FileAssociationItem FAItem = new FileAssociationItem("Explorer", Path, "%1", "Windows Explorer",
-          Path, 0, false, "Fixed");
-        FA.OpenWithItems.Add(FAItem);
-        FA.OpenItem = FAItem;
-        return FA;
+        FileAssociationItem faItem = new FileAssociationItem("Explorer", path, "%1", "Windows Explorer",
+          path, 0, false, "Fixed");
+        faItems.OpenWithItems.Add(faItem);
+        faItems.OpenItem = faItem;
+        return faItems;
       }
 
       #endregion
@@ -949,11 +948,11 @@ namespace FreeLibSet.Shell
 #endif
             try
             {
-              System.Xml.XmlDocument XmlDoc = new System.Xml.XmlDocument();
-              XmlDoc.Load(aFiles[i]);
-              System.Xml.XmlNamespaceManager NmSpcMan = new System.Xml.XmlNamespaceManager(XmlDoc.NameTable);
-              NmSpcMan.AddNamespace("Def", @"http://www.freedesktop.org/standards/shared-mime-info");
-              System.Xml.XmlNodeList mtnodes = XmlDoc.SelectNodes("Def:mime-info/Def:mime-type", NmSpcMan);
+              System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+              xmlDoc.Load(aFiles[i]);
+              System.Xml.XmlNamespaceManager nmSpcMan = new System.Xml.XmlNamespaceManager(xmlDoc.NameTable);
+              nmSpcMan.AddNamespace("Def", @"http://www.freedesktop.org/standards/shared-mime-info");
+              System.Xml.XmlNodeList mtnodes = xmlDoc.SelectNodes("Def:mime-info/Def:mime-type", nmSpcMan);
 #if USE_TRACE
               System.Diagnostics.Trace.WriteLine("  mime-type count=" + mtnodes.Count.ToString());
 #endif
@@ -963,7 +962,7 @@ namespace FreeLibSet.Shell
                 if (mimetype.Length == 0)
                   continue;
 
-                foreach (System.Xml.XmlNode globnode in mtnode.SelectNodes("Def:glob", NmSpcMan))
+                foreach (System.Xml.XmlNode globnode in mtnode.SelectNodes("Def:glob", nmSpcMan))
                 {
                   string pattern = GetAttrStr(globnode, "pattern");
                   if (!pattern.StartsWith("*."))
@@ -1032,15 +1031,15 @@ namespace FreeLibSet.Shell
 
       internal static FileAssociations FromMimeType(string mimeType)
       {
-        FileAssociations FAs;
+        FileAssociations faItems;
         lock (_SyncRoot)
         {
           if (NeedsRecreateMimeDesktopFiles())
             CreateMimeDesktopFiles();
 
-          FAs = DoFromMimeType(mimeType);
+          faItems = DoFromMimeType(mimeType);
         }
-        return FAs;
+        return faItems;
       }
 
       private static FileAssociations DoFromMimeType(string mimeType)
@@ -1056,17 +1055,17 @@ namespace FreeLibSet.Shell
 #endif
 
         string[] aDesktopFiles = sDesktopFiles.Split(';');
-        FileAssociations FAs = new FileAssociations(false);
+        FileAssociations faItems = new FileAssociations(false);
         for (int i = 0; i < aDesktopFiles.Length; i++)
         {
-          FileAssociationItem FA = CreateFromDesktopFile(aDesktopFiles[i]);
-          if (FA != null)
-            FAs.OpenWithItems.Add(FA);
+          FileAssociationItem faItem = CreateFromDesktopFile(aDesktopFiles[i]);
+          if (faItem != null)
+            faItems.OpenWithItems.Add(faItem);
         }
-        if (FAs.OpenWithItems.Count > 0)
-          FAs.OpenItem = FAs.OpenWithItems[0];
-        FAs.SetReadOnly();
-        return FAs;
+        if (faItems.OpenWithItems.Count > 0)
+          faItems.OpenItem = faItems.OpenWithItems[0];
+        faItems.SetReadOnly();
+        return faItems;
       }
 
       private static FileAssociationItem CreateFromDesktopFile(string desktopFileName)
@@ -1084,14 +1083,14 @@ namespace FreeLibSet.Shell
           return null;
         }
 
-        IniFile File = new IniFile(true);
-        File.Load(DesktopFilePath);
-        string DisplayName = File["Desktop Entry", "Name[" + LanguageStr + "]"]; // Name[ru]
-        if (String.IsNullOrEmpty(DisplayName))
-          DisplayName = File["Desktop Entry", "Name"];
-        if (String.IsNullOrEmpty(DisplayName))
-          DisplayName = desktopFileName;
-        string sExec = File["Desktop Entry", "Exec"];
+        IniFile file = new IniFile(true);
+        file.Load(DesktopFilePath);
+        string displayName = file["Desktop Entry", "Name[" + LanguageStr + "]"]; // Name[ru]
+        if (String.IsNullOrEmpty(displayName))
+          displayName = file["Desktop Entry", "Name"];
+        if (String.IsNullOrEmpty(displayName))
+          displayName = desktopFileName;
+        string sExec = file["Desktop Entry", "Exec"];
         if (String.IsNullOrEmpty(sExec))
         {
 #if USE_TRACE
@@ -1099,9 +1098,9 @@ namespace FreeLibSet.Shell
 #endif
           return null;
         }
-        string FileName;
-        string Arguments;
-        if (!SplitFileNameAndArgs(sExec, out FileName, out Arguments))
+        string fileName;
+        string arguments;
+        if (!SplitFileNameAndArgs(sExec, out fileName, out arguments))
         {
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("Cannot split \"Exec\" key=\"" + sExec + "\" found in " + DesktopFilePath.Path);
@@ -1109,8 +1108,8 @@ namespace FreeLibSet.Shell
           return null;
         }
 
-        AbsPath ProgramPath = FileTools.FindExecutableFilePath(FileName);
-        if (ProgramPath.IsEmpty)
+        AbsPath programPath = FileTools.FindExecutableFilePath(fileName);
+        if (programPath.IsEmpty)
         {
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("Cannot find executable file \"" + FileName + "\", defined in " + DesktopFilePath.Path);
@@ -1118,8 +1117,8 @@ namespace FreeLibSet.Shell
           return null;
         }
 
-        AbsPath IconPath = AbsPath.Empty;
-        string sIcon = File["Desktop Entry", "Icon"];
+        AbsPath iconPath = AbsPath.Empty;
+        string sIcon = file["Desktop Entry", "Icon"];
 
 #if USE_TRACE
         //System.Diagnostics.Trace.WriteLine("Icon=" + sIcon);
@@ -1155,12 +1154,12 @@ namespace FreeLibSet.Shell
             // Х.З., как правильно выбрать тему
             string[] a = System.IO.Directory.GetFiles("/usr/share/icons", sIcon + ".png", System.IO.SearchOption.AllDirectories);
             if (a.Length > 0)
-              IconPath = new AbsPath(a[0]);
+              iconPath = new AbsPath(a[0]);
           }
           catch { }
         }
 
-        return new FileAssociationItem(desktopFileName, ProgramPath, Arguments, DisplayName, IconPath, 0, false, DesktopFilePath.Path);
+        return new FileAssociationItem(desktopFileName, programPath, arguments, displayName, iconPath, 0, false, DesktopFilePath.Path);
       }
 
       /// <summary>
@@ -1214,10 +1213,10 @@ namespace FreeLibSet.Shell
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("  from " + MimeinfoCacheFilePath);
 #endif
-          FreeLibSet.IO.IniFile Ini = new IniFile(true);
-          Ini.Load(new AbsPath(_MimeinfoCacheFilePath));
-          foreach (IniKeyValue Pair in Ini.GetKeyValues("MIME Cache"))
-            _MimeDesktopFiles[Pair.Key] = Pair.Value;
+          FreeLibSet.IO.IniFile ini = new IniFile(true);
+          ini.Load(new AbsPath(_MimeinfoCacheFilePath));
+          foreach (IniKeyValue pair in ini.GetKeyValues("MIME Cache"))
+            _MimeDesktopFiles[pair.Key] = pair.Value;
           _MimeinfoCacheFileTime = System.IO.File.GetLastWriteTime(_MimeinfoCacheFilePath);
         }
 
@@ -1230,10 +1229,10 @@ namespace FreeLibSet.Shell
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("  from " + DefaultsListFilePath);
 #endif
-          FreeLibSet.IO.IniFile Ini = new IniFile(true);
-          Ini.Load(new AbsPath(_DefaultsListFilePath));
-          foreach (IniKeyValue Pair in Ini.GetKeyValues("Default Applications"))
-            _MimeDesktopFiles[Pair.Key] = Pair.Value;
+          FreeLibSet.IO.IniFile ini = new IniFile(true);
+          ini.Load(new AbsPath(_DefaultsListFilePath));
+          foreach (IniKeyValue pair in ini.GetKeyValues("Default Applications"))
+            _MimeDesktopFiles[pair.Key] = pair.Value;
           _DefaultsListFileTime = System.IO.File.GetLastWriteTime(_DefaultsListFilePath);
         }
 
@@ -1278,8 +1277,8 @@ namespace FreeLibSet.Shell
           {
             if (i < (commandLine.Length - 1))
             {
-              char NextChar = commandLine[i + 1];
-              if (NextChar == '\"') // удвоенная кавычка
+              char nextChar = commandLine[i + 1];
+              if (nextChar == '\"') // удвоенная кавычка
               {
                 sb.Append('\"');
                 i++; // пропускаем один символ

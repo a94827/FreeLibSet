@@ -29,10 +29,10 @@ namespace FreeLibSet.Forms
       if (groupTitle == null)
         groupTitle = String.Empty;
 
-      int MaxLen = Math.Max(formTitle.Length, groupTitle.Length);
-      RadioButton[] Buttons = new RadioButton[items.Length];
+      int maxLen = Math.Max(formTitle.Length, groupTitle.Length);
+      RadioButton[] buttons = new RadioButton[items.Length];
 
-      int DY = 0; // расстояние между кнопками
+      int dy = 0; // расстояние между кнопками
 
       for (int i = 0; i < items.Length; i++)
       {
@@ -43,35 +43,35 @@ namespace FreeLibSet.Forms
           btn.TabIndex = 0;
         }
         btn.Text = items[i];
-        btn.Location = new Point(imageKeys==null?8:40, (String.IsNullOrEmpty(groupTitle) ? 12 : 24) + DY * i);
+        btn.Location = new Point(imageKeys==null?8:40, (String.IsNullOrEmpty(groupTitle) ? 12 : 24) + dy * i);
         btn.AutoSize = true;
         // не работает
         //        btn.DoubleClick += new EventHandler(btn_DoubleClick);
         TheGroupBox.Controls.Add(btn);
-        Buttons[i] = btn;
-        MaxLen = Math.Max(MaxLen, items[i].Length);
+        buttons[i] = btn;
+        maxLen = Math.Max(maxLen, items[i].Length);
 
         if (imageKeys != null)
         {
           // У RadioButton есть свойство Image, но изображение располагается некрасиво
 
-          string ThisImageKey = imageKeys[i];
-          if (String.IsNullOrEmpty(ThisImageKey))
-            ThisImageKey = "EmptyImage";
+          string thisImageKey = imageKeys[i];
+          if (String.IsNullOrEmpty(thisImageKey))
+            thisImageKey = "EmptyImage";
           Label lbl = new Label();
           lbl.Text = String.Empty;
-          lbl.Image = EFPApp.MainImages.Images[ThisImageKey];
+          lbl.Image = EFPApp.MainImages.Images[thisImageKey];
           lbl.Size = new Size(16, 16);
-          int YOff = (btn.Height - lbl.Height) / 2; // 17.01.2019 - центрируем от кнопок
-          lbl.Location = new Point(8, btn.Location.Y+YOff);
+          int yOff = (btn.Height - lbl.Height) / 2; // 17.01.2019 - центрируем от кнопок
+          lbl.Location = new Point(8, btn.Location.Y+yOff);
           TheGroupBox.Controls.Add(lbl);
         }
 
 
 
-        if (DY == 0) // вычисляем зазор между кнопками
+        if (dy == 0) // вычисляем зазор между кнопками
           //DY = Math.Max(18/* значок*/, btn.Height + SystemInformation.SizingBorderWidth);
-          DY = Math.Max(18/* значок*/, (btn.Height *3)/2);
+          dy = Math.Max(18/* значок*/, (btn.Height *3)/2);
       }
       //int H = 70 + Items.Length * DY;
       //int W = 8 * MaxLen + 120;
@@ -80,7 +80,7 @@ namespace FreeLibSet.Forms
       //this.ClientSize = new Size(Math.Max(W, this.ClientSize.Width), Math.Max(H, this.ClientSize.Height));
 
       efpForm = new EFPFormProvider(this);
-      efpRadio = new EFPRadioButtons(efpForm, Buttons);
+      efpRadio = new EFPRadioButtons(efpForm, buttons);
     }
 
     // не работает
@@ -300,7 +300,7 @@ namespace FreeLibSet.Forms
 
       #region Нужны ли картинки у кнопок ?
 
-      string[] ImageKeys2 = null;
+      string[] imageKeys2 = null;
       if (_ImageKeys != null && EFPApp.ShowListImages /* 20.05.2021 */)
       { 
         if (_ImageKeys.Length!=Items.Length)
@@ -309,7 +309,7 @@ namespace FreeLibSet.Forms
         {
           if (!String.IsNullOrEmpty(_ImageKeys[i]))
           {
-            ImageKeys2 = _ImageKeys;
+            imageKeys2 = _ImageKeys;
             break;
           }
         }
@@ -323,7 +323,7 @@ namespace FreeLibSet.Forms
           throw new InvalidOperationException("Длина массива EnabledItemFlags  (" + _EnabledItemFlags.Length.ToString() + ") не совпадает с длиной массива Items (" + Items.Length.ToString() + ")");
       }
 
-      RadioSelectForm frm = new RadioSelectForm(Title, GroupTitle, Items, ImageKeys2);
+      RadioSelectForm frm = new RadioSelectForm(Title, GroupTitle, Items, imageKeys2);
       EFPApp.InitMainImageIcon(frm, ImageKey, true);
 
       if (_EnabledItemFlags != null)

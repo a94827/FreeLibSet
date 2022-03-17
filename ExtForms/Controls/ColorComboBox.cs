@@ -26,7 +26,7 @@ namespace FreeLibSet.Controls
     {
       base.DrawMode = DrawMode.OwnerDrawFixed;
       DrawItem += new DrawItemEventHandler(TheCB_DrawItem);
-//      base.ItemHeight = 20;
+      //      base.ItemHeight = 20;
       base.DropDownStyle = ComboBoxStyle.DropDownList;
       InitPopupItems();
       base.SelectedIndexChanged += new EventHandler(ColorComboBox_SelectedIndexChanged);
@@ -90,16 +90,16 @@ namespace FreeLibSet.Controls
     public string[] PopupColorNames
     {
       get { return _PopupColorNames; }
-      set 
+      set
       {
         if (value == _PopupColorNames)
           return;
-        _PopupColorNames = value; 
+        _PopupColorNames = value;
       }
     }
     private string[] _PopupColorNames;
 
-    [Description("Цвет изображения для значения Color.Empty. "+
+    [Description("Цвет изображения для значения Color.Empty. " +
     "По умолчанию - Color.Empty, при этом внутренность квадратика не заполняется")]
     [Category("Appearance")]
     [DefaultValue(typeof(Color), "Empty")]
@@ -129,11 +129,11 @@ namespace FreeLibSet.Controls
       base.Items.Clear();
       base.Items.Add("Выбрать");
       if (_PopupColors != null)
-      { 
-        object[] Items=new object[_PopupColors.Length];
+      {
+        object[] items = new object[_PopupColors.Length];
         for (int i = 0; i < _PopupColors.Length; i++)
-          Items[i] = _PopupColors[i];
-        base.Items.AddRange(Items);
+          items[i] = _PopupColors[i];
+        base.Items.AddRange(items);
       }
       Color = clr;
     }
@@ -154,27 +154,27 @@ namespace FreeLibSet.Controls
       rc1.Inflate(-1, -1);
 
       Color clr;
-      string ItemText;
+      string itemText;
       if (args.Index < 1)
       {
         clr = Color;
         if (args.Index == 0)
-          ItemText = "Выбрать ...";
+          itemText = "Выбрать ...";
         else
-          ItemText = MyGetColorText(Color);
+          itemText = MyGetColorText(Color);
       }
       else
       {
-        int PopIdx = args.Index - 1;
-        if (PopupColors == null || PopIdx >= PopupColors.Length)
+        int popIdx = args.Index - 1;
+        if (PopupColors == null || popIdx >= PopupColors.Length)
         {
           clr = Color.Red;
-          ItemText = "???";
+          itemText = "???";
         }
         else
         {
-          clr = PopupColors[PopIdx];
-          ItemText=MyGetColorText(clr);
+          clr = PopupColors[popIdx];
+          itemText = MyGetColorText(clr);
         }
       }
 
@@ -197,7 +197,7 @@ namespace FreeLibSet.Controls
       rc2.X += 32;
       rc2.Width -= 32;
 
-      args.Graphics.DrawString(ItemText, base.Font, SystemBrushes.ControlText, rc2);
+      args.Graphics.DrawString(itemText, base.Font, SystemBrushes.ControlText, rc2);
 
       args.DrawFocusRectangle();
     }
@@ -258,10 +258,10 @@ namespace FreeLibSet.Controls
       }
       if (_PopupColors != null)
       {
-        int PopIdx = base.SelectedIndex - 1;
-        if (PopIdx < _PopupColors.Length)
+        int popIdx = base.SelectedIndex - 1;
+        if (popIdx < _PopupColors.Length)
         {
-          Color = _PopupColors[PopIdx];
+          Color = _PopupColors[popIdx];
           return;
         }
       }
@@ -470,6 +470,5 @@ namespace FreeLibSet.Controls
             Color.LightGreen, Color.LightCyan,Color.Blue, Color.Magenta}; // ???
 
     #endregion
-
   }
 }

@@ -46,11 +46,8 @@ namespace FreeLibSet.Forms
       _IsDisposed = false;
       _LogoutKnownBugExceptions = logoutKnownBugExceptions;
 
-      _EHAppDomain_UnhandledException = new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
-      _EHApplication_ThreadException = new ThreadExceptionEventHandler(Application_ThreadException);
-
-      AppDomain.CurrentDomain.UnhandledException += _EHAppDomain_UnhandledException;
-      Application.ThreadException += _EHApplication_ThreadException;
+      AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
+      Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
       Interlocked.Increment(ref _HandlerCount);
     }
 
@@ -81,8 +78,8 @@ namespace FreeLibSet.Forms
     /// <param name="Dispose">true, если был вызван метод Dispose()</param>
     protected virtual void Dispose(bool Dispose)
     {
-      AppDomain.CurrentDomain.UnhandledException -= _EHAppDomain_UnhandledException;
-      Application.ThreadException -= _EHApplication_ThreadException;
+      AppDomain.CurrentDomain.UnhandledException -= new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
+      Application.ThreadException -= new ThreadExceptionEventHandler(Application_ThreadException);
       Interlocked.Decrement(ref _HandlerCount);
     }
 
@@ -107,9 +104,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Обработчики событий
-
-    private readonly UnhandledExceptionEventHandler _EHAppDomain_UnhandledException;
-    private readonly ThreadExceptionEventHandler _EHApplication_ThreadException;
 
     /// <summary>
     /// Обработчик события AppDomain.UnhandledException
@@ -170,10 +164,10 @@ namespace FreeLibSet.Forms
         // в System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
         //
         // Понятия не имею, как его предотвращать
-        ObjectDisposedException ExOD = args.Exception as ObjectDisposedException;
-        if (ExOD != null)
+        ObjectDisposedException exOD = args.Exception as ObjectDisposedException;
+        if (exOD != null)
         {
-          if (ProcessIconDisposedException(ExOD))
+          if (ProcessIconDisposedException(exOD))
             return;
         }
 
@@ -200,10 +194,10 @@ namespace FreeLibSet.Forms
         // в System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
         // в System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
         // в System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
-        NotSupportedException ExNS = args.Exception as NotSupportedException;
-        if (ExNS != null)
+        NotSupportedException exNS = args.Exception as NotSupportedException;
+        if (exNS != null)
         {
-          if (ProcessToolStripSetItemLocationException(ExNS))
+          if (ProcessToolStripSetItemLocationException(exNS))
             return;
         }
 

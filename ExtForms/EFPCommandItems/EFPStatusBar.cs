@@ -84,8 +84,8 @@ namespace FreeLibSet.Forms
     /// <param name="item">Команда</param>
     public void Add(EFPCommandItem item)
     {
-      EFPUIStatusPanelObj obj = new EFPUIStatusPanelObj(this, item);
-      _Items.Add(obj);
+      EFPUIStatusPanelObj uiObj = new EFPUIStatusPanelObj(this, item);
+      _Items.Add(uiObj);
     }
 
     /// <summary>
@@ -95,10 +95,10 @@ namespace FreeLibSet.Forms
     /// <param name="items">Список команд</param>
     public void Add(EFPCommandItems items)
     {
-      foreach (EFPCommandItem Item in items)
+      foreach (EFPCommandItem item in items)
       {
-        if (Item.StatusBarUsage)
-          Add(Item);
+        if (item.StatusBarUsage)
+          Add(item);
       }
     }
 
@@ -461,9 +461,9 @@ namespace FreeLibSet.Forms
         {
           if (!StatusStripControl.IsDisposed)
           {
-            Point Pos1 = Cursor.Position;
-            Point Pos2 = StatusStripControl.PointToClient(Pos1);
-            InitToolTip(StatusStripControl.GetItemAt(Pos2));
+            Point pos1 = Cursor.Position;
+            Point pos2 = StatusStripControl.PointToClient(pos1);
+            InitToolTip(StatusStripControl.GetItemAt(pos2));
           }
         }
       }
@@ -495,15 +495,15 @@ namespace FreeLibSet.Forms
       {
         if (Array.IndexOf<EFPStatusBarPanels>(WantedPanels, _ShownPanels[i]) < 0)
         {
-          foreach (EFPUIStatusPanelObj obj in _ShownPanels[i].Items)
+          foreach (EFPUIStatusPanelObj uiObj in _ShownPanels[i].Items)
           {
             try
             {
-              StatusStripControl.Items.Remove(obj.StatusLabel);
+              StatusStripControl.Items.Remove(uiObj.StatusLabel);
             }
             catch (Exception e)
             {
-              EFPApp.ShowException(e, "Ошибка отсоединения панели статусной строки " + obj.ToString());
+              EFPApp.ShowException(e, "Ошибка отсоединения панели статусной строки " + uiObj.ToString());
             }
           }
         }
@@ -520,11 +520,11 @@ namespace FreeLibSet.Forms
           int pos = 0;
           // Все элементы добавляются перед уже существующими, но в порядке,
           // в котором они добавлены в этот набор
-          foreach (EFPUIStatusPanelObj obj in WantedPanels[i].Items)
+          foreach (EFPUIStatusPanelObj uiObj in WantedPanels[i].Items)
           {
-            StatusStripControl.Items.Insert(pos, obj.StatusLabel);
+            StatusStripControl.Items.Insert(pos, uiObj.StatusLabel);
             //if (ClientMainForm.MainForm.TheStatusBar.RenderMode == ToolStripRenderMode.System)
-            obj.StatusLabel.BackColor = SystemColors.Control;
+            uiObj.StatusLabel.BackColor = SystemColors.Control;
             //        ClientMainForm.MainForm.TheStatusBar.Items.Add(obj.StatusLabel);
 
             pos++;
@@ -574,8 +574,8 @@ namespace FreeLibSet.Forms
           }
 
           // Выводим подсказку над статусной строкой
-          Point Pos = new Point(item.Bounds.Left, -StatusStripControl.Height - (LineCount - 1) * StatusStripControl.Font.Height);
-          _TheToolTip.Show(item.ToolTipText, StatusStripControl, Pos, _TheToolTip.AutoPopDelay);
+          Point pos = new Point(item.Bounds.Left, -StatusStripControl.Height - (LineCount - 1) * StatusStripControl.Font.Height);
+          _TheToolTip.Show(item.ToolTipText, StatusStripControl, pos, _TheToolTip.AutoPopDelay);
         }
       }
       _CurrentToolTipItem = item;

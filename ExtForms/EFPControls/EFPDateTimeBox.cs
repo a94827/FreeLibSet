@@ -1028,8 +1028,8 @@ namespace FreeLibSet.Forms
         _NotReadOnlySync = new DepInput<bool>(true, null);
         _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
 
-        DepOr ReadOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
-        _ReadOnlyEx.Source = ReadOnlyOr;
+        DepOr readOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
+        _ReadOnlyEx.Source = readOnlyOr;
       }
     }
     /// <summary>

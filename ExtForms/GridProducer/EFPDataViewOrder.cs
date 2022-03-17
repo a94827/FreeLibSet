@@ -301,7 +301,6 @@ namespace FreeLibSet.Forms
       return true;
     }
 
-
     #endregion
   }
 
@@ -327,21 +326,21 @@ namespace FreeLibSet.Forms
       string name = sort;
       if (String.IsNullOrEmpty(sort))
         name = "*"; // 24.01.2022
-      EFPDataViewOrder Item = new EFPDataViewOrder(name, sort);
+      EFPDataViewOrder order = new EFPDataViewOrder(name, sort);
       if (sortInfo.IsEmpty)
       {
         string[] aColNames;
         ListSortDirection[] aDirs;
         DataTools.GetDataViewSortColumnNames(sort, out aColNames, out aDirs);
         if (aDirs.Length > 0)
-          Item.SortInfo = new EFPDataGridViewSortInfo(aColNames[0], aDirs[0]);
+          order.SortInfo = new EFPDataGridViewSortInfo(aColNames[0], aDirs[0]);
       }
       else
-        Item.SortInfo = sortInfo;
+        order.SortInfo = sortInfo;
       if (!String.IsNullOrEmpty(displayName))
-        Item.DisplayName = displayName;
-      Add(Item);
-      return Item;
+        order.DisplayName = displayName;
+      Add(order);
+      return order;
     }
 
     /// <summary>
@@ -397,7 +396,6 @@ namespace FreeLibSet.Forms
           return this[Count - 1];
       }
     }
-
 
     /// <summary>
     /// Добавляет новый порядок сортировки, используя DataViewSortBuilder.
@@ -523,10 +521,10 @@ namespace FreeLibSet.Forms
         dlg.ImageKeys[i] = this[i].ImageKey;
       }
       dlg.SelectedIndex = orderIndex;
-      bool Res = dlg.ShowDialog() == DialogResult.OK;
-      if (Res)
+      bool res = dlg.ShowDialog() == DialogResult.OK;
+      if (res)
         orderIndex = dlg.SelectedIndex;
-      return Res;
+      return res;
     }
 
     #endregion

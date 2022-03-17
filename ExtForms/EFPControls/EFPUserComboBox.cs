@@ -128,9 +128,9 @@ namespace FreeLibSet.Forms
         _SelectableSync = new DepInput<bool>(true, null);
         _SelectableSync.OwnerInfo = new DepOwnerInfo(this, "SelectableSync");
 
-        DepAnd SelectableAnd = new DepAnd(_SelectableMain, _SelectableSync);
-        SelectableAnd.OwnerInfo = new DepOwnerInfo(this, "SelectableMain & SelectableSync");
-        _SelectableEx.Source = SelectableAnd;
+        DepAnd selectableAnd = new DepAnd(_SelectableMain, _SelectableSync);
+        selectableAnd.OwnerInfo = new DepOwnerInfo(this, "SelectableMain & SelectableSync");
+        _SelectableEx.Source = selectableAnd;
       }
     }
 
@@ -912,8 +912,8 @@ namespace FreeLibSet.Forms
       else
       {
         StringBuilder sb = new StringBuilder();
-        int SingleSelIndex = -1;
-        int SelCnt = 0;
+        int singleSelIndex = -1;
+        int selCnt = 0;
         for (int i = 0; i < Items.Length; i++)
         {
           if (Selections[i])
@@ -921,21 +921,21 @@ namespace FreeLibSet.Forms
             if (sb.Length > 0)
               sb.Append(", ");
             sb.Append(Items[i]);
-            SingleSelIndex = i;
-            SelCnt++;
+            singleSelIndex = i;
+            selCnt++;
           }
         }
         _TextValueNeededArgs.TextValue = sb.ToString();
 
-        if (SelCnt == 1)
+        if (selCnt == 1)
         {
           if (ImageKeys != null)
           {
 #if DEBUG
-            if (SingleSelIndex < 0 || SingleSelIndex >= ImageKeys.Length)
-              throw new BugException("Неправильный SingleSelIndex=" + SingleSelIndex.ToString());
+            if (singleSelIndex < 0 || singleSelIndex >= ImageKeys.Length)
+              throw new BugException("Неправильный SingleSelIndex=" + singleSelIndex.ToString());
 #endif
-            _TextValueNeededArgs.ImageKey = ImageKeys[SingleSelIndex];
+            _TextValueNeededArgs.ImageKey = ImageKeys[singleSelIndex];
           }
           else
             _TextValueNeededArgs.ImageKey = ImageKey;

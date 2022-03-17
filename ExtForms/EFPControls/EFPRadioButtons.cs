@@ -46,17 +46,17 @@ namespace FreeLibSet.Forms
       : base(baseProvider, firstControl, true)
     {
       // Ищем все кнопки в группе
-      List<RadioButton> Items = new List<RadioButton>();
-      Control ThisControl = firstControl;
-      while (ThisControl != null)
+      List<RadioButton> items = new List<RadioButton>();
+      Control thisControl = firstControl;
+      while (thisControl != null)
       {
-        if (ThisControl is RadioButton)
-          Items.Add((RadioButton)ThisControl);
+        if (thisControl is RadioButton)
+          items.Add((RadioButton)thisControl);
         else
           break;
-        ThisControl = ThisControl.Parent.GetNextControl(ThisControl, true);
+        thisControl = thisControl.Parent.GetNextControl(thisControl, true);
       }
-      _Controls = Items.ToArray();
+      _Controls = items.ToArray();
 
       Init();
     }
@@ -361,19 +361,19 @@ namespace FreeLibSet.Forms
       // Не нужно, иначе может не обновляться
       //if (InsideSelectedIndexChanged)
       //  return;
-      int Value2;
+      int value2;
       if (AllowDisabledSelectedIndex && (!EnabledState))
-        Value2 = DisabledSelectedIndex;
+        value2 = DisabledSelectedIndex;
       else if (_HasSavedSelectedIndex)
       {
         _HasSavedSelectedIndex = false;
-        Value2 = _SavedSelectedIndex;
+        value2 = _SavedSelectedIndex;
       }
       else
         return;
 
       for (int i = 0; i < _Controls.Length; i++)
-        _Controls[i].Checked = (i == Value2);
+        _Controls[i].Checked = (i == value2);
     }
 
     private bool _InsideSelectedIndexChanged;

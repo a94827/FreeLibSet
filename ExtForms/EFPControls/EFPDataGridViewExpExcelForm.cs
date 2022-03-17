@@ -65,24 +65,24 @@ namespace FreeLibSet.Forms
       // не надежно. Могут быть переопределены методы On
       // efpUseFill.Enabled = ControlProvider.HasAttributeHandlers;
 
-      bool HasBoolColumn = false;
+      bool hasBoolColumn = false;
       for (int i = 0; i < controlProvider.Control.Columns.Count; i++)
       {
-        DataGridViewColumn Column = controlProvider.Control.Columns[i];
-        if (!Column.Visible)
+        DataGridViewColumn gridCol = controlProvider.Control.Columns[i];
+        if (!gridCol.Visible)
           continue;
-        if (Column is DataGridViewCheckBoxColumn)
+        if (gridCol is DataGridViewCheckBoxColumn)
         {
-          HasBoolColumn = true;
+          hasBoolColumn = true;
           break;
         }
-        if (Column.ValueType == typeof(Boolean))
+        if (gridCol.ValueType == typeof(Boolean))
         {
-          HasBoolColumn = true;
+          hasBoolColumn = true;
           break;
         }
       }
-      efpBoolMode.Enabled = HasBoolColumn;
+      efpBoolMode.Enabled = hasBoolColumn;
     }
 
     #endregion
@@ -126,7 +126,7 @@ namespace FreeLibSet.Forms
 
     public static void SendTable(EFPDataGridView controlProvider, EFPDataGridViewExpExcelSettings settings)
     {
-      bool WithFile = EFPApp.MicrosoftExcelVersion.Major >= MicrosoftOfficeTools.MicrosoftOffice_XP;
+      bool withFile = EFPApp.MicrosoftExcelVersion.Major >= MicrosoftOfficeTools.MicrosoftOffice_XP;
       //if (Settings.Mode != GridHandlerExpExcelMode.Table)
       //  WithFile = false;
 
@@ -138,7 +138,7 @@ namespace FreeLibSet.Forms
       //              "Передача таблицы в MS Excel");
       //#endif
 
-      if (WithFile)
+      if (withFile)
       {
         Splash spl = new Splash(new string[] { 
           "Создание файла", 
@@ -146,10 +146,10 @@ namespace FreeLibSet.Forms
         try
         {
           // Передача через временный файл
-          string FileName = EFPApp.SharedTempDir.GetTempFileName("xml").Path;
-          controlProvider.SaveExcel2003(FileName, settings);
+          string fileName = EFPApp.SharedTempDir.GetTempFileName("xml").Path;
+          controlProvider.SaveExcel2003(fileName, settings);
           spl.Complete();
-          MicrosoftOfficeTools.OpenWithExcel(new AbsPath(FileName), true);
+          MicrosoftOfficeTools.OpenWithExcel(new AbsPath(fileName), true);
           spl.Complete();
 
           // Надо создать новую книгу и скопировать туда лист из исходной книги
@@ -169,18 +169,18 @@ namespace FreeLibSet.Forms
         "Передача таблицы"});
         try
         {
-          ExcelHelper Helper = new ExcelHelper(true);
+          ExcelHelper helper = new ExcelHelper(true);
           try
           {
             // Передача через OLE
-            Workbook wbk = Helper.Application.Workbooks.Add(1);
-            Worksheet Sheet = wbk.Sheets[1];
+            Workbook wbk = helper.Application.Workbooks.Add(1);
+            Worksheet sht = wbk.Sheets[1];
             spl.Complete();
-            DoSendTable2(controlProvider, settings, Sheet, 1, 1, spl);
+            DoSendTable2(controlProvider, settings, sht, 1, 1, spl);
           }
           finally
           {
-            Helper.Dispose();
+            helper.Dispose();
           }
         }
         finally
@@ -202,132 +202,132 @@ namespace FreeLibSet.Forms
       sheet.Cells.SetVerticalAlignment(XlVAlign.xlVAlignCenter);
       sheet.Cells.SetWrapText(true);
       // 1. Собираем массив печатаемых столбцов и строк
-      EFPDataGridViewRectArea Area = controlProvider.GetRectArea(settings.RangeMode);
+      EFPDataGridViewRectArea area = controlProvider.GetRectArea(settings.RangeMode);
 
       int i, j;
       Range r = new Range();
 
       // Устанавливаем ширину столбцов в единицах ширины шрифта
-      double[] Widthes = new double[Area.ColumnCount];
-      for (i = 0; i < Area.ColumnCount; i++)
+      double[] widths = new double[area.ColumnCount];
+      for (i = 0; i < area.ColumnCount; i++)
       {
-        EFPDataGridViewColumn Column = controlProvider.Columns[Area.ColumnIndices[i]];
-        Widthes[i] = Column.TextWidth;
+        EFPDataGridViewColumn Column = controlProvider.Columns[area.ColumnIndices[i]];
+        widths[i] = Column.TextWidth;
       }
-      sheet.SetColumnTextWidthes(Widthes);
+      sheet.SetColumnTextWidths(widths);
 
-      int CurrRow = firstRow;
+      int currRow = firstRow;
 
-      object[] RowBuffer = new object[Area.ColumnCount];
+      object[] rowBuffer = new object[area.ColumnCount];
       // Заголовки 
       if (settings.ShowColumnHeaders)
       {
-        for (j = 0; j < Area.ColumnCount; j++)
+        for (j = 0; j < area.ColumnCount; j++)
         {
-          RowBuffer[j] = MyGetCellFormula(Area.Columns[j].HeaderText);
+          rowBuffer[j] = MyGetCellFormula(area.Columns[j].HeaderText);
         }
-        r = sheet.GetRange(CurrRow, firstCol, CurrRow, firstCol + Area.ColumnCount - 1);
-        r.FormulaArray = RowBuffer;
+        r = sheet.GetRange(currRow, firstCol, currRow, firstCol + area.ColumnCount - 1);
+        r.FormulaArray = rowBuffer;
         r.HorizontalAlignment = XlHAlign.xlHAlignCenter; // независимо от флага
         r.Font.SetBold(true);
-        CurrRow++;
+        currRow++;
       }
 
-      if (Area.RowCount > 0)
+      if (area.RowCount > 0)
       {
         // Выравнивание и формат
-        for (j = 0; j < Area.ColumnCount; j++)
+        for (j = 0; j < area.ColumnCount; j++)
         {
-          r = sheet.GetRange(CurrRow, firstCol + j, CurrRow + Area.RowCount - 1, firstCol + j);
+          r = sheet.GetRange(currRow, firstCol + j, currRow + area.RowCount - 1, firstCol + j);
           // Выравнивание для столбца по умолчанию
-          XlHAlign ColHAlign = GetHAlign(Area.Columns[j].DefaultCellStyle.Alignment);
-          XlVAlign ColVAlign = GetVAlign(Area.Columns[j].DefaultCellStyle.Alignment);
-          r.HorizontalAlignment = ColHAlign;
-          if (ColVAlign != XlVAlign.xlVAlignCenter)
-            r.VerticalAlignment = ColVAlign;
+          XlHAlign colHAlign = GetHAlign(area.Columns[j].DefaultCellStyle.Alignment);
+          XlVAlign colVAlign = GetVAlign(area.Columns[j].DefaultCellStyle.Alignment);
+          r.HorizontalAlignment = colHAlign;
+          if (colVAlign != XlVAlign.xlVAlignCenter)
+            r.VerticalAlignment = colVAlign;
 
-          string Format = Area.Columns[j].DefaultCellStyle.Format;
-          r.NumberFormat = Format;
+          string format = area.Columns[j].DefaultCellStyle.Format;
+          r.NumberFormat = format;
         }
 
         // Сюда запоминаем цвета ячеек строки
-        EFPDataGridViewExcelCellAttributes[] CellAttrBuffer = null;
+        EFPDataGridViewExcelCellAttributes[] cellAttrBuffer = null;
         if (settings.UseInterior)
-          CellAttrBuffer = new EFPDataGridViewExcelCellAttributes[Area.ColumnCount];
+          cellAttrBuffer = new EFPDataGridViewExcelCellAttributes[area.ColumnCount];
 
         // Строки данных
-        spl.SetPercent(0, Area.RowCount);
+        spl.SetPercent(0, area.RowCount);
         spl.AllowCancel = true;
-        for (i = 0; i < Area.RowCount; i++)
+        for (i = 0; i < area.RowCount; i++)
         {
-          controlProvider.DoGetRowAttributes(Area.RowIndices[i], EFPDataGridViewAttributesReason.Print);
+          controlProvider.DoGetRowAttributes(area.RowIndices[i], EFPDataGridViewAttributesReason.Print);
 
-          for (j = 0; j < Area.ColumnCount; j++)
+          for (j = 0; j < area.ColumnCount; j++)
           {
-            int ColumnIndex = Area.ColumnIndices[j];
-            EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(ColumnIndex);
+            int columnIndex = area.ColumnIndices[j];
+            EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(columnIndex);
             object v = CellArgs.FormattedValue;
             if (v is Bitmap)
               v = null;
-            RowBuffer[j] = MyGetCellFormula(v);
+            rowBuffer[j] = MyGetCellFormula(v);
 
-            bool CellDefined = false;
+            bool cellDefined = false;
 
             // Проверяем выравнивание. Если оно не совпадает с заданным для столбца,
             // то определяем его для ячейки
-            XlHAlign ColHAlign = GetHAlign(Area.Columns[j].DefaultCellStyle.Alignment);
-            XlVAlign ColVAlign = GetVAlign(Area.Columns[j].DefaultCellStyle.Alignment);
-            XlHAlign CellHAlign = GetHAlign(CellArgs.CellStyle.Alignment);
-            XlVAlign CellVAlign = GetVAlign(CellArgs.CellStyle.Alignment);
-            if (CellHAlign != ColHAlign)
+            XlHAlign colHAlign = GetHAlign(area.Columns[j].DefaultCellStyle.Alignment);
+            XlVAlign colVAlign = GetVAlign(area.Columns[j].DefaultCellStyle.Alignment);
+            XlHAlign cellHAlign = GetHAlign(CellArgs.CellStyle.Alignment);
+            XlVAlign cellVAlign = GetVAlign(CellArgs.CellStyle.Alignment);
+            if (cellHAlign != colHAlign)
             {
-              if (!CellDefined)
+              if (!cellDefined)
               {
-                r = sheet.Cells[CurrRow, firstCol + j];
-                CellDefined = true;
+                r = sheet.Cells[currRow, firstCol + j];
+                cellDefined = true;
               }
-              r.HorizontalAlignment = CellHAlign;
+              r.HorizontalAlignment = cellHAlign;
             }
-            if (CellVAlign != ColVAlign)
+            if (cellVAlign != colVAlign)
             {
-              if (!CellDefined)
+              if (!cellDefined)
               {
-                r = sheet.Cells[CurrRow, firstCol + j];
-                CellDefined = true;
+                r = sheet.Cells[currRow, firstCol + j];
+                cellDefined = true;
               }
-              r.VerticalAlignment = CellVAlign;
+              r.VerticalAlignment = cellVAlign;
             }
             if (CellArgs.IndentLevel > 0)
             {
-              if (!CellDefined)
+              if (!cellDefined)
               {
-                r = sheet.Cells[CurrRow, firstCol + j];
-                CellDefined = true;
+                r = sheet.Cells[currRow, firstCol + j];
+                cellDefined = true;
               }
-              int IndentLevel = CellArgs.IndentLevel;
+              int indentLevel = CellArgs.IndentLevel;
               // if (IndentLevel < 0) IndentLevel = 0; // 27.12.2020 Лишняя проверка
-              if (IndentLevel > 15) IndentLevel = 15;
-              r.IndentLevel = IndentLevel;
+              if (indentLevel > 15) indentLevel = 15;
+              r.IndentLevel = indentLevel;
             }
 
 
             // Цвета
             if (settings.UseInterior)
-              CellAttrBuffer[j] = EFPDataGridView.GetExcelCellAttr(CellArgs);
+              cellAttrBuffer[j] = EFPDataGridView.GetExcelCellAttr(CellArgs);
           } // цикл по ячейкам в строке
 
-          r = sheet.GetRange(CurrRow, firstCol, CurrRow, firstCol + Area.ColumnCount - 1);
+          r = sheet.GetRange(currRow, firstCol, currRow, firstCol + area.ColumnCount - 1);
           try
           {
-            r.FormulaArray = RowBuffer;
+            r.FormulaArray = rowBuffer;
           }
           catch
           {
             // Пытаемся заполнить по одной ячейке
-            for (int k = 0; k < Area.ColumnCount; k++)
+            for (int k = 0; k < area.ColumnCount; k++)
             {
-              Range r1 = sheet.GetRange(CurrRow, firstCol + k, CurrRow, firstCol + k);
-              r1.Formula = RowBuffer[k];
+              Range r1 = sheet.GetRange(currRow, firstCol + k, currRow, firstCol + k);
+              r1.Formula = rowBuffer[k];
             }
           }
 
@@ -335,27 +335,27 @@ namespace FreeLibSet.Forms
           {
             // Заполняем для строки
             // !!! Оптимизация
-            for (j = 0; j < Area.ColumnCount; j++)
+            for (j = 0; j < area.ColumnCount; j++)
             {
-              if (!CellAttrBuffer[j].IsEmpty)
+              if (!cellAttrBuffer[j].IsEmpty)
               {
-                r = sheet.Cells[CurrRow, firstCol + j];
-                if (!CellAttrBuffer[j].BackColor.IsEmpty)
-                  r.Interior.SetColor(CellAttrBuffer[j].BackColor);
-                if (!CellAttrBuffer[j].ForeColor.IsEmpty)
-                  r.Font.SetColor(CellAttrBuffer[j].ForeColor);
-                if (CellAttrBuffer[j].Bold)
+                r = sheet.Cells[currRow, firstCol + j];
+                if (!cellAttrBuffer[j].BackColor.IsEmpty)
+                  r.Interior.SetColor(cellAttrBuffer[j].BackColor);
+                if (!cellAttrBuffer[j].ForeColor.IsEmpty)
+                  r.Font.SetColor(cellAttrBuffer[j].ForeColor);
+                if (cellAttrBuffer[j].Bold)
                   r.Font.SetBold(true);
-                if (CellAttrBuffer[j].Italic)
+                if (cellAttrBuffer[j].Italic)
                   r.Font.SetItalic(true);
-                if (CellAttrBuffer[j].Underline)
+                if (cellAttrBuffer[j].Underline)
                   r.Font.SetUnderline(true);
               }
             }
           }
 
           spl.IncPercent();
-          CurrRow++;
+          currRow++;
         }
       }
     }
@@ -529,9 +529,9 @@ namespace FreeLibSet.Forms
     public static void SendTable(EFPDataGridView controlProvider, EFPDataGridViewExpExcelSettings settings)
     {
 
-      string FileName = EFPApp.SharedTempDir.GetTempFileName("ods").Path;
-      controlProvider.SaveOpenOfficeCalc(FileName, settings);
-      EFPApp.UsedOpenOffice.OpenWithCalc(new AbsPath(FileName), true); // без указания имени файла
+      string fileName = EFPApp.SharedTempDir.GetTempFileName("ods").Path;
+      controlProvider.SaveOpenOfficeCalc(fileName, settings);
+      EFPApp.UsedOpenOffice.OpenWithCalc(new AbsPath(fileName), true); // без указания имени файла
     }
 
     #endregion

@@ -199,11 +199,11 @@ namespace FreeLibSet.Shell
       /// <returns></returns>
       private void InitVersionUnix()
       {
-        AbsPath TextFile = new AbsPath(ProgramDir, "versionrc");
-        if (!File.Exists(TextFile.Path))
+        AbsPath textFile = new AbsPath(ProgramDir, "versionrc");
+        if (!File.Exists(textFile.Path))
           return;
 
-        string[] aLines = System.IO.File.ReadAllLines(TextFile.Path); // ?? кодировка
+        string[] aLines = System.IO.File.ReadAllLines(textFile.Path); // ?? кодировка
         for (int i = 0; i < aLines.Length; i++)
         {
           // Искомая строка выглядит так:
@@ -227,8 +227,8 @@ namespace FreeLibSet.Shell
 
       private bool IsCompExists(string appName)
       {
-        AbsPath FilePath = new AbsPath(ProgramDir, appName + GetExeExtension());
-        return File.Exists(FilePath.Path);
+        AbsPath filePath = new AbsPath(ProgramDir, appName + GetExeExtension());
+        return File.Exists(filePath.Path);
       }
 
       #endregion
@@ -287,7 +287,6 @@ namespace FreeLibSet.Shell
           }
         }
       }
-
 
       #endregion
 
@@ -644,7 +643,7 @@ namespace FreeLibSet.Shell
 
         return lst.ToArray();
       }
-      catch(Exception e)
+      catch (Exception e)
       {
         Trace.WriteLine("Exception caught when detecting installed OpenOffices/LibreOffices: " + e.Message);
         return new OfficeInfo[0];
@@ -719,11 +718,11 @@ namespace FreeLibSet.Shell
       // Может не быть доступа к ключу реестра
       try
       {
-        AbsPath ProgramDir = new AbsPath(tree.GetString(keyName, String.Empty));
-        if (ProgramDir.IsEmpty)
+        AbsPath programDir = new AbsPath(tree.GetString(keyName, String.Empty));
+        if (programDir.IsEmpty)
           return;
 
-        FindOrAddItem(lst, ProgramDir, kind, InfoSource.Registry, keyName, platform);
+        FindOrAddItem(lst, programDir, kind, InfoSource.Registry, keyName, platform);
       }
       catch
       {
@@ -736,23 +735,23 @@ namespace FreeLibSet.Shell
 
     private static void FindFromPath(List<OfficeInfo> lst)
     {
-      string PathVar=Environment.GetEnvironmentVariable("PATH");
-      if (String.IsNullOrEmpty(PathVar))
+      string pathVar = Environment.GetEnvironmentVariable("PATH");
+      if (String.IsNullOrEmpty(pathVar))
         return;
 
-      string[] a = PathVar.Split(System.IO.Path.PathSeparator);
+      string[] a = pathVar.Split(System.IO.Path.PathSeparator);
       for (int i = 0; i < a.Length; i++)
         FindOrAddItem(lst, new AbsPath(a[i]), OpenOfficeKind.Unknown, InfoSource.EnvironmentVariable, "Path", OpenOfficePlatform.Unknown);
     }
 
     private static void FindFromPredefined(List<OfficeInfo> lst)
     {
-      AbsPath Dir = new AbsPath("/usr/lib/libreoffice/program");
-      if (File.Exists(new AbsPath(Dir, "soffice").Path))
-        FindOrAddItem(lst, Dir, OpenOfficeKind.LibreOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
-      Dir = new AbsPath("/usr/lib/openoffice/program"); // !! проверить имя папки
-      if (File.Exists(new AbsPath(Dir, "soffice").Path))
-        FindOrAddItem(lst, Dir, OpenOfficeKind.OpenOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
+      AbsPath dir = new AbsPath("/usr/lib/libreoffice/program");
+      if (File.Exists(new AbsPath(dir, "soffice").Path))
+        FindOrAddItem(lst, dir, OpenOfficeKind.LibreOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
+      dir = new AbsPath("/usr/lib/openoffice/program"); // !! проверить имя папки
+      if (File.Exists(new AbsPath(dir, "soffice").Path))
+        FindOrAddItem(lst, dir, OpenOfficeKind.OpenOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
     }
 
     #endregion
@@ -767,14 +766,14 @@ namespace FreeLibSet.Shell
       if (!Directory.Exists(programDir.Path))
         return; // пустышка
 
-      AbsPath SOfficePath = new AbsPath(programDir, "soffice" + GetExeExtension());
-      if (!File.Exists(SOfficePath.Path))
+      AbsPath sofficePath = new AbsPath(programDir, "soffice" + GetExeExtension());
+      if (!File.Exists(sofficePath.Path))
         return;
 
       if (Environment.OSVersion.Platform == PlatformID.Unix)
       {
-        AbsPath SOfficeBinPath = new AbsPath(programDir, "soffice.bin");
-        if (!File.Exists(SOfficeBinPath.Path))
+        AbsPath sofficeBinPath = new AbsPath(programDir, "soffice.bin");
+        if (!File.Exists(sofficeBinPath.Path))
           return; // soffice может быть символьной ссылкой. Проверка не реализована
       }
 
@@ -813,7 +812,6 @@ namespace FreeLibSet.Shell
     {
       _Installations = InitInstallations();
     }
-
 
     #endregion
 
@@ -854,12 +852,12 @@ namespace FreeLibSet.Shell
     public static bool ODFAddFormat(XmlElement elStyles, string formatText, string styleName,
       CultureInfo ci)
     {
-      string Language = ci.Name.Substring(0, 2);
-      string Country = String.Empty;
+      string language = ci.Name.Substring(0, 2);
+      string country = String.Empty;
       if (ci.Name.Length == 5)
-        Country = ci.Name.Substring(3, 2);
+        country = ci.Name.Substring(3, 2);
       return ODFAddFormat(elStyles, formatText, styleName,
-        ci.NumberFormat, ci.DateTimeFormat, Language, Country);
+        ci.NumberFormat, ci.DateTimeFormat, language, country);
     }
 
     /// <summary>
@@ -909,14 +907,14 @@ namespace FreeLibSet.Shell
       string[] a = formatText.Split(';');
       XmlElement elStyleP0, elStyleP1;
       switch (a.Length)
-      { 
+      {
         case 1: // обычный формат, как было
           DoWriteNumberFormat(elStyle, formatText);
           break;
         case 2: // Части >=0 и < 0
           elStyleP0 = elStyles.OwnerDocument.CreateElement("number:number-style", nmspcNumber);
           elStyles.AppendChild(elStyle);
-          SetAttr(elStyleP0, "style:name", styleName+"P0", nmspcStyle);
+          SetAttr(elStyleP0, "style:name", styleName + "P0", nmspcStyle);
           DoWriteNumberFormat(elStyleP0, a[0]);
           DoWriteFormatRef(elStyle, "value()>=0", styleName + "P0");
 
@@ -942,7 +940,6 @@ namespace FreeLibSet.Shell
           throw new ArgumentException("Числовой формат \"" + formatText + "\" состоит больше, чем из трех частей", "formatText");
       }
 
-
       return true;
     }
 
@@ -950,7 +947,7 @@ namespace FreeLibSet.Shell
     {
       XmlElement elMap = elStyle.OwnerDocument.CreateElement("style:map", nmspcStyle);
       elStyle.AppendChild(elMap);
-      SetAttr(elMap, "style:condition", condition,nmspcStyle);
+      SetAttr(elMap, "style:condition", condition, nmspcStyle);
       SetAttr(elMap, "style:apply-style-name", styleName, nmspcStyle);
     }
 
@@ -962,14 +959,14 @@ namespace FreeLibSet.Shell
         return;
       }
 
-      if (formatText[0]=='\"')
+      if (formatText[0] == '\"')
       {
         DoWriteTextFormat(elStyle, UnquoteText(formatText));
         return;
       }
 
       if (formatText[0] == '-')
-      { 
+      {
         // Знак числа не является частью формата, а является текстом
         DoWriteTextFormat(elStyle, "-");
         formatText = formatText.Substring(1);
@@ -982,16 +979,16 @@ namespace FreeLibSet.Shell
        */
 
       // Определяем наличие разделителя тысяч и убираем ведущие #
-      bool ThousandSep = false;
+      bool thousandSep = false;
       for (int i = 0; i < formatText.Length; i++)
       {
-        bool brk=false;
+        bool brk = false;
         switch (formatText[i])
-        { 
+        {
           case '#':
             break;
           case ',':
-            ThousandSep=true;
+            thousandSep = true;
             break;
           default:
             formatText = formatText.Substring(i);
@@ -1002,47 +999,47 @@ namespace FreeLibSet.Shell
           break;
       }
 
-      int MinIntDigs;
-      int Decimals;
+      int minIntDigs;
+      int decimals;
       int p = formatText.IndexOf('.');
       if (p < 0)
       {
-        Decimals = 0;
-        MinIntDigs = formatText.Length;
+        decimals = 0;
+        minIntDigs = formatText.Length;
       }
       else
       {
-        Decimals = formatText.Length - p - 1;
-        MinIntDigs = formatText.Length - Decimals - 1;
+        decimals = formatText.Length - p - 1;
+        minIntDigs = formatText.Length - decimals - 1;
       }
 
-      int MinDecimals = Decimals;
-      for (int i = 0; i < Decimals; i++)
+      int minDecimals = decimals;
+      for (int i = 0; i < decimals; i++)
       {
         if (formatText[formatText.Length - i - 1] == '#')
-          MinDecimals--;
+          minDecimals--;
         else
           break;
       }
 
       XmlElement elNumber = elStyle.OwnerDocument.CreateElement("number:number", nmspcNumber);
       elStyle.AppendChild(elNumber);
-      SetAttr(elNumber, "number:decimal-places", Decimals.ToString(), nmspcNumber);
-      SetAttr(elNumber, "number:min-integer-digits", MinIntDigs.ToString(), nmspcNumber);
-      if (MinDecimals < Decimals)
+      SetAttr(elNumber, "number:decimal-places", decimals.ToString(), nmspcNumber);
+      SetAttr(elNumber, "number:min-integer-digits", minIntDigs.ToString(), nmspcNumber);
+      if (minDecimals < decimals)
       {
-        SetAttr(elNumber, "loext:min-decimal-places", MinDecimals.ToString(), nmspcLoext);
+        SetAttr(elNumber, "loext:min-decimal-places", minDecimals.ToString(), nmspcLoext);
         SetAttr(elNumber, "number:decimal-replacement", "", nmspcNumber);
       }
 
-      if (ThousandSep) // по идее, надо проверять, что запятая идет слева от "." и находится между "0#"
+      if (thousandSep) // по идее, надо проверять, что запятая идет слева от "." и находится между "0#"
         SetAttr(elNumber, "number:grouping", "true", nmspcNumber);
     }
 
     private static string UnquoteText(string s)
     {
       if (s.Length < 2) // бяка
-        return string.Empty; 
+        return string.Empty;
       s = s.Substring(1, s.Length - 2);
       s = s.Replace("\"\"", "\"");
 
@@ -1062,38 +1059,36 @@ namespace FreeLibSet.Shell
     }
 
     private static bool ODFAddDateTimeFormat(XmlElement elStyles, string formatText, string styleName,
-      DateTimeFormatInfo FormatInfo, string Language, string Country)
+      DateTimeFormatInfo formatInfo, string language, string Country)
     {
       // Заменяем стандартные стили
       switch (formatText)
       {
-        case "d": formatText = FormatInfo.ShortDatePattern; break;
-        case "D": formatText = FormatInfo.LongDatePattern; break;
-        case "t": formatText = FormatInfo.ShortTimePattern; break;
-        case "T": formatText = FormatInfo.LongTimePattern; break;
-        case "f": formatText = FormatInfo.LongDatePattern + " " + FormatInfo.ShortTimePattern; break;
-        case "F": formatText = FormatInfo.FullDateTimePattern; break;
-        case "g": formatText = FormatInfo.ShortDatePattern + " " + FormatInfo.ShortTimePattern; break;
-        case "G": formatText = FormatInfo.ShortDatePattern + " " + FormatInfo.LongTimePattern; break;
+        case "d": formatText = formatInfo.ShortDatePattern; break;
+        case "D": formatText = formatInfo.LongDatePattern; break;
+        case "t": formatText = formatInfo.ShortTimePattern; break;
+        case "T": formatText = formatInfo.LongTimePattern; break;
+        case "f": formatText = formatInfo.LongDatePattern + " " + formatInfo.ShortTimePattern; break;
+        case "F": formatText = formatInfo.FullDateTimePattern; break;
+        case "g": formatText = formatInfo.ShortDatePattern + " " + formatInfo.ShortTimePattern; break;
+        case "G": formatText = formatInfo.ShortDatePattern + " " + formatInfo.LongTimePattern; break;
         case "M":
-        case "m": formatText = FormatInfo.MonthDayPattern; break;
+        case "m": formatText = formatInfo.MonthDayPattern; break;
         case "R":
-        case "r": formatText = FormatInfo.RFC1123Pattern; break;
-        case "s": formatText = FormatInfo.SortableDateTimePattern; break;
-        case "u": formatText = FormatInfo.UniversalSortableDateTimePattern; break;
-        case "U": formatText = FormatInfo.FullDateTimePattern; break;
+        case "r": formatText = formatInfo.RFC1123Pattern; break;
+        case "s": formatText = formatInfo.SortableDateTimePattern; break;
+        case "u": formatText = formatInfo.UniversalSortableDateTimePattern; break;
+        case "U": formatText = formatInfo.FullDateTimePattern; break;
         case "Y":
-        case "y": formatText = FormatInfo.YearMonthPattern; break;
+        case "y": formatText = formatInfo.YearMonthPattern; break;
       }
 
 
       XmlElement elStyle = elStyles.OwnerDocument.CreateElement(IsTimeOnlyFormat(formatText) ? "number:time-style" : "number:date-style", nmspcNumber);
       elStyles.AppendChild(elStyle);
       SetAttr(elStyle, "style:name", styleName, nmspcStyle);
-      SetAttr(elStyle, "number:language", Language, nmspcNumber);
+      SetAttr(elStyle, "number:language", language, nmspcNumber);
       SetAttr(elStyle, "number:country", Country, nmspcNumber);
-
-
 
       XmlElement elPart;
       string AllMaskChars = "yMdhms";
@@ -1221,10 +1216,10 @@ namespace FreeLibSet.Shell
         switch (formatText[pos])
         {
           case '/':
-            s = FormatInfo.DateSeparator;
+            s = formatInfo.DateSeparator;
             break;
           case ':':
-            s = FormatInfo.TimeSeparator;
+            s = formatInfo.TimeSeparator;
             break;
           default:
             s = new string(formatText[pos], 1);
@@ -1301,13 +1296,13 @@ namespace FreeLibSet.Shell
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="FormatText"></param>
+    /// <param name="formatText"></param>
     /// <returns></returns>
-    public static bool IsTimeOnlyFormat(string FormatText)
+    public static bool IsTimeOnlyFormat(string formatText)
     {
-      if (String.IsNullOrEmpty(FormatText))
+      if (String.IsNullOrEmpty(formatText))
         return false;
-      switch (FormatText)
+      switch (formatText)
       {
         case "d":
         case "D":
@@ -1330,7 +1325,7 @@ namespace FreeLibSet.Shell
           return true;
       }
 
-      return DataTools.IndexOfAny(FormatText, "dMy") < 0;
+      return DataTools.IndexOfAny(formatText, "dMy") < 0;
     }
 
     #endregion
@@ -1339,13 +1334,13 @@ namespace FreeLibSet.Shell
 
     private static void SetAttr(XmlElement el, string name, string value, string nmspc)
     {
-      XmlAttribute Attr;
+      XmlAttribute attr;
       if (String.IsNullOrEmpty(nmspc))
-        Attr = el.OwnerDocument.CreateAttribute(name);
+        attr = el.OwnerDocument.CreateAttribute(name);
       else
-        Attr = el.OwnerDocument.CreateAttribute(name, nmspc);
-      Attr.Value = value;
-      el.Attributes.Append(Attr);
+        attr = el.OwnerDocument.CreateAttribute(name, nmspc);
+      attr.Value = value;
+      el.Attributes.Append(attr);
     }
 
     #endregion

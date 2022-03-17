@@ -166,21 +166,21 @@ namespace FreeLibSet.Forms
         {
           #region Предотвращение вложенного вызова
 
-          bool Found = false;
+          bool found = false;
           for (int j = 0; j < _ExecutingHandlers.Count; j++)
           {
             if (Object.ReferenceEquals(_ExecutingHandlers[j], a[i]))
             {
-              Found = true;
+              found = true;
               break;
             }
           }
-          if (Found)
+          if (found)
             continue;
 
           #endregion
 
-          int LastCnt = _ExecutingHandlers.Count;
+          int lastCnt = _ExecutingHandlers.Count;
           _ExecutingHandlers.Add(a[i]);
           try
           {
@@ -198,13 +198,13 @@ namespace FreeLibSet.Forms
 
           // 07.05.2017
           // Обработчики могут удаляться не только в конце списка
-          if (_ExecutingHandlers.Count == (LastCnt + 1))
+          if (_ExecutingHandlers.Count == (lastCnt + 1))
           {
-            if (Object.ReferenceEquals(_ExecutingHandlers[LastCnt], a[i]))
+            if (Object.ReferenceEquals(_ExecutingHandlers[lastCnt], a[i]))
             {
               // Список ExecutingHandlers не поменялся.
               // Быстрое удаление
-              _ExecutingHandlers.RemoveAt(LastCnt);
+              _ExecutingHandlers.RemoveAt(lastCnt);
               continue;
             }
             // Список ExecutingHandlers поменялся.
@@ -433,7 +433,6 @@ namespace FreeLibSet.Forms
   {
     // Нельзя использовать SimpleDisposableObject в качестве базового класса
 
-
     #region Конструктор и Dispose
 
     internal EFPAppIdleHandlers()
@@ -617,21 +616,21 @@ namespace FreeLibSet.Forms
         {
           #region Предотвращение вложенного вызова
 
-          bool Found = false;
+          bool found = false;
           for (int j = 0; j < _ExecutingHandlers.Count; j++)
           {
             if (Object.ReferenceEquals(_ExecutingHandlers[j], a[i]))
             {
-              Found = true;
+              found = true;
               break;
             }
           }
-          if (Found)
+          if (found)
             continue;
 
           #endregion
 
-          int LastCnt = _ExecutingHandlers.Count;
+          int lastCnt = _ExecutingHandlers.Count;
           _ExecutingHandlers.Add(a[i]);
           try
           {
@@ -648,13 +647,13 @@ namespace FreeLibSet.Forms
           }
 
           // Обработчики могут удаляться не только в конце списка
-          if (_ExecutingHandlers.Count == (LastCnt + 1))
+          if (_ExecutingHandlers.Count == (lastCnt + 1))
           {
-            if (Object.ReferenceEquals(_ExecutingHandlers[LastCnt], a[i]))
+            if (Object.ReferenceEquals(_ExecutingHandlers[lastCnt], a[i]))
             {
               // Список ExecutingHandlers не поменялся.
               // Быстрое удаление
-              _ExecutingHandlers.RemoveAt(LastCnt);
+              _ExecutingHandlers.RemoveAt(lastCnt);
               continue;
             }
             // Список ExecutingHandlers поменялся.

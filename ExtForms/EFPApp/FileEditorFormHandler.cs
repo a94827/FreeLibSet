@@ -135,8 +135,8 @@ namespace FreeLibSet.Forms
       if (Save == null)
         throw new InvalidOperationException("Обработчик события Save не установлен");
 
-      AbsPath OldFileName = FileName;
-      AbsPath ThisFileName = FileName;
+      AbsPath oldFileName = FileName;
+      AbsPath thisFileName = FileName;
       if (saveAs || FileName.IsEmpty)
       {
         SaveFileDialog dlg = new SaveFileDialog();
@@ -147,22 +147,22 @@ namespace FreeLibSet.Forms
 
         if (dlg.ShowDialog() != DialogResult.OK)
           return;
-        ThisFileName = new AbsPath(dlg.FileName);
+        thisFileName = new AbsPath(dlg.FileName);
       }
 
       // Временно заменяем имя файла
       try
       {
-        _FileName = ThisFileName;
+        _FileName = thisFileName;
         Save(this, EventArgs.Empty);
       }
       finally
       {
-        _FileName = OldFileName;
+        _FileName = oldFileName;
       }
 
       // Устанавливаем новое имя файла после успешного сохранения
-      FileName = ThisFileName;
+      FileName = thisFileName;
       Modified = false;
     }
 

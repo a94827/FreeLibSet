@@ -107,7 +107,7 @@ namespace FreeLibSet.Forms
     /// <returns>Загруженное изображение или null</returns>
     public virtual Bitmap LoadSnapshot(EFPConfigSectionInfo configInfo)
     {
-      Bitmap Bmp = null;
+      Bitmap bmp = null;
       CfgPart cfg;
       using (EFPApp.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfg))
       {
@@ -119,7 +119,7 @@ namespace FreeLibSet.Forms
             byte[] b = Convert.FromBase64String(sSnapshot);
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream(b))
             {
-              Bmp = Image.FromStream(ms) as Bitmap;
+              bmp = Image.FromStream(ms) as Bitmap;
             }
           }
           catch //(Exception e)
@@ -127,7 +127,7 @@ namespace FreeLibSet.Forms
           }
         }
       }
-      return Bmp;
+      return bmp;
     }
 
     #endregion

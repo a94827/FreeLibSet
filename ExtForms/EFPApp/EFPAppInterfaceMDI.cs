@@ -34,7 +34,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public override string Name { get { return "MDI"; } }
 
-
     #endregion
 
     #region Главное окно
@@ -45,13 +44,13 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public override EFPAppMainWindowLayout ShowMainWindow()
     {
-      EFPAppMainWindowLayoutMDI Layout = new EFPAppMainWindowLayoutMDI(ObsoleteMode);
+      EFPAppMainWindowLayoutMDI layout = new EFPAppMainWindowLayoutMDI(ObsoleteMode);
 
-      base.AddMainWindow(Layout);
+      base.AddMainWindow(layout);
 
-      Layout.MainWindow.Show();
+      layout.MainWindow.Show();
 
-      return Layout;
+      return layout;
     }
 
     /// <summary>
@@ -134,10 +133,10 @@ namespace FreeLibSet.Forms
         return false;
       if (mdiLayout == MdiLayout.ArrangeIcons)
       {
-        Form[] Forms = CurrentMainWindowLayout.GetChildForms(false);
-        for (int i = 0; i < Forms.Length; i++)
+        Form[] forms = CurrentMainWindowLayout.GetChildForms(false);
+        for (int i = 0; i < forms.Length; i++)
         {
-          if (Forms[i].WindowState == FormWindowState.Minimized)
+          if (forms[i].WindowState == FormWindowState.Minimized)
             return true;
         }
         return false;
@@ -183,7 +182,6 @@ namespace FreeLibSet.Forms
 
     private FormStartPositionCascadeHelper _CascadeHelper;
 
-
     internal new void PrepareChildForm(Form form)
     {
       form.MdiParent = MainWindow;
@@ -212,18 +210,18 @@ namespace FreeLibSet.Forms
       Size sis = SystemInformation.SmallIconSize;
       if (form.Icon.Width > sis.Width || form.Icon.Height > sis.Height)
       {
-        Icon NewIcon = new Icon(form.Icon, sis);
+        Icon newIcon = new Icon(form.Icon, sis);
 
-        if (NewIcon.Size.Width != sis.Width || NewIcon.Size.Height != sis.Height)
+        if (newIcon.Size.Width != sis.Width || newIcon.Size.Height != sis.Height)
         {
-          Bitmap bmp = NewIcon.ToBitmap();
-          NewIcon.Dispose();
+          Bitmap bmp = newIcon.ToBitmap();
+          newIcon.Dispose();
           Bitmap bmp2 = new Bitmap(bmp, sis); // масщтабирование
           bmp.Dispose();
-          NewIcon = Icon.FromHandle(bmp2.GetHicon());
+          newIcon = Icon.FromHandle(bmp2.GetHicon());
           bmp2.Dispose();
         }
-        form.Icon = NewIcon;
+        form.Icon = newIcon;
         //NewIcon.Dispose();
       }
 
@@ -259,23 +257,23 @@ namespace FreeLibSet.Forms
        * https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=106264
        */
 
-      bool SetMaximized = false;
-      bool CanMaximize = form.FormBorderStyle == FormBorderStyle.Sizable && form.MaximizeBox;
+      bool setMaximized = false;
+      bool canMaximize = form.FormBorderStyle == FormBorderStyle.Sizable && form.MaximizeBox;
 
       // Проверка на form.WindowState может быть только в ShowChildForm(), но не в PrepareChildForm().
       // Пользовательские настройки считываются между этими двумя вызовами.
-      if (CanMaximize && form.WindowState == FormWindowState.Maximized)
+      if (canMaximize && form.WindowState == FormWindowState.Maximized)
         // Наше окно будет развернуто
-        SetMaximized = true;
+        setMaximized = true;
 
       if (MainWindow.ActiveMdiChild != null)
       {
         if (MainWindow.ActiveMdiChild.WindowState == FormWindowState.Maximized)
         {
-          if (CanMaximize)
+          if (canMaximize)
             // Предыдущее дочернее окно будет развернуто, следовательно, наше окно
             // (если это не запрещено) тоже станет развернутым
-            SetMaximized = true;
+            setMaximized = true;
           else
             // Следует запретить автоматическую разветку нашего окна
             // Для этого нужно отменить развертку предыдущего окна
@@ -283,7 +281,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      if (SetMaximized)
+      if (setMaximized)
       {
         // 25.08.2008
         // Если просто устанавливать стиль рамки, то все работает для окон, созданных
@@ -306,12 +304,12 @@ namespace FreeLibSet.Forms
 
       // 09.06.2021 Перенесено вниз, после вызова Form.Show()
       // 14.06.2021 Перенесено обратно, до показа формы, чтобы окно не прыгало
-      Rectangle Area = WinFormsTools.GetMdiContainerArea(MainWindow); // доступная область. Левый верхний угол имеет координаты (0,0)
-      _CascadeHelper.SetStartPosition(form, Area);
+      Rectangle area = WinFormsTools.GetMdiContainerArea(MainWindow); // доступная область. Левый верхний угол имеет координаты (0,0)
+      _CascadeHelper.SetStartPosition(form, area);
 
       form.Show();
 
-      if (SetMaximized)
+      if (setMaximized)
         form.FormBorderStyle = FormBorderStyle.Sizable; // восстанавливаем рамку обратно после вызова Show()
     }
 
@@ -325,7 +323,6 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
-
 
     /// <summary>
     /// Рисование главного окна для изображения предварительного просмотра.
@@ -349,14 +346,14 @@ namespace FreeLibSet.Forms
       ClearWorkspaceArea(bitmap, area);
 
       // Рисуем повторно дочерние окна
-      Form[] Forms = GetChildForms(true);
-      for (int i = Forms.Length - 1; i >= 0; i--)
+      Form[] forms = GetChildForms(true);
+      for (int i = forms.Length - 1; i >= 0; i--)
       {
-        if (EFPApp.FormWantsSaveComposition(Forms[i]))
+        if (EFPApp.FormWantsSaveComposition(forms[i]))
         {
-          Rectangle rc2 = Forms[i].RectangleToScreen(area);
+          Rectangle rc2 = forms[i].RectangleToScreen(area);
           Rectangle rc3 = MainWindow.RectangleToClient(rc2);
-          Forms[i].DrawToBitmap(bitmap, rc3);
+          forms[i].DrawToBitmap(bitmap, rc3);
         }
       }
     }
@@ -378,6 +375,5 @@ namespace FreeLibSet.Forms
         g.FillRectangle(SystemBrushes.AppWorkspace, rc3);
       }
     }
-
   }
 }

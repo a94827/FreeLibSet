@@ -166,7 +166,7 @@ namespace FreeLibSet.Forms
 
     public static void SaveFile(EFPDataGridView controlProvider, string fileName, EFPDataGridViewExpExcelSettings settings)
     {
-      XmlDocument XmlDoc = CreateXml(controlProvider, settings);
+      XmlDocument xmlDoc = CreateXml(controlProvider, settings);
       //XmlDoc.Save(FileName);
 
       XmlWriterSettings XmlSettings = new XmlWriterSettings();
@@ -178,7 +178,7 @@ namespace FreeLibSet.Forms
       XmlWriter wrt = XmlWriter.Create(fileName, XmlSettings);
       try
       {
-        XmlDoc.WriteTo(wrt);
+        xmlDoc.WriteTo(wrt);
       }
       finally
       {
@@ -214,69 +214,69 @@ namespace FreeLibSet.Forms
     public static XmlDocument CreateXml(EFPDataGridView controlProvider, EFPDataGridViewExpExcelSettings settings)
     {
       // 1. Собираем массив печатаемых столбцов и строк
-      EFPDataGridViewRectArea Area = controlProvider.GetRectArea(settings.RangeMode);
+      EFPDataGridViewRectArea area = controlProvider.GetRectArea(settings.RangeMode);
 
-      XmlDocument XmlDoc = new XmlDocument();
+      XmlDocument xmlDoc = new XmlDocument();
 
-      XmlDeclaration xmldecl = XmlDoc.CreateXmlDeclaration("1.0", settings.DebugXml ? "Windows-1251" : "UTF-8", "yes");
-      XmlDoc.InsertBefore(xmldecl, XmlDoc.DocumentElement);
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", settings.DebugXml ? "Windows-1251" : "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
-      XmlProcessingInstruction XmlPI = XmlDoc.CreateProcessingInstruction("mso-application", "progid=\"Excel.Sheet\"");
-      XmlDoc.AppendChild(XmlPI);
+      XmlProcessingInstruction xmlPI = xmlDoc.CreateProcessingInstruction("mso-application", "progid=\"Excel.Sheet\"");
+      xmlDoc.AppendChild(xmlPI);
 
 
       XmlAttribute attr;
-      XmlElement elWholeDoc = XmlDoc.CreateElement("Workbook", nmspcSS);
-      XmlDoc.AppendChild(elWholeDoc);
-      attr = XmlDoc.CreateAttribute("xmlns");  // без namespace
+      XmlElement elWholeDoc = xmlDoc.CreateElement("Workbook", nmspcSS);
+      xmlDoc.AppendChild(elWholeDoc);
+      attr = xmlDoc.CreateAttribute("xmlns");  // без namespace
       attr.Value = nmspcSS;
       elWholeDoc.Attributes.Append(attr);
-      attr = XmlDoc.CreateAttribute("xmlns:o");
+      attr = xmlDoc.CreateAttribute("xmlns:o");
       attr.Value = nmspcO;
       elWholeDoc.Attributes.Append(attr);
-      attr = XmlDoc.CreateAttribute("xmlns:x");
+      attr = xmlDoc.CreateAttribute("xmlns:x");
       attr.Value = nmspcX;
       elWholeDoc.Attributes.Append(attr);
-      attr = XmlDoc.CreateAttribute("xmlns:ss");
+      attr = xmlDoc.CreateAttribute("xmlns:ss");
       attr.Value = nmspcSS;
       elWholeDoc.Attributes.Append(attr);
 
       // Сводка
-      XmlElement elDocumentProperties = XmlDoc.CreateElement("DocumentProperties", nmspcO);
+      XmlElement elDocumentProperties = xmlDoc.CreateElement("DocumentProperties", nmspcO);
       elWholeDoc.AppendChild(elDocumentProperties);
 
-      EFPDocumentProperties Props = controlProvider.DocumentProperties;
+      EFPDocumentProperties docProps = controlProvider.DocumentProperties;
 
-      if (!String.IsNullOrEmpty(Props.Title))
+      if (!String.IsNullOrEmpty(docProps.Title))
       {
-        XmlElement elTitle = XmlDoc.CreateElement("Title", nmspcO);
+        XmlElement elTitle = xmlDoc.CreateElement("Title", nmspcO);
         elDocumentProperties.AppendChild(elTitle);
-        elTitle.AppendChild(XmlDoc.CreateTextNode(Props.Title));
+        elTitle.AppendChild(xmlDoc.CreateTextNode(docProps.Title));
       }
-      if (!String.IsNullOrEmpty(Props.Subject))
+      if (!String.IsNullOrEmpty(docProps.Subject))
       {
-        XmlElement elSubject = XmlDoc.CreateElement("Subject", nmspcO);
+        XmlElement elSubject = xmlDoc.CreateElement("Subject", nmspcO);
         elDocumentProperties.AppendChild(elSubject);
-        elSubject.AppendChild(XmlDoc.CreateTextNode(Props.Subject));
+        elSubject.AppendChild(xmlDoc.CreateTextNode(docProps.Subject));
       }
-      if (!String.IsNullOrEmpty(Props.Author))
+      if (!String.IsNullOrEmpty(docProps.Author))
       {
-        XmlElement elAuthor = XmlDoc.CreateElement("Author", nmspcO);
+        XmlElement elAuthor = xmlDoc.CreateElement("Author", nmspcO);
         elDocumentProperties.AppendChild(elAuthor);
-        elAuthor.AppendChild(XmlDoc.CreateTextNode(Props.Author));
+        elAuthor.AppendChild(xmlDoc.CreateTextNode(docProps.Author));
       }
-      if (!String.IsNullOrEmpty(Props.Company))
+      if (!String.IsNullOrEmpty(docProps.Company))
       {
-        XmlElement elCompany = XmlDoc.CreateElement("Company", nmspcO);
+        XmlElement elCompany = xmlDoc.CreateElement("Company", nmspcO);
         elDocumentProperties.AppendChild(elCompany);
-        elCompany.AppendChild(XmlDoc.CreateTextNode(Props.Company));
+        elCompany.AppendChild(xmlDoc.CreateTextNode(docProps.Company));
       }
 
       // Таблица стилей нужна обязательно. 
       // Первый стиль "ColHdr" используется для заголовков,
       // Остальные стили добавляются в таблицу по мере необходимости, чтобы
       // не делать для каждой ячейки отдельный стили
-      XmlElement elStyles = XmlDoc.CreateElement("Styles", nmspcSS);
+      XmlElement elStyles = xmlDoc.CreateElement("Styles", nmspcSS);
       elWholeDoc.AppendChild(elStyles);
       // М.б. нужен стиль "Default"?
 
@@ -285,27 +285,27 @@ namespace FreeLibSet.Forms
       // Атрибуты заголовков столбцов
       if (settings.ShowColumnHeaders)
       {
-        XmlElement elStyleHead = XmlDoc.CreateElement("Style", nmspcSS);
-        attr = XmlDoc.CreateAttribute("ss:ID", nmspcSS);
+        XmlElement elStyleHead = xmlDoc.CreateElement("Style", nmspcSS);
+        attr = xmlDoc.CreateAttribute("ss:ID", nmspcSS);
         attr.Value = "ColHdr";
         elStyleHead.Attributes.Append(attr);
         elStyles.AppendChild(elStyleHead);
 
-        elAlign = XmlDoc.CreateElement("Alignment", nmspcSS);
+        elAlign = xmlDoc.CreateElement("Alignment", nmspcSS);
         elStyleHead.AppendChild(elAlign);
-        attr = XmlDoc.CreateAttribute("ss:Horizontal", nmspcSS);
+        attr = xmlDoc.CreateAttribute("ss:Horizontal", nmspcSS);
         attr.Value = "Center";
         elAlign.Attributes.Append(attr);
-        attr = XmlDoc.CreateAttribute("ss:Vertical", nmspcSS);
+        attr = xmlDoc.CreateAttribute("ss:Vertical", nmspcSS);
         attr.Value = "Center";
         elAlign.Attributes.Append(attr);
-        attr = XmlDoc.CreateAttribute("ss:WrapText", nmspcSS);
+        attr = xmlDoc.CreateAttribute("ss:WrapText", nmspcSS);
         attr.Value = "1";
         elAlign.Attributes.Append(attr);
 
         if (settings.UseBorders)
         {
-          XmlElement elBorders = XmlDoc.CreateElement("Borders", nmspcSS);
+          XmlElement elBorders = xmlDoc.CreateElement("Borders", nmspcSS);
           elStyleHead.AppendChild(elBorders);
 
           AddBorder(elBorders, "Bottom", EFPDataGridViewBorderStyle.Thin);
@@ -314,31 +314,31 @@ namespace FreeLibSet.Forms
           AddBorder(elBorders, "Top", EFPDataGridViewBorderStyle.Thin);
         }
 
-        elFont = XmlDoc.CreateElement("Font", nmspcSS);
+        elFont = xmlDoc.CreateElement("Font", nmspcSS);
         elStyleHead.AppendChild(elFont);
-        attr = XmlDoc.CreateAttribute("ss:Bold", nmspcSS);
+        attr = xmlDoc.CreateAttribute("ss:Bold", nmspcSS);
         attr.Value = "1";
         elFont.Attributes.Append(attr);
       }
 
 
       // Один лист в книге
-      XmlElement elWorksheet = XmlDoc.CreateElement("Worksheet", nmspcSS);
+      XmlElement elWorksheet = xmlDoc.CreateElement("Worksheet", nmspcSS);
       elWholeDoc.AppendChild(elWorksheet);
-      attr = XmlDoc.CreateAttribute("ss:Name", nmspcSS);
+      attr = xmlDoc.CreateAttribute("ss:Name", nmspcSS);
       attr.Value = "Таблица";
       elWorksheet.Attributes.Append(attr);
 
       // На листе одна таблица
-      XmlElement elTable = XmlDoc.CreateElement("Table", nmspcSS);
+      XmlElement elTable = xmlDoc.CreateElement("Table", nmspcSS);
       elWorksheet.AppendChild(elTable);
 
       // Размеры столбцов
-      for (int j = 0; j < Area.ColumnCount; j++)
+      for (int j = 0; j < area.ColumnCount; j++)
       {
-        XmlElement elColumn = XmlDoc.CreateElement("Column", nmspcSS);
-        attr = XmlDoc.CreateAttribute("ss:Width", nmspcSS);
-        EFPDataGridViewColumn Col = controlProvider.Columns[Area.ColumnIndices[j]];
+        XmlElement elColumn = xmlDoc.CreateElement("Column", nmspcSS);
+        attr = xmlDoc.CreateAttribute("ss:Width", nmspcSS);
+        EFPDataGridViewColumn Col = controlProvider.Columns[area.ColumnIndices[j]];
         attr.Value = Col.WidthPt.ToString(); // в пунктах
         elColumn.Attributes.Append(attr);
         elTable.AppendChild(elColumn);
@@ -347,43 +347,43 @@ namespace FreeLibSet.Forms
       // Заголовки столбцов
       if (settings.ShowColumnHeaders)
       {
-        EFPDataGridViewColumnHeaderArray HeaderArray = controlProvider.GetColumnHeaderArray(Area);
+        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
-        for (int i = 0; i < HeaderArray.RowCount; i++)
+        for (int i = 0; i < headerArray.RowCount; i++)
         {
-          XmlElement elHeadRow = XmlDoc.CreateElement("Row", nmspcSS);
+          XmlElement elHeadRow = xmlDoc.CreateElement("Row", nmspcSS);
           elTable.AppendChild(elHeadRow);
-          for (int j = 0; j < HeaderArray.ColumnCount; j++)
+          for (int j = 0; j < headerArray.ColumnCount; j++)
           {
-            if (HeaderArray.RowSpan[i, j] == 0)
+            if (headerArray.RowSpan[i, j] == 0)
               continue; // не первая строка объединения
 
-            XmlElement elCell = XmlDoc.CreateElement("Cell", nmspcSS);
+            XmlElement elCell = xmlDoc.CreateElement("Cell", nmspcSS);
             elHeadRow.AppendChild(elCell);
 
-            attr = XmlDoc.CreateAttribute("ss:StyleID", nmspcSS);
+            attr = xmlDoc.CreateAttribute("ss:StyleID", nmspcSS);
             attr.Value = "ColHdr";
             elCell.Attributes.Append(attr);
 
-            attr = XmlDoc.CreateAttribute("ss:Index", nmspcSS);
+            attr = xmlDoc.CreateAttribute("ss:Index", nmspcSS);
             attr.Value = (j + 1).ToString();
             elCell.Attributes.Append(attr);
 
-            if (HeaderArray.RowSpan[i, j] > 1)
+            if (headerArray.RowSpan[i, j] > 1)
             {
-              attr = XmlDoc.CreateAttribute("ss:MergeDown", nmspcSS);
-              attr.Value = (HeaderArray.RowSpan[i, j] - 1).ToString();
+              attr = xmlDoc.CreateAttribute("ss:MergeDown", nmspcSS);
+              attr.Value = (headerArray.RowSpan[i, j] - 1).ToString();
               elCell.Attributes.Append(attr);
             }
 
-            if (HeaderArray.ColumnSpan[i, j] > 1)
+            if (headerArray.ColumnSpan[i, j] > 1)
             {
-              attr = XmlDoc.CreateAttribute("ss:MergeAcross", nmspcSS);
-              attr.Value = (HeaderArray.ColumnSpan[i, j] - 1).ToString();
+              attr = xmlDoc.CreateAttribute("ss:MergeAcross", nmspcSS);
+              attr.Value = (headerArray.ColumnSpan[i, j] - 1).ToString();
               elCell.Attributes.Append(attr);
             }
 
-            string s = HeaderArray.Text[i, j];
+            string s = headerArray.Text[i, j];
             if (!String.IsNullOrEmpty(s))
             {
               s = s.Replace("\r\n", "\n"); // только символ 0x0A
@@ -391,11 +391,11 @@ namespace FreeLibSet.Forms
               // неразрывный пробел так и остается
               s = DataTools.ReplaceAny(s, BadValueChars, ' '); // непечатные символы
 
-              XmlElement elData = XmlDoc.CreateElement("Data", nmspcSS);
+              XmlElement elData = xmlDoc.CreateElement("Data", nmspcSS);
               elCell.AppendChild(elData);
               elData.InnerText = s;
 
-              attr = XmlDoc.CreateAttribute("ss:Type", nmspcSS);
+              attr = xmlDoc.CreateAttribute("ss:Type", nmspcSS);
               attr.Value = "String";
               elData.Attributes.Append(attr);
             }
@@ -406,71 +406,71 @@ namespace FreeLibSet.Forms
       StringBuilder sb = new StringBuilder();
 
       // Сюда запоминаем существующие стили ячеек
-      List<string> CellStyleKeys = new List<string>();
+      List<string> cellStyleKeys = new List<string>();
 
       // Хранилище для границ ячеек
-      EFPDataGridViewBorderStyle[,] BorderStyles = null;
+      EFPDataGridViewBorderStyle[,] borderStyles = null;
       if (settings.UseBorders)
-        BorderStyles = new EFPDataGridViewBorderStyle[Area.ColumnCount, 6];
+        borderStyles = new EFPDataGridViewBorderStyle[area.ColumnCount, 6];
 
       // Перебираем строки таблицы
-      for (int i = 0; i < Area.RowCount; i++)
+      for (int i = 0; i < area.RowCount; i++)
       {
         // Границы надо запрашивать отдельно, в режиме печати
         if (settings.UseBorders)
         {
-          controlProvider.DoGetRowAttributes(Area.RowIndices[i], EFPDataGridViewAttributesReason.Print);
-          for (int j = 0; j < Area.ColumnCount; j++)
+          controlProvider.DoGetRowAttributes(area.RowIndices[i], EFPDataGridViewAttributesReason.Print);
+          for (int j = 0; j < area.ColumnCount; j++)
           {
-            int ColumnIndex = Area.ColumnIndices[j];
+            int ColumnIndex = area.ColumnIndices[j];
             EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(ColumnIndex);
-            BorderStyles[j, 0] = CellArgs.BottomBorder;
-            BorderStyles[j, 1] = CellArgs.LeftBorder;
-            BorderStyles[j, 2] = CellArgs.RightBorder;
-            BorderStyles[j, 3] = CellArgs.TopBorder;
+            borderStyles[j, 0] = CellArgs.BottomBorder;
+            borderStyles[j, 1] = CellArgs.LeftBorder;
+            borderStyles[j, 2] = CellArgs.RightBorder;
+            borderStyles[j, 3] = CellArgs.TopBorder;
             if (CellArgs.DiagonalUpBorder == EFPDataGridViewBorderStyle.Default)
-              BorderStyles[j, 4] = EFPDataGridViewBorderStyle.None;
+              borderStyles[j, 4] = EFPDataGridViewBorderStyle.None;
             else
-              BorderStyles[j, 4] = CellArgs.DiagonalUpBorder;
+              borderStyles[j, 4] = CellArgs.DiagonalUpBorder;
             if (CellArgs.DiagonalDownBorder == EFPDataGridViewBorderStyle.Default)
-              BorderStyles[j, 5] = EFPDataGridViewBorderStyle.None;
+              borderStyles[j, 5] = EFPDataGridViewBorderStyle.None;
             else
-              BorderStyles[j, 5] = CellArgs.DiagonalDownBorder;
+              borderStyles[j, 5] = CellArgs.DiagonalDownBorder;
           }
         }
 
-        controlProvider.DoGetRowAttributes(Area.RowIndices[i], EFPDataGridViewAttributesReason.View);
+        controlProvider.DoGetRowAttributes(area.RowIndices[i], EFPDataGridViewAttributesReason.View);
 
-        XmlElement elRow = XmlDoc.CreateElement("Row", nmspcSS);
+        XmlElement elRow = xmlDoc.CreateElement("Row", nmspcSS);
         elTable.AppendChild(elRow);
 
-        for (int j = 0; j < Area.ColumnCount; j++)
+        for (int j = 0; j < area.ColumnCount; j++)
         {
-          int ColumnIndex = Area.ColumnIndices[j];
+          int ColumnIndex = area.ColumnIndices[j];
           EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(ColumnIndex);
           EFPDataGridViewExcelCellAttributes ExcelAttr = EFPDataGridView.GetExcelCellAttr(CellArgs);
 
-          XmlElement elCell = XmlDoc.CreateElement("Cell", nmspcSS);
+          XmlElement elCell = xmlDoc.CreateElement("Cell", nmspcSS);
           elRow.AppendChild(elCell);
 
 
-          string ValueText, TypeText, FormatText;
-          GetCellValue(CellArgs, out ValueText, out TypeText, out FormatText, settings);
+          string valueText, typeText, formatText;
+          GetCellValue(CellArgs, out valueText, out typeText, out formatText, settings);
 
-          bool WordWrap = CellArgs.CellStyle.WrapMode == DataGridViewTriState.True;
+          bool wordWrap = CellArgs.CellStyle.WrapMode == DataGridViewTriState.True;
           if (CellArgs.Column.GridColumn is DataGridViewTextBoxColumn)
           {
-            Type ValueType = ((DataGridViewTextBoxColumn)(CellArgs.Column.GridColumn)).ValueType;
-            if (ValueType == typeof(string) || ValueType == null)
-              WordWrap = true;
+            Type valueType = ((DataGridViewTextBoxColumn)(CellArgs.Column.GridColumn)).ValueType;
+            if (valueType == typeof(string) || valueType == null)
+              wordWrap = true;
           }
 
           sb.Length = 0;
-          sb.Append(FormatText);
+          sb.Append(formatText);
           sb.Append("|");
           sb.Append(CellArgs.CellStyle.Alignment.ToString());
           sb.Append("|");
-          sb.Append(WordWrap.ToString());
+          sb.Append(wordWrap.ToString());
           sb.Append("|");
           sb.Append(CellArgs.IndentLevel.ToString());
           sb.Append("|");
@@ -489,22 +489,22 @@ namespace FreeLibSet.Forms
           }
           if (settings.UseBorders)
           {
-            for (int k = 0; k < BorderStyles.GetLength(1); k++)
+            for (int k = 0; k < borderStyles.GetLength(1); k++)
             {
-              sb.Append(BorderStyles[j, k]);
+              sb.Append(borderStyles[j, k]);
               sb.Append("|");
             }
           }
-          int StyleKeyIndex = CellStyleKeys.IndexOf(sb.ToString());
-          if (StyleKeyIndex < 0)
+          int styleKeyIndex = cellStyleKeys.IndexOf(sb.ToString());
+          if (styleKeyIndex < 0)
           {
             // Требуется добавить стиль
-            CellStyleKeys.Add(sb.ToString());
-            StyleKeyIndex = CellStyleKeys.Count - 1;
+            cellStyleKeys.Add(sb.ToString());
+            styleKeyIndex = cellStyleKeys.Count - 1;
 
-            XmlElement elStyle = XmlDoc.CreateElement("Style", nmspcSS);
-            attr = XmlDoc.CreateAttribute("ss:ID", nmspcSS);
-            attr.Value = "s" + (StyleKeyIndex + 100).ToString();
+            XmlElement elStyle = xmlDoc.CreateElement("Style", nmspcSS);
+            attr = xmlDoc.CreateAttribute("ss:ID", nmspcSS);
+            attr.Value = "s" + (styleKeyIndex + 100).ToString();
             elStyle.Attributes.Append(attr);
             elStyles.AppendChild(elStyle);
 
@@ -523,110 +523,110 @@ namespace FreeLibSet.Forms
               default: throw new BugException("Неизвестное выравнивание");
             }
 
-            elAlign = XmlDoc.CreateElement("Alignment", nmspcSS);
+            elAlign = xmlDoc.CreateElement("Alignment", nmspcSS);
             elStyle.AppendChild(elAlign);
-            attr = XmlDoc.CreateAttribute("ss:Horizontal", nmspcSS);
+            attr = xmlDoc.CreateAttribute("ss:Horizontal", nmspcSS);
             attr.Value = ha;
             elAlign.Attributes.Append(attr);
-            attr = XmlDoc.CreateAttribute("ss:Vertical", nmspcSS);
+            attr = xmlDoc.CreateAttribute("ss:Vertical", nmspcSS);
             attr.Value = va;
             elAlign.Attributes.Append(attr);
-            if (WordWrap)
+            if (wordWrap)
             {
-              attr = XmlDoc.CreateAttribute("ss:WrapText", nmspcSS);
+              attr = xmlDoc.CreateAttribute("ss:WrapText", nmspcSS);
               attr.Value = "1";
               elAlign.Attributes.Append(attr);
             }
             if (CellArgs.IndentLevel > 0)
             {
-              attr = XmlDoc.CreateAttribute("ss:Indent", nmspcSS);
+              attr = xmlDoc.CreateAttribute("ss:Indent", nmspcSS);
               attr.Value = CellArgs.IndentLevel.ToString();
               elAlign.Attributes.Append(attr);
             }
 
             if (settings.UseBorders)
             {
-              XmlElement elBorders = XmlDoc.CreateElement("Borders", nmspcSS);
+              XmlElement elBorders = xmlDoc.CreateElement("Borders", nmspcSS);
               elStyle.AppendChild(elBorders);
 
-              AddBorder(elBorders, "Bottom", BorderStyles[j, 0]);
-              AddBorder(elBorders, "Left", BorderStyles[j, 1]);
-              AddBorder(elBorders, "Right", BorderStyles[j, 2]);
-              AddBorder(elBorders, "Top", BorderStyles[j, 3]);
-              AddBorder(elBorders, "DiagonalRight", BorderStyles[j, 4]);
-              AddBorder(elBorders, "DiagonalLeft", BorderStyles[j, 5]);
+              AddBorder(elBorders, "Bottom", borderStyles[j, 0]);
+              AddBorder(elBorders, "Left", borderStyles[j, 1]);
+              AddBorder(elBorders, "Right", borderStyles[j, 2]);
+              AddBorder(elBorders, "Top", borderStyles[j, 3]);
+              AddBorder(elBorders, "DiagonalRight", borderStyles[j, 4]);
+              AddBorder(elBorders, "DiagonalLeft", borderStyles[j, 5]);
             }
 
             if (settings.UseInterior)
             {
-              elFont = XmlDoc.CreateElement("Font", nmspcSS);
+              elFont = xmlDoc.CreateElement("Font", nmspcSS);
               elStyle.AppendChild(elFont);
 
               if (ExcelAttr.Bold)
               {
-                attr = XmlDoc.CreateAttribute("ss:Bold", nmspcSS);
+                attr = xmlDoc.CreateAttribute("ss:Bold", nmspcSS);
                 attr.Value = "1";
                 elFont.Attributes.Append(attr);
               }
               if (!ExcelAttr.ForeColor.IsEmpty)
               {
-                attr = XmlDoc.CreateAttribute("ss:Color", nmspcSS);
+                attr = xmlDoc.CreateAttribute("ss:Color", nmspcSS);
                 attr.Value = MyColorStr(ExcelAttr.ForeColor);
                 elFont.Attributes.Append(attr);
               }
               if (ExcelAttr.Italic)
               {
-                attr = XmlDoc.CreateAttribute("ss:Italic", nmspcSS);
+                attr = xmlDoc.CreateAttribute("ss:Italic", nmspcSS);
                 attr.Value = "1";
                 elFont.Attributes.Append(attr);
               }
               if (ExcelAttr.Underline)
               {
-                attr = XmlDoc.CreateAttribute("ss:Underline", nmspcSS);
+                attr = xmlDoc.CreateAttribute("ss:Underline", nmspcSS);
                 attr.Value = "Single";
                 elFont.Attributes.Append(attr);
               }
 
               if (!ExcelAttr.BackColor.IsEmpty)
               {
-                XmlElement elInterior = XmlDoc.CreateElement("Interior", nmspcSS);
+                XmlElement elInterior = xmlDoc.CreateElement("Interior", nmspcSS);
                 elStyle.AppendChild(elInterior);
-                attr = XmlDoc.CreateAttribute("ss:Color", nmspcSS);
+                attr = xmlDoc.CreateAttribute("ss:Color", nmspcSS);
                 attr.Value = MyColorStr(ExcelAttr.BackColor);
                 elInterior.Attributes.Append(attr);
-                attr = XmlDoc.CreateAttribute("ss:Pattern", nmspcSS);
+                attr = xmlDoc.CreateAttribute("ss:Pattern", nmspcSS);
                 attr.Value = "Solid";
                 elInterior.Attributes.Append(attr);
               }
             } // UseFill
 
-            if (!String.IsNullOrEmpty(FormatText))
+            if (!String.IsNullOrEmpty(formatText))
             {
-              XmlElement elNumberFormat = XmlDoc.CreateElement("NumberFormat", nmspcSS);
+              XmlElement elNumberFormat = xmlDoc.CreateElement("NumberFormat", nmspcSS);
               elStyle.AppendChild(elNumberFormat);
-              attr = XmlDoc.CreateAttribute("ss:Format", nmspcSS);
-              attr.Value = FormatText;
+              attr = xmlDoc.CreateAttribute("ss:Format", nmspcSS);
+              attr.Value = formatText;
               elNumberFormat.Attributes.Append(attr);
             }
           }
 
-          attr = XmlDoc.CreateAttribute("ss:StyleID", nmspcSS);
-          attr.Value = "s" + (StyleKeyIndex + 100).ToString();
+          attr = xmlDoc.CreateAttribute("ss:StyleID", nmspcSS);
+          attr.Value = "s" + (styleKeyIndex + 100).ToString();
           elCell.Attributes.Append(attr);
 
-          if (TypeText != null)
+          if (typeText != null)
           {
-            XmlElement elData = XmlDoc.CreateElement("Data", nmspcSS);
+            XmlElement elData = xmlDoc.CreateElement("Data", nmspcSS);
             elCell.AppendChild(elData);
-            elData.InnerText = ValueText;
+            elData.InnerText = valueText;
 
-            attr = XmlDoc.CreateAttribute("ss:Type", nmspcSS);
-            attr.Value = TypeText;
+            attr = xmlDoc.CreateAttribute("ss:Type", nmspcSS);
+            attr.Value = typeText;
             elData.Attributes.Append(attr);
           }
         }
       }
-      return XmlDoc;
+      return xmlDoc;
     }
 
     private static void AddBorder(XmlElement elBorders, string pos, EFPDataGridViewBorderStyle borderStyle)
@@ -774,24 +774,24 @@ namespace FreeLibSet.Forms
       #region Начало
 
       //SharpZipLibLoader.LoadSharpZipLib();
-      ZipFileCreator ZF = new ZipFileCreator(fileName);
+      ZipFileCreator zf = new ZipFileCreator(fileName);
 
       #endregion
 
       #region Заголовок ([Content_Types].xml)
 
-      XmlDocument XmlDocCT = CreateContentTypes();
-      ZF.AddXmlFile("[Content_Types].xml", XmlDocCT);
+      XmlDocument xmlDocCT = CreateContentTypes();
+      zf.AddXmlFile("[Content_Types].xml", xmlDocCT);
 
       #endregion
 
       #region Связи (_rels/.rels)
 
-      XmlDocument XmlDocRels1 = CreateRels1();
-      ZF.AddXmlFile("_rels/.rels", XmlDocRels1);
+      XmlDocument xmlDocRels1 = CreateRels1();
+      zf.AddXmlFile("_rels/.rels", xmlDocRels1);
 
-      XmlDocument XmlDocRels2 = CreateRels2();
-      ZF.AddXmlFile("xl/_rels/workbook.xml.rels", XmlDocRels2);
+      XmlDocument xmlDocRels2 = CreateRels2();
+      zf.AddXmlFile("xl/_rels/workbook.xml.rels", xmlDocRels2);
 
       #endregion
 
@@ -812,34 +812,34 @@ namespace FreeLibSet.Forms
 
       #region Workbook
 
-      XmlDocument XmlDocWorkbook = CreateWorkbook();
-      ZF.AddXmlFile("xl/workbook.xml", XmlDocWorkbook);
+      XmlDocument xmlDocWorkbook = CreateWorkbook();
+      zf.AddXmlFile("xl/workbook.xml", xmlDocWorkbook);
 
       #endregion
 
       #region Worksheet
 
-      List<string> SharedStrings;
-      int SharedStringCount;
-      StyleTable Styles = new StyleTable(controlProvider, settings);
-      XmlDocument XmlDocSheet = CreateSheet(controlProvider, settings, out SharedStrings, out SharedStringCount, Styles);
-      ZF.AddXmlFile("xl/worksheets/sheet1.xml", XmlDocSheet);
+      List<string> sharedStrings;
+      int sharedStringCount;
+      StyleTable styles = new StyleTable(controlProvider, settings);
+      XmlDocument xmlDocSheet = CreateSheet(controlProvider, settings, out sharedStrings, out sharedStringCount, styles);
+      zf.AddXmlFile("xl/worksheets/sheet1.xml", xmlDocSheet);
 
-      XmlDocument XmlDocStyles = Styles.FinishDoc();
-      ZF.AddXmlFile("xl/styles.xml", XmlDocStyles);
+      XmlDocument xmlDocStyles = styles.FinishDoc();
+      zf.AddXmlFile("xl/styles.xml", xmlDocStyles);
 
       #endregion
 
       #region Список строк
 
-      XmlDocument XmlDocSharedStrings = CreateSharedStrings(SharedStrings, SharedStringCount);
-      ZF.AddXmlFile("xl/sharedStrings.xml", XmlDocSharedStrings);
+      XmlDocument xmlDocSharedStrings = CreateSharedStrings(sharedStrings, sharedStringCount);
+      zf.AddXmlFile("xl/sharedStrings.xml", xmlDocSharedStrings);
 
       #endregion
 
       #region Конец
 
-      ZF.Close();
+      zf.Close();
 
       #endregion
     }
@@ -852,45 +852,45 @@ namespace FreeLibSet.Forms
 
     private static XmlDocument CreateContentTypes()
     {
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmldecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-      XmlDoc.InsertBefore(xmldecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("Types", nmspcContentTypes);
+      XmlElement elRoot = xmlDoc.CreateElement("Types", nmspcContentTypes);
       SetAttr(elRoot, "xmlns", nmspcContentTypes, String.Empty);
-      XmlDoc.AppendChild(elRoot);
+      xmlDoc.AppendChild(elRoot);
 
-      XmlElement elDefault = XmlDoc.CreateElement("Default", nmspcContentTypes);
+      XmlElement elDefault = xmlDoc.CreateElement("Default", nmspcContentTypes);
       SetAttr(elDefault, "Extension", "rels", String.Empty);
       SetAttr(elDefault, "ContentType", "application/vnd.openxmlformats-package.relationships+xml", String.Empty);
       elRoot.AppendChild(elDefault);
 
-      elDefault = XmlDoc.CreateElement("Default", nmspcContentTypes);
+      elDefault = xmlDoc.CreateElement("Default", nmspcContentTypes);
       SetAttr(elDefault, "Extension", "xml", String.Empty);
       SetAttr(elDefault, "ContentType", "application/xml", String.Empty);
       elRoot.AppendChild(elDefault);
 
-      XmlElement elOverride = XmlDoc.CreateElement("Override", nmspcContentTypes);
+      XmlElement elOverride = xmlDoc.CreateElement("Override", nmspcContentTypes);
       SetAttr(elOverride, "PartName", "/xl/workbook.xml", String.Empty);
       SetAttr(elOverride, "ContentType", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", String.Empty);
       elRoot.AppendChild(elOverride);
 
-      elOverride = XmlDoc.CreateElement("Override", nmspcContentTypes);
+      elOverride = xmlDoc.CreateElement("Override", nmspcContentTypes);
       SetAttr(elOverride, "PartName", "/xl/worksheets/sheet1.xml", String.Empty);
       SetAttr(elOverride, "ContentType", "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml", String.Empty);
       elRoot.AppendChild(elOverride);
 
-      elOverride = XmlDoc.CreateElement("Override", nmspcContentTypes);
+      elOverride = xmlDoc.CreateElement("Override", nmspcContentTypes);
       SetAttr(elOverride, "PartName", "/xl/sharedStrings.xml", String.Empty);
       SetAttr(elOverride, "ContentType", "application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml", String.Empty);
       elRoot.AppendChild(elOverride);
 
-      elOverride = XmlDoc.CreateElement("Override", nmspcContentTypes);
+      elOverride = xmlDoc.CreateElement("Override", nmspcContentTypes);
       SetAttr(elOverride, "PartName", "/xl/styles.xml", String.Empty);
       SetAttr(elOverride, "ContentType", "application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml", String.Empty);
       elRoot.AppendChild(elOverride);
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
     private const string nmspcPackageRels = "http://schemas.openxmlformats.org/package/2006/relationships";
@@ -898,15 +898,15 @@ namespace FreeLibSet.Forms
 
     private static XmlDocument CreateRels1()
     {
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmldecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-      XmlDoc.InsertBefore(xmldecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("Relationships", nmspcPackageRels);
+      XmlElement elRoot = xmlDoc.CreateElement("Relationships", nmspcPackageRels);
       SetAttr(elRoot, "xmlns", nmspcPackageRels, String.Empty);
-      XmlDoc.AppendChild(elRoot);
+      xmlDoc.AppendChild(elRoot);
 
-      XmlElement elRL = XmlDoc.CreateElement("Relationship", nmspcPackageRels);
+      XmlElement elRL = xmlDoc.CreateElement("Relationship", nmspcPackageRels);
       SetAttr(elRL, "Id", "rId1", String.Empty);
       SetAttr(elRL, "Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument", String.Empty);
       SetAttr(elRL, "Target", "xl/workbook.xml", String.Empty);
@@ -926,38 +926,38 @@ namespace FreeLibSet.Forms
       elRoot.AppendChild(elRL);
 #endif
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
     private static XmlDocument CreateRels2()
     {
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmldecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-      XmlDoc.InsertBefore(xmldecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("Relationships", nmspcPackageRels);
+      XmlElement elRoot = xmlDoc.CreateElement("Relationships", nmspcPackageRels);
       SetAttr(elRoot, "xmlns", nmspcPackageRels, String.Empty);
-      XmlDoc.AppendChild(elRoot);
+      xmlDoc.AppendChild(elRoot);
 
-      XmlElement elRL = XmlDoc.CreateElement("Relationship", nmspcPackageRels);
+      XmlElement elRL = xmlDoc.CreateElement("Relationship", nmspcPackageRels);
       SetAttr(elRL, "Id", "rId1", String.Empty);
       SetAttr(elRL, "Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet", String.Empty);
       SetAttr(elRL, "Target", "worksheets/sheet1.xml", String.Empty);
       elRoot.AppendChild(elRL);
 
-      elRL = XmlDoc.CreateElement("Relationship", nmspcPackageRels);
+      elRL = xmlDoc.CreateElement("Relationship", nmspcPackageRels);
       SetAttr(elRL, "Id", "rId2", String.Empty);
       SetAttr(elRL, "Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings", String.Empty);
       SetAttr(elRL, "Target", "sharedStrings.xml", String.Empty);
       elRoot.AppendChild(elRL);
 
-      elRL = XmlDoc.CreateElement("Relationship", nmspcPackageRels);
+      elRL = xmlDoc.CreateElement("Relationship", nmspcPackageRels);
       SetAttr(elRL, "Id", "rId3", String.Empty);
       SetAttr(elRL, "Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles", String.Empty);
       SetAttr(elRL, "Target", "styles.xml", String.Empty);
       elRoot.AppendChild(elRL);
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
 
@@ -1009,25 +1009,25 @@ namespace FreeLibSet.Forms
 
     private static XmlDocument CreateWorkbook()
     {
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmldecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-      XmlDoc.InsertBefore(xmldecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("workbook", nmspcSpreadsheet);
+      XmlElement elRoot = xmlDoc.CreateElement("workbook", nmspcSpreadsheet);
       SetAttr(elRoot, "xmlns", nmspcSpreadsheet, String.Empty);
       SetAttr(elRoot, "xmlns:r", nmspcOfficeRels, String.Empty);
-      XmlDoc.AppendChild(elRoot);
+      xmlDoc.AppendChild(elRoot);
 
-      XmlElement elSheets = XmlDoc.CreateElement("sheets", nmspcSpreadsheet);
+      XmlElement elSheets = xmlDoc.CreateElement("sheets", nmspcSpreadsheet);
       elRoot.AppendChild(elSheets);
 
-      XmlElement elSheet = XmlDoc.CreateElement("sheet", nmspcSpreadsheet);
+      XmlElement elSheet = xmlDoc.CreateElement("sheet", nmspcSpreadsheet);
       SetAttr(elSheet, "name", "1", String.Empty);
       SetAttr(elSheet, "sheetId", "1", String.Empty);
       SetAttr(elSheet, "r:id", "rId1", nmspcOfficeRels);
       elSheets.AppendChild(elSheet);
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
     #endregion
@@ -1123,10 +1123,10 @@ namespace FreeLibSet.Forms
       {
         #region Числовые форматы
 
-        int NumFmtId = 0; // общий формат
+        int numFmtId = 0; // общий формат
         if (!String.IsNullOrEmpty(numberFormat))
         {
-          if (!_NumFmtDict.TryGetValue(numberFormat, out NumFmtId))
+          if (!_NumFmtDict.TryGetValue(numberFormat, out numFmtId))
           {
             if (_elNumFmtRoot == null)
             {
@@ -1135,12 +1135,12 @@ namespace FreeLibSet.Forms
             }
 
             XmlElement elNumFmt = _XmlDoc.CreateElement("numFmt", nmspcSpreadsheet);
-            NumFmtId = _NumFmtDict.Count + 1001; // Начинаем нумерацию с 1001
-            SetAttr(elNumFmt, "numFmtId", NumFmtId.ToString(), String.Empty);
+            numFmtId = _NumFmtDict.Count + 1001; // Начинаем нумерацию с 1001
+            SetAttr(elNumFmt, "numFmtId", numFmtId.ToString(), String.Empty);
             SetAttr(elNumFmt, "formatCode", numberFormat, String.Empty);
             _elNumFmtRoot.AppendChild(elNumFmt);
 
-            _NumFmtDict.Add(numberFormat, NumFmtId);
+            _NumFmtDict.Add(numberFormat, numFmtId);
           }
         }
 
@@ -1151,9 +1151,9 @@ namespace FreeLibSet.Forms
         if (!_Settings.UseInterior)
           foreColor = Color.Empty;
 
-        string FontKey = isBold.ToString() + "|" + isItalic.ToString() + "|" + isUnderline.ToString() + "|" + foreColor.ToString();
-        int FontIdx;
-        if (!_FontDict.TryGetValue(FontKey, out FontIdx))
+        string fontKey = isBold.ToString() + "|" + isItalic.ToString() + "|" + isUnderline.ToString() + "|" + foreColor.ToString();
+        int fontIdx;
+        if (!_FontDict.TryGetValue(fontKey, out fontIdx))
         {
           if (_elFontRoot == null)
           {
@@ -1195,8 +1195,8 @@ namespace FreeLibSet.Forms
             elFont.AppendChild(elColor);
           }
 
-          FontIdx = _FontDict.Count;
-          _FontDict.Add(FontKey, FontIdx);
+          fontIdx = _FontDict.Count;
+          _FontDict.Add(fontKey, fontIdx);
         }
 
         #endregion
@@ -1206,16 +1206,16 @@ namespace FreeLibSet.Forms
         if (!_Settings.UseInterior)
           backColor = Color.Empty;
 
-        int FillIdx = GetFillIdx(backColor);
+        int fillIdx = GetFillIdx(backColor);
 
         #endregion
 
         #region Границы
 
-        string BorderKey = leftBorder.ToString() + "|" + topBorder.ToString() + "|" + rightBorder.ToString() + "|" + bottomBorder.ToString()+
+        string borderKey = leftBorder.ToString() + "|" + topBorder.ToString() + "|" + rightBorder.ToString() + "|" + bottomBorder.ToString()+
           "|" + diagonalUpBorder.ToString()+"|" + diagonalDownBorder.ToString();
-        int BorderIdx;
-        if (!_BordersDict.TryGetValue(BorderKey, out BorderIdx))
+        int borderIdx;
+        if (!_BordersDict.TryGetValue(borderKey, out borderIdx))
         {
           if (_elBordersRoot == null)
           {
@@ -1244,17 +1244,17 @@ namespace FreeLibSet.Forms
             AddBorder(elBorder, "diagonal", (EFPDataGridViewBorderStyle)Math.Max((int)diagonalUpBorder, (int)diagonalDownBorder));
           }
 
-          BorderIdx = _BordersDict.Count;
-          _BordersDict.Add(BorderKey, BorderIdx);
+          borderIdx = _BordersDict.Count;
+          _BordersDict.Add(borderKey, borderIdx);
         }
 
         #endregion
 
         #region Стиль ячейки
 
-        string StyleKey = NumFmtId.ToString() + "|" + FontIdx.ToString() + "|" + FillIdx.ToString() + "|" + BorderIdx.ToString() + "|" + align.ToString() + "|" + offset.ToString() + "|" + wordWrap.ToString();
-        int StyleIdx;
-        if (!_CellXfsDict.TryGetValue(StyleKey, out StyleIdx))
+        string styleKey = numFmtId.ToString() + "|" + fontIdx.ToString() + "|" + fillIdx.ToString() + "|" + borderIdx.ToString() + "|" + align.ToString() + "|" + offset.ToString() + "|" + wordWrap.ToString();
+        int styleIdx;
+        if (!_CellXfsDict.TryGetValue(styleKey, out styleIdx))
         {
           if (_elCellXfsRoot == null)
           {
@@ -1264,27 +1264,27 @@ namespace FreeLibSet.Forms
 
           XmlElement elXf = _XmlDoc.CreateElement("xf", nmspcSpreadsheet);
 
-          if (NumFmtId > 0)
+          if (numFmtId > 0)
           {
-            SetAttr(elXf, "numFmtId", NumFmtId.ToString(), String.Empty);
+            SetAttr(elXf, "numFmtId", numFmtId.ToString(), String.Empty);
             SetAttr(elXf, "applyNumberFormat", "1", String.Empty);
           }
 
-          if (FontIdx > 0)
+          if (fontIdx > 0)
           {
-            SetAttr(elXf, "fontId", FontIdx.ToString(), String.Empty);
+            SetAttr(elXf, "fontId", fontIdx.ToString(), String.Empty);
             SetAttr(elXf, "applyFont", "1", String.Empty);
           }
 
           if (!backColor.IsEmpty)
           {
-            SetAttr(elXf, "fillId", FillIdx.ToString(), String.Empty);
+            SetAttr(elXf, "fillId", fillIdx.ToString(), String.Empty);
             SetAttr(elXf, "applyFill", "1", String.Empty);
           }
 
-          if (BorderIdx > 0)
+          if (borderIdx > 0)
           {
-            SetAttr(elXf, "borderId", BorderIdx.ToString(), String.Empty);
+            SetAttr(elXf, "borderId", borderIdx.ToString(), String.Empty);
             SetAttr(elXf, "applyBorder", "1", String.Empty);
           }
           _elCellXfsRoot.AppendChild(elXf);
@@ -1315,20 +1315,20 @@ namespace FreeLibSet.Forms
             SetAttr(elAlignment, "wrapText", "1", String.Empty);
           elXf.AppendChild(elAlignment);
 
-          StyleIdx = _CellXfsDict.Count;
-          _CellXfsDict.Add(StyleKey, StyleIdx);
+          styleIdx = _CellXfsDict.Count;
+          _CellXfsDict.Add(styleKey, styleIdx);
         }
 
         #endregion
 
-        return StyleIdx;
+        return styleIdx;
       }
 
       private int GetFillIdx(Color backColor)
       {
-        string FillKey = backColor.ToString();
-        int FillIdx;
-        if (!_FillDict.TryGetValue(FillKey, out FillIdx))
+        string fillKey = backColor.ToString();
+        int fillIdx;
+        if (!_FillDict.TryGetValue(fillKey, out fillIdx))
         {
           if (_elFillRoot == null)
           {
@@ -1353,10 +1353,10 @@ namespace FreeLibSet.Forms
 
           elFill.AppendChild(elPatternFill);
 
-          FillIdx = _FillDict.Count;
-          _FillDict.Add(FillKey, FillIdx);
+          fillIdx = _FillDict.Count;
+          _FillDict.Add(fillKey, fillIdx);
         }
-        return FillIdx;
+        return fillIdx;
       }
 
       private static void AddBorder(XmlElement elParent, string tagName, EFPDataGridViewBorderStyle borderStyle)
@@ -1413,43 +1413,43 @@ namespace FreeLibSet.Forms
     {
       #region Собираем массив печатаемых столбцов и строк
 
-      EFPDataGridViewRectArea Area = controlProvider.GetRectArea(settings.RangeMode);
+      EFPDataGridViewRectArea area = controlProvider.GetRectArea(settings.RangeMode);
 
       #endregion
 
       #region Таблица разделяемых строк
 
       sharedStrings = new List<string>();
-      Dictionary<string, int> SharedStringIndices = new Dictionary<string, int>(); // индексы строк в массиве SharedStrings
+      Dictionary<string, int> sharedStringIndices = new Dictionary<string, int>(); // индексы строк в массиве SharedStrings
       sharedStringCount = 0;
 
       #endregion
 
       #region Начало документа sheet1.xml
 
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmldecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-      XmlDoc.InsertBefore(xmldecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
-      XmlElement elSheetRoot = XmlDoc.CreateElement("worksheet", nmspcSpreadsheet);
+      XmlElement elSheetRoot = xmlDoc.CreateElement("worksheet", nmspcSpreadsheet);
       SetAttr(elSheetRoot, "xmlns", nmspcSpreadsheet, String.Empty);
       SetAttr(elSheetRoot, "xmlns:r", nmspcOfficeRels, String.Empty);
-      XmlDoc.AppendChild(elSheetRoot);
+      xmlDoc.AppendChild(elSheetRoot);
 
       #endregion
 
       #region Размеры столбцов
 
-      XmlElement elCols = XmlDoc.CreateElement("cols", nmspcSpreadsheet);
+      XmlElement elCols = xmlDoc.CreateElement("cols", nmspcSpreadsheet);
       elSheetRoot.AppendChild(elCols);
 
-      for (int j = 0; j < Area.ColumnCount; j++)
+      for (int j = 0; j < area.ColumnCount; j++)
       {
-        EFPDataGridViewColumn Column = controlProvider.Columns[Area.ColumnIndices[j]];
-        XmlElement elCol = XmlDoc.CreateElement("col", nmspcSpreadsheet);
+        EFPDataGridViewColumn column = controlProvider.Columns[area.ColumnIndices[j]];
+        XmlElement elCol = xmlDoc.CreateElement("col", nmspcSpreadsheet);
         SetAttr(elCol, "min", (j + 1).ToString(), String.Empty);
         SetAttr(elCol, "max", (j + 1).ToString(), String.Empty);
-        SetAttr(elCol, "width", Column.TextWidth.ToString("0.##", StdConvert.NumberFormat), String.Empty);
+        SetAttr(elCol, "width", column.TextWidth.ToString("0.##", StdConvert.NumberFormat), String.Empty);
         elCols.AppendChild(elCol);
       }
 
@@ -1462,111 +1462,109 @@ namespace FreeLibSet.Forms
 
       #region Заголовки столбцов
 
-      XmlElement elSheetData = XmlDoc.CreateElement("sheetData", nmspcSpreadsheet);
+      XmlElement elSheetData = xmlDoc.CreateElement("sheetData", nmspcSpreadsheet);
       elSheetRoot.AppendChild(elSheetData);
 
-      XmlElement elMergeCells = XmlDoc.CreateElement("mergeCells", nmspcSpreadsheet);
+      XmlElement elMergeCells = xmlDoc.CreateElement("mergeCells", nmspcSpreadsheet);
       // Потом добавим elSheetRoot.AppendChild(elMergeCells);
 
-      int RowCount = 0; // счетчик строк
+      int rowCount = 0; // счетчик строк
 
       // Заголовки столбцов
       if (settings.ShowColumnHeaders)
       {
-        int HeaderStyleIdx = styles.GetStyle(true, false, false, Color.Empty, Color.Empty,
+        int headerStyleIdx = styles.GetStyle(true, false, false, Color.Empty, Color.Empty,
           EFPDataGridViewBorderStyle.Thin, EFPDataGridViewBorderStyle.Thin, EFPDataGridViewBorderStyle.Thin, EFPDataGridViewBorderStyle.Thin,
           EFPDataGridViewBorderStyle.None, EFPDataGridViewBorderStyle.None,
           DataGridViewContentAlignment.MiddleCenter, 0, true, String.Empty);
 
-        EFPDataGridViewColumnHeaderArray HeaderArray = controlProvider.GetColumnHeaderArray(Area);
+        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
-        for (int i = 0; i < HeaderArray.RowCount; i++)
+        for (int i = 0; i < headerArray.RowCount; i++)
         {
-          RowCount++;
+          rowCount++;
 
-          XmlElement elRow = XmlDoc.CreateElement("row", nmspcSpreadsheet);
-          SetAttr(elRow, "r", RowCount.ToString(), String.Empty);
+          XmlElement elRow = xmlDoc.CreateElement("row", nmspcSpreadsheet);
+          SetAttr(elRow, "r", rowCount.ToString(), String.Empty);
           elSheetData.AppendChild(elRow);
 
-          for (int j = 0; j < HeaderArray.ColumnCount; j++)
+          for (int j = 0; j < headerArray.ColumnCount; j++)
           {
-            if (HeaderArray.RowSpan[i, j] == 0)
+            if (headerArray.RowSpan[i, j] == 0)
               continue; // не первая строка объединения
 
-            XmlElement elC = XmlDoc.CreateElement("c", nmspcSpreadsheet);
+            XmlElement elC = xmlDoc.CreateElement("c", nmspcSpreadsheet);
 
-            string CellAddr1 = MicrosoftOfficeTools.GetExcelColumnName(j + 1) + RowCount.ToString();
-            SetAttr(elC, "r", CellAddr1, String.Empty);
-            SetAttr(elC, "s", HeaderStyleIdx.ToString(), String.Empty);
+            string cellAddr1 = MicrosoftOfficeTools.GetExcelColumnName(j + 1) + rowCount.ToString();
+            SetAttr(elC, "r", cellAddr1, String.Empty);
+            SetAttr(elC, "s", headerStyleIdx.ToString(), String.Empty);
             elRow.AppendChild(elC);
-            string s = HeaderArray.Text[i, j];
-            WriteCellString(elC, s, sharedStrings, SharedStringIndices, ref sharedStringCount);
+            string s = headerArray.Text[i, j];
+            WriteCellString(elC, s, sharedStrings, sharedStringIndices, ref sharedStringCount);
 
-            if (HeaderArray.RowSpan[i, j] > 1 || HeaderArray.ColumnSpan[i, j] > 1)
+            if (headerArray.RowSpan[i, j] > 1 || headerArray.ColumnSpan[i, j] > 1)
             {
-              string CellAddr2 = MicrosoftOfficeTools.GetExcelColumnName(j + HeaderArray.ColumnSpan[i, j]) + (RowCount + HeaderArray.RowSpan[i, j] - 1).ToString();
-              XmlElement elMergeCell = XmlDoc.CreateElement("mergeCell", nmspcSpreadsheet);
-              SetAttr(elMergeCell, "ref", CellAddr1 + ":" + CellAddr2, String.Empty);
+              string cellAddr2 = MicrosoftOfficeTools.GetExcelColumnName(j + headerArray.ColumnSpan[i, j]) + (rowCount + headerArray.RowSpan[i, j] - 1).ToString();
+              XmlElement elMergeCell = xmlDoc.CreateElement("mergeCell", nmspcSpreadsheet);
+              SetAttr(elMergeCell, "ref", cellAddr1 + ":" + cellAddr2, String.Empty);
               elMergeCells.AppendChild(elMergeCell);
             }
           }
         }
       }
 
-
       #endregion
 
       #region Цикл по строкам
 
       // Перебираем строки таблицы
-      for (int i = 0; i < Area.RowCount; i++)
+      for (int i = 0; i < area.RowCount; i++)
       {
-        RowCount++;
+        rowCount++;
 
-        XmlElement elRow = XmlDoc.CreateElement("row", nmspcSpreadsheet);
-        SetAttr(elRow, "r", RowCount.ToString(), String.Empty);
+        XmlElement elRow = xmlDoc.CreateElement("row", nmspcSpreadsheet);
+        SetAttr(elRow, "r", rowCount.ToString(), String.Empty);
         elSheetData.AppendChild(elRow);
 
-        controlProvider.DoGetRowAttributes(Area.RowIndices[i], EFPDataGridViewAttributesReason.View);
+        controlProvider.DoGetRowAttributes(area.RowIndices[i], EFPDataGridViewAttributesReason.View);
 
         // Перебираем столбцы
-        for (int j = 0; j < Area.ColumnCount; j++)
+        for (int j = 0; j < area.ColumnCount; j++)
         {
-          int ColumnIndex = Area.ColumnIndices[j];
+          int columnIndex = area.ColumnIndices[j];
 
-          EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(ColumnIndex);
-          EFPDataGridViewExcelCellAttributes ExcelAttr = EFPDataGridView.GetExcelCellAttr(CellArgs);
+          EFPDataGridViewCellAttributesEventArgs cellArgs = controlProvider.DoGetCellAttributes(columnIndex);
+          EFPDataGridViewExcelCellAttributes excelAttr = EFPDataGridView.GetExcelCellAttr(cellArgs);
 
-          XmlElement elC = XmlDoc.CreateElement("c", nmspcSpreadsheet);
-          SetAttr(elC, "r", MicrosoftOfficeTools.GetExcelColumnName(j + 1) + RowCount.ToString(), String.Empty);
-          int StyleIdx = styles.GetStyle(ExcelAttr.Bold, ExcelAttr.Italic, ExcelAttr.Underline,
-            ExcelAttr.BackColor, ExcelAttr.ForeColor,
-            CellArgs.LeftBorder, CellArgs.TopBorder, CellArgs.RightBorder, CellArgs.BottomBorder,
-            CellArgs.DiagonalUpBorder, CellArgs.DiagonalDownBorder,
-            CellArgs.CellStyle.Alignment, CellArgs.IndentLevel, CellArgs.CellStyle.WrapMode == DataGridViewTriState.True, CellArgs.CellStyle.Format);
-          SetAttr(elC, "s", StyleIdx.ToString(), String.Empty);
+          XmlElement elC = xmlDoc.CreateElement("c", nmspcSpreadsheet);
+          SetAttr(elC, "r", MicrosoftOfficeTools.GetExcelColumnName(j + 1) + rowCount.ToString(), String.Empty);
+          int styleIdx = styles.GetStyle(excelAttr.Bold, excelAttr.Italic, excelAttr.Underline,
+            excelAttr.BackColor, excelAttr.ForeColor,
+            cellArgs.LeftBorder, cellArgs.TopBorder, cellArgs.RightBorder, cellArgs.BottomBorder,
+            cellArgs.DiagonalUpBorder, cellArgs.DiagonalDownBorder,
+            cellArgs.CellStyle.Alignment, cellArgs.IndentLevel, cellArgs.CellStyle.WrapMode == DataGridViewTriState.True, cellArgs.CellStyle.Format);
+          SetAttr(elC, "s", styleIdx.ToString(), String.Empty);
           elRow.AppendChild(elC);
 
-          string ValueText, TypeText, FormatText;
-          GetCellValue(CellArgs, out ValueText, out TypeText, out FormatText, settings);
+          string valueText, typeText, formatText;
+          GetCellValue(cellArgs, out valueText, out typeText, out formatText, settings);
 
-          if (!String.IsNullOrEmpty(TypeText))
+          if (!String.IsNullOrEmpty(typeText))
           {
-            if (TypeText == "s")
-              WriteCellString(elC, ValueText, sharedStrings, SharedStringIndices, ref sharedStringCount);
+            if (typeText == "s")
+              WriteCellString(elC, valueText, sharedStrings, sharedStringIndices, ref sharedStringCount);
             else
             {
-              if (!String.IsNullOrEmpty(TypeText))
-                SetAttr(elC, "t", TypeText, String.Empty);
+              if (!String.IsNullOrEmpty(typeText))
+                SetAttr(elC, "t", typeText, String.Empty);
 
               XmlElement elV = elC.OwnerDocument.CreateElement("v", nmspcSpreadsheet);
-              elV.InnerText = ValueText;
+              elV.InnerText = valueText;
               elC.AppendChild(elV);
             }
           }
         }
       }
-
 
       #endregion
 
@@ -1578,7 +1576,7 @@ namespace FreeLibSet.Forms
         elSheetRoot.AppendChild(elMergeCells);
       }
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
     private static void GetCellValue(EFPDataGridViewCellAttributesEventArgs cellArgs, out string valueText, out string typeText, out string formatText, EFPDataGridViewExpExcelSettings settings)
@@ -1703,27 +1701,27 @@ namespace FreeLibSet.Forms
 
     private static XmlDocument CreateSharedStrings(List<string> sharedStrings, int sharedStringCount)
     {
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmldecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-      XmlDoc.InsertBefore(xmldecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("sst", nmspcSpreadsheet);
+      XmlElement elRoot = xmlDoc.CreateElement("sst", nmspcSpreadsheet);
       SetAttr(elRoot, "count", sharedStringCount.ToString(), String.Empty);
       SetAttr(elRoot, "uniqueCount", sharedStrings.Count.ToString(), String.Empty);
       SetAttr(elRoot, "xmlns", nmspcSpreadsheet, String.Empty);
-      XmlDoc.AppendChild(elRoot);
+      xmlDoc.AppendChild(elRoot);
 
       for (int i = 0; i < sharedStrings.Count; i++)
       {
-        XmlElement elSI = XmlDoc.CreateElement("si", nmspcSpreadsheet);
+        XmlElement elSI = xmlDoc.CreateElement("si", nmspcSpreadsheet);
         elRoot.AppendChild(elSI);
         //XmlElement elR = XmlDoc.CreateElement("r", nmspcSpreadsheet);
         //elSI.AppendChild(elR);
-        XmlElement elT = XmlDoc.CreateElement("t", nmspcSpreadsheet);
+        XmlElement elT = xmlDoc.CreateElement("t", nmspcSpreadsheet);
         elT.InnerText = sharedStrings[i];
         elSI.AppendChild(elT);
       }
-      return XmlDoc;
+      return xmlDoc;
     }
 
     #endregion
@@ -1732,13 +1730,13 @@ namespace FreeLibSet.Forms
 
     private static void SetAttr(XmlElement el, string name, string value, string nmspc)
     {
-      XmlAttribute Attr;
+      XmlAttribute attr;
       if (String.IsNullOrEmpty(nmspc))
-        Attr = el.OwnerDocument.CreateAttribute(name);
+        attr = el.OwnerDocument.CreateAttribute(name);
       else
-        Attr = el.OwnerDocument.CreateAttribute(name, nmspc);
-      Attr.Value = value;
-      el.Attributes.Append(Attr);
+        attr = el.OwnerDocument.CreateAttribute(name, nmspc);
+      attr.Value = value;
+      el.Attributes.Append(attr);
     }
 
     #endregion
@@ -1761,35 +1759,35 @@ namespace FreeLibSet.Forms
       #region Начало
 
       //SharpZipLibLoader.LoadSharpZipLib();
-      ZipFileCreator ZF = new ZipFileCreator(fileName);
-      ZF.AddMimeType("application/vnd.oasis.opendocument.spreadsheet");
+      ZipFileCreator zf = new ZipFileCreator(fileName);
+      zf.AddMimeType("application/vnd.oasis.opendocument.spreadsheet");
 
       #endregion
 
       #region Манифест (manifest.xml)
 
-      XmlDocument XmlDoc = CreateManifest();
-      ZF.AddXmlFile("META-INF/manifest.xml", XmlDoc);
+      XmlDocument xmlDoc = CreateManifest();
+      zf.AddXmlFile("META-INF/manifest.xml", xmlDoc);
 
       #endregion
 
       #region Метаданные
 
-      XmlDoc = CreateMeta(controlProvider/*, settings*/);
-      ZF.AddXmlFile("meta.xml", XmlDoc);
+      xmlDoc = CreateMeta(controlProvider/*, settings*/);
+      zf.AddXmlFile("meta.xml", xmlDoc);
 
       #endregion
 
       #region Основной документ
 
-      XmlDoc = CreateContent(controlProvider, settings);
-      ZF.AddXmlFile("content.xml", XmlDoc);
+      xmlDoc = CreateContent(controlProvider, settings);
+      zf.AddXmlFile("content.xml", xmlDoc);
 
       #endregion
 
       #region Конец
 
-      ZF.Close();
+      zf.Close();
 
       //ZF.DebugOutFiles();
 
@@ -1804,35 +1802,35 @@ namespace FreeLibSet.Forms
     {
       const string nmspcManifest = "urn:oasis:names:tc:opendocument:xmlns:manifest:1.0";
 
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmlDecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", String.Empty);
-      XmlDoc.InsertBefore(xmlDecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmlDecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", String.Empty);
+      xmlDoc.InsertBefore(xmlDecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("manifest:manifest", nmspcManifest);
-      XmlDoc.AppendChild(elRoot);
+      XmlElement elRoot = xmlDoc.CreateElement("manifest:manifest", nmspcManifest);
+      xmlDoc.AppendChild(elRoot);
 
       SetAttr(elRoot, "xmlns:manifest", nmspcManifest, String.Empty);
       SetAttr(elRoot, "manifest:version", "1.2", nmspcManifest);
 
       XmlElement elFile;
 
-      elFile = XmlDoc.CreateElement("manifest:file-entry", nmspcManifest);
+      elFile = xmlDoc.CreateElement("manifest:file-entry", nmspcManifest);
       elRoot.AppendChild(elFile);
       SetAttr(elFile, "manifest:media-type", "application/vnd.oasis.opendocument.spreadsheet", nmspcManifest);
       SetAttr(elFile, "manifest:version", "1.2", nmspcManifest);
       SetAttr(elFile, "manifest:full-path", "/", nmspcManifest);
 
-      elFile = XmlDoc.CreateElement("manifest:file-entry", nmspcManifest);
+      elFile = xmlDoc.CreateElement("manifest:file-entry", nmspcManifest);
       elRoot.AppendChild(elFile);
       SetAttr(elFile, "manifest:media-type", "text/xml", nmspcManifest);
       SetAttr(elFile, "manifest:full-path", "meta.xml", nmspcManifest);
 
-      elFile = XmlDoc.CreateElement("manifest:file-entry", nmspcManifest);
+      elFile = xmlDoc.CreateElement("manifest:file-entry", nmspcManifest);
       elRoot.AppendChild(elFile);
       SetAttr(elFile, "manifest:media-type", "text/xml", nmspcManifest);
       SetAttr(elFile, "manifest:full-path", "content.xml", nmspcManifest);
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
     #endregion
@@ -1845,17 +1843,17 @@ namespace FreeLibSet.Forms
 
     private static XmlDocument CreateMeta(EFPDataGridView controlProvider/*, EFPDataGridViewExpExcelSettings settings*/)
     {
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmlDecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", String.Empty);
-      XmlDoc.InsertBefore(xmlDecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmlDecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", String.Empty);
+      xmlDoc.InsertBefore(xmlDecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("office:document-meta", nmspcOffice);
-      XmlDoc.AppendChild(elRoot);
+      XmlElement elRoot = xmlDoc.CreateElement("office:document-meta", nmspcOffice);
+      xmlDoc.AppendChild(elRoot);
       SetAttr(elRoot, "xmlns:office", nmspcOffice, String.Empty);
       SetAttr(elRoot, "xmlns:meta", nmspcMeta, String.Empty);
       SetAttr(elRoot, "xmlns:dc", nmspcDc, String.Empty);
 
-      XmlElement elMeta = XmlDoc.CreateElement("office:meta", nmspcOffice);
+      XmlElement elMeta = xmlDoc.CreateElement("office:meta", nmspcOffice);
       elRoot.AppendChild(elMeta);
 
       EFPDocumentProperties Props = controlProvider.DocumentProperties;
@@ -1875,7 +1873,7 @@ namespace FreeLibSet.Forms
       //if (AccDepClientExec.OurOrgId != 0)
       //  AddTextNode(elMeta, "meta:company", AccDepClientExec.OurOrg.ShortName, nmspcMeta);
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
     private static void AddTextNode(XmlElement elParent, string tagName, string text, string nmspc)
@@ -1902,14 +1900,14 @@ namespace FreeLibSet.Forms
     private static XmlDocument CreateContent(EFPDataGridView controlProvider, EFPDataGridViewExpExcelSettings settings)
     {
       // 1. Собираем массив печатаемых столбцов и строк
-      EFPDataGridViewRectArea Area = controlProvider.GetRectArea(settings.RangeMode);
+      EFPDataGridViewRectArea area = controlProvider.GetRectArea(settings.RangeMode);
 
-      XmlDocument XmlDoc = new XmlDocument();
-      XmlDeclaration xmlDecl = XmlDoc.CreateXmlDeclaration("1.0", "UTF-8", String.Empty);
-      XmlDoc.InsertBefore(xmlDecl, XmlDoc.DocumentElement);
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmlDecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", String.Empty);
+      xmlDoc.InsertBefore(xmlDecl, xmlDoc.DocumentElement);
 
-      XmlElement elRoot = XmlDoc.CreateElement("office:document-content", nmspcOffice);
-      XmlDoc.AppendChild(elRoot);
+      XmlElement elRoot = xmlDoc.CreateElement("office:document-content", nmspcOffice);
+      xmlDoc.AppendChild(elRoot);
       SetAttr(elRoot, "xmlns:office", nmspcOffice, String.Empty);
       SetAttr(elRoot, "xmlns:style", nmspcStyle, String.Empty);
       SetAttr(elRoot, "xmlns:text", nmspcText, String.Empty);
@@ -1919,38 +1917,38 @@ namespace FreeLibSet.Forms
       SetAttr(elRoot, "xmlns:loext", nmspcLoext, String.Empty);
       SetAttr(elRoot, "office:version", "1.2", String.Empty);
 
-      XmlElement elAutoStyles = XmlDoc.CreateElement("office:automatic-styles", nmspcOffice);
+      XmlElement elAutoStyles = xmlDoc.CreateElement("office:automatic-styles", nmspcOffice);
       elRoot.AppendChild(elAutoStyles); // будем заполнять по мере необходимости
 
-      XmlElement elBody = XmlDoc.CreateElement("office:body", nmspcOffice);
+      XmlElement elBody = xmlDoc.CreateElement("office:body", nmspcOffice);
       elRoot.AppendChild(elBody);
 
-      XmlElement elSpreadSheet = XmlDoc.CreateElement("office:spreadsheet", nmspcOffice);
+      XmlElement elSpreadSheet = xmlDoc.CreateElement("office:spreadsheet", nmspcOffice);
       elBody.AppendChild(elSpreadSheet);
 
-      XmlElement elTable = XmlDoc.CreateElement("table:table", nmspcTable);
+      XmlElement elTable = xmlDoc.CreateElement("table:table", nmspcTable);
       elSpreadSheet.AppendChild(elTable);
       SetAttr(elTable, "table:name", "Таблица", nmspcTable);
 
       #region Объявления столбцов
 
       // В отличие от MS Excel, ширина столбцов задается в стилях
-      for (int j = 0; j < Area.ColumnCount; j++)
+      for (int j = 0; j < area.ColumnCount; j++)
       {
-        EFPDataGridViewColumn Col = controlProvider.Columns[Area.ColumnIndices[j]];
+        EFPDataGridViewColumn col = controlProvider.Columns[area.ColumnIndices[j]];
 
-        XmlElement elColStyle = XmlDoc.CreateElement("style:style", nmspcStyle);
+        XmlElement elColStyle = xmlDoc.CreateElement("style:style", nmspcStyle);
         elAutoStyles.AppendChild(elColStyle);
         SetAttr(elColStyle, "style:name", "co" + (j + 1).ToString(), nmspcStyle);
         SetAttr(elColStyle, "style:family", "table-column", nmspcStyle);
 
-        XmlElement elColProps = XmlDoc.CreateElement("style:table-column-properties", nmspcStyle);
+        XmlElement elColProps = xmlDoc.CreateElement("style:table-column-properties", nmspcStyle);
         elColStyle.AppendChild(elColProps);
-        float w = (float)(Col.WidthPt) / 72f * 2.54f;
+        float w = (float)(col.WidthPt) / 72f * 2.54f;
         SetAttr(elColProps, "style:column-width", w.ToString("0.000", StdConvert.NumberFormat) + "cm", nmspcStyle);
 
 
-        XmlElement elColumn = XmlDoc.CreateElement("table:table-column", nmspcTable);
+        XmlElement elColumn = xmlDoc.CreateElement("table:table-column", nmspcTable);
         elTable.AppendChild(elColumn);
         SetAttr(elColumn, "table:style-name", "co" + (j + 1).ToString(), nmspcTable);
       }
@@ -1971,12 +1969,12 @@ namespace FreeLibSet.Forms
 
       #region "ro1"
 
-      XmlElement elRowStyle = XmlDoc.CreateElement("style:style", nmspcStyle);
+      XmlElement elRowStyle = xmlDoc.CreateElement("style:style", nmspcStyle);
       elAutoStyles.AppendChild(elRowStyle);
       SetAttr(elRowStyle, "style:name", "ro1", nmspcStyle);
       SetAttr(elRowStyle, "style:family", "table-row", nmspcStyle);
 
-      XmlElement elTRP = XmlDoc.CreateElement("style:table-row-properties", nmspcStyle);
+      XmlElement elTRP = xmlDoc.CreateElement("style:table-row-properties", nmspcStyle);
       elRowStyle.AppendChild(elTRP);
       // Вот бы знать ... SetAttr(elTRP, "style:row-height", "70mm", nmspcStyle); 
       SetAttr(elTRP, "style:use-optimal-row-height", "true", nmspcStyle);
@@ -1985,12 +1983,12 @@ namespace FreeLibSet.Forms
 
       #region "ro2"
 
-      elRowStyle = XmlDoc.CreateElement("style:style", nmspcStyle);
+      elRowStyle = xmlDoc.CreateElement("style:style", nmspcStyle);
       elAutoStyles.AppendChild(elRowStyle);
       SetAttr(elRowStyle, "style:name", "ro2", nmspcStyle);
       SetAttr(elRowStyle, "style:family", "table-row", nmspcStyle);
 
-      elTRP = XmlDoc.CreateElement("style:table-row-properties", nmspcStyle);
+      elTRP = xmlDoc.CreateElement("style:table-row-properties", nmspcStyle);
       elRowStyle.AppendChild(elTRP);
       //SetAttr(elTRP, "style:row-height", "40mm", nmspcStyle);
       SetAttr(elTRP, "style:use-optimal-row-height", "true", nmspcStyle);
@@ -2003,50 +2001,50 @@ namespace FreeLibSet.Forms
 
       if (settings.ShowColumnHeaders)
       {
-        XmlElement elHeadStyle = XmlDoc.CreateElement("style:style", nmspcStyle);
+        XmlElement elHeadStyle = xmlDoc.CreateElement("style:style", nmspcStyle);
         elAutoStyles.AppendChild(elHeadStyle);
         SetAttr(elHeadStyle, "style:name", "ColHdr", nmspcStyle);
         SetAttr(elHeadStyle, "style:family", "table-cell", nmspcStyle);
 
-        XmlElement elCellProps = XmlDoc.CreateElement("style:table-cell-properties", nmspcStyle);
+        XmlElement elCellProps = xmlDoc.CreateElement("style:table-cell-properties", nmspcStyle);
         elHeadStyle.AppendChild(elCellProps);
         SetBorders(elCellProps, "fo:border", EFPDataGridViewBorderStyle.Thin, nmspcFo);
         SetAttr(elCellProps, "style:vertical-align", "middle", nmspcStyle);
         SetAttr(elCellProps, "fo:wrap-option", "wrap", nmspcFo);
 
-        XmlElement elParProps = XmlDoc.CreateElement("style:paragraph-properties", nmspcStyle);
+        XmlElement elParProps = xmlDoc.CreateElement("style:paragraph-properties", nmspcStyle);
         elHeadStyle.AppendChild(elParProps);
         SetAttr(elParProps, "fo:text-align", "center", nmspcFo);
 
-        EFPDataGridViewColumnHeaderArray HeaderArray = controlProvider.GetColumnHeaderArray(Area);
+        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
-        for (int i = 0; i < HeaderArray.RowCount; i++)
+        for (int i = 0; i < headerArray.RowCount; i++)
         {
-          XmlElement elHeadRow = XmlDoc.CreateElement("table:table-row", nmspcTable);
+          XmlElement elHeadRow = xmlDoc.CreateElement("table:table-row", nmspcTable);
           elTable.AppendChild(elHeadRow);
           SetAttr(elHeadRow, "table:style-name", "ro1", nmspcTable); // 17.07.2019
 
-          for (int j = 0; j < HeaderArray.ColumnCount; j++)
+          for (int j = 0; j < headerArray.ColumnCount; j++)
           {
-            if (HeaderArray.RowSpan[i, j] == 0)
+            if (headerArray.RowSpan[i, j] == 0)
             {
               // не первая строка объединения
-              XmlElement elCoveredCell = XmlDoc.CreateElement("table:covered-table-cell", nmspcTable);
+              XmlElement elCoveredCell = xmlDoc.CreateElement("table:covered-table-cell", nmspcTable);
               elHeadRow.AppendChild(elCoveredCell);
 
               continue;
             }
 
-            XmlElement elCell = XmlDoc.CreateElement("table:table-cell", nmspcTable);
+            XmlElement elCell = xmlDoc.CreateElement("table:table-cell", nmspcTable);
             elHeadRow.AppendChild(elCell);
             SetAttr(elCell, "table:style-name", "ColHdr", nmspcTable);
 
             // один заголовок также может содержать несколько абзацев
-            if (!String.IsNullOrEmpty(HeaderArray.Text[i, j]))
+            if (!String.IsNullOrEmpty(headerArray.Text[i, j]))
             {
               SetAttr(elCell, "office:value-type", "string", nmspcOffice);
 
-              string[] a = HeaderArray.Text[i, j].Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+              string[] a = headerArray.Text[i, j].Split(DataTools.NewLineSeparators, StringSplitOptions.None);
               for (int k = 0; k < a.Length; k++)
               {
                 string s = a[k];
@@ -2054,7 +2052,7 @@ namespace FreeLibSet.Forms
                 s = DataTools.ReplaceAny(s, EFPDataGridViewExpExcel2003.BadValueChars, ' ');
 
                 // неразрывный пробел так и остается
-                XmlElement elP = XmlDoc.CreateElement("text:p", nmspcText);
+                XmlElement elP = xmlDoc.CreateElement("text:p", nmspcText);
                 elCell.AppendChild(elP);
                 elP.InnerText = s;
               }
@@ -2064,10 +2062,10 @@ namespace FreeLibSet.Forms
             //attr.Value = "ColHdr";
             //elCell.Attributes.Append(attr);
 
-            if (HeaderArray.RowSpan[i, j] > 1 || HeaderArray.ColumnSpan[i, j] > 1)
+            if (headerArray.RowSpan[i, j] > 1 || headerArray.ColumnSpan[i, j] > 1)
             {
-              SetAttr(elCell, "table:number-columns-spanned", HeaderArray.ColumnSpan[i, j].ToString(), nmspcTable);
-              SetAttr(elCell, "table:number-rows-spanned", HeaderArray.RowSpan[i, j].ToString(), nmspcTable);
+              SetAttr(elCell, "table:number-columns-spanned", headerArray.ColumnSpan[i, j].ToString(), nmspcTable);
+              SetAttr(elCell, "table:number-rows-spanned", headerArray.RowSpan[i, j].ToString(), nmspcTable);
             }
 
           } // по столбцам
@@ -2081,69 +2079,69 @@ namespace FreeLibSet.Forms
       StringBuilder sb = new StringBuilder();
 
       // Сюда запоминаем существующие стили ячеек
-      List<string> CellStyleKeys = new List<string>();
+      List<string> cellStyleKeys = new List<string>();
 
       // Хранилище для границ ячеек
-      EFPDataGridViewBorderStyle[,] BorderStyles = null;
+      EFPDataGridViewBorderStyle[,] borderStyles = null;
       if (settings.UseBorders)
-        BorderStyles = new EFPDataGridViewBorderStyle[Area.ColumnCount, 6];
+        borderStyles = new EFPDataGridViewBorderStyle[area.ColumnCount, 6];
 
       // Перебираем строки таблицы
-      for (int i = 0; i < Area.RowCount; i++)
+      for (int i = 0; i < area.RowCount; i++)
       {
         // Границы надо запрашивать отдельно, в режиме печати
         if (settings.UseBorders)
         {
-          controlProvider.DoGetRowAttributes(Area.RowIndices[i], EFPDataGridViewAttributesReason.Print);
-          for (int j = 0; j < Area.ColumnCount; j++)
+          controlProvider.DoGetRowAttributes(area.RowIndices[i], EFPDataGridViewAttributesReason.Print);
+          for (int j = 0; j < area.ColumnCount; j++)
           {
-            int ColumnIndex = Area.ColumnIndices[j];
-            EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(ColumnIndex);
-            BorderStyles[j, 0] = CellArgs.BottomBorder;
-            BorderStyles[j, 1] = CellArgs.LeftBorder;
-            BorderStyles[j, 2] = CellArgs.RightBorder;
-            BorderStyles[j, 3] = CellArgs.TopBorder;
+            int columnIndex = area.ColumnIndices[j];
+            EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(columnIndex);
+            borderStyles[j, 0] = CellArgs.BottomBorder;
+            borderStyles[j, 1] = CellArgs.LeftBorder;
+            borderStyles[j, 2] = CellArgs.RightBorder;
+            borderStyles[j, 3] = CellArgs.TopBorder;
             if (CellArgs.DiagonalUpBorder == EFPDataGridViewBorderStyle.Default)
-              BorderStyles[j, 4] = EFPDataGridViewBorderStyle.None;
+              borderStyles[j, 4] = EFPDataGridViewBorderStyle.None;
             else
-              BorderStyles[j, 4] = CellArgs.DiagonalUpBorder;
+              borderStyles[j, 4] = CellArgs.DiagonalUpBorder;
             if (CellArgs.DiagonalDownBorder == EFPDataGridViewBorderStyle.Default)
-              BorderStyles[j, 5] = EFPDataGridViewBorderStyle.None;
+              borderStyles[j, 5] = EFPDataGridViewBorderStyle.None;
             else
-              BorderStyles[j, 5] = CellArgs.DiagonalDownBorder;
+              borderStyles[j, 5] = CellArgs.DiagonalDownBorder;
           }
         }
 
-        controlProvider.DoGetRowAttributes(Area.RowIndices[i], EFPDataGridViewAttributesReason.View);
+        controlProvider.DoGetRowAttributes(area.RowIndices[i], EFPDataGridViewAttributesReason.View);
 
-        XmlElement elRow = XmlDoc.CreateElement("table:table-row", nmspcTable);
+        XmlElement elRow = xmlDoc.CreateElement("table:table-row", nmspcTable);
         elTable.AppendChild(elRow);
         SetAttr(elRow, "table:style-name", "ro2", nmspcTable); // 17.07.2019
 
-        for (int j = 0; j < Area.ColumnCount; j++)
+        for (int j = 0; j < area.ColumnCount; j++)
         {
-          int ColumnIndex = Area.ColumnIndices[j];
+          int columnIndex = area.ColumnIndices[j];
 
-          XmlElement elCell = XmlDoc.CreateElement("table:table-cell", nmspcTable);
+          XmlElement elCell = xmlDoc.CreateElement("table:table-cell", nmspcTable);
           elRow.AppendChild(elCell);
 
           #region Определение формата
 
-          EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(ColumnIndex);
-          EFPDataGridViewExcelCellAttributes ExcelAttr = EFPDataGridView.GetExcelCellAttr(CellArgs);
+          EFPDataGridViewCellAttributesEventArgs cellArgs = controlProvider.DoGetCellAttributes(columnIndex);
+          EFPDataGridViewExcelCellAttributes excelAttr = EFPDataGridView.GetExcelCellAttr(cellArgs);
 
 
-          bool WordWrap = CellArgs.CellStyle.WrapMode == DataGridViewTriState.True;
-          if (CellArgs.Column.GridColumn is DataGridViewTextBoxColumn)
+          bool wordWrap = cellArgs.CellStyle.WrapMode == DataGridViewTriState.True;
+          if (cellArgs.Column.GridColumn is DataGridViewTextBoxColumn)
           {
-            Type ValueType = ((DataGridViewTextBoxColumn)(CellArgs.Column.GridColumn)).ValueType;
-            if (ValueType == typeof(string) || ValueType == null)
-              WordWrap = true;
+            Type valueType = ((DataGridViewTextBoxColumn)(cellArgs.Column.GridColumn)).ValueType;
+            if (valueType == typeof(string) || valueType == null)
+              wordWrap = true;
           }
 
-          String FormatText = String.Empty;
-          if (!String.IsNullOrEmpty(CellArgs.CellStyle.Format))
-            FormatText = CellArgs.CellStyle.Format;
+          String formatText = String.Empty;
+          if (!String.IsNullOrEmpty(cellArgs.CellStyle.Format))
+            formatText = cellArgs.CellStyle.Format;
 
 
           #endregion
@@ -2151,91 +2149,91 @@ namespace FreeLibSet.Forms
           #region Поиск существующего стиля ячейки
 
           sb.Length = 0;
-          sb.Append(FormatText);
+          sb.Append(formatText);
           sb.Append("|");
-          sb.Append(CellArgs.CellStyle.Alignment.ToString());
+          sb.Append(cellArgs.CellStyle.Alignment.ToString());
           sb.Append("|");
-          sb.Append(WordWrap.ToString());
+          sb.Append(wordWrap.ToString());
           sb.Append("|");
-          sb.Append(CellArgs.IndentLevel.ToString());
+          sb.Append(cellArgs.IndentLevel.ToString());
           sb.Append("|");
           if (settings.UseInterior)
           {
-            sb.Append(ExcelAttr.BackColor.ToString());
+            sb.Append(excelAttr.BackColor.ToString());
             sb.Append("|");
-            sb.Append(ExcelAttr.ForeColor.ToString());
+            sb.Append(excelAttr.ForeColor.ToString());
             sb.Append("|");
-            sb.Append(ExcelAttr.Bold);
+            sb.Append(excelAttr.Bold);
             sb.Append("|");
-            sb.Append(ExcelAttr.Italic);
+            sb.Append(excelAttr.Italic);
             sb.Append("|");
-            sb.Append(ExcelAttr.Underline);
+            sb.Append(excelAttr.Underline);
             sb.Append("|");
           }
           if (settings.UseBorders)
           {
-            for (int k = 0; k < BorderStyles.GetLength(1); k++)
+            for (int k = 0; k < borderStyles.GetLength(1); k++)
             {
-              sb.Append(BorderStyles[j, k]);
+              sb.Append(borderStyles[j, k]);
               sb.Append("|");
             }
           }
-          int StyleKeyIndex = CellStyleKeys.IndexOf(sb.ToString());
+          int styleKeyIndex = cellStyleKeys.IndexOf(sb.ToString());
 
           #endregion
 
-          if (StyleKeyIndex < 0)
+          if (styleKeyIndex < 0)
           {
             #region Добавление стиля
 
-            CellStyleKeys.Add(sb.ToString());
-            StyleKeyIndex = CellStyleKeys.Count - 1;
+            cellStyleKeys.Add(sb.ToString());
+            styleKeyIndex = cellStyleKeys.Count - 1;
 
             // Сначала добавляем формат для чисел
-            string NFormatName = "N" + (StyleKeyIndex + 1).ToString();
-            if (!OpenOfficeTools.ODFAddFormat(elAutoStyles, FormatText, NFormatName))
-              NFormatName = null;
+            string nFormatName = "N" + (styleKeyIndex + 1).ToString();
+            if (!OpenOfficeTools.ODFAddFormat(elAutoStyles, formatText, nFormatName))
+              nFormatName = null;
 
-            XmlElement elStyle = XmlDoc.CreateElement("style:style", nmspcStyle);
+            XmlElement elStyle = xmlDoc.CreateElement("style:style", nmspcStyle);
             elAutoStyles.AppendChild(elStyle);
-            SetAttr(elStyle, "style:name", "ce" + (StyleKeyIndex + 1).ToString(), nmspcStyle);
+            SetAttr(elStyle, "style:name", "ce" + (styleKeyIndex + 1).ToString(), nmspcStyle);
             SetAttr(elStyle, "style:family", "table-cell", nmspcStyle);
 
-            if (NFormatName != null)
-              SetAttr(elStyle, "style:data-style-name", NFormatName, nmspcStyle);
+            if (nFormatName != null)
+              SetAttr(elStyle, "style:data-style-name", nFormatName, nmspcStyle);
 
-            XmlElement elCellProps = XmlDoc.CreateElement("style:table-cell-properties", nmspcStyle);
+            XmlElement elCellProps = xmlDoc.CreateElement("style:table-cell-properties", nmspcStyle);
             elStyle.AppendChild(elCellProps);
 
-            XmlElement elParProps = XmlDoc.CreateElement("style:paragraph-properties", nmspcStyle);
+            XmlElement elParProps = xmlDoc.CreateElement("style:paragraph-properties", nmspcStyle);
             elStyle.AppendChild(elParProps);
 
             if (settings.UseBorders)
             {
-              if (BorderStyles[j, 0] == BorderStyles[j, 1] &&
-                BorderStyles[j, 0] == BorderStyles[j, 2] &&
-                BorderStyles[j, 0] == BorderStyles[j, 3] &&
-                BorderStyles[j, 4] == EFPDataGridViewBorderStyle.None && BorderStyles[j, 5] == EFPDataGridViewBorderStyle.None)
+              if (borderStyles[j, 0] == borderStyles[j, 1] &&
+                borderStyles[j, 0] == borderStyles[j, 2] &&
+                borderStyles[j, 0] == borderStyles[j, 3] &&
+                borderStyles[j, 4] == EFPDataGridViewBorderStyle.None && borderStyles[j, 5] == EFPDataGridViewBorderStyle.None)
 
                 // Все границы одинаковые
-                SetBorders(elCellProps, "fo:border", BorderStyles[j, 0], nmspcFo);
+                SetBorders(elCellProps, "fo:border", borderStyles[j, 0], nmspcFo);
               else
               {
                 // Границы разные
-                SetBorders(elCellProps, "fo:border-bottom", BorderStyles[j, 0], nmspcFo);
-                SetBorders(elCellProps, "fo:border-left", BorderStyles[j, 1], nmspcFo);
-                SetBorders(elCellProps, "fo:border-right", BorderStyles[j, 2], nmspcFo);
-                SetBorders(elCellProps, "fo:border-top", BorderStyles[j, 3], nmspcFo);
-                if (BorderStyles[j, 4] != EFPDataGridViewBorderStyle.None || BorderStyles[j, 5] != EFPDataGridViewBorderStyle.None)
+                SetBorders(elCellProps, "fo:border-bottom", borderStyles[j, 0], nmspcFo);
+                SetBorders(elCellProps, "fo:border-left", borderStyles[j, 1], nmspcFo);
+                SetBorders(elCellProps, "fo:border-right", borderStyles[j, 2], nmspcFo);
+                SetBorders(elCellProps, "fo:border-top", borderStyles[j, 3], nmspcFo);
+                if (borderStyles[j, 4] != EFPDataGridViewBorderStyle.None || borderStyles[j, 5] != EFPDataGridViewBorderStyle.None)
                 {
-                  SetBorders(elCellProps, "style:diagonal-bl-tr", BorderStyles[j, 4], nmspcStyle);
-                  SetBorders(elCellProps, "style:diagonal-tl-br", BorderStyles[j, 5], nmspcStyle);
+                  SetBorders(elCellProps, "style:diagonal-bl-tr", borderStyles[j, 4], nmspcStyle);
+                  SetBorders(elCellProps, "style:diagonal-tl-br", borderStyles[j, 5], nmspcStyle);
                 }
               }
             }
 
             string ha, va;
-            switch (CellArgs.CellStyle.Alignment)
+            switch (cellArgs.CellStyle.Alignment)
             {
               case DataGridViewContentAlignment.TopLeft: ha = "start"; va = "top"; break;
               case DataGridViewContentAlignment.TopCenter: ha = "center"; va = "top"; break;
@@ -2251,37 +2249,37 @@ namespace FreeLibSet.Forms
 
             SetAttr(elCellProps, "style:vertical-align", va, nmspcStyle);
             SetAttr(elParProps, "fo:text-align", ha, nmspcFo);
-            if (WordWrap)
+            if (wordWrap)
               SetAttr(elCellProps, "fo:wrap-option", "wrap", nmspcFo);
 
-            if (CellArgs.IndentLevel > 0)
+            if (cellArgs.IndentLevel > 0)
             {
               if (ha == "start")
-                SetAttr(elParProps, "fo:margin-left", (0.3 * CellArgs.IndentLevel) + "cm", nmspcFo);
+                SetAttr(elParProps, "fo:margin-left", (0.3 * cellArgs.IndentLevel) + "cm", nmspcFo);
               if (ha == "end") // наверное, не будет работать
-                SetAttr(elParProps, "fo:margin-right", (0.3 * CellArgs.IndentLevel) + "cm", nmspcFo);
+                SetAttr(elParProps, "fo:margin-right", (0.3 * cellArgs.IndentLevel) + "cm", nmspcFo);
             }
 
 
             if (settings.UseInterior)
             {
-              if (ExcelAttr.Bold || ExcelAttr.Italic || ExcelAttr.Underline || (!ExcelAttr.ForeColor.IsEmpty))
+              if (excelAttr.Bold || excelAttr.Italic || excelAttr.Underline || (!excelAttr.ForeColor.IsEmpty))
               {
-                XmlElement elTextProps = XmlDoc.CreateElement("style:text-properties", nmspcStyle);
+                XmlElement elTextProps = xmlDoc.CreateElement("style:text-properties", nmspcStyle);
                 elStyle.AppendChild(elTextProps);
 
-                if (ExcelAttr.Bold)
+                if (excelAttr.Bold)
                   SetAttr(elTextProps, "fo:font-weight", "bold", nmspcFo);
-                if (ExcelAttr.Italic)
+                if (excelAttr.Italic)
                   SetAttr(elTextProps, "fo:font-style", "italic", nmspcFo);
-                if (ExcelAttr.Underline)
+                if (excelAttr.Underline)
                   SetAttr(elTextProps, "style:text-underline-style", "solid", nmspcStyle);
-                if (!ExcelAttr.ForeColor.IsEmpty)
-                  SetAttr(elTextProps, "fo:color", MyColorStr(ExcelAttr.ForeColor), nmspcFo);
+                if (!excelAttr.ForeColor.IsEmpty)
+                  SetAttr(elTextProps, "fo:color", MyColorStr(excelAttr.ForeColor), nmspcFo);
               }
 
-              if (!ExcelAttr.BackColor.IsEmpty)
-                SetAttr(elCellProps, "fo:background-color", MyColorStr(ExcelAttr.BackColor), nmspcFo);
+              if (!excelAttr.BackColor.IsEmpty)
+                SetAttr(elCellProps, "fo:background-color", MyColorStr(excelAttr.BackColor), nmspcFo);
 
             } // UseFill
 
@@ -2297,47 +2295,47 @@ namespace FreeLibSet.Forms
             #endregion
           }
 
-          SetAttr(elCell, "table:style-name", "ce" + (StyleKeyIndex + 1).ToString(), nmspcTable);
+          SetAttr(elCell, "table:style-name", "ce" + (styleKeyIndex + 1).ToString(), nmspcTable);
 
           #region Значение ячейки
 
-          if (CellArgs.ContentVisible) // 24.08.2015
+          if (cellArgs.ContentVisible) // 24.08.2015
           {
-            object CellValue = CellArgs.FormattedValue;
-            if (CellValue is DBNull)
-              CellValue = null;
-            if (CellValue is Image)
-              CellValue = null; // 14.01.2014
-            if (CellValue is Boolean)
+            object cellValue = cellArgs.FormattedValue;
+            if (cellValue is DBNull)
+              cellValue = null;
+            if (cellValue is Image)
+              cellValue = null; // 14.01.2014
+            if (cellValue is Boolean)
             {
               switch (settings.BoolMode)
               {
                 case EFPDataGridViewExpExcelBoolMode.Boolean:
                   break; // как есть
                 case EFPDataGridViewExpExcelBoolMode.Digit:
-                  CellValue = ((bool)CellValue) ? 1 : 0;
+                  cellValue = ((bool)cellValue) ? 1 : 0;
                   break;
                 case EFPDataGridViewExpExcelBoolMode.Brackets:
-                  CellValue = ((bool)CellValue) ? "[X]" : "[ ]";
+                  cellValue = ((bool)cellValue) ? "[X]" : "[ ]";
                   break;
               }
             }
-            if (CellValue != null)
+            if (cellValue != null)
             {
               #region Текстовое представление
 
-              string s = CellValue.ToString();
+              string s = cellValue.ToString();
               if (s.Length > 0) // 17.07.2019
               {
                 string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
                 for (int k = 0; k < a.Length; k++)
                 {
-                  XmlElement elP = XmlDoc.CreateElement("text:p", nmspcText);
+                  XmlElement elP = xmlDoc.CreateElement("text:p", nmspcText);
                   elCell.AppendChild(elP);
                   s = a[k];
                   s = DataTools.ReplaceAny(s, EFPDataGridViewExpExcel2003.BadValueChars, ' ');
                   //elP.InnerText = s; // это - текст. В числах запятая на точку не заменяется
-                  XmlText txt = XmlDoc.CreateTextNode(s); // 17.07.2019
+                  XmlText txt = xmlDoc.CreateTextNode(s); // 17.07.2019
                   elP.AppendChild(txt);
                 }
               }
@@ -2346,26 +2344,26 @@ namespace FreeLibSet.Forms
 
               #region Типизированное значение
 
-              switch (CellValue.GetType().Name)
+              switch (cellValue.GetType().Name)
               {
                 case "String":
                   SetAttr(elCell, "office:value-type", "string", nmspcOffice);
                   break;
                 case "Boolean":
                   SetAttr(elCell, "office:value-type", "boolean", nmspcOffice);
-                  SetAttr(elCell, "office:boolean-value", (bool)CellValue ? "true" : "false", nmspcOffice);
+                  SetAttr(elCell, "office:boolean-value", (bool)cellValue ? "true" : "false", nmspcOffice);
                   break;
                 case "DateTime":
                   // Теоретически существует еще тип time, но реально везде используется date
-                  DateTime dt = (DateTime)CellValue;
+                  DateTime dt = (DateTime)cellValue;
                   SetAttr(elCell, "office:value-type", "date", nmspcOffice);
                   SetAttr(elCell, "office:date-value", dt.ToString("s"), nmspcOffice);
                   break;
                 default:
-                  if (DataTools.IsIntegerType(CellValue.GetType()) || DataTools.IsFloatType(CellValue.GetType()))
+                  if (DataTools.IsIntegerType(cellValue.GetType()) || DataTools.IsFloatType(cellValue.GetType()))
                   {
                     SetAttr(elCell, "office:value-type", "float", nmspcOffice);
-                    SetAttr(elCell, "office:value", Convert.ToString(CellValue, StdConvert.NumberFormat), nmspcOffice);
+                    SetAttr(elCell, "office:value", Convert.ToString(cellValue, StdConvert.NumberFormat), nmspcOffice);
                   }
                   break;
               }
@@ -2383,7 +2381,7 @@ namespace FreeLibSet.Forms
 
       //DebugTools.DebugXml(XmlDoc, "Contents");
 
-      return XmlDoc;
+      return xmlDoc;
     }
 
     private static string MyColorStr(Color c)
@@ -2393,23 +2391,23 @@ namespace FreeLibSet.Forms
 
     private static void SetBorders(XmlElement elCellProps, string attrName, EFPDataGridViewBorderStyle borderStyle, string nmspc)
     {
-      string Value;
+      string value;
       switch (borderStyle)
       {
         case EFPDataGridViewBorderStyle.Default:
-          Value = "0.1pt solid #000000";
+          value = "0.1pt solid #000000";
           break;
         case EFPDataGridViewBorderStyle.Thin:
-          Value = "0.5pt solid #000000";
+          value = "0.5pt solid #000000";
           break;
         case EFPDataGridViewBorderStyle.Thick:
-          Value = "1pt solid #000000";
+          value = "1pt solid #000000";
           break;
         default:
           return;
       }
 
-      SetAttr(elCellProps, attrName, Value, nmspc);
+      SetAttr(elCellProps, attrName, value, nmspc);
     }
 
     #endregion
@@ -2418,13 +2416,13 @@ namespace FreeLibSet.Forms
 
     private static void SetAttr(XmlElement el, string name, string value, string nmspc)
     {
-      XmlAttribute Attr;
+      XmlAttribute attr;
       if (String.IsNullOrEmpty(nmspc))
-        Attr = el.OwnerDocument.CreateAttribute(name);
+        attr = el.OwnerDocument.CreateAttribute(name);
       else
-        Attr = el.OwnerDocument.CreateAttribute(name, nmspc);
-      Attr.Value = value;
-      el.Attributes.Append(Attr);
+        attr = el.OwnerDocument.CreateAttribute(name, nmspc);
+      attr.Value = value;
+      el.Attributes.Append(attr);
     }
 
     #endregion
