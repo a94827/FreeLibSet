@@ -132,20 +132,20 @@ namespace FreeLibSet.Forms.Docs
     {
       string[] codes, names;
       GetCodesAndNames(out codes, out names);
-      CodeGridFilterForm Form = new CodeGridFilterForm(codes, names, new EFPCodeValidatingEventHandler(CodeValidating));
-      Form.Text = DisplayName;
-      Form.efpEmpty.Visible = CanBeEmpty;
+      CodeGridFilterForm form = new CodeGridFilterForm(codes, names, new EFPCodeValidatingEventHandler(CodeValidating));
+      form.Text = DisplayName;
+      form.efpEmpty.Visible = CanBeEmpty;
 
-      Form.efpMode.SelectedIndex = (int)(Mode);
-      Form.efpCodes.SelectedCodes = Codes;
-      Form.efpEmpty.Checked = EmptyCode;
+      form.efpMode.SelectedIndex = (int)(Mode);
+      form.efpCodes.SelectedCodes = Codes;
+      form.efpEmpty.Checked = EmptyCode;
 
-      if (EFPApp.ShowDialog(Form, true, dialogPosition) != DialogResult.OK)
+      if (EFPApp.ShowDialog(form, true, dialogPosition) != DialogResult.OK)
         return false;
 
-      SetFilter((CodeFilterMode)(Form.efpMode.SelectedIndex),
-        Form.efpCodes.SelectedCodes,
-        Form.efpEmpty.Checked);
+      SetFilter((CodeFilterMode)(form.efpMode.SelectedIndex),
+        form.efpCodes.SelectedCodes,
+        form.efpEmpty.Checked);
       return true;
     }
 

@@ -638,9 +638,9 @@ namespace FreeLibSet.Data
     /// <returns>true, если в базу данных были внесены изменения</returns>
     public bool UpdateStruct()
     {
-      ISplash Splash = new DummySplash();
-      ErrorMessageList Errors = new ErrorMessageList();
-      return UpdateStruct(Splash, Errors, new DBxUpdateStructOptions());
+      ISplash splash = new DummySplash();
+      ErrorMessageList errors = new ErrorMessageList();
+      return UpdateStruct(splash, errors, new DBxUpdateStructOptions());
     }
 
     /// <summary>
@@ -670,14 +670,14 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя удаляемой таблицы</param>
     public virtual void DropTable(string tableName)
     {
-      using (DBxConBase Con = MainEntry.CreateCon())
+      using (DBxConBase con = MainEntry.CreateCon())
       {
-        Con.NameCheckingEnabled = false;
-        Con.Validator.CheckTableName(tableName, DBxAccessMode.Full);
-        DBxSqlBuffer Buffer = new DBxSqlBuffer(this.Formatter);
-        Buffer.SB.Append("DROP TABLE ");
-        Buffer.FormatTableName(tableName);
-        Con.SQLExecuteNonQuery(Buffer.SB.ToString());
+        con.NameCheckingEnabled = false;
+        con.Validator.CheckTableName(tableName, DBxAccessMode.Full);
+        DBxSqlBuffer buffer = new DBxSqlBuffer(this.Formatter);
+        buffer.SB.Append("DROP TABLE ");
+        buffer.FormatTableName(tableName);
+        con.SQLExecuteNonQuery(buffer.SB.ToString());
       }
     }
 
@@ -845,16 +845,16 @@ namespace FreeLibSet.Data
     /// <returns>Объект блокировки</returns>
     internal object GetUpdateTableLockObject(string tableName)
     {
-      object LockObj;
+      object lockObj;
       lock (_UpdateTableLockObjects)
       {
-        if (!_UpdateTableLockObjects.TryGetValue(tableName, out LockObj))
+        if (!_UpdateTableLockObjects.TryGetValue(tableName, out lockObj))
         {
-          LockObj = new object();
-          _UpdateTableLockObjects.Add(tableName, LockObj);
+          lockObj = new object();
+          _UpdateTableLockObjects.Add(tableName, lockObj);
         }
       }
-      return LockObj;
+      return lockObj;
     }
 
     #endregion
@@ -887,8 +887,8 @@ namespace FreeLibSet.Data
 
       args.Exception.Data["SQL"] = args.CmdText;
       args.Exception.Data["DB.DisplayName"] = this.DisplayName;
-      int ExNo = Interlocked.Increment(ref _ExceptionCount);
-      args.Exception.Data["DB.ExceptionSerialNumber"] = ExNo; // 19.09.2019
+      int exNo = Interlocked.Increment(ref _ExceptionCount);
+      args.Exception.Data["DB.ExceptionSerialNumber"] = exNo; // 19.09.2019
       if (!String.IsNullOrEmpty(args.InnerException.StackTrace))
         args.Exception.Data["OriginalStackTrace"] = args.InnerException.StackTrace; // 09.06.2018
       args.Exception.Data["DBx.OnCreateSqlException.StackTrace"] = Environment.StackTrace; // 20.11.2019

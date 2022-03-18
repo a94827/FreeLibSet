@@ -95,16 +95,16 @@ namespace FreeLibSet.Data
     /// <param name="value">Значение поля</param>
     public void SetColumnValues(DataTable table, string columnName, object value)
     {
-      DataRow[] Rows = table.Select(ToString());
-      if (Rows.Length > 0)
+      DataRow[] rows = table.Select(ToString());
+      if (rows.Length > 0)
       {
         int p = table.Columns.IndexOf(columnName);
 #if DEBUG
         if (p < 0)
           throw new ArgumentException("Столбец \"" + columnName + "\" не найден в таблице \"" + table.TableName + "\"");
 #endif
-        for (int i = 0; i < Rows.Length; i++)
-          Rows[i][p] = value;
+        for (int i = 0; i < rows.Length; i++)
+          rows[i][p] = value;
       }
     }
 
@@ -141,29 +141,29 @@ namespace FreeLibSet.Data
       if (this.Degeneration == DBxFilterDegeneration.AlwaysTrue)
         return rowFilter;
 
-      DBxSqlBuffer Buffer = new DBxSqlBuffer();
+      DBxSqlBuffer buffer = new DBxSqlBuffer();
       if (String.IsNullOrEmpty(rowFilter))
-        Buffer.FormatFilter(this);
+        buffer.FormatFilter(this);
       else
       {
         if (this is AndFilter)
         {
           // Упрощенный вариант без лишних скобок
-          Buffer.SB.Append("(");
-          Buffer.SB.Append(rowFilter);
-          Buffer.SB.Append(") AND ");
-          Buffer.FormatFilter(this);
+          buffer.SB.Append("(");
+          buffer.SB.Append(rowFilter);
+          buffer.SB.Append(") AND ");
+          buffer.FormatFilter(this);
         }
         else
         {
-          Buffer.SB.Append("(");
-          Buffer.SB.Append(rowFilter);
-          Buffer.SB.Append(") AND (");
-          Buffer.FormatFilter(this);
-          Buffer.SB.Append(")");
+          buffer.SB.Append("(");
+          buffer.SB.Append(rowFilter);
+          buffer.SB.Append(") AND (");
+          buffer.FormatFilter(this);
+          buffer.SB.Append(")");
         }
       }
-      return Buffer.SB.ToString();
+      return buffer.SB.ToString();
     }
 
     #endregion
@@ -176,9 +176,9 @@ namespace FreeLibSet.Data
     /// <returns>SQL-выражение</returns>
     public override string ToString()
     {
-      DBxSqlBuffer Buffer = new DBxSqlBuffer();
-      Buffer.FormatFilter(this);
-      return Buffer.SB.ToString();
+      DBxSqlBuffer buffer = new DBxSqlBuffer();
+      buffer.FormatFilter(this);
+      return buffer.SB.ToString();
     }
 
 #if DEBUG
@@ -192,13 +192,13 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
 
-      const string BadChars = " ,;";
-      for (int i = 0; i < BadChars.Length; i++)
+      const string badChars = " ,;";
+      for (int i = 0; i < badChars.Length; i++)
       {
-        int p = columnName.IndexOf(BadChars[i]);
+        int p = columnName.IndexOf(badChars[i]);
         if (p >= 0)
           throw new ArgumentException("Имя поля \"" + columnName + "\" содержит недопустимый символ \"" +
-            BadChars[i] + "\" в позиции " + (p + 1).ToString());
+            badChars[i] + "\" в позиции " + (p + 1).ToString());
       }
     }
 #endif
@@ -691,7 +691,6 @@ namespace FreeLibSet.Data
     #endregion
   }
 
-
   /// <summary>
   /// Фильтр сравнения значения поле с константым значением.
   /// Этот фильтр является частным случаем CompareFilter, когда первым выражением является DBxColumn, а вторым выражением является константа DBxConst.
@@ -899,11 +898,11 @@ namespace FreeLibSet.Data
     /// <returns>Объект фильтра или null</returns>
     public static DBxFilter CreateFilter(Hashtable columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
 
-      return CreateFilter(new DBxColumns(ColumnNames), Values);
+      return CreateFilter(new DBxColumns(columnNames), values);
     }
 
     /*
@@ -993,9 +992,9 @@ namespace FreeLibSet.Data
     /// Идентификатор не может быть равен 0.
     /// </summary>
     /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
-    /// <param name="Id">Идентификатор</param>
-    public IdsFilter(DBxExpression expression, Int32 Id)
-      : this(expression, new IdList(new Int32[1] { Id }))
+    /// <param name="id">Идентификатор</param>
+    public IdsFilter(DBxExpression expression, Int32 id)
+      : this(expression, new IdList(new Int32[1] { id }))
     {
     }
 
@@ -1005,9 +1004,9 @@ namespace FreeLibSet.Data
     /// Идентификатор не может быть равен 0.
     /// </summary>
     /// <param name="ColumnName">Имя числового столбца</param>
-    /// <param name="Id">Идентификатор</param>
-    public IdsFilter(string ColumnName, Int32 Id)
-      : this(new DBxColumn(ColumnName), new IdList(new Int32[1] { Id }))
+    /// <param name="id">Идентификатор</param>
+    public IdsFilter(string ColumnName, Int32 id)
+      : this(new DBxColumn(ColumnName), new IdList(new Int32[1] { id }))
     {
     }
 
@@ -1018,11 +1017,11 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает фильтр для поля "Id".
     /// Список идентификаторов не может быть пустым.
-    /// Список <paramref name="Ids"/> переводится в режим "Только чтение"
+    /// Список <paramref name="ids"/> переводится в режим "Только чтение"
     /// </summary>
-    /// <param name="Ids">Список идентификаторов</param>
-    public IdsFilter(IdList Ids)
-      : this("Id", Ids)
+    /// <param name="ids">Список идентификаторов</param>
+    public IdsFilter(IdList ids)
+      : this("Id", ids)
     {
     }
 
@@ -1030,9 +1029,9 @@ namespace FreeLibSet.Data
     /// Создает фильтр для поля "Id".
     /// Массив идентификаторов не может быть пустым и не может содержать значения 0.
     /// </summary>
-    /// <param name="Ids">Массив идентификаторов</param>
-    public IdsFilter(Int32[] Ids)
-      : this("Id", Ids)
+    /// <param name="ids">Массив идентификаторов</param>
+    public IdsFilter(Int32[] ids)
+      : this("Id", ids)
     {
     }
 
@@ -1040,9 +1039,9 @@ namespace FreeLibSet.Data
     /// Создает фильтр для поля "Id".
     /// Идентификатор не может быть равен 0.
     /// </summary>
-    /// <param name="Id">Идентификатор</param>
-    public IdsFilter(Int32 Id)
-      : this("Id", Id)
+    /// <param name="id">Идентификатор</param>
+    public IdsFilter(Int32 id)
+      : this("Id", id)
     {
     }
 
@@ -1431,7 +1430,7 @@ namespace FreeLibSet.Data
     {
       get
       {
-        bool AllAreTrue = true;
+        bool areAllTrue = true;
         for (int i = 0; i < _Filters.Length; i++)
         {
           switch (_Filters[i].Degeneration)
@@ -1439,12 +1438,12 @@ namespace FreeLibSet.Data
             case DBxFilterDegeneration.AlwaysFalse:
               return DBxFilterDegeneration.AlwaysFalse;
             case DBxFilterDegeneration.None:
-              AllAreTrue = false;
+              areAllTrue = false;
               break;
           }
         }
 
-        if (AllAreTrue)
+        if (areAllTrue)
           return DBxFilterDegeneration.AlwaysTrue;
         else
           return DBxFilterDegeneration.None;
@@ -1554,19 +1553,19 @@ namespace FreeLibSet.Data
         {
           case DBxFilterDegeneration.AlwaysTrue:
             // Убираем вырожденные фильтры
-            List<DBxFilter> Filters2 = new List<DBxFilter>(filters.Count - 1);
+            List<DBxFilter> filters2 = new List<DBxFilter>(filters.Count - 1);
             for (int j = 0; j < filters.Count; j++)
             {
               switch (filters[j].Degeneration)
               {
                 case DBxFilterDegeneration.None:
-                  Filters2.Add(filters[j]);
+                  filters2.Add(filters[j]);
                   break;
                 case DBxFilterDegeneration.AlwaysFalse:
                   return DummyFilter.AlwaysFalse;
               }
             }
-            filters = Filters2;
+            filters = filters2;
             break;
         }
       }
@@ -1700,7 +1699,7 @@ namespace FreeLibSet.Data
     {
       get
       {
-        bool AllAreFalse = true;
+        bool areAllFalse = true;
         for (int i = 0; i < _Filters.Length; i++)
         {
           switch (_Filters[i].Degeneration)
@@ -1708,12 +1707,12 @@ namespace FreeLibSet.Data
             case DBxFilterDegeneration.AlwaysTrue:
               return DBxFilterDegeneration.AlwaysTrue;
             case DBxFilterDegeneration.None:
-              AllAreFalse = false;
+              areAllFalse = false;
               break;
           }
         }
 
-        if (AllAreFalse)
+        if (areAllFalse)
           return DBxFilterDegeneration.AlwaysFalse;
         else
           return DBxFilterDegeneration.None;
@@ -1737,7 +1736,6 @@ namespace FreeLibSet.Data
       }
       return false;
     }
-
 
     #endregion
 

@@ -51,16 +51,16 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DBxDocTableLockData Res;
-        if (!_Tables.TryGetValue(tableName, out Res))
+        DBxDocTableLockData res;
+        if (!_Tables.TryGetValue(tableName, out res))
         {
           if (IsReadOnly)
             return null;
 
-          Res = new DBxDocTableLockData(this, tableName);
-          _Tables.Add(tableName, Res);
+          res = new DBxDocTableLockData(this, tableName);
+          _Tables.Add(tableName, res);
         }
-        return Res;
+        return res;
       }
     }
 
@@ -114,9 +114,9 @@ namespace FreeLibSet.Data.Docs
       CheckNotReadOnly();
       for (int i = 0; i < ds.Tables.Count; i++)
       {
-        string TableName = ds.Tables[i].TableName;
-        if (docProvider.Source.GlobalData.DocTypes.Contains(TableName)) // блокируем только документы, а не поддокументы
-          this[TableName].Init(ds.Tables[i]);
+        string tableName = ds.Tables[i].TableName;
+        if (docProvider.Source.GlobalData.DocTypes.Contains(tableName)) // блокируем только документы, а не поддокументы
+          this[tableName].Init(ds.Tables[i]);
       }
     }
 
@@ -129,12 +129,12 @@ namespace FreeLibSet.Data.Docs
       CheckNotReadOnly();
       for (int i = 0; i < docSel.TableNames.Length; i++)
       {
-        string TableName = docSel.TableNames[i];
-        Int32[] Ids = docSel[TableName];
-        if (Ids.Length == 0)
+        string tableName = docSel.TableNames[i];
+        Int32[] ids = docSel[tableName];
+        if (ids.Length == 0)
           continue;
-        for (int j = 0; j < Ids.Length; j++)
-          this[TableName].LockIds.Add(Ids[j]);
+        for (int j = 0; j < ids.Length; j++)
+          this[tableName].LockIds.Add(ids[j]);
       }
     }
 
@@ -149,12 +149,12 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Наличие конфликта</returns>
     public bool TestConflict(DBxDocSetLockData other)
     {
-      foreach (KeyValuePair<string, DBxDocTableLockData> Pair in _Tables)
+      foreach (KeyValuePair<string, DBxDocTableLockData> pair in _Tables)
       {
-        DBxDocTableLockData OtherTable;
-        if (other._Tables.TryGetValue(Pair.Key, out OtherTable))
+        DBxDocTableLockData otherTable;
+        if (other._Tables.TryGetValue(pair.Key, out otherTable))
         {
-          if (Pair.Value.TestConflict(OtherTable))
+          if (pair.Value.TestConflict(otherTable))
             return true;
         }
       }
@@ -273,20 +273,20 @@ namespace FreeLibSet.Data.Docs
     /// <param name="textHandlers">Используется для извлечения текстовых представлений. Может быть null</param>
     public void ToString(StringBuilder sb, DBxDocTextHandlers textHandlers)
     {
-      bool IsFirstPair = true;
-      foreach (KeyValuePair<string, DBxDocTableLockData> Pair in _Tables)
+      bool isFirstPair = true;
+      foreach (KeyValuePair<string, DBxDocTableLockData> pair in _Tables)
       {
-        if (!Pair.Value.IsEmpty)
+        if (!pair.Value.IsEmpty)
         {
-          if (IsFirstPair) // 06.07.2017. Используем флаг, вместо проверки sb.Length==0
-            IsFirstPair = false;
+          if (isFirstPair) // 06.07.2017. Используем флаг, вместо проверки sb.Length==0
+            isFirstPair = false;
           else
             sb.Append(", ");
-          Pair.Value.ToString(sb, textHandlers);
+          pair.Value.ToString(sb, textHandlers);
         }
       }
 
-      if (IsFirstPair)
+      if (isFirstPair)
         sb.Append("{Пустая блокировка}");
     }
 
@@ -477,18 +477,18 @@ namespace FreeLibSet.Data.Docs
 
     internal void Init(DataTable table)
     {
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        switch (Row.RowState)
+        switch (row.RowState)
         {
           case DataRowState.Added:
             LockAdd = true;
             break;
           case DataRowState.Modified:
-            LockIds.Add((Int32)(Row["Id"]));
+            LockIds.Add((Int32)(row["Id"]));
             break;
           case DataRowState.Deleted:
-            LockIds.Add((Int32)(Row["Id", DataRowVersion.Original]));
+            LockIds.Add((Int32)(row["Id", DataRowVersion.Original]));
             break;
         }
       }
@@ -655,9 +655,9 @@ namespace FreeLibSet.Data.Docs
       List<ServerExecLock> lst = new List<ServerExecLock>();
 #endif
 
-      foreach (DBxDocTableLockData Table in Data)
+      foreach (DBxDocTableLockData table in Data)
       {
-        Table.LockIds.SetReadOnly();
+        table.LockIds.SetReadOnly();
 
 #if USE_LOCK_ADD
         if (Table.LockAdd)
@@ -692,17 +692,17 @@ namespace FreeLibSet.Data.Docs
       {
         // Проверяем длительные блокировки
         // Если есть конфликт, выбрасываем исключение, а не переходим в режим ожидания
-        foreach (DBxLongDocsLock LongLock in DocProvider.Source.GlobalData.LongLocks)
+        foreach (DBxLongDocsLock longLock in DocProvider.Source.GlobalData.LongLocks)
         {
           // 04.07.2016
           // Используем явно заданный список блокировок
           // if (LongLock.DocProvider == DocProvider) // иначе сами себя заблокируем
           //   continue;
-          if (IgnoredLocks.Contains(LongLock.Guid))
+          if (IgnoredLocks.Contains(longLock.Guid))
             continue;
 
-          if (Data.TestConflict(LongLock.Data))
-            throw new DBxDocsLockException(this, LongLock, _DocProvider.Source.GlobalData.TextHandlers);
+          if (Data.TestConflict(longLock.Data))
+            throw new DBxDocsLockException(this, longLock, _DocProvider.Source.GlobalData.TextHandlers);
         }
       }
 
@@ -771,12 +771,12 @@ namespace FreeLibSet.Data.Docs
       args.WriteLine("Блокируемые таблицы:");
       args.IndentLevel++;
       int cnt = 0;
-      foreach (DBxDocTableLockData Table in Data)
+      foreach (DBxDocTableLockData table in Data)
       {
-        if (Table.IsEmpty)
+        if (table.IsEmpty)
           continue;
         cnt++;
-        args.WriteLine(Table.ToString());
+        args.WriteLine(table.ToString());
       }
       if (cnt == 0)
         args.WriteLine("Нет блокируемых таблиц (пустой объект)");
@@ -1044,11 +1044,11 @@ namespace FreeLibSet.Data.Docs
     /// Установка блокировки для набора документов.
     /// Блокируются только документы в режимах Edit и Delete, а также Insert, если документы уже получили идентификаторы.
     /// </summary>
-    /// <param name="DocSet">Набор документов</param>
-    public DBxLongDocsLockHandler(DBxDocSet DocSet)
+    /// <param name="docSet">Набор документов</param>
+    public DBxLongDocsLockHandler(DBxDocSet docSet)
     {
-      _LockGuid = DocSet.AddLongLock();
-      _DocProvider = DocSet.DocProvider;
+      _LockGuid = docSet.AddLongLock();
+      _DocProvider = docSet.DocProvider;
     }
 
     /// <summary>

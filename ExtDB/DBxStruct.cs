@@ -129,9 +129,9 @@ namespace FreeLibSet.Data
     public string[] GetAllTableNames()
     {
       string[] a;
-      using (DBxConBase Con = Entry.CreateCon())
+      using (DBxConBase con = Entry.CreateCon())
       {
-        a = Con.GetAllTableNamesFromSchema();
+        a = con.GetAllTableNamesFromSchema();
       }
       return a;
     }
@@ -143,14 +143,14 @@ namespace FreeLibSet.Data
     /// <returns>Заполненное описание структуры таблицы</returns>
     public DBxTableStruct GetTableStruct(string tableName)
     {
-      DBxTableStruct Obj;
+      DBxTableStruct obj;
 
-      using (DBxConBase Con = Entry.CreateCon())
+      using (DBxConBase con = Entry.CreateCon())
       {
-        Obj = Con.GetRealTableStructFromSchema(tableName);
+        obj = con.GetRealTableStructFromSchema(tableName);
       }
 
-      return Obj;
+      return obj;
     }
 
     #endregion
@@ -386,15 +386,15 @@ namespace FreeLibSet.Data
       if (columnNames == null)
         return ts.CreateDataTable();
 
-      DataTable Table = new DataTable(ts.TableName);
+      DataTable table = new DataTable(ts.TableName);
       for (int i = 0; i < columnNames.Count; i++)
       {
-        DBxColumnStruct ColDef = this.FindColumn(tableName, columnNames[i]);
-        if (ColDef == null)
+        DBxColumnStruct colDef = this.FindColumn(tableName, columnNames[i]);
+        if (colDef == null)
           throw new ArgumentException("Для таблицы \"" + tableName + "\" не определен столбец \"" + columnNames[i] + "\"", "columnNames");
-        Table.Columns.Add(ColDef.CreateDataColumn(columnNames[i]));
+        table.Columns.Add(colDef.CreateDataColumn(columnNames[i]));
       }
-      return Table;
+      return table;
     }
 
     /// <summary>
@@ -416,14 +416,14 @@ namespace FreeLibSet.Data
         if (p >= 0)
         {
           // Ссылочное поле
-          string RefColName = columnName.Substring(0, p);
+          string refColName = columnName.Substring(0, p);
           columnName = columnName.Substring(p + 1);
-          DBxColumnStruct RefCol = ts.Columns[RefColName];
-          if (RefCol == null)
+          DBxColumnStruct refCol = ts.Columns[refColName];
+          if (refCol == null)
             return null;
-          if (String.IsNullOrEmpty(RefCol.MasterTableName))
+          if (String.IsNullOrEmpty(refCol.MasterTableName))
             return null;
-          ts = Tables[RefCol.MasterTableName];
+          ts = Tables[refCol.MasterTableName];
         }
         else
         {
@@ -484,28 +484,28 @@ namespace FreeLibSet.Data
     /// <param name="db">База данных для проверки корректности имен полей или null</param>
     public void CheckStruct(DBx db)
     {
-      foreach (DBxTableStruct Table in Tables)
+      foreach (DBxTableStruct table in Tables)
       {
-        Table.CheckStruct(db);
+        table.CheckStruct(db);
 
-        foreach (DBxColumnStruct Col in Table.Columns)
+        foreach (DBxColumnStruct col in table.Columns)
         {
-          if (!String.IsNullOrEmpty(Col.MasterTableName))
+          if (!String.IsNullOrEmpty(col.MasterTableName))
           {
-            DBxTableStruct MasterTable = Tables[Col.MasterTableName];
-            if (MasterTable == null)
-              throw new DBxStructException(Table, "В таблице \"" + Table.TableName + "\" ссылочное поле \"" + Col.ColumnName + "\" ссылается на несуществующую таблицу \"" + Col.MasterTableName + "\"");
-            switch (MasterTable.PrimaryKey.Count)
+            DBxTableStruct masterTable = Tables[col.MasterTableName];
+            if (masterTable == null)
+              throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" ссылается на несуществующую таблицу \"" + col.MasterTableName + "\"");
+            switch (masterTable.PrimaryKey.Count)
             {
               case 0:
-                throw new DBxStructException(Table, "В таблице \"" + Table.TableName + "\" ссылочное поле \"" + Col.ColumnName + "\" ссылается на таблицу \"" + MasterTable.TableName + "\", которая не имеет первичного ключа");
+                throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" ссылается на таблицу \"" + masterTable.TableName + "\", которая не имеет первичного ключа");
               case 1:
-                DBxColumnStruct PKCol = MasterTable.Columns[MasterTable.PrimaryKey[0]];
-                if (PKCol.ColumnType != Col.ColumnType)
-                  throw new DBxStructException(Table, "В таблице \"" + Table.TableName + "\" ссылочное поле \"" + Col.ColumnName + "\" типа \"" + Col.ColumnType.ToString() + "\" ссылается на таблицу \"" + MasterTable.TableName + "\", которая имеет первичный ключ по полю \"" + PKCol.ColumnType + "\"типа " + PKCol.ColumnType);
+                DBxColumnStruct pkCol = masterTable.Columns[masterTable.PrimaryKey[0]];
+                if (pkCol.ColumnType != col.ColumnType)
+                  throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" типа \"" + col.ColumnType.ToString() + "\" ссылается на таблицу \"" + masterTable.TableName + "\", которая имеет первичный ключ по полю \"" + pkCol.ColumnType + "\"типа " + pkCol.ColumnType);
                 break;
               default:
-                throw new DBxStructException(Table, "В таблице \"" + Table.TableName + "\" ссылочное поле \"" + Col.ColumnName + "\" ссылается на таблицу \"" + MasterTable.TableName + "\", которая имеет составной первичный ключ");
+                throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" ссылается на таблицу \"" + masterTable.TableName + "\", которая имеет составной первичный ключ");
             }
           }
         }
@@ -535,8 +535,8 @@ namespace FreeLibSet.Data
       _AllTableNames = source.AllTableNames;
       for (int i = 0; i < source.AllTableNames.Length; i++)
       {
-        DBxTableStruct OrgTable = source[source.AllTableNames[i]];
-        _List.Add(OrgTable.Clone());
+        DBxTableStruct orgTable = source[source.AllTableNames[i]];
+        _List.Add(orgTable.Clone());
       }
     }
 
@@ -603,18 +603,18 @@ namespace FreeLibSet.Data
 
         lock (_List)
         {
-          DBxTableStruct Obj = _List[tableName];
-          if (Obj == null && _Owner.Source != null)
+          DBxTableStruct obj = _List[tableName];
+          if (obj == null && _Owner.Source != null)
           {
 
             if (DataTools.IndexOf(AllTableNames, tableName, _List.IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) >= 0)
             {
-              Obj = _Owner.Source.GetTableStruct(tableName);
-              _List.Add(Obj);
+              obj = _Owner.Source.GetTableStruct(tableName);
+              _List.Add(obj);
             }
           }
 
-          return Obj;
+          return obj;
         }
       }
     }
@@ -772,8 +772,8 @@ namespace FreeLibSet.Data
       }
        * */
 
-      DBxTableStruct Item = this[tableName];
-      return Item != null;
+      DBxTableStruct item = this[tableName];
+      return item != null;
     }
 
     /// <summary>
@@ -882,8 +882,8 @@ namespace FreeLibSet.Data
       {
         get
         {
-          string TableName = _AllTableNames[_CurrIndex];
-          return _Owner.Tables[TableName];
+          string tableName = _AllTableNames[_CurrIndex];
+          return _Owner.Tables[tableName];
         }
       }
 

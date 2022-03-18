@@ -286,12 +286,12 @@ namespace FreeLibSet.Data
 
       for (int i = 0; i < Expressions.Count; i++)
       {
-        bool HasColumn;
-        bool HasAgregate;
-        GetExpressionInfo(Expressions[i].Expression, out HasColumn, out HasAgregate);
-        if (HasColumn && HasAgregate)
+        bool hasColumn;
+        bool hasAgregate;
+        GetExpressionInfo(Expressions[i].Expression, out hasColumn, out hasAgregate);
+        if (hasColumn && hasAgregate)
           throw new InvalidOperationException("Выражение Expressions[" + i.ToString() + "] (" + Expressions[i].Expression.ToString() + ") содержит одновременно и агрегатную функцию и ссылку на поле таблицы");
-        else if (HasColumn)
+        else if (hasColumn)
           GroupBy.Add(Expressions[i].Expression);
       }
     }

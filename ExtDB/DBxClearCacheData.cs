@@ -70,8 +70,8 @@ namespace FreeLibSet.Data
       if (Id <= 0) // 25.06.2021 - Фиктивные идентификаторы пропускаются
         return;
 
-      Int32 FirstId = DBxTableCache.GetFirstPageId(Id);
-      lst.Add(FirstId);
+      Int32 firstId = DBxTableCache.GetFirstPageId(Id);
+      lst.Add(firstId);
     }
 
     /// <summary>
@@ -244,12 +244,12 @@ namespace FreeLibSet.Data
     {
       get
       {
-        IdList Res;
+        IdList res;
         if (AreAllTables)
-          Res = null;
-        else if (!_Items.TryGetValue(tableName, out Res))
-          Res = IdList.Empty;
-        return Res;
+          res = null;
+        else if (!_Items.TryGetValue(tableName, out res))
+          res = IdList.Empty;
+        return res;
       }
     }
 
@@ -269,8 +269,8 @@ namespace FreeLibSet.Data
         IdList lst = this[tableName];
         if (Object.ReferenceEquals(lst, null))
           return true;
-        Int32 FirstId = DBxTableCache.GetFirstPageId(id);
-        return lst.Contains(FirstId);
+        Int32 firstId = DBxTableCache.GetFirstPageId(id);
+        return lst.Contains(firstId);
       }
     }
 
@@ -290,26 +290,26 @@ namespace FreeLibSet.Data
         return "All tables";
 
       StringBuilder sb = new StringBuilder();
-      foreach (KeyValuePair<string, IdList> Pair in _Items)
+      foreach (KeyValuePair<string, IdList> pair in _Items)
       {
         if (sb.Length > 0)
           sb.Append(", ");
-        sb.Append(Pair.Key);
+        sb.Append(pair.Key);
         sb.Append(": ");
-        if (Object.ReferenceEquals(Pair.Value, null))
+        if (Object.ReferenceEquals(pair.Value, null))
           sb.Append("all rows");
         else
         {
-          Int32[] FirstIds = Pair.Value.ToArray();
-          Array.Sort<Int32>(FirstIds);
+          Int32[] firstIds = pair.Value.ToArray();
+          Array.Sort<Int32>(firstIds);
           // Объединяем повторяющиеся блоки
           // Лень!
-          for (int i = 0; i < FirstIds.Length; i++)
+          for (int i = 0; i < firstIds.Length; i++)
           {
             if (i > 0)
               sb.Append(",");
-            Int32 LastId = FirstIds[i] + 99;
-            sb.Append(FirstIds[i]);
+            Int32 LastId = firstIds[i] + 99;
+            sb.Append(firstIds[i]);
             sb.Append("-");
             sb.Append(LastId);
           }
@@ -330,10 +330,10 @@ namespace FreeLibSet.Data
 
     private static DBxClearCacheData CreateAllTables()
     {
-      DBxClearCacheData Data = new DBxClearCacheData();
-      Data.AddAllTables();
-      Data.SetReadOnly();
-      return Data;
+      DBxClearCacheData data = new DBxClearCacheData();
+      data.AddAllTables();
+      data.SetReadOnly();
+      return data;
     }
 
     #endregion
@@ -435,19 +435,19 @@ namespace FreeLibSet.Data
     /// <returns>Предыдуший список</returns>
     public DBxClearCacheData Swap()
     {
-      DBxClearCacheData Prev;
+      DBxClearCacheData prev;
       lock (SyncRoot)
       {
         if (_Current.IsEmpty)
-          Prev = null;
+          prev = null;
         else
         {
-          Prev = _Current;
+          prev = _Current;
           _Current = new DBxClearCacheData();
-          Prev.SetReadOnly();
+          prev.SetReadOnly();
         }
       }
-      return Prev;
+      return prev;
     }
 
     #endregion
@@ -537,25 +537,25 @@ namespace FreeLibSet.Data
     /// Возвращает false, если метод не выполнил никаких действий</returns>
     public bool Swap()
     {
-      DBxClearCacheData PrevData;
+      DBxClearCacheData prevData;
       lock (_Items)
       {
-        PrevData = Holder.Swap();
-        if (PrevData != null)
+        prevData = Holder.Swap();
+        if (prevData != null)
         {
           checked { _LastVersion++; } // Переход к отрицательным значениям недопустим
-          BufferItem Item = new BufferItem();
-          Item.Version = _LastVersion;
-          Item.Data = PrevData;
-          if (PrevData.AreAllTables)
+          BufferItem bufItem = new BufferItem();
+          bufItem.Version = _LastVersion;
+          bufItem.Data = prevData;
+          if (prevData.AreAllTables)
             // Можно очистить кольцевой буфер
             _Items.Clear();
-          _Items.Add(Item);
+          _Items.Add(bufItem);
           if (DBxCache.TraceSwitch.Enabled)
-            TraceSwap(PrevData);
+            TraceSwap(prevData);
         }
       }
-      return PrevData != null;
+      return prevData != null;
     }
 
     /// <summary>
@@ -606,23 +606,23 @@ namespace FreeLibSet.Data
     /// <returns>Массив объектов из кольцевого буфера, содержащих информацию о необходимой очистке</returns>
     public DBxClearCacheData[] GetData(ref int version)
     {
-      DBxClearCacheData[] Res;
+      DBxClearCacheData[] res;
       lock (_Items)
       {
-        int FirstVersion = 0;
+        int firstVersion = 0;
         if (_Items.Count > 0)
-          FirstVersion = _Items[0].Version;
+          firstVersion = _Items[0].Version;
 #if DEBUG
-        if (FirstVersion > _LastVersion)
+        if (firstVersion > _LastVersion)
           throw new BugException("FirstVersion > LastVersion");
 #endif
 
-        if (version < FirstVersion)
+        if (version < firstVersion)
           // Либо слишком долго не было вызова GetData() и буфер "убежал",
           // либо в буфер попал вызов очистки всех таблиц и предыдущий буфер был очищен за ненадобностью
-          Res = AllTablesArray;
+          res = _AllTablesArray;
         else if (version == _LastVersion)
-          Res = EmptyArray; // Не было никаких изменений с последней версии
+          res = _EmptyArray; // Не было никаких изменений с последней версии
         else
         {
           if (version > _LastVersion)
@@ -630,30 +630,30 @@ namespace FreeLibSet.Data
 
           // Все в порядке.
           // В кольцевом буфере есть элементы и с номером Version, и более новые
-          int StartPos = -1;
+          int startPos = -1;
           for (int i = 0; i < _Items.Count; i++)
           {
             if (_Items[i].Version == version)
             {
-              StartPos = i;
+              startPos = i;
               break;
             }
           }
-          if (StartPos < 0)
+          if (startPos < 0)
             throw new BugException("В кольцевом буфере не нашли элемент с версией " + version.ToString());
 
-          Res = new DBxClearCacheData[_Items.Count - StartPos - 1];
+          res = new DBxClearCacheData[_Items.Count - startPos - 1];
           // Нельзя использовать CopyTo(), т.к. в списке у нас структура BufferItem
           // FItems.CopyTo(StartPos+1, Res, 0, Res.Length);
-          for (int i = 0; i < Res.Length; i++)
-            Res[i] = _Items[StartPos + i + 1].Data;
+          for (int i = 0; i < res.Length; i++)
+            res[i] = _Items[startPos + i + 1].Data;
         }
 
         // Номер версии для следующего вызова
         version = _LastVersion;
       }
 
-      return Res;
+      return res;
     }
 
     #region Статические списки
@@ -661,12 +661,12 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращается при отсутствии изменений
     /// </summary>
-    private static readonly DBxClearCacheData[] EmptyArray = new DBxClearCacheData[0];
+    private static readonly DBxClearCacheData[] _EmptyArray = new DBxClearCacheData[0];
 
     /// <summary>
     /// Возвращается при необходимости выполнить полную очистку
     /// </summary>
-    private static readonly DBxClearCacheData[] AllTablesArray = CreateAllTablesArray();
+    private static readonly DBxClearCacheData[] _AllTablesArray = CreateAllTablesArray();
 
     private static DBxClearCacheData[] CreateAllTablesArray()
     {

@@ -196,9 +196,9 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       DBxTableStruct tblStruct = DocTypes[docTypeName].Struct;
-      using (DBxCon Con = new DBxCon(_Source.MainDBEntry))
+      using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
-        DataTable tbl = Con.FillSelect(docTypeName, GetColumns(docTypeName, null), filter);
+        DataTable tbl = con.FillSelect(docTypeName, GetColumns(docTypeName, null), filter);
         tblStruct.InitDataRowLimits(tbl);
         tbl.AcceptChanges(); // 06.08.2018
         return tbl;
@@ -1947,11 +1947,11 @@ namespace FreeLibSet.Data.Docs
       // Записываем поддокументы
       for (int i = 0; i < doc.DocType.SubDocs.Count; i++)
       {
-        string SubDocTypeName = doc.DocType.SubDocs[i].Name;
-        if (!doc.MultiDocs.SubDocs.ContainsModified(SubDocTypeName))
+        string subDocTypeName = doc.DocType.SubDocs[i].Name;
+        if (!doc.MultiDocs.SubDocs.ContainsModified(subDocTypeName))
           continue;
 
-        DBxSingleSubDocs sds = doc.SubDocs[SubDocTypeName];
+        DBxSingleSubDocs sds = doc.SubDocs[subDocTypeName];
         if (sds.SubDocCount == 0)
           continue;
 
@@ -1964,7 +1964,7 @@ namespace FreeLibSet.Data.Docs
           switch (subDoc.SubDocState)
           {
             case DBxDocState.Insert:
-              bool subDocRealAdded = idReplacer.IsAdded(SubDocTypeName, subDoc.SubDocId);
+              bool subDocRealAdded = idReplacer.IsAdded(subDocTypeName, subDoc.SubDocId);
               SubApplyChange1(subDoc, mainConUser, ts, subDocRealAdded, currVersion, ref usedColumnNames2);
               break;
             case DBxDocState.Edit:
@@ -3038,20 +3038,20 @@ namespace FreeLibSet.Data.Docs
         // не по документу/поддокументу, содержащему ссылку
         DBxTableStruct str = DocTypes.FindByTableName(pair.Key).Struct;
         List<String> nullableCols = null;
-        foreach (DBxColumnStruct columnDef in str.Columns)
+        foreach (DBxColumnStruct colDef in str.Columns)
         {
-          if (String.IsNullOrEmpty(columnDef.MasterTableName))
+          if (String.IsNullOrEmpty(colDef.MasterTableName))
             continue;
 
           // Обнуление имеет смысл только для ссылок на таблицы, которые есть среди удаляемых
-          if (!realDel.Dict.ContainsKey(columnDef.MasterTableName))
+          if (!realDel.Dict.ContainsKey(colDef.MasterTableName))
             continue; // в большинстве случае будут ссылки, которые никому не мешают
 
-          if (columnDef.Nullable)
+          if (colDef.Nullable)
           {
             if (nullableCols == null)
               nullableCols = new List<string>();
-            nullableCols.Add(columnDef.ColumnName);
+            nullableCols.Add(colDef.ColumnName);
           }
           else
             firstPriorityTableNames.Add(pair.Key); // нужно удалять в первую очередь

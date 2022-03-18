@@ -115,11 +115,11 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Отображаемое имя поля</returns>
     public string GetDisplayName(int index)
     {
-      string DisplayName = _Row.Table.Columns[index].Caption;
-      if (String.IsNullOrEmpty(DisplayName))
+      string displayName = _Row.Table.Columns[index].Caption;
+      if (String.IsNullOrEmpty(displayName))
         return GetName(index);
       else
-        return DisplayName;
+        return displayName;
     }
 
     /// <summary>
@@ -235,7 +235,7 @@ namespace FreeLibSet.Data.Docs
       //if (_IsReadOnly)
       //  return true;
 
-      DataColumn col=_Row.Table.Columns[index];
+      DataColumn col = _Row.Table.Columns[index];
       return col.ReadOnly || col.Expression.Length > 0; // 01.03.2022
     }
 
@@ -497,11 +497,11 @@ namespace FreeLibSet.Data.Docs
     /// <param name="name">Имя столбца</param>
     public void ResetBuffer(string name)
     {
-      int Index = IndexOf(name);
-      if (Index < 0)
+      int index = IndexOf(name);
+      if (index < 0)
         throw new ArgumentException("Таблица \"" + _Table.TableName + "\" не содержит столбца \"" + name + "\"");
 
-      _BufFlags[Index] = false;
+      _BufFlags[index] = false;
     }
 
     #endregion
@@ -682,7 +682,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>true, если столбец доступен только для чтения</returns>
     public bool GetValueReadOnly(int index)
     {
-      DataColumn col=_Table.Columns[index];
+      DataColumn col = _Table.Columns[index];
       return col.ReadOnly || col.Expression.Length > 0; // 01.03.2022
     }
 
@@ -727,7 +727,7 @@ namespace FreeLibSet.Data.Docs
 #endif
       if (values.Length != Table.Rows.Count)
         throw new ArgumentException("Длина массива должна быть равна " + RowCount.ToString(), "values");
-      
+
       CheckNotReadOnly(); // 28.02.2022
 
       for (int i = 0; i < values.Length; i++)

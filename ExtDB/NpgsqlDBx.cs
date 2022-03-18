@@ -27,7 +27,7 @@ namespace FreeLibSet.Data.Npgsql
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public NpgsqlDBx(NpgsqlConnectionStringBuilder connectionStringBuilder)
     {
-      SyncRoot = new object();
+      _SyncRoot = new object();
 
       _DatabaseName = GetDataBaseName(connectionStringBuilder);
       if (!String.IsNullOrEmpty(_DatabaseName))
@@ -84,7 +84,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 
 
-    private readonly object SyncRoot;
+    private readonly object _SyncRoot;
 
     /// <summary>
     /// Текстовое представление версии сервера
@@ -93,13 +93,13 @@ namespace FreeLibSet.Data.Npgsql
     {
       get
       {
-        lock (SyncRoot)
+        lock (_SyncRoot)
         {
           if (_ServerVersionText == null)
           {
-            using (NpgsqlDBxCon Con = MainEntry.CreateCon() as NpgsqlDBxCon)
+            using (NpgsqlDBxCon con = MainEntry.CreateCon() as NpgsqlDBxCon)
             {
-              _ServerVersionText = "PostGreSQL " + Con.Connection.ServerVersion;
+              _ServerVersionText = "PostGreSQL " + con.Connection.ServerVersion;
             }
           }
           return _ServerVersionText;
@@ -114,9 +114,9 @@ namespace FreeLibSet.Data.Npgsql
     /// <returns>Размер базы данных в байтах</returns>
     public override long GetDBSize()
     {
-      using (NpgsqlDBxCon Con = new NpgsqlDBxCon(MainEntry, false))
+      using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, false))
       {
-        return DataTools.GetInt64(Con.SQLExecuteScalar("SELECT pg_database_size( \'" + DatabaseName + "\' )"));
+        return DataTools.GetInt64(con.SQLExecuteScalar("SELECT pg_database_size( \'" + DatabaseName + "\' )"));
       }
     }
 
@@ -144,10 +144,10 @@ namespace FreeLibSet.Data.Npgsql
     {
       get
       {
-        using (NpgsqlDBxCon Con = new NpgsqlDBxCon(MainEntry, true))
+        using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, true))
         {
-          DataTable Table = Con.Connection.GetSchema("Databases");
-          using (DataView dv = new DataView(Table))
+          DataTable table = con.Connection.GetSchema("Databases");
+          using (DataView dv = new DataView(table))
           {
             dv.Sort = "database_name";
             return dv.Find(this.DatabaseName) >= 0;
@@ -162,10 +162,10 @@ namespace FreeLibSet.Data.Npgsql
     {
       if (DatabaseExists)
         return;
-      using (NpgsqlDBxCon Con = new NpgsqlDBxCon(MainEntry, true))
+      using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, true))
       {
-        Con.CommandTimeout = 0; // Бесконечное время выполнения
-        Con.CreateDatabase();
+        con.CommandTimeout = 0; // Бесконечное время выполнения
+        con.CreateDatabase();
       }
     }
 
@@ -182,10 +182,10 @@ namespace FreeLibSet.Data.Npgsql
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
-      using (NpgsqlDBxCon Con = new NpgsqlDBxCon(MainEntry, false))
+      using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, false))
       {
-        Con.CommandTimeout = 0; // Бесконечное время выполнения
-        return Con.UpdateDBStruct(splash, errors, options);
+        con.CommandTimeout = 0; // Бесконечное время выполнения
+        return con.UpdateDBStruct(splash, errors, options);
       }
     }
 
@@ -200,9 +200,9 @@ namespace FreeLibSet.Data.Npgsql
       if (!DatabaseExists)
         return false;
 
-      using (NpgsqlDBxCon Con = new NpgsqlDBxCon(MainEntry, true))
+      using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, true))
       {
-        Con.DropDatabase();
+        con.DropDatabase();
       }
 
       return true;
@@ -217,14 +217,14 @@ namespace FreeLibSet.Data.Npgsql
     /// <param name="tableName">Имя удаляемой таблицы</param>
     public override void DropTableIfExists(string tableName)
     {
-      using (DBxConBase Con = MainEntry.CreateCon())
+      using (DBxConBase con = MainEntry.CreateCon())
       {
-        Con.NameCheckingEnabled = false;
-        DBxSqlBuffer Buffer = new DBxSqlBuffer(this.Formatter);
-        Con.Validator.CheckTableName(tableName, DBxAccessMode.Full);
-        Buffer.SB.Append("DROP TABLE IF EXISTS ");
-        Buffer.FormatTableName(tableName);
-        Con.SQLExecuteNonQuery(Buffer.SB.ToString());
+        con.NameCheckingEnabled = false;
+        DBxSqlBuffer buffer = new DBxSqlBuffer(this.Formatter);
+        con.Validator.CheckTableName(tableName, DBxAccessMode.Full);
+        buffer.SB.Append("DROP TABLE IF EXISTS ");
+        buffer.FormatTableName(tableName);
+        con.SQLExecuteNonQuery(buffer.SB.ToString());
       }
     }
 
@@ -523,10 +523,10 @@ namespace FreeLibSet.Data.Npgsql
       cmd.Transaction = CurrentTransaction;
 
       NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
-      DataTable Table = new DataTable(tableName);
+      DataTable table = new DataTable(tableName);
       da.FillError += new FillErrorEventHandler(HandleDataAdapterFillError); // 03.10.2018
-      da.Fill(Table);
-      return Table;
+      da.Fill(table);
+      return table;
     }
 
     /// <summary>
@@ -543,26 +543,26 @@ namespace FreeLibSet.Data.Npgsql
       return cmd.ExecuteReader(CommandBehavior.SingleResult);
     }
 
-    private static void InitCmdParameters(NpgsqlCommand cmd, object[] ParamValues)
+    private static void InitCmdParameters(NpgsqlCommand cmd, object[] paramValues)
     {
       cmd.Parameters.Clear();
-      if (ParamValues != null)
+      if (paramValues != null)
       {
-        for (int i = 0; i < ParamValues.Length; i++)
+        for (int i = 0; i < paramValues.Length; i++)
         {
-          NpgsqlParameter Param = new NpgsqlParameter();
-          Param.ParameterName = "@P" + (i + 1).ToString();
-          Param.Value = ParamValues[i];
+          NpgsqlParameter sqlParam = new NpgsqlParameter();
+          sqlParam.ParameterName = "@P" + (i + 1).ToString();
+          sqlParam.Value = paramValues[i];
 
-          if (ParamValues[i] != null)
+          if (paramValues[i] != null)
           {
-            if (ParamValues[i] is Array)
+            if (paramValues[i] is Array)
             {
               //Param.SqlDbType = SqlDbType.VarBinary;
-              Param.DbType = DbType.Binary;
+              sqlParam.DbType = DbType.Binary;
             }
           }
-          cmd.Parameters.Add(Param);
+          cmd.Parameters.Add(sqlParam);
         }
       }
     }
@@ -616,7 +616,7 @@ namespace FreeLibSet.Data.Npgsql
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
 
-      Int32 Id;
+      Int32 id;
 
       Buffer.SB.Append("INSERT INTO ");
       Buffer.FormatTableName(tableName);
@@ -630,12 +630,12 @@ namespace FreeLibSet.Data.Npgsql
       Buffer.SB.Append(" RETURNING ");
       Buffer.FormatColumnName(PrimaryKeyColumnName);
 
-      Id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
 
-      if (Id <= 0)
-        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + Id.ToString());
+      if (id <= 0)
+        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + id.ToString());
 
-      return Id;
+      return id;
     }
 
     /// <summary>
@@ -650,9 +650,9 @@ namespace FreeLibSet.Data.Npgsql
       base.AddRecord(tableName, columnNames, values);
 
       // Корректируем последовательности для первичного ключа
-      int SeqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, columnNames);
-      if (SeqColumnIndex >= 0)
-        CorrectPrimaryKeySequence(tableName, DataTools.GetInt(values[SeqColumnIndex]));
+      int seqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, columnNames);
+      if (seqColumnIndex >= 0)
+        CorrectPrimaryKeySequence(tableName, DataTools.GetInt(values[seqColumnIndex]));
     }
 
     /// <summary>
@@ -694,19 +694,19 @@ namespace FreeLibSet.Data.Npgsql
       if (TrimValues)
         PerformTrimValues(tableName, table);
 
-      DBxColumns ColumnNames = DBxColumns.FromColumns(table.Columns);
-      Validator.CheckTableColumnNames(tableName, ColumnNames, false, DBxAccessMode.Full);
+      DBxColumns columnNames = DBxColumns.FromColumns(table.Columns);
+      Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
       DBxTableStruct ts = DB.Struct.Tables[tableName];
 
       #region Определяем режимы копирования
 
-      CopyFormattingMode[] Modes = new CopyFormattingMode[ColumnNames.Count];
+      CopyFormattingMode[] Modes = new CopyFormattingMode[columnNames.Count];
 
-      for (int i = 0; i < ColumnNames.Count; i++)
+      for (int i = 0; i < columnNames.Count; i++)
       {
-        DBxColumnStruct ColDef = ts.Columns[ColumnNames[i]];
+        DBxColumnStruct colDef = ts.Columns[columnNames[i]];
 
-        switch (ColDef.ColumnType)
+        switch (colDef.ColumnType)
         {
           case DBxColumnType.Int:
           case DBxColumnType.Float:
@@ -740,57 +740,57 @@ namespace FreeLibSet.Data.Npgsql
       Buffer.SB.Append("COPY ");
       Buffer.FormatTableName(tableName);
       Buffer.SB.Append(" (");
-      Buffer.FormatCSColumnNames(ColumnNames);
+      Buffer.FormatCSColumnNames(columnNames);
       Buffer.SB.Append(") FROM STDIN");
 
       NpgsqlCommand cmd = new NpgsqlCommand(Buffer.SB.ToString(), Connection);
-      NpgsqlCopySerializer Serializer = new NpgsqlCopySerializer(Connection);
-      NpgsqlCopyIn CopyIn = new NpgsqlCopyIn(cmd, Connection, Serializer.ToStream);
+      NpgsqlCopySerializer serializer = new NpgsqlCopySerializer(Connection);
+      NpgsqlCopyIn copyIn = new NpgsqlCopyIn(cmd, Connection, serializer.ToStream);
 
-      CopyIn.Start();
+      copyIn.Start();
 
       string s;
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
-        for (int i = 0; i < ColumnNames.Count; i++)
+        for (int i = 0; i < columnNames.Count; i++)
         {
-          if (Row.IsNull(i))
-            Serializer.AddNull();
+          if (row.IsNull(i))
+            serializer.AddNull();
           else
           {
-            DBxColumnStruct ColDef = ts.Columns[ColumnNames[i]];
+            DBxColumnStruct colDef = ts.Columns[columnNames[i]];
 
             switch (Modes[i])
             {
               case CopyFormattingMode.FormatValue:
                 Buffer.Clear();
-                Buffer.FormatValue(Row[i], ColDef.ColumnType); // сами форматируем
-                Serializer.AddString(Buffer.SB.ToString());
+                Buffer.FormatValue(row[i], colDef.ColumnType); // сами форматируем
+                serializer.AddString(Buffer.SB.ToString());
                 break;
               case CopyFormattingMode.String:
-                s = DataTools.GetString(Row[i]);
-                Serializer.AddString(s); // пусть он форматирует
+                s = DataTools.GetString(row[i]);
+                serializer.AddString(s); // пусть он форматирует
                 break;
               case CopyFormattingMode.Guid: // 08.10.2019
-                s = DataTools.GetString(Row[i]);
+                s = DataTools.GetString(row[i]);
                 Guid g = new Guid(s);
                 s = g.ToString("D");
-                Serializer.AddString(s);
+                serializer.AddString(s);
                 break;
               default:
                 throw new BugException();
             }
           }
         }
-        Serializer.EndRow();
+        serializer.EndRow();
       }
-      Serializer.Flush();
+      serializer.Flush();
 
-      CopyIn.End();
+      copyIn.End();
 
-      int SeqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, ColumnNames);
-      if (SeqColumnIndex >= 0)
-        CorrectPrimaryKeySequence(tableName, DataTools.MaxInt(table, ColumnNames[SeqColumnIndex], true) ?? 0);
+      int seqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, columnNames);
+      if (seqColumnIndex >= 0)
+        CorrectPrimaryKeySequence(tableName, DataTools.MaxInt(table, columnNames[seqColumnIndex], true) ?? 0);
     }
 
     #region Корректировка последовательности
@@ -809,7 +809,7 @@ namespace FreeLibSet.Data.Npgsql
     /// Ключ - имя таблицы
     /// Значение - имя последовательности, используемой полем первичного ключа
     /// </summary>
-    private Dictionary<string, string> TablePKSequenceNames;
+    private Dictionary<string, string> _TablePKSequenceNames;
 
 
     /// <summary>
@@ -819,18 +819,18 @@ namespace FreeLibSet.Data.Npgsql
     /// <param name="usedId"></param>
     private void CorrectPrimaryKeySequence(string tableName, Int32 usedId)
     {
-      if (TablePKSequenceNames == null)
-        TablePKSequenceNames = new Dictionary<string, string>();
+      if (_TablePKSequenceNames == null)
+        _TablePKSequenceNames = new Dictionary<string, string>();
       string SeqName;
-      if (!TablePKSequenceNames.TryGetValue(tableName, out SeqName))
+      if (!_TablePKSequenceNames.TryGetValue(tableName, out SeqName))
       {
         SeqName = GetTablePKSequenceName(tableName);
-        TablePKSequenceNames.Add(tableName, SeqName);
+        _TablePKSequenceNames.Add(tableName, SeqName);
       }
 
-      string PrimaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
-      Int32 LastId = DataTools.GetInt(GetMaxValue(tableName, PrimaryKeyColumnName, null));
-      usedId = Math.Max(LastId, usedId);
+      string primaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
+      Int32 lastId = DataTools.GetInt(GetMaxValue(tableName, primaryKeyColumnName, null));
+      usedId = Math.Max(lastId, usedId);
 
       StringBuilder sb = new StringBuilder();
       sb.Append("SELECT setval(\'");
@@ -844,7 +844,7 @@ namespace FreeLibSet.Data.Npgsql
 
     private string GetTablePKSequenceName(string tableName)
     {
-      string PrimaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
+      string primaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
       StringBuilder sb = new StringBuilder();
 
       // Имя таблицы идет и в апострофах и в кавычках
@@ -853,12 +853,12 @@ namespace FreeLibSet.Data.Npgsql
       sb.Append("SELECT pg_get_serial_sequence(\'\"");
       sb.Append(tableName);
       sb.Append("\"\', \'");
-      sb.Append(PrimaryKeyColumnName);
+      sb.Append(primaryKeyColumnName);
       sb.Append("\')");
 
-      string SeqName = (string)(SQLExecuteScalar(sb.ToString()));
+      string seqName = (string)(SQLExecuteScalar(sb.ToString()));
 
-      return SeqName;
+      return seqName;
     }
 
     #endregion
@@ -905,10 +905,10 @@ namespace FreeLibSet.Data.Npgsql
     /// <returns></returns>
     internal protected override string[] GetAllTableNamesFromSchema()
     {
-      DataTable Table = Connection.GetSchema("Tables", new string[] { DB.DatabaseName, "public" });
-      string[] a = new string[Table.Rows.Count];
-      for (int i = 0; i < Table.Rows.Count; i++)
-        a[i] = DataTools.GetString(Table.Rows[i], "table_name");
+      DataTable table = Connection.GetSchema("Tables", new string[] { DB.DatabaseName, "public" });
+      string[] a = new string[table.Rows.Count];
+      for (int i = 0; i < table.Rows.Count; i++)
+        a[i] = DataTools.GetString(table.Rows[i], "table_name");
 
       return a;
     }
@@ -920,134 +920,133 @@ namespace FreeLibSet.Data.Npgsql
     /// <returns>Структура</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
-      DBxTableStruct TableStr = new DBxTableStruct(tableName);
+      DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
       #region Список столбцов, тип, MaxLen, Nullable
 
-      DataTable Table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, "public", tableName });
-      Table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
+      DataTable table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, "public", tableName });
+      table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
 
-      foreach (DataRowView drv in Table.DefaultView)
+      foreach (DataRowView drv in table.DefaultView)
       {
-        string ColumnName = DataTools.GetString(drv.Row, "column_name");
-        DBxColumnStruct ColStr = new DBxColumnStruct(ColumnName);
+        string columnName = DataTools.GetString(drv.Row, "column_name");
+        DBxColumnStruct colStr = new DBxColumnStruct(columnName);
 
-        string ColTypeString = DataTools.GetString(drv.Row, "data_type");
-        switch (ColTypeString)
+        string colTypeString = DataTools.GetString(drv.Row, "data_type");
+        switch (colTypeString)
         {
           case "char":
           case "nchar":
           case "bpchar":
-            ColStr.ColumnType = DBxColumnType.String;
+            colStr.ColumnType = DBxColumnType.String;
             break;
 
           case "bigint":
           case "int8":
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int64.MinValue;
-            ColStr.MaxValue = Int64.MaxValue;
+            colStr.ColumnType = DBxColumnType.Int;
+            colStr.MinValue = Int64.MinValue;
+            colStr.MaxValue = Int64.MaxValue;
             break;
           case "int":
           case "int4":
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int32.MinValue;
-            ColStr.MaxValue = Int32.MaxValue;
+            colStr.ColumnType = DBxColumnType.Int;
+            colStr.MinValue = Int32.MinValue;
+            colStr.MaxValue = Int32.MaxValue;
             break;
           case "smallint":
           case "int2":
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int16.MinValue;
-            ColStr.MaxValue = Int16.MaxValue;
+            colStr.ColumnType = DBxColumnType.Int;
+            colStr.MinValue = Int16.MinValue;
+            colStr.MaxValue = Int16.MaxValue;
             break;
           case "tinyint":
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = 0;
-            ColStr.MaxValue = 255;
+            colStr.ColumnType = DBxColumnType.Int;
+            colStr.MinValue = 0;
+            colStr.MaxValue = 255;
             break;
 
           case "float":
           case "float4":
-            ColStr.ColumnType = DBxColumnType.Float;
+            colStr.ColumnType = DBxColumnType.Float;
             // TODO: Использовать длину поля для разделения float/double
-            ColStr.MinValue = Double.MinValue;
-            ColStr.MaxValue = Double.MaxValue;
+            colStr.MinValue = Double.MinValue;
+            colStr.MaxValue = Double.MaxValue;
             break;
           case "real":
           case "float8":
-            ColStr.ColumnType = DBxColumnType.Float;
+            colStr.ColumnType = DBxColumnType.Float;
             // TODO: Использовать длину поля для разделения float/double
-            ColStr.MinValue = Single.MinValue;
-            ColStr.MaxValue = Single.MaxValue;
+            colStr.MinValue = Single.MinValue;
+            colStr.MaxValue = Single.MaxValue;
             break;
 
           case "money":
-            ColStr.ColumnType = DBxColumnType.Money;
-            ColStr.MinValue = -922337203685477.5808;
-            ColStr.MaxValue = 922337203685477.5807;
+            colStr.ColumnType = DBxColumnType.Money;
+            colStr.MinValue = -922337203685477.5808;
+            colStr.MaxValue = 922337203685477.5807;
             break;
           case "smallmoney":
-            ColStr.ColumnType = DBxColumnType.Money;
-            ColStr.MinValue = -214748.3648;
-            ColStr.MaxValue = 214748.3647;
+            colStr.ColumnType = DBxColumnType.Money;
+            colStr.MinValue = -214748.3648;
+            colStr.MaxValue = 214748.3647;
             break;
 
           case "bit":
           case "bool":
-            ColStr.ColumnType = DBxColumnType.Boolean;
+            colStr.ColumnType = DBxColumnType.Boolean;
             break;
 
           case "date":
-            ColStr.ColumnType = DBxColumnType.Date;
+            colStr.ColumnType = DBxColumnType.Date;
             break;
 
           case "datetime":
           case "smalldatetime":
           case "datetimeoffset": // ???
           case "timestamp":
-          case "datetime2": ColStr.ColumnType = DBxColumnType.DateTime; break;
+          case "datetime2": colStr.ColumnType = DBxColumnType.DateTime; break;
 
-          case "time": ColStr.ColumnType = DBxColumnType.Time; break;
+          case "time": colStr.ColumnType = DBxColumnType.Time; break;
 
           case "varchar":
           case "nvarchar":
           case "text":
           case "ntext":
-            ColStr.ColumnType = DBxColumnType.Memo;
+            colStr.ColumnType = DBxColumnType.Memo;
             break;
 
           case "image":
           case "varbinary":
-            ColStr.ColumnType = DBxColumnType.Binary;
+            colStr.ColumnType = DBxColumnType.Binary;
             break;
 
           case "binary":
-            ColStr.ColumnType = DBxColumnType.Binary;
+            colStr.ColumnType = DBxColumnType.Binary;
             //ColStr.MaxLength=
             break;
 
           case "xml":
-            ColStr.ColumnType = DBxColumnType.Xml;
+            colStr.ColumnType = DBxColumnType.Xml;
             break;
 
           case "uuid": // 06.10.2021
-            ColStr.ColumnType = DBxColumnType.Guid;
+            colStr.ColumnType = DBxColumnType.Guid;
             break;
 
           default:
             break;
         }
 
-        ColStr.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+        colStr.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
 
-        string NullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
-        switch (NullableStr) // 01.10.2019
+        string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
+        switch (nullableStr) // 01.10.2019
         {
-          case "YES": ColStr.Nullable = true; break;
-          case "NO": ColStr.Nullable = false; break;
+          case "YES": colStr.Nullable = true; break;
+          case "NO": colStr.Nullable = false; break;
         }
 
-
-        TableStr.Columns.Add(ColStr);
+        tableStr.Columns.Add(colStr);
       }
 
       #endregion
@@ -1063,43 +1062,43 @@ namespace FreeLibSet.Data.Npgsql
       //}
 
 
-      int TableOID = GetTableOID(tableName);
-      if (TableOID == 0)
+      int tableOID = GetTableOID(tableName);
+      if (tableOID == 0)
         throw new BugException("Не удалось получить идентификатор object_id таблицы \"" + tableName + "\"");
 
       Buffer.Clear();
       Buffer.SB.Append(@"SELECT confrelid,confdeltype,conkey FROM pg_catalog.pg_constraint WHERE contype='f' AND conrelid=");
-      Buffer.FormatValue(TableOID, DBxColumnType.Int);
+      Buffer.FormatValue(tableOID, DBxColumnType.Int);
       DataTable tbl = SQLExecuteDataTable(Buffer.SB.ToString(), "pg_constraint");
-      foreach (DataRow Row in tbl.Rows)
+      foreach (DataRow row in tbl.Rows)
       {
-        Int32 RefTableOID = DataTools.GetInt(Row, "confrelid");
-        string RefTableName = GetTableNameFromOID(RefTableOID);
-        if (String.IsNullOrEmpty(RefTableName))
-          throw new BugException("Не найдено имя для мастер-таблицы с OID=" + RefTableOID);
+        Int32 refTableOID = DataTools.GetInt(row, "confrelid");
+        string refTableName = GetTableNameFromOID(refTableOID);
+        if (String.IsNullOrEmpty(refTableName))
+          throw new BugException("Не найдено имя для мастер-таблицы с OID=" + refTableOID);
 
-        Int16[] DetColPoss = (Int16[])(Row["conkey"]);
+        Int16[] detColPoss = (Int16[])(row["conkey"]);
         // не нужен Int16[] RefColPoss = (Int16[])(Row["confkey"]);
-        if (DetColPoss.Length != 1 /*|| RefColPoss.Length != 1*/)
+        if (detColPoss.Length != 1 /*|| RefColPoss.Length != 1*/)
           continue; // FOREIGN KEY по нескольким полям не поддерживаются
 
-        DBxColumnStruct ColStr = TableStr.Columns[DetColPoss[0] - 1];
-        ColStr.MasterTableName = RefTableName; // 01.10.2019
+        DBxColumnStruct colStr = tableStr.Columns[detColPoss[0] - 1];
+        colStr.MasterTableName = refTableName; // 01.10.2019
 
-        string RefTypeCode = DataTools.GetString(Row, "confdeltype");
-        switch (RefTypeCode)
+        string refTypeCode = DataTools.GetString(row, "confdeltype");
+        switch (refTypeCode)
         {
-          case "c": ColStr.RefType = DBxRefType.Delete; break;
-          case "n": ColStr.RefType = DBxRefType.Clear; break;
-          default: ColStr.RefType = DBxRefType.Disallow; break;
+          case "c": colStr.RefType = DBxRefType.Delete; break;
+          case "n": colStr.RefType = DBxRefType.Clear; break;
+          default: colStr.RefType = DBxRefType.Disallow; break;
         }
 
       }
 
       #endregion
 
-      TableStr.SetReadOnly();
-      return TableStr;
+      tableStr.SetReadOnly();
+      return tableStr;
     }
 
     #endregion
@@ -1165,7 +1164,7 @@ namespace FreeLibSet.Data.Npgsql
 
     internal bool UpdateDBStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
-      bool Modified = false;
+      bool modified = false;
 
       // Индексы и ограничения.
       // В отличие от MS SQL Server, требуется, чтобы имена индексов были уникальны в пределах
@@ -1183,20 +1182,20 @@ namespace FreeLibSet.Data.Npgsql
       //    Свойство DBxIndexDef.IndexName не учитывается
 
       if (UpdateDBStructTables(splash, errors))
-        Modified = true;
+        modified = true;
 
       if (options.ForeignKeys)
       {
         if (UpdateDBStructForeignKeys(splash, errors))
-          Modified = true;
+          modified = true;
       }
 
       if (UpdateDBStructIndices(splash, errors, options))
-        Modified = true;
+        modified = true;
 
       splash.PhaseText = String.Empty;
       splash.PercentMax = 0;
-      return Modified;
+      return modified;
     }
 
     #endregion
@@ -1205,17 +1204,17 @@ namespace FreeLibSet.Data.Npgsql
 
     private bool UpdateDBStructTables(ISplash splash, ErrorMessageList errors)
     {
-      bool Modified = false;
+      bool modified = false;
 
       #region Извлечение информации из существующей схемы данных
 
-      DataTable TableTables = Connection.GetSchema("Tables");
-      DataView dvTables = new DataView(TableTables);
+      DataTable tableTables = Connection.GetSchema("Tables");
+      DataView dvTables = new DataView(tableTables);
       dvTables.Sort = "TABLE_NAME";
 
       // Столбцы
-      DataTable TableColumns = Connection.GetSchema("Columns");
-      DataView dvColumns = new DataView(TableColumns);
+      DataTable tableColumns = Connection.GetSchema("Columns");
+      DataView dvColumns = new DataView(tableColumns);
       dvColumns.Sort = "TABLE_NAME,COLUMN_NAME"; // нужен такой порядок
 
       // Данные по индексам 
@@ -1228,23 +1227,23 @@ namespace FreeLibSet.Data.Npgsql
 
       splash.PercentMax = DB.Struct.Tables.Count;
       // Цикл по таблицам
-      foreach (DBxTableStruct Table in DB.Struct.Tables)
+      foreach (DBxTableStruct table in DB.Struct.Tables)
       {
-        if (!Table.AutoCreate)
+        if (!table.AutoCreate)
           continue;
 
-        if (Table.Columns.Count == 0)
-          throw new DBxStructException(Table, "Не задано ни одного столбца");
+        if (table.Columns.Count == 0)
+          throw new DBxStructException(table, "Не задано ни одного столбца");
         //CheckPrimaryKeyColumn(Table, Table.PrimaryKeyColumns[0]);
 
-        if (dvTables.Find(Table.TableName) < 0)
+        if (dvTables.Find(table.TableName) < 0)
         {
           #region Требуется полное создание таблицы
 
-          splash.PhaseText = "Создается таблица \"" + Table.TableName + "\"";
-          CreateTable(Table);
-          errors.AddInfo("Создана таблица \"" + Table.TableName + "\"");
-          Modified = true;
+          splash.PhaseText = "Создается таблица \"" + table.TableName + "\"";
+          CreateTable(table);
+          errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
+          modified = true;
 
           #endregion
         }
@@ -1252,82 +1251,82 @@ namespace FreeLibSet.Data.Npgsql
         {
           #region Проверяем правильность первичного ключа
 
-          if (CorrectPrimaryKey(Table, dvIndexColumns, errors))
-            Modified = true;
+          if (CorrectPrimaryKey(table, dvIndexColumns, errors))
+            modified = true;
 
           #endregion
 
           #region Проверяем наличие недостающих полей
 
-          DBxSqlBuffer Buffer2 = new DBxSqlBuffer(Buffer.Formatter);
+          DBxSqlBuffer buffer2 = new DBxSqlBuffer(Buffer.Formatter);
 
-          foreach (DBxColumnStruct Column in Table.Columns)
+          foreach (DBxColumnStruct colDef in table.Columns)
           {
-            int ColumnRowIndex = dvColumns.Find(new object[] { Table.TableName, Column.ColumnName });
-            if (ColumnRowIndex < 0)
+            int columnRowIndex = dvColumns.Find(new object[] { table.TableName, colDef.ColumnName });
+            if (columnRowIndex < 0)
             {
               // Поля не существует
-              splash.PhaseText = "Добавление поля \"" + Column.ColumnName + "\"в таблицу \"" + Table.TableName + "\"";
+              splash.PhaseText = "Добавление поля \"" + colDef.ColumnName + "\"в таблицу \"" + table.TableName + "\"";
               Buffer.Clear();
               Buffer.SB.Append("ALTER TABLE ");
-              Buffer.FormatTableName(Table.TableName);
+              Buffer.FormatTableName(table.TableName);
               Buffer.SB.Append(" ADD "); // а не ADD COLUMN
-              AppendColumnDef(/*Table, */Column, false, true);
+              AppendColumnDef(/*Table, */colDef, false, true);
               SQLExecuteNonQuery(Buffer.SB.ToString());
-              errors.AddInfo("Создано поле \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName + "\"");
-              Modified = true;
+              errors.AddInfo("Создано поле \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName + "\"");
+              modified = true;
             }
             else
             {
               // Проверяем соответствие поля
-              DataRow ColumnRow = dvColumns[ColumnRowIndex].Row;
+              DataRow columnRow = dvColumns[columnRowIndex].Row;
               // Проверяем соответствие типа столбца объявлению
-              string RealType = DataTools.GetString(ColumnRow, "DATA_TYPE").ToUpperInvariant();
-              RealType = ReplaceSynonymousPostGreSqlServerType(RealType);
-              Buffer2.Clear();
-              FormatValueType(Buffer2, Column, false);
-              string WantedType = Buffer2.SB.ToString();
-              int p = WantedType.IndexOf('(');
+              string realType = DataTools.GetString(columnRow, "DATA_TYPE").ToUpperInvariant();
+              realType = ReplaceSynonymousPostGreSqlServerType(realType);
+              buffer2.Clear();
+              FormatValueType(buffer2, colDef, false);
+              string wantedType = buffer2.SB.ToString();
+              int p = wantedType.IndexOf('(');
               if (p >= 0)
-                WantedType = WantedType.Substring(0, p);
+                wantedType = wantedType.Substring(0, p);
 
-              if (RealType != WantedType)
+              if (realType != wantedType)
               {
-                errors.AddError("Несоответствие типа поля \"" + Column.ColumnName + "\" таблицы \"" +
-                    Table.TableName + "\". Объявление поля типа " + Column.ColumnType.ToString() +
-                    " предполагает тип " + WantedType +
-                    " в то время как реальный тип поля " + RealType);
+                errors.AddError("Несоответствие типа поля \"" + colDef.ColumnName + "\" таблицы \"" +
+                    table.TableName + "\". Объявление поля типа " + colDef.ColumnType.ToString() +
+                    " предполагает тип " + wantedType +
+                    " в то время как реальный тип поля " + realType);
               }
               else
               {
                 #region Проверка длины строкового поля
 
-                if (Column.ColumnType == DBxColumnType.String)
+                if (colDef.ColumnType == DBxColumnType.String)
                 {
-                  int RealLen = DataTools.GetInt(ColumnRow, "CHARACTER_MAXIMUM_LENGTH");
-                  if (RealLen != Column.MaxLength)
+                  int realLen = DataTools.GetInt(columnRow, "CHARACTER_MAXIMUM_LENGTH");
+                  if (realLen != colDef.MaxLength)
                   {
-                    if (RealLen > Column.MaxLength)
+                    if (realLen > colDef.MaxLength)
                     {
                       // !!! Проверка, нельзя ли укоротить поле
-                      errors.AddWarning("Поле \"" + Column.ColumnName + "\" таблицы \"" +
-                          Table.TableName + "\" должно иметь длину " + Column.MaxLength.ToString() +
-                          " символов, в то время, как реальное поле длиннее:  " + RealLen.ToString() + " символов");
+                      errors.AddWarning("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
+                          table.TableName + "\" должно иметь длину " + colDef.MaxLength.ToString() +
+                          " символов, в то время, как реальное поле длиннее:  " + realLen.ToString() + " символов");
                       //DisallowFieldChange = true;
                     }
                     else
                     {
                       // Лучше пересоздать все индексы
-                      errors.AddInfo("Все существующие индексы таблицы \"" + Table.TableName + "\" будут удалены из-за изменения размера поля \"" + Column.ColumnName + "\"");
-                      if (DeleteAllIndices(Table.TableName, splash, errors))
-                        Modified = true;
+                      errors.AddInfo("Все существующие индексы таблицы \"" + table.TableName + "\" будут удалены из-за изменения размера поля \"" + colDef.ColumnName + "\"");
+                      if (DeleteAllIndices(table.TableName, splash, errors))
+                        modified = true;
 
                       // Увеличиваем длину поля
-                      splash.PhaseText = "Изменение длины поля \"" + Column.ColumnName + "\" в таблице \"" + Table.TableName + "\"";
-                      AlterColumn(Table, Column, true, false);
-                      errors.AddInfo("Длина поля \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName +
-                        "\" увеличена с " + RealLen.ToString() + " до " + Column.MaxLength.ToString() + " символов");
-                      Modified = true;
+                      splash.PhaseText = "Изменение длины поля \"" + colDef.ColumnName + "\" в таблице \"" + table.TableName + "\"";
+                      AlterColumn(table, colDef, true, false);
+                      errors.AddInfo("Длина поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                        "\" увеличена с " + realLen.ToString() + " до " + colDef.MaxLength.ToString() + " символов");
+                      modified = true;
                     }
                   }
                 } // Строковое поле
@@ -1338,47 +1337,47 @@ namespace FreeLibSet.Data.Npgsql
 
                 // Установка свойства DEFAULT должна выполняться до установки NOT NULL, иначе возникнет ошибка
 
-                string WantedDefExpr = String.Empty;
-                if (Column.DefaultExpression != null)
+                string wantedDefExpr = String.Empty;
+                if (colDef.DefaultExpression != null)
                 {
-                  Buffer2.Clear();
-                  Buffer2.FormatExpression(Column.DefaultExpression, new DBxFormatExpressionInfo());
-                  WantedDefExpr = Buffer2.SB.ToString();
+                  buffer2.Clear();
+                  buffer2.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
+                  wantedDefExpr = buffer2.SB.ToString();
                 }
-                string RealDefExpr = DataTools.GetString(ColumnRow, "COLUMN_DEFAULT");
-                if (RealDefExpr.StartsWith("nextval(", StringComparison.OrdinalIgnoreCase))
-                  RealDefExpr = String.Empty; // иначе изгадим первичный ключ
-                if (RealDefExpr != WantedDefExpr)
+                string realDefExpr = DataTools.GetString(columnRow, "COLUMN_DEFAULT");
+                if (realDefExpr.StartsWith("nextval(", StringComparison.OrdinalIgnoreCase))
+                  realDefExpr = String.Empty; // иначе изгадим первичный ключ
+                if (realDefExpr != wantedDefExpr)
                 {
                   // Вседа сначала убираем старое правило, потом добавляем новое
-                  if (RealDefExpr.Length > 0)
+                  if (realDefExpr.Length > 0)
                   {
                     Buffer.Clear();
                     Buffer.SB.Append("ALTER TABLE ");
-                    Buffer.FormatTableName(Table.TableName);
+                    Buffer.FormatTableName(table.TableName);
                     Buffer.SB.Append(" ALTER COLUMN ");
-                    Buffer.FormatColumnName(Column.ColumnName);
+                    Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append(" DROP DEFAULT");
 
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName +
+                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
                         "\" очищен признак DEFAULT");
                   }
-                  if (WantedDefExpr.Length > 0)
+                  if (wantedDefExpr.Length > 0)
                   {
                     Buffer.Clear();
                     Buffer.SB.Append("ALTER TABLE ");
-                    Buffer.FormatTableName(Table.TableName);
+                    Buffer.FormatTableName(table.TableName);
                     Buffer.SB.Append(" ALTER COLUMN ");
-                    Buffer.FormatColumnName(Column.ColumnName);
+                    Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append("SET DEFAULT ");
-                    Buffer.FormatExpression(Column.DefaultExpression, new DBxFormatExpressionInfo());
+                    Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
                     SQLExecuteNonQuery(Buffer.SB.ToString());
 
-                    errors.AddInfo("Для поля \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName +
-                      "\" установлен признак DEFAULT " + WantedDefExpr);
+                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                      "\" установлен признак DEFAULT " + wantedDefExpr);
                   }
-                  Modified = true;
+                  modified = true;
                 }
 
                 #endregion
@@ -1386,55 +1385,55 @@ namespace FreeLibSet.Data.Npgsql
                 #region Проверка признака Nullable
 
                 // Проверяем Nullable
-                string s1 = DataTools.GetString(ColumnRow, "IS_NULLABLE").ToUpperInvariant();
+                string s1 = DataTools.GetString(columnRow, "IS_NULLABLE").ToUpperInvariant();
 
-                bool RealNullable;
+                bool realNullable;
                 switch (s1)
                 {
                   case "YES":
-                    RealNullable = true;
+                    realNullable = true;
                     break;
                   case "NO":
-                    RealNullable = false;
+                    realNullable = false;
                     break;
                   default:
-                    RealNullable = Column.Nullable;
+                    realNullable = colDef.Nullable;
                     break;
                 }
 
-                if (Column.Nullable != RealNullable)
+                if (colDef.Nullable != realNullable)
                 {
-                  if (DeleteAllIndices(Table.TableName, splash, errors))
-                    Modified = true;
+                  if (DeleteAllIndices(table.TableName, splash, errors))
+                    modified = true;
 
                   #region Замена NULL'ов на DEFAULT
 
-                  if ((!Column.Nullable) && Column.DefaultExpression != null && (!IsTableEmpty(Table.TableName)))
+                  if ((!colDef.Nullable) && colDef.DefaultExpression != null && (!IsTableEmpty(table.TableName)))
                   {
                     //SetValue(Table.TableName, new ValueFilter(Column.ColumnName, null, CompareKind.Equal, Column.ColumnType),Column.ColumnName, Column.Default)
                     // Заменяем значения NULL на значение по умолчанию
                     Buffer.Clear();
                     Buffer.SB.Append("UPDATE ");
-                    Buffer.FormatTableName(Table.TableName);
+                    Buffer.FormatTableName(table.TableName);
                     Buffer.SB.Append(" SET ");
-                    Buffer.FormatColumnName(Column.ColumnName);
+                    Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append("=");
-                    Buffer.FormatExpression(Column.DefaultExpression, new DBxFormatExpressionInfo());
+                    Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
                     Buffer.SB.Append(" WHERE ");
-                    Buffer.FormatColumnName(Column.ColumnName);
+                    Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append(" IS NULL");
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName +
+                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
                       "\" значения NULL заменены на значение по умолчанию");
                   }
 
                   #endregion
 
                   // Делаем поле NULLABLE
-                  AlterColumn(Table, Column, false, true);
-                  errors.AddInfo("Для поля \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName +
-                    "\" установлен признак " + (Column.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
-                  Modified = true;
+                  AlterColumn(table, colDef, false, true);
+                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                    "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
+                  modified = true;
                 }
 
                 #endregion
@@ -1449,9 +1448,9 @@ namespace FreeLibSet.Data.Npgsql
 
         #region Комментарии
 
-        SetTableComment(Table.TableName, Table.Comment);
-        for (int i = 0; i < Table.Columns.Count; i++)
-          SetColumnComment(Table.TableName, Table.Columns[i].ColumnName, Table.Columns[i].Comment);
+        SetTableComment(table.TableName, table.Comment);
+        for (int i = 0; i < table.Columns.Count; i++)
+          SetColumnComment(table.TableName, table.Columns[i].ColumnName, table.Columns[i].Comment);
 
 
         #endregion
@@ -1460,7 +1459,7 @@ namespace FreeLibSet.Data.Npgsql
         splash.IncPercent();
       } // Цикл по таблицам
 
-      return Modified;
+      return modified;
     }
 
     private void CreateTable(DBxTableStruct table)
@@ -1516,7 +1515,7 @@ namespace FreeLibSet.Data.Npgsql
     /// Ключ - тип данных, который может возвращать PostGreSQL
     /// Значение - "основной" тип данных, который мы используем в библиотеке
     /// </summary>
-    private static readonly Dictionary<string, string> SynonymousPostGreSqlServerTypeReplaces =
+    private static readonly Dictionary<string, string> _SynonymousPostGreSqlServerTypeReplaces =
       CreateSynonymousPostGreSqlServerTypeReplaces();
 
     private static Dictionary<string, string> CreateSynonymousPostGreSqlServerTypeReplaces()
@@ -1534,9 +1533,9 @@ namespace FreeLibSet.Data.Npgsql
 
     private static string ReplaceSynonymousPostGreSqlServerType(string realType)
     {
-      string MainType;
-      if (SynonymousPostGreSqlServerTypeReplaces.TryGetValue(realType, out MainType))
-        return MainType;
+      string mainType;
+      if (_SynonymousPostGreSqlServerTypeReplaces.TryGetValue(realType, out mainType))
+        return mainType;
       else
         return realType;
     }
@@ -1620,41 +1619,41 @@ namespace FreeLibSet.Data.Npgsql
       if (table.PrimaryKey.Count != 1)
         throw new NotSupportedException("В таблице должен быть первичный ключ из одного поля");
 
-      bool Modified = false;
-      bool Found = false;
-      string PKName = table.TableName + "_pkey";
+      bool modified = false;
+      bool found = false;
+      string pkName = table.TableName + "_pkey";
 
-      dvIndexColumns.RowFilter = "TABLE_NAME='" + table.TableName + "' AND INDEX_NAME='" + PKName + "'";
+      dvIndexColumns.RowFilter = "TABLE_NAME='" + table.TableName + "' AND INDEX_NAME='" + pkName + "'";
       foreach (DataRowView drvCol in dvIndexColumns)
       {
-        string ColumnName = DataTools.GetString(drvCol.Row, "COLUMN_NAME");
-        if (String.Equals(ColumnName, table.PrimaryKey[0], StringComparison.OrdinalIgnoreCase))
-          Found = true;
+        string columnName = DataTools.GetString(drvCol.Row, "COLUMN_NAME");
+        if (String.Equals(columnName, table.PrimaryKey[0], StringComparison.OrdinalIgnoreCase))
+          found = true;
         else
         {
           // 13.10.2021.
           // Ограничение может иметь имя в любом регистре.
           // ALTER TABLE DROP CONSTRAINT требует указания имени ограничения с учетом регистра.
           // Берем имя, как оно записано в базе данных.
-          string PKName2 = DataTools.GetString(drvCol.Row, "INDEX_NAME"); 
+          string pkName2 = DataTools.GetString(drvCol.Row, "INDEX_NAME"); 
 
           //if (IndexName.StartsWith("Index"))
           //  continue; // составной пользовательский индекс, в который входит поле "Id"
-          SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" DROP CONSTRAINT \"" + PKName2 + "\"");
-          errors.AddInfo("Удалено неправильное ограничение первичного ключа \"" + PKName2 + "\" в таблице \"" + table.TableName + "\"");
-          Modified = true;
+          SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" DROP CONSTRAINT \"" + pkName2 + "\"");
+          errors.AddInfo("Удалено неправильное ограничение первичного ключа \"" + pkName2 + "\" в таблице \"" + table.TableName + "\"");
+          modified = true;
           break;
         }
       }
 
-      if (!Found)
+      if (!found)
       {
-        SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" ADD CONSTRAINT \"" + PKName + "\" PRIMARY KEY (\"" + table.PrimaryKey[0] + "\")");
-        errors.AddInfo("Добавлено ограничение первичного ключа \"" + PKName + "\" в таблице \"" + table.TableName + "\"");
-        Modified = true;
+        SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" ADD CONSTRAINT \"" + pkName + "\" PRIMARY KEY (\"" + table.PrimaryKey[0] + "\")");
+        errors.AddInfo("Добавлено ограничение первичного ключа \"" + pkName + "\" в таблице \"" + table.TableName + "\"");
+        modified = true;
       }
 
-      return Modified;
+      return modified;
     }
 
     #endregion
@@ -1696,7 +1695,7 @@ namespace FreeLibSet.Data.Npgsql
 
     private bool UpdateDBStructForeignKeys(ISplash splash, ErrorMessageList errors)
     {
-      bool Modified = false;
+      bool modified = false;
 
       #region Создаем TableForeignKeys
 
@@ -1708,8 +1707,8 @@ namespace FreeLibSet.Data.Npgsql
       //dvForeignKeys.Sort = "CONSTRAINT_NAME";
 
       // Столбцы
-      DataTable TableColumns = Connection.GetSchema("Columns");
-      DataView dvColumns = new DataView(TableColumns);
+      DataTable tableColumns = Connection.GetSchema("Columns");
+      DataView dvColumns = new DataView(tableColumns);
       dvColumns.Sort = "TABLE_NAME,ORDINAL_POSITION";
 
       // Используем системную таблицу pg_constraint
@@ -1717,15 +1716,15 @@ namespace FreeLibSet.Data.Npgsql
       // 1: conrelid::regclass - имя таблицы в кавычках
       // 2: conkey - массив индексов столбцов ссылочных полей (нас интересуют только ограничения из одного элемента)
       // contype='f' - фильтр по ограничениям внешнего ключа
-      DataTable TablePGC = DoSQLExecuteDataTable(@"SELECT conname, conrelid::regclass, conkey FROM pg_catalog.pg_constraint WHERE contype='f'", "pg_constraint", null);
+      DataTable tablePGC = DoSQLExecuteDataTable(@"SELECT conname, conrelid::regclass, conkey FROM pg_catalog.pg_constraint WHERE contype='f'", "pg_constraint", null);
       // Собираем руками
-      DataTable TableForeignKeys = new DataTable();
-      TableForeignKeys.Columns.Add("CONSTRAINT_NAME", typeof(string));
-      TableForeignKeys.Columns.Add("TABLE_NAME", typeof(string));
-      TableForeignKeys.Columns.Add("COLUMN_NAME", typeof(string));
-      foreach (DataRow RowPGC in TablePGC.Rows)
+      DataTable tableForeignKeys = new DataTable();
+      tableForeignKeys.Columns.Add("CONSTRAINT_NAME", typeof(string));
+      tableForeignKeys.Columns.Add("TABLE_NAME", typeof(string));
+      tableForeignKeys.Columns.Add("COLUMN_NAME", typeof(string));
+      foreach (DataRow rowPGC in tablePGC.Rows)
       {
-        Array aColIdxs = RowPGC[2] as Array;
+        Array aColIdxs = rowPGC[2] as Array;
         if (aColIdxs == null)
         {
           errors.AddWarning("В системной таблице \"pg_constraint\" задано ограничение внешнего ключа с неправильным полем \"conkey\"");
@@ -1734,80 +1733,80 @@ namespace FreeLibSet.Data.Npgsql
         if (aColIdxs.Length != 1)
           continue; // явно не наше ограничение
 
-        string ConstraintName = (string)(RowPGC[0]);
-        string TableName = (string)(RowPGC[1]);
-        if (TableName[0] == '\"') // убираем кавычки
-          TableName = TableName.Substring(1, TableName.Length - 2);
+        string constraintName = (string)(rowPGC[0]);
+        string tableName = (string)(rowPGC[1]);
+        if (tableName[0] == '\"') // убираем кавычки
+          tableName = tableName.Substring(1, tableName.Length - 2);
 
         object oColIdx = aColIdxs.GetValue(0);
-        int ColIdx = DataTools.GetInt(oColIdx);
-        int p = dvColumns.Find(new object[2] { TableName, ColIdx });
+        int colIdx = DataTools.GetInt(oColIdx);
+        int p = dvColumns.Find(new object[2] { tableName, colIdx });
         if (p < 0)
         {
-          errors.AddWarning("В системной таблице \"pg_constraint\" задано ограничение внешнего ключа для таблицы \"" + TableName + "\" и столюца с индексом " + ColIdx.ToString() +
+          errors.AddWarning("В системной таблице \"pg_constraint\" задано ограничение внешнего ключа для таблицы \"" + tableName + "\" и столюца с индексом " + colIdx.ToString() +
             ". Для этих таблицы+поле не найдено записи в таблице столбцов. Существующее ограничение не рассматривается, но возможна ошибка повторного добавления ограничения");
           continue;
         }
-        string ColName = DataTools.GetString(dvColumns[p].Row, "COLUMN_NAME");
+        string colName = DataTools.GetString(dvColumns[p].Row, "COLUMN_NAME");
 
-        TableForeignKeys.Rows.Add(ConstraintName, TableName, ColName);
+        tableForeignKeys.Rows.Add(constraintName, tableName, colName);
       }
 
 
-      DataView dvForeignKeys = TableForeignKeys.DefaultView;
+      DataView dvForeignKeys = tableForeignKeys.DefaultView;
       dvForeignKeys.Sort = "TABLE_NAME,COLUMN_NAME";
 
       #endregion
 
       splash.PhaseText = "Проверка внешних ключей";
       splash.PercentMax = DB.Struct.Tables.Count;
-      foreach (DBxTableStruct Table in DB.Struct.Tables)
+      foreach (DBxTableStruct table in DB.Struct.Tables)
       {
-        if (!Table.AutoCreate)
+        if (!table.AutoCreate)
           continue;
 
-        if (UpdateForeignKeys(Table, dvForeignKeys, splash, errors))
-          Modified = true;
+        if (UpdateForeignKeys(table, dvForeignKeys, splash, errors))
+          modified = true;
         splash.IncPercent();
       }
 
-      return Modified;
+      return modified;
     }
 
     private bool UpdateForeignKeys(DBxTableStruct table, DataView dvForeignKeys, ISplash splash, ErrorMessageList errors)
     {
-      bool Modified = false;
-      foreach (DBxColumnStruct Column in table.Columns)
+      bool modified = false;
+      foreach (DBxColumnStruct column in table.Columns)
       {
-        if (String.IsNullOrEmpty(Column.MasterTableName))
+        if (String.IsNullOrEmpty(column.MasterTableName))
           continue;
-        if (Column.RefType == DBxRefType.Emulation)
+        if (column.RefType == DBxRefType.Emulation)
           continue;
 
-        if (dvForeignKeys.Find(new object[] { table.TableName, Column.ColumnName }) >= 0)
+        if (dvForeignKeys.Find(new object[] { table.TableName, column.ColumnName }) >= 0)
         {
           continue;
         }
 
         // Создаем внешний ключ
-        splash.PhaseText = "Создание внешнего ключа для таблицы \"" + table.TableName + "\", столбца \"" + Column.ColumnName + "\"";
+        splash.PhaseText = "Создание внешнего ключа для таблицы \"" + table.TableName + "\", столбца \"" + column.ColumnName + "\"";
 
         Buffer.Clear();
         Buffer.SB.Append("ALTER TABLE ");
         Buffer.FormatTableName(table.TableName);
         Buffer.SB.Append(" ADD FOREIGN KEY (");
-        Buffer.FormatColumnName(Column.ColumnName);
+        Buffer.FormatColumnName(column.ColumnName);
         Buffer.SB.Append(") REFERENCES ");
-        Buffer.FormatTableName(Column.MasterTableName);
+        Buffer.FormatTableName(column.MasterTableName);
         Buffer.SB.Append(" ");
-        Buffer.FormatRefColumnDeleteAction(Column.RefType);
+        Buffer.FormatRefColumnDeleteAction(column.RefType);
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Создан внешний ключ в таблице \"" + table.TableName + "\" для столбца \"" + Column.ColumnName + "\"");
-        Modified = true;
+        errors.AddInfo("Создан внешний ключ в таблице \"" + table.TableName + "\" для столбца \"" + column.ColumnName + "\"");
+        modified = true;
       }
 
-      return Modified; // 28.12.2020
+      return modified; // 28.12.2020
     }
 
     #endregion
@@ -1818,7 +1817,7 @@ namespace FreeLibSet.Data.Npgsql
     {
       // Индексы удаляем и создаем отдельно, не пытаясь объединить это с созданием таблицы
 
-      bool Modified = false;
+      bool modified = false;
 
       splash.PhaseText = "Проверка индексов";
 
@@ -1835,8 +1834,8 @@ namespace FreeLibSet.Data.Npgsql
       // Кроме того, могут быть всякие вычисляемые индексы
       // Поэтому, делаем все руками, кроме списка столбцов
 
-      DataTable TableColumns = Connection.GetSchema("Columns");
-      DataView dvColumns = new DataView(TableColumns);
+      DataTable tableColumns = Connection.GetSchema("Columns");
+      DataView dvColumns = new DataView(tableColumns);
       dvColumns.Sort = "TABLE_NAME,ORDINAL_POSITION"; // нумерация с 1
 
       // Используем хитрый запрос.
@@ -1845,7 +1844,7 @@ namespace FreeLibSet.Data.Npgsql
       // 0 "tablename": - имя таблицы
       // 1 "indexname" - имя индекса
       // 2 "indexcolumns" - массив номеров столбцов (нумерация с 1), 0- вычисляемый индекс
-      DataTable TableIdx = DoSQLExecuteDataTable(
+      DataTable tableIdx = DoSQLExecuteDataTable(
 @"SELECT 
     t.relname AS tablename, 
     c.relname AS indexname, 
@@ -1869,34 +1868,33 @@ namespace FreeLibSet.Data.Npgsql
 
       splash.PercentMax = DB.Struct.Tables.Count;
       // Цикл по таблицам
-      foreach (DBxTableStruct Table in DB.Struct.Tables)
+      foreach (DBxTableStruct table in DB.Struct.Tables)
       {
-        if (!Table.AutoCreate)
+        if (!table.AutoCreate)
           continue;
 
         #region Словарь для поиска нужных индексов
 
         // Создаем словарь "СписокСтолбцовВВерхнемРегистре - НомерИндекса"
-        Dictionary<string, int> Dict = new Dictionary<string, int>(Table.Indexes.Count);
-        for (int i = 0; i < Table.Indexes.Count; i++)
-          Dict.Add(Table.Indexes[i].Columns.AsString.ToUpperInvariant(), i);
-
+        Dictionary<string, int> dict = new Dictionary<string, int>(table.Indexes.Count);
+        for (int i = 0; i < table.Indexes.Count; i++)
+          dict.Add(table.Indexes[i].Columns.AsString.ToUpperInvariant(), i);
 
         #endregion
 
         #region Просмотр существующих индексов и удаление ненужных
 
         // Для каждого описания индекса устанавливается флаг, если такой индекс есть
-        bool[] IndexFlags = new bool[Table.Indexes.Count];
+        bool[] indexFlags = new bool[table.Indexes.Count];
 
         // Существующие индексы для текущей таблицы
-        TableIdx.DefaultView.RowFilter = new ValueFilter("tablename", Table.TableName).ToString();
+        tableIdx.DefaultView.RowFilter = new ValueFilter("tablename", table.TableName).ToString();
 
         //object[] a = TableIdx.Rows[1].ItemArray;
 
-        foreach (DataRowView drvIdx in TableIdx.DefaultView)
+        foreach (DataRowView drvIdx in tableIdx.DefaultView)
         {
-          string IndexName = DataTools.GetString(drvIdx.Row, "indexname");
+          string indexName = DataTools.GetString(drvIdx.Row, "indexname");
 
           // Первичные ключи не проверяем, т.к. их отфильтровали в запросе
           //if (IndexName.EndsWith("_PKEY", StringComparison.OrdinalIgnoreCase))
@@ -1910,44 +1908,44 @@ namespace FreeLibSet.Data.Npgsql
           string sColIdxs = drvIdx.Row[2].ToString();
           string[] aColIdxs = sColIdxs.Split(' ');
 
-          string[] ColNames = new string[aColIdxs.Length];
+          string[] colNames = new string[aColIdxs.Length];
           for (int j = 0; j < aColIdxs.Length; j++)
           {
-            int ColIdx = int.Parse(aColIdxs[j]);
-            if (ColIdx == 0)
+            int colIdx = int.Parse(aColIdxs[j]);
+            if (colIdx == 0)
             {
               // Индекс с выражением не обрабатываем
-              ColNames = null;
+              colNames = null;
               break;
             }
             else
             {
-              int p = dvColumns.Find(new object[] { Table.TableName, ColIdx });
+              int p = dvColumns.Find(new object[] { table.TableName, colIdx });
               if (p < 0)
               {
-                errors.AddError("Для индекса \"" + IndexName + "\" задан столбец с номером " + ColIdx.ToString() + ", которого нет в таблице \"" + Table.TableName + "\"");
-                ColNames = null;
+                errors.AddError("Для индекса \"" + indexName + "\" задан столбец с номером " + colIdx.ToString() + ", которого нет в таблице \"" + table.TableName + "\"");
+                colNames = null;
                 break;
               }
-              ColNames[j] = DataTools.GetString(dvColumns[p].Row, "COLUMN_NAME");
+              colNames[j] = DataTools.GetString(dvColumns[p].Row, "COLUMN_NAME");
             }
           }
-          if (ColNames == null)
+          if (colNames == null)
             continue;
 
-          string ThisColumns = String.Join(",", ColNames).ToUpperInvariant();
+          string thisColumns = String.Join(",", colNames).ToUpperInvariant();
 
           #endregion
 
-          int IndexIdx;
-          if (Dict.TryGetValue(ThisColumns, out IndexIdx))
-            IndexFlags[IndexIdx] = true; // нашли индекс
+          int indexIdx;
+          if (dict.TryGetValue(thisColumns, out indexIdx))
+            indexFlags[indexIdx] = true; // нашли индекс
           else if (options.DropUnusedIndices)
           {
-            splash.PhaseText = "Удаление индекса " + IndexName;
-            DropIndex(/*Table.TableName, */IndexName);
-            Modified = true;
-            errors.AddInfo("Удален индекс \"" + IndexName + "\" в таблице \"" + Table.TableName + "\", т.к. он не соответствует объявленному в структуре данных");
+            splash.PhaseText = "Удаление индекса " + indexName;
+            DropIndex(/*Table.TableName, */indexName);
+            modified = true;
+            errors.AddInfo("Удален индекс \"" + indexName + "\" в таблице \"" + table.TableName + "\", т.к. он не соответствует объявленному в структуре данных");
           }
         } // цикл по существующим индексам
 
@@ -1955,13 +1953,13 @@ namespace FreeLibSet.Data.Npgsql
 
         #region Создание новых индексов
 
-        for (int i = 0; i < Table.Indexes.Count; i++)
+        for (int i = 0; i < table.Indexes.Count; i++)
         {
-          if (!IndexFlags[i])
+          if (!indexFlags[i])
           {
-            CreateIndex(Table.TableName, Table.Indexes[i].Columns);
-            Modified = true;
-            errors.AddInfo("Добавлен индекс для таблицы \"" + Table.TableName + "\", по полям " + Table.Indexes[i].Columns.AsString);
+            CreateIndex(table.TableName, table.Indexes[i].Columns);
+            modified = true;
+            errors.AddInfo("Добавлен индекс для таблицы \"" + table.TableName + "\", по полям " + table.Indexes[i].Columns.AsString);
           }
         }
 
@@ -1970,7 +1968,7 @@ namespace FreeLibSet.Data.Npgsql
         splash.IncPercent();
       }
 
-      return Modified;
+      return modified;
     }
 
 
@@ -2043,35 +2041,35 @@ namespace FreeLibSet.Data.Npgsql
       // Перебираем все существующие индексы
       // Один индекс может занимать несколько строк
       // Создаем список индексов для удаления
-      List<string> IndexNames = null;
+      List<string> indexNames = null;
 
-      DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, tableName });
-      foreach (DataRow IndexRow in TableIndexes.Rows)
+      DataTable tableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, tableName });
+      foreach (DataRow indexRow in tableIndexes.Rows)
       {
-        string IndexName = DataTools.GetString(IndexRow, "INDEX_NAME");
-        if (IndexName.EndsWith("_PKEY", StringComparison.OrdinalIgnoreCase))
+        string indexName = DataTools.GetString(indexRow, "INDEX_NAME");
+        if (indexName.EndsWith("_PKEY", StringComparison.OrdinalIgnoreCase))
           continue;
 
         // Добавляем индекс в список на удаление
-        if (IndexNames == null)
-          IndexNames = new List<string>();
-        if (!IndexNames.Contains(IndexName))
-          IndexNames.Add(IndexName);
+        if (indexNames == null)
+          indexNames = new List<string>();
+        if (!indexNames.Contains(indexName))
+          indexNames.Add(indexName);
       }
 
-      if (IndexNames == null)
+      if (indexNames == null)
         return false;
 
       splash.PhaseText = "Удаление индексов таблицы \"" + tableName + "\"";
-      for (int i = 0; i < IndexNames.Count; i++)
+      for (int i = 0; i < indexNames.Count; i++)
       {
         Buffer.Clear();
         Buffer.SB.Append("DROP INDEX \"");
-        Buffer.SB.Append(IndexNames[i]);
+        Buffer.SB.Append(indexNames[i]);
         Buffer.SB.Append("\"");
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Удален индекс \"" + IndexNames[i] + "\" в таблице \"" + tableName + "\"");
+        errors.AddInfo("Удален индекс \"" + indexNames[i] + "\" в таблице \"" + tableName + "\"");
       }
       return true;
     }

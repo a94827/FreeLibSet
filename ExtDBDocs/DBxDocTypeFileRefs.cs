@@ -105,13 +105,13 @@ namespace FreeLibSet.Data.Docs
     {
 #if USE_REFS
       // 19.07.2021. Добавляем ссылку, а не числовое поле
-      DBxColumnStruct Column = _TableStruct.Columns.AddReference(columnName, "FileNames", true);
+      DBxColumnStruct column = _TableStruct.Columns.AddReference(columnName, "FileNames", true);
 #else
-      DBxColumnStruct Column = _TableStruct.Columns.AddInt(columnName);
+      DBxColumnStruct column = _TableStruct.Columns.AddInt(columnName);
 #endif
-      DBxDocTypeFileRef Ref = new DBxDocTypeFileRef(Column);
-      base.Add(Ref);
-      return Ref;
+      DBxDocTypeFileRef fileRef = new DBxDocTypeFileRef(column);
+      base.Add(fileRef);
+      return fileRef;
     }
 
     #endregion
@@ -221,13 +221,13 @@ namespace FreeLibSet.Data.Docs
     {
 #if USE_REFS
       // 19.07.2021. Добавляем ссылку, а не числовое поле
-      DBxColumnStruct Column = _TableStruct.Columns.AddReference(columnName, "BinData", true);
+      DBxColumnStruct column = _TableStruct.Columns.AddReference(columnName, "BinData", true);
 #else
-      DBxColumnStruct Column = _TableStruct.Columns.AddInt(columnName);
+      DBxColumnStruct column = _TableStruct.Columns.AddInt(columnName);
 #endif
-      DBxDocTypeBinDataRef Ref = new DBxDocTypeBinDataRef(Column);
-      base.Add(Ref);
-      return Ref;
+      DBxDocTypeBinDataRef fileRef = new DBxDocTypeBinDataRef(column);
+      base.Add(fileRef);
+      return fileRef;
     }
 
     #endregion

@@ -240,16 +240,16 @@ namespace FreeLibSet.Data.Docs
         return;
       for (int i = 0; i < DocTypeNames.Length; i++)
       {
-        DBxDocType DocType = AllDocTypes[DocTypeNames[i]];
-        if (DocType == null)
+        DBxDocType docType = AllDocTypes[DocTypeNames[i]];
+        if (docType == null)
           continue;
 
-        result.TableModes[DocType.Name] = Mode;
-        foreach (DBxSubDocType sdt in DocType.SubDocs)
+        result.TableModes[docType.Name] = Mode;
+        foreach (DBxSubDocType sdt in docType.SubDocs)
           result.TableModes[sdt.Name] = Mode;
 
         // 28.04.2021
-        DBxDocType grpType = _AllDocTypes.GetGroupDocType(DocType);
+        DBxDocType grpType = _AllDocTypes.GetGroupDocType(docType);
         if (grpType != null)
           result.TableModes[grpType.Name] = DBxPermissions.Max(result.TableModes[grpType.Name], Mode);
       }
@@ -271,16 +271,16 @@ namespace FreeLibSet.Data.Docs
       if (docTypeNames == null)
         return "Список видов документов не задан";
 
-      string[] Titles = new string[docTypeNames.Length];
+      string[] titles = new string[docTypeNames.Length];
       for (int i = 0; i < docTypeNames.Length; i++)
       {
-        DBxDocType DocType = allDocTypes[docTypeNames[i]];
-        if (DocType == null)
-          Titles[i] = "?? " + docTypeNames[i];
+        DBxDocType docType = allDocTypes[docTypeNames[i]];
+        if (docType == null)
+          titles[i] = "?? " + docTypeNames[i];
         else
-          Titles[i] = "\"" + DocType.PluralTitle + "\"";
+          titles[i] = "\"" + docType.PluralTitle + "\"";
       }
-      return "Документы " + String.Join(", ", Titles);
+      return "Документы " + String.Join(", ", titles);
     }
 
     #endregion

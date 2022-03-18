@@ -74,9 +74,9 @@ namespace FreeLibSet.Data
     /// <param name="mode">Предстоящий режим использования таблицы (Full - изменение, ReadOnly - чтение)</param>
     public void CheckTableName(string tableName, DBxAccessMode mode)
     {
-      string ErrorText;
-      if (!Entry.DB.IsValidTableName(tableName, out ErrorText))
-        throw new ArgumentException("Недопустимое имя таблицы \"" + tableName + "\". " + ErrorText);
+      string errorText;
+      if (!Entry.DB.IsValidTableName(tableName, out errorText))
+        throw new ArgumentException("Недопустимое имя таблицы \"" + tableName + "\". " + errorText);
 
       if (NameCheckingEnabled)
       {
@@ -120,31 +120,31 @@ namespace FreeLibSet.Data
 
     private DBxColumnStruct DoCheckTableColumnName(string tableName, string columnName, bool allowDots, DBxAccessMode mode)
     {
-      string ErrorText;
-      if (!Entry.DB.IsValidColumnName(columnName, allowDots, out ErrorText))
-        throw new ArgumentException("Недопустимое имя столбца \"" + columnName + "\". " + ErrorText, "columnName");
+      string errorText;
+      if (!Entry.DB.IsValidColumnName(columnName, allowDots, out errorText))
+        throw new ArgumentException("Недопустимое имя столбца \"" + columnName + "\". " + errorText, "columnName");
 
       int pDot = columnName.IndexOf('.');
 
       if (pDot >= 0)
       {
-        string MainColumnName = columnName.Substring(0, pDot);
-        DBxColumnStruct ColDef = Entry.DB.Struct.Tables[tableName].Columns[MainColumnName];
-        if (ColDef == null)
+        string mainColumnName = columnName.Substring(0, pDot);
+        DBxColumnStruct colDef = Entry.DB.Struct.Tables[tableName].Columns[mainColumnName];
+        if (colDef == null)
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Определения для столбца \"" + MainColumnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "columnName");
+            throw new ArgumentException("Определения для столбца \"" + mainColumnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "columnName");
           else
             return null;
         }
-        if (String.IsNullOrEmpty(ColDef.MasterTableName))
-          throw new ArgumentException("Столбец \"" + MainColumnName + "\" таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\" не является ссылочным", "columnName");
+        if (String.IsNullOrEmpty(colDef.MasterTableName))
+          throw new ArgumentException("Столбец \"" + mainColumnName + "\" таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\" не является ссылочным", "columnName");
 
         if (NameCheckingEnabled)
-          CheckTableName(ColDef.MasterTableName, mode);
+          CheckTableName(colDef.MasterTableName, mode);
 
         // Рекурсивный вызов
-        return DoCheckTableColumnName(ColDef.MasterTableName, columnName.Substring(pDot + 1), true, mode);
+        return DoCheckTableColumnName(colDef.MasterTableName, columnName.Substring(pDot + 1), true, mode);
       }
       else
       {
@@ -203,11 +203,11 @@ namespace FreeLibSet.Data
       if (columnNames.Count == 0)
         throw new ArgumentException("Пустой список имен полей", "columnNames");
 
-      DBxColumnType[] ColumnTypes = new DBxColumnType[columnNames.Count];
+      DBxColumnType[] columnTypes = new DBxColumnType[columnNames.Count];
 
       for (int i = 0; i < columnNames.Count; i++)
-        ColumnTypes[i] = CheckTableColumnName(tableName, columnNames[i], allowDots, mode);
-      return ColumnTypes;
+        columnTypes[i] = CheckTableColumnName(tableName, columnNames[i], allowDots, mode);
+      return columnTypes;
     }
 
     /// <summary>
@@ -226,11 +226,11 @@ namespace FreeLibSet.Data
       if (columnNames.Count == 0)
         throw new ArgumentException("Пустой список имен полей", "columnNames");
 
-      DBxColumnType[] ColumnTypes = new DBxColumnType[columnNames.Count];
+      DBxColumnType[] columnTypes = new DBxColumnType[columnNames.Count];
 
       for (int i = 0; i < columnNames.Count; i++)
-        ColumnTypes[i] = CheckTableColumnName(tableName, columnNames[i], allowDots, mode);
-      return ColumnTypes;
+        columnTypes[i] = CheckTableColumnName(tableName, columnNames[i], allowDots, mode);
+      return columnTypes;
     }
 
 

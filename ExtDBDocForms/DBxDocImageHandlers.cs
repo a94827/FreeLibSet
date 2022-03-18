@@ -217,9 +217,9 @@ namespace FreeLibSet.Forms.Docs
         lock (_TableItems)
         {
           _DBCache = value;
-          foreach (KeyValuePair<string, TableHandler> Pair in _TableItems)
+          foreach (KeyValuePair<string, TableHandler> pair in _TableItems)
           {
-            Pair.Value.AccessDeniedFlag = false;
+            pair.Value.AccessDeniedFlag = false;
           }
         }
       }
@@ -259,10 +259,10 @@ namespace FreeLibSet.Forms.Docs
     /// Обработчик должен выполняться быстро, так как вызывается при прорисовке кажой строки табличного просмотра</param>
     public void Add(string tableName, string imageKey, string columnNames, DBxImageValueNeededEventHandler imageValueNeeded)
     {
-      DBxColumns ColumnNames2 = null;
+      DBxColumns columnNames2 = null;
       if (!String.IsNullOrEmpty(columnNames))
-        ColumnNames2 = new DBxColumns(columnNames);
-      Add(tableName, imageKey, ColumnNames2, imageValueNeeded);
+        columnNames2 = new DBxColumns(columnNames);
+      Add(tableName, imageKey, columnNames2, imageValueNeeded);
     }
 
     /// <summary>
@@ -317,8 +317,8 @@ namespace FreeLibSet.Forms.Docs
         //  }
         //}
 
-        TableHandler Handler = new TableHandler(this, tableName, ImageKey, columnNames, imageValueNeeded);
-        _TableItems.Add(tableName, Handler);
+        TableHandler handler = new TableHandler(this, tableName, ImageKey, columnNames, imageValueNeeded);
+        _TableItems.Add(tableName, handler);
       }
     }
 
@@ -383,8 +383,8 @@ namespace FreeLibSet.Forms.Docs
         //if (DocProvider == null)
         //  return "Error"; // источник данных не присоединен
 
-        TableHandler Handler;
-        if (!_TableItems.TryGetValue(tableName, out Handler))
+        TableHandler handler;
+        if (!_TableItems.TryGetValue(tableName, out handler))
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
@@ -394,38 +394,38 @@ namespace FreeLibSet.Forms.Docs
         }
 
 
-        if (Handler.DocType == null)
+        if (handler.DocType == null)
           // Не найденная таблица. Не нужно ничего запрашивать, даже если есть поля и обработчик
           return "Error";
-        if (Handler.AccessDeniedFlag)
+        if (handler.AccessDeniedFlag)
           return "UnknownState"; // 10.07.2018
 
-        bool FromRow = false;
+        bool fromRow = false;
         if (row != null)
-          FromRow = DBxColumns.TableContains(row.Table, Handler.QueriedColumnNames);
-        object[] Values;
+          fromRow = DBxColumns.TableContains(row.Table, handler.QueriedColumnNames);
+        object[] values;
         try
         {
-          if (FromRow)
-            Values = Handler.QueriedColumnNames.GetRowValues(row);
+          if (fromRow)
+            values = handler.QueriedColumnNames.GetRowValues(row);
           else
           {
             if (id < 0)
               return "Error"; // 16.06.2021
-            Values = DBCache[tableName].GetValues(id, Handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
+            values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
           }
         }
         catch (DBxAccessException)
         {
-          Handler.AccessDeniedFlag = true; // 10.07.2018
+          handler.AccessDeniedFlag = true; // 10.07.2018
           throw;
         }
-        _Args.InitData(tableName, id, Handler.QueriedColumnNames, Values, DBxImageValueNeededReason.Image);
+        _Args.InitData(tableName, id, handler.QueriedColumnNames, values, DBxImageValueNeededReason.Image);
 
         // Добавляем информацию об удаленном документе
         if (DocTypes.UseDeleted)
         {
-          if (Handler.SubDocType == null)
+          if (handler.SubDocType == null)
           {
             if (_Args.GetBool("Deleted"))
               return "Cancel";
@@ -434,17 +434,17 @@ namespace FreeLibSet.Forms.Docs
           {
             if (_Args.GetBool("Deleted"))
               return "Cancel";
-            if (GetDocIdDeleted(Handler))
+            if (GetDocIdDeleted(handler))
               return "Cancel";
           }
         }
 
-        _Args.ImageKey = Handler.ImageKey;
-        if (Handler.ImageValueNeeded != null)
+        _Args.ImageKey = handler.ImageKey;
+        if (handler.ImageValueNeeded != null)
         {
           try
           {
-            Handler.ImageValueNeeded(this, _Args);
+            handler.ImageValueNeeded(this, _Args);
           }
           catch
           {
@@ -587,8 +587,8 @@ namespace FreeLibSet.Forms.Docs
       {
         lock (_TableItems)
         {
-          TableHandler Handler;
-          if (!_TableItems.TryGetValue(tableName, out Handler))
+          TableHandler handler;
+          if (!_TableItems.TryGetValue(tableName, out handler))
           {
             // добавляем пустышку
             if (String.IsNullOrEmpty(tableName))
@@ -597,10 +597,10 @@ namespace FreeLibSet.Forms.Docs
             return GetDummyImageKey(kind);
           }
 
-          if (String.IsNullOrEmpty(Handler.ImageKey))
+          if (String.IsNullOrEmpty(handler.ImageKey))
             return GetDummyImageKey(kind);
           else
-            return Handler.ImageKey;
+            return handler.ImageKey;
         }
       }
       catch
@@ -657,8 +657,8 @@ namespace FreeLibSet.Forms.Docs
         //if (DocProvider == null)
         //  return; // источник данных не присоединен
 
-        TableHandler Handler;
-        if (!_TableItems.TryGetValue(tableName, out Handler))
+        TableHandler handler;
+        if (!_TableItems.TryGetValue(tableName, out handler))
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
@@ -668,31 +668,31 @@ namespace FreeLibSet.Forms.Docs
         }
 
 
-        if (Handler.DocType == null)
+        if (handler.DocType == null)
           // Не найденная таблица. Не нужно ничего запрашивать, даже если есть поля и обработчик
           return;
 
-        bool FromRow = false;
+        bool fromRow = false;
         if (row != null)
-          FromRow = DBxColumns.TableContains(row.Table, Handler.QueriedColumnNames);
-        object[] Values;
-        if (FromRow)
-          Values = Handler.QueriedColumnNames.GetRowValues(row);
+          fromRow = DBxColumns.TableContains(row.Table, handler.QueriedColumnNames);
+        object[] values;
+        if (fromRow)
+          values = handler.QueriedColumnNames.GetRowValues(row);
         else
         {
           if (id < 0)
             return; // 16.06.2021
-          Values = DBCache[tableName].GetValues(id, Handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
+          values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
         }
 
-        _Args.InitData(tableName, id, Handler.QueriedColumnNames, Values, DBxImageValueNeededReason.RowColor);
+        _Args.InitData(tableName, id, handler.QueriedColumnNames, values, DBxImageValueNeededReason.RowColor);
 
         // Добавляем информацию об удаленном документе
         if (DocTypes.UseDeleted)
         {
           // 24.11.2017
           // Вызываем пользовательский обработчик и для удаленного документа
-          if (Handler.SubDocType == null)
+          if (handler.SubDocType == null)
           {
             if (_Args.GetBool("Deleted"))
             {
@@ -702,7 +702,7 @@ namespace FreeLibSet.Forms.Docs
           }
           else
           {
-            if (_Args.GetBool("Deleted") || GetDocIdDeleted(Handler))
+            if (_Args.GetBool("Deleted") || GetDocIdDeleted(handler))
             {
               grayed = true;
               //return;
@@ -712,11 +712,11 @@ namespace FreeLibSet.Forms.Docs
 
         _Args.ColorType = colorType;
         _Args.Grayed = grayed;
-        if (Handler.ImageValueNeeded != null)
+        if (handler.ImageValueNeeded != null)
         {
           try
           {
-            Handler.ImageValueNeeded(this, _Args);
+            handler.ImageValueNeeded(this, _Args);
           }
           catch
           {
@@ -748,8 +748,8 @@ namespace FreeLibSet.Forms.Docs
           return;
         }
 
-        Int32 Id = DataTools.GetInt(row, "Id");
-        DoGetRowColor(tableName, Id, row.Table.DataSet, row, out colorType, out grayed);
+        Int32 id = DataTools.GetInt(row, "Id");
+        DoGetRowColor(tableName, id, row.Table.DataSet, row, out colorType, out grayed);
       }
       catch
       {
@@ -835,8 +835,8 @@ namespace FreeLibSet.Forms.Docs
       {
         if (row.RowState == DataRowState.Deleted)
           return "Строка удалена";
-        Int32 Id = DataTools.GetInt(row, "Id");
-        return DoGetToolTipText(tableName, Id, row.Table.DataSet, row);
+        Int32 id = DataTools.GetInt(row, "Id");
+        return DoGetToolTipText(tableName, id, row.Table.DataSet, row);
       }
       catch (Exception e)
       {
@@ -854,8 +854,8 @@ namespace FreeLibSet.Forms.Docs
         //if (DocProvider == null)
         //  return "Источник данных не присоединен";
 
-        TableHandler Handler;
-        if (!_TableItems.TryGetValue(tableName, out Handler))
+        TableHandler handler;
+        if (!_TableItems.TryGetValue(tableName, out handler))
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
@@ -864,39 +864,39 @@ namespace FreeLibSet.Forms.Docs
           return String.Empty;
         }
 
-        if (Handler.DocType == null)
+        if (handler.DocType == null)
           // Не найденная таблица. Не нужно ничего запрашивать, даже если есть поля и обработчик
           return "Таблица не найдена";
-        if (Handler.AccessDeniedFlag)
+        if (handler.AccessDeniedFlag)
           return "Доступ к таблице запрещен"; // 10.07.2018
 
-        bool FromRow = false;
+        bool fromRow = false;
         if (row != null)
-          FromRow = DBxColumns.TableContains(row.Table, Handler.QueriedColumnNames);
-        object[] Values;
+          fromRow = DBxColumns.TableContains(row.Table, handler.QueriedColumnNames);
+        object[] values;
         try
         {
-          if (FromRow)
-            Values = Handler.QueriedColumnNames.GetRowValues(row);
+          if (fromRow)
+            values = handler.QueriedColumnNames.GetRowValues(row);
           else
           {
             if (id < 0)
               return "Фиктивный идентификатор"; // 16.06.2021
-            Values = DBCache[tableName].GetValues(id, Handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
+            values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
           }
         }
         catch (DBxAccessException)
         {
-          Handler.AccessDeniedFlag = true; // 10.07.2018
+          handler.AccessDeniedFlag = true; // 10.07.2018
           throw;
         }
 
-        _Args.InitData(tableName, id, Handler.QueriedColumnNames, Values, DBxImageValueNeededReason.ToolTipText);
+        _Args.InitData(tableName, id, handler.QueriedColumnNames, values, DBxImageValueNeededReason.ToolTipText);
 
         // Добавляем информацию об удаленном документе
         if (DocTypes.UseDeleted)
         {
-          if (Handler.SubDocType == null)
+          if (handler.SubDocType == null)
           {
             if (_Args.GetBool("Deleted"))
               return "Документ удален";
@@ -905,17 +905,17 @@ namespace FreeLibSet.Forms.Docs
           {
             if (_Args.GetBool("Deleted"))
               return "Поддокумент удален";
-            if (GetDocIdDeleted(Handler))
+            if (GetDocIdDeleted(handler))
               return "Удален основной документ";
           }
         }
 
         _Args.ToolTipText = String.Empty;
-        if (Handler.ImageValueNeeded != null)
+        if (handler.ImageValueNeeded != null)
         {
           try
           {
-            Handler.ImageValueNeeded(this, _Args);
+            handler.ImageValueNeeded(this, _Args);
           }
           catch (Exception e)
           {
@@ -1003,7 +1003,7 @@ namespace FreeLibSet.Forms.Docs
         _ColumnNames = columnNames;
         _ImageValueNeeded = imageValueNeeded;
 
-        owner.DocTypes.FindByTableName(tableName, out FDocType, out FSubDocType);
+        owner.DocTypes.FindByTableName(tableName, out _DocType, out _SubDocType);
 
         if (DocType != null)
         {
@@ -1045,14 +1045,14 @@ namespace FreeLibSet.Forms.Docs
       /// <summary>
       /// Вид документа, к которому относится таблица (если найдено)
       /// </summary>
-      public DBxDocType DocType { get { return FDocType; } }
-      private DBxDocType FDocType;
+      public DBxDocType DocType { get { return _DocType; } }
+      private DBxDocType _DocType;
 
       /// <summary>
       /// Вид поддокумента, к которому относится таблица, или null, если таблица относится к документу
       /// </summary>
-      public DBxSubDocType SubDocType { get { return FSubDocType; } }
-      private DBxSubDocType FSubDocType;
+      public DBxSubDocType SubDocType { get { return _SubDocType; } }
+      private DBxSubDocType _SubDocType;
 
       /// <summary>
       /// Список полей, используемых для запросов.
@@ -1095,13 +1095,13 @@ namespace FreeLibSet.Forms.Docs
     {
       lock (_TableItems)
       {
-        TableHandler Handler;
-        if (_TableItems.TryGetValue(tableName, out Handler))
+        TableHandler handler;
+        if (_TableItems.TryGetValue(tableName, out handler))
         {
           if (forQuery)
-            return Handler.QueriedColumnNames;
+            return handler.QueriedColumnNames;
           else
-            return Handler.ColumnNames;
+            return handler.ColumnNames;
         }
         else
         {
@@ -1126,7 +1126,6 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-
 
     #endregion
 

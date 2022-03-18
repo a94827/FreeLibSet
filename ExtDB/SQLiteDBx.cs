@@ -269,12 +269,12 @@ namespace FreeLibSet.Data.SQLite
     {
       if (DatabaseExists)
         return;
-      using (SQLiteDBxCon Con = new SQLiteDBxCon(MainEntry))
+      using (SQLiteDBxCon con = new SQLiteDBxCon(MainEntry))
       {
         // Ничего не делаем. Само создается
         // 21.07.2021. Неверно. Надо обязательно обратиться к свойству Connection
 
-        Con.Connection.GetSchema();
+        con.Connection.GetSchema();
       }
     }
 
@@ -291,10 +291,10 @@ namespace FreeLibSet.Data.SQLite
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
-      using (SQLiteDBxCon Con = new SQLiteDBxCon(MainEntry))
+      using (SQLiteDBxCon con = new SQLiteDBxCon(MainEntry))
       {
-        Con.CommandTimeout = 0; // Бесконечное время выполнения
-        return Con.UpdateDBStruct(splash, errors, options);
+        con.CommandTimeout = 0; // Бесконечное время выполнения
+        return con.UpdateDBStruct(splash, errors, options);
       }
     }
 
@@ -307,14 +307,14 @@ namespace FreeLibSet.Data.SQLite
     /// <param name="tableName">Имя удаляемой таблицы</param>
     public override void DropTableIfExists(string tableName)
     {
-      using (DBxConBase Con = MainEntry.CreateCon())
+      using (DBxConBase con = MainEntry.CreateCon())
       {
-        Con.NameCheckingEnabled = false;
-        DBxSqlBuffer Buffer = new DBxSqlBuffer(this.Formatter);
-        Buffer.SB.Append("DROP TABLE IF EXISTS ");
-        Con.Validator.CheckTableName(tableName, DBxAccessMode.Full);
-        Buffer.FormatTableName(tableName);
-        Con.SQLExecuteNonQuery(Buffer.SB.ToString());
+        con.NameCheckingEnabled = false;
+        DBxSqlBuffer buffer = new DBxSqlBuffer(this.Formatter);
+        buffer.SB.Append("DROP TABLE IF EXISTS ");
+        con.Validator.CheckTableName(tableName, DBxAccessMode.Full);
+        buffer.FormatTableName(tableName);
+        con.SQLExecuteNonQuery(buffer.SB.ToString());
       }
     }
 
@@ -357,7 +357,7 @@ namespace FreeLibSet.Data.SQLite
     /// </summary>
     public static void LoadDLLs()
     {
-      if (LoadDLLsFlag)
+      if (_LoadDLLsFlag)
         return; // повторный вызов
 
       //if (IntPtr.Size == 8)
@@ -367,10 +367,10 @@ namespace FreeLibSet.Data.SQLite
 
       System.Reflection.Assembly.Load("System.Data.SQLite"); // обязательно после SQLite.Interop.dll
 
-      LoadDLLsFlag = true;
+      _LoadDLLsFlag = true;
     }
 
-    private static bool LoadDLLsFlag = false;
+    private static bool _LoadDLLsFlag = false;
 
     #endregion
 
@@ -740,20 +740,20 @@ namespace FreeLibSet.Data.SQLite
       {
         for (int i = 0; i < paramValues.Length; i++)
         {
-          SQLiteParameter Param = new SQLiteParameter();
+          SQLiteParameter sqlParam = new SQLiteParameter();
           //Param.ParameterName = "@P" + (i + 1).ToString();
-          Param.ParameterName = ":P" + (i + 1).ToString(); // исправлено 29.05.2020
-          Param.Value = paramValues[i];
+          sqlParam.ParameterName = ":P" + (i + 1).ToString(); // исправлено 29.05.2020
+          sqlParam.Value = paramValues[i];
 
           if (paramValues[i] != null)
           {
             if (paramValues[i] is Array)
             {
               //Param.SqlDbType = SqlDbType.VarBinary;
-              Param.DbType = DbType.Binary;
+              sqlParam.DbType = DbType.Binary;
             }
           }
-          cmd.Parameters.Add(Param);
+          cmd.Parameters.Add(sqlParam);
         }
       }
     }
@@ -842,7 +842,7 @@ namespace FreeLibSet.Data.SQLite
     {
       Buffer.Clear();
       Validator.CheckTableName(tableName, DBxAccessMode.Full);
-      DBxColumnType[] ColumnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
+      DBxColumnType[] columnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
       /*string PrimaryKeyColumnName = */
       Validator.CheckTablePrimaryKeyInt32(tableName);
 
@@ -852,24 +852,24 @@ namespace FreeLibSet.Data.SQLite
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
 
-      Int32 Id;
+      Int32 id;
 
       Buffer.SB.Append("INSERT INTO ");
       Buffer.FormatTableName(tableName);
       Buffer.SB.Append(" (");
       Buffer.FormatCSColumnNames(columnNames);
       Buffer.SB.Append(") VALUES (");
-      Buffer.FormatCSValues(values, ColumnTypes);
+      Buffer.FormatCSValues(values, columnTypes);
       Buffer.SB.Append(')');
 
       Buffer.SB.Append("; SELECT last_insert_rowid()");
 
-      Id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
 
-      if (Id <= 0)
-        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + Id.ToString());
+      if (id <= 0)
+        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + id.ToString());
 
-      return Id;
+      return id;
     }
 
     #endregion
@@ -877,7 +877,6 @@ namespace FreeLibSet.Data.SQLite
     #endregion
 
     #region Транзакция
-
 
     /// <summary>
     /// Текущая транзакция, если был вызов метода TransactionBegin(), или null, если нет активной транзакции
@@ -897,10 +896,10 @@ namespace FreeLibSet.Data.SQLite
     /// <returns></returns>
     internal protected override string[] GetAllTableNamesFromSchema()
     {
-      DataTable Table = Connection.GetSchema("Tables"); // исправлено 28.08.2020
-      string[] a = new string[Table.Rows.Count];
-      for (int i = 0; i < Table.Rows.Count; i++)
-        a[i] = DataTools.GetString(Table.Rows[i], "table_name");
+      DataTable table = Connection.GetSchema("Tables"); // исправлено 28.08.2020
+      string[] a = new string[table.Rows.Count];
+      for (int i = 0; i < table.Rows.Count; i++)
+        a[i] = DataTools.GetString(table.Rows[i], "table_name");
 
       return a;
     }
@@ -912,41 +911,41 @@ namespace FreeLibSet.Data.SQLite
     /// <returns>Структура</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
-      DBxTableStruct TableStr = new DBxTableStruct(tableName);
+      DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
       #region Список столбцов, тип, MaxLen, Nullable
 
-      DataTable Table = Connection.GetSchema("Columns", new string[] { null, null, tableName }); // исправлено 28.08.2020
-      Table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
+      DataTable table = Connection.GetSchema("Columns", new string[] { null, null, tableName }); // исправлено 28.08.2020
+      table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
 
-      foreach (DataRowView drv in Table.DefaultView)
+      foreach (DataRowView drv in table.DefaultView)
       {
-        string ColumnName = DataTools.GetString(drv.Row, "column_name");
-        DBxColumnStruct ColStr = new DBxColumnStruct(ColumnName);
+        string columnName = DataTools.GetString(drv.Row, "column_name");
+        DBxColumnStruct colDef = new DBxColumnStruct(columnName);
 
-        string ColTypeString = DataTools.GetString(drv.Row, "data_type");
+        string colTypeString = DataTools.GetString(drv.Row, "data_type");
         // 28.08.2020
         // Таблица типов взята из файла System.Data.SQLite\Resources\DataTypes.xml
         // исходных текстов System.Data.SQLite
-        switch (ColTypeString)
+        switch (colTypeString)
         {
           case "tinyint":
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = 0;
-            ColStr.MaxValue = 255;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = 0;
+            colDef.MaxValue = 255;
             break;
 
           case "smallint":
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int16.MinValue;
-            ColStr.MaxValue = Int16.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int16.MinValue;
+            colDef.MaxValue = Int16.MaxValue;
             break;
 
           case "int":
           case "integer": // По идее, это Int64, но этот тип используется для идентификаторов
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int32.MinValue;
-            ColStr.MaxValue = Int32.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int32.MinValue;
+            colDef.MaxValue = Int32.MaxValue;
             break;
 
           case "counter": // ?? Надо?
@@ -954,30 +953,30 @@ namespace FreeLibSet.Data.SQLite
           case "identity": // ?? Надо?
           case "long":
           case "bigint":
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int64.MinValue;
-            ColStr.MaxValue = Int64.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int64.MinValue;
+            colDef.MaxValue = Int64.MaxValue;
             break;
 
           case "single":
-            ColStr.ColumnType = DBxColumnType.Float;
-            ColStr.MinValue = Single.MinValue;
-            ColStr.MaxValue = Single.MaxValue;
+            colDef.ColumnType = DBxColumnType.Float;
+            colDef.MinValue = Single.MinValue;
+            colDef.MaxValue = Single.MaxValue;
             break;
 
           case "real":
           case "float":
           case "double":
-            ColStr.ColumnType = DBxColumnType.Float;
-            ColStr.MinValue = Double.MinValue;
-            ColStr.MaxValue = Double.MaxValue;
+            colDef.ColumnType = DBxColumnType.Float;
+            colDef.MinValue = Double.MinValue;
+            colDef.MaxValue = Double.MaxValue;
             break;
 
           case "money":
           case "currency":
           case "decimal":
           case "numeric":
-            ColStr.ColumnType = DBxColumnType.Money;
+            colDef.ColumnType = DBxColumnType.Money;
             break;
 
           case "bit":
@@ -985,13 +984,13 @@ namespace FreeLibSet.Data.SQLite
           case "logical":
           case "bool":
           case "boolean":
-            ColStr.ColumnType = DBxColumnType.Boolean;
+            colDef.ColumnType = DBxColumnType.Boolean;
             break;
 
           case "char":
           case "nchar":
           case "string": // это - под вопросом
-            ColStr.ColumnType = DBxColumnType.String;
+            colDef.ColumnType = DBxColumnType.String;
             break;
           case "smallmoney":
 
@@ -1002,21 +1001,21 @@ namespace FreeLibSet.Data.SQLite
           case "note":
           case "text":
           case "ntext":
-            ColStr.ColumnType = DBxColumnType.Memo;
+            colDef.ColumnType = DBxColumnType.Memo;
             break;
 
           case "date":
           case "smalldate": // под вопросом
-            ColStr.ColumnType = DBxColumnType.Date;
+            colDef.ColumnType = DBxColumnType.Date;
             break;
 
           case "time":
-            ColStr.ColumnType = DBxColumnType.Time;
+            colDef.ColumnType = DBxColumnType.Time;
             break;
 
           case "datetime":
           case "timestamp": // ?? под вопросом
-            ColStr.ColumnType = DBxColumnType.DateTime;
+            colDef.ColumnType = DBxColumnType.DateTime;
             break;
 
           case "binary":
@@ -1025,32 +1024,32 @@ namespace FreeLibSet.Data.SQLite
           case "image":
           case "general":
           case "oleobject": // ?? надо?
-            ColStr.ColumnType = DBxColumnType.Binary;
+            colDef.ColumnType = DBxColumnType.Binary;
             break;
 
           case "uniqueidentifier":
           case "guid":
-            ColStr.ColumnType = DBxColumnType.Guid;
+            colDef.ColumnType = DBxColumnType.Guid;
             break;
 
           case "xml": // Этого типа нет, я его сам придумал
-            ColStr.ColumnType = DBxColumnType.Xml;
+            colDef.ColumnType = DBxColumnType.Xml;
             break;
 
           default:
-            throw new BugException("Неизвестный тип поля: \"" + ColTypeString + "\"");
+            throw new BugException("Неизвестный тип поля: \"" + colTypeString + "\"");
         }
 
-        ColStr.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+        colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
 
-        string NullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
-        switch (NullableStr)
+        string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
+        switch (nullableStr)
         {
-          case "TRUE": ColStr.Nullable = true; break;  // исправлено 28.08.2020
-          case "FALSE": ColStr.Nullable = false; break;
+          case "TRUE": colDef.Nullable = true; break;  // исправлено 28.08.2020
+          case "FALSE": colDef.Nullable = false; break;
         }
 
-        TableStr.Columns.Add(ColStr);
+        tableStr.Columns.Add(colDef);
       }
 
       #endregion
@@ -1061,7 +1060,7 @@ namespace FreeLibSet.Data.SQLite
       foreach (DataRow row in schema.Rows)
       {
         string refColName = DataTools.GetString(row, "FKEY_FROM_COLUMN");
-        DBxColumnStruct colStr = TableStr.Columns[refColName];
+        DBxColumnStruct colStr = tableStr.Columns[refColName];
         if (colStr == null)
           continue; // по идее, это ошибка
 
@@ -1089,8 +1088,8 @@ namespace FreeLibSet.Data.SQLite
 
       #endregion
 
-      TableStr.SetReadOnly();
-      return TableStr;
+      tableStr.SetReadOnly();
+      return tableStr;
     }
 
 
@@ -1133,14 +1132,14 @@ namespace FreeLibSet.Data.SQLite
 
     internal bool UpdateDBStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
-      bool Modified = false;
+      bool modified = false;
 
       if (UpdateDBStructTables(splash, errors, options))
-        Modified = true;
+        modified = true;
 
       splash.PhaseText = String.Empty;
       splash.PercentMax = 0;
-      return Modified;
+      return modified;
     }
 
     #endregion
@@ -1160,7 +1159,7 @@ namespace FreeLibSet.Data.SQLite
        * копию таблицы
        */
 
-      bool Modified = false;
+      bool modified = false;
 
       #region Извлечение информации из существующей схемы данных
 
@@ -1171,8 +1170,8 @@ namespace FreeLibSet.Data.SQLite
        * которая не нужна для обновления структуры, но для которой делаются дополнительные вызовы.
        */
 
-      DataTable TableTables = Connection.GetSchema("Tables");
-      DataView dvTables = new DataView(TableTables);
+      DataTable tableTables = Connection.GetSchema("Tables");
+      DataView dvTables = new DataView(tableTables);
       dvTables.Sort = "TABLE_NAME";
 
       //// Столбцы
@@ -1193,43 +1192,43 @@ namespace FreeLibSet.Data.SQLite
       splash.PercentMax = DB.Struct.Tables.Count;
 
       // Цикл по таблицам
-      foreach (DBxTableStruct Table in DB.Struct.Tables)
+      foreach (DBxTableStruct table in DB.Struct.Tables)
       {
-        if (!Table.AutoCreate)
+        if (!table.AutoCreate)
           continue;
 
-        if (Table.Columns.Count == 0)
-          throw new DBxStructException(Table, "Не задано ни одного столбца");
+        if (table.Columns.Count == 0)
+          throw new DBxStructException(table, "Не задано ни одного столбца");
 
         //CheckPrimaryKeyColumn(Table, Table.PrimaryKeyColumns[0]);
         //bool IndicesDropped = false;
 
-        List<DBxColumnStruct> ColumnsToAdd;
-        DBxColumns ExistedColumns;
-        List<DBxColumnStruct> ColumnsToReplaceNullToDef; // Столбцы для замены NULL на DEFAULT
+        List<DBxColumnStruct> columnsToAdd;
+        DBxColumns existedColumns;
+        List<DBxColumnStruct> columnsToReplaceNullToDef; // Столбцы для замены NULL на DEFAULT
 
-        if (dvTables.Find(Table.TableName) < 0)
+        if (dvTables.Find(table.TableName) < 0)
         {
           #region Требуется полное создание таблицы
 
-          splash.PhaseText = "Создается таблица \"" + Table.TableName + "\"";
-          CreateTable(Table, Table.TableName, options);
-          errors.AddInfo("Создана таблица \"" + Table.TableName + "\"");
-          Modified = true;
+          splash.PhaseText = "Создается таблица \"" + table.TableName + "\"";
+          CreateTable(table, table.TableName, options);
+          errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
+          modified = true;
 
           #endregion
         }
-        else if (NeedsRecreateTable(Table, /*dvColumns,*/ errors, out ColumnsToAdd, out ExistedColumns, out ColumnsToReplaceNullToDef))
+        else if (NeedsRecreateTable(table, /*dvColumns,*/ errors, out columnsToAdd, out existedColumns, out columnsToReplaceNullToDef))
         {
           #region Требуется пересоздание с использованием промежуточной таблицы
 
           // См. порядок действий в справочном файле SQLite
           // lang_altertable.html
 
-          DropAllIndices(splash, Table.TableName);
+          DropAllIndices(splash, table.TableName);
           //IndicesDropped = true;
 
-          splash.PhaseText = "Изменение структуры таблицы \"" + Table.TableName + "\"";
+          splash.PhaseText = "Изменение структуры таблицы \"" + table.TableName + "\"";
 
           DropTable(AlterTableName, true);
           PragmaForeighKeys(false);
@@ -1239,38 +1238,38 @@ namespace FreeLibSet.Data.SQLite
             {
               try
               {
-                if (ColumnsToReplaceNullToDef != null)
+                if (columnsToReplaceNullToDef != null)
                 {
-                  foreach (DBxColumnStruct Column in ColumnsToReplaceNullToDef)
+                  foreach (DBxColumnStruct colDef in columnsToReplaceNullToDef)
                   {
                     // Заменяем значения NULL на значение по умолчанию
                     Buffer.Clear();
                     Buffer.SB.Append("UPDATE ");
-                    Buffer.FormatTableName(Table.TableName);
+                    Buffer.FormatTableName(table.TableName);
                     Buffer.SB.Append(" SET ");
-                    Buffer.FormatColumnName(Column.ColumnName);
+                    Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append("=");
-                    Buffer.FormatExpression(Column.DefaultExpression, new DBxFormatExpressionInfo());
+                    Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
                     Buffer.SB.Append(" WHERE ");
-                    Buffer.FormatColumnName(Column.ColumnName);
+                    Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append(" IS NULL");
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName +
+                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
                       "\" значения NULL заменены на значение по умолчанию");
                   }
                 }
 
                 // Создаем промежуточную таблицу
-                CreateTable(Table, AlterTableName, options);
+                CreateTable(table, AlterTableName, options);
 
                 // Переносим данные. Здесь может возникнуть исключение, если типы данных несовместимы
-                InsertIntoFrom(AlterTableName, Table.TableName, ExistedColumns);
+                InsertIntoFrom(AlterTableName, table.TableName, existedColumns);
 
                 // Удаляем исходную таблицу
-                DropTable(Table.TableName, false);
+                DropTable(table.TableName, false);
 
                 // Переименовываем таблицу
-                RenameTable(AlterTableName, Table.TableName);
+                RenameTable(AlterTableName, table.TableName);
 
                 tran.Commit();
               }
@@ -1285,26 +1284,26 @@ namespace FreeLibSet.Data.SQLite
           {
             PragmaForeighKeys(true);
           }
-          errors.AddInfo("Таблица \"" + Table.TableName + "\" пересоздана из-за изменения формата столбцов");
-          Modified = true;
+          errors.AddInfo("Таблица \"" + table.TableName + "\" пересоздана из-за изменения формата столбцов");
+          modified = true;
 
           #endregion
         }
-        else if (ColumnsToAdd != null)
+        else if (columnsToAdd != null)
         {
           #region Требуется добавление недостающих столбцлв
 
-          foreach (DBxColumnStruct Column in ColumnsToAdd)
+          foreach (DBxColumnStruct colDef in columnsToAdd)
           {
-            splash.PhaseText = "Добавление поля \"" + Column.ColumnName + "\"в таблицу \"" + Table.TableName + "\"";
+            splash.PhaseText = "Добавление поля \"" + colDef.ColumnName + "\"в таблицу \"" + table.TableName + "\"";
             Buffer.Clear();
             Buffer.SB.Append("ALTER TABLE ");
-            Buffer.FormatTableName(Table.TableName);
+            Buffer.FormatTableName(table.TableName);
             Buffer.SB.Append(" ADD "); // а не ADD COLUMN
-            AppendColumnDef(/*Table, */Column, false, options, true);
+            AppendColumnDef(/*Table, */colDef, false, options, true);
             SQLExecuteNonQuery(Buffer.SB.ToString());
-            errors.AddInfo("Создано поле \"" + Column.ColumnName + "\"в таблице \"" + Table.TableName + "\"");
-            Modified = true;
+            errors.AddInfo("Создано поле \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName + "\"");
+            modified = true;
           }
 
           #endregion
@@ -1314,19 +1313,19 @@ namespace FreeLibSet.Data.SQLite
 
         #region Комментарии
 
-        SetTableComment(Table.TableName, Table.Comment);
-        for (int i = 0; i < Table.Columns.Count; i++)
-          SetColumnComment(Table.TableName, Table.Columns[i].ColumnName, Table.Columns[i].Comment);
+        SetTableComment(table.TableName, table.Comment);
+        for (int i = 0; i < table.Columns.Count; i++)
+          SetColumnComment(table.TableName, table.Columns[i].ColumnName, table.Columns[i].Comment);
 
         #endregion
 
-        UpdateDBStructIndices(Table, splash, errors, options);
+        UpdateDBStructIndices(table, splash, errors, options);
 
         splash.PhaseText = String.Empty;
         splash.IncPercent();
       } // Цикл по таблицам
 
-      return Modified;
+      return modified;
     }
 
     /// <summary>
@@ -1408,7 +1407,7 @@ namespace FreeLibSet.Data.SQLite
       out DBxColumns existedColumns,
       out List<DBxColumnStruct> columnsToReplaceNullToDef)
     {
-      bool NeedsRecreate = false;
+      bool needsRecreate = false;
       DBxColumnList lstExistedColumns = new DBxColumnList(table.Columns.Count);
       columnsToAdd = null;
       // не нужен отдельный форматизатор DBxSqlBuffer Buffer2 = new DBxSqlBuffer(Buffer.Formatter);
@@ -1421,64 +1420,64 @@ namespace FreeLibSet.Data.SQLite
       DataTable tblColumns = SQLExecuteDataTable(Buffer.SB.ToString());
       tblColumns.DefaultView.Sort = "name";
 
-      foreach (DBxColumnStruct Column in table.Columns)
+      foreach (DBxColumnStruct colDef in table.Columns)
       {
-        int ColumnRowIndex = tblColumns.DefaultView.Find(Column.ColumnName);
-        if (ColumnRowIndex < 0)
+        int columnRowIndex = tblColumns.DefaultView.Find(colDef.ColumnName);
+        if (columnRowIndex < 0)
         {
           // Поля не существует
           if (columnsToAdd == null)
             columnsToAdd = new List<DBxColumnStruct>();
-          columnsToAdd.Add(Column);
+          columnsToAdd.Add(colDef);
         }
         else
         {
-          lstExistedColumns.Add(Column.ColumnName);
+          lstExistedColumns.Add(colDef.ColumnName);
           // Проверяем соответствие поля
-          DataRow ColumnRow = tblColumns.DefaultView[ColumnRowIndex].Row;
+          DataRow columnRow = tblColumns.DefaultView[columnRowIndex].Row;
           // Проверяем соответствие типа столбца объявлению
 
-          string RealType = DataTools.GetString(ColumnRow, "type").ToUpperInvariant();
-          int RealLength;
-          SplitValueType(ref RealType, out RealLength);
-          bool RealIsPK = DataTools.GetBool(ColumnRow, "pk");
-          if (RealIsPK)
+          string realType = DataTools.GetString(columnRow, "type").ToUpperInvariant();
+          int realLength;
+          SplitValueType(ref realType, out realLength);
+          bool realIsPK = DataTools.GetBool(columnRow, "pk");
+          if (realIsPK)
           {
-            if (RealType == "INTEGER")
-              RealType = "INT";
+            if (realType == "INTEGER")
+              realType = "INT";
           }
 
           Buffer.Clear();
-          FormatValueType(Buffer, Column, false);
-          string WantedType = Buffer.SB.ToString();
-          int WantedLength; // равно Column.MaxLength
-          SplitValueType(ref WantedType, out WantedLength);
+          FormatValueType(Buffer, colDef, false);
+          string wantedType = Buffer.SB.ToString();
+          int wantedLength; // равно Column.MaxLength
+          SplitValueType(ref wantedType, out wantedLength);
 
-          if (RealType != WantedType)
+          if (realType != wantedType)
           {
-            errors.AddInfo("Несоответствие типа поля \"" + Column.ColumnName + "\" таблицы \"" +
-              table.TableName + "\". Объявление поля типа " + Column.ColumnType.ToString() +
-              " предполагает тип " + WantedType +
-              " в то время как реальный тип поля " + RealType + ". Требуется пересоздать таблицу");
-            NeedsRecreate = true;
+            errors.AddInfo("Несоответствие типа поля \"" + colDef.ColumnName + "\" таблицы \"" +
+              table.TableName + "\". Объявление поля типа " + colDef.ColumnType.ToString() +
+              " предполагает тип " + wantedType +
+              " в то время как реальный тип поля " + realType + ". Требуется пересоздать таблицу");
+            needsRecreate = true;
           }
           else
           {
             #region Проверка длины строкового поля
 
-            if (Column.ColumnType == DBxColumnType.String)
+            if (colDef.ColumnType == DBxColumnType.String)
             {
               // Укорачивать строковые поля никакого смысла не имеет, так как в файле лишние символы
               // не хранятся, как в Access или MS SQL Server.
               // Удлинять надо, так как из-за неправильного описания в программе может срабатывать
               // ограничение, если будет прочитана реальная структура таблицы
 
-              if (RealLength < WantedLength)
+              if (realLength < wantedLength)
               {
-                errors.AddInfo("Поле \"" + Column.ColumnName + "\" таблицы \"" +
-                      table.TableName + "\" должно иметь длину " + WantedLength.ToString() +
-                      " символов, в то время, как реальное поле длиннее:  " + RealLength.ToString() + " символов. Для удлинения поля требуется пересоздать таблицу");
-                NeedsRecreate = true;
+                errors.AddInfo("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
+                      table.TableName + "\" должно иметь длину " + wantedLength.ToString() +
+                      " символов, в то время, как реальное поле длиннее:  " + realLength.ToString() + " символов. Для удлинения поля требуется пересоздать таблицу");
+                needsRecreate = true;
               }
             } // Строковое поле
 
@@ -1489,19 +1488,19 @@ namespace FreeLibSet.Data.SQLite
 
           // Установка свойства DEFAULT должна выполняться до установки NOT NULL, иначе возникнет ошибка
 
-          string WantedDefExpr = String.Empty;
-          if (Column.DefaultExpression != null)
+          string wantedDefExpr = String.Empty;
+          if (colDef.DefaultExpression != null)
           {
             Buffer.Clear();
-            Buffer.FormatExpression(Column.DefaultExpression, new DBxFormatExpressionInfo());
-            WantedDefExpr = Buffer.SB.ToString();
+            Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
+            wantedDefExpr = Buffer.SB.ToString();
           }
-          string RealDefExpr = DataTools.GetString(ColumnRow, "dflt_value");
-          if (RealDefExpr != WantedDefExpr)
+          string RealDefExpr = DataTools.GetString(columnRow, "dflt_value");
+          if (RealDefExpr != wantedDefExpr)
           {
-            errors.AddInfo("Для поля \"" + Column.ColumnName + "\"в таблице \"" + table.TableName +
+            errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
               "\" должен быть " + (RealDefExpr.Length > 0 ? "установлен" : "сброшен") + " признак DEFAULT. Для изменения признака DEFAULT требуется пересоздать таблицу");
-            NeedsRecreate = true;
+            needsRecreate = true;
           }
 
           #endregion
@@ -1509,19 +1508,19 @@ namespace FreeLibSet.Data.SQLite
           #region Проверка признака Nullable
 
           // Проверяем Nullable
-          bool RealNullable = !DataTools.GetBool(ColumnRow, "notnull");
+          bool realNullable = !DataTools.GetBool(columnRow, "notnull");
 
-          if (Column.Nullable != RealNullable)
+          if (colDef.Nullable != realNullable)
           {
-            errors.AddInfo("Для поля \"" + Column.ColumnName + "\"в таблице \"" + table.TableName +
-              "\" установлен признак " + (Column.Nullable ? "\"NULL\"" : "\"NOT NULL\"") + ". Для изменения ограничения NULLABLE требуется пересоздать таблицу");
-            NeedsRecreate = true;
+            errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+              "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\"") + ". Для изменения ограничения NULLABLE требуется пересоздать таблицу");
+            needsRecreate = true;
 
-            if ((!Column.Nullable) && Column.DefaultExpression != null)
+            if ((!colDef.Nullable) && colDef.DefaultExpression != null)
             {
               if (columnsToReplaceNullToDef == null)
                 columnsToReplaceNullToDef = new List<DBxColumnStruct>();
-              columnsToReplaceNullToDef.Add(Column);
+              columnsToReplaceNullToDef.Add(colDef);
             }
           }
 
@@ -1537,7 +1536,7 @@ namespace FreeLibSet.Data.SQLite
       #endregion
 
       existedColumns = new DBxColumns(lstExistedColumns); // нет смысла оптимизировать
-      return NeedsRecreate;
+      return needsRecreate;
     }
 
     /// <summary>
@@ -1586,21 +1585,21 @@ namespace FreeLibSet.Data.SQLite
       // Когда на одной странице помещается мало строк, выгоднее использовать таблицу с rowid.
 
       int pPrimaryKey;
-      bool WithoutRowId;
+      bool withoutRowId;
       switch (table.PrimaryKey.Count)
       {
         case 1:
           pPrimaryKey = table.Columns.IndexOf(table.PrimaryKey[0]);
-          WithoutRowId = table.PrimaryKeyColumns[0].ColumnType != DBxColumnType.Int && (!table.Columns.ContainsBlob());
+          withoutRowId = table.PrimaryKeyColumns[0].ColumnType != DBxColumnType.Int && (!table.Columns.ContainsBlob());
           break;
         case 0:
           pPrimaryKey = -1;
-          WithoutRowId = false;
+          withoutRowId = false;
           break;
         default:
           pPrimaryKey = -1;
           //WithoutRowId = true;
-          WithoutRowId = !table.Columns.ContainsBlob();
+          withoutRowId = !table.Columns.ContainsBlob();
           break;
       }
 
@@ -1631,7 +1630,7 @@ namespace FreeLibSet.Data.SQLite
 
       Buffer.SB.Append(")");
 
-      if (WithoutRowId)
+      if (withoutRowId)
         Buffer.SB.Append(" WITHOUT ROWID");
 
       SQLExecuteNonQuery(Buffer.SB.ToString());
@@ -1676,7 +1675,6 @@ namespace FreeLibSet.Data.SQLite
       }
       buffer.FormatValueType(column);
     }
-
 
     #endregion
 
@@ -1748,7 +1746,7 @@ namespace FreeLibSet.Data.SQLite
 
     private bool UpdateDBStructIndices(DBxTableStruct table, ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
-      bool Modified = false;
+      bool modified = false;
 
       // Таблица существующих индексов
       DataTable tblIndices = CreateIndicesTable(table.TableName);
@@ -1761,8 +1759,8 @@ namespace FreeLibSet.Data.SQLite
 
       for (int i = 0; i < table.Indexes.Count; i++)
       {
-        string WantedCols = table.Indexes[i].Columns.AsString;
-        int pIndex = dvIdxCols.Find(WantedCols);
+        string wantedCols = table.Indexes[i].Columns.AsString;
+        int pIndex = dvIdxCols.Find(wantedCols);
         if (pIndex >= 0)
           // Индекс найден
           dvIdxCols[pIndex].Row["Flag"] = true;
@@ -1770,13 +1768,13 @@ namespace FreeLibSet.Data.SQLite
         {
           // Требуется создать индекс
           // Имя нового индекса
-          string IndexName = GetNewIndexName(table.TableName, tblIndices);
+          string indexName = GetNewIndexName(table.TableName, tblIndices);
 
-          splash.PhaseText = "Создание индекса \"" + IndexName + "\" для таблицы \"" + table.TableName + "\", столбцы: " + WantedCols;
+          splash.PhaseText = "Создание индекса \"" + indexName + "\" для таблицы \"" + table.TableName + "\", столбцы: " + wantedCols;
 
           Buffer.Clear();
           Buffer.SB.Append("CREATE INDEX \"");
-          Buffer.SB.Append(IndexName);
+          Buffer.SB.Append(indexName);
           Buffer.SB.Append("\" ON ");
           Buffer.FormatTableName(table.TableName);
           Buffer.SB.Append(" (");
@@ -1784,10 +1782,10 @@ namespace FreeLibSet.Data.SQLite
           Buffer.SB.Append(")");
           SQLExecuteNonQuery(Buffer.SB.ToString());
 
-          Modified = true;
-          errors.AddInfo("Создан индекс \"" + IndexName + "\" для таблицы \"" + table.TableName + "\", столбцы: " + WantedCols);
+          modified = true;
+          errors.AddInfo("Создан индекс \"" + indexName + "\" для таблицы \"" + table.TableName + "\", столбцы: " + wantedCols);
 
-          tblIndices.Rows.Add(IndexName, WantedCols, true); // обязательно добавляем, иначе следующее имя индекса будет неправильным
+          tblIndices.Rows.Add(indexName, wantedCols, true); // обязательно добавляем, иначе следующее имя индекса будет неправильным
         }
       } // цикл по объявленным индексам
 
@@ -1797,22 +1795,22 @@ namespace FreeLibSet.Data.SQLite
 
       if (options.DropUnusedIndices)
       {
-        foreach (DataRow IdxRow in tblIndices.Rows)
+        foreach (DataRow idxRow in tblIndices.Rows)
         {
-          if (!DataTools.GetBool(IdxRow, "Flag"))
+          if (!DataTools.GetBool(idxRow, "Flag"))
           {
-            string IndexName = DataTools.GetString(IdxRow, "IndexName");
+            string indexName = DataTools.GetString(idxRow, "IndexName");
             splash.PhaseText = "Удаление лишнего индекса для таблицы \"" + table.TableName + "\"";
-            DropIndex(/*table.TableName, */IndexName);
-            errors.AddInfo("Удален лишний индекс \"" + IndexName + "\" в таблице \"" + table.TableName + "\"");
-            Modified = true;
+            DropIndex(/*table.TableName, */indexName);
+            errors.AddInfo("Удален лишний индекс \"" + indexName + "\" в таблице \"" + table.TableName + "\"");
+            modified = true;
           }
         }
       }
 
       #endregion
 
-      return Modified;
+      return modified;
     }
 
     /// <summary>
@@ -1867,28 +1865,28 @@ namespace FreeLibSet.Data.SQLite
       Buffer.FormatValue(tableName, DBxColumnType.String);
 
       DataTable tblSchema = SQLExecuteDataTable(Buffer.SB.ToString());
-      foreach (DataRow ListRow in tblSchema.Rows)
+      foreach (DataRow listRow in tblSchema.Rows)
       {
-        string IndexName = DataTools.GetString(ListRow, "name");
-        string Expr = DataTools.GetString(ListRow, "sql");
+        string indexName = DataTools.GetString(listRow, "name");
+        string expr = DataTools.GetString(listRow, "sql");
 
-        if (Expr.Length == 0)
+        if (expr.Length == 0)
           continue; // 18.01.2020. Автоиндексы не имеют выражения
 
         // выражение - это то, что в круглых скобках
-        int p1 = Expr.IndexOf('(');
+        int p1 = expr.IndexOf('(');
         if (p1 < 0)
           throw new BugException("Не найдена \"(\"");
-        int p2 = Expr.LastIndexOf(')');
+        int p2 = expr.LastIndexOf(')');
         if (p2 < p1)
           throw new BugException("Не найдена \")\"");
-        Expr = Expr.Substring(p1 + 1, p2 - p1 - 1);
+        expr = expr.Substring(p1 + 1, p2 - p1 - 1);
         // внутри могут оставаться пробелы, поля - в кавычках
-        string[] a = Expr.Split(',');
+        string[] a = expr.Split(',');
         for (int i = 0; i < a.Length; i++)
           a[i] = GetIndexColumnName(a[i]);
 
-        tblIndices.Rows.Add(IndexName, String.Join(",", a));
+        tblIndices.Rows.Add(indexName, String.Join(",", a));
       }
 #endif
 
@@ -1926,9 +1924,9 @@ namespace FreeLibSet.Data.SQLite
     {
       for (int i = 1; i < 1000; i++)
       {
-        string IndexName = tableName + "_" + i.ToString();
-        if (tblIndices.DefaultView.Find(IndexName) < 0)
-          return IndexName;
+        string indexName = tableName + "_" + i.ToString();
+        if (tblIndices.DefaultView.Find(indexName) < 0)
+          return indexName;
       }
       throw new BugException("Не смогли придумать имя для нового индекса таблицы \"" + tableName + "\". Слишком много существующих индексов");
     }
@@ -1966,12 +1964,12 @@ namespace FreeLibSet.Data.SQLite
 
       //csb.DataSource = ReplaceDBItem(csb.DataSource, OldDBName, NewDBName);
       // 31.07.2018. Вместо простой замены текста, заменяем имя файла
-      AbsPath Path = new AbsPath(csb.DataSource);
-      if (String.Equals(Path.FileNameWithoutExtension, oldDBName, StringComparison.OrdinalIgnoreCase))
+      AbsPath path = new AbsPath(csb.DataSource);
+      if (String.Equals(path.FileNameWithoutExtension, oldDBName, StringComparison.OrdinalIgnoreCase))
       {
-        string FileName = newDBName + Path.Extension;
-        Path = new AbsPath(Path.ParentDir, FileName);
-        csb.DataSource = Path.Path;
+        string fileName = newDBName + path.Extension;
+        path = new AbsPath(path.ParentDir, fileName);
+        csb.DataSource = path.Path;
       }
 
       return csb.ConnectionString;
@@ -2029,15 +2027,15 @@ namespace FreeLibSet.Data.SQLite
 
     private void PrepareCommand()
     {
-      DBxSqlBuffer Buffer = new DBxSqlBuffer(Con.DB.Formatter);
+      DBxSqlBuffer buffer = new DBxSqlBuffer(Con.DB.Formatter);
       switch (WriterInfo.Mode)
       {
         case DBxDataWriterMode.Insert:
-          FormatInsertSQL(Buffer);
+          FormatInsertSQL(buffer);
           break;
 
         case DBxDataWriterMode.Update:
-          FormatUpdateSql(Buffer);
+          FormatUpdateSql(buffer);
           break;
 
         case DBxDataWriterMode.InsertOrUpdate:
@@ -2052,25 +2050,25 @@ namespace FreeLibSet.Data.SQLite
           // https://stackoverflow.com/questions/15277373/sqlite-upsert-update-or-insert/38463024#38463024
           // см. ответ №69
 
-          FormatUpdateSql(Buffer);
-          Buffer.SB.Append(";");
-          Buffer.SB.Append(Environment.NewLine);
+          FormatUpdateSql(buffer);
+          buffer.SB.Append(";");
+          buffer.SB.Append(Environment.NewLine);
 
           //FormatInsertSQL(Buffer);
-          Buffer.SB.Append("INSERT INTO ");
-          Buffer.FormatTableName(WriterInfo.TableName);
-          Buffer.SB.Append(" (");
-          Buffer.FormatCSColumnNames(WriterInfo.Columns);
-          Buffer.SB.Append(") SELECT ");
+          buffer.SB.Append("INSERT INTO ");
+          buffer.FormatTableName(WriterInfo.TableName);
+          buffer.SB.Append(" (");
+          buffer.FormatCSColumnNames(WriterInfo.Columns);
+          buffer.SB.Append(") SELECT ");
 
           for (int i = 0; i < Values.Length; i++)
           {
             if (i > 0)
-              Buffer.SB.Append(',');
-            Buffer.FormatParamPlaceholder(i);
+              buffer.SB.Append(',');
+            buffer.FormatParamPlaceholder(i);
           }
 
-          Buffer.SB.Append(" WHERE (SELECT Changes()=0)");
+          buffer.SB.Append(" WHERE (SELECT Changes()=0)");
           //}
           break;
 
@@ -2078,7 +2076,7 @@ namespace FreeLibSet.Data.SQLite
           throw new BugException("Неизвестный Mode=" + WriterInfo.Mode.ToString());
       }
 
-      _Command = new SQLiteCommand(Buffer.SB.ToString());
+      _Command = new SQLiteCommand(buffer.SB.ToString());
       for (int i = 0; i < Values.Length; i++)
         _Command.Parameters.Add(new SQLiteParameter("P" + (i + 1).ToString(), null));
       _Command.Connection = ((SQLiteDBxCon)Con).Connection;
@@ -2087,46 +2085,46 @@ namespace FreeLibSet.Data.SQLite
       _Command.Prepare(); // для порядка.
     }
 
-    private void FormatInsertSQL(DBxSqlBuffer Buffer)
+    private void FormatInsertSQL(DBxSqlBuffer buffer)
     {
-      Buffer.SB.Append("INSERT INTO ");
-      Buffer.FormatTableName(WriterInfo.TableName);
-      Buffer.SB.Append(" (");
-      Buffer.FormatCSColumnNames(WriterInfo.Columns);
-      Buffer.SB.Append(") VALUES (");
+      buffer.SB.Append("INSERT INTO ");
+      buffer.FormatTableName(WriterInfo.TableName);
+      buffer.SB.Append(" (");
+      buffer.FormatCSColumnNames(WriterInfo.Columns);
+      buffer.SB.Append(") VALUES (");
 
       for (int i = 0; i < Values.Length; i++)
       {
         if (i > 0)
-          Buffer.SB.Append(',');
-        Buffer.FormatParamPlaceholder(i);
+          buffer.SB.Append(',');
+        buffer.FormatParamPlaceholder(i);
       }
-      Buffer.SB.Append(")");
+      buffer.SB.Append(")");
     }
 
-    private void FormatUpdateSql(DBxSqlBuffer Buffer)
+    private void FormatUpdateSql(DBxSqlBuffer buffer)
     {
-      Buffer.SB.Append("UPDATE ");
-      Buffer.FormatTableName(WriterInfo.TableName);
-      Buffer.SB.Append(" SET ");
+      buffer.SB.Append("UPDATE ");
+      buffer.FormatTableName(WriterInfo.TableName);
+      buffer.SB.Append(" SET ");
 
       for (int i = 0; i < OtherColumns.Count; i++)
       {
         if (i > 0)
-          Buffer.SB.Append(", ");
-        Buffer.FormatColumnName(OtherColumns[i]);
-        Buffer.SB.Append("=");
-        Buffer.FormatParamPlaceholder(OtherColumnPositions[i]);
+          buffer.SB.Append(", ");
+        buffer.FormatColumnName(OtherColumns[i]);
+        buffer.SB.Append("=");
+        buffer.FormatParamPlaceholder(OtherColumnPositions[i]);
       }
 
-      Buffer.SB.Append(" WHERE ");
+      buffer.SB.Append(" WHERE ");
       for (int i = 0; i < SearchColumns.Count; i++)
       {
         if (i > 0)
-          Buffer.SB.Append(" AND ");
-        Buffer.FormatColumnName(SearchColumns[i]);
-        Buffer.SB.Append("=");
-        Buffer.FormatParamPlaceholder(SearchColumnPositions[i]);
+          buffer.SB.Append(" AND ");
+        buffer.FormatColumnName(SearchColumns[i]);
+        buffer.SB.Append("=");
+        buffer.FormatParamPlaceholder(SearchColumnPositions[i]);
       }
     }
 

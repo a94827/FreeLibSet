@@ -489,10 +489,10 @@ namespace FreeLibSet.Data
     {
       if (args == null)
         throw new ArgumentNullException("args");
-      int MinArgCount, MaxArgCount;
-      GetArgCount(function, out MinArgCount, out MaxArgCount);
-      if (args.Length < MinArgCount || args.Length > MaxArgCount)
-        throw new ArgumentException("Неправильное количество аргументов: " + args.Length.ToString() + ". Для функции " + function.ToString() + " требуются аргументы в количестве от " + MinArgCount.ToString() + " до " + MaxArgCount.ToString());
+      int minArgCount, maxArgCount;
+      GetArgCount(function, out minArgCount, out maxArgCount);
+      if (args.Length < minArgCount || args.Length > maxArgCount)
+        throw new ArgumentException("Неправильное количество аргументов: " + args.Length.ToString() + ". Для функции " + function.ToString() + " требуются аргументы в количестве от " + minArgCount.ToString() + " до " + maxArgCount.ToString());
       for (int i = 0; i < args.Length; i++)
       {
         if (args[i] == null)
@@ -742,16 +742,16 @@ namespace FreeLibSet.Data
     /// <returns>Новое выражение</returns>
     public override DBxExpression SetColumnNamePrefix(string prefix)
     {
-      bool HasDiff = false;
+      bool hasDiff = false;
       DBxExpression[] args2 = new DBxExpression[Arguments.Length];
       for (int i = 0; i < Arguments.Length; i++)
       {
         args2[i] = Arguments[i].SetColumnNamePrefix(prefix);
         if (!object.ReferenceEquals(args2[i], Arguments[i]))
-          HasDiff = true;
+          hasDiff = true;
       }
 
-      if (HasDiff)
+      if (hasDiff)
         return new DBxFunction(Function, args2);
       else
         return this; // реально никогда не будет

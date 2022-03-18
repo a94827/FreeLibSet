@@ -109,15 +109,15 @@ namespace FreeLibSet.Data.Docs
       //Changes.Caller.Splash.PhaseText = "Поиск новых документов и поддокументов";
       // SubstIds создадим только когда понадобится
       _SubstIds = null; // убираем предыдущее
-      foreach (DBxMultiDocs MultiDocs in docSet)
+      foreach (DBxMultiDocs multiDocs in docSet)
       {
         // Основная таблица
-        FindTableSubstIds(ds.Tables[MultiDocs.DocType.Name]);
+        FindTableSubstIds(ds.Tables[multiDocs.DocType.Name]);
         // Поддокументы
-        for (int i = 0; i < MultiDocs.DocType.SubDocs.Count; i++)
+        for (int i = 0; i < multiDocs.DocType.SubDocs.Count; i++)
         {
-          DBxSubDocType sdt = MultiDocs.DocType.SubDocs[i];
-          if (MultiDocs.SubDocs.ContainsModified(sdt.Name))
+          DBxSubDocType sdt = multiDocs.DocType.SubDocs[i];
+          if (multiDocs.SubDocs.ContainsModified(sdt.Name))
             FindTableSubstIds(ds.Tables[sdt.Name]);
         }
       }

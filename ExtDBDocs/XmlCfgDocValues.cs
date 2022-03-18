@@ -100,9 +100,9 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Имя параметра</returns>
     private string GetName(int index)
     {
-      string Name;
-      _Items.TryGetKey(index, out Name);
-      return Name;
+      string name;
+      _Items.TryGetKey(index, out name);
+      return name;
     }
 
 
@@ -297,14 +297,14 @@ namespace FreeLibSet.Data.Docs
       if (_Children == null)
         _Children = new Dictionary<string, XmlCfgDocValues>();
 
-      XmlCfgDocValues Child;
-      if (!_Children.TryGetValue(name, out Child))
+      XmlCfgDocValues child;
+      if (!_Children.TryGetValue(name, out child))
       {
-        CfgPart Part2 = Part.GetChild(name, true);
-        Child = new XmlCfgDocValues(Part2, IsReadOnly);
-        _Children.Add(name, Child);
+        CfgPart part2 = Part.GetChild(name, true);
+        child = new XmlCfgDocValues(part2, IsReadOnly);
+        _Children.Add(name, child);
       }
-      return Child;
+      return child;
     }
 
     private Dictionary<string, XmlCfgDocValues> _Children;

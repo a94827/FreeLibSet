@@ -1483,7 +1483,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("request");
 
       DBxCacheLoadResponse response = new DBxCacheLoadResponse();
-      string DBIdentityMD5 = DataTools.MD5SumFromString(Source.DB.DBIdentity);
+      string dbIdentityMD5 = DataTools.MD5SumFromString(Source.DB.DBIdentity);
 
       #region Страницы таблиц
 
@@ -1494,16 +1494,16 @@ namespace FreeLibSet.Data
         {
           DBxCacheLoadRequest.PageInfo pi = request.TablePages[i];
 
-          string IdColumnName = _Source.Validator.CheckTablePrimaryKeyInt32(pi.TableName);
-          NumRangeFilter Filter = new NumRangeFilter(IdColumnName, pi.FirstId, pi.FirstId + DBxCache.PageRowCount - 1);
-          DataTable Table = FillSelect(pi.TableName, pi.ColumnNames, Filter);
+          string idColumnName = _Source.Validator.CheckTablePrimaryKeyInt32(pi.TableName);
+          NumRangeFilter filter = new NumRangeFilter(idColumnName, pi.FirstId, pi.FirstId + DBxCache.PageRowCount - 1);
+          DataTable table = FillSelect(pi.TableName, pi.ColumnNames, filter);
 
           DBxCacheTablePage page = new DBxCacheTablePage(
-            DBIdentityMD5,
+            dbIdentityMD5,
             pi.TableName,
             pi.FirstId,
             DataTools.MD5SumFromString(pi.ColumnNames.AsString),
-            Table, _Source.Entry.DB.Struct.Tables[pi.TableName].PrimaryKey.AsString);
+            table, _Source.Entry.DB.Struct.Tables[pi.TableName].PrimaryKey.AsString);
 
           response.TablePages.Add(pi.InternalKey, page);
         }
@@ -1524,7 +1524,7 @@ namespace FreeLibSet.Data
           object v = GetValue(ii.TableName, ii.Id, ii.ColumnName);
 
           DBxCacheIndividualValue page = new DBxCacheIndividualValue(
-            DBIdentityMD5,
+            dbIdentityMD5,
             ii.TableName,
             ii.Id,
             ii.ColumnName,
@@ -1582,10 +1582,10 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор строки или 0</returns>
     public Int32 FindRecord(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return FindRecord(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return FindRecord(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -1735,10 +1735,10 @@ namespace FreeLibSet.Data
     /// <returns>Массив идентификаторов строк</returns>
     public IdList GetIds(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return GetIds(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return GetIds(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -1783,8 +1783,8 @@ namespace FreeLibSet.Data
     /// <returns>Список идентификаторов дочерних элементов</returns>
     public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested)
     {
-      Int32 LoopedId;
-      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, null, out LoopedId);
+      Int32 loopedId;
+      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, null, out loopedId);
     }
 
     /// <summary>
@@ -1802,8 +1802,8 @@ namespace FreeLibSet.Data
     /// <returns>Список идентификаторов дочерних элементов</returns>
     public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where)
     {
-      Int32 LoopedId;
-      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out LoopedId);
+      Int32 loopedId;
+      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
     }
 
     /// <summary>
@@ -1830,58 +1830,58 @@ namespace FreeLibSet.Data
 
       loopedId = 0;
 
-      DBxFilter SrcFilter;
+      DBxFilter srcFilter;
       if (parentId == 0)
-        SrcFilter = new ValueFilter(parentIdColumnName, null, typeof(Int32));
+        srcFilter = new ValueFilter(parentIdColumnName, null, typeof(Int32));
       else
-        SrcFilter = new ValueFilter(parentIdColumnName, parentId);
+        srcFilter = new ValueFilter(parentIdColumnName, parentId);
 
-      IdList ResIds = new IdList();
+      IdList resIds = new IdList();
 
       while (true)
       {
-        DBxFilter Filter2;
+        DBxFilter filter2;
         if (where == null)
-          Filter2 = SrcFilter;
+          filter2 = srcFilter;
         else
-          Filter2 = new AndFilter(SrcFilter, where);
+          filter2 = new AndFilter(srcFilter, where);
 
-        IdList ResIds2 = GetIds(tableName, Filter2);
-        if (ResIds2.Count == 0)
-          return ResIds; // рекурсия закончилась нормально
+        IdList resIds2 = GetIds(tableName, filter2);
+        if (resIds2.Count == 0)
+          return resIds; // рекурсия закончилась нормально
 
-        if (ResIds.Count == 0)
+        if (resIds.Count == 0)
         {
           // Первый такт
           if (parentId != 0)
           {
-            if (ResIds2.Contains(parentId))
+            if (resIds2.Contains(parentId))
             {
-              ResIds2.Remove(parentId);
+              resIds2.Remove(parentId);
               loopedId = parentId;
             }
           }
 
           if (!nested)
-            return ResIds2; // нерекурсивный вызов
+            return resIds2; // нерекурсивный вызов
         }
         else
         {
           // второй и далее уровень
 
-          Int32 LoopedId2; // отдельная переменная нужна, чтобы не заменить найденный ранее LoopedId на 0
-          if (ResIds2.ContainsAny(ResIds, out LoopedId2))
+          Int32 loopedId2; // отдельная переменная нужна, чтобы не заменить найденный ранее LoopedId на 0
+          if (resIds2.ContainsAny(resIds, out loopedId2))
           {
             // Зациклилось
-            loopedId = LoopedId2;
-            ResIds2.Remove(ResIds);
-            if (ResIds2.Count == 0)
-              return ResIds; // найден только зацилившийся узел
+            loopedId = loopedId2;
+            resIds2.Remove(resIds);
+            if (resIds2.Count == 0)
+              return resIds; // найден только зацилившийся узел
           }
         }
 
-        ResIds.Add(ResIds2);
-        SrcFilter = new IdsFilter(parentIdColumnName, ResIds2);
+        resIds.Add(resIds2);
+        srcFilter = new IdsFilter(parentIdColumnName, resIds2);
       }
     }
 
@@ -2054,8 +2054,8 @@ namespace FreeLibSet.Data
     /// <returns>Массив значений полей строки</returns>
     public object[] GetValues(string tableName, Int32 id, string columnNames)
     {
-      DBxColumns ColumnNames2 = new DBxColumns(columnNames);
-      return GetValues(tableName, id, ColumnNames2);
+      DBxColumns columnNames2 = new DBxColumns(columnNames);
+      return GetValues(tableName, id, columnNames2);
     }
 
     /// <summary>
@@ -2438,9 +2438,9 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
     public Int32 AddRecordWithIdResult(string tableName, string columnName, object value)
     {
-      object[] Values = new object[1];
-      Values[0] = value;
-      return AddRecordWithIdResult(tableName, new DBxColumns(columnName), Values);
+      object[] values = new object[1];
+      values[0] = value;
+      return AddRecordWithIdResult(tableName, new DBxColumns(columnName), values);
     }
 
     /// <summary>
@@ -2452,10 +2452,10 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
     public Int32 AddRecordWithIdResult(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return AddRecordWithIdResult(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return AddRecordWithIdResult(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -2495,10 +2495,10 @@ namespace FreeLibSet.Data
     /// <param name="columnNamesAndValues">Имена столбцов и значения полей</param>
     public void AddRecord(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      AddRecord(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      AddRecord(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -2710,10 +2710,10 @@ namespace FreeLibSet.Data
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
     public bool FindOrAddRecord(string tableName, IDictionary columnNamesAndValues, out Int32 id)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return FindOrAddRecord(tableName, new DBxColumns(ColumnNames), Values, out id);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return FindOrAddRecord(tableName, new DBxColumns(columnNames), values, out id);
     }
 
     /// <summary>
@@ -2745,9 +2745,9 @@ namespace FreeLibSet.Data
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
     public Int32 FindOrAddRecord(string tableName, IDictionary columnNamesAndValues)
     {
-      Int32 Id;
-      FindOrAddRecord(tableName, columnNamesAndValues, out Id);
-      return Id;
+      Int32 id;
+      FindOrAddRecord(tableName, columnNamesAndValues, out id);
+      return id;
     }
 
     /// <summary>
@@ -3014,9 +3014,9 @@ namespace FreeLibSet.Data
     /// <returns></returns>
     public DBxCon Clone()
     {
-      DBxConBase Con2 = Source.Entry.CreateCon();
-      Source.CopyTo(Con2);
-      return new DBxCon(Con2);
+      DBxConBase con2 = Source.Entry.CreateCon();
+      Source.CopyTo(con2);
+      return new DBxCon(con2);
     }
 
     object ICloneable.Clone()
@@ -3318,9 +3318,9 @@ namespace FreeLibSet.Data
     /// <returns></returns>
     public new DBxUnsafeCon Clone()
     {
-      DBxConBase Con2 = Source.Entry.CreateCon();
-      Source.CopyTo(Con2);
-      return new DBxUnsafeCon(Con2);
+      DBxConBase con2 = Source.Entry.CreateCon();
+      Source.CopyTo(con2);
+      return new DBxUnsafeCon(con2);
     }
 
     object ICloneable.Clone()

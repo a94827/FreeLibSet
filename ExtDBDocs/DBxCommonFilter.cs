@@ -495,13 +495,13 @@ namespace FreeLibSet.Data.Docs
     /// несколько, то будет возвращаен AndDBxFilter</returns>
     public DBxFilter GetSqlFilter()
     {
-      List<DBxFilter> Filters = new List<DBxFilter>();
+      List<DBxFilter> filters = new List<DBxFilter>();
       for (int i = 0; i < Count; i++)
       {
         if (this[i].UseSqlFilter && (!this[i].IsEmpty))
-          Filters.Add(this[i].GetSqlFilter());
+          filters.Add(this[i].GetSqlFilter());
       }
-      return AndFilter.FromArray(Filters.ToArray());
+      return AndFilter.FromArray(filters.ToArray());
     }
 
 
@@ -666,7 +666,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public event EventHandler Changed;
 
-    private bool InsideChanged = false;
+    private bool _InsideChanged = false;
 
     /// <summary>
     /// Внутренний метод для вызова события Changed
@@ -679,10 +679,10 @@ namespace FreeLibSet.Data.Docs
         //throw new ArgumentException("Фильтр не относится к коллекции");
         return; // обойдемся без выброса исключения
 
-      if (InsideChanged)
+      if (_InsideChanged)
         return;
 
-      InsideChanged = true;
+      _InsideChanged = true;
       try
       {
         if (!base.IsUpdating)
@@ -704,7 +704,7 @@ namespace FreeLibSet.Data.Docs
       }
       finally
       {
-        InsideChanged = false;
+        _InsideChanged = false;
       }
     }
 
@@ -855,13 +855,13 @@ namespace FreeLibSet.Data.Docs
     /// несколько, то будет возвращаен AndDBxFilter</returns>
     public DBxFilter GetSqlFilter()
     {
-      List<DBxFilter> Filters = new List<DBxFilter>();
+      List<DBxFilter> filters = new List<DBxFilter>();
       for (int i = 0; i < Count; i++)
       {
         if (this[i].UseSqlFilter && (!this[i].IsEmpty))
-          Filters.Add(this[i].GetSqlFilter());
+          filters.Add(this[i].GetSqlFilter());
       }
-      return AndFilter.FromArray(Filters.ToArray());
+      return AndFilter.FromArray(filters.ToArray());
     }
 
 
@@ -999,16 +999,16 @@ namespace FreeLibSet.Data.Docs
         //  this[i].Clear();
         //}
 
-        CfgPart Part2 = config.GetChild(this[i].Code, false);
-        if (Part2 != null)
+        CfgPart cfg2 = config.GetChild(this[i].Code, false);
+        if (cfg2 != null)
         {
           try
           {
-            this[i].ReadConfig(Part2);
+            this[i].ReadConfig(cfg2);
           }
           catch (Exception e)
           {
-            OnReadConfigError(e, this[i], Part2);
+            OnReadConfigError(e, this[i], cfg2);
           }
         }
       }
@@ -1514,20 +1514,20 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override DBxFilter GetSqlFilter()
     {
-      List<DBxFilter> Filters = new List<DBxFilter>();
+      List<DBxFilter> filters = new List<DBxFilter>();
       if (Codes.Length > 0)
-        Filters.Add(new ValuesFilter(Code, Codes));
+        filters.Add(new ValuesFilter(Code, Codes));
       if (EmptyCode)
-        Filters.Add(new ValueFilter(Code, String.Empty, typeof(string)));
+        filters.Add(new ValueFilter(Code, String.Empty, typeof(string)));
 
-      DBxFilter Filter = OrFilter.FromList(Filters);
+      DBxFilter filter = OrFilter.FromList(filters);
       if (Mode == CodeFilterMode.Exclude)
       {
-        Filter = new NotFilter(Filter);
+        filter = new NotFilter(filter);
         if (CanBeEmpty && (!EmptyCode))
-          Filter = new OrFilter(Filter, new ValueFilter(Code, String.Empty, typeof(string))); // 17.11.2021
+          filter = new OrFilter(filter, new ValueFilter(Code, String.Empty, typeof(string))); // 17.11.2021
       }
-      return Filter;
+      return filter;
     }
 
     /// <summary>
@@ -1537,8 +1537,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      string RowValue = DataTools.GetString(rowValues.GetValue(ColumnName));
-      return TestValue(RowValue);
+      string rowValue = DataTools.GetString(rowValues.GetValue(ColumnName));
+      return TestValue(rowValue);
     }
 
     /// <summary>
@@ -1598,19 +1598,18 @@ namespace FreeLibSet.Data.Docs
       if (IsEmpty)
         return true;
 
-      bool Flag;
+      bool flag;
       if (String.IsNullOrEmpty(rowValue))
-        Flag = EmptyCode;
+        flag = EmptyCode;
       else
-        Flag = Array.IndexOf<string>(Codes, rowValue) >= 0;
+        flag = Array.IndexOf<string>(Codes, rowValue) >= 0;
       if (Mode == CodeFilterMode.Exclude)
-        return !Flag;
+        return !flag;
       else
-        return Flag;
+        return flag;
     }
 
     #endregion
-
   }
 
   #endregion
@@ -1893,8 +1892,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      int Value = DataTools.GetInt(columnValues[0]);
-      return new string[] { Value.ToString() };
+      int value = DataTools.GetInt(columnValues[0]);
+      return new string[] { value.ToString() };
     }
 
     #endregion
@@ -2190,15 +2189,15 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Если FirstValue и LastValue установлены в одно и то же значение, отличное от null, то значение поля документа инициализируется выбранным значением.
     /// </summary>
-    /// <param name="DocValue"></param>
-    protected override void OnInitNewDocValue(DBxDocValue DocValue)
+    /// <param name="docValue"></param>
+    protected override void OnInitNewDocValue(DBxDocValue docValue)
     {
       if (FirstValue.HasValue && LastValue.HasValue && Object.Equals(FirstValue, LastValue))
       {
         if (NullIsZero && FirstValue.Value.Equals(default(T)))
-          DocValue.SetNull();
+          docValue.SetNull();
         else
-          DocValue.SetValue(FirstValue.Value);
+          docValue.SetValue(FirstValue.Value);
       }
     }
 
@@ -2256,11 +2255,11 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override DBxFilter GetSqlFilter()
     {
-      DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
+      DBxFilter filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
       if (NullIsZero && DataTools.IsInRange<Int32>(0, FirstValue, LastValue))
-        Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(int)), Filter);
-      return Filter;
+        filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(int)), filter);
+      return filter;
     }
 
     /// <summary>
@@ -2337,11 +2336,11 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override DBxFilter GetSqlFilter()
     {
-      DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
+      DBxFilter filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
       if (NullIsZero && DataTools.IsInRange<Single>(0, FirstValue, LastValue))
-        Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), Filter);
-      return Filter;
+        filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), filter);
+      return filter;
     }
 
     /// <summary>
@@ -2499,11 +2498,11 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override DBxFilter GetSqlFilter()
     {
-      DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
+      DBxFilter filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
       if (NullIsZero && DataTools.IsInRange<Decimal>(0, FirstValue, LastValue))
-        Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), Filter);
-      return Filter;
+        filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), filter);
+      return filter;
     }
 
     /// <summary>
@@ -2593,19 +2592,19 @@ namespace FreeLibSet.Data.Docs
       {
         if (FilterFlags == null)
           return -1;
-        int Index = -1;
+        int index = -1;
         for (int i = 0; i < FilterFlags.Length; i++)
         {
           if (FilterFlags[i])
           {
-            if (Index < 0)
-              Index = i;
+            if (index < 0)
+              index = i;
             else
               // Установлено больше одного флага
               return -1;
           }
         }
-        return Index;
+        return index;
       }
       set
       {
@@ -2649,18 +2648,18 @@ namespace FreeLibSet.Data.Docs
       if (FilterFlags == null)
         return null;
 
-      List<int> Values = new List<int>();
+      List<int> values = new List<int>();
       for (int i = 0; i < FilterFlags.Length; i++)
       {
         if (FilterFlags[i])
-          Values.Add(i);
+          values.Add(i);
       }
-      DBxFilter Filter = new ValuesFilter(ColumnName, Values.ToArray());
+      DBxFilter filter = new ValuesFilter(ColumnName, values.ToArray());
       // 18.10.2019
       // Форматировщик OnFormatValuesFilter() теперь сам учитывает наличие пустого значения среди Values и дополнительная проверка на NULL не нужна
       //if (FilterFlags[0])
       //  Filter = new OrFilter(Filter, new ValueFilter(ColumnName, null, typeof(Int16)));
-      return Filter;
+      return filter;
     }
 
     /// <summary>
@@ -2672,11 +2671,11 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      int Value = DataTools.GetInt(rowValues.GetValue(ColumnName));
-      if (Value < 0 || Value > FilterFlags.Length)
+      int value = DataTools.GetInt(rowValues.GetValue(ColumnName));
+      if (value < 0 || value > FilterFlags.Length)
         return false;
       else
-        return FilterFlags[Value];
+        return FilterFlags[value];
     }
 
     /// <summary>
@@ -2875,10 +2874,9 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      object RowValue = rowValues.GetValue(ColumnName);
-      return TestValue(RowValue);
+      object rowValue = rowValues.GetValue(ColumnName);
+      return TestValue(rowValue);
     }
-
     /// <summary>
     /// Прочитать значение фильтра из секции конфигурации
     /// </summary>
@@ -2928,13 +2926,13 @@ namespace FreeLibSet.Data.Docs
     /// <returns>true, если значение проходит условие фильтра</returns>
     public bool TestValue(object rowValue)
     {
-      bool IsNull = (rowValue == null || rowValue is DBNull);
+      bool isNull = (rowValue == null || rowValue is DBNull);
       switch (Value)
       {
         case NullNotNullFilterValue.Null:
-          return IsNull;
+          return isNull;
         case NullNotNullFilterValue.NotNull:
-          return !IsNull;
+          return !isNull;
         default:
           return true;
       }
@@ -3064,10 +3062,10 @@ namespace FreeLibSet.Data.Docs
     /// Если неприменимо, аргумент игнорируется</param>
     public void SetFilter(RefDocFilterMode mode, Int32[] docIds)
     {
-      IdList DocIds2 = null;
+      IdList docIds2 = null;
       if (docIds != null)
-        DocIds2 = new IdList(docIds);
-      SetFilter(mode, DocIds2);
+        docIds2 = new IdList(docIds);
+      SetFilter(mode, docIds2);
     }
 
     /// <summary>
@@ -3188,8 +3186,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      Int32 Id = DataTools.GetInt(rowValues.GetValue(ColumnName));
-      return TestValue(Id);
+      Int32 id = DataTools.GetInt(rowValues.GetValue(ColumnName));
+      return TestValue(id);
     }
 
     /// <summary>
@@ -3226,9 +3224,9 @@ namespace FreeLibSet.Data.Docs
     /// <param name="config">Секция конфигурации</param>
     public override void ReadConfig(CfgPart config)
     {
-      RefDocFilterMode NewMode = config.GetEnum<RefDocFilterMode>("Mode");
-      Int32[] NewDocIds = StdConvert.ToInt32Array(config.GetString("Ids"));
-      SetFilter(NewMode, NewDocIds);
+      RefDocFilterMode newMode = config.GetEnum<RefDocFilterMode>("Mode");
+      Int32[] newDocIds = StdConvert.ToInt32Array(config.GetString("Ids"));
+      SetFilter(newMode, newDocIds);
     }
 
     /// <summary>
@@ -3254,9 +3252,9 @@ namespace FreeLibSet.Data.Docs
       switch (Mode)
       {
         case RefDocFilterMode.Include:
-          Int32 Id = SingleDocId;
-          if (Id != 0)
-            docValue.SetInteger(Id);
+          Int32 id = SingleDocId;
+          if (id != 0)
+            docValue.SetInteger(id);
           break;
         case RefDocFilterMode.Null:
           docValue.SetNull();
@@ -3268,16 +3266,16 @@ namespace FreeLibSet.Data.Docs
 
     public override bool CanAsCurrRow(DataRow row)
     {
-      Int32 ThisId = DataTools.GetInt(row, ColumnName);
-      if (ThisId == 0 || ThisId == SingleDocId)
+      Int32 thisId = DataTools.GetInt(row, ColumnName);
+      if (thisId == 0 || thisId == SingleDocId)
         return false;
       return true;
     }
 
     public override void SetAsCurrRow(DataRow row)
     {
-      Int32 ThisId = DataTools.GetInt(row, ColumnName);
-      SingleDocId = ThisId;
+      Int32 thisId = DataTools.GetInt(row, ColumnName);
+      SingleDocId = thisId;
     }
 
 #pragma warning restore 1591
@@ -3347,14 +3345,14 @@ namespace FreeLibSet.Data.Docs
 
       if (!String.IsNullOrEmpty(docType.GroupRefColumnName))
       {
-        DBxColumnStruct GroupIdCol = docType.Struct.Columns[docType.GroupRefColumnName];
-        if (GroupIdCol == null)
+        DBxColumnStruct groupIdCol = docType.Struct.Columns[docType.GroupRefColumnName];
+        if (groupIdCol == null)
           throw new ArgumentException("Неправильное описание вида документа \"" + docType.Name + "\". Нет поля \"" + docType.GroupRefColumnName + "\"", "docType");
-        if (String.IsNullOrEmpty(GroupIdCol.MasterTableName))
+        if (String.IsNullOrEmpty(groupIdCol.MasterTableName))
           throw new ArgumentException("Неправильное описание вида документа \"" + docType.Name + "\". Поле \"" + docType.GroupRefColumnName + "\" нея является", "docType");
-        DBxDocType GroupDocType = docProvider.DocTypes[GroupIdCol.MasterTableName];
+        DBxDocType GroupDocType = docProvider.DocTypes[groupIdCol.MasterTableName];
         if (GroupDocType == null)
-          throw new NullReferenceException("Не найдены документы для мастер-таблицы \"" + GroupIdCol.MasterTableName + "\"");
+          throw new NullReferenceException("Не найдены документы для мастер-таблицы \"" + groupIdCol.MasterTableName + "\"");
         _GroupFilter = new RefDocCommonFilter(docProvider, GroupDocType, columnName + "." + docType.GroupRefColumnName);
         _GroupFilter.DisplayName = GroupDocType.SingularTitle;
         Add(_GroupFilter);
@@ -3551,11 +3549,11 @@ namespace FreeLibSet.Data.Docs
       {
         if (IncludeNestedGroups)
         {
-          DBxDocTreeModel Model = new DBxDocTreeModel(DocProvider,
+          DBxDocTreeModel model = new DBxDocTreeModel(DocProvider,
             GroupDocType,
             new DBxColumns(new string[] { "Id", GroupDocType.TreeParentColumnName }));
 
-          return new IdList(Model.GetIdWithChildren(GroupId));
+          return new IdList(model.GetIdWithChildren(GroupId));
         }
         else
           return IdList.FromId(GroupId);
@@ -3605,8 +3603,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      Int32 Id = DataTools.GetInt(rowValues.GetValue(ColumnName));
-      return TestValue(Id);
+      Int32 id = DataTools.GetInt(rowValues.GetValue(ColumnName));
+      return TestValue(id);
     }
 
     /// <summary>
@@ -4304,12 +4302,12 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      int Year1 = DataTools.GetInt(rowValues.GetValue(ColumnName1));
-      int Year2 = DataTools.GetInt(rowValues.GetValue(ColumnName2));
+      int year1 = DataTools.GetInt(rowValues.GetValue(ColumnName1));
+      int year2 = DataTools.GetInt(rowValues.GetValue(ColumnName2));
 
-      if (Year1 > 0 && Value < Year1)
+      if (year1 > 0 && Value < year1)
         return false;
-      if (Year2 > 0 && Value > Year2)
+      if (year2 > 0 && Value > year2)
         return false;
       return true;
     }

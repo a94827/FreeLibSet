@@ -122,7 +122,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Свойство должно возвращать значение разрешения в текстовом виде, например, "Полный доступ"
     /// </summary>
-    public abstract string ValueText { get;}
+    public abstract string ValueText { get; }
 
     /// <summary>
     /// Информация об источнике разрешения (строка)
@@ -238,9 +238,9 @@ namespace FreeLibSet.Data
     {
       get
       {
-        TempCfg Cfg = new TempCfg();
-        this.Write(Cfg);
-        return Cfg.AsXmlText;
+        TempCfg cfg = new TempCfg();
+        this.Write(cfg);
+        return cfg.AsXmlText;
       }
     }
 
@@ -275,8 +275,8 @@ namespace FreeLibSet.Data
         if (cfgOne == null)
           break;
 
-        string ClassCode = cfgOne.GetString("Class");
-        UserPermission p = Add(ClassCode);
+        string classCode = cfgOne.GetString("Class");
+        UserPermission p = Add(classCode);
         p.Read(cfgOne);
         p.SourceInfo = cfgOne.GetString("SourceInfo");
       }
@@ -301,14 +301,14 @@ namespace FreeLibSet.Data
     /// <returns>Созданное разрешение</returns>
     public UserPermission Add(string classCode)
     {
-      UserPermission Permission = Creators.Create(classCode);
+      UserPermission up = Creators.Create(classCode);
 #if DEBUG
-      if (Permission == null)
+      if (up == null)
         throw new NullReferenceException("Не создано разрешение для ClassCode=\"" + classCode + "\"");
 #endif
-      Permission.Owner = this;
-      base.Add(Permission);
-      return Permission;
+      up.Owner = this;
+      base.Add(up);
+      return up;
     }
 
     /// <summary>
@@ -371,9 +371,9 @@ namespace FreeLibSet.Data
     {
       for (int i = Count - 1; i >= 0; i--)
       {
-        T Res = this[i] as T;
-        if (Res != null)
-          return Res;
+        T res = this[i] as T;
+        if (res != null)
+          return res;
       }
       return null;
     }
@@ -389,9 +389,9 @@ namespace FreeLibSet.Data
 
     private static UserPermissions CreateEmpty()
     {
-      UserPermissions Res = new UserPermissions(UserPermissionCreators.Empty);
-      Res.SetReadOnly();
-      return Res;
+      UserPermissions res = new UserPermissions(UserPermissionCreators.Empty);
+      res.SetReadOnly();
+      return res;
     }
 
     #endregion
@@ -476,26 +476,26 @@ namespace FreeLibSet.Data
     /// <returns>Созданное разрешение</returns>
     public UserPermission Create(string classCode)
     {
-      UserPermission Permission;
-      IUserPermissionCreator Creator = this[classCode];
-      if (Creator == null)
+      UserPermission up;
+      IUserPermissionCreator creator = this[classCode];
+      if (creator == null)
       {
         if (String.IsNullOrEmpty(classCode))
           throw new ArgumentNullException("classCode");
-        Permission = new UnknownUserPermission(classCode);
+        up = new UnknownUserPermission(classCode);
       }
       else
       {
-        Permission = Creator.CreateUserPermission();
-        if (Permission == null)
-          throw new BugException("Метод " + Creator.GetType().ToString() + ".CreateUserPermission() вернул null");
+        up = creator.CreateUserPermission();
+        if (up == null)
+          throw new BugException("Метод " + creator.GetType().ToString() + ".CreateUserPermission() вернул null");
       }
 
-      if (Permission.ClassCode != classCode)
-        throw new BugException("Полученное разрешение " + Permission.GetType().ToString() +
+      if (up.ClassCode != classCode)
+        throw new BugException("Полученное разрешение " + up.GetType().ToString() +
           " имеет ClassCode=\"" + classCode + "\", отличное от запрошенного \"" + classCode + "\"");
 
-      return Permission;
+      return up;
     }
 
     /// <summary>
@@ -512,9 +512,9 @@ namespace FreeLibSet.Data
       if (cfg == null)
         throw new ArgumentNullException("cfg");
 
-      UserPermission p = Create(classCode);
-      p.Read(cfg);
-      return p;
+      UserPermission up = Create(classCode);
+      up.Read(cfg);
+      return up;
     }
 
     /// <summary>
@@ -551,9 +551,9 @@ namespace FreeLibSet.Data
 
     private static UserPermissionCreators CreateEmpty()
     {
-      UserPermissionCreators Creators = new UserPermissionCreators();
-      Creators.SetReadOnly();
-      return Creators;
+      UserPermissionCreators creators = new UserPermissionCreators();
+      creators.SetReadOnly();
+      return creators;
     }
 
     #endregion

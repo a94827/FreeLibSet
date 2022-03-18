@@ -209,22 +209,22 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     public string GetErrorText()
     {
-      string Res = null;
+      string res = null;
       foreach (KeyValuePair<string, string> Pair in _ErrorMessages)
       {
         if (String.IsNullOrEmpty(Pair.Value))
           continue;
 
-        if (Res == null)
-          Res = Pair.Value;
+        if (res == null)
+          res = Pair.Value;
         else
-          Res = Res + ". " + Pair.Value;
+          res = res + ". " + Pair.Value;
       }
 
-      if (Res == null)
+      if (res == null)
         return String.Empty;
       else
-        return Res;
+        return res;
     }
 
     #endregion
@@ -295,29 +295,29 @@ namespace FreeLibSet.Data.Docs
         if (item == null)
           continue;
 
-        string TableNames = item.TableNames;
-        if (String.IsNullOrEmpty(TableNames))
+        string tableNames = item.TableNames;
+        if (String.IsNullOrEmpty(tableNames))
           throw new NullReferenceException("Свойство \"TableNames\" для объекта " + item.ToString() + " не вернуло список таблиц");
-        if (TableNames.IndexOf(',') >= 0)
+        if (tableNames.IndexOf(',') >= 0)
         {
-          string[] a = TableNames.Split(',');
+          string[] a = tableNames.Split(',');
           for (int j = 0; j < a.Length; j++)
             AddItem(a[j], item);
         }
         else
-          AddItem(TableNames, item);
+          AddItem(tableNames, item);
       }
     }
 
     private void AddItem(string tableName, IDBxDocPermission item)
     {
-      List<IDBxDocPermission> List;
-      if (!_Items.TryGetValue(tableName, out List))
+      List<IDBxDocPermission> list;
+      if (!_Items.TryGetValue(tableName, out list))
       {
-        List = new List<IDBxDocPermission>();
-        _Items.Add(tableName, List);
+        list = new List<IDBxDocPermission>();
+        _Items.Add(tableName, list);
       }
-      List.Add(item);
+      list.Add(item);
     }
 
     #endregion
@@ -355,8 +355,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Наличие прав доступа</returns>
     public bool TestDocument(DBxSingleDoc doc, DBxDocPermissionReason reason, out string errorText)
     {
-      List<IDBxDocPermission> List;
-      if (!_Items.TryGetValue(doc.DocType.Name, out List))
+      List<IDBxDocPermission> list;
+      if (!_Items.TryGetValue(doc.DocType.Name, out list))
       {
         errorText = null;
         return true;
@@ -388,14 +388,14 @@ namespace FreeLibSet.Data.Docs
 #if DEBUG
       if (_Args.Values == null)
         throw new BugException("Args.Values=null");
-      Int32 DummyDocId = _Args.Values["Id"].AsInteger; // пытаемся прочитать
+      Int32 dummyDocId = _Args.Values["Id"].AsInteger; // пытаемся прочитать
 #endif
 
       _Args.ErrorMessages.Clear();
       // Всегда проверяем все разрешения, а не до первого запрета, т.к. последнее разрешение может разрешить
       // то, что было запрещено до этого
-      for (int i = 0; i < List.Count; i++)
-        List[i].TestDocAllowed(_Args);
+      for (int i = 0; i < list.Count; i++)
+        list[i].TestDocAllowed(_Args);
 
       errorText = _Args.GetErrorText();
       return String.IsNullOrEmpty(errorText);
@@ -410,11 +410,11 @@ namespace FreeLibSet.Data.Docs
     [DebuggerStepThrough]
     public void TestDocument(DBxSingleDoc doc, DBxDocPermissionReason reason)
     {
-      string ErrorText;
-      if (!TestDocument(doc, reason, out ErrorText))
+      string errorText;
+      if (!TestDocument(doc, reason, out errorText))
         // throw new DBxAccessException("Нет права " + GetActionName(Reason) + " документа \"" + Doc.DocType.SingularTitle + "\" с Id="+Doc.DocId.ToString()+". " + ErrorText);
         throw new DBxAccessException("Нет права " + GetActionName(reason) + " документа \"" +
-          doc.DocType.SingularTitle + "\" \"" + doc.TextValue + "\". " + ErrorText);
+          doc.DocType.SingularTitle + "\" \"" + doc.TextValue + "\". " + errorText);
     }
 
     private static string GetActionName(DBxDocPermissionReason reason)
@@ -444,11 +444,11 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Наличие прав доступа</returns>
     public bool TestDocuments(DBxDocSet docSet, DBxDocPermissionReason reason, out string errorText)
     {
-      foreach (DBxMultiDocs MultiDocs in docSet)
+      foreach (DBxMultiDocs multiDocs in docSet)
       {
-        foreach (DBxSingleDoc Doc in MultiDocs)
+        foreach (DBxSingleDoc doc in multiDocs)
         {
-          if (!TestDocument(Doc, reason, out errorText))
+          if (!TestDocument(doc, reason, out errorText))
             return false;
         }
       }
@@ -467,10 +467,10 @@ namespace FreeLibSet.Data.Docs
     [DebuggerStepThrough]
     public void TestDocuments(DBxDocSet docSet, DBxDocPermissionReason reason)
     {
-      string ErrorText;
-      if (!TestDocuments(docSet, reason, out ErrorText))
+      string errorText;
+      if (!TestDocuments(docSet, reason, out errorText))
         // throw new DBxAccessException("Нет права " + GetActionName(Reason) + " документа \"" + Doc.DocType.SingularTitle + "\" с Id="+Doc.DocId.ToString()+". " + ErrorText);
-        throw new DBxAccessException("Нет права " + GetActionName(reason) + " документов \"" + ErrorText);
+        throw new DBxAccessException("Нет права " + GetActionName(reason) + " документов \"" + errorText);
     }
 
     #endregion

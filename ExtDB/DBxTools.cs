@@ -160,27 +160,27 @@ namespace FreeLibSet.Data
     /// </summary>
     public static void InitLogout()
     {
-      if (InitLogoutCalled)
+      if (_InitLogoutCalled)
         return;
-      InitLogoutCalled = true;
+      _InitLogoutCalled = true;
       LogoutTools.LogoutInfoNeeded += new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded); // 19.08.2020 перенесено сюда
       LogoutTools.LogoutProp += new LogoutPropEventHandler(LogoutTools_LogoutProp);
     }
 
-    private static bool InitLogoutCalled = false;
+    private static bool _InitLogoutCalled = false;
 
     private static void LogoutTools_LogoutInfoNeeded(object sender, LogoutInfoNeededEventArgs args)
     {
       args.WriteHeader("DBx");
-      foreach (DBx DB in DBx.AllDBList)
+      foreach (DBx db in DBx.AllDBList)
       {
-        args.WriteLine(DB.ToString());
+        args.WriteLine(db.ToString());
         args.IndentLevel++;
-        if (DB.IsDisposed)
+        if (db.IsDisposed)
           args.WriteLine("Disposed");
         else
         {
-          LogoutTools.LogoutObject(args, DB);
+          LogoutTools.LogoutObject(args, db);
         }
         args.IndentLevel--;
       }

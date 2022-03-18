@@ -163,7 +163,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -172,7 +172,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -187,7 +187,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -196,7 +196,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -213,7 +213,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -222,7 +222,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -257,7 +257,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -266,7 +266,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -283,7 +283,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -292,7 +292,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -311,7 +311,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -320,7 +320,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -335,7 +335,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -344,7 +344,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -363,7 +363,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -372,7 +372,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -389,7 +389,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -398,7 +398,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -418,7 +418,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -427,7 +427,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -445,7 +445,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -454,7 +454,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -470,7 +470,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -479,7 +479,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -497,7 +497,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -506,7 +506,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -524,7 +524,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -533,7 +533,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -556,7 +556,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -565,7 +565,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -588,7 +588,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -597,7 +597,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -615,7 +615,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -624,7 +624,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -641,7 +641,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -650,7 +650,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -668,7 +668,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -677,7 +677,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -695,7 +695,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -704,7 +704,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -723,7 +723,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -732,7 +732,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -750,7 +750,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -759,11 +759,11 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
- 
+
     /// <summary>
     /// ѕолучить числовые значени€ пол€ без повторов.
     /// ≈сли в таблице встречаютс€ значени€ NULL, то они пропускаютс€.
@@ -777,7 +777,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -786,7 +786,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -804,7 +804,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -813,7 +813,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -831,7 +831,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -840,7 +840,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -858,7 +858,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -867,7 +867,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -882,7 +882,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -891,7 +891,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -954,7 +954,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -963,7 +963,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -980,7 +980,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -989,7 +989,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1003,7 +1003,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1012,7 +1012,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1028,7 +1028,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1037,7 +1037,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1077,7 +1077,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1086,7 +1086,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1102,7 +1102,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1111,7 +1111,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1125,7 +1125,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1134,7 +1134,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1151,7 +1151,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1160,7 +1160,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1194,7 +1194,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1203,7 +1203,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1228,7 +1228,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      int RepeatCount = 0;
+      int repeatCount = 0;
       while (true)
       {
         try
@@ -1237,7 +1237,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          CatchException(e, ref RepeatCount);
+          CatchException(e, ref repeatCount);
         }
       }
     }
@@ -1332,8 +1332,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     public override DBxDocProvider Clone()
     {
-      DBxDocProvider Source2 = Source.Clone();
-      return new DBxChainDocProvider(Source2.CreateProxy(), CurrentThreadOnly);
+      DBxDocProvider source2 = Source.Clone();
+      return new DBxChainDocProvider(source2.CreateProxy(), CurrentThreadOnly);
     }
 
     /// <summary>
@@ -1373,11 +1373,11 @@ namespace FreeLibSet.Data.Docs
         _UserPermissionCreators = value;
         _UserPermissionCreators.SetReadOnly();
 
-        DBxChainDocProvider Source2 = Source as DBxChainDocProvider;
-        if (Source2 != null && (!SourceIsRemote))
+        DBxChainDocProvider source2 = Source as DBxChainDocProvider;
+        if (source2 != null && (!SourceIsRemote))
         {
-          if (Source2.UserPermissionCreators == null)
-            Source2.UserPermissionCreators = value;
+          if (source2.UserPermissionCreators == null)
+            source2.UserPermissionCreators = value;
         }
 
         ResetPermissions();
@@ -1396,7 +1396,7 @@ namespace FreeLibSet.Data.Docs
       {
         _UserPermissions = null;
 
-        int RepeatCount = 0;
+        int repeatCount = 0;
         while (true)
         {
           try
@@ -1406,7 +1406,7 @@ namespace FreeLibSet.Data.Docs
           }
           catch (Exception e)
           {
-            CatchException(e, ref RepeatCount);  // 04.09.2017
+            CatchException(e, ref repeatCount);  // 04.09.2017
           }
         }
       }
@@ -1433,22 +1433,22 @@ namespace FreeLibSet.Data.Docs
           }
           else
           {
-            TempCfg Cfg = new TempCfg();
-            int RepeatCount = 0;
+            TempCfg cfg = new TempCfg();
+            int repeatCount = 0;
             while (true)
             {
               try
               {
-                Cfg.AsXmlText = UserPermissionsAsXmlString;
+                cfg.AsXmlText = UserPermissionsAsXmlString;
                 break;
               }
               catch (Exception e)
               {
-                CatchException(e, ref RepeatCount);  // 04.09.2017
+                CatchException(e, ref repeatCount);  // 04.09.2017
               }
             }
             _UserPermissions = new UserPermissions(_UserPermissionCreators);
-            _UserPermissions.Read(Cfg);
+            _UserPermissions.Read(cfg);
           }
         }
         return _UserPermissions;
@@ -1530,10 +1530,10 @@ namespace FreeLibSet.Data.Docs
       if (_ExceptionCaught == null)
         return false;
 
-      DBxRetriableExceptionEventArgs Args = new DBxRetriableExceptionEventArgs(exception, repeatCount);
-      _ExceptionCaught(this, Args);
+      DBxRetriableExceptionEventArgs args = new DBxRetriableExceptionEventArgs(exception, repeatCount);
+      _ExceptionCaught(this, args);
 
-      return Args.Retry;
+      return args.Retry;
     }
 
     private void CatchException(Exception exception, ref int repeatCount)

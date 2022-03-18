@@ -240,12 +240,12 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      DBx DB;
+      DBx db;
 
-      string OldSplashText = null;
+      string oldSplashText = null;
       if (Splash != null)
       {
-        OldSplashText = Splash.PhaseText;
+        oldSplashText = Splash.PhaseText;
         Splash.PhaseText = "Обновление базы данных " + dbName;
       }
       try
@@ -263,7 +263,7 @@ namespace FreeLibSet.Data.Docs
           csb.AttachDBFilename = DBDir.SlashedPath + dbName + ".mdf";
           csb.IntegratedSecurity = true;
 
-          DB = new FreeLibSet.Data.SqlClient.SqlDBx(csb);
+          db = new FreeLibSet.Data.SqlClient.SqlDBx(csb);
         }
         else
         {
@@ -278,44 +278,44 @@ namespace FreeLibSet.Data.Docs
               throw new NullReferenceException("Свойство ProviderName содержит неизвестный провайдер \"" + ProviderName + "\". Допустимые значения: " +
                 String.Join(", ", DBxManager.Managers.GetCodes()));
           }
-          string ConStr = dbMan.ReplaceDBName(ConnectionString, "db", dbName);
+          string conStr = dbMan.ReplaceDBName(ConnectionString, "db", dbName);
 
           if (ProviderName == DBxProviderNames.SQLite && (!DocTypes.UseDeleted)) // 02.02.2022
           {
-            DbConnectionStringBuilder csb = dbMan.CreateConnectionStringBuilder(ConStr);
+            DbConnectionStringBuilder csb = dbMan.CreateConnectionStringBuilder(conStr);
             csb["foreign keys"] = true;
-            ConStr = csb.ConnectionString;
+            conStr = csb.ConnectionString;
           }
 
-          DB = dbMan.CreateDBObject(ConStr);
+          db = dbMan.CreateDBObject(conStr);
         }
 
-        DB.DisplayName = dbName;
-        DB.CommandTimeout = CommandTimeout;
+        db.DisplayName = dbName;
+        db.CommandTimeout = CommandTimeout;
 
 
         if (dbStruct != null)
         {
           // 08.10.2018
           // Пользовательская инициализация
-          DBxDocDBConnectionHelperInitDBxEventArgs Args = new DBxDocDBConnectionHelperInitDBxEventArgs(DB, dbStruct, dbName);
+          DBxDocDBConnectionHelperInitDBxEventArgs Args = new DBxDocDBConnectionHelperInitDBxEventArgs(db, dbStruct, dbName);
           OnBeforeInitDB(Args);
 
-          DB.CreateIfRequired();
-          DB.Struct = dbStruct; // возможно, была изменена пользовательским обработчиком
+          db.CreateIfRequired();
+          db.Struct = dbStruct; // возможно, была изменена пользовательским обработчиком
 
           ISplash spl = this.Splash ?? new DummySplash();
-          int OldErrorCount = Errors.Count;
-          DB.UpdateStruct(spl, Errors, UpdateStructOptions);
-          Errors.SetPrefix("Обновление структуры " + dbName + ". ", OldErrorCount);
+          int oldErrorCount = Errors.Count;
+          db.UpdateStruct(spl, Errors, UpdateStructOptions);
+          Errors.SetPrefix("Обновление структуры " + dbName + ". ", oldErrorCount);
         }
       }
       finally
       {
         if (Splash != null)
-          Splash.PhaseText = OldSplashText;
+          Splash.PhaseText = oldSplashText;
       }
-      return DB;
+      return db;
     }
 
     /// <summary>
@@ -433,18 +433,18 @@ namespace FreeLibSet.Data.Docs
       DBxStruct filesDBStruct; // Структура баз данных files. Используется, если DBxBinDataHandler.UseFragmentation=true.
       InitBinDataHandler(out binDataHandler, out filesDBStruct);
 
-      DBx MainDB = InitDB("db", MainDBStruct);
-      DBx UndoDB = null;
+      DBx mainDB = InitDB("db", MainDBStruct);
+      DBx undoDB = null;
       if (UseUndo)
       {
         if (UndoDBStruct == null)
           throw new InvalidOperationException("При заданных настройках объекта DBxDocTypes, ведение истории невозможно");
-        UndoDB = InitDB("undo", UndoDBStruct);
+        undoDB = InitDB("undo", UndoDBStruct);
       }
 
       if (binDataHandler != null)
       {
-        binDataHandler.MainEntry = MainDB.MainEntry;
+        binDataHandler.MainEntry = mainDB.MainEntry;
         if (filesDBStruct != null)
         {
           DBx filesDB = InitDB("files", filesDBStruct.Clone());
@@ -469,15 +469,15 @@ namespace FreeLibSet.Data.Docs
 
 
       if (InitDocTableIds)
-        DocTypes.InitDocTableIds(MainDB.MainEntry);
+        DocTypes.InitDocTableIds(mainDB.MainEntry);
 
       this.Splash = null; // Объект может остаться "прицепленным" к DBxBinDataHelper
 
-      DBxEntry MainDBEntry = MainDB.MainEntry;
-      DBxEntry UndoDBEntry = null;
-      if (UndoDB != null)
-        UndoDBEntry = UndoDB.MainEntry;
-      return new DBxRealDocProviderGlobal(DocTypes, MainDBEntry, UndoDBEntry, binDataHandler);
+      DBxEntry mainDBEntry = mainDB.MainEntry;
+      DBxEntry undoDBEntry = null;
+      if (undoDB != null)
+        undoDBEntry = undoDB.MainEntry;
+      return new DBxRealDocProviderGlobal(DocTypes, mainDBEntry, undoDBEntry, binDataHandler);
     }
 
     private void InitBinDataHandler(out DBxBinDataHandler binDataHandler, out DBxStruct filesDBStruct)
@@ -499,9 +499,9 @@ namespace FreeLibSet.Data.Docs
         binDataHandler.UseFragmentation = _UseBinDataFragmentation.Value;
       else
       {
-        using (DBx DummyDB = InitDB("db", null))
+        using (DBx dummyDB = InitDB("db", null))
         {
-          binDataHandler.UseFragmentation = DummyDB.DBSizeLimit < FileTools.TByte;
+          binDataHandler.UseFragmentation = dummyDB.DBSizeLimit < FileTools.TByte;
         }
       }
 
@@ -525,17 +525,17 @@ namespace FreeLibSet.Data.Docs
     /// <param name="args">Не используется</param>
     void BinDataHandler_DBSizeLimitExceeded(object sender, EventArgs args)
     {
-      DBxBinDataHandler BinDataHandler = (DBxBinDataHandler)sender;
+      DBxBinDataHandler binDataHandler = (DBxBinDataHandler)sender;
 
       System.Diagnostics.Trace.WriteLine("DBxBinDataHandler.DBSizeLimitExceeded event handler called");
 
-      string DBName = "files" + (BinDataHandler.SectionEntryCount + 1).ToString();
+      string dbName = "files" + (binDataHandler.SectionEntryCount + 1).ToString();
       DBxStruct dbs = new DBxStruct();
-      BinDataHandler.AddSectionTableStructs(dbs);
-      DBx DB = InitDB(DBName, dbs);
-      BinDataHandler.AddSectionEntry(DB.MainEntry);
+      binDataHandler.AddSectionTableStructs(dbs);
+      DBx db = InitDB(dbName, dbs);
+      binDataHandler.AddSectionEntry(db.MainEntry);
 
-      System.Diagnostics.Trace.WriteLine("New database created: " + DB.DisplayName);
+      System.Diagnostics.Trace.WriteLine("New database created: " + db.DisplayName);
     }
 
     #endregion

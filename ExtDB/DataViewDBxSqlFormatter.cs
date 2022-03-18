@@ -54,7 +54,6 @@ namespace FreeLibSet.Data
         OnFormatColumnName(buffer, column.ColumnName);
     }
 
-
     #endregion
 
     #region Выражения
@@ -112,8 +111,6 @@ namespace FreeLibSet.Data
 
     #region Прочие фильтры
 
-
-
     /// <summary>
     /// Запись фильтра CompareFilter в режиме сравнения значения с NULL.
     /// Добавляет "NOT ISNULL(Выражение, Значение-по-Умолчанию)=Значение-по-Умолчанию"
@@ -137,7 +134,6 @@ namespace FreeLibSet.Data
       buffer.SB.Append(")=");
       buffer.FormatValue(DBxTools.GetDefaultValue(columnType), DBxColumnType.Unknown);
     }
-
 
     #endregion
 
@@ -171,7 +167,6 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
     {
-
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
       formatInfo.NullAsDefaultValue = true;
       formatInfo.WantedColumnType = DBxColumnType.String;

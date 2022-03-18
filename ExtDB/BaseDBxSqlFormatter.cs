@@ -233,47 +233,47 @@ namespace FreeLibSet.Data
     /// <param name="formatInfo">Параметры форматирования</param>
     protected override void OnFormatColumn(DBxSqlBuffer buffer, DBxColumn column, DBxFormatExpressionInfo formatInfo)
     {
-      string TableAlias;
-      buffer.ColumnTableAliases.TryGetValue(column.ColumnName, out TableAlias);
+      string tableAlias;
+      buffer.ColumnTableAliases.TryGetValue(column.ColumnName, out tableAlias);
 
-      string ActualName = column.ColumnName;
-      int LastDotPos = column.ColumnName.LastIndexOf('.');
-      if (LastDotPos >= 0)
+      string actualName = column.ColumnName;
+      int lastDotPos = column.ColumnName.LastIndexOf('.');
+      if (lastDotPos >= 0)
       {
-        ActualName = ActualName.Substring(LastDotPos + 1);
-        if (String.IsNullOrEmpty(TableAlias))
+        actualName = actualName.Substring(lastDotPos + 1);
+        if (String.IsNullOrEmpty(tableAlias))
           throw new InvalidOperationException("Для ссылочного столбца \"" + column.ColumnName + "\" не найден альяс таблицы");
       }
 
-      bool UseCoalesce = false;
-      DBxColumnType WantedType = formatInfo.WantedColumnType;
+      bool useCoalesce = false;
+      DBxColumnType wantedType = formatInfo.WantedColumnType;
       if (formatInfo.NullAsDefaultValue)
       {
-        DBxColumnStruct Str;
-        buffer.ColumnStructs.TryGetValue(column.ColumnName, out Str);
-        if (Str != null)
+        DBxColumnStruct colStr;
+        buffer.ColumnStructs.TryGetValue(column.ColumnName, out colStr);
+        if (colStr != null)
         {
-          UseCoalesce = Str.Nullable;
-          WantedType = Str.ColumnType;
+          useCoalesce = colStr.Nullable;
+          wantedType = colStr.ColumnType;
         }
         else
-          UseCoalesce = true;
+          useCoalesce = true;
       }
 
-      if (UseCoalesce)
+      if (useCoalesce)
       {
-        if (WantedType == DBxColumnType.Unknown)
+        if (wantedType == DBxColumnType.Unknown)
           throw new InvalidOperationException("Для столбца \"" + column.ColumnName + "\" требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных");
 
-        DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(DBxTools.GetDefaultValue(WantedType), WantedType));
+        DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(DBxTools.GetDefaultValue(wantedType), wantedType));
         OnFormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // рекурсивный вызов форматировщика, но уже без флага 
       }
       else
       {
-        if (String.IsNullOrEmpty(TableAlias))
-          OnFormatColumnName(buffer, ActualName);
+        if (String.IsNullOrEmpty(tableAlias))
+          OnFormatColumnName(buffer, actualName);
         else
-          OnFormatColumnName(buffer, TableAlias, ActualName);
+          OnFormatColumnName(buffer, tableAlias, actualName);
       }
     }
 
@@ -351,10 +351,10 @@ namespace FreeLibSet.Data
           // Определяем тип данных из константы
           for (int i = function.Arguments.Length - 1; i >= 1; i--)
           {
-            DBxConst ConstExpr = function.Arguments[i].GetConst();
-            if (ConstExpr != null)
+            DBxConst constExpr = function.Arguments[i].GetConst();
+            if (constExpr != null)
             {
-              formatInfo.WantedColumnType = ConstExpr.ColumnType; // переопределяем переданный тип
+              formatInfo.WantedColumnType = constExpr.ColumnType; // переопределяем переданный тип
               break;
             }
           }
@@ -488,7 +488,6 @@ namespace FreeLibSet.Data
           throw new ArgumentException("Неизвестная агрегатная функция " + kind.ToString());
       }
     }
-
 
     #endregion
 
@@ -771,15 +770,14 @@ namespace FreeLibSet.Data
 
     #region Фильтры
 
-
     /// <summary>
     /// Получить знак для условия ValueFilterKind 
     /// </summary>
-    /// <param name="Kind">Тип сравнения</param>
+    /// <param name="kind">Тип сравнения</param>
     /// <returns>Знак операции сравнения</returns>
-    protected virtual string GetSignStr(CompareKind Kind)
+    protected virtual string GetSignStr(CompareKind kind)
     {
-      switch (Kind)
+      switch (kind)
       {
         case CompareKind.Equal: return "=";
         case CompareKind.LessThan: return "<";
@@ -787,7 +785,7 @@ namespace FreeLibSet.Data
         case CompareKind.GreaterThan: return ">";
         case CompareKind.GreaterOrEqualThan: return ">=";
         case CompareKind.NotEqual: return "<>";
-        default: throw new ArgumentException("Неизвестный Kind: " + Kind.ToString());
+        default: throw new ArgumentException("Неизвестный Kind: " + kind.ToString());
       }
     }
 
@@ -802,8 +800,8 @@ namespace FreeLibSet.Data
     {
       if (filter.Ids.Count == 1)
       {
-        Int32 SingleId = filter.Ids.SingleId;
-        CompareFilter Filter2 = new CompareFilter(filter.Expression, new DBxConst(SingleId), CompareKind.Equal, SingleId == 0, DBxColumnType.Int);
+        Int32 singleId = filter.Ids.SingleId;
+        CompareFilter Filter2 = new CompareFilter(filter.Expression, new DBxConst(singleId), CompareKind.Equal, singleId == 0, DBxColumnType.Int);
         FormatFilter(buffer, Filter2);
         return;
       }
@@ -813,15 +811,15 @@ namespace FreeLibSet.Data
       formatInfo.WantedColumnType = DBxColumnType.Int;
       buffer.FormatExpression(filter.Expression, formatInfo);
       buffer.SB.Append(" IN (");
-      bool First = true;
-      foreach (Int32 Id in filter.Ids)
+      bool first = true;
+      foreach (Int32 id in filter.Ids)
       {
-        if (First)
-          First = false;
+        if (first)
+          first = false;
         else
           buffer.SB.Append(", ");
 
-        buffer.SB.Append(Id.ToString());
+        buffer.SB.Append(id.ToString());
       }
       buffer.SB.Append(')');
     }
@@ -835,12 +833,12 @@ namespace FreeLibSet.Data
     protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
     {
       // Есть ли в списке значений значение по умолчанию
-      bool HasDefaultValue = false;
+      bool hasDefaultValue = false;
       foreach (object v in filter.Values)
       {
         if (DataTools.IsEmptyValue(v))
         {
-          HasDefaultValue = true;
+          hasDefaultValue = true;
           break;
         }
       }
@@ -848,14 +846,14 @@ namespace FreeLibSet.Data
       if (filter.Values.Length == 1)
       {
         // Как обычный ValueFilter
-        CompareFilter Filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.Values.GetValue(0)), CompareKind.Equal, HasDefaultValue, filter.ColumnType);
-        FormatFilter(buffer, Filter2);
+        CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.Values.GetValue(0)), CompareKind.Equal, hasDefaultValue, filter.ColumnType);
+        FormatFilter(buffer, filter2);
         return;
       }
 
       // Сложный фильтр использует IN
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
-      formatInfo.NullAsDefaultValue = HasDefaultValue;
+      formatInfo.NullAsDefaultValue = hasDefaultValue;
       if (filter.ColumnType == DBxColumnType.Unknown)
       {
         foreach (object v in filter.Values)
@@ -916,19 +914,19 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatStringValueFilter(DBxSqlBuffer buffer, StringValueFilter filter)
     {
-      DBxExpression Expr1, Expr2;
+      DBxExpression expr1, expr2;
       if (filter.IgnoreCase)
       {
-        Expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
-        Expr2 = new DBxConst(filter.Value.ToUpperInvariant(), DBxColumnType.String);
+        expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
+        expr2 = new DBxConst(filter.Value.ToUpperInvariant(), DBxColumnType.String);
       }
       else
       {
-        Expr1 = filter.Expression;
-        Expr2 = new DBxConst(filter.Value, DBxColumnType.String);
+        expr1 = filter.Expression;
+        expr2 = new DBxConst(filter.Value, DBxColumnType.String);
       }
-      CompareFilter Filter2 = new CompareFilter(Expr1, Expr2, CompareKind.Equal, true);
-      buffer.FormatFilter(Filter2);
+      CompareFilter filter2 = new CompareFilter(expr1, expr2, CompareKind.Equal, true);
+      buffer.FormatFilter(filter2);
     }
 
     /// <summary>
@@ -938,17 +936,17 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
     {
-      DBxExpression Expr1;
+      DBxExpression expr1;
       if (filter.IgnoreCase)
-        Expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
+        expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
       else
-        Expr1 = filter.Expression;
+        expr1 = filter.Expression;
 
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
       formatInfo.NullAsDefaultValue = true;
       formatInfo.WantedColumnType = DBxColumnType.String;
       formatInfo.NoParentheses = false;
-      buffer.FormatExpression(Expr1, formatInfo);
+      buffer.FormatExpression(expr1, formatInfo);
       buffer.SB.Append(" LIKE '");
 
       string v = filter.Value;
@@ -1002,26 +1000,26 @@ namespace FreeLibSet.Data
     {
       // 24.06.2019.
       // То же, что и классе DataViewDBxSqlFormatter, но с переводом к верхнему регистру
-      DBxExpression Expr1, Expr2;
+      DBxExpression expr1, expr2;
       if (filter.IgnoreCase)
       {
-        Expr1 = new DBxFunction(DBxFunctionKind.Upper, new DBxFunction(DBxFunctionKind.Substring,
+        expr1 = new DBxFunction(DBxFunctionKind.Upper, new DBxFunction(DBxFunctionKind.Substring,
           filter.Expression,
           new DBxConst(filter.StartIndex + 1),
           new DBxConst(filter.Value.Length)));
-        Expr2 = new DBxConst(filter.Value.ToUpperInvariant(), DBxColumnType.String);
+        expr2 = new DBxConst(filter.Value.ToUpperInvariant(), DBxColumnType.String);
       }
       else
       {
-        Expr1 = new DBxFunction(DBxFunctionKind.Substring,
+        expr1 = new DBxFunction(DBxFunctionKind.Substring,
           filter.Expression,
           new DBxConst(filter.StartIndex + 1),
           new DBxConst(filter.Value.Length));
-        Expr2 = new DBxConst(filter.Value, DBxColumnType.String);
+        expr2 = new DBxConst(filter.Value, DBxColumnType.String);
       }
 
-      CompareFilter Filter2 = new CompareFilter(Expr1, Expr2, CompareKind.Equal, true);
-      buffer.FormatFilter(Filter2);
+      CompareFilter filter2 = new CompareFilter(expr1, expr2, CompareKind.Equal, true);
+      buffer.FormatFilter(filter2);
     }
 
     #endregion
@@ -1144,14 +1142,14 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatDateRangeInclusionFilter(DBxSqlBuffer buffer, DateRangeInclusionFilter filter)
     {
-      DBxFunction Expr1 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.Value));
-      CompareFilter Filt1 = new CompareFilter(Expr1, new DBxConst(filter.Value), CompareKind.LessOrEqualThan, false);
+      DBxFunction expr1 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.Value));
+      CompareFilter filter1 = new CompareFilter(expr1, new DBxConst(filter.Value), CompareKind.LessOrEqualThan, false);
 
-      DBxFunction Expr2 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.Value));
-      CompareFilter Filt2 = new CompareFilter(Expr2, new DBxConst(filter.Value), CompareKind.GreaterOrEqualThan, false);
+      DBxFunction expr2 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.Value));
+      CompareFilter filter2 = new CompareFilter(expr2, new DBxConst(filter.Value), CompareKind.GreaterOrEqualThan, false);
 
-      DBxFilter Filt3 = new AndFilter(Filt1, Filt2);
-      buffer.FormatFilter(Filt3);
+      DBxFilter filter3 = new AndFilter(filter1, filter2);
+      buffer.FormatFilter(filter3);
     }
 
 
@@ -1168,26 +1166,26 @@ namespace FreeLibSet.Data
       // Вместо этого используем сам диапазон.
       // Нужно, на случай, если провайдер базы данных (SQLite) не поддерживает весь диапазон дат DateTime
 
-      List<DBxFilter> Filters = new List<DBxFilter>();
+      List<DBxFilter> filters = new List<DBxFilter>();
 
       if (filter.FirstDate.HasValue)
       {
         // Не путать. Первое поле (начальная дата) сравнивается с конечной датой фильтра и наоборот.
-        DBxFunction Expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.FirstDate.Value));
-        CompareFilter Filt = new CompareFilter(Expr, new DBxConst(filter.FirstDate.Value), CompareKind.GreaterOrEqualThan, false);
-        Filters.Add(Filt);
+        DBxFunction expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.FirstDate.Value));
+        CompareFilter filter2 = new CompareFilter(expr, new DBxConst(filter.FirstDate.Value), CompareKind.GreaterOrEqualThan, false);
+        filters.Add(filter2);
       }
       if (filter.LastDate.HasValue)
       {
-        DBxFunction Expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.LastDate.Value));
-        CompareFilter Filt = new CompareFilter(Expr, new DBxConst(filter.LastDate.Value), CompareKind.LessOrEqualThan, false);
-        Filters.Add(Filt);
+        DBxFunction expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.LastDate.Value));
+        CompareFilter filter2 = new CompareFilter(expr, new DBxConst(filter.LastDate.Value), CompareKind.LessOrEqualThan, false);
+        filters.Add(filter2);
       }
-      DBxFilter ResFilter = AndFilter.FromList(Filters);
-      if (ResFilter == null)
-        ResFilter = DummyFilter.AlwaysTrue;
+      DBxFilter resFilter = AndFilter.FromList(filters);
+      if (resFilter == null)
+        resFilter = DummyFilter.AlwaysTrue;
 
-      buffer.FormatFilter(ResFilter);
+      buffer.FormatFilter(resFilter);
     }
 
     #endregion
@@ -1206,12 +1204,12 @@ namespace FreeLibSet.Data
         if (i > 0)
           buffer.SB.Append(" AND ");
 
-        bool Parentheses = FilterNeedsParentheses(filter.Filters[i]);
+        bool parentheses = FilterNeedsParentheses(filter.Filters[i]);
 
-        if (Parentheses)
+        if (parentheses)
           buffer.SB.Append('(');
         buffer.FormatFilter(filter.Filters[i]);
-        if (Parentheses)
+        if (parentheses)
           buffer.SB.Append(')');
       }
     }
@@ -1227,14 +1225,14 @@ namespace FreeLibSet.Data
       {
         if (i > 0)
           buffer.SB.Append(" OR ");
-        bool Parentheses = FilterNeedsParentheses(filter.Filters[i]);
+        bool parentheses = FilterNeedsParentheses(filter.Filters[i]);
 
-        if (Parentheses)
+        if (parentheses)
           buffer.SB.Append('(');
 
         buffer.FormatFilter(filter.Filters[i]);
 
-        if (Parentheses)
+        if (parentheses)
           buffer.SB.Append(')');
       }
     }
@@ -1247,13 +1245,13 @@ namespace FreeLibSet.Data
     protected override void OnFormatNotFilter(DBxSqlBuffer buffer, NotFilter filter)
     {
       buffer.SB.Append("NOT ");
-      bool Parentheses = FilterNeedsParentheses(filter.BaseFilter);
-      if (Parentheses)
+      bool parentheses = FilterNeedsParentheses(filter.BaseFilter);
+      if (parentheses)
         buffer.SB.Append("(");
 
       buffer.FormatFilter(filter.BaseFilter);
 
-      if (Parentheses)
+      if (parentheses)
         buffer.SB.Append(')');
     }
 

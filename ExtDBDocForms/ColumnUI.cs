@@ -525,32 +525,32 @@ namespace FreeLibSet.Forms.Docs
     {
       //AccDepClientExec.DocTypes.LoadSavedColumnValues();
 
-      foreach (DBxDocValue Value in values)
+      foreach (DBxDocValue value in values)
       {
-        if (Value.IsReadOnly)
+        if (value.IsReadOnly)
           continue;
-        if (_Owner.DocTypeBase.CalculatedColumns.Contains(Value.Name))
+        if (_Owner.DocTypeBase.CalculatedColumns.Contains(value.Name))
           continue; // 10.06.2019
-        ColumnUI UI = this[Value.Name];
+        ColumnUI colUI = this[value.Name];
 
-        switch (UI.NewMode)
+        switch (colUI.NewMode)
         {
           case ColumnNewMode.Default:
             if (!insertCopy)
-              SetIfNotNull(Value, UI.DefaultValue);
+              SetIfNotNull(value, colUI.DefaultValue);
             break;
 
           case ColumnNewMode.AlwaysDefaultValue:
-            object v = UI.DefaultValue;
+            object v = colUI.DefaultValue;
             //SetIfNotNull(Value, v);
             // 03.11.2015, 05.11.2015
             if ((v == null) || (v is DBNull))
             {
               if (insertCopy)
-                Value.SetNull();
+                value.SetNull();
             }
             else
-              Value.SetValue(v);
+              value.SetValue(v);
             break;
 
           case ColumnNewMode.Saved:
@@ -560,15 +560,15 @@ namespace FreeLibSet.Forms.Docs
             // Условия убраны 07.01.2022
             //if (Value.Value == null || Value.Value is DBNull)
             //{
-              SetIfNotNull(Value, UI.Value);
+              SetIfNotNull(value, colUI.Value);
             //}
             break;
 
           case ColumnNewMode.SavedIfChangedElseDefault:
-            SetIfNotNull(Value, UI.Value);
+            SetIfNotNull(value, colUI.Value);
             break;
           default:
-            throw new BugException("Неизвестный NewMode=" + UI.NewMode.ToString());
+            throw new BugException("Неизвестный NewMode=" + colUI.NewMode.ToString());
         }
       }
     }
@@ -584,41 +584,41 @@ namespace FreeLibSet.Forms.Docs
 
     internal void PerformPost(IDBxDocValues values, IDBxDocValues orgValues)
     {
-      foreach (DBxDocValue Value in values)
+      foreach (DBxDocValue value in values)
       {
-        if (Value.IsReadOnly)
+        if (value.IsReadOnly)
           continue;
-        if (_Owner.DocTypeBase.CalculatedColumns.Contains(Value.Name))
+        if (_Owner.DocTypeBase.CalculatedColumns.Contains(value.Name))
           continue; // 10.06.2019
-        if (Value.Grayed)
+        if (value.Grayed)
           continue;
 
-        ColumnUI UI = this[Value.Name];
+        ColumnUI colUI = this[value.Name];
 
-        switch (UI.NewMode)
+        switch (colUI.NewMode)
         {
           case ColumnNewMode.Default: // 10.06.2019
           case ColumnNewMode.Saved:
-            UI.SavedValue = Value.Value;
+            colUI.SavedValue = value.Value;
             break;
 
           case ColumnNewMode.SavedIfChangedElseDefault:
-            bool SaveFlag;
+            bool saveFlag;
             if (orgValues == null)
-              SaveFlag = true;
+              saveFlag = true;
             else
             {
-              DBxDocValue OrgValue = orgValues[Value.Name];
-              SaveFlag = !Object.Equals(Value.Value, OrgValue.Value);
+              DBxDocValue orgValue = orgValues[value.Name];
+              saveFlag = !Object.Equals(value.Value, orgValue.Value);
             }
-            if (SaveFlag)
-              UI.SavedValue = Value.Value;
+            if (saveFlag)
+              colUI.SavedValue = value.Value;
             break;
           case ColumnNewMode.AlwaysDefaultValue:
             // не сохраняем
             break;
           default:
-            throw new BugException("Неизвестный NewMode=" + UI.NewMode.ToString());
+            throw new BugException("Неизвестный NewMode=" + colUI.NewMode.ToString());
         }
       }
     }

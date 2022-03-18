@@ -214,10 +214,10 @@ namespace FreeLibSet.Data.OleDb
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
-      using (OleDbDBxCon Con = new OleDbDBxCon(MainEntry))
+      using (OleDbDBxCon con = new OleDbDBxCon(MainEntry))
       {
-        Con.CommandTimeout = 0; // Бесконечное время выполнения
-        return Con.UpdateDBStruct(splash, errors, options);
+        con.CommandTimeout = 0; // Бесконечное время выполнения
+        return con.UpdateDBStruct(splash, errors, options);
       }
     }
 
@@ -351,17 +351,17 @@ namespace FreeLibSet.Data.OleDb
       try
       {
         OleDbConnectionStringBuilder csb = new OleDbConnectionStringBuilder(cs);
-        foreach (string Key in csb.Keys)
+        foreach (string key in csb.Keys)
         {
-          if (String.Equals(Key, "Password", StringComparison.OrdinalIgnoreCase))
+          if (String.Equals(key, "Password", StringComparison.OrdinalIgnoreCase))
           {
             object v;
-            if (csb.TryGetValue(Key, out v))
+            if (csb.TryGetValue(key, out v))
             {
               string s = DataTools.GetString(v);
               if (s.Length > 0)
               {
-                csb[Key] = "***";
+                csb[key] = "***";
               }
             }
           }
@@ -376,7 +376,6 @@ namespace FreeLibSet.Data.OleDb
     }
 
     #endregion
-
   }
 
   /// <summary>
@@ -650,13 +649,13 @@ namespace FreeLibSet.Data.OleDb
     /// <returns></returns>
     internal protected override string[] GetAllTableNamesFromSchema()
     {
-      DataTable Table = Connection.GetSchema("Tables");
+      DataTable table = Connection.GetSchema("Tables");
       List<string> lst = new List<string>();
-      for (int i = 0; i < Table.Rows.Count; i++)
+      for (int i = 0; i < table.Rows.Count; i++)
       {
-        string tt = DataTools.GetString(Table.Rows[i], "table_type");
+        string tt = DataTools.GetString(table.Rows[i], "table_type");
         if (tt == "TABLE")
-          lst.Add(DataTools.GetString(Table.Rows[i], "table_name"));
+          lst.Add(DataTools.GetString(table.Rows[i], "table_name"));
       }
       return lst.ToArray();
     }
@@ -668,54 +667,54 @@ namespace FreeLibSet.Data.OleDb
     /// <returns>Структура</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
-      DBxTableStruct TableStr = new DBxTableStruct(tableName);
+      DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
       #region Список столбцов, тип, MaxLen, Nullable
 
-      DataTable Table = Connection.GetSchema("Columns", new string[] { null, null, tableName });
-      Table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
+      DataTable table = Connection.GetSchema("Columns", new string[] { null, null, tableName });
+      table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
 
-      foreach (DataRowView drv in Table.DefaultView)
+      foreach (DataRowView drv in table.DefaultView)
       {
-        string ColumnName = DataTools.GetString(drv.Row, "column_name");
-        DBxColumnStruct ColStr = new DBxColumnStruct(ColumnName);
+        string columnName = DataTools.GetString(drv.Row, "column_name");
+        DBxColumnStruct colDef = new DBxColumnStruct(columnName);
 
-        OleDbType ColType = (OleDbType)(DataTools.GetInt(drv.Row, "data_type"));
-        switch (ColType)
+        OleDbType colType = (OleDbType)(DataTools.GetInt(drv.Row, "data_type"));
+        switch (colType)
         {
           // Summary:
           //     A 16-bit signed integer (DBTYPE_I2). This maps to System.Int16.
           case OleDbType.SmallInt:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int16.MinValue;
-            ColStr.MaxValue = Int16.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int16.MinValue;
+            colDef.MaxValue = Int16.MaxValue;
             break;
 
           //
           // Summary:
           //     A 32-bit signed integer (DBTYPE_I4). This maps to System.Int32.
           case OleDbType.Integer:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int32.MinValue;
-            ColStr.MaxValue = Int32.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int32.MinValue;
+            colDef.MaxValue = Int32.MaxValue;
             break;
           //
           // Summary:
           //     A floating-point number within the range of -3.40E +38 through 3.40E +38
           //     (DBTYPE_R4). This maps to System.Single.
           case OleDbType.Single:
-            ColStr.ColumnType = DBxColumnType.Float;
-            ColStr.MinValue = Single.MinValue;
-            ColStr.MaxValue = Single.MaxValue;
+            colDef.ColumnType = DBxColumnType.Float;
+            colDef.MinValue = Single.MinValue;
+            colDef.MaxValue = Single.MaxValue;
             break;
           //
           // Summary:
           //     A floating-point number within the range of -1.79E +308 through 1.79E +308
           //     (DBTYPE_R8). This maps to System.Double.
           case OleDbType.Double:
-            ColStr.ColumnType = DBxColumnType.Float;
-            ColStr.MinValue = Double.MinValue;
-            ColStr.MaxValue = Double.MaxValue;
+            colDef.ColumnType = DBxColumnType.Float;
+            colDef.MinValue = Double.MinValue;
+            colDef.MaxValue = Double.MaxValue;
             break;
           //
           // Summary:
@@ -723,7 +722,7 @@ namespace FreeLibSet.Data.OleDb
           //     -1 (or +922,337,203,685,477.5807) with an accuracy to a ten-thousandth of
           //     a currency unit (DBTYPE_CY). This maps to System.Decimal.
           case OleDbType.Currency:
-            ColStr.ColumnType = DBxColumnType.Money;
+            colDef.ColumnType = DBxColumnType.Money;
             //ColStr.MinValue = Int16.MinValue;
             //ColStr.MaxValue = Int16.MaxValue;
             break;
@@ -733,14 +732,14 @@ namespace FreeLibSet.Data.OleDb
           //     of days since December 30, 1899, and the fractional portion is a fraction
           //     of a day. This maps to System.DateTime.
           case OleDbType.Date:
-            ColStr.ColumnType = DBxColumnType.Date;
+            colDef.ColumnType = DBxColumnType.Date;
             break;
           //
           // Summary:
           //     A null-terminated character string of Unicode characters (DBTYPE_BSTR). This
           //     maps to System.String.
           case OleDbType.BSTR:
-            ColStr.ColumnType = DBxColumnType.String;
+            colDef.ColumnType = DBxColumnType.String;
             break;
           //
           // Summary:
@@ -754,7 +753,7 @@ namespace FreeLibSet.Data.OleDb
           // Summary:
           //     A Boolean value (DBTYPE_BOOL). This maps to System.Boolean.
           case OleDbType.Boolean:
-            ColStr.ColumnType = DBxColumnType.Boolean;
+            colDef.ColumnType = DBxColumnType.Boolean;
             break;
           //
           // Summary:
@@ -771,55 +770,55 @@ namespace FreeLibSet.Data.OleDb
           //     A fixed precision and scale numeric value between -10 38 -1 and 10 38 -1
           //     (DBTYPE_DECIMAL). This maps to System.Decimal.
           case OleDbType.Decimal:
-            ColStr.ColumnType = DBxColumnType.Money;
+            colDef.ColumnType = DBxColumnType.Money;
             break;
           //
           // Summary:
           //     A 8-bit signed integer (DBTYPE_I1). This maps to System.SByte.
           case OleDbType.TinyInt:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = SByte.MinValue;
-            ColStr.MaxValue = SByte.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = SByte.MinValue;
+            colDef.MaxValue = SByte.MaxValue;
             break;
           //
           // Summary:
           //     A 8-bit unsigned integer (DBTYPE_UI1). This maps to System.Byte.
           case OleDbType.UnsignedTinyInt:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Byte.MinValue;
-            ColStr.MaxValue = Byte.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Byte.MinValue;
+            colDef.MaxValue = Byte.MaxValue;
             break;
           //
           // Summary:
           //     A 16-bit unsigned integer (DBTYPE_UI2). This maps to System.UInt16.
           case OleDbType.UnsignedSmallInt:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = UInt16.MinValue;
-            ColStr.MaxValue = UInt16.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = UInt16.MinValue;
+            colDef.MaxValue = UInt16.MaxValue;
             break;
           //
           // Summary:
           //     A 32-bit unsigned integer (DBTYPE_UI4). This maps to System.UInt32.
           case OleDbType.UnsignedInt:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = UInt32.MinValue;
-            ColStr.MaxValue = UInt32.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = UInt32.MinValue;
+            colDef.MaxValue = UInt32.MaxValue;
             break;
           //
           // Summary:
           //     A 64-bit signed integer (DBTYPE_I8). This maps to System.Int64.
           case OleDbType.BigInt:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = Int64.MinValue;
-            ColStr.MaxValue = Int64.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int64.MinValue;
+            colDef.MaxValue = Int64.MaxValue;
             break;
           //
           // Summary:
           //     A 64-bit unsigned integer (DBTYPE_UI8). This maps to System.UInt64.
           case OleDbType.UnsignedBigInt:
-            ColStr.ColumnType = DBxColumnType.Int;
-            ColStr.MinValue = UInt64.MinValue;
-            ColStr.MaxValue = UInt64.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = UInt64.MinValue;
+            colDef.MaxValue = UInt64.MaxValue;
             break;
           //
           // Summary:
@@ -830,14 +829,14 @@ namespace FreeLibSet.Data.OleDb
           // Summary:
           //     A globally unique identifier (or GUID) (DBTYPE_GUID). This maps to System.Guid.
           case OleDbType.Guid:
-            ColStr.ColumnType = DBxColumnType.Guid;
+            colDef.ColumnType = DBxColumnType.Guid;
             break;
           //
           // Summary:
           //     A stream of binary data (DBTYPE_BYTES). This maps to an System.Array of type
           //     System.Byte.
           case OleDbType.Binary:
-            ColStr.ColumnType = DBxColumnType.Binary;
+            colDef.ColumnType = DBxColumnType.Binary;
             break;
 
           //
@@ -853,7 +852,7 @@ namespace FreeLibSet.Data.OleDb
             // Summary:
             //     An exact numeric value with a fixed precision and scale (DBTYPE_NUMERIC).
             //     This maps to System.Decimal.
-            ColStr.ColumnType = DBxColumnType.String;
+            colDef.ColumnType = DBxColumnType.String;
             break;
 
           //
@@ -861,27 +860,27 @@ namespace FreeLibSet.Data.OleDb
           //     An exact numeric value with a fixed precision and scale (DBTYPE_NUMERIC).
           //     This maps to System.Decimal.
           case OleDbType.Numeric:
-            ColStr.ColumnType = DBxColumnType.Float; // !! диапазон
+            colDef.ColumnType = DBxColumnType.Float; // !! диапазон
             break;
 
           //
           // Summary:
           //     Date data in the format yyyymmdd (DBTYPE_DBDATE). This maps to System.DateTime.
           case OleDbType.DBDate:
-            ColStr.ColumnType = DBxColumnType.Date;
+            colDef.ColumnType = DBxColumnType.Date;
             break;
           //
           // Summary:
           //     Time data in the format hhmmss (DBTYPE_DBTIME). This maps to System.TimeSpan.
           case OleDbType.DBTime:
-            ColStr.ColumnType = DBxColumnType.Time;
+            colDef.ColumnType = DBxColumnType.Time;
             break;
           //
           // Summary:
           //     Data and time data in the format yyyymmddHHmmss (DBTYPE_DBTIMESTAMP). This
           //     maps to System.DateTime.
           case OleDbType.DBTimeStamp:
-            ColStr.ColumnType = DBxColumnType.DateTime;
+            colDef.ColumnType = DBxColumnType.DateTime;
             break;
           //
           // Summary:
@@ -912,7 +911,7 @@ namespace FreeLibSet.Data.OleDb
           //     A long null-terminated Unicode string value (System.Data.OleDb.OleDbParameter
           //     only). This maps to System.String.
           case OleDbType.LongVarWChar:
-            ColStr.ColumnType = DBxColumnType.String;
+            colDef.ColumnType = DBxColumnType.String;
             break;
           //
           // Summary:
@@ -924,16 +923,16 @@ namespace FreeLibSet.Data.OleDb
           //     A long binary value (System.Data.OleDb.OleDbParameter only). This maps to
           //     an System.Array of type System.Byte.
           case OleDbType.LongVarBinary:
-            ColStr.ColumnType = DBxColumnType.Binary;
+            colDef.ColumnType = DBxColumnType.Binary;
             break;
 
 
         }
 
-        ColStr.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
-        ColStr.Nullable = DataTools.GetBool(drv.Row, "is_nullable");
+        colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+        colDef.Nullable = DataTools.GetBool(drv.Row, "is_nullable");
 
-        TableStr.Columns.Add(ColStr);
+        tableStr.Columns.Add(colDef);
       }
 
       #endregion
@@ -995,8 +994,8 @@ namespace FreeLibSet.Data.OleDb
 #endif
       #endregion
 
-      TableStr.SetReadOnly();
-      return TableStr;
+      tableStr.SetReadOnly();
+      return tableStr;
     }
 
     //private int GetTableObjId(string TableName)

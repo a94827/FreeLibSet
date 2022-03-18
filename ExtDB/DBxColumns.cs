@@ -186,12 +186,12 @@ namespace FreeLibSet.Data
       if (columns == null)
         return null;
 
-      string[] Items = new String[columns.Count];
+      string[] items = new String[columns.Count];
 
       for (int i = 0; i < columns.Count; i++)
-        Items[i] = columns[i].ColumnName;
+        items[i] = columns[i].ColumnName;
 
-      return new DBxColumns(Items);
+      return new DBxColumns(items);
     }
 
     /// <summary>
@@ -208,25 +208,25 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(prefix))
         return FromColumns(columns);
 
-      List<String> Names = new List<string>();
-      foreach (DataColumn Column in columns)
+      List<String> names = new List<string>();
+      foreach (DataColumn column in columns)
       {
-        if (Column.ColumnName.StartsWith(prefix))
+        if (column.ColumnName.StartsWith(prefix))
         {
           if (stripPrefix)
-            Names.Add(Column.ColumnName.Substring(prefix.Length));
+            names.Add(column.ColumnName.Substring(prefix.Length));
           else
-            Names.Add(Column.ColumnName);
+            names.Add(column.ColumnName);
         }
       }
-      if (Names.Count == 0)
+      if (names.Count == 0)
         return null;
       else
-        return new DBxColumns(Names);
+        return new DBxColumns(names);
     }
 
 
-    private static readonly CharArrayIndexer DataViewSortBadChars = new CharArrayIndexer("()+*/");
+    private static readonly CharArrayIndexer _DataViewSortBadChars = new CharArrayIndexer("()+*/");
 
     /// <summary>
     /// Извлечь имена столбцов из свойства DataView.Sort.
@@ -240,7 +240,7 @@ namespace FreeLibSet.Data
     {
       if (String.IsNullOrEmpty(sort))
         return null;
-      if (DataTools.IndexOfAny(sort, DataViewSortBadChars) >= 0)
+      if (DataTools.IndexOfAny(sort, _DataViewSortBadChars) >= 0)
         throw new ArgumentException("Порядок сортировки \"" + sort + "\" содержит недопустимые символы", "sort");
       string[] a = sort.Split(',');
       for (int i = 0; i < a.Length; i++)
@@ -879,18 +879,18 @@ namespace FreeLibSet.Data
       if (sourceTable == null)
         throw new ArgumentNullException("sourceTable");
 
-      DataTable ResTable = new DataTable();
+      DataTable resTable = new DataTable();
       for (int i = 0; i < Count; i++)
       {
         int p = sourceTable.Columns.IndexOf(this[i]);
         if (p < 0)
           throw new ArgumentException("Таблица \"" + sourceTable.TableName + "\" не содержит столбца \"" + this[i] + "\"", "sourceTable");
 
-        ResTable.Columns.Add(DataTools.CloneDataColumn(sourceTable.Columns[i]));
+        resTable.Columns.Add(DataTools.CloneDataColumn(sourceTable.Columns[i]));
       }
 
-      DataTools.CopyRowsToRows(sourceTable, ResTable, true, true);
-      return ResTable;
+      DataTools.CopyRowsToRows(sourceTable, resTable, true, true);
+      return resTable;
     }
 
     #endregion
@@ -919,8 +919,8 @@ namespace FreeLibSet.Data
     /// <returns>Массив полученных значений</returns>
     public object[] GetRowValues(DataRow row, bool throwIfNoColumn)
     {
-      object[] Values = new object[Count];
-      for (int i = 0; i < Values.Length; i++)
+      object[] values = new object[Count];
+      for (int i = 0; i < values.Length; i++)
       {
         int p = row.Table.Columns.IndexOf(this[i]);
         if (p < 0)
@@ -930,9 +930,9 @@ namespace FreeLibSet.Data
               "\" не содержит столбца \"" + this[i] + "\"", "row");
           continue;
         }
-        Values[i] = row[p];
+        values[i] = row[p];
       }
-      return Values;
+      return values;
     }
 
     /// <summary>
@@ -1040,10 +1040,10 @@ namespace FreeLibSet.Data
       if (arg2 == null)
         return arg1;
 
-      DBxColumnList List = new DBxColumnList(arg1);
-      List.Remove(arg2);
+      DBxColumnList list = new DBxColumnList(arg1);
+      list.Remove(arg2);
 
-      return new DBxColumns(List);
+      return new DBxColumns(list);
     }
 
     /// <summary>
@@ -1094,16 +1094,16 @@ namespace FreeLibSet.Data
       if (arg1 == null || arg2 == null)
         return null;
 
-      List<string> ColumnNames = new List<string>();
+      List<string> columnNames = new List<string>();
       for (int i = 0; i < arg1.Count; i++)
       {
         if (arg2.Contains(arg1[i]))
-          ColumnNames.Add(arg1[i]);
+          columnNames.Add(arg1[i]);
       }
-      if (ColumnNames.Count == 0)
+      if (columnNames.Count == 0)
         return null;
       else
-        return new DBxColumns(ColumnNames);
+        return new DBxColumns(columnNames);
     }
 
     /// <summary>
@@ -1179,7 +1179,6 @@ namespace FreeLibSet.Data
 
     #endregion
   }
-
 
   /// <summary>
   /// Список имен полей для редактирования.
@@ -2243,7 +2242,6 @@ namespace FreeLibSet.Data
         Tables[item.TableName].Add(item.ColumnName);
       }
     }
-
 
     /// <summary>
     /// Очищает весь список

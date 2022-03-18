@@ -120,19 +120,19 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("subDocIds");
 
       mainObj.GetTableReady();
-      DataRow[] SrcSubDocRows = new DataRow[subDocIds.Length];
+      DataRow[] srcSubDocRows = new DataRow[subDocIds.Length];
       for (int i = 0; i < subDocIds.Length; i++)
       {
         if (subDocIds[i] == 0)
           throw new ArgumentException("В списке идентификаторов поддокументов задано значение 0", "subDocIds["+i.ToString()+"]");
         // Фиктивные идентификаторы могут быть
 
-        SrcSubDocRows[i] = mainObj._Table.Rows.Find(subDocIds[i]);
-        if (SrcSubDocRows[i] == null)
+        srcSubDocRows[i] = mainObj._Table.Rows.Find(subDocIds[i]);
+        if (srcSubDocRows[i] == null)
           throw new ArgumentException("Не найдена строка поддокумента с идентификатором " + subDocIds[i].ToString());
       }
 
-      return SrcSubDocRows;
+      return srcSubDocRows;
     }
 
     /// <summary>
@@ -156,30 +156,29 @@ namespace FreeLibSet.Data.Docs
       DataTools.SetPrimaryKey(_Table, "Id");
 
       // Псевдонабор нужен для ссылки на DocSet
-      DataSet DummyDataSet = new DataSet();
-      DummyDataSet.Tables.Add(_Table);
-      foreach (object Key in mainObj.DocSet.DataSet.ExtendedProperties.Keys)
-        DummyDataSet.ExtendedProperties[Key] = mainObj.DocSet.DataSet.ExtendedProperties[Key];
+      DataSet dummyDataSet = new DataSet();
+      dummyDataSet.Tables.Add(_Table);
+      foreach (object key in mainObj.DocSet.DataSet.ExtendedProperties.Keys)
+        dummyDataSet.ExtendedProperties[key] = mainObj.DocSet.DataSet.ExtendedProperties[key];
 
       if (srcSubDocRows != null)
       {
         for (int i = 0; i < srcSubDocRows.Length; i++)
         {
-          DataRow ResRow = _Table.NewRow();
-          ResRow.ItemArray = srcSubDocRows[i].ItemArray;
-          _Table.Rows.Add(ResRow);
+          DataRow resRow = _Table.NewRow();
+          resRow.ItemArray = srcSubDocRows[i].ItemArray;
+          _Table.Rows.Add(resRow);
 
-          ResRow.AcceptChanges(); // независимо от исходного состояния
+          resRow.AcceptChanges(); // независимо от исходного состояния
           //DataTools.SetRowState(ResRow, SrcSubDocRows[i].RowState);
-
         }
       }
 
       _SubDocValues = new MultiSubDocValues(this);
       _TableIsReady = true;
 
-      foreach (DataRow MainRow in mainObj.Owner.Table.Rows)
-        _DocRowDict.Add(MainRow, null); // 11.07.2016
+      foreach (DataRow mainRow in mainObj.Owner.Table.Rows)
+        _DocRowDict.Add(mainRow, null); // 11.07.2016
 
 #if DEBUG_DICT
       DebugDocRowDict();
@@ -323,22 +322,22 @@ namespace FreeLibSet.Data.Docs
 
       #region Создание списка документов, для которых нужны поддокументы
 
-      List<Int32> DocIds = new List<Int32>();
-      for (int DocIndex = 0; DocIndex < Owner.DocCount; DocIndex++)
+      List<Int32> docIds = new List<Int32>();
+      for (int docIndex = 0; docIndex < Owner.DocCount; docIndex++)
       {
-        DataRow Row = Owner.GetDocRow(DocIndex);
-        if (_DocRowDict.ContainsKey(Row))
+        DataRow row = Owner.GetDocRow(docIndex);
+        if (_DocRowDict.ContainsKey(row))
           continue;
-        Int32 DocId = DataTools.GetInt(DBxDocSet.GetValue(Row, "Id"));
-        if (DocSet.DocProvider.IsRealDocId(DocId))
-          DocIds.Add(DocId);
+        Int32 docId = DataTools.GetInt(DBxDocSet.GetValue(row, "Id"));
+        if (DocSet.DocProvider.IsRealDocId(docId))
+          docIds.Add(docId);
       }
 
       #endregion
 
       #region Загрузка поддокументов
 
-      DoInitTable(DocIds);
+      DoInitTable(docIds);
 
 #if DEBUG
       if (_SubDocValues == null)
@@ -352,12 +351,12 @@ namespace FreeLibSet.Data.Docs
       // Добавляем в коллекцию даже документы с фиктивными идентификаторами, т.к. для них может выполняться
       // создание поддокументов
 
-      for (int DocIndex = 0; DocIndex < Owner.DocCount; DocIndex++)
+      for (int docIndex = 0; docIndex < Owner.DocCount; docIndex++)
       {
-        DataRow Row = Owner.GetDocRow(DocIndex);
+        DataRow row = Owner.GetDocRow(docIndex);
 
-        if (!_DocRowDict.ContainsKey(Row))
-          _DocRowDict.Add(Row, null);
+        if (!_DocRowDict.ContainsKey(row))
+          _DocRowDict.Add(row, null);
       }
 
 #if DEBUG_DICT
@@ -397,24 +396,24 @@ namespace FreeLibSet.Data.Docs
 
       if (docIds.Count > 0)
       {
-        DataTable Table2;
+        DataTable table2;
         if (DocSet.VersionView)
-          Table2 = DoInitVersionTable(docIds);
+          table2 = DoInitVersionTable(docIds);
         else
-          Table2 = DocSet.DocProvider.LoadSubDocData(Owner.DocType.Name, SubDocType.Name, docIds.ToArray());
+          table2 = DocSet.DocProvider.LoadSubDocData(Owner.DocType.Name, SubDocType.Name, docIds.ToArray());
 
-        bool TableIsEmpty;
+        bool tableIsEmpty;
         if (_Table == null)
-          TableIsEmpty = true;
+          tableIsEmpty = true;
         else
-          TableIsEmpty = _Table.Rows.Count == 0;
-        if (TableIsEmpty)
+          tableIsEmpty = _Table.Rows.Count == 0;
+        if (tableIsEmpty)
         {
           // Первое обращение
           // Используем полученную таблицу
-          DataTools.AddTableToDataSet(DocSet.DataSet, Table2);
-          DataTools.SetPrimaryKey(Table2, "Id");
-          _Table = Table2;
+          DataTools.AddTableToDataSet(DocSet.DataSet, table2);
+          DataTools.SetPrimaryKey(table2, "Id");
+          _Table = table2;
           if (_SubDocValues == null)
             _SubDocValues = new MultiSubDocValues(this);
           else
@@ -427,11 +426,11 @@ namespace FreeLibSet.Data.Docs
           _Table.BeginLoadData();
           try
           {
-            for (int i = 0; i < Table2.Rows.Count; i++)
+            for (int i = 0; i < table2.Rows.Count; i++)
             {
-              DataRow DstRow = _Table.NewRow();
-              DataTools.CopyRowValues(Table2.Rows[i], DstRow, false);
-              _Table.Rows.Add(DstRow);
+              DataRow dstRow = _Table.NewRow();
+              DataTools.CopyRowValues(table2.Rows[i], dstRow, false);
+              _Table.Rows.Add(dstRow);
             }
           }
           finally
@@ -463,17 +462,17 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     private DataTable DoInitVersionTable(List<Int32> docIds)
     {
-      DataTable ResTable = null;
+      DataTable resTable = null;
       for (int i = 0; i < docIds.Count; i++)
       {
-        DBxSingleDoc Doc = Owner.GetDocById(docIds[i]);
-        DataTable Table2 = Owner.DocProvider.LoadSubDocDataVersion(Owner.DocType.Name, SubDocType.Name, docIds[i], Doc.Version);
+        DBxSingleDoc doc = Owner.GetDocById(docIds[i]);
+        DataTable table2 = Owner.DocProvider.LoadSubDocDataVersion(Owner.DocType.Name, SubDocType.Name, docIds[i], doc.Version);
         if (i == 0)
-          ResTable = Table2;
+          resTable = table2;
         else
-          DataTools.CopyRowsToRows(Table2, ResTable, false, true);
+          DataTools.CopyRowsToRows(table2, resTable, false, true);
       }
-      return ResTable;
+      return resTable;
     }
 
     /// <summary>
@@ -553,10 +552,10 @@ namespace FreeLibSet.Data.Docs
           // return FDocValues[Name];
           // Так неправильно. 
           // Нужно, чтобы возвращался объект, ссылающийся на нас
-          int Index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
-          if (Index < 0)
+          int index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
+          if (index < 0)
             throw new ArgumentException("Таблица \"" + _MultiSubDocs._Table.TableName + "\" не содержит столбца \"" + name + "\"", "name");
-          return new DBxDocValue(this, Index);
+          return new DBxDocValue(this, index);
         }
       }
 
@@ -577,11 +576,11 @@ namespace FreeLibSet.Data.Docs
 
           // Для команды Insert проверка бессмысленна
 
-          DataTable Table = _MultiSubDocs.Table;
+          DataTable table = _MultiSubDocs.Table;
 
-          foreach (DataRow Row in Table.Rows)
+          foreach (DataRow row in table.Rows)
           {
-            switch (Row.RowState)
+            switch (row.RowState)
             {
               case DataRowState.Unchanged:
               case DataRowState.Deleted:
@@ -723,34 +722,34 @@ namespace FreeLibSet.Data.Docs
 
     internal DataRow[] GetRowsForDocId(Int32 docId)
     {
-      DBxSingleDoc Doc = _Owner.GetDocById(docId);
-      return GetRowsForDocRow(Doc.Row);
+      DBxSingleDoc doc = _Owner.GetDocById(docId);
+      return GetRowsForDocRow(doc.Row);
     }
 
     internal DataRow[] GetRowsForDocRow(DataRow docRow)
     {
       GetTableReady();
-      DataRow[] Res;
-      if (!_DocRowDict.TryGetValue(docRow, out Res))
+      DataRow[] res;
+      if (!_DocRowDict.TryGetValue(docRow, out res))
       {
         Int32 DocId = DataTools.GetInt(docRow, "Id");
         throw new BugException("Таблица поддокументов для документа с DocId=" + DocId.ToString() + " не была загружена");
       }
 
-      if (Res == null)
+      if (res == null)
       {
         // Загружаем список поддокументов для документа
-        Int32 DocId = DataTools.GetInt(docRow, "Id");
+        Int32 docId = DataTools.GetInt(docRow, "Id");
         DataView dv = new DataView(_Table); // DefaultView использовать нельзя использовать, т.к. оно используется в просмотре таблицы поддокументов
         try
         {
-          dv.RowFilter = "DocId=" + DocId.ToString(); // включая поддокументы с записанным полем Deleted=true
+          dv.RowFilter = "DocId=" + docId.ToString(); // включая поддокументы с записанным полем Deleted=true
           dv.RowStateFilter |= DataViewRowState.Deleted;
           dv.Sort = SubDocType.DefaultOrder.ToString();
-          Res = new DataRow[dv.Count];
-          for (int i = 0; i < Res.Length; i++)
-            Res[i] = dv[i].Row;
-          _DocRowDict[docRow] = Res;
+          res = new DataRow[dv.Count];
+          for (int i = 0; i < res.Length; i++)
+            res[i] = dv[i].Row;
+          _DocRowDict[docRow] = res;
         }
         finally
         {
@@ -762,7 +761,7 @@ namespace FreeLibSet.Data.Docs
 #endif
       }
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -772,8 +771,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docId"></param>
     internal void ResetRowsForDocId(Int32 docId)
     {
-      DBxSingleDoc Doc = _Owner.GetDocById(docId);
-      ResetRowsForDocRow(Doc.Row);
+      DBxSingleDoc doc = _Owner.GetDocById(docId);
+      ResetRowsForDocRow(doc.Row);
     }
 
     internal void ResetRowsForDocRow(DataRow docRow)
@@ -980,10 +979,10 @@ namespace FreeLibSet.Data.Docs
       {
         get
         {
-          int Index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
-          if (Index < 0)
+          int index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
+          if (index < 0)
             throw new ArgumentException("Поле \"" + name + "\" не принадлежит поддокументу \""+_MultiSubDocs.SubDocType.SingularTitle+"\"", "name");
-          return new DBxDocValue(this, Index);
+          return new DBxDocValue(this, index);
         }
       }
 
@@ -994,11 +993,11 @@ namespace FreeLibSet.Data.Docs
 
       public string GetDisplayName(int index)
       {
-        string DisplayName = _MultiSubDocs.Table.Columns[index].Caption;
-        if (String.IsNullOrEmpty(DisplayName))
+        string displayName = _MultiSubDocs.Table.Columns[index].Caption;
+        if (String.IsNullOrEmpty(displayName))
           return GetName(index);
         else
-          return DisplayName;
+          return displayName;
       }
 
       public int IndexOf(string name)
@@ -1230,13 +1229,13 @@ namespace FreeLibSet.Data.Docs
       if (_SingleSubDocOriginalValues == null)
         _SingleSubDocOriginalValues = new Dictionary<int, SingleSubDocValues>();
 
-      SingleSubDocValues Values;
-      if (!_SingleSubDocOriginalValues.TryGetValue(rowIndex, out Values))
+      SingleSubDocValues values;
+      if (!_SingleSubDocOriginalValues.TryGetValue(rowIndex, out values))
       {
-        Values = new SingleSubDocValues(this, rowIndex, DataRowVersion.Original);
-        _SingleSubDocOriginalValues.Add(rowIndex, Values);
+        values = new SingleSubDocValues(this, rowIndex, DataRowVersion.Original);
+        _SingleSubDocOriginalValues.Add(rowIndex, values);
       }
-      return Values;
+      return values;
     }
 
     private Dictionary<int, SingleSubDocValues> _SingleSubDocOriginalValues;
@@ -1336,7 +1335,6 @@ namespace FreeLibSet.Data.Docs
       return new Enumerator(this);
     }
 
-
     #endregion
 
     #region Состояние поддокументов
@@ -1354,30 +1352,30 @@ namespace FreeLibSet.Data.Docs
       switch (state)
       {
         case DBxDocState.Insert:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Added)
+            if (row.RowState == DataRowState.Added)
               cnt++;
           }
           break;
         case DBxDocState.Edit:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Modified)
+            if (row.RowState == DataRowState.Modified)
               cnt++;
           }
           break;
         case DBxDocState.View:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Unchanged)
+            if (row.RowState == DataRowState.Unchanged)
               cnt++;
           }
           break;
         case DBxDocState.Delete:
-          foreach (DataRow Row in _Table.Rows)
+          foreach (DataRow row in _Table.Rows)
           {
-            if (Row.RowState == DataRowState.Deleted)
+            if (row.RowState == DataRowState.Deleted)
               cnt++;
           }
           break;
@@ -1399,14 +1397,14 @@ namespace FreeLibSet.Data.Docs
         if (_Table.Rows.Count == 0)
           return DBxDocState.None;
 
-        DBxDocState Res1 = DBxDocSet.GetDocState(_Table.Rows[0]);
+        DBxDocState res1 = DBxDocSet.GetDocState(_Table.Rows[0]);
         for (int i = 1; i < _Table.Rows.Count; i++)
         {
-          DBxDocState Res2 = DBxDocSet.GetDocState(_Table.Rows[i]);
-          if (Res2 != Res1)
+          DBxDocState res2 = DBxDocSet.GetDocState(_Table.Rows[i]);
+          if (res2 != res1)
             return DBxDocState.Mixed;
         }
-        return Res1;
+        return res1;
       }
     }
 
@@ -1490,10 +1488,10 @@ namespace FreeLibSet.Data.Docs
       {
         case DBxDocState.Insert:
         case DBxDocState.Edit:
-          DataRow Row = _Table.NewRow();
-          Row["Id"] = NextFictiveId();
-          Row["DocId"] = doc.DocId;
-          _Table.Rows.Add(Row);
+          DataRow row = _Table.NewRow();
+          row["Id"] = NextFictiveId();
+          row["DocId"] = doc.DocId;
+          _Table.Rows.Add(row);
           ResetRowsForDocRow(doc.Row);
 
 #if DEBUG_DICT
@@ -1540,14 +1538,14 @@ namespace FreeLibSet.Data.Docs
 
       CheckCanModify();
 
-      DataSet TempDS = new DataSet();
+      DataSet tempDS = new DataSet();
 
-      foreach (DataRow Row in _Table.Rows)
+      foreach (DataRow row in _Table.Rows)
       {
-        DBxDocSet.DoInsertCopy1(TempDS, SubDocType.Name, (Int32)(Row["Id"]), NextFictiveId());
+        DBxDocSet.DoInsertCopy1(tempDS, SubDocType.Name, (Int32)(row["Id"]), NextFictiveId());
       }
 
-      DBxDocSet.DoInsertCopy2(TempDS, _Table.DataSet, DocSet.DocProvider);
+      DBxDocSet.DoInsertCopy2(tempDS, _Table.DataSet, DocSet.DocProvider);
     }
 
     /// <summary>
@@ -1605,18 +1603,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="subDocIds">Идентификаторы поддокументов</param>
     public void Delete(Int32[] subDocIds)
     {
-      IdList DocIds = new IdList();
+      IdList docIds = new IdList();
 
       for (int i = 0; i < subDocIds.Length; i++)
       {
-        DBxSubDoc SubDoc = GetSubDocById(subDocIds[i]);
-        DocIds.Add(SubDoc.DocId);
-        SubDoc.Doc.CheckCanDeleteSubDocs(); // 03.02.2022
-        SubDoc.Delete();
+        DBxSubDoc subDoc = GetSubDocById(subDocIds[i]);
+        docIds.Add(subDoc.DocId);
+        subDoc.Doc.CheckCanDeleteSubDocs(); // 03.02.2022
+        subDoc.Delete();
       }
 
-      foreach (Int32 DocId in DocIds)
-        ResetRowsForDocId(DocId);
+      foreach (Int32 docId in docIds)
+        ResetRowsForDocId(docId);
 
 #if DEBUG_DICT
       DebugDocRowDict();
@@ -1697,41 +1695,41 @@ namespace FreeLibSet.Data.Docs
 
       GetTableReady();
 
-      foreach (DataRow SrcRow in subSet._Table.Rows)
+      foreach (DataRow srcRow in subSet._Table.Rows)
       {
-        if (SrcRow.RowState == DataRowState.Unchanged)
+        if (srcRow.RowState == DataRowState.Unchanged)
           continue;
 
-        Int32 DocId = DataTools.GetInt(DBxDocSet.GetValue(SrcRow, "DocId"));
-        ResetRowsForDocId(DocId);
+        Int32 docId = DataTools.GetInt(DBxDocSet.GetValue(srcRow, "DocId"));
+        ResetRowsForDocId(docId);
 
-        Int32 Id = DataTools.GetInt(DBxDocSet.GetValue(SrcRow, "Id"));
-        DataRow ResRow = _Table.Rows.Find(Id);
-        if (ResRow == null)
+        Int32 id = DataTools.GetInt(DBxDocSet.GetValue(srcRow, "Id"));
+        DataRow resRow = _Table.Rows.Find(id);
+        if (resRow == null)
         {
-          if (SrcRow.RowState == DataRowState.Deleted)
+          if (srcRow.RowState == DataRowState.Deleted)
             continue; // в подмножество добавили поддокумент, а затем - удалили.
 
-          if (DocSet.DocProvider.IsRealDocId(Id))
+          if (DocSet.DocProvider.IsRealDocId(id))
             throw new InvalidOperationException("Попытка добавление строка поддокумента \"" + SubDocType.SingularTitle +
-              "\" с Id=" + Id.ToString() + ". Строка поддокумента в состоянии " + SrcRow.RowState.ToString());
+              "\" с Id=" + id.ToString() + ". Строка поддокумента в состоянии " + srcRow.RowState.ToString());
 
-          ResRow = _Table.NewRow();
-          ResRow.ItemArray = SrcRow.ItemArray;
-          _Table.Rows.Add(ResRow);
+          resRow = _Table.NewRow();
+          resRow.ItemArray = srcRow.ItemArray;
+          _Table.Rows.Add(resRow);
         }
         else
         {
-          if (SrcRow.RowState == DataRowState.Deleted)
+          if (srcRow.RowState == DataRowState.Deleted)
           {
-            ResRow.Delete();
+            resRow.Delete();
             continue; // 26.08.2015. Вызов SetRowState() вызовет ошибку
           }
           else
-            ResRow.ItemArray = SrcRow.ItemArray;
+            resRow.ItemArray = srcRow.ItemArray;
         }
 
-        DataTools.SetRowState(ResRow, SrcRow.RowState);
+        DataTools.SetRowState(resRow, srcRow.RowState);
       }
     }
 
@@ -1761,21 +1759,21 @@ namespace FreeLibSet.Data.Docs
 
       for (int i = 0; i < subSet.SubDocCount; i++)
       {
-        DBxSubDoc ResSubDoc;
+        DBxSubDoc resSubDoc;
         if (i < SubDocCount)
         {
           // Заменяем существующий документ
-          ResSubDoc = this[i];
-          if (ResSubDoc.SubDocState == DBxDocState.View)
-            ResSubDoc.Edit();
+          resSubDoc = this[i];
+          if (resSubDoc.SubDocState == DBxDocState.View)
+            resSubDoc.Edit();
         }
         else
         {
           // Добавляеми поддокумент
-          ResSubDoc = Insert();
+          resSubDoc = Insert();
         }
 
-        DBxDocValue.CopyValues(subSet[i].Values, ResSubDoc.Values);
+        DBxDocValue.CopyValues(subSet[i].Values, resSubDoc.Values);
       }
 
       // Удаляем лишние поддокументы

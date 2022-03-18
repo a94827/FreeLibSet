@@ -506,9 +506,9 @@ namespace FreeLibSet.Data.Docs
         lock (_TableItems)
         {
           _DBCache = value;
-          foreach (KeyValuePair<string, TableHandler> Pair in _TableItems)
+          foreach (KeyValuePair<string, TableHandler> pair in _TableItems)
           {
-            Pair.Value.AccessDeniedFlag = false;
+            pair.Value.AccessDeniedFlag = false;
           }
         }
       }
@@ -545,8 +545,8 @@ namespace FreeLibSet.Data.Docs
         // Удаляем в случае повторного вызова метода Add
         _TableItems.Remove(tableName);
 
-        TableHandler Handler = new TableHandler(this, tableName, columnNames, textValueNeeded);
-        _TableItems.Add(tableName, Handler);
+        TableHandler handler = new TableHandler(this, tableName, columnNames, textValueNeeded);
+        _TableItems.Add(tableName, handler);
       }
     }
 
@@ -647,46 +647,46 @@ namespace FreeLibSet.Data.Docs
         //if (FDocProvider == null)
         //  return Id.ToString(); // источник данных не присоединен
 
-        TableHandler Handler;
-        if (!_TableItems.TryGetValue(tableName, out Handler))
+        TableHandler handler;
+        if (!_TableItems.TryGetValue(tableName, out handler))
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
             throw new ArgumentNullException("tableName");
 
-          Handler = new TableHandler(this, tableName, ColumnsId, null);
-          _TableItems.Add(tableName, Handler);
+          handler = new TableHandler(this, tableName, ColumnsId, null);
+          _TableItems.Add(tableName, handler);
         }
 
-        if (Handler.DocType == null)
+        if (handler.DocType == null)
           // Не найденная таблица. Не нужно ничего запрашивать, даже если есть поля и обработчик
           return id.ToString();
-        if (Handler.AccessDeniedFlag)
+        if (handler.AccessDeniedFlag)
           return id.ToString(); // 10.07.2018
 
-        object[] Values;
+        object[] values;
         try
         {
           if (id < 0)
           {
-            Values = InternalGetValues(tableName, id, Handler.QueriedColumnNames, primaryDS); // 27.03.2018
-            if (Values == null)
+            values = InternalGetValues(tableName, id, handler.QueriedColumnNames, primaryDS); // 27.03.2018
+            if (values == null)
               return "?? Id=" + id.ToString();
           }
           else
-            Values = DBCache[tableName].GetValues(id, Handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
+            values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
         }
         catch (DBxAccessException)
         {
-          Handler.AccessDeniedFlag = true; // 10.07.2018
+          handler.AccessDeniedFlag = true; // 10.07.2018
           throw;
         }
-        _Args.InitData(tableName, id, Handler.QueriedColumnNames, Values);
-        if (Handler.TextValueNeeded != null)
+        _Args.InitData(tableName, id, handler.QueriedColumnNames, values);
+        if (handler.TextValueNeeded != null)
         {
           try
           {
-            Handler.TextValueNeeded(this, _Args);
+            handler.TextValueNeeded(this, _Args);
           }
           catch (Exception e)
           {
@@ -699,13 +699,13 @@ namespace FreeLibSet.Data.Docs
         else
         {
           // Без обработчика помещаем текстовые значения через запятую
-          for (int i = 0; i < Handler.ColumnNames.Count; i++)
+          for (int i = 0; i < handler.ColumnNames.Count; i++)
           {
-            if (Values[i] == null)
+            if (values[i] == null)
               continue;
-            if (Values[i] is DBNull)
+            if (values[i] is DBNull)
               continue;
-            string s2 = Values[i].ToString().Trim();
+            string s2 = values[i].ToString().Trim();
             if (String.IsNullOrEmpty(s2))
               continue;
 
@@ -720,7 +720,7 @@ namespace FreeLibSet.Data.Docs
           _Args.Text.Append("Id=");
           _Args.Text.Append(id);
         }
-        else if (withId && (!Handler.ColumnNames.Contains("Id")))
+        else if (withId && (!handler.ColumnNames.Contains("Id")))
         {
           _Args.Text.Append(" (Id=");
           _Args.Text.Append(id);
@@ -730,7 +730,7 @@ namespace FreeLibSet.Data.Docs
         // Добавляем информацию об удаленном документе
         if (_DocTypes.UseDeleted)
         {
-          if (Handler.SubDocType == null)
+          if (handler.SubDocType == null)
           {
             if (_Args.GetBool("Deleted"))
               _Args.Text.Append(" (удален)");
@@ -739,7 +739,7 @@ namespace FreeLibSet.Data.Docs
           {
             if (_Args.GetBool("Deleted"))
               _Args.Text.Append(" (удален)");
-            if (GetDocIdDeleted(Handler))
+            if (GetDocIdDeleted(handler))
               _Args.Text.Append(" (в удаленном документе)");
           }
         }
@@ -770,13 +770,13 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     private object[] InternalGetValues(string tableName, Int32 id, DBxColumns columnNames, DataSet primaryDS)
     {
-      DataRow Row = InternalGetRow(tableName, id, primaryDS);
-      if (Row == null)
+      DataRow row = InternalGetRow(tableName, id, primaryDS);
+      if (row == null)
         return null;
 
       object[] a = new object[columnNames.Count];
       for (int i = 0; i < columnNames.Count; i++)
-        a[i] = InternalGetValue(Row, tableName, columnNames[i], primaryDS);
+        a[i] = InternalGetValue(row, tableName, columnNames[i], primaryDS);
       return a;
     }
 
@@ -785,11 +785,11 @@ namespace FreeLibSet.Data.Docs
       if (primaryDS == null)
         return null;
 
-      DataTable Table = primaryDS.Tables[tableName];
-      if (Table == null)
+      DataTable table = primaryDS.Tables[tableName];
+      if (table == null)
         return null;
 
-      return Table.Rows.Find(id);
+      return table.Rows.Find(id);
     }
 
     private object InternalGetValue(DataRow row, string tableName, string columnName, DataSet primaryDS)
@@ -809,27 +809,27 @@ namespace FreeLibSet.Data.Docs
       }
       else
       {
-        string RefColumnName = columnName.Substring(0, p);
-        Int32 RefId = DataTools.GetInt(InternalGetValue(row, tableName, RefColumnName, primaryDS));
-        if (RefId == 0)
+        string refColumnName = columnName.Substring(0, p);
+        Int32 refId = DataTools.GetInt(InternalGetValue(row, tableName, refColumnName, primaryDS));
+        if (refId == 0)
           return null; // пустая ссылка
 
-        DBxTableStruct TableStruct = DBCache[tableName].TableStruct;
+        DBxTableStruct tableStruct = DBCache[tableName].TableStruct;
 
-        string ExtTableName = TableStruct.Columns[RefColumnName].MasterTableName;
-        if (String.IsNullOrEmpty(ExtTableName))
-          throw new ArgumentException("Поле \"" + ExtTableName + "\" таблицы \"" + tableName + "\" не является ссылочным", "columnName");
+        string extTableName = tableStruct.Columns[refColumnName].MasterTableName;
+        if (String.IsNullOrEmpty(extTableName))
+          throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + tableName + "\" не является ссылочным", "columnName");
         string ExtColumnName = columnName.Substring(p + 1);
 
-        DataRow Row2 = InternalGetRow(ExtTableName, RefId, primaryDS);
-        if (Row2 == null)
+        DataRow row2 = InternalGetRow(extTableName, refId, primaryDS);
+        if (row2 == null)
         {
-          if (RefId > 0)
-            return DBCache[ExtTableName].GetValue(RefId, ExtColumnName);
+          if (refId > 0)
+            return DBCache[extTableName].GetValue(refId, ExtColumnName);
           else
             return null;
         }
-        return InternalGetValue(Row2, ExtTableName, ExtColumnName, primaryDS);
+        return InternalGetValue(row2, extTableName, ExtColumnName, primaryDS);
       }
     }
 
@@ -881,11 +881,11 @@ namespace FreeLibSet.Data.Docs
     {
       try
       {
-        Int32 RefId = DataTools.GetInt(row, refColumnName);
-        if (RefId == 0)
+        Int32 refId = DataTools.GetInt(row, refColumnName);
+        if (refId == 0)
           return String.Empty;
         else
-          return DoGetTextValue(row.Table.TableName, RefId, row.Table.DataSet, false);
+          return DoGetTextValue(row.Table.TableName, refId, row.Table.DataSet, false);
       }
       catch (Exception e)
       {
@@ -1118,19 +1118,19 @@ namespace FreeLibSet.Data.Docs
           if (!_TableItems.ContainsKey(a[i].Name))
           {
             // Находим первое текстовое поле
-            string NameColumnName = null;
+            string nameColumnName = null;
             for (int j = 0; j < a[i].Struct.Columns.Count; j++)
             {
-              DBxColumnStruct ColDef = a[i].Struct.Columns[j];
-              if (ColDef.ColumnType == DBxColumnType.String && (!ColDef.Nullable))
+              DBxColumnStruct colDef = a[i].Struct.Columns[j];
+              if (colDef.ColumnType == DBxColumnType.String && (!colDef.Nullable))
               {
-                NameColumnName = ColDef.ColumnName;
+                nameColumnName = colDef.ColumnName;
                 break;
               }
             }
-            if (String.IsNullOrEmpty(NameColumnName))
+            if (String.IsNullOrEmpty(nameColumnName))
               throw new BugException("У документов \"" + a[i].PluralTitle + "\" нет ни одного текстового столбца. Эти документы не образуют дерево групп");
-            this.Add(a[i].Name, NameColumnName);
+            this.Add(a[i].Name, nameColumnName);
           }
         }
       }

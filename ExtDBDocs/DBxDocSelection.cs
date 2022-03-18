@@ -160,8 +160,8 @@ namespace FreeLibSet.Data.Docs
       get
       {
         int cnt = 0;
-        foreach (DataTable Table in _Data.Tables)
-          cnt += Table.Rows.Count;
+        foreach (DataTable table in _Data.Tables)
+          cnt += table.Rows.Count;
         return cnt;
       }
     }
@@ -203,10 +203,10 @@ namespace FreeLibSet.Data.Docs
       _TableNames = null; // список имен таблиц больше недействителен
 
       // Добавляем таблицу
-      DataTable Table = _Data.Tables.Add(tableName);
-      Table.Columns.Add("Id", typeof(Int32));
-      DataTools.SetPrimaryKey(Table, "Id");
-      return Table;
+      DataTable table = _Data.Tables.Add(tableName);
+      table.Columns.Add("Id", typeof(Int32));
+      DataTools.SetPrimaryKey(table, "Id");
+      return table;
     }
 
     /// <summary>
@@ -219,9 +219,9 @@ namespace FreeLibSet.Data.Docs
     {
       if (id == 0)
         return 0;
-      DataTable Table = ReadyTable(tableName, true);
-      DataRow DummyRow;
-      return DataTools.FindOrAddPrimaryKeyRow(Table, id, out DummyRow) ? 1 : 0;
+      DataTable table = ReadyTable(tableName, true);
+      DataRow dummyRow;
+      return DataTools.FindOrAddPrimaryKeyRow(table, id, out dummyRow) ? 1 : 0;
     }
 
     /// <summary>
@@ -236,14 +236,14 @@ namespace FreeLibSet.Data.Docs
         return 0;
       if (ids.Length == 0)
         return 0;
-      DataTable Table = ReadyTable(tableName, true);
+      DataTable table = ReadyTable(tableName, true);
       int cnt = 0;
       for (int i = 0; i < ids.Length; i++)
       {
         if (ids[i] == 0)
           continue;
-        DataRow DummyRow;
-        if (DataTools.FindOrAddPrimaryKeyRow(Table, ids[i], out DummyRow))
+        DataRow dummyRow;
+        if (DataTools.FindOrAddPrimaryKeyRow(table, ids[i], out dummyRow))
           cnt++;
       }
       return cnt;
@@ -261,12 +261,12 @@ namespace FreeLibSet.Data.Docs
         return 0;
       if (ids.Count == 0)
         return 0;
-      DataTable Table = ReadyTable(tableName, true);
+      DataTable table = ReadyTable(tableName, true);
       int cnt = 0;
-      foreach (Int32 Id in ids)
+      foreach (Int32 id in ids)
       {
-        DataRow DummyRow;
-        if (DataTools.FindOrAddPrimaryKeyRow(Table, Id, out DummyRow))
+        DataRow dummyRow;
+        if (DataTools.FindOrAddPrimaryKeyRow(table, id, out dummyRow))
           cnt++;
       }
       return cnt;
@@ -283,15 +283,15 @@ namespace FreeLibSet.Data.Docs
         return 0;
 
       int cnt = 0;
-      foreach (DataTable SrcTable in source._Data.Tables)
+      foreach (DataTable srcTable in source._Data.Tables)
       {
-        DataTable ResTable = ReadyTable(SrcTable.TableName, true);
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        DataTable resTable = ReadyTable(srcTable.TableName, true);
+        foreach (DataRow srcRow in srcTable.Rows)
         {
           // Можно не проверять удаленные строки
-          Int32 Id = (Int32)(SrcRow["Id"]);
-          DataRow DummyRow;
-          if (DataTools.FindOrAddPrimaryKeyRow(ResTable, Id, out DummyRow))
+          Int32 id = (Int32)(srcRow["Id"]);
+          DataRow dummyRow;
+          if (DataTools.FindOrAddPrimaryKeyRow(resTable, id, out dummyRow))
             cnt++;
         }
       }
@@ -312,16 +312,16 @@ namespace FreeLibSet.Data.Docs
         return 0;
       if (table.Rows.Count == 0)
         return 0;
-      DataTable ResTable = ReadyTable(tableName, true);
+      DataTable resTable = ReadyTable(tableName, true);
       int cnt = 0;
       foreach (DataRow SrcRow in table.Rows)
       {
         if (SrcRow.RowState == DataRowState.Deleted)
           continue; // 27.09.2017
 
-        Int32 Id = (Int32)(SrcRow["Id"]);
-        DataRow DummyRow;
-        if (DataTools.FindOrAddPrimaryKeyRow(ResTable, Id, out DummyRow))
+        Int32 id = (Int32)(SrcRow["Id"]);
+        DataRow dummyRow;
+        if (DataTools.FindOrAddPrimaryKeyRow(resTable, id, out dummyRow))
           cnt++;
       }
 
@@ -351,13 +351,13 @@ namespace FreeLibSet.Data.Docs
     {
       if (id == 0)
         return 0;
-      DataTable Table = ReadyTable(tableName, false);
-      if (Table == null)
+      DataTable table = ReadyTable(tableName, false);
+      if (table == null)
         return 0;
-      DataRow Row = Table.Rows.Find(id);
-      if (Row != null)
+      DataRow row = table.Rows.Find(id);
+      if (row != null)
       {
-        Table.Rows.Remove(Row);
+        table.Rows.Remove(row);
         return 1;
       }
       else
@@ -376,17 +376,17 @@ namespace FreeLibSet.Data.Docs
         return 0;
       if (ids.Length == 0)
         return 0;
-      DataTable Table = ReadyTable(tableName, false);
-      if (Table == null)
+      DataTable table = ReadyTable(tableName, false);
+      if (table == null)
         return 0;
 
       int cnt = 0;
       for (int i = 0; i < ids.Length; i++)
       {
-        DataRow Row = Table.Rows.Find(ids[i]);
-        if (Row != null)
+        DataRow row = table.Rows.Find(ids[i]);
+        if (row != null)
         {
-          Table.Rows.Remove(Row);
+          table.Rows.Remove(row);
           cnt++;
         }
       }
@@ -406,17 +406,17 @@ namespace FreeLibSet.Data.Docs
         return 0;
       if (ids.Count == 0)
         return 0;
-      DataTable Table = ReadyTable(tableName, false);
-      if (Table == null)
+      DataTable table = ReadyTable(tableName, false);
+      if (table == null)
         return 0;
 
       int cnt = 0;
-      foreach (Int32 Id in ids)
+      foreach (Int32 id in ids)
       {
-        DataRow Row = Table.Rows.Find(Id);
-        if (Row != null)
+        DataRow row = table.Rows.Find(id);
+        if (row != null)
         {
-          Table.Rows.Remove(Row);
+          table.Rows.Remove(row);
           cnt++;
         }
       }
@@ -435,18 +435,18 @@ namespace FreeLibSet.Data.Docs
         return 0;
 
       int cnt = 0;
-      foreach (DataTable SrcTable in source._Data.Tables)
+      foreach (DataTable srcTable in source._Data.Tables)
       {
-        DataTable ResTable = ReadyTable(SrcTable.TableName, false);
-        if (ResTable == null)
+        DataTable resTable = ReadyTable(srcTable.TableName, false);
+        if (resTable == null)
           continue;
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
-          Int32 Id = (Int32)(SrcRow["Id"]);
-          DataRow Row = ResTable.Rows.Find(Id);
-          if (Row != null)
+          Int32 id = (Int32)(srcRow["Id"]);
+          DataRow row = resTable.Rows.Find(id);
+          if (row != null)
           {
-            ResTable.Rows.Remove(Row);
+            resTable.Rows.Remove(row);
             cnt++;
           }
         }
@@ -462,11 +462,11 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Количество удаленных документов</returns>
     public int Remove(string tableName)
     {
-      DataTable Table = ReadyTable(tableName, false);
-      if (Table == null)
+      DataTable table = ReadyTable(tableName, false);
+      if (table == null)
         return 0;
-      int cnt = Table.Rows.Count;
-      _Data.Tables.Remove(Table);
+      int cnt = table.Rows.Count;
+      _Data.Tables.Remove(table);
       _TableNames = null;
       return cnt;
     }
@@ -485,20 +485,20 @@ namespace FreeLibSet.Data.Docs
         return 0;
       if (table.Rows.Count == 0)
         return 0;
-      DataTable ResTable = ReadyTable(tableName, false);
-      if (ResTable == null)
+      DataTable resTable = ReadyTable(tableName, false);
+      if (resTable == null)
         return 0;
 
       int cnt = 0;
-      foreach (DataRow SrcRow in table.Rows)
+      foreach (DataRow srcRow in table.Rows)
       {
-        if (SrcRow.RowState == DataRowState.Deleted)
+        if (srcRow.RowState == DataRowState.Deleted)
           continue; // 27.09.2017
-        Int32 Id = (Int32)(SrcRow["Id"]);
-        DataRow Row = ResTable.Rows.Find(Id);
+        Int32 id = (Int32)(srcRow["Id"]);
+        DataRow Row = resTable.Rows.Find(id);
         if (Row != null)
         {
-          ResTable.Rows.Remove(Row);
+          resTable.Rows.Remove(Row);
           cnt++;
         }
       }
@@ -543,23 +543,23 @@ namespace FreeLibSet.Data.Docs
 
       for (int i = _Data.Tables.Count - 1; i >= 0; i--)
       {
-        DataTable ResTable = _Data.Tables[i];
-        DataTable SrcTable = source.ReadyTable(ResTable.TableName, false);
-        if (SrcTable == null)
+        DataTable resTable = _Data.Tables[i];
+        DataTable srcTable = source.ReadyTable(resTable.TableName, false);
+        if (srcTable == null)
         {
-          cnt += ResTable.Rows.Count;
+          cnt += resTable.Rows.Count;
           _Data.Tables.RemoveAt(i);
           _TableNames = null;
           continue;
         }
 
-        for (int j = ResTable.Rows.Count - 1; j >= 0; j--)
+        for (int j = resTable.Rows.Count - 1; j >= 0; j--)
         {
-          DataRow ResRow = ResTable.Rows[j];
-          Int32 Id = (Int32)(ResRow["Id"]);
-          if (SrcTable.Rows.Find(Id) == null)
+          DataRow resRow = resTable.Rows[j];
+          Int32 id = (Int32)(resRow["Id"]);
+          if (srcTable.Rows.Find(id) == null)
           {
-            ResTable.Rows.RemoveAt(j);
+            resTable.Rows.RemoveAt(j);
             cnt++;
           }
         }
@@ -663,9 +663,9 @@ namespace FreeLibSet.Data.Docs
         return false;
       else
       {
-        foreach (Int32 Id in ids)
+        foreach (Int32 id in ids)
         {
-          if (_Data.Tables[p].Rows.Find(Id) != null)
+          if (_Data.Tables[p].Rows.Find(id) != null)
             return true;
         }
         return false;
@@ -685,16 +685,16 @@ namespace FreeLibSet.Data.Docs
       if (source.IsEmpty)
         return true; // 19.01.2021
 
-      foreach (DataTable SrcTable in source._Data.Tables)
+      foreach (DataTable srcTable in source._Data.Tables)
       {
-        DataTable ResTable = ReadyTable(SrcTable.TableName, false);
-        if (ResTable == null)
+        DataTable resTable = ReadyTable(srcTable.TableName, false);
+        if (resTable == null)
           continue;
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
           // Можно не проверять удаленные строки
-          Int32 Id = (Int32)(SrcRow["Id"]);
-          if (ResTable.Rows.Find(Id) != null)
+          Int32 id = (Int32)(srcRow["Id"]);
+          if (resTable.Rows.Find(id) != null)
             return true;
         }
       }
@@ -748,9 +748,9 @@ namespace FreeLibSet.Data.Docs
         return false;
       else
       {
-        foreach (Int32 Id in ids)
+        foreach (Int32 id in ids)
         {
-          if (_Data.Tables[p].Rows.Find(Id) == null)
+          if (_Data.Tables[p].Rows.Find(id) == null)
             return false;
         }
         return true;
@@ -770,20 +770,20 @@ namespace FreeLibSet.Data.Docs
       if (source.IsEmpty)
         return true;
 
-      foreach (DataTable SrcTable in source._Data.Tables)
+      foreach (DataTable srcTable in source._Data.Tables)
       {
-        if (SrcTable.Rows.Count == 0)
+        if (srcTable.Rows.Count == 0)
           continue;
 
-        DataTable ResTable = ReadyTable(SrcTable.TableName, false);
-        if (ResTable == null)
+        DataTable resTable = ReadyTable(srcTable.TableName, false);
+        if (resTable == null)
           return false;
 
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
           // Можно не проверять удаленные строки
-          Int32 Id = (Int32)(SrcRow["Id"]);
-          if (ResTable.Rows.Find(Id) == null)
+          Int32 id = (Int32)(srcRow["Id"]);
+          if (resTable.Rows.Find(id) == null)
             return false;
         }
       }
@@ -823,16 +823,16 @@ namespace FreeLibSet.Data.Docs
         cfg.Remove("Tables");
       else
       {
-        CfgPart Part2 = cfg.GetChild("Tables", true);
-        Part2.Clear();
+        CfgPart part2 = cfg.GetChild("Tables", true);
+        part2.Clear();
         for (int i = 0; i < TableNames.Length; i++)
         {
           Int32[] ids = this[TableNames[i]];
           if (ids.Length == 0)
             continue;
-          CfgPart Part3 = Part2.GetChild(TableNames[i], true);
+          CfgPart part3 = part2.GetChild(TableNames[i], true);
           string s = StdConvert.ToString(ids);
-          Part3.SetString("Ids", s);
+          part3.SetString("Ids", s);
         }
       }
     }
@@ -849,18 +849,18 @@ namespace FreeLibSet.Data.Docs
 #endif
 
       Clear();
-      CfgPart Part2 = cfg.GetChild("Tables", false);
-      if (Part2 == null)
+      CfgPart part2 = cfg.GetChild("Tables", false);
+      if (part2 == null)
         return;
-      string[] TableNames = Part2.GetChildNames();
-      for (int i = 0; i < TableNames.Length; i++)
+      string[] tableNames = part2.GetChildNames();
+      for (int i = 0; i < tableNames.Length; i++)
       {
-        CfgPart Part3 = Part2.GetChild(TableNames[i], false);
-        if (Part3 == null)
+        CfgPart part3 = part2.GetChild(tableNames[i], false);
+        if (part3 == null)
           continue; // ошибка
-        string s = Part3.GetString("Ids");
-        Int32[] Ids = StdConvert.ToInt32Array(s);
-        Add(TableNames[i], Ids);
+        string s = part3.GetString("Ids");
+        Int32[] ids = StdConvert.ToInt32Array(s);
+        Add(tableNames[i], ids);
       }
     }
 
@@ -984,10 +984,10 @@ namespace FreeLibSet.Data.Docs
         return "Нет документов";
       if (TotalCount == 1)
       {
-        DBxDocType DocType = textHandlers.DocTypes[_Data.Tables[0].TableName];
-        string sDTN = DocType.SingularTitle;
-        Int32 DocId = this[DocType.Name][0];
-        return sDTN + " " + textHandlers.GetTextValue(DocType.Name, DocId);
+        DBxDocType docType = textHandlers.DocTypes[_Data.Tables[0].TableName];
+        string sDTN = docType.SingularTitle;
+        Int32 docId = this[docType.Name][0];
+        return sDTN + " " + textHandlers.GetTextValue(docType.Name, docId);
       }
 
       StringBuilder sb = new StringBuilder();
@@ -1000,12 +1000,12 @@ namespace FreeLibSet.Data.Docs
         else
           sb.Append(": ");
 
-        DBxDocType DocType = textHandlers.DocTypes[_Data.Tables[i].TableName];
+        DBxDocType docType = textHandlers.DocTypes[_Data.Tables[i].TableName];
         int n = _Data.Tables[i].Rows.Count;
         if (n == 1)
-          sb.Append(DocType.SingularTitle);
+          sb.Append(docType.SingularTitle);
         else
-          sb.Append(DocType.PluralTitle);
+          sb.Append(docType.PluralTitle);
 
         sb.Append(" (");
         sb.Append(n);

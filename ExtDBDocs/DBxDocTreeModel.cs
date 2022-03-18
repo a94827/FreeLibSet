@@ -94,9 +94,9 @@ namespace FreeLibSet.Data.Docs
       while (true)
       {
         IdList missingIds = new IdList();
-        foreach (DataRow Row in table.Rows)
+        foreach (DataRow row in table.Rows)
         {
-          Int32 parentId = DataTools.GetInt(Row[pParentId]);
+          Int32 parentId = DataTools.GetInt(row[pParentId]);
           if (parentId == 0)
             continue;
           if (table.Rows.Find(parentId) == null)
@@ -119,8 +119,8 @@ namespace FreeLibSet.Data.Docs
           // Требуется добавить в таблицу поле флага
           DataTable table3 = table.Clone();
           table3.Columns.Add(DefIntegrityFlagColumnName, typeof(bool));
-          foreach (DataRow Row1 in table.Rows)
-            table3.Rows.Add(Row1.ItemArray);
+          foreach (DataRow row1 in table.Rows)
+            table3.Rows.Add(row1.ItemArray);
           table = table3;
           DataTools.SetPrimaryKey(table, "Id");
         }
@@ -330,9 +330,9 @@ namespace FreeLibSet.Data.Docs
       while (true)
       {
         IdList missingIds = new IdList();
-        foreach (DataRow Row in resTable.Rows)
+        foreach (DataRow row in resTable.Rows)
         {
-          Int32 parentId = DataTools.GetInt(Row[pParentId]);
+          Int32 parentId = DataTools.GetInt(row[pParentId]);
           if (parentId == 0)
             continue;
           if (resTable.Rows.Find(parentId) == null)

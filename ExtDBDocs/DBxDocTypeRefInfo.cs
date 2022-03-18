@@ -151,12 +151,12 @@ namespace FreeLibSet.Data.Docs
       List<DBxDocTypeRefInfo> lst = new List<DBxDocTypeRefInfo>();
       for (int i = 0; i < docTypes.Count; i++)
       {
-        DBxDocType FromDocType = docTypes[i];
+        DBxDocType fromDocType = docTypes[i];
         // »щем ссылки из основного документа
-        GetToDocTypeRefs2(lst, ToDocType, FromDocType, FromDocType);
+        GetToDocTypeRefs2(lst, ToDocType, fromDocType, fromDocType);
         // »щем ссылки из поддокументов
-        for (int j = 0; j < FromDocType.SubDocs.Count; j++)
-          GetToDocTypeRefs2(lst, ToDocType, FromDocType, FromDocType.SubDocs[j]);
+        for (int j = 0; j < fromDocType.SubDocs.Count; j++)
+          GetToDocTypeRefs2(lst, ToDocType, fromDocType, fromDocType.SubDocs[j]);
       }
 
       return lst.ToArray();

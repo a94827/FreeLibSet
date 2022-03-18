@@ -48,15 +48,15 @@ namespace FreeLibSet.Data
       parts.CopyTo(_Parts, 0);
 
 #if DEBUG
-      for (int i=0; i<_Parts.Length;i++)
+      for (int i = 0; i < _Parts.Length; i++)
       {
         if (_Parts[i].IsEmpty)
-          throw new ArgumentException("Элемент сортировки с индексом "+i.ToString()+" не задан", "parts");
+          throw new ArgumentException("Элемент сортировки с индексом " + i.ToString() + " не задан", "parts");
       }
 #endif
     }
 
-    
+
     /// <summary>
     /// Создает порядок сортировки на основании одного или нескольких выражений.
     /// Каждое выражение преобразуется в DBxOrderItem с сортировкой по возрастанию
@@ -162,11 +162,11 @@ namespace FreeLibSet.Data
       sortOrder = ListSortDirection.Ascending;
       if (Parts.Length > 0)
       {
-        DBxColumnList List = new DBxColumnList();
-        Parts[0].Expression.GetColumnNames(List);
-        if (List.Count > 0)
+        DBxColumnList list = new DBxColumnList();
+        Parts[0].Expression.GetColumnNames(list);
+        if (list.Count > 0)
         {
-          columnName = List[0];
+          columnName = list[0];
           sortOrder = Parts[0].SortOrder;
         }
       }
@@ -191,9 +191,9 @@ namespace FreeLibSet.Data
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      DBxSqlBuffer Buffer = new DBxSqlBuffer();
-      Buffer.FormatOrder(this);
-      return Buffer.SB.ToString();
+      DBxSqlBuffer buffer = new DBxSqlBuffer();
+      buffer.FormatOrder(this);
+      return buffer.SB.ToString();
     }
 
     /// <summary>
@@ -204,10 +204,10 @@ namespace FreeLibSet.Data
     /// <returns>Новый заполненный объект DBxOrder</returns>
     public DBxOrder SetColumnNamePrefix(string prefix)
     {
-      DBxOrderPart[] Infos2 = new DBxOrderPart[Parts.Length];
+      DBxOrderPart[] parts2 = new DBxOrderPart[Parts.Length];
       for (int i = 0; i < Parts.Length; i++)
-        Infos2[i] = Parts[i].SetColumnNamePrefix(prefix);
-      return new DBxOrder(Infos2);
+        parts2[i] = Parts[i].SetColumnNamePrefix(prefix);
+      return new DBxOrder(parts2);
     }
 
     #endregion
@@ -301,7 +301,7 @@ namespace FreeLibSet.Data
     /// <param name="sortOrder">Порядок сортировки: по возрастанию или по убыванию</param>
     public DBxOrderPart(DBxExpression expression, ListSortDirection sortOrder)
     {
-      if (expression==null)
+      if (expression == null)
         throw new ArgumentNullException("expression");
       _Expression = expression;
       _SortOrder = sortOrder;
@@ -312,7 +312,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="expression">Элемент порядка сортировки (обычно, DBxColumn)</param>
     public DBxOrderPart(DBxExpression expression)
-      :this(expression, ListSortDirection.Ascending)
+      : this(expression, ListSortDirection.Ascending)
     {
     }
 
@@ -322,7 +322,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя поля для создания DBxColumn</param>
     /// <param name="sortOrder">Порядок сортировки: по возрастанию или по убыванию</param>
     public DBxOrderPart(string columnName, ListSortDirection sortOrder)
-      :this(new DBxColumn(columnName), sortOrder)
+      : this(new DBxColumn(columnName), sortOrder)
     {
     }
 
@@ -365,13 +365,13 @@ namespace FreeLibSet.Data
       if (_Expression == null)
         return String.Empty;
 
-      DBxSqlBuffer Buffer = new DBxSqlBuffer();
+      DBxSqlBuffer buffer = new DBxSqlBuffer();
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
       formatInfo.NullAsDefaultValue = false; // Нельзя делать true, т.к. при сортировке для DataView тип данных неизвестен
-      Buffer.FormatExpression(_Expression, formatInfo);
-      if (_SortOrder==ListSortDirection.Descending)
-        Buffer.SB.Append(" DESC");
-      return Buffer.ToString();
+      buffer.FormatExpression(_Expression, formatInfo);
+      if (_SortOrder == ListSortDirection.Descending)
+        buffer.SB.Append(" DESC");
+      return buffer.ToString();
     }
 
     #endregion

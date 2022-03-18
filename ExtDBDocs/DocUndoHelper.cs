@@ -173,13 +173,13 @@ namespace FreeLibSet.Data.Docs
       //  new AndFilter(new ValueFilter("DocTableId", docType.TableId), new ValueFilter("DocId", docId))));
       // DoValidateDocVersion(DocType, DocId, UndoDocVersion, ref DocVersion);
 
-      Hashtable FieldPairs = new Hashtable();
-      FieldPairs.Add("UserActionId", UserActionId);
-      FieldPairs.Add("DocTableId", docType.TableId);
-      FieldPairs.Add("DocId", docId);
-      FieldPairs.Add("Version", docVersion);
-      FieldPairs.Add("Action", (int)action);
-      docActionId = _UndoCon.AddRecordWithIdResult("DocActions", FieldPairs);
+      Hashtable fieldPairs = new Hashtable();
+      fieldPairs.Add("UserActionId", UserActionId);
+      fieldPairs.Add("DocTableId", docType.TableId);
+      fieldPairs.Add("DocId", docId);
+      fieldPairs.Add("Version", docVersion);
+      fieldPairs.Add("Action", (int)action);
+      docActionId = _UndoCon.AddRecordWithIdResult("DocActions", fieldPairs);
 
       return docActionId;
     }
@@ -443,8 +443,8 @@ namespace FreeLibSet.Data.Docs
       ActualizeMainDoc(docType, docId, docVersion);
       foreach (DBxSubDocType sdt in docType.SubDocs)
       {
-        IdList SubDocIds = MainConGlobal.GetIds(sdt.Name, new IdsFilter("DocId", docId)); // включая deleted
-        foreach (Int32 SubDocId in SubDocIds)
+        IdList subDocIds = MainConGlobal.GetIds(sdt.Name, new IdsFilter("DocId", docId)); // включая deleted
+        foreach (Int32 SubDocId in subDocIds)
           ActualizeSubDoc(sdt, SubDocId, docVersion);
       }
     }

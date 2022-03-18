@@ -195,10 +195,10 @@ namespace FreeLibSet.Data.Docs
     {
       if (SubDocState != DBxDocState.View)
         throw new InvalidOperationException("Поддокумент должен находиться в состоянии View, а не " + SubDocState.ToString());
-      DataSet TempDS = new DataSet();
+      DataSet tempDS = new DataSet();
 
-      DBxDocSet.DoInsertCopy1(TempDS, MultiSubDocs.SubDocType.Name, SubDocId, MultiSubDocs.NextFictiveId());
-      DBxDocSet.DoInsertCopy2(TempDS, MultiSubDocs.Table.DataSet, DocSet.DocProvider);
+      DBxDocSet.DoInsertCopy1(tempDS, MultiSubDocs.SubDocType.Name, SubDocId, MultiSubDocs.NextFictiveId());
+      DBxDocSet.DoInsertCopy2(tempDS, MultiSubDocs.Table.DataSet, DocSet.DocProvider);
     }
 
     /// <summary>

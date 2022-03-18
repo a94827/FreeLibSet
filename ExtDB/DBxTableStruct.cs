@@ -102,8 +102,8 @@ namespace FreeLibSet.Data
           throw new ArgumentNullException();
         for (int i = 0; i < value.Count; i++)
         {
-          DBxColumnStruct Col = Columns[value[i]];
-          if (Col == null)
+          DBxColumnStruct colStr = Columns[value[i]];
+          if (colStr == null)
             throw new ArgumentException("В списке полей нет \"" + value[i] + "\"");
         }
 
@@ -132,10 +132,10 @@ namespace FreeLibSet.Data
     {
       get
       {
-        DBxColumns PK = PrimaryKey;
-        DBxColumnStruct[] a = new DBxColumnStruct[PK.Count];
-        for (int i = 0; i < PK.Count; i++)
-          a[i] = Columns[PK[i]];
+        DBxColumns pk = PrimaryKey;
+        DBxColumnStruct[] a = new DBxColumnStruct[pk.Count];
+        for (int i = 0; i < pk.Count; i++)
+          a[i] = Columns[pk[i]];
         return a;
       }
       set
@@ -253,10 +253,10 @@ namespace FreeLibSet.Data
     /// <returns>Пустой DataTable</returns>
     public DataTable CreateDataTable()
     {
-      DataTable Table = new DataTable(TableName);
+      DataTable table = new DataTable(TableName);
       for (int i = 0; i < Columns.Count; i++)
-        Table.Columns.Add(Columns[i].CreateDataColumn());
-      return Table;
+        table.Columns.Add(Columns[i].CreateDataColumn());
+      return table;
     }
 
     /// <summary>
@@ -272,14 +272,14 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("table");
 #endif
 
-      foreach (DataColumn Column in table.Columns)
+      foreach (DataColumn column in table.Columns)
       {
-        int p = Columns.IndexOf(Column.ColumnName);
+        int p = Columns.IndexOf(column.ColumnName);
         if (p < 0)
           continue; // служебное поле
-        DBxColumnStruct ColDef = Columns[p];
-        if (ColDef.ColumnType == DBxColumnType.String && Column.DataType == typeof(string))
-          Column.MaxLength = ColDef.MaxLength;
+        DBxColumnStruct colDef = Columns[p];
+        if (colDef.ColumnType == DBxColumnType.String && column.DataType == typeof(string))
+          column.MaxLength = colDef.MaxLength;
         /* Нельзя !
         if (FieldDef.Type==DatabaseStruct.FieldType.String ||
             FieldDef.Type==DatabaseStruct.FieldType.Date ||
@@ -364,13 +364,13 @@ namespace FreeLibSet.Data
     {
       if (db != null)
       {
-        string ErrorText;
-        if (!db.IsValidTableName(TableName, out ErrorText))
-          throw new DBxStructException(this, "Неправильное имя таблицы \"" + TableName + "\"." + ErrorText);
+        string errorText;
+        if (!db.IsValidTableName(TableName, out errorText))
+          throw new DBxStructException(this, "Неправильное имя таблицы \"" + TableName + "\"." + errorText);
       }
 
-      foreach (DBxColumnStruct Column in Columns)
-        Column.CheckStruct(this, db);
+      foreach (DBxColumnStruct colDef in Columns)
+        colDef.CheckStruct(this, db);
     }
 
     /// <summary>
@@ -383,10 +383,10 @@ namespace FreeLibSet.Data
       switch (PrimaryKey.Count)
       {
         case 1:
-          DBxColumnStruct cs = Columns[PrimaryKey[0]];
-          if (cs.DataType != typeof(Int32))
-            throw new DBxPrimaryKeyException("Таблица \"" + TableName + "\" имеет первичный ключа по полю \"" + cs.ColumnName + "\", которое имеет тип ("+cs.ColumnType.ToString()+"), отличный от Int32");
-          return cs.ColumnName;
+          DBxColumnStruct colDef = Columns[PrimaryKey[0]];
+          if (colDef.DataType != typeof(Int32))
+            throw new DBxPrimaryKeyException("Таблица \"" + TableName + "\" имеет первичный ключа по полю \"" + colDef.ColumnName + "\", которое имеет тип ("+colDef.ColumnType.ToString()+"), отличный от Int32");
+          return colDef.ColumnName;
         case 0:
           throw new DBxPrimaryKeyException("Таблица \"" + TableName + "\" не имеет первичного ключа. Требуется первичный ключ по целочисленному полю");
         default:
@@ -488,11 +488,11 @@ namespace FreeLibSet.Data
       if (Count > 0)
         throw new InvalidOperationException("Ключевое поле \"" + columnName + "\" должно быть первым в списке");
 
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Col.Nullable = false;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      item.Nullable = false;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -506,12 +506,12 @@ namespace FreeLibSet.Data
     {
       if (maxLength < 1 || maxLength > 255)
         throw new ArgumentOutOfRangeException("maxLength", maxLength, "Длина строкового поля может быть от 1 до 255 символов");
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.String;
-      Col.MaxLength = maxLength;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.String;
+      item.MaxLength = maxLength;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -522,11 +522,11 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddDate(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Date;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Date;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -537,11 +537,11 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddDateTime(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.DateTime;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.DateTime;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -552,11 +552,11 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddTime(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Time;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Time;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -567,10 +567,10 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddInt(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -581,11 +581,11 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddInt(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -601,12 +601,12 @@ namespace FreeLibSet.Data
       if (minValue > maxValue)
         throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
 
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Col.MinValue = minValue;
-      Col.MaxValue = maxValue;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      item.MinValue = minValue;
+      item.MaxValue = maxValue;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -622,13 +622,13 @@ namespace FreeLibSet.Data
       if (minValue > maxValue)
         throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
 
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Col.MinValue = minValue;
-      Col.MaxValue = maxValue;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      item.MinValue = minValue;
+      item.MaxValue = maxValue;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -678,12 +678,12 @@ namespace FreeLibSet.Data
       if (minValue > maxValue)
         throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
 
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Col.MinValue = minValue;
-      Col.MaxValue = maxValue;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      item.MinValue = minValue;
+      item.MaxValue = maxValue;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -699,13 +699,13 @@ namespace FreeLibSet.Data
       if (minValue > maxValue)
         throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
 
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Col.MinValue = minValue;
-      Col.MaxValue = maxValue;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      item.MinValue = minValue;
+      item.MaxValue = maxValue;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -760,10 +760,10 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddMoney(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Money;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Money;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -774,11 +774,11 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddMoney(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Money;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Money;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -789,12 +789,12 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddSingle(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Float;
-      Col.MinValue = Single.MinValue;
-      Col.MaxValue = Single.MaxValue;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Float;
+      item.MinValue = Single.MinValue;
+      item.MaxValue = Single.MaxValue;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -805,13 +805,13 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddSingle(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Float;
-      Col.MinValue = Single.MinValue;
-      Col.MaxValue = Single.MaxValue;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Float;
+      item.MinValue = Single.MinValue;
+      item.MaxValue = Single.MaxValue;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -822,12 +822,12 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddDouble(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Float;
-      Col.MinValue = Double.MinValue;
-      Col.MaxValue = Double.MaxValue;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Float;
+      item.MinValue = Double.MinValue;
+      item.MaxValue = Double.MaxValue;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -838,13 +838,13 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddDouble(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Float;
-      Col.MinValue = Double.MinValue;
-      Col.MaxValue = Double.MaxValue;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Float;
+      item.MinValue = Double.MinValue;
+      item.MaxValue = Double.MaxValue;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -855,10 +855,10 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddBoolean(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Boolean;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Boolean;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -869,11 +869,11 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddBoolean(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Boolean;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Boolean;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -892,13 +892,13 @@ namespace FreeLibSet.Data
       if (refType == DBxRefType.Clear && (!nullable))
         throw new ArgumentException("Тип ссылки не может быть DBxRefType.Clear, если nullable=false", "refType");
 
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Int;
-      Col.MasterTableName = masterTableName;
-      Col.Nullable = nullable;
-      Col.RefType = refType;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Int;
+      item.MasterTableName = masterTableName;
+      item.Nullable = nullable;
+      item.RefType = refType;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -931,10 +931,10 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddMemo(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Memo;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Memo;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -946,10 +946,10 @@ namespace FreeLibSet.Data
     {
       // В текущей реализации не отличается от прочих XML-полей
 
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Xml;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Xml;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -959,10 +959,10 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddXml(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Xml;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Xml;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -972,10 +972,10 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddBinary(string columnName)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Binary;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Binary;
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -986,11 +986,11 @@ namespace FreeLibSet.Data
     /// <returns>Созданный объект объявления поля</returns>
     public DBxColumnStruct AddGuid(string columnName, bool nullable)
     {
-      DBxColumnStruct Col = new DBxColumnStruct(columnName);
-      Col.ColumnType = DBxColumnType.Guid;
-      Col.Nullable = nullable;
-      Add(Col);
-      return Col;
+      DBxColumnStruct item = new DBxColumnStruct(columnName);
+      item.ColumnType = DBxColumnType.Guid;
+      item.Nullable = nullable;
+      Add(item);
+      return item;
     }
 
     #endregion
@@ -1480,11 +1480,11 @@ namespace FreeLibSet.Data
       Type t = DataType;
       if (t == null)
         throw new InvalidOperationException("Не удалось определить тип данных для столбца " + ToString());
-      DataColumn Column = new DataColumn(columnName, t);
-      Column.AllowDBNull = Nullable;
+      DataColumn column = new DataColumn(columnName, t);
+      column.AllowDBNull = Nullable;
       if (MaxLength > 0)
-        Column.MaxLength = MaxLength;
-      return Column;
+        column.MaxLength = MaxLength;
+      return column;
     }
 
     #endregion

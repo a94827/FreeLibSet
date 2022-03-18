@@ -32,17 +32,17 @@ namespace FreeLibSet.Data
       if (validator == null)
         throw new ArgumentNullException("validator");
 
-      this.Info = info;
-      this.Validator = validator;
+      this._Info = info;
+      this._Validator = validator;
     }
 
     #endregion
 
     #region Поля
 
-    private DBxSelectInfo Info;
+    private DBxSelectInfo _Info;
 
-    private DBxNameValidator Validator;
+    private DBxNameValidator _Validator;
 
     #endregion
 
@@ -51,7 +51,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Дополнительный буфер для создания строки.
     /// </summary>
-    private DBxSqlBuffer Buffer2;
+    private DBxSqlBuffer _Buffer2;
 
     /// <summary>
     /// Основной метод - получение SQL-выражения
@@ -62,24 +62,24 @@ namespace FreeLibSet.Data
     {
       #region Проверка аргументов
 
-      if (Buffer2 != null)
+      if (_Buffer2 != null)
         throw new InvalidOperationException("Повторный вызов метода Format не допускается. Объект FillSelectFormatter является одноразовым");
 
       if (buffer == null)
         throw new ArgumentNullException("buffer");
-      if (String.IsNullOrEmpty(Info.TableName))
+      if (String.IsNullOrEmpty(_Info.TableName))
         throw new InvalidDataException("Не задано DBxSelectInfo.TableName");
 
-      Validator.CheckTableName(Info.TableName, DBxAccessMode.ReadOnly);
+      _Validator.CheckTableName(_Info.TableName, DBxAccessMode.ReadOnly);
 
-      if (Info.HasGroupBy)
+      if (_Info.HasGroupBy)
       {
-        if (Info.Expressions.Count == 0)
+        if (_Info.Expressions.Count == 0)
           throw new InvalidOperationException("Задан список GROUP BY без задания списка выражений (SELECT *)");
       }
       else
       {
-        if (Info.Having != null)
+        if (_Info.Having != null)
           throw new InvalidOperationException("Задано предложение HAVING без GROUP BY");
       }
 
@@ -98,15 +98,15 @@ namespace FreeLibSet.Data
 
       // Если предложения Where и OrderBy содержит имена полей с точками, то их придется 
       // добавить в конец списка
-      DBxColumnList ColumnNames2 = new DBxColumnList();
-      Info.GetColumnNames(ColumnNames2); // все существующие поля
+      DBxColumnList columnNames2 = new DBxColumnList();
+      _Info.GetColumnNames(columnNames2); // все существующие поля
 
-      Validator.CheckTableColumnNames(Info.TableName, ColumnNames2, true, DBxAccessMode.ReadOnly);
+      _Validator.CheckTableColumnNames(_Info.TableName, columnNames2, true, DBxAccessMode.ReadOnly);
 
       #endregion
 
-      PrepareInternal(ColumnNames2, buffer); // 28.02.2020
-      Buffer2 = new DBxSqlBuffer(buffer.Formatter);
+      PrepareInternal(columnNames2, buffer); // 28.02.2020
+      _Buffer2 = new DBxSqlBuffer(buffer.Formatter);
 
       #endregion
 
@@ -126,16 +126,16 @@ namespace FreeLibSet.Data
 
       #region TOP
 
-      if (Info.MaxRecordCount != 0)
+      if (_Info.MaxRecordCount != 0)
       {
-        if (Info.MaxRecordCount < 0)
+        if (_Info.MaxRecordCount < 0)
           throw new InvalidOperationException("DBxSelectInfo.MaxRecordCount<0");
 
         switch (buffer.Formatter.SelectMaxRecordCountMode)
         {
           case DBxSelectMaxRecordCountMode.Top:
             buffer.SB.Append("TOP ");
-            buffer.SB.Append(Info.MaxRecordCount);
+            buffer.SB.Append(_Info.MaxRecordCount);
             buffer.SB.Append(" ");
             break;
           case DBxSelectMaxRecordCountMode.Limit:
@@ -150,23 +150,23 @@ namespace FreeLibSet.Data
 
       #region DISTINCT
 
-      if (Info.Unique)
+      if (_Info.Unique)
         buffer.SB.Append("DISTINCT ");
 
       #endregion
 
       #region Список полей и других выражений, которые должны попасть в таблицу
 
-      for (int i = 0; i < Info.Expressions.Count; i++)
+      for (int i = 0; i < _Info.Expressions.Count; i++)
       {
         if (i > 0)
           buffer.SB.Append(", ");
 
-        buffer.FormatExpression(Info.Expressions[i].Expression, new DBxFormatExpressionInfo());
-        if (Info.Expressions[i].AliasRequired)
+        buffer.FormatExpression(_Info.Expressions[i].Expression, new DBxFormatExpressionInfo());
+        if (_Info.Expressions[i].AliasRequired)
         {
           buffer.SB.Append(" AS ");
-          buffer.FormatColumnName(Info.Expressions[i].Alias);
+          buffer.FormatColumnName(_Info.Expressions[i].Alias);
         }
       }
 
@@ -176,44 +176,44 @@ namespace FreeLibSet.Data
 
       #region Имя (основной) таблицы
 
-      Buffer2.SB.Length = 0;
-      Buffer2.FormatTableName(Info.TableName.Trim());
+      _Buffer2.SB.Length = 0;
+      _Buffer2.FormatTableName(_Info.TableName.Trim());
 
       #endregion
 
       #region Инструкции LEFT JOIN
 
-      if (HasDotColumns)
+      if (_HasDotColumns)
       {
-        for (int i = 0; i < JoinInfoList.Count; i++)
+        for (int i = 0; i < _JoinInfoList.Count; i++)
         {
-          JoinInfo ThisInfo = JoinInfoList[i];
+          JoinInfo thisInfo = _JoinInfoList[i];
           if (i > 0)
           {
-            Buffer2.SB.Insert(0, "(");
+            _Buffer2.SB.Insert(0, "(");
             // Скобки вокруг предыдущего выражения
-            Buffer2.SB.Append(")");
+            _Buffer2.SB.Append(")");
           }
-          Buffer2.SB.Append(" LEFT JOIN ");
-          Buffer2.FormatTableName(ThisInfo.RightTableName);
-          Buffer2.SB.Append(" AS ");
-          Buffer2.FormatTableName(ThisInfo.AliasName);
-          Buffer2.SB.Append(" ON ");
-          Buffer2.FormatTableName(ThisInfo.LeftTableName);
-          Buffer2.SB.Append(".");
-          Buffer2.FormatColumnName(ThisInfo.RefColumnName);
-          Buffer2.SB.Append("=");
-          Buffer2.FormatTableName(ThisInfo.AliasName);
-          Buffer2.SB.Append(".");
+          _Buffer2.SB.Append(" LEFT JOIN ");
+          _Buffer2.FormatTableName(thisInfo.RightTableName);
+          _Buffer2.SB.Append(" AS ");
+          _Buffer2.FormatTableName(thisInfo.AliasName);
+          _Buffer2.SB.Append(" ON ");
+          _Buffer2.FormatTableName(thisInfo.LeftTableName);
+          _Buffer2.SB.Append(".");
+          _Buffer2.FormatColumnName(thisInfo.RefColumnName);
+          _Buffer2.SB.Append("=");
+          _Buffer2.FormatTableName(thisInfo.AliasName);
+          _Buffer2.SB.Append(".");
           // Buffer2.FormatColumnName("Id");
           // 01.10.2019
           // Не всегда первичным ключом является поле "Id"
-          DBxTableStruct RightTS = Validator.Entry.DB.Struct.Tables[ThisInfo.RightTableName];
+          DBxTableStruct RightTS = _Validator.Entry.DB.Struct.Tables[thisInfo.RightTableName];
           if (RightTS == null)
-            throw new BugException("Не найдено описание мастер-таблицы \"" + ThisInfo.RightTableName + "\"");
+            throw new BugException("Не найдено описание мастер-таблицы \"" + thisInfo.RightTableName + "\"");
           if (RightTS.PrimaryKeyColumns.Length != 1)
-            throw new BugException("Для мастер-таблицы \"" + ThisInfo.RightTableName + "\" не задан первичный ключ или он составной");
-          Buffer2.FormatColumnName(RightTS.PrimaryKeyColumns[0].ColumnName);
+            throw new BugException("Для мастер-таблицы \"" + thisInfo.RightTableName + "\" не задан первичный ключ или он составной");
+          _Buffer2.FormatColumnName(RightTS.PrimaryKeyColumns[0].ColumnName);
         }
       }
 
@@ -222,30 +222,30 @@ namespace FreeLibSet.Data
       #region FROM
 
       buffer.SB.Append(" FROM ");
-      buffer.SB.Append(Buffer2.SB.ToString());
+      buffer.SB.Append(_Buffer2.SB.ToString());
 
       #endregion
 
       #region WHERE
 
-      if (Info.Where != null && Info.Where.Degeneration != DBxFilterDegeneration.AlwaysTrue)
+      if (_Info.Where != null && _Info.Where.Degeneration != DBxFilterDegeneration.AlwaysTrue)
       {
         buffer.SB.Append(" WHERE ");
-        buffer.FormatFilter(Info.Where);
+        buffer.FormatFilter(_Info.Where);
       }
 
       #endregion
 
       #region GROUP BY
 
-      if (Info.GroupBy.Count > 0)
+      if (_Info.GroupBy.Count > 0)
       {
         buffer.SB.Append(" GROUP BY ");
-        for (int i = 0; i < Info.GroupBy.Count; i++)
+        for (int i = 0; i < _Info.GroupBy.Count; i++)
         {
           if (i > 0)
             buffer.SB.Append(",");
-          buffer.FormatExpression(Info.GroupBy[i], new DBxFormatExpressionInfo());
+          buffer.FormatExpression(_Info.GroupBy[i], new DBxFormatExpressionInfo());
         }
       }
 
@@ -253,33 +253,33 @@ namespace FreeLibSet.Data
 
       #region HAVING
 
-      if (Info.Having != null && Info.Having.Degeneration != DBxFilterDegeneration.AlwaysTrue)
+      if (_Info.Having != null && _Info.Having.Degeneration != DBxFilterDegeneration.AlwaysTrue)
       {
         buffer.SB.Append(" HAVING ");
-        buffer.FormatFilter(Info.Having);
+        buffer.FormatFilter(_Info.Having);
       }
 
       #endregion
 
       #region ORDER BY
 
-      if (Info.OrderBy != null)
+      if (_Info.OrderBy != null)
       {
         buffer.SB.Append(" ORDER BY ");
-        buffer.FormatOrder(Info.OrderBy);
+        buffer.FormatOrder(_Info.OrderBy);
       }
 
       #endregion
 
       #region LIMIT
 
-      if (Info.MaxRecordCount != 0)
+      if (_Info.MaxRecordCount != 0)
       {
         switch (buffer.Formatter.SelectMaxRecordCountMode)
         {
           case DBxSelectMaxRecordCountMode.Limit:
             buffer.SB.Append(" LIMIT ");
-            buffer.SB.Append(Info.MaxRecordCount);
+            buffer.SB.Append(_Info.MaxRecordCount);
             break;
         }
       }
@@ -299,17 +299,17 @@ namespace FreeLibSet.Data
       // 06.12.2017
       // Больше не используем конструкцию "SELECT *"
       // Всегда используем явный список полей
-      if (Info.Expressions.Count > 0)
+      if (_Info.Expressions.Count > 0)
         return;
 
-      foreach (DBxColumnStruct ColDef in Validator.Entry.DB.Struct.Tables[Info.TableName].Columns)
+      foreach (DBxColumnStruct colDef in _Validator.Entry.DB.Struct.Tables[_Info.TableName].Columns)
       {
-        if (Validator.Entry.Permissions.ColumnModes[Info.TableName, ColDef.ColumnName] == DBxAccessMode.None)
+        if (_Validator.Entry.Permissions.ColumnModes[_Info.TableName, colDef.ColumnName] == DBxAccessMode.None)
           continue;
-        Info.Expressions.Add(new DBxColumn(ColDef.ColumnName));
+        _Info.Expressions.Add(new DBxColumn(colDef.ColumnName));
       }
-      if (Info.Expressions.Count == 0)
-        throw new ArgumentException("Для выражения SELECT * FROM " + Info.TableName + " невозможно получить список полей, так как у пользователя нет прав на просмотр каких-либо столбцов");
+      if (_Info.Expressions.Count == 0)
+        throw new ArgumentException("Для выражения SELECT * FROM " + _Info.TableName + " невозможно получить список полей, так как у пользователя нет прав на просмотр каких-либо столбцов");
     }
 
     #endregion
@@ -354,26 +354,26 @@ namespace FreeLibSet.Data
       /// Поиск уже существующего элемента в массиве. Если он не найден, 
       /// добавляем новый элемент
       /// </summary>
-      /// <param name="Items"></param>
-      /// <param name="LeftTableName"></param>
-      /// <param name="RightTableName"></param>
-      /// <param name="RefColumnName"></param>
-      public static JoinInfo FindOrAdd(List<JoinInfo> Items, string LeftTableName, string RightTableName, string RefColumnName)
+      /// <param name="items"></param>
+      /// <param name="leftTableName"></param>
+      /// <param name="rightTableName"></param>
+      /// <param name="refColumnName"></param>
+      public static JoinInfo FindOrAdd(List<JoinInfo> items, string leftTableName, string rightTableName, string refColumnName)
       {
-        foreach (JoinInfo Info in Items)
+        foreach (JoinInfo info in items)
         {
-          if (Info.LeftTableName == LeftTableName && Info.RightTableName == RightTableName && Info.RefColumnName == RefColumnName)
-            return Info; // уже есть такая таблица
+          if (info.LeftTableName == leftTableName && info.RightTableName == rightTableName && info.RefColumnName == refColumnName)
+            return info; // уже есть такая таблица
         }
 
         // Добавляем новую тему
-        JoinInfo NewInfo = new JoinInfo();
-        NewInfo.LeftTableName = LeftTableName;
-        NewInfo.RightTableName = RightTableName;
-        NewInfo.RefColumnName = RefColumnName;
-        NewInfo.AliasName = RightTableName + "_" + (Items.Count + 1).ToString();
-        Items.Add(NewInfo);
-        return NewInfo;
+        JoinInfo newInfo = new JoinInfo();
+        newInfo.LeftTableName = leftTableName;
+        newInfo.RightTableName = rightTableName;
+        newInfo.RefColumnName = refColumnName;
+        newInfo.AliasName = rightTableName + "_" + (items.Count + 1).ToString();
+        items.Add(newInfo);
+        return newInfo;
       }
 
       #endregion
@@ -392,9 +392,9 @@ namespace FreeLibSet.Data
     /// <summary>
     /// True, если есть поля с точками
     /// </summary>
-    private bool HasDotColumns;
+    private bool _HasDotColumns;
 
-    private List<JoinInfo> JoinInfoList;
+    private List<JoinInfo> _JoinInfoList;
 
     #endregion
 
@@ -425,14 +425,14 @@ namespace FreeLibSet.Data
     {
       #region HasDotColumns
 
-      HasDotColumns = false;
+      _HasDotColumns = false;
       // Определяем, есть ли поля с точками. Если они есть, то придется задавать
       // имя таблицы перед всеми полями
       for (int i = 0; i < columnNames2.Count; i++)
       {
         if (columnNames2[i].IndexOf('.') >= 0)
         {
-          HasDotColumns = true;
+          _HasDotColumns = true;
           break;
         }
       }
@@ -441,9 +441,9 @@ namespace FreeLibSet.Data
 
       #region NameConvPairs и JoinInfoList
 
-      JoinInfoList = null;  // Описание таблиц Join
-      if (HasDotColumns)
-        JoinInfoList = new List<JoinInfo>();
+      _JoinInfoList = null;  // Описание таблиц Join
+      if (_HasDotColumns)
+        _JoinInfoList = new List<JoinInfo>();
 
       // Это - обязательное действие, иначе форматировщик не получит доступ к структуре столбцов
       // Не надо. Было выполнено в методе Format
@@ -452,36 +452,35 @@ namespace FreeLibSet.Data
       for (int i = 0; i < columnNames2.Count; i++)
       {
 
-        string ThisFieldName = columnNames2[i].Trim();
-        string ThisTableName1 = Info.TableName; // Без псевдонима
-        string ThisTableName2 = Info.TableName; // С псевдонимом
+        string thisColumnName = columnNames2[i].Trim();
+        string thisTableName1 = _Info.TableName; // Без псевдонима
+        string thisTableName2 = _Info.TableName; // С псевдонимом
 
         while (true)
         {
-          int p = ThisFieldName.IndexOf('.');
+          int p = thisColumnName.IndexOf('.');
           if (p < 0)
             break;
-          string Name1 = ThisFieldName.Substring(0, p); // слева от точки
+          string name1 = thisColumnName.Substring(0, p); // слева от точки
           // Ищем описание ссылочного поля в описании структуры БД
-          if (!Validator.Entry.DB.Struct.Tables[ThisTableName1].Columns.Contains(Name1))
-            throw new InvalidOperationException("Таблица \"" + ThisTableName1 + "\" не содержит поля \"" + Name1 + "\" ");
-          DBxColumnStruct FieldDef = Validator.Entry.DB.Struct.Tables[ThisTableName1].Columns[Name1];
-          if (String.IsNullOrEmpty(FieldDef.MasterTableName))
-            throw new InvalidOperationException("Поле \"" + Name1 + "\" таблицы \"" + ThisTableName1 + "\" не является ссылочным");
+          if (!_Validator.Entry.DB.Struct.Tables[thisTableName1].Columns.Contains(name1))
+            throw new InvalidOperationException("Таблица \"" + thisTableName1 + "\" не содержит поля \"" + name1 + "\" ");
+          DBxColumnStruct colDef = _Validator.Entry.DB.Struct.Tables[thisTableName1].Columns[name1];
+          if (String.IsNullOrEmpty(colDef.MasterTableName))
+            throw new InvalidOperationException("Поле \"" + name1 + "\" таблицы \"" + thisTableName1 + "\" не является ссылочным");
 
-          JoinInfo ji = JoinInfo.FindOrAdd(JoinInfoList, ThisTableName2, FieldDef.MasterTableName, Name1);
+          JoinInfo ji = JoinInfo.FindOrAdd(_JoinInfoList, thisTableName2, colDef.MasterTableName, name1);
 
-          ThisTableName1 = FieldDef.MasterTableName;
-          ThisTableName2 = ji.AliasName;
-          ThisFieldName = ThisFieldName.Substring(p + 1);
+          thisTableName1 = colDef.MasterTableName;
+          thisTableName2 = ji.AliasName;
+          thisColumnName = thisColumnName.Substring(p + 1);
         }
 
-        if (HasDotColumns)
-          buffer.ColumnTableAliases.Add(columnNames2[i], ThisTableName2);
+        if (_HasDotColumns)
+          buffer.ColumnTableAliases.Add(columnNames2[i], thisTableName2);
       } // счетчик по списку полей 2
 
       #endregion
-
     }
 
     #endregion
@@ -555,85 +554,84 @@ namespace FreeLibSet.Data
       if (table == null)
         throw new ArgumentNullException("table");
 #endif
-      if (table.Columns.Count < Info.Expressions.Count) // 20.11.2019
+      if (table.Columns.Count < _Info.Expressions.Count) // 20.11.2019
       { 
-        ArgumentException e=new ArgumentException("Неправильное количество столбцов в таблице: "+table.Columns.Count.ToString()+". Ожидалось: "+Info.Expressions.Count.ToString(), "table");
+        ArgumentException e=new ArgumentException("Неправильное количество столбцов в таблице: "+table.Columns.Count.ToString()+". Ожидалось: "+_Info.Expressions.Count.ToString(), "table");
         e.Data["table.ColumnNames"] = DataTools.GetColumnNames(table);
-        e.Data["DBxFillSelectInfo"] = Info;
+        e.Data["DBxFillSelectInfo"] = _Info;
         throw e;
       }
 
-      for (int i = 0; i < Info.Expressions.Count; i++)
-        table.Columns[i].ColumnName = Info.Expressions[i].Alias;
+      for (int i = 0; i < _Info.Expressions.Count; i++)
+        table.Columns[i].ColumnName = _Info.Expressions[i].Alias;
     }
 
     #endregion
 
     #region Коррекция типов полей
 
-
-    public void CorrectColumnTypes(ref DataTable Table, DBxSqlBuffer buffer)
+    public void CorrectColumnTypes(ref DataTable table, DBxSqlBuffer buffer)
     {
       if (!buffer.Formatter.UseTypeCorrectionInSelectResult)
         return;
 
       #region Проверяем наличие несоответствующих типов полей
 
-      bool HasChanges = false;
-      DBxColumnStruct[] ColStructs = new DBxColumnStruct[Table.Columns.Count];
-      for (int i = 0; i < Table.Columns.Count; i++)
+      bool hasChanges = false;
+      DBxColumnStruct[] colStructs = new DBxColumnStruct[table.Columns.Count];
+      for (int i = 0; i < table.Columns.Count; i++)
       {
         DBxNamedExpression ne;
-        if (!Info.Expressions.TryGetValue(Table.Columns[i].ColumnName, out ne))
-          throw new InvalidOperationException("Таблица " + Table.TableName + " содержит поле \"" + Table.Columns[i].ColumnName + "\", для которого не найден альяс в списке DBxFillSelectInfo.Expressions");
+        if (!_Info.Expressions.TryGetValue(table.Columns[i].ColumnName, out ne))
+          throw new InvalidOperationException("Таблица " + table.TableName + " содержит поле \"" + table.Columns[i].ColumnName + "\", для которого не найден альяс в списке DBxFillSelectInfo.Expressions");
 
         DBxColumn col = ne.Expression as DBxColumn;
         if (col == null)
           continue; // для функций и констант корректировка невозможна
         DBxColumnStruct cs;
-        buffer.ColumnStructs.TryGetValue(Table.Columns[i].ColumnName, out cs);
+        buffer.ColumnStructs.TryGetValue(table.Columns[i].ColumnName, out cs);
         if (cs == null)
         {
-          if (Validator.NameCheckingEnabled)
+          if (_Validator.NameCheckingEnabled)
             throw new NullReferenceException("Для столбца \"" + col.ColumnName + "\" не найдено описание поля в списке DBxSqlBuffer.ColumnStructs");
           else
             continue; // проверка отключена
         }
-        if (Table.Columns[i].DataType != cs.DataType)
+        if (table.Columns[i].DataType != cs.DataType)
         {
-          ColStructs[i] = cs;
-          HasChanges = true;
+          colStructs[i] = cs;
+          hasChanges = true;
           break;
         }
       }
 
-      if (!HasChanges)
+      if (!hasChanges)
         return; // ничего делать не надо
 
       #endregion
 
       #region Создаем правильную структуру таблицы
 
-      DataTable ResTable = new DataTable(Table.TableName);
-      for (int i = 0; i < Table.Columns.Count; i++)
+      DataTable resTable = new DataTable(table.TableName);
+      for (int i = 0; i < table.Columns.Count; i++)
       {
-        DataColumn NewCol;
-        if (ColStructs[i] != null)
-          NewCol = ColStructs[i].CreateDataColumn(Table.Columns[i].ColumnName);
+        DataColumn newCol;
+        if (colStructs[i] != null)
+          newCol = colStructs[i].CreateDataColumn(table.Columns[i].ColumnName);
         else
-          NewCol = DataTools.CloneDataColumn(Table.Columns[i]);
-        ResTable.Columns.Add(NewCol);
+          newCol = DataTools.CloneDataColumn(table.Columns[i]);
+        resTable.Columns.Add(newCol);
       }
 
       #endregion
 
       #region Копируем данные
 
-      DataTools.CopyRowsToRows(Table, ResTable, false, true);
+      DataTools.CopyRowsToRows(table, resTable, false, true);
 
       #endregion
 
-      Table = ResTable;
+      table = resTable;
     }
 
 #if XXX

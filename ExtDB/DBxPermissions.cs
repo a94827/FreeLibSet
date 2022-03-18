@@ -99,16 +99,16 @@ namespace FreeLibSet.Data
       /// Если свойство не установлено в явном виде, возвращает общее разрешение для базы данных.
       /// Установка свойства должна идти до установки индивидуальных рарешений на поля таблицы
       /// </summary>
-      /// <param name="TableName">Имя таблицы</param>
+      /// <param name="tableName">Имя таблицы</param>
       /// <returns>Разрешение</returns>
-      public DBxAccessMode this[string TableName]
+      public DBxAccessMode this[string tableName]
       {
         get
         {
           if (_Owner._TableDefs == null)
             return _Owner.DBMode;
           TableDef td;
-          if (_Owner._TableDefs.TryGetValue(TableName, out td))
+          if (_Owner._TableDefs.TryGetValue(tableName, out td))
             return td.TableMode;
           else
             return _Owner.DBMode;
@@ -116,16 +116,16 @@ namespace FreeLibSet.Data
         set
         {
           _Owner.CheckNotReadOnly();
-          if (String.IsNullOrEmpty(TableName))
+          if (String.IsNullOrEmpty(tableName))
             throw new ArgumentNullException("TableName");
 
           if (_Owner._TableDefs == null)
             _Owner._TableDefs = new Dictionary<string, TableDef>();
           TableDef td;
-          if (!_Owner._TableDefs.TryGetValue(TableName, out td))
+          if (!_Owner._TableDefs.TryGetValue(tableName, out td))
           {
             td = new TableDef();
-            _Owner._TableDefs.Add(TableName, td);
+            _Owner._TableDefs.Add(tableName, td);
           }
           td.TableMode = value;
         }
@@ -430,16 +430,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Текстовое представление для режима доступа
     /// </summary>
-    /// <param name="Mode">Режим</param>
+    /// <param name="mode">Режим</param>
     /// <returns>Строка</returns>
-    public static string GetAccessModeText(DBxAccessMode Mode)
+    public static string GetAccessModeText(DBxAccessMode mode)
     {
-      switch (Mode)
+      switch (mode)
       {
         case DBxAccessMode.Full: return "Полный доступ";
         case DBxAccessMode.ReadOnly: return "Просмотр";
         case DBxAccessMode.None: return "Запрет";
-        default: return "??? " + Mode.ToString();
+        default: return "??? " + mode.ToString();
       }
     }
 
@@ -450,9 +450,9 @@ namespace FreeLibSet.Data
 
     private static DBxPermissions CreateFullAccess()
     {
-      DBxPermissions Res = new DBxPermissions();
-      Res.SetReadOnly();
-      return Res;
+      DBxPermissions res = new DBxPermissions();
+      res.SetReadOnly();
+      return res;
     }
 
     /// <summary>
@@ -462,10 +462,10 @@ namespace FreeLibSet.Data
 
     private static DBxPermissions CreateReadOnlyAccess()
     {
-      DBxPermissions Res = new DBxPermissions();
-      Res.DBMode = DBxAccessMode.ReadOnly;
-      Res.SetReadOnly();
-      return Res;
+      DBxPermissions res = new DBxPermissions();
+      res.DBMode = DBxAccessMode.ReadOnly;
+      res.SetReadOnly();
+      return res;
     }
 
     /// <summary>

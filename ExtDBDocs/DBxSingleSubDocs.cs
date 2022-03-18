@@ -86,19 +86,19 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DataRow[] SubDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
+        DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
 
-        if (SubDocRows.Length == 0)
+        if (subDocRows.Length == 0)
           return DBxDocState.None;
 
-        DBxDocState Res1 = DBxDocSet.GetDocState(SubDocRows[0]);
-        for (int i = 1; i < SubDocRows.Length; i++)
+        DBxDocState res1 = DBxDocSet.GetDocState(subDocRows[0]);
+        for (int i = 1; i < subDocRows.Length; i++)
         {
-          DBxDocState Res2 = DBxDocSet.GetDocState(SubDocRows[i]);
-          if (Res2 != Res1)
+          DBxDocState res2 = DBxDocSet.GetDocState(subDocRows[i]);
+          if (res2 != res1)
             return DBxDocState.Mixed;
         }
-        return Res1;
+        return res1;
       }
     }
 
@@ -146,8 +146,8 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DataRow[] SubDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
-        return SubDocRows.Length;
+        DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
+        return subDocRows.Length;
       }
     }
 
@@ -158,11 +158,11 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DataRow[] SubDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
+        DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
         int cnt=0;
-        for (int i = 0; i < SubDocRows.Length; i++)
+        for (int i = 0; i < subDocRows.Length; i++)
         {
-          if (SubDocRows[i].RowState != DataRowState.Deleted)
+          if (subDocRows[i].RowState != DataRowState.Deleted)
             cnt++;
         }
         return cnt;
@@ -178,13 +178,13 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DataRow[] SubDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
-        DataRow Row = SubDocRows[index];
-        if (Row.RowState == DataRowState.Detached)
+        DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
+        DataRow row = subDocRows[index];
+        if (row.RowState == DataRowState.Detached)
           throw new InvalidOperationException("Нельзя получить доступ к поддокументу с индексом " + index.ToString() +
             ", т.к. строка для него была удалена из таблицы поддокументов (RowState=Detached)");
-        int RowIndex = _SubDocs.Table.Rows.IndexOf(Row);
-        return new DBxSubDoc(SubDocs, RowIndex);
+        int rowIndex = _SubDocs.Table.Rows.IndexOf(row);
+        return new DBxSubDoc(SubDocs, rowIndex);
       }
     }
 
@@ -197,8 +197,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если поддокумент найден</returns>
     public bool TryGetSubDocById(Int32 subDocId, out DBxSubDoc subDoc)
     {
-      bool Res = SubDocs.TryGetSubDocById(subDocId, out subDoc);
-      if (Res)
+      bool res = SubDocs.TryGetSubDocById(subDocId, out subDoc);
+      if (res)
       {
         if (subDoc.DocId != Doc.DocId)
         {
@@ -206,7 +206,7 @@ namespace FreeLibSet.Data.Docs
           return false;
         }
       }
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -219,11 +219,11 @@ namespace FreeLibSet.Data.Docs
     /// Структура не может быть неинициализированной</returns>
     public DBxSubDoc GetSubDocById(Int32 subDocId)
     {
-      DBxSubDoc Res = SubDocs.GetSubDocById(subDocId);
-      if (Res.DocId != Doc.DocId)
+      DBxSubDoc res = SubDocs.GetSubDocById(subDocId);
+      if (res.DocId != Doc.DocId)
         throw new ArgumentException("Поддокумент \"" + SubDocs.SubDocType.SingularTitle + "\" c SubDocId=" + subDocId.ToString() + " относится к документу \"" +
-          Doc.DocType.SingularTitle + "\" с DocId=" + Res.DocId.ToString() + ", а не " + Doc.DocId.ToString(), "subDocId");
-      return Res;
+          Doc.DocType.SingularTitle + "\" с DocId=" + res.DocId.ToString() + ", а не " + Doc.DocId.ToString(), "subDocId");
+      return res;
     }
 
     #endregion
@@ -265,8 +265,8 @@ namespace FreeLibSet.Data.Docs
       {
         get
         {
-          int RowIndex = _SubDocs.Table.Rows.IndexOf(_SubDocRows[_SubDocIndex]);
-          return new DBxSubDoc(_SubDocs, RowIndex);
+          int rowIndex = _SubDocs.Table.Rows.IndexOf(_SubDocRows[_SubDocIndex]);
+          return new DBxSubDoc(_SubDocs, rowIndex);
         }
       }
 
@@ -310,8 +310,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
     {
-      DataRow[] SubDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
-      return new Enumerator(_SubDocs, SubDocRows);
+      DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
+      return new Enumerator(_SubDocs, subDocRows);
     }
 
 

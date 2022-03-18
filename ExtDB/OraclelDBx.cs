@@ -28,7 +28,7 @@ namespace FreeLibSet.Data.OracleClient
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public OracleDBx(OracleConnectionStringBuilder connectionStringBuilder)
     {
-      SyncRoot = new object();
+      _SyncRoot = new object();
 
       _DatabaseName = GetDataBaseName(connectionStringBuilder);
       if (!String.IsNullOrEmpty(_DatabaseName))
@@ -64,7 +64,7 @@ namespace FreeLibSet.Data.OracleClient
     public override string DatabaseName { get { return _DatabaseName; } }
     private string _DatabaseName;
 
-    protected readonly object SyncRoot;
+    private readonly object _SyncRoot;
 
     /// <summary>
     /// Главная точка входа в базу данных.
@@ -85,13 +85,13 @@ namespace FreeLibSet.Data.OracleClient
     {
       get
       {
-        lock (SyncRoot)
+        lock (_SyncRoot)
         {
           if (_ServerVersionText == null)
           {
-            using (OracleDBxCon Con = MainEntry.CreateCon() as OracleDBxCon)
+            using (OracleDBxCon con = MainEntry.CreateCon() as OracleDBxCon)
             {
-              _ServerVersionText = "Oracle " + Con.Connection.ServerVersion;
+              _ServerVersionText = "Oracle " + con.Connection.ServerVersion;
             }
           }
           return _ServerVersionText;
@@ -121,10 +121,10 @@ namespace FreeLibSet.Data.OracleClient
     {
       get
       {
-        using (OracleDBxCon Con = new OracleDBxCon(MainEntry, true))
+        using (OracleDBxCon con = new OracleDBxCon(MainEntry, true))
         {
-          DataTable Table = Con.Connection.GetSchema("Databases");
-          using (DataView dv = new DataView(Table))
+          DataTable table = con.Connection.GetSchema("Databases");
+          using (DataView dv = new DataView(table))
           {
             dv.Sort = "database_name";
             return dv.Find(this.DatabaseName) >= 0;
@@ -151,10 +151,10 @@ namespace FreeLibSet.Data.OracleClient
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
-      using (OracleDBxCon Con = new OracleDBxCon(MainEntry, false))
+      using (OracleDBxCon con = new OracleDBxCon(MainEntry, false))
       {
-        Con.CommandTimeout = 0; // Бесконечное время выполнения
-        return Con.UpdateDBStruct(splash, errors, options);
+        con.CommandTimeout = 0; // Бесконечное время выполнения
+        return con.UpdateDBStruct(splash, errors, options);
       }
     }
 
@@ -487,26 +487,26 @@ namespace FreeLibSet.Data.OracleClient
       return cmd.ExecuteReader(CommandBehavior.SingleResult);
     }
 
-    private static void InitCmdParameters(OracleCommand cmd, object[] ParamValues)
+    private static void InitCmdParameters(OracleCommand cmd, object[] paramValues)
     {
       cmd.Parameters.Clear();
-      if (ParamValues != null)
+      if (paramValues != null)
       {
-        for (int i = 0; i < ParamValues.Length; i++)
+        for (int i = 0; i < paramValues.Length; i++)
         {
-          OracleParameter Param = new OracleParameter();
-          Param.ParameterName = "@P" + (i + 1).ToString();
-          Param.Value = ParamValues[i];
+          OracleParameter sqlParam = new OracleParameter();
+          sqlParam.ParameterName = "@P" + (i + 1).ToString();
+          sqlParam.Value = paramValues[i];
 
-          if (ParamValues[i] != null)
+          if (paramValues[i] != null)
           {
-            if (ParamValues[i] is Array)
+            if (paramValues[i] is Array)
             {
-              Param.OracleType = OracleType.Blob;
-              Param.DbType = DbType.Binary;
+              sqlParam.OracleType = OracleType.Blob;
+              sqlParam.DbType = DbType.Binary;
             }
           }
-          cmd.Parameters.Add(Param);
+          cmd.Parameters.Add(sqlParam);
         }
       }
     }
@@ -599,10 +599,10 @@ namespace FreeLibSet.Data.OracleClient
     /// <returns></returns>
     internal protected override string[] GetAllTableNamesFromSchema()
     {
-      DataTable Table = Connection.GetSchema("Tables", new string[] { DB.DatabaseName });
-      string[] a = new string[Table.Rows.Count];
-      for (int i = 0; i < Table.Rows.Count; i++)
-        a[i] = DataTools.GetString(Table.Rows[i], "TABLE_NAME");
+      DataTable table = Connection.GetSchema("Tables", new string[] { DB.DatabaseName });
+      string[] a = new string[table.Rows.Count];
+      for (int i = 0; i < table.Rows.Count; i++)
+        a[i] = DataTools.GetString(table.Rows[i], "TABLE_NAME");
 
       return a;
     }
@@ -614,22 +614,22 @@ namespace FreeLibSet.Data.OracleClient
     /// <returns>Структура</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
-      DBxTableStruct TableStr = new DBxTableStruct(tableName);
+      DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
       #region Список столбцов, тип, MaxLen, Nullable
 
-      DataTable Table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, tableName.ToUpperInvariant() });
+      DataTable table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, tableName.ToUpperInvariant() });
 
-      foreach (DataRowView drv in Table.DefaultView)
+      foreach (DataRowView drv in table.DefaultView)
       {
-        string ColumnName = DataTools.GetString(drv.Row, "COLUMN_NAME");
-        DBxColumnStruct ColStr = new DBxColumnStruct(ColumnName);
+        string columnName = DataTools.GetString(drv.Row, "COLUMN_NAME");
+        DBxColumnStruct colDef = new DBxColumnStruct(columnName);
 
-        string ColTypeString = DataTools.GetString(drv.Row, "DATATYPE");
+        string colTypeString = DataTools.GetString(drv.Row, "DATATYPE");
         //int Prec = DataTools.GetInt(drv.Row, "PRECISION"); // на самом деле имеет тип decimal
-        int Scale = DataTools.GetInt(drv.Row, "SCALE"); // на самом деле имеет тип decimal
+        int scale = DataTools.GetInt(drv.Row, "SCALE"); // на самом деле имеет тип decimal
 
-        switch (ColTypeString.ToUpperInvariant())
+        switch (colTypeString.ToUpperInvariant())
         {
           // TODO: Сделать все типы
 
@@ -637,65 +637,65 @@ namespace FreeLibSet.Data.OracleClient
           case "NVARCHAR2":
           case "CHAR":
           case "NCHAR":
-            ColStr.ColumnType = DBxColumnType.String;
+            colDef.ColumnType = DBxColumnType.String;
             break;
           case "NUMBER":
-            if (Scale == 0)
+            if (scale == 0)
             {
-              ColStr.ColumnType = DBxColumnType.Int;
-              ColStr.MinValue = Int64.MinValue; // !!!!! Думать лень
-              ColStr.MaxValue = Int64.MaxValue;
+              colDef.ColumnType = DBxColumnType.Int;
+              colDef.MinValue = Int64.MinValue; // !!!!! Думать лень
+              colDef.MaxValue = Int64.MaxValue;
             }
             else
-              ColStr.ColumnType = DBxColumnType.Float;
+              colDef.ColumnType = DBxColumnType.Float;
             break;
 
           case "FLOAT":
-            ColStr.ColumnType = DBxColumnType.Float;
+            colDef.ColumnType = DBxColumnType.Float;
             // TODO: Использовать длину поля для разделения float/double
-            ColStr.MinValue = Double.MinValue;
-            ColStr.MaxValue = Double.MaxValue;
+            colDef.MinValue = Double.MinValue;
+            colDef.MaxValue = Double.MaxValue;
             break;
 
           case "BINARY_FLOAT":
-            ColStr.ColumnType = DBxColumnType.Float;
-            ColStr.MinValue = Single.MinValue;
-            ColStr.MaxValue = Single.MaxValue;
+            colDef.ColumnType = DBxColumnType.Float;
+            colDef.MinValue = Single.MinValue;
+            colDef.MaxValue = Single.MaxValue;
             break;
 
           case "BINARY_DOUBLE":
-            ColStr.ColumnType = DBxColumnType.Float;
-            ColStr.MinValue = Double.MinValue;
-            ColStr.MaxValue = Double.MaxValue;
+            colDef.ColumnType = DBxColumnType.Float;
+            colDef.MinValue = Double.MinValue;
+            colDef.MaxValue = Double.MaxValue;
             break;
 
           case "DATE":
           case "TIMESTAMP":
-            ColStr.ColumnType = DBxColumnType.DateTime;
+            colDef.ColumnType = DBxColumnType.DateTime;
             break;
 
           case "LONG":
           case "CLOB":
           case "NCLOB":
-            ColStr.ColumnType = DBxColumnType.Memo;
+            colDef.ColumnType = DBxColumnType.Memo;
             break;
 
           case "RAW":
           case "LONG RAW":
           case "BLOB":
-            ColStr.ColumnType = DBxColumnType.Binary;
+            colDef.ColumnType = DBxColumnType.Binary;
             break;
         }
 
-        ColStr.MaxLength = DataTools.GetInt(drv.Row, "LENGTH"); // это в байтах
+        colDef.MaxLength = DataTools.GetInt(drv.Row, "LENGTH"); // это в байтах
 
-        string NullableStr = DataTools.GetString(drv.Row, "NULLABLE").ToUpperInvariant();
-        if (NullableStr == "N")
-          ColStr.Nullable = false;
+        string nullableStr = DataTools.GetString(drv.Row, "NULLABLE").ToUpperInvariant();
+        if (nullableStr == "N")
+          colDef.Nullable = false;
         else
-          ColStr.Nullable = true;
+          colDef.Nullable = true;
 
-        TableStr.Columns.Add(ColStr);
+        tableStr.Columns.Add(colDef);
       }
 
       #endregion
@@ -759,8 +759,8 @@ namespace FreeLibSet.Data.OracleClient
       #endregion
 #endif
 
-      TableStr.SetReadOnly();
-      return TableStr;
+      tableStr.SetReadOnly();
+      return tableStr;
     }
 
 #if XXX
@@ -844,7 +844,7 @@ namespace FreeLibSet.Data.OracleClient
           Errors.AddInfo("Создана таблица \"" + Table.TableName + "\"");
           Modified = true;
 
-          #endregion
+      #endregion
         }
         else
         {
@@ -853,7 +853,7 @@ namespace FreeLibSet.Data.OracleClient
           if (CorrectPrimaryKey(Table, dvIndexColumns, Errors))
             Modified = true;
 
-          #endregion
+      #endregion
 
       #region Проверяем наличие недостающих полей
 
@@ -962,7 +962,7 @@ namespace FreeLibSet.Data.OracleClient
             } // поле существует
           } // Цикл по столбцам
 
-          #endregion
+      #endregion
         }
 
         // Таблица существует

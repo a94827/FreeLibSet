@@ -153,15 +153,10 @@ namespace FreeLibSet.Forms.Docs
     private void InitStdUserPermissionsUI()
     {
       UserPermissionsUI.Add(new WholeDBPermissionUI());
-
       UserPermissionsUI.Add(new TableUserPermissionUI());
-
       UserPermissionsUI.Add(new DocTypePermissionUI(this));
-
       UserPermissionsUI.Add(new DocTypeViewHistoryPermissionUI(this));
-
       UserPermissionsUI.Add(new ViewOtherUsersActionPermissionUI());
-
       UserPermissionsUI.Add(new RecalcColumnsPermissionUI());
     }
 
@@ -175,14 +170,14 @@ namespace FreeLibSet.Forms.Docs
         if (!String.IsNullOrEmpty(dt.GroupRefColumnName))
         {
 
-          DBxColumnStruct ColDef = dt.Struct.Columns[dt.GroupRefColumnName];
-          if (ColDef == null)
+          DBxColumnStruct colDef = dt.Struct.Columns[dt.GroupRefColumnName];
+          if (colDef == null)
             throw new BugException("Неизвестное имя столбца \"" + dt.GroupRefColumnName + "\" в документе \"" + dt.Name + "\", которое задается свойством GroupRefColumnName");
-          if (String.IsNullOrEmpty(ColDef.MasterTableName))
+          if (String.IsNullOrEmpty(colDef.MasterTableName))
             throw new BugException("Столбец \"" + dt.GroupRefColumnName + "\" документа \"" + dt.Name + " не является ссылочным");
-          DBxDocType dt2 = DocProvider.DocTypes[ColDef.MasterTableName];
+          DBxDocType dt2 = DocProvider.DocTypes[colDef.MasterTableName];
           if (dt2 == null)
-            throw new BugException("Неизвестный вид документов \"" + ColDef.MasterTableName + "\" в документе \"" + dt.Name + "\" для группировки");
+            throw new BugException("Неизвестный вид документов \"" + colDef.MasterTableName + "\" в документе \"" + dt.Name + "\" для группировки");
 
           _GroupDocDict.Add(dt.Name, dt2.Name);
           _GroupDocList.Add(dt2.Name);
@@ -313,17 +308,17 @@ namespace FreeLibSet.Forms.Docs
     {
       #region Защищенный конструктор
 
-      internal DocTypeList(DBUI owner)
+      internal DocTypeList(DBUI ui)
       {
-        _Owner = owner;
-        _Items = new Dictionary<string, DocTypeUI>(owner.DocProvider.DocTypes.Count);
+        _UI = ui;
+        _Items = new Dictionary<string, DocTypeUI>(ui.DocProvider.DocTypes.Count);
       }
 
       #endregion
 
       #region Свойства
 
-      private DBUI _Owner;
+      private DBUI _UI;
 
       internal Dictionary<string, DocTypeUI> Items { get { return _Items; } }
       private Dictionary<string, DocTypeUI> _Items;
@@ -343,19 +338,19 @@ namespace FreeLibSet.Forms.Docs
           {
             if (String.IsNullOrEmpty(docTypeName))
               throw new ArgumentNullException("docTypeName");
-            if (!_Owner.DocProvider.DocTypes.Contains(docTypeName))
+            if (!_UI.DocProvider.DocTypes.Contains(docTypeName))
               throw new ArgumentException("Неизвестный тип документов \"" + docTypeName + "\"", "docTypeName");
 
-            if (_Owner._GroupDocList.Contains(docTypeName))
-              res = new GroupDocTypeUI(_Owner, _Owner.DocProvider.DocTypes[docTypeName]);
+            if (_UI._GroupDocList.Contains(docTypeName))
+              res = new GroupDocTypeUI(_UI, _UI.DocProvider.DocTypes[docTypeName]);
             else
-              res = new DocTypeUI(_Owner, _Owner.DocProvider.DocTypes[docTypeName]);
+              res = new DocTypeUI(_UI, _UI.DocProvider.DocTypes[docTypeName]);
             _Items.Add(docTypeName, res);
 
-            string GroupName;
-            if (_Owner._GroupDocDict.TryGetValue(docTypeName, out GroupName))
+            string groupName;
+            if (_UI._GroupDocDict.TryGetValue(docTypeName, out groupName))
             {
-              GroupDocTypeUI dt2 = (GroupDocTypeUI)(this[GroupName]);
+              GroupDocTypeUI dt2 = (GroupDocTypeUI)(this[groupName]);
               res.GroupDocType = dt2;
             }
           }
@@ -382,7 +377,7 @@ namespace FreeLibSet.Forms.Docs
       {
         DBxDocType docType;
         DBxSubDocType subDocType;
-        if (_Owner.DocProvider.DocTypes.FindByTableName(tableName, out docType, out subDocType))
+        if (_UI.DocProvider.DocTypes.FindByTableName(tableName, out docType, out subDocType))
         {
           docTypeUI = this[docType.Name];
           if (subDocType == null)
@@ -409,7 +404,7 @@ namespace FreeLibSet.Forms.Docs
       {
         DBxDocType docType;
         DBxSubDocType subDocType;
-        if (_Owner.DocProvider.DocTypes.FindByTableName(tableName, out docType, out subDocType))
+        if (_UI.DocProvider.DocTypes.FindByTableName(tableName, out docType, out subDocType))
         {
           DocTypeUI DocTypeUI = this[docType.Name];
           if (subDocType == null)
@@ -430,9 +425,9 @@ namespace FreeLibSet.Forms.Docs
       /// <returns>Интерфейс вида документа или null</returns>
       public DocTypeUI FindByTableId(Int32 tableId)
       {
-        DBxDocType DocType = _Owner.DocProvider.DocTypes.FindByTableId(tableId);
-        if (DocType != null)
-          return this[DocType.Name];
+        DBxDocType docType = _UI.DocProvider.DocTypes.FindByTableId(tableId);
+        if (docType != null)
+          return this[docType.Name];
         else
           return null;
       }
@@ -592,16 +587,16 @@ namespace FreeLibSet.Forms.Docs
       //DBxOrder CrOrder3 = new DBxOrder(OrderItems); // по имени пользователя, создавшего документ
 
       // Исходные столбцы всплывающей подсказки по документу
-      string AboutDocSrcColNames = null;
+      string aboutDocSrcColNames = null;
       if (DocProvider.DocTypes.UseTime)
       {
-        AboutDocSrcColNames = "Id,CreateTime,ChangeTime";
+        aboutDocSrcColNames = "Id,CreateTime,ChangeTime";
         if (DocProvider.DocTypes.UseVersions)
-          AboutDocSrcColNames += ",Version";
+          aboutDocSrcColNames += ",Version";
         if (DocProvider.DocTypes.UseUsers)
-          AboutDocSrcColNames += ",CreateUserId,ChangeUserId";
+          aboutDocSrcColNames += ",CreateUserId,ChangeUserId";
         if (DocProvider.DocTypes.UseDeleted)
-          AboutDocSrcColNames += ",Deleted";
+          aboutDocSrcColNames += ",Deleted";
       }
 
 
@@ -617,10 +612,10 @@ namespace FreeLibSet.Forms.Docs
           dt.GridProducer.Columns.Insert(0, IdCol);
         }
 
-        bool HistoryAllowed = DocTypeViewHistoryPermission.GetAllowed(this.DocProvider.UserPermissions, dt.DocType.Name);
+        bool historyAllowed = DocTypeViewHistoryPermission.GetAllowed(this.DocProvider.UserPermissions, dt.DocType.Name);
 
         // Информация о документе
-        if (HistoryAllowed) // 11.04.2016
+        if (historyAllowed) // 11.04.2016
         {
           if (DocProvider.DocTypes.UseTime)
           {
@@ -698,9 +693,9 @@ namespace FreeLibSet.Forms.Docs
           }
 #endif
 
-          if (AboutDocSrcColNames != null)
+          if (aboutDocSrcColNames != null)
           {
-            EFPGridProducerToolTip ttDocumentInfo = dt.GridProducer.ToolTips.AddUserItem("DocumentInfo", AboutDocSrcColNames,
+            EFPGridProducerToolTip ttDocumentInfo = dt.GridProducer.ToolTips.AddUserItem("DocumentInfo", aboutDocSrcColNames,
               new EFPGridProducerValueNeededEventHandler(AboutDoc_ToolTipTextNeeded));
             ttDocumentInfo.DisplayName = "Документ создан / изменен";
             ttDocumentInfo.Tag = dt;
@@ -723,9 +718,9 @@ namespace FreeLibSet.Forms.Docs
 
     private void ChangeUserNameColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 ChangeUserId = args.GetInt("ChangeUserId");
-      if (ChangeUserId != 0)
-        args.Value = GetUserName(ChangeUserId);
+      Int32 changeUserId = args.GetInt("ChangeUserId");
+      if (changeUserId != 0)
+        args.Value = GetUserName(changeUserId);
       else
         args.Value = GetUserName(args.GetInt("CreateUserId"));
     }
@@ -747,8 +742,8 @@ namespace FreeLibSet.Forms.Docs
     private void AboutDoc_ToolTipTextNeeded(object sender,
       EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 DocId = args.GetInt("Id");
-      if (DocId == 0)
+      Int32 docId = args.GetInt("Id");
+      if (docId == 0)
       {
         args.Value = "Нет выбранного документа";
         return;
@@ -760,7 +755,7 @@ namespace FreeLibSet.Forms.Docs
       sb.Append("Документ \"");
       sb.Append(dt.DocType.SingularTitle);
       sb.Append("\" Id=");
-      sb.Append(DocId);
+      sb.Append(docId);
 
       if (DocProvider.DocTypes.UseVersions)
       {
@@ -769,26 +764,26 @@ namespace FreeLibSet.Forms.Docs
       }
 
       sb.Append(" создан ");
-      DateTime? CreateTime = args.GetNullableDateTime("CreateTime");
-      if (CreateTime.HasValue)
-        sb.Append(CreateTime.Value.ToString());
+      DateTime? createTime = args.GetNullableDateTime("CreateTime");
+      if (createTime.HasValue)
+        sb.Append(createTime.Value.ToString());
       if (DocProvider.DocTypes.UseUsers)
       {
         sb.Append(" (");
         sb.Append(TextHandlers.GetTextValue("Пользователи", args.GetInt("CreateUserId")));
         sb.Append(")");
       }
-      DateTime? ChangeTime = args.GetNullableDateTime("ChangeTime");
-      if (ChangeTime.HasValue)
+      DateTime? changeTime = args.GetNullableDateTime("ChangeTime");
+      if (changeTime.HasValue)
       {
-        bool IsDeleted = false;
+        bool isDeleted = false;
         if (DocProvider.DocTypes.UseDeleted)
-          IsDeleted = args.GetBool("Deleted");
-        if (IsDeleted)
+          isDeleted = args.GetBool("Deleted");
+        if (isDeleted)
           sb.Append(". Удален ");
         else
           sb.Append(". Изменен ");
-        sb.Append(ChangeTime.Value.ToString());
+        sb.Append(changeTime.Value.ToString());
         if (DocProvider.DocTypes.UseUsers)
         {
           sb.Append(" (");
@@ -874,21 +869,21 @@ namespace FreeLibSet.Forms.Docs
     /// <returns></returns>
     public DBxDocSelection PasteDocSel()
     {
-      DBxDocSelection DocSel = null;
+      DBxDocSelection docSel = null;
       IDataObject dobj = EFPApp.Clipboard.GetDataObject();
       if (dobj != null)
-        DocSel = (DBxDocSelection)(dobj.GetData(typeof(DBxDocSelection)));
+        docSel = (DBxDocSelection)(dobj.GetData(typeof(DBxDocSelection)));
 
-      if (DocSel == null)
+      if (docSel == null)
         return null;
 
-      if (DocSel.DBIdentity != DocProvider.DBIdentity)
+      if (docSel.DBIdentity != DocProvider.DBIdentity)
       {
         EFPApp.ShowTempMessage("Выборка в буфере обмена относится к другой базе данных");
         return null;
       }
 
-      return DocSel;
+      return docSel;
     }
 
     /// <summary>
@@ -911,17 +906,17 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentException("Неизвестный вид документа", "docTypeName");
 #endif
 
-      DBxDocSelection DocSel = PasteDocSel();
-      if (DocSel == null)
+      DBxDocSelection docSel = PasteDocSel();
+      if (docSel == null)
       {
         EFPApp.ShowTempMessage("В буфере обмена нет выборки документов");
         return 0;
       }
 
-      Int32 Id = DocSel.GetSingleId(docTypeName);
-      if (Id == 0)
+      Int32 docId = docSel.GetSingleId(docTypeName);
+      if (docId == 0)
         EFPApp.ShowTempMessage("В буфере обмена нет ссылки на документ \"" + dt.SingularTitle + "\"");
-      return Id;
+      return docId;
     }
 
 #if XXX
@@ -1013,14 +1008,14 @@ namespace FreeLibSet.Forms.Docs
       if (!DocProvider.DocTypes.Contains(docTypeName))
         throw new ArgumentException("Неизвестный вид документов \"" + docTypeName + "\"", "docTypeName");
 
-      DBxDocSelection DocSel = new DBxDocSelection(DocProvider.DBIdentity);
+      DBxDocSelection docSel = new DBxDocSelection(DocProvider.DBIdentity);
       for (int i = 0; i < docIds.Length; i++)
       {
         if (!DocProvider.IsRealDocId(docIds[i]))
           continue;
-        DocSel.Add(docTypeName, docIds[i]);
+        docSel.Add(docTypeName, docIds[i]);
       }
-      return DocSel;
+      return docSel;
     }
 
     #endregion
@@ -1187,9 +1182,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="reportParams">Заполненные параметры отчета</param>
     public void ShowUserActions(UserActionsReportParams reportParams)
     {
-      UserActionsReport Report = new UserActionsReport(this);
-      Report.ReportParams = reportParams;
-      Report.Run();
+      UserActionsReport report = new UserActionsReport(this);
+      report.ReportParams = reportParams;
+      report.Run();
     }
 
     #endregion
@@ -1321,21 +1316,21 @@ namespace FreeLibSet.Forms.Docs
     {
       if (creatorParams.ClassName == typeof(DocTableViewForm).ToString())
       {
-        string DocTypeName = creatorParams.ConfigSectionName;
-        DocTableViewForm Form = new DocTableViewForm(this.DocTypes[DocTypeName], DocTableViewMode.Browse);
-        return Form;
+        string docTypeName = creatorParams.ConfigSectionName;
+        DocTableViewForm form = new DocTableViewForm(this.DocTypes[docTypeName], DocTableViewMode.Browse);
+        return form;
       }
 
       if (creatorParams.ClassName == typeof(DocInfoReport).ToString())
       {
-        DocInfoReport Report = new DocInfoReport(this);
-        return ((IEFPFormCreator)Report).CreateForm(creatorParams);
+        DocInfoReport report = new DocInfoReport(this);
+        return ((IEFPFormCreator)report).CreateForm(creatorParams);
       }
 
       if (creatorParams.ClassName == typeof(UserActionsReport).ToString())
       {
-        UserActionsReport Report = new UserActionsReport(this);
-        return ((IEFPFormCreator)Report).CreateForm(creatorParams);
+        UserActionsReport report = new UserActionsReport(this);
+        return ((IEFPFormCreator)report).CreateForm(creatorParams);
       }
 
       return null;
@@ -1372,9 +1367,9 @@ namespace FreeLibSet.Forms.Docs
         dtui.Browsers.UpdateDBCacheAndRows(docSet);
         dtui.RefreshBufferedData(); // 03.02.2022
 
-        Int32[] DocIds = docSet[i].DocIds;
-        if (DocIds.Length > 0)
-          dtui.Browsers.UpdateRowsForIds(DocIds);
+        Int32[] docIds = docSet[i].DocIds;
+        if (docIds.Length > 0)
+          dtui.Browsers.UpdateRowsForIds(docIds);
       }
     }
 
@@ -1563,31 +1558,31 @@ namespace FreeLibSet.Forms.Docs
     /// <returns></returns>
     public DBxDocSet CreateDocs()
     {
-      DBxDocSet DocSet = new DBxDocSet(DocType.UI.DocProvider);
-      DBxMultiDocs Docs = DocSet[DocType.DocType.Name];
+      DBxDocSet docSet = new DBxDocSet(DocType.UI.DocProvider);
+      DBxMultiDocs mDocs = docSet[DocType.DocType.Name];
 
       switch (State)
       {
         case EFPDataGridViewState.Edit:
-          Docs.Edit(EditIds);
+          mDocs.Edit(EditIds);
           break;
         case EFPDataGridViewState.Insert:
-          Docs.Insert();
+          mDocs.Insert();
           if (Caller != null)
-            Caller.InitNewDocValues(Docs[0]);
+            Caller.InitNewDocValues(mDocs[0]);
           break;
         case EFPDataGridViewState.InsertCopy:
           if (EditIds.Length != 1)
             throw new InvalidOperationException("Должен быть задан единственный идентификатор документа");
-          Docs.InsertCopy(EditIds[0]);
+          mDocs.InsertCopy(EditIds[0]);
           break;
         default:
-          Docs.View(EditIds);
+          mDocs.View(EditIds);
           break;
       }
 
       // TODO: DocSet.CheckDocs = true;
-      return DocSet;
+      return docSet;
     }
 
     #endregion
@@ -1843,8 +1838,8 @@ namespace FreeLibSet.Forms.Docs
     {
       for (int i = 0; i < Ids.Length; i++)
       {
-        Int32 RefId = DataTools.GetInt(GetRowValue(i, refColumnName));
-        DocSel.Add(refTableName, RefId);
+        Int32 refId = DataTools.GetInt(GetRowValue(i, refColumnName));
+        DocSel.Add(refTableName, refId);
       }
     }
 
@@ -1864,13 +1859,13 @@ namespace FreeLibSet.Forms.Docs
         #region Из текущей строки таблицы поддокументов
 
         int p = columnName.IndexOf('.');
-        string BaseColumnName;
+        string baseColumnName;
         if (p < 0)
-          BaseColumnName = columnName;
+          baseColumnName = columnName;
         else
-          BaseColumnName = columnName.Substring(0, p);
+          baseColumnName = columnName.Substring(0, p);
 
-        int p2 = Rows[rowIndex].Table.Columns.IndexOf(BaseColumnName);
+        int p2 = Rows[rowIndex].Table.Columns.IndexOf(baseColumnName);
         if (p2 < 0)
           return null; // нет такого поля
         object BaseValue = Rows[rowIndex][p2];
@@ -1878,10 +1873,10 @@ namespace FreeLibSet.Forms.Docs
           return BaseValue;
 
         // Ссылочное поле с точкой
-        Int32 RefId = DataTools.GetInt(BaseValue);
-        if (RefId < 0)
+        Int32 refId = DataTools.GetInt(BaseValue);
+        if (refId < 0)
           return null; // тоже фиктивный идентификатор
-        return _UI.TextHandlers.DBCache[TableName].GetRefValue(columnName, RefId);
+        return _UI.TextHandlers.DBCache[TableName].GetRefValue(columnName, refId);
 
         #endregion
       }
@@ -2319,10 +2314,10 @@ namespace FreeLibSet.Forms.Docs
       if (GetDocSel != null)
       {
         // Есть обработчик события
-        DocTypeDocSelEventArgs Args = new DocTypeDocSelEventArgs(_UI, docSel, _DocTypeBase.Name, ids, reason);
+        DocTypeDocSelEventArgs args = new DocTypeDocSelEventArgs(_UI, docSel, _DocTypeBase.Name, ids, reason);
         try
         {
-          GetDocSel(this, Args);
+          GetDocSel(this, args);
         }
         catch (Exception e)
         {
@@ -2342,10 +2337,10 @@ namespace FreeLibSet.Forms.Docs
       if (GetDocSel != null)
       {
         // Есть обработчик события
-        DocTypeDocSelEventArgs Args = new DocTypeDocSelEventArgs(_UI, docSel, _DocTypeBase.Name, rows, reason);
+        DocTypeDocSelEventArgs args = new DocTypeDocSelEventArgs(_UI, docSel, _DocTypeBase.Name, rows, reason);
         try
         {
-          GetDocSel(this, Args);
+          GetDocSel(this, args);
         }
         catch (Exception e)
         {
@@ -2470,10 +2465,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     internal void OnDocProviderChanged()
     {
-      DBxDocType NewDocType = UI.DocProvider.DocTypes[_DocType.Name];
-      if (NewDocType == null)
+      DBxDocType newDocType = UI.DocProvider.DocTypes[_DocType.Name];
+      if (newDocType == null)
         throw new NullReferenceException("Не найден новый DocType для DocTypeName=\"" + _DocType.Name + "\"");
-      _DocType = NewDocType;
+      _DocType = newDocType;
       foreach (SubDocTypeUI sdtui in SubDocTypes.Items.Values)
         sdtui.OnDocProviderChanged();
     }
@@ -2572,18 +2567,18 @@ namespace FreeLibSet.Forms.Docs
       {
         get
         {
-          SubDocTypeUI Res;
-          if (!_Items.TryGetValue(subDocTypeName, out Res))
+          SubDocTypeUI res;
+          if (!_Items.TryGetValue(subDocTypeName, out res))
           {
             if (String.IsNullOrEmpty(subDocTypeName))
               throw new ArgumentNullException("subDocTypeName");
             if (!_Owner.DocType.SubDocs.Contains(subDocTypeName))
               throw new ArgumentException("Неизвестный тип поддокументов \"" + subDocTypeName + "\"", "subDocTypeName");
 
-            Res = new SubDocTypeUI(_Owner, _Owner.DocType.SubDocs[subDocTypeName]);
-            _Items.Add(subDocTypeName, Res);
+            res = new SubDocTypeUI(_Owner, _Owner.DocType.SubDocs[subDocTypeName]);
+            _Items.Add(subDocTypeName, res);
           }
-          return Res;
+          return res;
         }
       }
 
@@ -2675,25 +2670,25 @@ namespace FreeLibSet.Forms.Docs
     {
       DataView dv;
 
-      DBxColumnList ColLst = new DBxColumnList(columns);
+      DBxColumnList colLst = new DBxColumnList(columns);
       if (DataBuffering)
       {
         if (orderBy != null)
         {
           // Требуется, чтобы поле сортировки присутствовало в выборке
-          orderBy.GetColumnNames(ColLst);
+          orderBy.GetColumnNames(colLst);
         }
         if ((!showDeleted) && UI.DocProvider.DocTypes.UseDeleted)
         {
-          DBxFilter Filter2 = DBSDocType.DeletedFalseFilter;
+          DBxFilter filter2 = DBSDocType.DeletedFalseFilter;
           if (filter == null)
-            filter = Filter2;
+            filter = filter2;
           else
-            filter = new AndFilter(filter, Filter2);
+            filter = new AndFilter(filter, filter2);
         }
         if (filter != null)
-          filter.GetColumnNames(ColLst); // 09.01.2018
-        DataTable dt = GetBufferedData(new DBxColumns(ColLst));
+          filter.GetColumnNames(colLst); // 09.01.2018
+        DataTable dt = GetBufferedData(new DBxColumns(colLst));
         dv = new DataView(dt);
         if (filter == null)
           dv.RowFilter = String.Empty;
@@ -2814,11 +2809,11 @@ namespace FreeLibSet.Forms.Docs
     {
       if ((!showDeleted) && UI.DocProvider.DocTypes.UseDeleted /* 19.12.2017 */)
       {
-        DBxFilter Filter2 = DBSDocType.DeletedFalseFilter;
+        DBxFilter filter2 = DBSDocType.DeletedFalseFilter;
         if (filter == null)
-          filter = Filter2;
+          filter = filter2;
         else
-          filter = new AndFilter(filter, Filter2);
+          filter = new AndFilter(filter, filter2);
       }
 
       int MaxRecordCount2 = maxRecordCount;
@@ -2863,25 +2858,25 @@ namespace FreeLibSet.Forms.Docs
       if (columns == null)
         throw new ArgumentNullException("columns");
 
-      DBxColumnList ColLst = new DBxColumnList(columns);
-      ColLst.Add("Id");
+      DBxColumnList colLst = new DBxColumnList(columns);
+      colLst.Add("Id");
       if (UI.DocProvider.DocTypes.UseDeleted)
-        ColLst.Add("Deleted");
+        colLst.Add("Deleted");
 
       if (_BufferedData != null)
       {
         // Проверяем, все ли поля есть
-        if (ColLst.HasMoreThan(_BufferedColumns))
+        if (colLst.HasMoreThan(_BufferedColumns))
         {
           // Некоторых полей не хватает
           _BufferedData = null;
-          ColLst.Add(_BufferedColumns);
+          colLst.Add(_BufferedColumns);
         }
       }
 
       if (_BufferedData == null)
       {
-        _BufferedData = UI.DocProvider.FillSelect(DocType.Name, new DBxColumns(ColLst), null);
+        _BufferedData = UI.DocProvider.FillSelect(DocType.Name, new DBxColumns(colLst), null);
         DataTools.CheckPrimaryKey(_BufferedData, "Id");
         _BufferedColumns = columns;
       }
@@ -2952,17 +2947,17 @@ namespace FreeLibSet.Forms.Docs
       // ни разу не отображается
       if (EFPApp.ShowListImages)
       {
-        DataGridViewImageColumn ImgCol = new DataGridViewImageColumn();
-        ImgCol.Name = "Image";
-        ImgCol.HeaderText = String.Empty;
-        ImgCol.ToolTipText = "Значок документа \"" + DocType.SingularTitle + "\"";
-        ImgCol.Width = controlProvider.Measures.ImageColumnWidth;
-        ImgCol.FillWeight = 1; // 08.02.2017
-        ImgCol.Resizable = DataGridViewTriState.False;
+        DataGridViewImageColumn imgCol = new DataGridViewImageColumn();
+        imgCol.Name = "Image";
+        imgCol.HeaderText = String.Empty;
+        imgCol.ToolTipText = "Значок документа \"" + DocType.SingularTitle + "\"";
+        imgCol.Width = controlProvider.Measures.ImageColumnWidth;
+        imgCol.FillWeight = 1; // 08.02.2017
+        imgCol.Resizable = DataGridViewTriState.False;
         //string ImgName = SingleDocImageKey;
         //ImgCol.Image = EFPApp.MainImages.Images[ImgName];
         // ImgCol_CellToopTextNeeded
-        controlProvider.Control.Columns.Add(ImgCol);
+        controlProvider.Control.Columns.Add(imgCol);
       }
       if (controlProvider.MarkRowIds != null)
         controlProvider.AddMarkRowsColumn();
@@ -3099,9 +3094,9 @@ namespace FreeLibSet.Forms.Docs
       {
         try
         {
-          InitEFPDBxViewEventArgs Args = new InitEFPDBxViewEventArgs(controlProvider);
-          Args.UserInitData = userInitData;
-          InitView(this, Args);
+          InitEFPDBxViewEventArgs args = new InitEFPDBxViewEventArgs(controlProvider);
+          args.UserInitData = userInitData;
+          InitView(this, args);
         }
         catch (Exception e)
         {
@@ -3130,8 +3125,8 @@ namespace FreeLibSet.Forms.Docs
       {
         try
         {
-          InitEFPDocSelViewEventArgs Args = new InitEFPDocSelViewEventArgs(controlProvider);
-          InitDocSelView(this, Args);
+          InitEFPDocSelViewEventArgs args = new InitEFPDocSelViewEventArgs(controlProvider);
+          InitDocSelView(this, args);
         }
         catch (Exception e)
         {
@@ -3146,8 +3141,8 @@ namespace FreeLibSet.Forms.Docs
 
     void ControlProvider_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
-      DataRow Row = args.DataRow;
-      if (Row == null)
+      DataRow row = args.DataRow;
+      if (row == null)
         return;
 
       // 24.11.2017
@@ -3156,11 +3151,11 @@ namespace FreeLibSet.Forms.Docs
       //  Args.Grayed = true;
       //else
       //{
-      EFPDataGridViewColorType ColorType;
-      bool Grayed;
-      UI.ImageHandlers.GetRowColor(DocType.Name, Row, out ColorType, out Grayed);
-      args.ColorType = ColorType;
-      args.Grayed = Grayed;
+      EFPDataGridViewColorType colorType;
+      bool grayed;
+      UI.ImageHandlers.GetRowColor(DocType.Name, row, out colorType, out grayed);
+      args.ColorType = colorType;
+      args.Grayed = grayed;
       //}
 #if XXX
       int CheckState = DataTools.GetInt(Row, "CheckState");
@@ -3235,21 +3230,21 @@ namespace FreeLibSet.Forms.Docs
     {
       if (args.ColumnName == "Image")
       {
-        DataRow Row = args.DataRow;
-        if (Row == null)
+        DataRow row = args.DataRow;
+        if (row == null)
           return;
 
         switch (args.Reason)
         {
           case EFPDataGridViewAttributesReason.View:
-            args.Value = GetImageValue(Row);
+            args.Value = GetImageValue(row);
             break;
           case EFPDataGridViewAttributesReason.ToolTip:
             if (args.ControlProvider.CurrentConfig != null)
             {
               if (args.ControlProvider.CurrentConfig.CurrentCellToolTip)
               {
-                string s1 = GetToolTipText(Row);
+                string s1 = GetToolTipText(row);
                 args.ToolTipText = DataTools.JoinNotEmptyStrings(Environment.NewLine, new string[] { s1, args.ToolTipText }); // 06.02.2018
               }
 
@@ -3573,8 +3568,8 @@ namespace FreeLibSet.Forms.Docs
 
     void DocTree_GetDocSel(object sender, EFPDBxTreeViewDocSelEventArgs args)
     {
-      Int32[] Ids = DataTools.GetIdsFromColumn(args.DataRows, "Id");
-      PerformGetDocSel(args.DocSel, Ids, args.Reason);
+      Int32[] docIds = DataTools.GetIdsFromColumn(args.DataRows, "Id");
+      PerformGetDocSel(args.DocSel, docIds, args.Reason);
     }
 
     #endregion
@@ -3598,9 +3593,9 @@ namespace FreeLibSet.Forms.Docs
       if (DocType.HasCalculatedColumns &&
         UI.DocProvider.DBPermissions.TableModes[DocType.Name] == DBxAccessMode.Full /*&& (!ControlProvider.ReadOnly)*/)
       {
-        RecalcColumnsPermissionMode Mode = RecalcColumnsPermission.GetMode(UI.DocProvider.UserPermissions);
+        RecalcColumnsPermissionMode mode = RecalcColumnsPermission.GetMode(UI.DocProvider.UserPermissions);
 
-        if (Mode != RecalcColumnsPermissionMode.Disabled)
+        if (mode != RecalcColumnsPermissionMode.Disabled)
         {
           EFPCommandItem MenuRecalcDocuments = new EFPCommandItem("Service", "RecalcDocsMenu");
           MenuRecalcDocuments.MenuText = "Пересчитать вычисляемые поля";
@@ -3623,7 +3618,7 @@ namespace FreeLibSet.Forms.Docs
           ci.Click += new EventHandler(RecalcViewDocuments_Click);
           controlProvider.CommandItems.Add(ci);
 
-          if (Mode == RecalcColumnsPermissionMode.All)
+          if (mode == RecalcColumnsPermissionMode.All)
           {
             ci = new EFPCommandItem("Service", "RecalcAllDocs");
             ci.MenuText = "Все существующие";
@@ -3708,8 +3703,8 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      Int32[] DocIds = DataTools.GetIdsFromColumn(ControlProvider.SourceAsDataView, "Id");
-      this.RecalcColumns(DocIds, new PerformRefreshDelegate(ControlProvider.PerformRefresh));
+      Int32[] docIds = DataTools.GetIdsFromColumn(ControlProvider.SourceAsDataView, "Id");
+      this.RecalcColumns(docIds, new PerformRefreshDelegate(ControlProvider.PerformRefresh));
     }
 
     void RecalcAllDocuments_Click(object sender, EventArgs args)
@@ -3754,8 +3749,8 @@ namespace FreeLibSet.Forms.Docs
 
     void DocGrid_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
     {
-      Int32[] Ids = DataTools.GetIdsFromColumn(args.DataRows, "Id");
-      PerformGetDocSel(args.DocSel, Ids, args.Reason);
+      Int32[] docIds = DataTools.GetIdsFromColumn(args.DataRows, "Id");
+      PerformGetDocSel(args.DocSel, docIds, args.Reason);
     }
 
     /*
@@ -3792,16 +3787,16 @@ namespace FreeLibSet.Forms.Docs
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
 
-      IEFPDBxView ControlProvider = (IEFPDBxView)(ci.Tag);
+      IEFPDBxView controlProvider = (IEFPDBxView)(ci.Tag);
 
-      Int32 DocId = ControlProvider.CurrentId;
-      if (DocId == 0)
+      Int32 docId = controlProvider.CurrentId;
+      if (docId == 0)
       {
         EFPApp.ShowTempMessage("Документ в табличном просмотре не выбран");
         return;
       }
 
-      ShowDocInfo(DocId);
+      ShowDocInfo(docId);
     }
 
     #endregion
@@ -3861,7 +3856,7 @@ namespace FreeLibSet.Forms.Docs
       if (MainMenuCommandItem == null)
         return;
 
-      DBxAccessMode AccessMode = DBxAccessMode.Full;
+      DBxAccessMode accessMode = DBxAccessMode.Full;
       for (int i = UI.DocProvider.UserPermissions.Count - 1; i >= 0; i--)
       {
         UserPermission up = UI.DocProvider.UserPermissions[i];
@@ -3870,24 +3865,24 @@ namespace FreeLibSet.Forms.Docs
         {
           if (dtp.DocTypeNames == null)
           {
-            AccessMode = dtp.Mode;
+            accessMode = dtp.Mode;
             break;
           }
           else if (DataTools.IndexOf(dtp.DocTypeNames, DocType.Name, StringComparison.OrdinalIgnoreCase) >= 0)
           {
-            AccessMode = dtp.Mode;
+            accessMode = dtp.Mode;
             break;
           }
         }
         WholeDBPermission dbp = up as WholeDBPermission;
         if (dbp != null)
         {
-          AccessMode = dbp.Mode;
+          accessMode = dbp.Mode;
           break;
         }
       }
 
-      MainMenuCommandItem.Visible = (AccessMode != DBxAccessMode.None);
+      MainMenuCommandItem.Visible = (accessMode != DBxAccessMode.None);
     }
 
     #endregion
@@ -3925,27 +3920,27 @@ namespace FreeLibSet.Forms.Docs
           formSearchKey = String.Empty;
       }
 
-      DocTableViewForm Form = null;
+      DocTableViewForm form = null;
       if (EFPApp.ActiveDialog == null) // 10.03.2016
-        Form = FindAndActivate(formSearchKey);
-      if (Form == null)
+        form = FindAndActivate(formSearchKey);
+      if (form == null)
       {
-        Form = new DocTableViewForm(this, DocTableViewMode.Browse);
-        Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
-        Form.FormSearchKey = formSearchKey;
+        form = new DocTableViewForm(this, DocTableViewMode.Browse);
+        form.StartPosition = FormStartPosition.WindowsDefaultBounds;
+        form.FormSearchKey = formSearchKey;
 
-        Form.ExternalFilters = externalFilters;
+        form.ExternalFilters = externalFilters;
         if (HasExternalFilters)
-          Form.FormProvider.ConfigClassName = String.Empty; // 02.11.2018
+          form.FormProvider.ConfigClassName = String.Empty; // 02.11.2018
 
 
-        Form.CurrentDocId = currentDocId;
-        EFPApp.ShowFormOrDialog(Form);
+        form.CurrentDocId = currentDocId;
+        EFPApp.ShowFormOrDialog(form);
       }
       else if (currentDocId != 0)
-        Form.CurrentDocId = currentDocId;
+        form.CurrentDocId = currentDocId;
 
-      return Form;
+      return form;
     }
 
     /// <summary>
@@ -3994,12 +3989,12 @@ namespace FreeLibSet.Forms.Docs
     {
       if (EFPApp.Interface != null)
       {
-        Form[] Forms = EFPApp.Interface.GetChildForms(true);
-        for (int i = 0; i < Forms.Length; i++)
+        Form[] forms = EFPApp.Interface.GetChildForms(true);
+        for (int i = 0; i < forms.Length; i++)
         {
-          if (Forms[i] is DocTableViewForm)
+          if (forms[i] is DocTableViewForm)
           {
-            DocTableViewForm frm = (DocTableViewForm)(Forms[i]);
+            DocTableViewForm frm = (DocTableViewForm)(forms[i]);
             if (frm.DocTypeName != this.DocType.Name)
               continue;
             if (!String.IsNullOrEmpty(formSearchKey))
@@ -4040,9 +4035,9 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Идентификатор документа или 0</returns>
     public Int32 SelectDoc(string title)
     {
-      int DocId = 0;
-      if (SelectDoc(ref DocId, title, false))
-        return DocId;
+      Int32 docId = 0;
+      if (SelectDoc(ref docId, title, false))
+        return docId;
       else
         return 0;
     }
@@ -4231,42 +4226,42 @@ namespace FreeLibSet.Forms.Docs
           break;
       }
 
-      bool FixedResult = false;
+      bool fixedResult = false;
       if (Editing != null)
       {
-        DocTypeEditingEventArgs Args = new DocTypeEditingEventArgs(this, state, editIds, modal, caller);
-        Editing(this, Args);
-        if (Args.Handled)
-          return Args.HandledResult;
+        DocTypeEditingEventArgs args = new DocTypeEditingEventArgs(this, state, editIds, modal, caller);
+        Editing(this, args);
+        if (args.Handled)
+          return args.HandledResult;
         else
-          FixedResult = Args.HandledResult;
+          fixedResult = args.HandledResult;
       }
 
       // 21.11.2018
       // Активируем уже открытый редактор документов
       if (state != EFPDataGridViewState.Insert && state != EFPDataGridViewState.InsertCopy)
       {
-        DBxDocSelection DocSel = UI.CreateDocSelection(DocType.Name, editIds);
-        DocumentEditor OldDE = DocumentEditor.FindEditor(DocSel);
-        if (OldDE != null)
+        DBxDocSelection docSel = UI.CreateDocSelection(DocType.Name, editIds);
+        DocumentEditor oldDE = DocumentEditor.FindEditor(docSel);
+        if (oldDE != null)
         {
-          DBxDocSelection OldDocSel = OldDE.Documents.DocSelection;
-          OldDocSel = new DBxDocSelection(OldDocSel, DocType.Name); // другие виды документов не интересны
+          DBxDocSelection oldDocSel = oldDE.Documents.DocSelection;
+          oldDocSel = new DBxDocSelection(oldDocSel, DocType.Name); // другие виды документов не интересны
           StringBuilder sb = new StringBuilder();
           sb.Append("Редактор уже открыт.");
-          if (!OldDocSel.ContainsAll(DocSel))
+          if (!oldDocSel.ContainsAll(docSel))
           {
             sb.Append(Environment.NewLine);
             sb.Append("Вы пытаетесь открыть сразу несколько документов, но не все они присутствуют в открытом редакторе.");
           }
-          else if (!DocSel.ContainsAll(OldDocSel))
+          else if (!docSel.ContainsAll(oldDocSel))
           {
             sb.Append(Environment.NewLine);
             sb.Append("Открытый редактор использует груповое редактирование документов, в том числе других.");
           }
 
           if (EFPApp.ActiveDialog == null)
-            EFPApp.Interface.CurrentChildForm = OldDE.Form;
+            EFPApp.Interface.CurrentChildForm = oldDE.Form;
           else
           {
             sb.Append(Environment.NewLine);
@@ -4284,7 +4279,7 @@ namespace FreeLibSet.Forms.Docs
       de.Caller = caller;
       de.Run();
 
-      return de.DataChanged || FixedResult;
+      return de.DataChanged || fixedResult;
     }
 
     /// <summary>
@@ -4325,11 +4320,11 @@ namespace FreeLibSet.Forms.Docs
         return false;
       }
 
-      Int32[] EditIds = new int[1];
-      EditIds[0] = editId;
+      Int32[] editIds = new int[1];
+      editIds[0] = editId;
 
-      EFPDataGridViewState State = readOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit;
-      return PerformEditing(EditIds, State, true, caller);
+      EFPDataGridViewState state = readOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit;
+      return PerformEditing(editIds, state, true, caller);
     }
 
 
@@ -4452,23 +4447,23 @@ namespace FreeLibSet.Forms.Docs
       if (p < 0)
         return; // вообще-то это ошибка
 
-      DBxDocValue Value = newDoc.Values[p];
+      DBxDocValue value = newDoc.Values[p];
 
       if (auxFilterGroupIds.Length == 1)
       {
         // В режиме, когда в фильре выбрана единственная группа (то есть группа самого вложенного уровня
         // или включен флажок "Скрыть документы во вложенных группах"
         Int32 GroupId = auxFilterGroupIds[0];
-        Value.SetInteger(GroupId);
+        value.SetInteger(GroupId);
       }
       else
       {
         // 10.06.2019
         // В режиме фильтра, когда выбрано несколько групп, или выбран режим "Документы без групп" проверяем,
         // что текущая выбранная в документе группа есть в списке. Если выбрана группа не в фильтре, значение очищается
-        Int32 CurrGroupId = Value.AsInteger;
+        Int32 CurrGroupId = value.AsInteger;
         if (CurrGroupId != 0 && Array.IndexOf<Int32>(auxFilterGroupIds, CurrGroupId) < 0)
-          Value.SetNull();
+          value.SetNull();
       }
     }
 
@@ -4508,12 +4503,12 @@ namespace FreeLibSet.Forms.Docs
 
     internal void DoBeforeEdit(DocumentEditor editor, out bool cancel, out bool showEditor)
     {
-      BeforeDocEditEventArgs Args = new BeforeDocEditEventArgs(editor);
+      BeforeDocEditEventArgs args = new BeforeDocEditEventArgs(editor);
       if (BeforeEdit != null)
-        BeforeEdit(this, Args);
+        BeforeEdit(this, args);
 
-      cancel = Args.Cancel;
-      showEditor = Args.ShowEditor;
+      cancel = args.Cancel;
+      showEditor = args.ShowEditor;
     }
 
 
@@ -4533,9 +4528,9 @@ namespace FreeLibSet.Forms.Docs
       if (multiDocs.DocType.Name != this.DocType.Name)
         throw new ArgumentException("Попытка инициализации для чужого типа документов", "multiDocs");
 
-      InitDocEditFormEventArgs Args = new InitDocEditFormEventArgs(editor, multiDocs);
+      InitDocEditFormEventArgs args = new InitDocEditFormEventArgs(editor, multiDocs);
       if (InitEditForm != null)
-        InitEditForm(this, Args);
+        InitEditForm(this, args);
     }
 
     /// <summary>
@@ -4553,9 +4548,9 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Writing != null)
       {
-        DocEditCancelEventArgs Args = new DocEditCancelEventArgs(editor);
-        Writing(this, Args);
-        if (Args.Cancel)
+        DocEditCancelEventArgs args = new DocEditCancelEventArgs(editor);
+        Writing(this, args);
+        if (args.Cancel)
           return false;
       }
       return true;
@@ -4574,8 +4569,8 @@ namespace FreeLibSet.Forms.Docs
       {
         try
         {
-          DocEditEventArgs Args = new DocEditEventArgs(editor);
-          Wrote(this, Args);
+          DocEditEventArgs args = new DocEditEventArgs(editor);
+          Wrote(this, args);
         }
         catch (Exception e)
         {
@@ -4629,19 +4624,19 @@ namespace FreeLibSet.Forms.Docs
       dispArgs["DocIds"] = docIds;
       DistributedCallData startData = UI.DocProvider.StartServerExecProc(dispArgs);
 
-      DistributedProcCallItem CallItem = new DistributedProcCallItem(startData);
-      CallItem.UserData["AfterRecalc"] = afterRecalc;
-      CallItem.UserData["AfterRecalcParams"] = afterRecalcParams;
-      CallItem.Finished += new DistributedProcCallEventHandler(RecalcColumnsCallItem_Finished);
-      EFPApp.ExecProcList.ExecuteAsync(CallItem);
+      DistributedProcCallItem callItem = new DistributedProcCallItem(startData);
+      callItem.UserData["AfterRecalc"] = afterRecalc;
+      callItem.UserData["AfterRecalcParams"] = afterRecalcParams;
+      callItem.Finished += new DistributedProcCallEventHandler(RecalcColumnsCallItem_Finished);
+      EFPApp.ExecProcList.ExecuteAsync(callItem);
     }
 
     void RecalcColumnsCallItem_Finished(object sender, DistributedProcCallEventArgs args)
     {
-      Delegate AfterRecalc = (Delegate)(args.Item.UserData["AfterRecalc"]);
-      object[] AfterRecalcParams = (object[])(args.Item.UserData["AfterRecalcParams"]);
-      if (AfterRecalc != null)
-        AfterRecalc.DynamicInvoke(AfterRecalcParams);
+      Delegate afterRecalc = (Delegate)(args.Item.UserData["AfterRecalc"]);
+      object[] afterRecalcParams = (object[])(args.Item.UserData["AfterRecalcParams"]);
+      if (afterRecalc != null)
+        afterRecalc.DynamicInvoke(afterRecalcParams);
     }
 
     #endregion
@@ -4671,10 +4666,10 @@ namespace FreeLibSet.Forms.Docs
       // 18.11.2017 Ссылку на группу добавляем в конце выборки
       if (this.GroupDocType != null)
       {
-        IdList GroupIds = new IdList();
+        IdList groupIds = new IdList();
         for (int i = 0; i < docIds.Length; i++)
-          GroupIds.Add(TableCache.GetInt(docIds[i], DocType.GroupRefColumnName));
-        docSel.Add(this.GroupDocType.DocType.Name, GroupIds);
+          groupIds.Add(TableCache.GetInt(docIds[i], DocType.GroupRefColumnName));
+        docSel.Add(this.GroupDocType.DocType.Name, groupIds);
       }
     }
 
@@ -4691,14 +4686,14 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("docIds");
 #endif
 
-      DBxDocSelection DocSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
+      DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
       for (int i = 0; i < docIds.Length; i++)
       {
         if (!UI.DocProvider.IsRealDocId(docIds[i]))
           continue;
-        DocSel.Add(DocType.Name, docIds[i]);
+        docSel.Add(DocType.Name, docIds[i]);
       }
-      return DocSel;
+      return docSel;
     }
 
     #endregion
@@ -4744,7 +4739,6 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
   }
-
 
   #region SubDocEditEventHandler
 
@@ -5092,10 +5086,10 @@ namespace FreeLibSet.Forms.Docs
 
     internal void OnDocProviderChanged()
     {
-      DBxSubDocType NewSubDocType = DocType.SubDocs[_SubDocType.Name]; // DocTypeUI.DocType уже обновлено на момент вызова
-      if (NewSubDocType == null)
+      DBxSubDocType newSubDocType = DocType.SubDocs[_SubDocType.Name]; // DocTypeUI.DocType уже обновлено на момент вызова
+      if (newSubDocType == null)
         throw new NullReferenceException("Не найден новый SubDocType для SubDocTypeName=\"" + _SubDocType.Name + "\" документа \"" + DocType.Name + "\"");
-      _SubDocType = NewSubDocType;
+      _SubDocType = newSubDocType;
     }
 
     #endregion
@@ -5141,15 +5135,15 @@ namespace FreeLibSet.Forms.Docs
       // См. примечание от 27.05.2015 в методе DocTypeUI.DoInitGrid()
       if (EFPApp.ShowListImages)
       {
-        DataGridViewImageColumn ImgCol = new DataGridViewImageColumn();
-        ImgCol.Name = "Image";
-        ImgCol.HeaderText = String.Empty;
-        ImgCol.ToolTipText = "Значок поддокумента \"" + SubDocType.SingularTitle + "\"";
-        ImgCol.Width = controlProvider.Measures.ImageColumnWidth;
-        ImgCol.FillWeight = 1; // 08.02.2017
-        ImgCol.Resizable = DataGridViewTriState.False;
+        DataGridViewImageColumn imgCol = new DataGridViewImageColumn();
+        imgCol.Name = "Image";
+        imgCol.HeaderText = String.Empty;
+        imgCol.ToolTipText = "Значок поддокумента \"" + SubDocType.SingularTitle + "\"";
+        imgCol.Width = controlProvider.Measures.ImageColumnWidth;
+        imgCol.FillWeight = 1; // 08.02.2017
+        imgCol.Resizable = DataGridViewTriState.False;
 
-        controlProvider.Control.Columns.Add(ImgCol);
+        controlProvider.Control.Columns.Add(imgCol);
         if (EFPApp.ShowToolTips)
           controlProvider.Columns[0].CellToolTextNeeded += new EFPDataGridViewCellToolTipTextNeededEventHandler(ImgCol_CellToopTextNeeded);
       }
@@ -5244,9 +5238,9 @@ namespace FreeLibSet.Forms.Docs
       {
         try
         {
-          InitEFPDBxViewEventArgs Args = new InitEFPDBxViewEventArgs(controlProvider);
-          Args.UserInitData = userInitData;
-          InitView(this, Args);
+          InitEFPDBxViewEventArgs args = new InitEFPDBxViewEventArgs(controlProvider);
+          args.UserInitData = userInitData;
+          InitView(this, args);
         }
         catch (Exception e)
         {
@@ -5261,9 +5255,9 @@ namespace FreeLibSet.Forms.Docs
 
     void ControlProvider_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
-      DataRow Row = args.DataRow;
+      DataRow row = args.DataRow;
 
-      if (Row == null)
+      if (row == null)
         return;
       // 24.11.2017
       // Вызываем пользовательский обработчик и для удаленных документов
@@ -5271,11 +5265,11 @@ namespace FreeLibSet.Forms.Docs
       //  Args.Grayed = true;
       //else
       //{
-      EFPDataGridViewColorType ColorType;
-      bool Grayed;
-      UI.ImageHandlers.GetRowColor(SubDocType.Name, Row, out ColorType, out Grayed);
-      args.ColorType = ColorType;
-      args.Grayed = Grayed;
+      EFPDataGridViewColorType colorType;
+      bool grayed;
+      UI.ImageHandlers.GetRowColor(SubDocType.Name, row, out colorType, out grayed);
+      args.ColorType = colorType;
+      args.Grayed = grayed;
       //}
     }
 
@@ -5283,23 +5277,23 @@ namespace FreeLibSet.Forms.Docs
     {
       if (args.ColumnName == "Image")
       {
-        DataRow Row = args.DataRow;
-        if (Row == null)
+        DataRow row = args.DataRow;
+        if (row == null)
           return;
 
         switch (args.Reason)
         {
           case EFPDataGridViewAttributesReason.View:
-            args.Value = GetImageValue(Row);
+            args.Value = GetImageValue(row);
             break;
 
           case EFPDataGridViewAttributesReason.ToolTip:
-            EFPDataGridViewConfig Cfg = ((EFPDBxGridView)args.ControlProvider).CurrentConfig;
-            if (Cfg != null)
+            EFPDataGridViewConfig cfg = ((EFPDBxGridView)args.ControlProvider).CurrentConfig;
+            if (cfg != null)
             {
-              if (Cfg.CurrentCellToolTip)
+              if (cfg.CurrentCellToolTip)
               {
-                string s1 = GetToolTipText(Row);
+                string s1 = GetToolTipText(row);
                 args.ToolTipText = DataTools.JoinNotEmptyStrings(Environment.NewLine, new string[] { s1, args.ToolTipText }); // 06.02.2018
               }
             }
@@ -5525,8 +5519,8 @@ namespace FreeLibSet.Forms.Docs
 
     void SubDocTree_GetDocSelWithIds(object sender, EFPDBxTreeViewDocSelEventArgs args)
     {
-      Int32[] Ids = DataTools.GetIds(args.DataRows);
-      PerformGetDocSel(args.DocSel, Ids, args.Reason);
+      Int32[] subDocIds = DataTools.GetIds(args.DataRows);
+      PerformGetDocSel(args.DocSel, subDocIds, args.Reason);
     }
 
     #endregion
@@ -5691,11 +5685,11 @@ namespace FreeLibSet.Forms.Docs
         return true;
       }
 
-      Int32 CurrDocId = 0;
+      Int32 currDocId = 0;
       if (!_LastSelectOneDocAll)
       {
         if (controlProvider.CurrentDataRow != null)
-          CurrDocId = DataTools.GetInt(controlProvider.CurrentDataRow, "DocId");
+          currDocId = DataTools.GetInt(controlProvider.CurrentDataRow, "DocId");
       }
 
       ListSelectDialog dlg = new ListSelectDialog();
@@ -5712,7 +5706,7 @@ namespace FreeLibSet.Forms.Docs
         dlg.Items[i + 1] = (i + 1).ToString() + ". DocId=" + controlProvider.SubDocs.Owner[i].DocId.ToString(); // !!! Названия для документов
         DBxSingleDoc Doc = controlProvider.SubDocs.Owner[i];
         dlg.ImageKeys[i + 1] = UI.ImageHandlers.GetImageKey(Doc);
-        if (controlProvider.SubDocs.Owner[i].DocId == CurrDocId)
+        if (controlProvider.SubDocs.Owner[i].DocId == currDocId)
           dlg.SelectedIndex = i + 1;
       }
 
@@ -5771,10 +5765,10 @@ namespace FreeLibSet.Forms.Docs
       }
       else
       {
-        BeforeSubDocEditEventArgs Args = new BeforeSubDocEditEventArgs(editor);
-        BeforeEdit(this, Args);
-        cancel = Args.Cancel;
-        showEditor = Args.ShowEditor;
+        BeforeSubDocEditEventArgs args = new BeforeSubDocEditEventArgs(editor);
+        BeforeEdit(this, args);
+        cancel = args.Cancel;
+        showEditor = args.ShowEditor;
       }
     }
 
@@ -5786,9 +5780,9 @@ namespace FreeLibSet.Forms.Docs
 
     internal void PerformInitEditForm(SubDocumentEditor editor)
     {
-      InitSubDocEditFormEventArgs Args = new InitSubDocEditFormEventArgs(editor);
+      InitSubDocEditFormEventArgs args = new InitSubDocEditFormEventArgs(editor);
       if (InitEditForm != null)
-        InitEditForm(this, Args);
+        InitEditForm(this, args);
     }
 
     /// <summary>
@@ -5803,9 +5797,9 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Writing != null)
       {
-        SubDocEditCancelEventArgs Args = new SubDocEditCancelEventArgs(editor);
-        Writing(this, Args);
-        if (Args.Cancel)
+        SubDocEditCancelEventArgs args = new SubDocEditCancelEventArgs(editor);
+        Writing(this, args);
+        if (args.Cancel)
           return false;
       }
       return true;
@@ -5823,8 +5817,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Wrote != null)
       {
-        SubDocEditEventArgs Args = new SubDocEditEventArgs(editor);
-        Wrote(this, Args);
+        SubDocEditEventArgs args = new SubDocEditEventArgs(editor);
+        Wrote(this, args);
       }
     }
 
@@ -5919,10 +5913,10 @@ namespace FreeLibSet.Forms.Docs
 
       for (int i = 0; i < docType.Struct.Columns.Count; i++)
       {
-        DBxColumnStruct ColDef = docType.Struct.Columns[i];
-        if (ColDef.ColumnType == DBxColumnType.String && (!ColDef.Nullable))
+        DBxColumnStruct colDef = docType.Struct.Columns[i];
+        if (colDef.ColumnType == DBxColumnType.String && (!colDef.Nullable))
         {
-          _NameColumnName = ColDef.ColumnName;
+          _NameColumnName = colDef.ColumnName;
           break;
         }
       }
@@ -5984,11 +5978,11 @@ namespace FreeLibSet.Forms.Docs
       {
         if (includeNestedGroups)
         {
-          DBxDocTreeModel Model = new DBxDocTreeModel(UI.DocProvider,
+          DBxDocTreeModel model = new DBxDocTreeModel(UI.DocProvider,
             DocType,
             new DBxColumns(new string[] { "Id", DocType.TreeParentColumnName }));
 
-          return new IdList(Model.GetIdWithChildren(groupId));
+          return new IdList(model.GetIdWithChildren(groupId));
         }
         else
           return IdList.FromId(groupId);

@@ -135,22 +135,22 @@ namespace FreeLibSet.Data
       // каким-нибудь хитрым образом
 
       int p = oldItem.LastIndexOf(System.IO.Path.DirectorySeparatorChar);
-      string Dir = oldItem.Substring(0, p + 1); // включая символ каталога
-      string FileName = oldItem.Substring(p + 1); // без пути
-      string Ext = System.IO.Path.GetExtension(FileName);
-      FileName = System.IO.Path.GetFileNameWithoutExtension(FileName);
+      string dir = oldItem.Substring(0, p + 1); // включая символ каталога
+      string fileName = oldItem.Substring(p + 1); // без пути
+      string ext = System.IO.Path.GetExtension(fileName);
+      fileName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
       if (String.IsNullOrEmpty(oldName))
-        oldName = FileName;
+        oldName = fileName;
       if (String.IsNullOrEmpty(newName))
         throw new ArgumentNullException("newName");
 
-      p = FileName.LastIndexOf(oldName, StringComparison.OrdinalIgnoreCase);
+      p = fileName.LastIndexOf(oldName, StringComparison.OrdinalIgnoreCase);
       if (p < 0)
         throw new ArgumentException("Имя файла базы данных \"" + oldItem + "\" не содержит в себе фрагмента \"" + oldName + "\", который требуется заменить");
-      FileName = FileName.Substring(0, p) + newName + FileName.Substring(p + oldName.Length);
+      fileName = fileName.Substring(0, p) + newName + fileName.Substring(p + oldName.Length);
 
-      return Dir + FileName + Ext;
+      return dir + fileName + ext;
     }
 
 

@@ -82,8 +82,8 @@ namespace FreeLibSet.Forms.Docs
     public override void GetInfo(UserPermission permission, UserPermissionUIInfo info)
     {
       base.GetInfo(permission, info);
-      int IndexValue = GetIndexValue(permission);
-      info.ValueImageKey = ImageKeys[IndexValue];
+      int indexValue = GetIndexValue(permission);
+      info.ValueImageKey = ImageKeys[indexValue];
     }
 
     #endregion
@@ -101,11 +101,11 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="editor">Редактор разрешения, который требуется инициализировать</param>
     public override void CreateEditor(UserPermissionEditor editor)
     {
-      RadioGroupBox Control = new RadioGroupBox(TextValues);
-      Control.Text = GroupTitle;
-      Control.ImageKeys = ImageKeys;
-      editor.Control = Control;
-      EFPRadioButtons efpRB = new EFPRadioButtons(editor.BaseProvider, Control);
+      RadioGroupBox control = new RadioGroupBox(TextValues);
+      control.Text = GroupTitle;
+      control.ImageKeys = ImageKeys;
+      editor.Control = control;
+      EFPRadioButtons efpRB = new EFPRadioButtons(editor.BaseProvider, control);
       efpRB.Enabled = !editor.IsReadOnly;
       editor.UserData = efpRB;
       editor.ReadValues += new UserPermissionEditorRWEventHandler(Editor_ReadValues);
@@ -114,18 +114,18 @@ namespace FreeLibSet.Forms.Docs
 
     void Editor_ReadValues(object sender, UserPermissionEditorRWEventArgs args)
     {
-      int IntValue = GetIndexValue(args.Permission);
-      UserPermissionEditor Editor = (UserPermissionEditor)sender;
-      EFPRadioButtons efpRB = (EFPRadioButtons)(Editor.UserData);
-      efpRB.SelectedIndex = IntValue;
+      int intValue = GetIndexValue(args.Permission);
+      UserPermissionEditor editor = (UserPermissionEditor)sender;
+      EFPRadioButtons efpRB = (EFPRadioButtons)(editor.UserData);
+      efpRB.SelectedIndex = intValue;
     }
 
     void Editor_WriteValues(object sender, UserPermissionEditorRWEventArgs args)
     {
-      UserPermissionEditor Editor = (UserPermissionEditor)sender;
-      EFPRadioButtons efpRB = (EFPRadioButtons)(Editor.UserData);
-      int IntValue = efpRB.SelectedIndex;
-      SetIndexValue(args.Permission, IntValue);
+      UserPermissionEditor editor = (UserPermissionEditor)sender;
+      EFPRadioButtons efpRB = (EFPRadioButtons)(editor.UserData);
+      int intValue = efpRB.SelectedIndex;
+      SetIndexValue(args.Permission, intValue);
     }
 
     #endregion

@@ -45,16 +45,16 @@ namespace FreeLibSet.Data.Docs
     public DBxSingleSubDocs this[string subDocTypeName]
     {
       get
-      { 
-        DBxMultiSubDocs SubDocs=_Owner.MultiDocs.SubDocs[subDocTypeName];
-        if (SubDocs == null)
+      {
+        DBxMultiSubDocs subDocs = _Owner.MultiDocs.SubDocs[subDocTypeName];
+        if (subDocs == null)
         {
           if (String.IsNullOrEmpty(subDocTypeName))
             throw new ArgumentNullException("subDocTypeName");
           else
             throw new ArgumentException("Неизвестный вид поддокументов \"" + subDocTypeName + "\"", "subDocTypeName");
         }
-        return new DBxSingleSubDocs(_Owner, SubDocs);
+        return new DBxSingleSubDocs(_Owner, subDocs);
       }
     }
 
@@ -67,8 +67,8 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        DBxMultiSubDocs SubDocs = _Owner.MultiDocs.SubDocs[index];
-        return new DBxSingleSubDocs(_Owner, SubDocs);
+        DBxMultiSubDocs subDocs = _Owner.MultiDocs.SubDocs[index];
+        return new DBxSingleSubDocs(_Owner, subDocs);
       }
     }
 

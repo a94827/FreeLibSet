@@ -318,10 +318,10 @@ namespace FreeLibSet.Data.Docs
 
       for (int i = 0; i < detailBase.Struct.Columns.Count; i++)
       {
-        DBxColumnStruct columnDef = detailBase.Struct.Columns[i];
-        if (!String.IsNullOrEmpty(columnDef.MasterTableName))
+        DBxColumnStruct colDef = detailBase.Struct.Columns[i];
+        if (!String.IsNullOrEmpty(colDef.MasterTableName))
         {
-          switch (columnDef.MasterTableName)
+          switch (colDef.MasterTableName)
           {
             case "DocTables":
               continue;
@@ -334,17 +334,17 @@ namespace FreeLibSet.Data.Docs
           }
           DBxDocType dt1;
           DBxSubDocType sdt1;
-          if (!(columnDef.MasterTableName == "BinData" || columnDef.MasterTableName == "FileNames"))
+          if (!(colDef.MasterTableName == "BinData" || colDef.MasterTableName == "FileNames"))
           {
-            if (!dts.FindByTableName(columnDef.MasterTableName, out dt1, out sdt1))
+            if (!dts.FindByTableName(colDef.MasterTableName, out dt1, out sdt1))
               throw new BugException("Объявление таблицы \"" + detailBase.Name +
-                "\" содержит описание ссылочного поля \"" + columnDef.ColumnName +
-                "\", которое ссылается на неизвестную таблицу \"" + columnDef.MasterTableName + "\"");
+                "\" содержит описание ссылочного поля \"" + colDef.ColumnName +
+                "\", которое ссылается на неизвестную таблицу \"" + colDef.MasterTableName + "\"");
           }
 
-          TableRefList list = InternalGetList(columnDef.MasterTableName);
+          TableRefList list = InternalGetList(colDef.MasterTableName);
 
-          list.RefColumns.Add(new RefColumnInfo(detailDocType, detailSubDocType, columnDef));
+          list.RefColumns.Add(new RefColumnInfo(detailDocType, detailSubDocType, colDef));
         }
       }
 

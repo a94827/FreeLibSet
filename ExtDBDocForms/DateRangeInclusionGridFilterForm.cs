@@ -111,28 +111,28 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      DateRangeInclusionGridFilterForm Form = new DateRangeInclusionGridFilterForm();
-      Form.Text = DisplayName;
-      Form.efpMode[1].Control.Text = WorkDateText;
-      Form.efpDate.DisabledValue = WorkDate;
+      DateRangeInclusionGridFilterForm form = new DateRangeInclusionGridFilterForm();
+      form.Text = DisplayName;
+      form.efpMode[1].Control.Text = WorkDateText;
+      form.efpDate.DisabledValue = WorkDate;
 
 
       if (Date.HasValue)
       {
         if (UseWorkDate)
-          Form.efpMode.SelectedIndex = 1;
+          form.efpMode.SelectedIndex = 1;
         else
         {
-          Form.efpMode.SelectedIndex = 2;
-          Form.efpDate.NValue = Date;
+          form.efpMode.SelectedIndex = 2;
+          form.efpDate.NValue = Date;
         }
       }
       else
-        Form.efpMode.SelectedIndex = 0;
+        form.efpMode.SelectedIndex = 0;
 
-      if (EFPApp.ShowDialog(Form, true, dialogPosition) != DialogResult.OK)
+      if (EFPApp.ShowDialog(form, true, dialogPosition) != DialogResult.OK)
         return false;
-      switch (Form.efpMode.SelectedIndex)
+      switch (form.efpMode.SelectedIndex)
       {
         case 0:
           Date = null;
@@ -143,7 +143,7 @@ namespace FreeLibSet.Forms.Docs
           break;
         case 2:
           UseWorkDate = false;
-          Date = Form.efpDate.NValue;
+          Date = form.efpDate.NValue;
           break;
       }
       return true;

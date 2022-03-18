@@ -688,7 +688,6 @@ namespace FreeLibSet.Data
       }
     }
 
-
     #endregion
 
     #region IDBxCacheSource Members
@@ -730,12 +729,12 @@ namespace FreeLibSet.Data
         {
           DBxCacheLoadRequest.PageInfo pi = request.TablePages[i];
 
-          string[] SearchPageKeys = new string[4] { DBIdentityMD5, 
+          string[] searchPageKeys = new string[4] { DBIdentityMD5, 
             pi.TableName, 
             pi.FirstId.ToString(),
             DataTools.MD5SumFromString(pi.ColumnNames.AsString)};
 
-          DBxCacheTablePage page = Cache.GetItemIfExists<DBxCacheTablePage>(SearchPageKeys, DBxTableCache.Persistance);
+          DBxCacheTablePage page = Cache.GetItemIfExists<DBxCacheTablePage>(searchPageKeys, DBxTableCache.Persistance);
           if (page == null)
           {
             if (request2 == null)
@@ -753,12 +752,12 @@ namespace FreeLibSet.Data
         {
           DBxCacheLoadRequest.IndividualInfo ii = request.IndividualValues[i];
 
-          string[] SearchPageKeys = new string[4] { DBIdentityMD5,             
+          string[] searchPageKeys = new string[4] { DBIdentityMD5,             
             ii.TableName, 
             ii.Id.ToString(),
             ii.ColumnName};
 
-          DBxCacheIndividualValue page = Cache.GetItemIfExists<DBxCacheIndividualValue>(SearchPageKeys, DBxTableCache.Persistance);
+          DBxCacheIndividualValue page = Cache.GetItemIfExists<DBxCacheIndividualValue>(searchPageKeys, DBxTableCache.Persistance);
           if (page == null)
           {
             if (request2 == null)

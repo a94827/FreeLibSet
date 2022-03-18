@@ -235,15 +235,15 @@ namespace FreeLibSet.Data
       DBxSelectFormatter fsf = new DBxSelectFormatter(info, Validator);
       Buffer.Clear();
       fsf.Format(Buffer);
-      DataTable Table = SQLExecuteDataTable(Buffer.SB.ToString(), info.TableName);
+      DataTable table = SQLExecuteDataTable(Buffer.SB.ToString(), info.TableName);
 
       // Мы не устанавливали альясы на имена полей, т.к. альясы не могут содержать
       // точки, а нам очень хочется вернуть имена столбцов точно так, как они были
       // запрошены
       try
       {
-        fsf.CorrectColumnNames(Table);
-        fsf.CorrectColumnTypes(ref Table, Buffer);
+        fsf.CorrectColumnNames(table);
+        fsf.CorrectColumnTypes(ref table, Buffer);
       }
       catch (Exception e)
       {
@@ -257,7 +257,7 @@ namespace FreeLibSet.Data
         throw;
       }
 
-      return Table;
+      return table;
     }
 
 
@@ -271,13 +271,13 @@ namespace FreeLibSet.Data
     /// <returns>Набор данных из одной таблицы с единственной колонкой</returns>
     public DataTable FillUniqueColumnValues(string tableName, string columnName, DBxFilter where)
     {
-      DBxSelectInfo Info = new DBxSelectInfo();
-      Info.TableName = tableName;
-      Info.Expressions.Add(columnName);
-      Info.Where = where;
-      Info.Unique = true;
-      Info.OrderBy = new DBxOrder(columnName);
-      return FillSelect(Info);
+      DBxSelectInfo info = new DBxSelectInfo();
+      info.TableName = tableName;
+      info.Expressions.Add(columnName);
+      info.Where = where;
+      info.Unique = true;
+      info.OrderBy = new DBxOrder(columnName);
+      return FillSelect(info);
     }
 
 
@@ -353,9 +353,9 @@ namespace FreeLibSet.Data
       Buffer.Clear();
       fsf.Format(Buffer);
 
-      string CmdText = Buffer.SB.ToString();
+      string cmdText = Buffer.SB.ToString();
 
-      DbDataReader rdr = SQLExecuteReader(CmdText);
+      DbDataReader rdr = SQLExecuteReader(cmdText);
 
 #if XXXXX
       // Мы не устанавливали альясы на имена полей, т.к. альясы не могут содержать
@@ -398,11 +398,11 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор строки или 0</returns>
     public Int32 FindRecord(string tableName, string columnName, object value)
     {
-      string[] ColumnNames = new string[1];
-      ColumnNames[0] = columnName;
-      object[] Values = new object[1];
-      Values[0] = value;
-      return FindRecord(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames = new string[1];
+      columnNames[0] = columnName;
+      object[] values = new object[1];
+      values[0] = value;
+      return FindRecord(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -414,10 +414,10 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор строки или 0</returns>
     public Int32 FindRecord(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return FindRecord(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return FindRecord(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -451,9 +451,9 @@ namespace FreeLibSet.Data
         throw new ArgumentException("Не задано ни одного поля для поиска в FindRecord для таблицы " + tableName, "columnNames");
 #endif
 
-      DBxFilter Filter = ValueFilter.CreateFilter(columnNames, values);
+      DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
 
-      return FindRecord(tableName, Filter, orderBy);
+      return FindRecord(tableName, filter, orderBy);
     }
 
     /// <summary>
@@ -498,14 +498,14 @@ namespace FreeLibSet.Data
       Validator.CheckTablePrimaryKeyInt32(tableName);
 
 
-      DBxSelectInfo Info = new DBxSelectInfo();
-      Info.TableName = tableName;
-      Info.Expressions.Add(DB.Struct.Tables[tableName].PrimaryKey);
-      Info.Where = where;
-      Info.OrderBy = orderBy;
-      Info.MaxRecordCount = 1;
+      DBxSelectInfo info = new DBxSelectInfo();
+      info.TableName = tableName;
+      info.Expressions.Add(DB.Struct.Tables[tableName].PrimaryKey);
+      info.Where = where;
+      info.OrderBy = orderBy;
+      info.MaxRecordCount = 1;
 
-      DBxSelectFormatter fsf = new DBxSelectFormatter(Info, Validator);
+      DBxSelectFormatter fsf = new DBxSelectFormatter(info, Validator);
       Buffer.Clear();
       fsf.Format(Buffer);
       object res = SQLExecuteScalar(Buffer.SB.ToString());
@@ -531,25 +531,25 @@ namespace FreeLibSet.Data
     {
       Validator.CheckTablePrimaryKeyInt32(tableName);
 
-      DBxSelectInfo Info = new DBxSelectInfo();
-      Info.TableName = tableName;
-      Info.Expressions.Add(DB.Struct.Tables[tableName].PrimaryKey);
-      Info.Where = where;
+      DBxSelectInfo info = new DBxSelectInfo();
+      info.TableName = tableName;
+      info.Expressions.Add(DB.Struct.Tables[tableName].PrimaryKey);
+      info.Where = where;
 
       if (singleOnly)
-        Info.MaxRecordCount = 2; // чтобы отличить, найдена ли ровно одна запись
+        info.MaxRecordCount = 2; // чтобы отличить, найдена ли ровно одна запись
       else
-        Info.MaxRecordCount = 1;
+        info.MaxRecordCount = 1;
 
-      DBxSelectFormatter fsf = new DBxSelectFormatter(Info, Validator);
+      DBxSelectFormatter fsf = new DBxSelectFormatter(info, Validator);
       Buffer.Clear();
       fsf.Format(Buffer);
 
       if (singleOnly)
       {
-        DataTable Table = SQLExecuteDataTable(Buffer.SB.ToString(), tableName);
-        if (Table.Rows.Count == 1)
-          return DataTools.GetInt(Table.Rows[0][0]);
+        DataTable table = SQLExecuteDataTable(Buffer.SB.ToString(), tableName);
+        if (table.Rows.Count == 1)
+          return DataTools.GetInt(table.Rows[0][0]);
         else
           return 0;
       }
@@ -653,11 +653,11 @@ namespace FreeLibSet.Data
     /// <returns>Массив идентификаторов</returns>
     public IdList GetIds(string tableName, string columnName, object value)
     {
-      string[] ColumnNames = new string[1];
-      ColumnNames[0] = columnName;
-      object[] Values = new object[1];
-      Values[0] = value;
-      return GetIds(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames = new string[1];
+      columnNames[0] = columnName;
+      object[] values = new object[1];
+      values[0] = value;
+      return GetIds(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -668,10 +668,10 @@ namespace FreeLibSet.Data
     /// <returns>Массив идентификаторов строк</returns>
     public IdList GetIds(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return GetIds(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return GetIds(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -686,8 +686,8 @@ namespace FreeLibSet.Data
       if (columnNames.Count == 0)
         throw new ArgumentException("Не задано ни одного поля для поиска в GetIds для таблицы " + tableName, "columnNames");
 
-      DBxFilter Filter = ValueFilter.CreateFilter(columnNames, values);
-      return GetIds(tableName, Filter);
+      DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
+      return GetIds(tableName, filter);
     }
 
     /// <summary>
@@ -702,10 +702,10 @@ namespace FreeLibSet.Data
       Validator.CheckTablePrimaryKeyInt32(tableName);
       IdList lst = new IdList();
 
-      using (DbDataReader Reader = ReaderSelect(tableName, DB.Struct.Tables[tableName].PrimaryKey, where))
+      using (DbDataReader rdr = ReaderSelect(tableName, DB.Struct.Tables[tableName].PrimaryKey, where))
       {
-        while (Reader.Read())
-          lst.Add(Reader.GetInt32(0));
+        while (rdr.Read())
+          lst.Add(rdr.GetInt32(0));
       }
 
       return lst;
@@ -798,13 +798,13 @@ namespace FreeLibSet.Data
     /// <returns>Значение</returns>
     public object GetValue(string tableName, Int32 id, string columnName)
     {
-      object Value;
-      if (!GetValue(tableName, id, columnName, out Value))
+      object value;
+      if (!GetValue(tableName, id, columnName, out value))
       {
         if (id != 0)
           throw new DBxRecordNotFoundException(tableName, id.ToString()); // 20.12.2019
       }
-      return Value;
+      return value;
     }
 
     /// <summary>
@@ -837,20 +837,20 @@ namespace FreeLibSet.Data
       if (p >= 0)
       {
         // Ссылочное поле
-        string ColName1 = columnName.Substring(0, p);
-        object Value1;
-        if (!GetValue(tableName, id, ColName1, out Value1))
+        string colName1 = columnName.Substring(0, p);
+        object value1;
+        if (!GetValue(tableName, id, colName1, out value1))
           return false;
-        Int32 Id2 = DataTools.GetInt(Value1);
-        if (Id2 == 0)
+        Int32 id2 = DataTools.GetInt(value1);
+        if (id2 == 0)
           return false;
 
         // Находим ссылочную таблицу
-        DBxColumnStruct ColDef = DB.Struct.Tables[tableName].Columns[ColName1];
-        if (String.IsNullOrEmpty(ColDef.MasterTableName))
-          throw new InvalidOperationException("Поле \"" + ColName1 + "\" таблицы \"" + tableName + "\" не является ссылочным");
+        DBxColumnStruct colDef = DB.Struct.Tables[tableName].Columns[colName1];
+        if (String.IsNullOrEmpty(colDef.MasterTableName))
+          throw new InvalidOperationException("Поле \"" + colName1 + "\" таблицы \"" + tableName + "\" не является ссылочным");
         // Рекурсивный вызов
-        return GetValue(ColDef.MasterTableName, Id2, columnName.Substring(p + 1), out value);
+        return GetValue(colDef.MasterTableName, id2, columnName.Substring(p + 1), out value);
       }
 
       Buffer.SB.Append("SELECT ");
@@ -934,8 +934,8 @@ namespace FreeLibSet.Data
     /// <returns>Массив значений полей строки</returns>
     public object[] GetValues(string tableName, Int32 id, string columnNames)
     {
-      DBxColumns ColumnNames2 = new DBxColumns(columnNames);
-      return GetValues(tableName, id, ColumnNames2);
+      DBxColumns columnNames2 = new DBxColumns(columnNames);
+      return GetValues(tableName, id, columnNames2);
     }
 
 
@@ -1533,12 +1533,12 @@ namespace FreeLibSet.Data
       if (id == 0)
         throw new DBxNoIdArgumentException("Не задан идентификатор записи", "id"); // 20.12.2019
 
-      string[] ColumnNames = new string[1];
-      ColumnNames[0] = columnName;
+      string[] columnNames = new string[1];
+      columnNames[0] = columnName;
       object[] Values = new object[1];
       Values[0] = value;
 
-      SetValues(tableName, new IdsFilter(DB.Struct.Tables[tableName].PrimaryKey[0], id), new DBxColumns(ColumnNames), Values);
+      SetValues(tableName, new IdsFilter(DB.Struct.Tables[tableName].PrimaryKey[0], id), new DBxColumns(columnNames), Values);
     }
 
     /// <summary>
@@ -1550,12 +1550,12 @@ namespace FreeLibSet.Data
     /// <param name="value">Значение</param>
     public void SetValue(string tableName, DBxFilter where, string columnName, object value)
     {
-      string[] ColumnNames = new string[1];
-      ColumnNames[0] = columnName;
-      object[] Values = new object[1];
-      Values[0] = value;
+      string[] columnNames = new string[1];
+      columnNames[0] = columnName;
+      object[] values = new object[1];
+      values[0] = value;
 
-      SetValues(tableName, where, new DBxColumns(ColumnNames), Values);
+      SetValues(tableName, where, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -1571,7 +1571,7 @@ namespace FreeLibSet.Data
       Buffer.Clear();
 
       Validator.CheckTableName(tableName, DBxAccessMode.Full);
-      DBxColumnType[] ColumnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
+      DBxColumnType[] columnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
 
       // 12.07.2021
       // Фильтра может не быть
@@ -1593,7 +1593,7 @@ namespace FreeLibSet.Data
           Buffer.SB.Append(", ");
         Buffer.FormatColumnName(columnNames[i]);
         Buffer.SB.Append("=");
-        Buffer.FormatValue(values[i], ColumnTypes[i]);
+        Buffer.FormatValue(values[i], columnTypes[i]);
       }
 
       if (where != null) // 12.07.2021
@@ -1683,7 +1683,6 @@ namespace FreeLibSet.Data
       }
     }
 
-
     /// <summary>
     /// Выполняет укорачивание длины текстовых полей
     /// </summary>
@@ -1698,41 +1697,41 @@ namespace FreeLibSet.Data
 
       DBxTableStruct ts = DB.Struct.Tables[tableName];
 
-      DBxColumnStruct[] ColDefs = new DBxColumnStruct[table.Columns.Count];
+      DBxColumnStruct[] colDefs = new DBxColumnStruct[table.Columns.Count];
 
-      bool Needed = false;
+      bool needed = false;
       for (int i = 0; i < table.Columns.Count; i++)
       {
         DBxColumnStruct cs = ts.Columns[table.Columns[i].ColumnName];
         if (cs.ColumnType == DBxColumnType.String)
         {
-          ColDefs[i] = cs;
-          Needed = true;
+          colDefs[i] = cs;
+          needed = true;
         }
       }
 
-      if (!Needed)
+      if (!needed)
         return;
 
       #endregion
 
       #region Обрезка
 
-      foreach (DataRow Row in table.Rows)
+      foreach (DataRow row in table.Rows)
       {
         for (int i = 0; i < table.Columns.Count; i++)
         {
-          DBxColumnStruct cs = ColDefs[i];
+          DBxColumnStruct cs = colDefs[i];
           if (cs == null)
             continue;
 
-          string s = DataTools.GetString(Row[i]);
+          string s = DataTools.GetString(row[i]);
           if (!String.IsNullOrEmpty(s))
           {
             if (s.Length > cs.MaxLength)
             {
               s = s.Substring(0, cs.MaxLength);
-              Row[i] = s;
+              row[i] = s;
             }
           }
         }
@@ -1740,7 +1739,6 @@ namespace FreeLibSet.Data
 
       #endregion
     }
-
 
     #endregion
 
@@ -1760,9 +1758,9 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
     public Int32 AddRecordWithIdResult(string tableName, string columnName, object value)
     {
-      object[] Values = new object[1];
-      Values[0] = value;
-      return AddRecordWithIdResult(tableName, new DBxColumns(columnName), Values);
+      object[] values = new object[1];
+      values[0] = value;
+      return AddRecordWithIdResult(tableName, new DBxColumns(columnName), values);
     }
 
     /// <summary>
@@ -1774,10 +1772,10 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
     public Int32 AddRecordWithIdResult(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return AddRecordWithIdResult(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return AddRecordWithIdResult(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -1804,9 +1802,9 @@ namespace FreeLibSet.Data
     /// <param name="value">Значение для поля <paramref name="columnName"/></param>
     public void AddRecord(string tableName, string columnName, object value)
     {
-      object[] Values = new object[1];
-      Values[0] = value;
-      AddRecord(tableName, new DBxColumns(columnName), Values);
+      object[] values = new object[1];
+      values[0] = value;
+      AddRecord(tableName, new DBxColumns(columnName), values);
     }
 
     /// <summary>
@@ -1816,10 +1814,10 @@ namespace FreeLibSet.Data
     /// <param name="columnNamesAndValues">Имена столбцов и значения полей</param>
     public void AddRecord(string tableName, IDictionary columnNamesAndValues)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      AddRecord(tableName, new DBxColumns(ColumnNames), Values);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      AddRecord(tableName, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -1952,9 +1950,9 @@ namespace FreeLibSet.Data
         DoAddRecordsMultiRows(tableName, table);
       else
       {
-        DBxColumns ColumnNames = DBxColumns.FromColumns(table.Columns);
-        foreach (DataRow SrcRow in table.Rows)
-          AddRecord(tableName, ColumnNames, SrcRow.ItemArray);
+        DBxColumns columnNames = DBxColumns.FromColumns(table.Columns);
+        foreach (DataRow srcRow in table.Rows)
+          AddRecord(tableName, columnNames, srcRow.ItemArray);
       }
     }
 
@@ -1966,12 +1964,12 @@ namespace FreeLibSet.Data
     /// <param name="table">Таблица исходных данных</param>
     private void DoAddRecordsMultiRows(string tableName, DataTable table)
     {
-      DBxColumns ColumnNames = DBxColumns.FromColumns(table.Columns);
-      DBxColumnType[] ColumnTypes = Validator.CheckTableColumnNames(tableName, ColumnNames, false, DBxAccessMode.Full);
+      DBxColumns columnNames = DBxColumns.FromColumns(table.Columns);
+      DBxColumnType[] columnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
 
-      DBxSqlBuffer Buffer2 = new DBxSqlBuffer(Buffer.Formatter); // для загрузки списка значений
-      string DelayedBuffer = null; // если на предыдущем такте стало слишком много команд
-      object[] Values = new object[ColumnNames.Count];
+      DBxSqlBuffer buffer2 = new DBxSqlBuffer(Buffer.Formatter); // для загрузки списка значений
+      string delayedBuffer = null; // если на предыдущем такте стало слишком много команд
+      object[] values = new object[columnNames.Count];
 
       int i1 = 0;
       while (i1 < table.Rows.Count)
@@ -1980,45 +1978,45 @@ namespace FreeLibSet.Data
         Buffer.SB.Append("INSERT INTO ");
         Buffer.FormatTableName(tableName); // 20.09.2019
         Buffer.SB.Append(" (");
-        Buffer.FormatCSColumnNames(ColumnNames);
+        Buffer.FormatCSColumnNames(columnNames);
         Buffer.SB.Append(") VALUES ");
 
-        int RowCount = Math.Min(Buffer.Formatter.MaxInsertIntoValueRowCount, table.Rows.Count - i1);
+        int rowCount = Math.Min(Buffer.Formatter.MaxInsertIntoValueRowCount, table.Rows.Count - i1);
         int i2 = 0;
-        while (i2 < RowCount)
+        while (i2 < rowCount)
         {
-          if (DelayedBuffer != null)
+          if (delayedBuffer != null)
           {
             // На предыдущем цикле переполнился буфер
-            Buffer.SB.Append(DelayedBuffer);
-            DelayedBuffer = null;
+            Buffer.SB.Append(delayedBuffer);
+            delayedBuffer = null;
             i1++;
             i2++;
             continue;
           }
 
-          DataRow SrcRow = table.Rows[i1]; // а не i1+i2
+          DataRow srcRow = table.Rows[i1]; // а не i1+i2
 
-          for (int j = 0; j < Values.Length; j++)
+          for (int j = 0; j < values.Length; j++)
           {
-            Values[j] = SrcRow[j];
-            if (Values[j] is DBNull)
-              Values[j] = null;
+            values[j] = srcRow[j];
+            if (values[j] is DBNull)
+              values[j] = null;
           }
-          Buffer2.Clear();
-          Buffer2.SB.Append("(");
-          Buffer2.FormatCSValues(Values, ColumnTypes);
-          Buffer2.SB.Append(')');
+          buffer2.Clear();
+          buffer2.SB.Append("(");
+          buffer2.FormatCSValues(values, columnTypes);
+          buffer2.SB.Append(')');
 
-          if (i2 > 0 && (Buffer.Formatter.MaxSqlLength - Buffer.SB.Length) < (Buffer2.SB.Length + 1))
+          if (i2 > 0 && (Buffer.Formatter.MaxSqlLength - Buffer.SB.Length) < (buffer2.SB.Length + 1))
           {
-            DelayedBuffer = Buffer2.SB.ToString(); // на следующем такте
+            delayedBuffer = buffer2.SB.ToString(); // на следующем такте
             break;
           }
 
           if (i2 > 0)
             Buffer.SB.Append(",");
-          Buffer.SB.Append(Buffer2.SB.ToString());
+          Buffer.SB.Append(buffer2.SB.ToString());
           i1++;
           i2++;
         }
@@ -2036,13 +2034,13 @@ namespace FreeLibSet.Data
     {
       using (DBxTransactionArray tr = new DBxTransactionArray(this))
       {
-        foreach (DataTable Table in ds.Tables)
+        foreach (DataTable table in ds.Tables)
         {
-          Validator.CheckTableName(Table.TableName, DBxAccessMode.Full);
-          if (Table.Rows.Count == 0)
+          Validator.CheckTableName(table.TableName, DBxAccessMode.Full);
+          if (table.Rows.Count == 0)
             continue; // Нечего добавлять
 
-          DoAddRecords(Table.TableName, Table);
+          DoAddRecords(table.TableName, table);
         }
 
         tr.Commit();
@@ -2085,13 +2083,13 @@ namespace FreeLibSet.Data
         DoAddRecordsMultiRows(tableName, source);
       else
       {
-        DBxColumns ColumnNames = DBxColumns.FromDataReader(source);
-        object[] Values = new object[ColumnNames.Count];
+        DBxColumns columnNames = DBxColumns.FromDataReader(source);
+        object[] values = new object[columnNames.Count];
         while (source.Read())
         {
-          for (int j = 0; j < Values.Length; j++)
-            Values[j] = source[j];
-          AddRecord(tableName, ColumnNames, Values);
+          for (int j = 0; j < values.Length; j++)
+            values[j] = source[j];
+          AddRecord(tableName, columnNames, values);
         }
       }
     }
@@ -2104,63 +2102,63 @@ namespace FreeLibSet.Data
     /// <param name="source">Открытая на чтение таблица данных, возможно, в другой базе данных</param>
     private void DoAddRecordsMultiRows(string tableName, DbDataReader source)
     {
-      DBxColumns ColumnNames = DBxColumns.FromDataReader(source);
-      DBxColumnType[] ColumnTypes = Validator.CheckTableColumnNames(tableName, ColumnNames, false, DBxAccessMode.Full);
+      DBxColumns columnNames = DBxColumns.FromDataReader(source);
+      DBxColumnType[] columnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
 
-      DBxSqlBuffer Buffer2 = new DBxSqlBuffer(Buffer.Formatter); // для загрузки списка значений
-      string DelayedBuffer = null; // если на предыдущем такте стало слишком много команд
-      object[] Values = new object[ColumnNames.Count];
+      DBxSqlBuffer buffer2 = new DBxSqlBuffer(Buffer.Formatter); // для загрузки списка значений
+      string delayedBuffer = null; // если на предыдущем такте стало слишком много команд
+      object[] values = new object[columnNames.Count];
 
-      int RowCount = Buffer.Formatter.MaxInsertIntoValueRowCount;
+      int rowCount = Buffer.Formatter.MaxInsertIntoValueRowCount;
 
-      bool Finished = false;
+      bool finished = false;
 
-      while (!Finished)
+      while (!finished)
       {
         Buffer.Clear();
         Buffer.SB.Append("INSERT INTO ");
         Buffer.FormatTableName(tableName); // 20.09.2019
         Buffer.SB.Append(" (");
-        Buffer.FormatCSColumnNames(ColumnNames);
+        Buffer.FormatCSColumnNames(columnNames);
         Buffer.SB.Append(") VALUES ");
 
         int i2 = 0;
-        while (i2 < RowCount)
+        while (i2 < rowCount)
         {
-          if (DelayedBuffer != null)
+          if (delayedBuffer != null)
           {
             // На предыдущем цикле переполнился буфер
-            Buffer.SB.Append(DelayedBuffer);
-            DelayedBuffer = null;
+            Buffer.SB.Append(delayedBuffer);
+            delayedBuffer = null;
             i2++;
             continue;
           }
 
-          Finished = !source.Read();
-          if (Finished)
+          finished = !source.Read();
+          if (finished)
             break;
 
-          for (int j = 0; j < Values.Length; j++)
+          for (int j = 0; j < values.Length; j++)
           {
-            Values[j] = source[j];
-            if (Values[j] is DBNull)
-              Values[j] = null;
+            values[j] = source[j];
+            if (values[j] is DBNull)
+              values[j] = null;
           }
 
-          Buffer2.Clear();
-          Buffer2.SB.Append("(");
-          Buffer2.FormatCSValues(Values, ColumnTypes);
-          Buffer2.SB.Append(')');
+          buffer2.Clear();
+          buffer2.SB.Append("(");
+          buffer2.FormatCSValues(values, columnTypes);
+          buffer2.SB.Append(')');
 
-          if (i2 > 0 && (Buffer.Formatter.MaxSqlLength - Buffer.SB.Length) < (Buffer2.SB.Length + 1))
+          if (i2 > 0 && (Buffer.Formatter.MaxSqlLength - Buffer.SB.Length) < (buffer2.SB.Length + 1))
           {
-            DelayedBuffer = Buffer2.SB.ToString(); // на следующем такте
+            delayedBuffer = buffer2.SB.ToString(); // на следующем такте
             break;
           }
 
           if (i2 > 0)
             Buffer.SB.Append(",");
-          Buffer.SB.Append(Buffer2.SB.ToString());
+          Buffer.SB.Append(buffer2.SB.ToString());
           i2++;
         }
 
@@ -2194,19 +2192,19 @@ namespace FreeLibSet.Data
 
       #region Структура таблицы
 
-      DataTable Table = new DataTable();
+      DataTable table = new DataTable();
       for (int i = 0; i < columnNamesAndValuesArray.Length; i++)
       {
         if (columnNamesAndValuesArray[i] == null)
           throw new ArgumentNullException("ColumnNamesAndValuesArray[" + i.ToString() + "]");
 
-        foreach (string ColumnName in columnNamesAndValuesArray[i].Keys)
+        foreach (string columnName in columnNamesAndValuesArray[i].Keys)
         {
-          if (!Table.Columns.Contains(ColumnName))
+          if (!table.Columns.Contains(columnName))
           {
-            object v = columnNamesAndValuesArray[i][ColumnName];
+            object v = columnNamesAndValuesArray[i][columnName];
             if (v != null)
-              Table.Columns.Add(ColumnName, v.GetType());
+              table.Columns.Add(columnName, v.GetType());
           }
         }
       }
@@ -2217,19 +2215,19 @@ namespace FreeLibSet.Data
 
       for (int i = 0; i < columnNamesAndValuesArray.Length; i++)
       {
-        DataRow Row = Table.Rows.Add();
-        foreach (string ColumnName in columnNamesAndValuesArray[i].Keys)
+        DataRow row = table.Rows.Add();
+        foreach (string columnName in columnNamesAndValuesArray[i].Keys)
         {
-          object v = columnNamesAndValuesArray[i][ColumnName];
+          object v = columnNamesAndValuesArray[i][columnName];
           if (v != null)
-            Row[ColumnName] = v;
+            row[columnName] = v;
         }
       }
 
       #endregion
 
       // Используем основной метод, принимающий DataTable
-      AddRecords(tableName, Table);
+      AddRecords(tableName, table);
     }
 
     #endregion
@@ -2472,14 +2470,14 @@ namespace FreeLibSet.Data
     /// <param name="colPosInfo">Информация о позициях столбцов в таблице <paramref name="table"/></param>
     protected virtual void DoUpdateRecords(string tableName, DataTable table, DataTableColumnPositions colPosInfo)
     {
-      object[] Values = new object[colPosInfo.OtherColumnNames.Count];
+      object[] values = new object[colPosInfo.OtherColumnNames.Count];
 
-      foreach (DataRow SrcRow in table.Rows)
+      foreach (DataRow srcRow in table.Rows)
       {
-        DBxFilter Filter = colPosInfo.CreatePKFilter(SrcRow);
-        colPosInfo.FillOtherValues(SrcRow, Values);
+        DBxFilter filter = colPosInfo.CreatePKFilter(srcRow);
+        colPosInfo.FillOtherValues(srcRow, values);
 
-        SetValues(tableName, Filter, colPosInfo.OtherColumnNames, Values);
+        SetValues(tableName, filter, colPosInfo.OtherColumnNames, values);
       }
     }
 
@@ -2496,12 +2494,12 @@ namespace FreeLibSet.Data
     {
       using (DBxTransactionArray tr = new DBxTransactionArray(this))
       {
-        foreach (DataTable Table in ds.Tables)
+        foreach (DataTable table in ds.Tables)
         {
-          Validator.CheckTableName(Table.TableName, DBxAccessMode.Full);
-          if (Table.Rows.Count == 0)
+          Validator.CheckTableName(table.TableName, DBxAccessMode.Full);
+          if (table.Rows.Count == 0)
             continue; // Нечего обновлять
-          UpdateRecords2(Table.TableName, Table);
+          UpdateRecords2(table.TableName, table);
         }
 
         tr.Commit();
@@ -2623,41 +2621,41 @@ namespace FreeLibSet.Data
       if (pkColumnDef != null) // на случай, если проверка структуры отключена
         pkColType = pkColumnDef.ColumnType;
 
-      DataTable ExTable = FillSelect(tableName,
+      DataTable exTable = FillSelect(tableName,
         DB.Struct.Tables[tableName].PrimaryKey,
         new ValuesFilter(pkColumnName, pkValues, pkColType),
         null);
-      if (ExTable.Rows.Count == 0)
+      if (exTable.Rows.Count == 0)
       {
         // Все строки новые
         DoAddRecords(tableName, table);
       }
-      else if (ExTable.Rows.Count == table.Rows.Count)
+      else if (exTable.Rows.Count == table.Rows.Count)
       {
         // Все строки существующие
         UpdateRecords2(tableName, table);
       }
       else
       {
-        DataTools.SetPrimaryKey(ExTable, pkColumnName);
+        DataTools.SetPrimaryKey(exTable, pkColumnName);
         // Часть строк новые, а часть - старые
-        DataTable NewTable = table.Clone();
-        DataTable UpdTable = table.Clone();
+        DataTable newTable = table.Clone();
+        DataTable updTable = table.Clone();
         foreach (DataRow SrcRow in table.Rows)
         {
-          if (ExTable.Rows.Find(SrcRow[pPK]) != null)
-            UpdTable.Rows.Add(SrcRow.ItemArray);
+          if (exTable.Rows.Find(SrcRow[pPK]) != null)
+            updTable.Rows.Add(SrcRow.ItemArray);
           else
-            NewTable.Rows.Add(SrcRow.ItemArray);
+            newTable.Rows.Add(SrcRow.ItemArray);
         }
 
 #if DEBUG
-        if (UpdTable.Rows.Count == 0 || NewTable.Rows.Count == 0)
+        if (updTable.Rows.Count == 0 || newTable.Rows.Count == 0)
           throw new BugException("Одна из таблиц пустая");
 #endif
 
-        UpdateRecords2(tableName, UpdTable);
-        DoAddRecords(tableName, NewTable);
+        UpdateRecords2(tableName, updTable);
+        DoAddRecords(tableName, newTable);
       }
     }
 
@@ -2672,27 +2670,27 @@ namespace FreeLibSet.Data
       if (colPosInfo.OtherColumnNames.Count == 0)
         throw new ArgumentException("Таблица DataTable имеет только столбцы первичного ключа (" + colPosInfo.PKColumnNames.ToString() + ") и ни одного дополнительного столбца для обновления", "table");
 
-      DataTable NewTable = null;
-      object[] Values = new object[colPosInfo.OrherColumnPositions.Length];
+      DataTable newTable = null;
+      object[] values = new object[colPosInfo.OrherColumnPositions.Length];
 
-      foreach (DataRow SrcRow in table.Rows)
+      foreach (DataRow srcRow in table.Rows)
       {
-        DBxFilter Filter = colPosInfo.CreatePKFilter(SrcRow);
+        DBxFilter Filter = colPosInfo.CreatePKFilter(srcRow);
         if (GetRecordCount(tableName, Filter) == 0)
         {
-          if (NewTable == null)
-            NewTable = table.Clone();
-          NewTable.Rows.Add(SrcRow.ItemArray);
+          if (newTable == null)
+            newTable = table.Clone();
+          newTable.Rows.Add(srcRow.ItemArray);
         }
         else
         {
-          colPosInfo.FillOtherValues(SrcRow, Values);
-          SetValues(tableName, Filter, colPosInfo.OtherColumnNames, Values);
+          colPosInfo.FillOtherValues(srcRow, values);
+          SetValues(tableName, Filter, colPosInfo.OtherColumnNames, values);
         }
       }
 
-      if (NewTable != null)
-        DoAddRecords(tableName, NewTable);
+      if (newTable != null)
+        DoAddRecords(tableName, newTable);
     }
 
     /// <summary>
@@ -2708,12 +2706,12 @@ namespace FreeLibSet.Data
     {
       using (DBxTransactionArray tr = new DBxTransactionArray(this))
       {
-        foreach (DataTable Table in ds.Tables)
+        foreach (DataTable table in ds.Tables)
         {
-          Validator.CheckTableName(Table.TableName, DBxAccessMode.Full);
-          if (Table.Rows.Count == 0)
+          Validator.CheckTableName(table.TableName, DBxAccessMode.Full);
+          if (table.Rows.Count == 0)
             continue; // Нечего обновлять
-          DoAddOrUpdateRecords(Table.TableName, Table);
+          DoAddOrUpdateRecords(table.TableName, table);
         }
 
         tr.Commit();
@@ -2750,14 +2748,14 @@ namespace FreeLibSet.Data
       if (_UpdateTableLockObjects == null)
         _UpdateTableLockObjects = new Dictionary<string, object>();
 
-      object LockObj;
-      if (!_UpdateTableLockObjects.TryGetValue(tableName, out LockObj))
+      object lockObj;
+      if (!_UpdateTableLockObjects.TryGetValue(tableName, out lockObj))
       {
-        LockObj = _Entry.DB.GetUpdateTableLockObject(tableName);
-        _UpdateTableLockObjects.Add(tableName, LockObj);
+        lockObj = _Entry.DB.GetUpdateTableLockObject(tableName);
+        _UpdateTableLockObjects.Add(tableName, lockObj);
       }
 
-      Monitor.Enter(LockObj);
+      Monitor.Enter(lockObj);
     }
 
     /// <summary>
@@ -2768,11 +2766,11 @@ namespace FreeLibSet.Data
     {
       if (_UpdateTableLockObjects == null)
         throw new InvalidOperationException("Не было вызова BeginUpdate()");
-      object LockObj;
-      if (!_UpdateTableLockObjects.TryGetValue(tableName, out LockObj))
+      object lockObj;
+      if (!_UpdateTableLockObjects.TryGetValue(tableName, out lockObj))
         throw new InvalidOperationException("Не было вызова BeginUpdate() для таблицы \"" + tableName + "\"");
 
-      Monitor.Exit(LockObj);
+      Monitor.Exit(lockObj);
     }
 
     #endregion
@@ -2792,10 +2790,10 @@ namespace FreeLibSet.Data
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
     public bool FindOrAddRecord(string tableName, IDictionary columnNamesAndValues, out Int32 id)
     {
-      string[] ColumnNames;
-      object[] Values;
-      DataTools.PairsToNamesAndValues(columnNamesAndValues, out ColumnNames, out Values);
-      return FindOrAddRecord(tableName, new DBxColumns(ColumnNames), Values, out id);
+      string[] columnNames;
+      object[] values;
+      DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
+      return FindOrAddRecord(tableName, new DBxColumns(columnNames), values, out id);
     }
 
     /// <summary>
@@ -2812,18 +2810,18 @@ namespace FreeLibSet.Data
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
     public bool FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values, out Int32 id)
     {
-      bool Added;
+      bool added;
 
       BeginUpdate(tableName);
       try
       {
-        Added = DoFindOrAddRecord(tableName, columnNames, values, out id);
+        added = DoFindOrAddRecord(tableName, columnNames, values, out id);
       }
       finally
       {
         EndUpdate(tableName);
       }
-      return Added;
+      return added;
     }
 
     /// <summary>
@@ -2839,11 +2837,11 @@ namespace FreeLibSet.Data
     protected virtual bool DoFindOrAddRecord(string tableName, DBxColumns columnNames, object[] values, out Int32 id)
     {
       id = FindRecord(tableName, columnNames, values);
-      bool Added = (id == 0);
-      if (Added)
+      bool added = (id == 0);
+      if (added)
         id = AddRecordWithIdResult(tableName, columnNames, values);
 
-      return Added;
+      return added;
     }
 
     /// <summary>
@@ -2858,9 +2856,9 @@ namespace FreeLibSet.Data
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
     public Int32 FindOrAddRecord(string tableName, IDictionary columnNamesAndValues)
     {
-      Int32 Id;
-      FindOrAddRecord(tableName, columnNamesAndValues, out Id);
-      return Id;
+      Int32 id;
+      FindOrAddRecord(tableName, columnNamesAndValues, out id);
+      return id;
     }
 
     /// <summary>
@@ -2876,9 +2874,9 @@ namespace FreeLibSet.Data
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
     public Int32 FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values)
     {
-      Int32 Id;
-      FindOrAddRecord(tableName, columnNames, values, out Id);
-      return Id;
+      Int32 id;
+      FindOrAddRecord(tableName, columnNames, values, out id);
+      return id;
     }
 
     /// <summary>
@@ -2938,19 +2936,19 @@ namespace FreeLibSet.Data
       if (table.Rows.Count == 0)
         return DataTools.EmptyIds;
 
-      Int32[] Ids = new Int32[table.Rows.Count];
+      Int32[] ids = new Int32[table.Rows.Count];
 
       BeginUpdate(tableName);
       try
       {
-        DoFindOrAddRecords(tableName, table, Ids);
+        DoFindOrAddRecords(tableName, table, ids);
       }
       finally
       {
         EndUpdate(tableName);
       }
 
-      return Ids;
+      return ids;
     }
 
     /// <summary>
@@ -2977,10 +2975,10 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="table">Строки для поиска. Этот объект не должен меняться</param>
-    /// <param name="Ids">Сюда должны записываться идентификаторы строк</param>
-    protected void DoFindOrAddRecordsSingleColumn(string tableName, DataTable table, Int32[] Ids)
+    /// <param name="ids">Сюда должны записываться идентификаторы строк</param>
+    protected void DoFindOrAddRecordsSingleColumn(string tableName, DataTable table, Int32[] ids)
     {
-      string IdColumnName = _Validator.CheckTablePrimaryKeyInt32(tableName);
+      string idColumnName = _Validator.CheckTablePrimaryKeyInt32(tableName);
 
       if (table.Columns.Count != 1)
         throw new ArgumentException("Таблица должна иметь только один столбец", "table");
@@ -2993,7 +2991,7 @@ namespace FreeLibSet.Data
       #region Загрузка существующих записей
 
       // Поиск выполняем блоками по 100 строк, чтобы не получился слишком длинный фильтр
-      DataTable MidTable = null;
+      DataTable midTable = null;
       for (int i = 0; i < table.Rows.Count; i += 100)
       {
         int n = Math.Min(table.Rows.Count - i, 100);
@@ -3003,44 +3001,44 @@ namespace FreeLibSet.Data
 
         DBxSelectInfo info = new DBxSelectInfo();
         info.TableName = tableName;
-        info.Expressions.Add(new DBxColumn(IdColumnName));
+        info.Expressions.Add(new DBxColumn(idColumnName));
         info.Expressions.Add(new DBxColumn(table.Columns[0].ColumnName));
         info.Where = new ValuesFilter(table.Columns[0].ColumnName, values, colType);
         DataTable MidTable2 = FillSelect(info);
-        if (MidTable == null)
-          MidTable = MidTable2;
+        if (midTable == null)
+          midTable = MidTable2;
         else
-          MidTable.Merge(MidTable2);
+          midTable.Merge(MidTable2);
       }
 
-      MidTable.AcceptChanges();
+      midTable.AcceptChanges();
 
       #endregion
 
-      DataTable NewTable = null;
-      Int32 LastId = 0;
+      DataTable newTable = null;
+      Int32 lastId = 0;
 
       #region Поиск
 
-      MidTable.DefaultView.Sort = table.Columns[0].ColumnName;
+      midTable.DefaultView.Sort = table.Columns[0].ColumnName;
       for (int i = 0; i < table.Rows.Count; i++)
       {
-        int p = MidTable.DefaultView.Find(table.Rows[i][0]);
+        int p = midTable.DefaultView.Find(table.Rows[i][0]);
         if (p >= 0)
           // Нашли
-          Ids[i] = DataTools.GetInt(MidTable.DefaultView[p].Row[0]);
+          ids[i] = DataTools.GetInt(midTable.DefaultView[p].Row[0]);
         else
         {
-          if (NewTable == null)
+          if (newTable == null)
           {
-            NewTable = MidTable.Clone(); // Два столбца
-            LastId = DataTools.GetInt(GetMaxValue(tableName, IdColumnName, null));
+            newTable = midTable.Clone(); // Два столбца
+            lastId = DataTools.GetInt(GetMaxValue(tableName, idColumnName, null));
           }
 
-          checked { LastId++; }
-          NewTable.Rows.Add(LastId, table.Rows[i][0]);
+          checked { lastId++; }
+          newTable.Rows.Add(lastId, table.Rows[i][0]);
 
-          Ids[i] = LastId;
+          ids[i] = lastId;
         }
       }
 
@@ -3048,8 +3046,8 @@ namespace FreeLibSet.Data
 
       #region Добавление записей
 
-      if (NewTable != null)
-        DoAddRecords(tableName, NewTable);
+      if (newTable != null)
+        DoAddRecords(tableName, newTable);
 
       #endregion
     }
@@ -3060,15 +3058,15 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="table">Строки для поиска. Этот объект не должен меняться</param>
-    /// <param name="Ids">Сюда должны записываться идентификаторы строк</param>
-    protected void DoFindOrAddRecordsMultiColumns(string tableName, DataTable table, Int32[] Ids)
+    /// <param name="ids">Сюда должны записываться идентификаторы строк</param>
+    protected void DoFindOrAddRecordsMultiColumns(string tableName, DataTable table, Int32[] ids)
     {
-      DBxColumns Columns = DBxColumns.FromColumns(table.Columns);
+      DBxColumns columns = DBxColumns.FromColumns(table.Columns);
       for (int i = 0; i < table.Rows.Count; i++)
       {
-        Int32 Id;
-        DoFindOrAddRecord(tableName, Columns, table.Rows[i].ItemArray, out Id);
-        Ids[i] = Id;
+        Int32 id;
+        DoFindOrAddRecord(tableName, columns, table.Rows[i].ItemArray, out id);
+        ids[i] = id;
       }
     }
 
@@ -3186,11 +3184,11 @@ namespace FreeLibSet.Data
     /// <param name="value">Заполняемое значение или null</param>
     public void WriteBlob(string tableName, Int32 id, string columnName, byte[] value)
     {
-      string IdColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
+      string idColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
       if (id == 0)
         throw new DBxNoIdArgumentException("Не задан идентификатор записи", "id");
 
-      WriteBlob(tableName, new IdsFilter(IdColumnName, id), columnName, value);
+      WriteBlob(tableName, new IdsFilter(idColumnName, id), columnName, value);
     }
 
     /// <summary>
@@ -3210,9 +3208,9 @@ namespace FreeLibSet.Data
     /// <returns>Значение поля или null</returns>
     public byte[] ReadBlob(string tableName, DBxFilter where, string columnName)
     {
-      byte[] Value;
-      ReadBlob(tableName, where, columnName, out Value);
-      return Value;
+      byte[] value;
+      ReadBlob(tableName, where, columnName, out value);
+      return value;
     }
 
     /// <summary>
@@ -3227,13 +3225,13 @@ namespace FreeLibSet.Data
     /// <returns>Значение поля или null</returns>
     public byte[] ReadBlob(string tableName, Int32 id, string columnName)
     {
-      string IdColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
+      string idColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
 
       if (id == 0)
         return null;
 
       byte[] value;
-      if (ReadBlob(tableName, new IdsFilter(IdColumnName, id), columnName, out value))
+      if (ReadBlob(tableName, new IdsFilter(idColumnName, id), columnName, out value))
         return value;
       else
         throw new DBxRecordNotFoundException(tableName, id.ToString());
@@ -3266,7 +3264,7 @@ namespace FreeLibSet.Data
       else
         throw new ArgumentNullException("where", "Фильтр по строкам должен быть задан");
 
-      bool Res;
+      bool res;
 
       Buffer.SB.Append("SELECT ");
       Buffer.FormatColumnName(columnName);
@@ -3275,20 +3273,20 @@ namespace FreeLibSet.Data
       Buffer.SB.Append(" WHERE ");
       Buffer.FormatFilter(where);
 
-      DbDataReader Reader = SQLExecuteReader(Buffer.SB.ToString());
+      DbDataReader rdr = SQLExecuteReader(Buffer.SB.ToString());
 
       try
       {
-        if (!Reader.Read())
+        if (!rdr.Read())
         {
-          Res = false;
+          res = false;
           value = null;
         }
         else
         {
-          Res = true;
+          res = true;
           //Type ft = Reader.GetFieldType(0);
-          object obj = Reader.GetValue(0);
+          object obj = rdr.GetValue(0);
           if (obj is byte[])
             value = (byte[])obj;
           else
@@ -3297,9 +3295,9 @@ namespace FreeLibSet.Data
       }
       finally
       {
-        Reader.Close();
+        rdr.Close();
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -3347,10 +3345,10 @@ namespace FreeLibSet.Data
 
       DBxConQueryInfo ti = TraceSqlBegin(cmdText);
 
-      object Res = null;
+      object res = null;
       try
       {
-        Res = DoSQLExecuteScalar(cmdText, paramValues);
+        res = DoSQLExecuteScalar(cmdText, paramValues);
       }
       catch (ThreadAbortException e)
       {
@@ -3365,7 +3363,7 @@ namespace FreeLibSet.Data
 
       TraceSqlEnd(ti, null);
 
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -3443,13 +3441,13 @@ namespace FreeLibSet.Data
       CheckNotDisposed();
       //???Caller.OnBeforeActivity();
 
-      DataTable Table = null;
+      DataTable table = null;
 
       DBxConQueryInfo ti = TraceSqlBegin(cmdText);
 
       try
       {
-        Table = DoSQLExecuteDataTable(cmdText, tableName, paramValues);
+        table = DoSQLExecuteDataTable(cmdText, tableName, paramValues);
       }
       catch (ThreadAbortException e)
       {
@@ -3465,8 +3463,8 @@ namespace FreeLibSet.Data
       TraceSqlEnd(ti, null);
 
       // При передаче клиенту предотвращаем преобразование времени из-за разных часовых поясов
-      SerializationTools.SetUnspecifiedDateTimeMode(Table);
-      return Table;
+      SerializationTools.SetUnspecifiedDateTimeMode(table);
+      return table;
     }
 
     /// <summary>
@@ -3539,21 +3537,21 @@ namespace FreeLibSet.Data
     /// <param name="innerException">Возникшее исключение</param>
     protected void ThrowSqlException(string cmdText, Exception innerException)
     {
-      DBxCreateSqlExceptionEventArgs Args = new DBxCreateSqlExceptionEventArgs(this, cmdText, innerException);
-      DB.OnCreateSqlException(Args);
+      DBxCreateSqlExceptionEventArgs args = new DBxCreateSqlExceptionEventArgs(this, cmdText, innerException);
+      DB.OnCreateSqlException(args);
 
       try
       {
         if (this.DbConnection != null)
         {
-          Args.Exception.Data["DbConnection.State"] = DbConnection.State;
+          args.Exception.Data["DbConnection.State"] = DbConnection.State;
         }
       }
       catch { }
 
       if (LogoutSqlExceptions)
-        LogoutException(Args.Exception, "Ошибка выполнения запроса");
-      throw Args.Exception;
+        LogoutException(args.Exception, "Ошибка выполнения запроса");
+      throw args.Exception;
     }
 
     /// <summary>
@@ -3563,8 +3561,8 @@ namespace FreeLibSet.Data
     /// <param name="title">Описание</param>
     protected void LogoutException(Exception exception, string title)
     {
-      DBxLogoutExceptionEventArgs Args = new DBxLogoutExceptionEventArgs(this, exception, title);
-      DB.OnLogoutException(Args);
+      DBxLogoutExceptionEventArgs args = new DBxLogoutExceptionEventArgs(this, exception, title);
+      DB.OnLogoutException(args);
     }
 
     #endregion
@@ -3951,16 +3949,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Копирует свойства текущего соединения в другое соединение
     /// </summary>
-    /// <param name="Dest">Соединение, свойства которого устанавливаются</param>
-    public virtual void CopyTo(DBxConBase Dest)
+    /// <param name="dest">Соединение, свойства которого устанавливаются</param>
+    public virtual void CopyTo(DBxConBase dest)
     {
-      if (Dest == null)
+      if (dest == null)
         throw new ArgumentNullException("Dest");
 
-      Dest.NameCheckingEnabled = this.NameCheckingEnabled;
-      Dest.LogoutSqlExceptions = this.LogoutSqlExceptions;
-      Dest.TrimValues = this.TrimValues;
-      Dest.CommandTimeout = this.CommandTimeout;
+      dest.NameCheckingEnabled = this.NameCheckingEnabled;
+      dest.LogoutSqlExceptions = this.LogoutSqlExceptions;
+      dest.TrimValues = this.TrimValues;
+      dest.CommandTimeout = this.CommandTimeout;
     }
 
     #endregion
