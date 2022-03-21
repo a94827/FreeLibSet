@@ -312,54 +312,54 @@ namespace FreeLibSet.Forms.Docs
 
     private List<ItemObject> InitItemList(out int selIndex)
     {
-      List<ItemObject> Items = new List<ItemObject>();
+      List<ItemObject> items = new List<ItemObject>();
 
       // 1. Корневой узел
-      Items.Add(new ItemObject());
+      items.Add(new ItemObject());
       selIndex = 0;
 
-      int IndentLevel = 1; // Отступ для текущего узла
+      int indentLevel = 1; // Отступ для текущего узла
 
 
       // 2. Иерархия до текущего узла, не включая его (испр. 17.11.2017)
       if (DocId != 0)
       {
-        object[] Rows = Model.TreePathFromId(DocId).FullPath;
-        for (int i = 0; i < Rows.Length - 1; i++)
+        object[] rows = Model.TreePathFromId(DocId).FullPath;
+        for (int i = 0; i < rows.Length - 1; i++)
         {
-          object[] PartRows = new object[i + 1];
-          Array.Copy(Rows, PartRows, i + 1);
-          TreePath PartPath = new TreePath(PartRows);
+          object[] partRows = new object[i + 1];
+          Array.Copy(rows, partRows, i + 1);
+          TreePath partPath = new TreePath(partRows);
 
-          Int32 ThisDocId = Model.TreePathToId(PartPath);
-          Items.Add(new ItemObject(ThisDocId, i + 1, true));
+          Int32 thisDocId = Model.TreePathToId(partPath);
+          items.Add(new ItemObject(thisDocId, i + 1, true));
         }
 
-        IndentLevel = Rows.Length;
+        indentLevel = rows.Length;
       }
 
       // 3. Список узлов, находящихся на одном уровне с текущим, включая текущий
-      TreePath ParentPath = Model.TreePathFromId(DocId).Parent;
-      foreach (object Row in Model.GetChildren(ParentPath))
+      TreePath parentPath = Model.TreePathFromId(DocId).Parent;
+      foreach (object row in Model.GetChildren(parentPath))
       {
-        TreePath ThisPath = new TreePath(ParentPath, Row);
-        Int32 ThisDocId = Model.TreePathToId(ThisPath);
-        Items.Add(new ItemObject(ThisDocId, IndentLevel, ThisDocId == DocId));
-        if (ThisDocId == DocId)
+        TreePath thisPath = new TreePath(parentPath, row);
+        Int32 thisDocId = Model.TreePathToId(thisPath);
+        items.Add(new ItemObject(thisDocId, indentLevel, thisDocId == DocId));
+        if (thisDocId == DocId)
         {
-          selIndex = Items.Count - 1;
+          selIndex = items.Count - 1;
 
           // 4. Список дочерних узлов
-          foreach (object Row2 in Model.GetChildren(ThisPath))
+          foreach (object row2 in Model.GetChildren(thisPath))
           {
-            TreePath ThisPath2 = new TreePath(ThisPath, Row2);
-            Int32 ThisDocId2 = Model.TreePathToId(ThisPath2);
-            Items.Add(new ItemObject(ThisDocId2, IndentLevel + 1, false));
+            TreePath thisPath2 = new TreePath(thisPath, row2);
+            Int32 thisDocId2 = Model.TreePathToId(thisPath2);
+            items.Add(new ItemObject(thisDocId2, indentLevel + 1, false));
           }
         }
       }
 
-      return Items;
+      return items;
     }
 
     #endregion
@@ -373,11 +373,11 @@ namespace FreeLibSet.Forms.Docs
         _InsideInitList = true;
         try
         {
-          int SelIndex;
-          List<ItemObject> Items = InitItemList(out SelIndex);
+          int selIndex;
+          List<ItemObject> items = InitItemList(out selIndex);
           Control.Items.Clear();
-          Control.Items.AddRange(Items.ToArray());
-          Control.SelectedIndex = SelIndex;
+          Control.Items.AddRange(items.ToArray());
+          Control.SelectedIndex = selIndex;
         }
         finally
         {
@@ -470,13 +470,13 @@ namespace FreeLibSet.Forms.Docs
 
     private void ControlPainter(object sender, ListControlImageEventArgs args)
     {
-      ItemObject Item;
+      ItemObject item;
       if (args.ItemIndex < 0)
-        Item = new ItemObject(DocId, 0, true);
+        item = new ItemObject(DocId, 0, true);
       else
-        Item = (ItemObject)(args.Item);
+        item = (ItemObject)(args.Item);
 
-      PaintItem(args, Item);
+      PaintItem(args, item);
     }
 
     private void PaintItem(ListControlImageEventArgs args, ItemObject item)
@@ -757,31 +757,31 @@ namespace FreeLibSet.Forms.Docs
           EFPApp.ShowTempMessage("Документ группы не выбран");
           return;
         }
-        DBxDocSelection DocSel = new DBxDocSelection(_ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
-        DocSel.Add(_ControlProvider.DocTypeUI.DocType.Name, _ControlProvider.DocId);
-        DataObject DObj = new DataObject();
-        DObj.SetData(DocSel);
-        _ControlProvider.DocTypeUI.UI.OnAddCopyFormats(DObj, DocSel);
-        DObj.SetText(_ControlProvider.DocTypeUI.GetTextValue(_ControlProvider.DocId));
-        EFPApp.Clipboard.SetDataObject(DObj, true);
+        DBxDocSelection docSel = new DBxDocSelection(_ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
+        docSel.Add(_ControlProvider.DocTypeUI.DocType.Name, _ControlProvider.DocId);
+        DataObject dObj = new DataObject();
+        dObj.SetData(docSel);
+        _ControlProvider.DocTypeUI.UI.OnAddCopyFormats(dObj, docSel);
+        dObj.SetText(_ControlProvider.DocTypeUI.GetTextValue(_ControlProvider.DocId));
+        EFPApp.Clipboard.SetDataObject(dObj, true);
       }
 
       void ciPaste_Click(object sender, EventArgs args)
       {
-        DBxDocSelection DocSel = _ControlProvider.DocTypeUI.UI.PasteDocSel();
-        if (DocSel == null)
+        DBxDocSelection docSel = _ControlProvider.DocTypeUI.UI.PasteDocSel();
+        if (docSel == null)
         {
           EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
           return;
         }
 
-        Int32[] Ids = DocSel[_ControlProvider.DocTypeUI.DocType.Name];
-        if (Ids.Length == 0)
+        Int32[] ids = docSel[_ControlProvider.DocTypeUI.DocType.Name];
+        if (ids.Length == 0)
         {
           EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы \"" + _ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
           return;
         }
-        _ControlProvider.DocId = Ids[0];
+        _ControlProvider.DocId = ids[0];
       }
 
       #endregion
@@ -810,9 +810,9 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Созданный объект EFPControlCommandItems</returns>
     protected override EFPControlCommandItems GetCommandItems()
     {
-      ControlItems Items = new ControlItems(this);
-      Items.InitEnabled();
-      return Items;
+      ControlItems items = new ControlItems(this);
+      items.InitEnabled();
+      return items;
     }
 
     #endregion

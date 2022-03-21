@@ -351,7 +351,7 @@ namespace FreeLibSet.FIAS
 
         //bool NoPK = true; // Не использовать первичный ключ типа GUID в таблицах. Будет неявный первичный ключ по rowid.
         // А для полей AOID и прочих, используем индекс.
-        bool NoPK = (_DB is FreeLibSet.Data.SQLite.SQLiteDBx); // 30.07.2020
+        bool noPK = (_DB is FreeLibSet.Data.SQLite.SQLiteDBx); // 30.07.2020
 
 
         #region "ClassifUpdate"
@@ -488,14 +488,14 @@ namespace FreeLibSet.FIAS
           }
         }
 
-        if (NoPK)
+        if (noPK)
           ts.PrimaryKey = DBxColumns.Empty;
 
         if (!_IndexDelayed)
         {
           if (!_InternalSettings.UseIdTables)
           {
-            if (NoPK)
+            if (noPK)
               ts.Indexes.Add("AOID"); // псевдо-первичный ключ
             ts.Indexes.Add("AOGUID"); // используется, когда в адресе задан GUID адресного объекта, то есть в большинстве случаев
             ts.Indexes.Add("PARENTGUID"); // используетсч при загрузке буферизованной страницы.
@@ -581,14 +581,14 @@ namespace FreeLibSet.FIAS
             }
           }
 
-          if (NoPK)
+          if (noPK)
             ts.PrimaryKey = DBxColumns.Empty;
 
           if (!_IndexDelayed)
           {
             if (!_InternalSettings.UseIdTables)
             {
-              if (NoPK)
+              if (noPK)
                 ts.Indexes.Add("HOUSEID"); // псевдо-первичный ключ
 
               ts.Indexes.Add("HOUSEGUID"); // используется, если в адресе задан GUID здания
@@ -664,14 +664,14 @@ namespace FreeLibSet.FIAS
             }
           }
 
-          if (NoPK)
+          if (noPK)
             ts.PrimaryKey = DBxColumns.Empty;
 
           if (!_IndexDelayed)
           {
             if (!_InternalSettings.UseIdTables)
             {
-              if (NoPK)
+              if (noPK)
                 ts.Indexes.Add("ROOMID"); // псевдопервичный ключ
 
               ts.Indexes.Add("ROOMGUID"); // используется, если в адресе задан GUID помещения
@@ -832,15 +832,15 @@ namespace FreeLibSet.FIAS
     internal FiasDBStat GetRealDBStat(IDBxCon con)
     {
       FiasDBStat stat = new FiasDBStat();
-//      if (!IsEmpty)
-//      {
-        stat.ActualDate = DataTools.GetNullableDateTime(con.GetValue("ClassifInfo", 1, "ActualDate")) ?? FiasTools.UnknownActualDate;
-        stat.AddrObCount = con.GetRecordCount("AddrOb");
-        if (DBSettings.UseHouse)
-          stat.HouseCount = con.GetRecordCount("House");
-        if (DBSettings.UseRoom)
-          stat.RoomCount = con.GetRecordCount("Room");
-//      }
+      //      if (!IsEmpty)
+      //      {
+      stat.ActualDate = DataTools.GetNullableDateTime(con.GetValue("ClassifInfo", 1, "ActualDate")) ?? FiasTools.UnknownActualDate;
+      stat.AddrObCount = con.GetRecordCount("AddrOb");
+      if (DBSettings.UseHouse)
+        stat.HouseCount = con.GetRecordCount("House");
+      if (DBSettings.UseRoom)
+        stat.RoomCount = con.GetRecordCount("Room");
+      //      }
       return stat;
     }
 

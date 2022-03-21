@@ -884,7 +884,7 @@ namespace FreeLibSet.FIAS.RI
     public static TextComboBox CreateFormatStringTextComboBox()
     {
       TextComboBox control = new TextComboBox(FiasFormatStringParser.ComponentTypes);
-      control.Validators.AddError(FormatStringValidateResultEx(control.TextEx), 
+      control.Validators.AddError(FormatStringValidateResultEx(control.TextEx),
         control.IsNotEmptyEx);
       return control;
     }

@@ -169,13 +169,13 @@ namespace FreeLibSet.FIAS
           cnt++;
         }
 
-        string[] Files = Directory.GetFiles(dir.Path, "*.dbf", SearchOption.TopDirectoryOnly);
-        Array.Sort<string>(Files);
+        string[] files = Directory.GetFiles(dir.Path, "*.dbf", SearchOption.TopDirectoryOnly);
+        Array.Sort<string>(files);
         //Splash.PercentMax = Files.Length;
         //Splash.AllowCancel = true;
-        for (int i = 0; i < Files.Length; i++)
+        for (int i = 0; i < files.Length; i++)
         {
-          AbsPath filePath = new AbsPath(Files[i]);
+          AbsPath filePath = new AbsPath(files[i]);
           if (filePath.FileNameWithoutExtension.ToUpperInvariant() == "SOCRBASE")
             continue;
           Splash.PhaseText = filePath.FileName;
@@ -199,30 +199,30 @@ namespace FreeLibSet.FIAS
     }
     private bool DoLoadDbfFile(DBxConBase con, AbsPath filePath)
     {
-      string Name = filePath.FileNameWithoutExtension.ToUpperInvariant();
-      if (Name == "SOCRBASE")
+      string name = filePath.FileNameWithoutExtension.ToUpperInvariant();
+      if (name == "SOCRBASE")
       {
         DoLoadDbfSocrBase(con, filePath);
         return true;
       }
-      if (Name.StartsWith("ADDROB") && CheckDbfFileNameRegion(Name.Substring(6)))
+      if (name.StartsWith("ADDROB") && CheckDbfFileNameRegion(name.Substring(6)))
       {
         DoLoadDbfAddrOb(con, filePath);
         return true;
       }
-      if (Name.StartsWith("HOUSE") && CheckDbfFileNameRegion(Name.Substring(5)) && _FiasDB.DBSettings.UseHouse)
+      if (name.StartsWith("HOUSE") && CheckDbfFileNameRegion(name.Substring(5)) && _FiasDB.DBSettings.UseHouse)
       {
         DoLoadDbfFileHouse(con, filePath);
         return true;
       }
-      if (Name.StartsWith("ROOM") && CheckDbfFileNameRegion(Name.Substring(4)) && _FiasDB.DBSettings.UseRoom)
+      if (name.StartsWith("ROOM") && CheckDbfFileNameRegion(name.Substring(4)) && _FiasDB.DBSettings.UseRoom)
       {
         DoLoadDbfFileRoom(con, filePath);
         return true;
       }
 
       // 25.02.2021
-      if (Name.StartsWith("DAD") || Name.StartsWith("DHOUSE") || Name.StartsWith("DROOM"))
+      if (name.StartsWith("DAD") || name.StartsWith("DHOUSE") || name.StartsWith("DROOM"))
       {
         throw new NotImplementedException("Не реализована обработка удаления записей ФИАС. Файл " + filePath.Path);
       }
@@ -262,10 +262,10 @@ namespace FreeLibSet.FIAS
       {
         while (dbf.Read())
         {
-          int Level = dbf.GetInt("LEVEL");
+          int level = dbf.GetInt("LEVEL");
           string scName = dbf.GetString("SCNAME");
           string socrName = dbf.GetString("SOCRNAME");
-          FindOrAddAOType(Level, scName, socrName);
+          FindOrAddAOType(level, scName, socrName);
           cnt++;
         }
       }
@@ -329,12 +329,12 @@ namespace FreeLibSet.FIAS
 
               #region Наименование адресного объекта
 
-              string OffName = dbf.GetString("OFFNAME");
-              wrt["OFFNAME"] = OffName;
+              string offName = dbf.GetString("OFFNAME");
+              wrt["OFFNAME"] = offName;
 
               if (_FiasDB.InternalSettings.FTSMode == FiasFTSMode.FTS3)
               {
-                cmdFTS3.Parameters[0].Value = FiasTools.PrepareForFTS(OffName);
+                cmdFTS3.Parameters[0].Value = FiasTools.PrepareForFTS(offName);
                 Int32 NameId = DataTools.GetInt(cmdFTS3.ExecuteScalar());
                 wrt["NameId"] = NameId;
               }
@@ -343,9 +343,9 @@ namespace FreeLibSet.FIAS
 
               #region Краткое наименование
 
-              int Level = dbf.GetInt("AOLEVEL");
+              int level = dbf.GetInt("AOLEVEL");
               string scName = dbf.GetString("SHORTNAME");
-              wrt["AOTypeId"] = FindOrAddAOType(Level, scName, String.Empty);
+              wrt["AOTypeId"] = FindOrAddAOType(level, scName, String.Empty);
 
               #endregion
 
@@ -953,12 +953,12 @@ namespace FreeLibSet.FIAS
 
                   #region Наименование адресного объекта
 
-                  string OffName = DataTools.GetString(rdr.GetAttribute("OFFNAME"));
-                  wrt["OFFNAME"] = OffName;
+                  string offName = DataTools.GetString(rdr.GetAttribute("OFFNAME"));
+                  wrt["OFFNAME"] = offName;
 
                   if (_FiasDB.InternalSettings.FTSMode == FiasFTSMode.FTS3)
                   {
-                    cmdFTS3.Parameters[0].Value = FiasTools.PrepareForFTS(OffName);
+                    cmdFTS3.Parameters[0].Value = FiasTools.PrepareForFTS(offName);
                     Int32 NameId = DataTools.GetInt(cmdFTS3.ExecuteScalar());
                     wrt["NameId"] = NameId;
                   }
@@ -967,9 +967,9 @@ namespace FreeLibSet.FIAS
 
                   #region Краткое наименование
 
-                  int Level = DataTools.GetInt(rdr.GetAttribute("AOLEVEL"));
+                  int level = DataTools.GetInt(rdr.GetAttribute("AOLEVEL"));
                   string scName = DataTools.GetString(rdr.GetAttribute("SHORTNAME"));
-                  wrt["AOTypeId"] = FindOrAddAOType(Level, scName, String.Empty);
+                  wrt["AOTypeId"] = FindOrAddAOType(level, scName, String.Empty);
 
                   #endregion
 
@@ -1292,8 +1292,8 @@ namespace FreeLibSet.FIAS
         XmlReader rdr = rdr0.Reader;
 
         // Имя ключевого GUID-поля ("AOID")
-        string PKName = FiasDB.DB.Struct.Tables[resTableName].PrimaryKey[0];
-        List<Guid> DelIds = new List<Guid>();
+        string pkName = FiasDB.DB.Struct.Tables[resTableName].PrimaryKey[0];
+        List<Guid> delIds = new List<Guid>();
         Splash.AllowCancel = true;
         while (rdr.Read())
         {
@@ -1303,21 +1303,21 @@ namespace FreeLibSet.FIAS
             {
               rdr0.UpdateSplash();
 
-              Guid g = DataTools.GetGuid(rdr.GetAttribute(PKName));
-              DelIds.Add(g);
+              Guid g = DataTools.GetGuid(rdr.GetAttribute(pkName));
+              delIds.Add(g);
 
-              if (DelIds.Count >= 500)
+              if (delIds.Count >= 500)
               {
-                con.Delete(resTableName, new ValuesFilter(PKName, DelIds.ToArray()));
-                DelIds.Clear();
+                con.Delete(resTableName, new ValuesFilter(pkName, delIds.ToArray()));
+                delIds.Clear();
               }
             }
           }
         }
 
-        if (DelIds.Count > 0)
-          con.Delete(resTableName, new ValuesFilter(PKName, DelIds.ToArray()));
-        cnt = DelIds.Count;
+        if (delIds.Count > 0)
+          con.Delete(resTableName, new ValuesFilter(pkName, delIds.ToArray()));
+        cnt = delIds.Count;
       }
 
       EndLoadFile(filePath, cnt);
@@ -1552,20 +1552,20 @@ namespace FreeLibSet.FIAS
       if (GuidTable.Rows.Count == 0)
         return IdDict; // никогда не будет
 
-#endregion
+    #endregion
 
     #region Поиск/добавление записей в базу данных
 
       Int32[] Ids = con.FindOrAddRecords(GuidTable);
 
-#endregion
+    #endregion
 
     #region Создаем словарь
 
       for (int i = 0; i < GuidTable.Rows.Count; i++)
         IdDict.Add(GuidTable.Rows[i][0].ToString(), Ids[i]);
 
-#endregion
+    #endregion
 
       return IdDict;
     }
@@ -1593,10 +1593,10 @@ namespace FreeLibSet.FIAS
     /// Перед записью основных таблиц классификатора вызывается FlushAOTypesTable().
     /// Если в таблицу были добавлены строким
     /// </summary>
-    private DataTable AOTypesTable;
-    private int AOTypesTableRowCount;
-    private Int32 AOTypesTableLastId1;
-    private Int32 AOTypesTableLastId2;
+    private DataTable _AOTypesTable;
+    private int _AOTypesTableRowCount;
+    private Int32 _AOTypesTableLastId1;
+    private Int32 _AOTypesTableLastId2;
 
     ///// <summary>
     ///// Идентификатор фиктивной записи в таблице AOType.
@@ -1606,41 +1606,41 @@ namespace FreeLibSet.FIAS
 
     private void LoadAOTypesTable(DBxConBase con)
     {
-      if (AOTypesTable != null)
+      if (_AOTypesTable != null)
         return;
 
       //DummyAOTypeId = Con.FindOrAddRecord("AOType", new DBxColumns("LEVEL,SCNAME,SOCRNAME"), new object[] { 0, "?", "?" });
 
-      AOTypesTable = con.FillSelect("AOType");
-      DataTools.SetPrimaryKey(AOTypesTable, "Id");
-      AOTypesTable.DefaultView.Sort = "LEVEL,SCNAME";
+      _AOTypesTable = con.FillSelect("AOType");
+      DataTools.SetPrimaryKey(_AOTypesTable, "Id");
+      _AOTypesTable.DefaultView.Sort = "LEVEL,SCNAME";
 
-      AOTypesTableRowCount = AOTypesTable.Rows.Count;
-      AOTypesTableLastId1 = DataTools.MaxInt(AOTypesTable, "Id", false) ?? 0;
-      AOTypesTableLastId2 = AOTypesTableLastId1;
+      _AOTypesTableRowCount = _AOTypesTable.Rows.Count;
+      _AOTypesTableLastId1 = DataTools.MaxInt(_AOTypesTable, "Id", false) ?? 0;
+      _AOTypesTableLastId2 = _AOTypesTableLastId1;
     }
 
     private void FlushAOTypesTable(DBxConBase con)
     {
-      if (AOTypesTableRowCount == AOTypesTable.Rows.Count)
+      if (_AOTypesTableRowCount == _AOTypesTable.Rows.Count)
         return; // Нечего сбрасывать
 
-      DataTable TempTable;
-      using (DataView dv2 = new DataView(AOTypesTable))
+      DataTable tempTable;
+      using (DataView dv2 = new DataView(_AOTypesTable))
       {
-        dv2.RowFilter = "Id>" + AOTypesTableLastId1.ToString();
-        TempTable = dv2.ToTable();
+        dv2.RowFilter = "Id>" + _AOTypesTableLastId1.ToString();
+        tempTable = dv2.ToTable();
 #if DEBUG
-        int WantedRowCount = AOTypesTable.Rows.Count - AOTypesTableRowCount;
-        if (WantedRowCount != TempTable.Rows.Count)
+        int wantedRowCount = _AOTypesTable.Rows.Count - _AOTypesTableRowCount;
+        if (wantedRowCount != tempTable.Rows.Count)
           throw new BugException("Неправильное число добавляемых записей в таблицу AOTypes: " +
-            TempTable.Rows.Count.ToString() + ". Ожидалось: " + WantedRowCount.ToString());
+            tempTable.Rows.Count.ToString() + ". Ожидалось: " + wantedRowCount.ToString());
 #endif
       }
 
-      con.AddRecords("AOType", TempTable);
-      AOTypesTableRowCount = AOTypesTable.Rows.Count;
-      AOTypesTableLastId1 = AOTypesTableLastId2;
+      con.AddRecords("AOType", tempTable);
+      _AOTypesTableRowCount = _AOTypesTable.Rows.Count;
+      _AOTypesTableLastId1 = _AOTypesTableLastId2;
     }
 
     /// <summary>
@@ -1657,40 +1657,40 @@ namespace FreeLibSet.FIAS
       if (level <= 0)
         throw new ArgumentOutOfRangeException("level");
 
-      int p = AOTypesTable.DefaultView.Find(new object[] { level, scName });
-      DataRow Row;
+      int p = _AOTypesTable.DefaultView.Find(new object[] { level, scName });
+      DataRow row;
       if (p >= 0)
       {
         // Существующее сокращение
-        Row = AOTypesTable.DefaultView[p].Row;
-        Int32 Id = DataTools.GetInt(Row, "Id");
+        row = _AOTypesTable.DefaultView[p].Row;
+        Int32 id = DataTools.GetInt(row, "Id");
 
-        if ((!String.IsNullOrEmpty(socrName)) && Id < AOTypesTableLastId1)
+        if ((!String.IsNullOrEmpty(socrName)) && id < _AOTypesTableLastId1)
         {
-          if (socrName != DataTools.GetString(Row, "SOCRNAME"))
+          if (socrName != DataTools.GetString(row, "SOCRNAME"))
           {
             using (DBxCon Con = new DBxCon(FiasDB.DB.MainEntry))
             {
-              Con.SetValue("AOType", Id, "SOCRNAME", socrName);
-              Row["SOCRNAME"] = socrName;
+              Con.SetValue("AOType", id, "SOCRNAME", socrName);
+              row["SOCRNAME"] = socrName;
             }
           }
         }
-        return Id;
+        return id;
       }
       else
       {
-        Row = AOTypesTable.NewRow();
-        AOTypesTableLastId2++;
-        Row["Id"] = AOTypesTableLastId2;
-        Row["LEVEL"] = level;
-        Row["SCNAME"] = scName;
+        row = _AOTypesTable.NewRow();
+        _AOTypesTableLastId2++;
+        row["Id"] = _AOTypesTableLastId2;
+        row["LEVEL"] = level;
+        row["SCNAME"] = scName;
         if (String.IsNullOrEmpty(socrName)) // неизвестное сокращение из основной таблицы объектов
-          Row["SOCRNAME"] = scName;
+          row["SOCRNAME"] = scName;
         else
-          Row["SOCRNAME"] = socrName;
-        AOTypesTable.Rows.Add(Row);
-        return AOTypesTableLastId2;
+          row["SOCRNAME"] = socrName;
+        _AOTypesTable.Rows.Add(row);
+        return _AOTypesTableLastId2;
       }
     }
 
@@ -1724,10 +1724,10 @@ namespace FreeLibSet.FIAS
     /// <param name="con"></param>
     private void EndUpdate(DBxConBase con)
     {
-      DateTime FinishTime = DateTime.Now;
+      DateTime finishTime = DateTime.Now;
       con.SetValues("ClassifInfo", 1, new DBxColumns("ActualDate,UpdateTime"),
-        new object[] { _ActualDate, FinishTime });
-      con.SetValue("ClassifUpdate", _UpdateId, "FinishTime", FinishTime);
+        new object[] { _ActualDate, finishTime });
+      con.SetValue("ClassifUpdate", _UpdateId, "FinishTime", finishTime);
 
       FiasDBStat stat = _FiasDB.GetRealDBStat(con);
       con.SetValue("ClassifInfo", 1, "AddrObCount", stat.AddrObCount);
@@ -1757,13 +1757,13 @@ namespace FreeLibSet.FIAS
     {
       _FileStartTime = DateTime.Now;
       FileInfo fi = new FileInfo(filePath.Path);
-      Trace.WriteLine(_FileStartTime.ToString("G") + " Start loading from " + filePath.FileName+". FileSize="+FileTools.GetMBSizeText(fi.Length));
+      Trace.WriteLine(_FileStartTime.ToString("G") + " Start loading from " + filePath.FileName + ". FileSize=" + FileTools.GetMBSizeText(fi.Length));
     }
 
     private void EndLoadFile(AbsPath filePath, int records)
     {
-      DateTime EndTime = DateTime.Now;
-      TimeSpan ts = EndTime - _FileStartTime;
+      DateTime endTime = DateTime.Now;
+      TimeSpan ts = endTime - _FileStartTime;
       string txt = String.Empty;
       if (ts.TotalSeconds > 0.1)
       {

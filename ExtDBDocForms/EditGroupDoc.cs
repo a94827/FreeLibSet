@@ -36,11 +36,11 @@ namespace FreeLibSet.Forms.Docs
 
     public static void InitDocEditForm(object sender, InitDocEditFormEventArgs args)
     {
-      EditGroupDoc Form = new EditGroupDoc();
+      EditGroupDoc form = new EditGroupDoc();
 
-      Form._Editor = args.Editor;
+      form._Editor = args.Editor;
 
-      Form.AddPage1(args);
+      form.AddPage1(args);
     }
 
     #endregion
@@ -51,18 +51,18 @@ namespace FreeLibSet.Forms.Docs
 
     private void AddPage1(InitDocEditFormEventArgs args)
     {
-      DocEditPage Page = args.AddPage("Группа", MainPanel1);
-      Page.ImageKey = args.Editor.DocTypeUI.ImageKey;
+      DocEditPage page = args.AddPage("Группа", MainPanel1);
+      page.ImageKey = args.Editor.DocTypeUI.ImageKey;
 
       //Page.HelpContext = "BuxBase.chm::CompanyEdit.htm#Общие";
 
       GroupDocTypeUI dtui = (GroupDocTypeUI)(args.Editor.DocTypeUI);
 
-      efpName = new EFPTextBox(Page.BaseProvider, edName);
+      efpName = new EFPTextBox(page.BaseProvider, edName);
       efpName.CanBeEmpty = false;
       args.AddText(efpName, dtui.NameColumnName, false);
 
-      EFPDocComboBox efpParent = new EFPDocComboBox(Page.BaseProvider, cbParent, dtui);
+      EFPDocComboBox efpParent = new EFPDocComboBox(page.BaseProvider, cbParent, dtui);
       efpParent.CanBeEmpty = true;
       args.AddRefToParent(efpParent, "ParentId", true);
     }

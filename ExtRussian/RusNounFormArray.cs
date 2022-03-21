@@ -294,16 +294,16 @@ namespace FreeLibSet.Russian
 
       // Собираем обратно
       Fill("");
-      RusNounFormArray Forms2 = new RusNounFormArray();
+      RusNounFormArray forms2 = new RusNounFormArray();
       for (i = 0; i < aParts.Count; i++)
       {
         if (aFlags[i])
         {
           // преобразование части
-          if (!Forms2.GetCases1(aParts[i], gender, options))
+          if (!forms2.GetCases1(aParts[i], gender, options))
             lRes = false;
           for (j = 0; j < 12; j++)
-            _Items[j] += Forms2._Items[j];
+            _Items[j] += forms2._Items[j];
         }
         else
         {
@@ -323,46 +323,46 @@ namespace FreeLibSet.Russian
       if (String.IsNullOrEmpty(baseForm))
         return;
 
-      string UpperForm = baseForm.ToUpperInvariant();
+      string upperForm = baseForm.ToUpperInvariant();
 
-      int StartPos = -1;
-      bool PrevFlag = false; // иначе предупреждение
+      int startPos = -1;
+      bool prevFlag = false; // иначе предупреждение
 
-      for (int ThisPos = 0; ThisPos < baseForm.Length; ThisPos++)
+      for (int thisPos = 0; thisPos < baseForm.Length; thisPos++)
       {
-        char c = UpperForm[ThisPos];
+        char c = upperForm[thisPos];
 
         // Является ли очередной символ русской буквой
         //bool ThisFlag = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".IndexOf(c) >= 0;
-        bool ThisFlag = RussianTools.IsUpperRussianChar(c); // 18.06.2020
+        bool thisFlag = RussianTools.IsUpperRussianChar(c); // 18.06.2020
 
-        if (ThisPos == 0)
+        if (thisPos == 0)
         {
-          StartPos = 0;
-          PrevFlag = ThisFlag;
+          startPos = 0;
+          prevFlag = thisFlag;
         }
         else
         {
-          if (ThisFlag != PrevFlag)
+          if (thisFlag != prevFlag)
           {
             // Смена части
-            aParts.Add(baseForm.Substring(StartPos, ThisPos - StartPos));
-            aFlags.Add(PrevFlag);
-            StartPos = ThisPos;
-            PrevFlag = ThisFlag;
+            aParts.Add(baseForm.Substring(startPos, thisPos - startPos));
+            aFlags.Add(prevFlag);
+            startPos = thisPos;
+            prevFlag = thisFlag;
           }
         }
       }
 
       // Добавляем последнюю часть
-      aParts.Add(baseForm.Substring(StartPos, baseForm.Length - StartPos));
-      aFlags.Add(PrevFlag);
+      aParts.Add(baseForm.Substring(startPos, baseForm.Length - startPos));
+      aFlags.Add(prevFlag);
     }
 
     private bool GetCases1(string baseForm, RusGender gender, RusFormArrayGetCasesOptions options)
     {
-      string UpperForm = baseForm.ToUpperInvariant();
-      bool IsUpperCase = (baseForm == UpperForm); // Все буквы заглавные ?
+      string upperForm = baseForm.ToUpperInvariant();
+      bool isUpperCase = (baseForm == upperForm); // Все буквы заглавные ?
       int i;
 
 
@@ -374,29 +374,29 @@ namespace FreeLibSet.Russian
       if (baseForm.Length < 2)
         return false;
 
-      if (UpperForm.IndexOfAny(new char[] { 'А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Э', 'Ю', 'Я' }) < 0)
+      if (upperForm.IndexOfAny(new char[] { 'А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Э', 'Ю', 'Я' }) < 0)
         // слово не содержит гласных букв
         return false;
 
       // Последний символ
-      char c = UpperForm[UpperForm.Length - 1];
+      char c = upperForm[upperForm.Length - 1];
 
       // Склонение
-      RusDeclension Scl;
+      RusDeclension declen;
       if (c == 'Ы' && (options & RusFormArrayGetCasesOptions.NoPlural) == RusFormArrayGetCasesOptions.NoPlural)
         // Склонения для слов типа "ножницы" отключается
-        Scl = RusDeclension.Undefined;
+        declen = RusDeclension.Undefined;
       else
-        Scl = GetDeclension(baseForm, gender);
+        declen = GetDeclension(baseForm, gender);
 
-      if (Scl == RusDeclension.Undefined)
+      if (declen == RusDeclension.Undefined)
         // не склоняется
         return false;
 
       // Разбиение слова на части
       string cBase; // Приставка+корень+суффикс
       string[] aEnds; // Окончания (12 форм)
-      MyGetCases(baseForm, UpperForm, Scl, options, out cBase, out aEnds);
+      MyGetCases(baseForm, upperForm, declen, options, out cBase, out aEnds);
 
 
       if (aEnds != null)
@@ -404,7 +404,7 @@ namespace FreeLibSet.Russian
         // Добавляем окончания
         for (i = 0; i < 12; i++)
           _Items[i] = cBase + aEnds[i];
-        if (IsUpperCase)
+        if (isUpperCase)
         {
           for (i = 0; i < 12; i++)
             _Items[i] = _Items[i].ToUpperInvariant();

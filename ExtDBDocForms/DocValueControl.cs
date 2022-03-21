@@ -247,14 +247,14 @@ namespace FreeLibSet.Forms.Docs
     private void CreateGrayCheckBox()
     {
       // В процессе замены label может потеряться исходное свойство DisplayName элемента
-      string OrgDisplayName = ControlProvider.DisplayName;
+      string orgDisplayName = ControlProvider.DisplayName;
 
-      CheckBox GrayCheckBox;
+      CheckBox grayCheckBox;
       if (ControlProvider.Label != null && ControlProvider.Label is Label)
-        GrayCheckBox = ReplaceLabelToCheckBox();
+        grayCheckBox = ReplaceLabelToCheckBox();
       else
-        GrayCheckBox = MakeNewCheckBox();
-      efpGrayCheckBox = new EFPCheckBox(ControlProvider.BaseProvider, GrayCheckBox);
+        grayCheckBox = MakeNewCheckBox();
+      efpGrayCheckBox = new EFPCheckBox(ControlProvider.BaseProvider, grayCheckBox);
 
       // Создаем зацикленную цепочку из CheckBox.CheckedEx, двух DepNot и DepInput посередине.
       DepNot not1 = new DepNot(efpGrayCheckBox.CheckedEx);
@@ -269,12 +269,12 @@ namespace FreeLibSet.Forms.Docs
       this.GrayedEx = not3.Arg; // нельзя использовать not1, т.к. это не EFPInput
 
 
-      ControlProvider.Label = GrayCheckBox;
+      ControlProvider.Label = grayCheckBox;
       // Установка DisplayName должна идти после установки свойства Label
       efpGrayCheckBox.DisplayName = "Флажок группового редактирования";
       efpGrayCheckBox.ToolTipText = "Включите флажок, чтобы установить одинаковое значение поля \"" +
-        OrgDisplayName + "\" для всех редактируемых документов";
-      ControlProvider.DisplayName = OrgDisplayName;
+        orgDisplayName + "\" для всех редактируемых документов";
+      ControlProvider.DisplayName = orgDisplayName;
     }
 
     /// <summary>
@@ -283,20 +283,20 @@ namespace FreeLibSet.Forms.Docs
     /// <returns></returns>
     private CheckBox ReplaceLabelToCheckBox()
     {
-      CheckBox GrayCheckBox = new CheckBox();
-      Label ControlLabel = (Label)(ControlProvider.Label);
+      CheckBox grayCheckBox = new CheckBox();
+      Label controlLabel = (Label)(ControlProvider.Label);
 
-      GrayCheckBox.Text = ControlLabel.Text;
-      GrayCheckBox.Image = ((Label)ControlLabel).Image;
-      GrayCheckBox.ImageList = ((Label)ControlLabel).ImageList;
-      GrayCheckBox.ImageIndex = ((Label)ControlLabel).ImageIndex;
-      GrayCheckBox.ImageAlign = ((Label)ControlLabel).ImageAlign;
+      grayCheckBox.Text = controlLabel.Text;
+      grayCheckBox.Image = ((Label)controlLabel).Image;
+      grayCheckBox.ImageList = ((Label)controlLabel).ImageList;
+      grayCheckBox.ImageIndex = ((Label)controlLabel).ImageIndex;
+      grayCheckBox.ImageAlign = ((Label)controlLabel).ImageAlign;
 
-      GrayCheckBox.CheckAlign = ContentAlignment.MiddleRight;
+      grayCheckBox.CheckAlign = ContentAlignment.MiddleRight;
 
-      WinFormsTools.ReplaceControl(ControlLabel, GrayCheckBox);
-      ControlLabel = null;
-      return GrayCheckBox;
+      WinFormsTools.ReplaceControl(controlLabel, grayCheckBox);
+      controlLabel = null;
+      return grayCheckBox;
     }
 
     /// <summary>
@@ -307,23 +307,23 @@ namespace FreeLibSet.Forms.Docs
     /// <returns></returns>
     private CheckBox MakeNewCheckBox()
     {
-      Panel ThePanel = new Panel();
-      WinFormsTools.ReplaceControl(ControlProvider.Control, ThePanel);
+      Panel thePanel = new Panel();
+      WinFormsTools.ReplaceControl(ControlProvider.Control, thePanel);
 
-      CheckBox TheCheckBox = new CheckBox();
-      TheCheckBox.Text = ""; // без заголовка
-      TheCheckBox.Location = new Point(0, (ControlProvider.Control.Height - 16) / 2);
-      TheCheckBox.Size = new Size(16, 16);
-      TheCheckBox.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-      TheCheckBox.TabIndex = 0;
-      ThePanel.Controls.Add(TheCheckBox);
+      CheckBox theCheckBox = new CheckBox();
+      theCheckBox.Text = ""; // без заголовка
+      theCheckBox.Location = new Point(0, (ControlProvider.Control.Height - 16) / 2);
+      theCheckBox.Size = new Size(16, 16);
+      theCheckBox.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+      theCheckBox.TabIndex = 0;
+      thePanel.Controls.Add(theCheckBox);
 
       ControlProvider.Control.Dock = DockStyle.None;
       ControlProvider.Control.Location = new Point(16, 0);
-      ControlProvider.Control.Size = new Size(ThePanel.ClientSize.Width - 16, ThePanel.ClientSize.Height);
+      ControlProvider.Control.Size = new Size(thePanel.ClientSize.Width - 16, thePanel.ClientSize.Height);
       ControlProvider.Control.TabIndex = 1;
-      ThePanel.Controls.Add(ControlProvider.Control);
-      return TheCheckBox;
+      thePanel.Controls.Add(ControlProvider.Control);
+      return theCheckBox;
     }
 
     #endregion
@@ -937,9 +937,9 @@ namespace FreeLibSet.Forms.Docs
           _ChangeInfo.Changed = true;
         else
         {
-          bool Eq1 = Object.Equals(CurrentValue1Ex.Value, _StartValue1);
-          bool Eq2 = Object.Equals(CurrentValue2Ex.Value, _StartValue2);
-          _ChangeInfo.Changed = !(Eq1 && Eq2);
+          bool eq1 = Object.Equals(CurrentValue1Ex.Value, _StartValue1);
+          bool eq2 = Object.Equals(CurrentValue2Ex.Value, _StartValue2);
+          _ChangeInfo.Changed = !(eq1 && eq2);
         }
       }
       else

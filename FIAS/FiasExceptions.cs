@@ -21,7 +21,7 @@ namespace FreeLibSet.FIAS
     /// Создает объект исключения с заданным сообщением
     /// </summary>
     /// <param name="message">Текст сообщения</param>
-    public FiasDBSettingsException (string message)
+    public FiasDBSettingsException(string message)
       : this(message, null)
     {
     }
@@ -32,7 +32,7 @@ namespace FreeLibSet.FIAS
     /// </summary>
     /// <param name="message">Текст сообщения</param>
     /// <param name="innerException">Вложенное исключение</param>
-    public FiasDBSettingsException (string message, Exception innerException)
+    public FiasDBSettingsException(string message, Exception innerException)
       : base(message, innerException)
     {
     }

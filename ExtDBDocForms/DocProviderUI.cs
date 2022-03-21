@@ -221,9 +221,6 @@ namespace FreeLibSet.Forms.Docs
       return res;
     }
 
-
-
-
     /// <summary>
     /// Внутренний метод получения хранимого файла
     /// Этот метод не должен использоваться в прикладном коде.
@@ -355,21 +352,21 @@ namespace FreeLibSet.Forms.Docs
 
       bool UseAsyncCall = DataTools.GetBool(dataSet.ExtendedProperties["UseAsyngWriting"]);
 
-      DataSet DataSet2;
+      DataSet dataSet2;
       if (UseAsyncCall)
       {
         // Асинхронный вызов
-        NamedValues DispArgs = new NamedValues();
-        DispArgs["Action"] = "ApplyChanges";
-        DispArgs["DataSet"] = dataSet;
-        DispArgs["ReloadData"] = reloadData;
-        NamedValues DispRes = ExecuteServerAsync(DispArgs, "Запись изменений документов");
-        DataSet2 = (DataSet)(DispRes["DataSet"]);
+        NamedValues dispArgs = new NamedValues();
+        dispArgs["Action"] = "ApplyChanges";
+        dispArgs["DataSet"] = dataSet;
+        dispArgs["ReloadData"] = reloadData;
+        NamedValues DispRes = ExecuteServerAsync(dispArgs, "Запись изменений документов");
+        dataSet2 = (DataSet)(DispRes["DataSet"]);
       }
       else
       {
         // Синхронный вызов, который используется чаще всего
-        DataSet2 = base.OnApplyChanges(dataSet, reloadData);
+        dataSet2 = base.OnApplyChanges(dataSet, reloadData);
       }
 
       // Сброс буферизации выполняем независимо от того, выполняется ли возврат строк от сервера
@@ -379,8 +376,8 @@ namespace FreeLibSet.Forms.Docs
 
       if (reloadData)
       {
-        if (DataSet2 != null)
-          AfterApplyChanges(DataSet2);
+        if (dataSet2 != null)
+          AfterApplyChanges(dataSet2);
         else
         {
           try
@@ -395,35 +392,35 @@ namespace FreeLibSet.Forms.Docs
         }
       }
 
-      return DataSet2;
+      return dataSet2;
     }
 
     private void AfterApplyChanges(DataSet dataSet2)
     {
-      SingleScopeList<DocTypeUI> DocTypeUIs = new SingleScopeList<DocTypeUI>();
-      foreach (DataTable Table in dataSet2.Tables)
+      SingleScopeList<DocTypeUI> docTypeUIs = new SingleScopeList<DocTypeUI>();
+      foreach (DataTable table in dataSet2.Tables)
       {
-        DocTypeUI DocTypeUI;
-        SubDocTypeUI SubDocTypeUI;
-        if (!_UI.DocTypes.FindByTableName(Table.TableName, out DocTypeUI, out SubDocTypeUI))
+        DocTypeUI docTypeUI;
+        SubDocTypeUI subDocTypeUI;
+        if (!_UI.DocTypes.FindByTableName(table.TableName, out docTypeUI, out subDocTypeUI))
           continue; // Недоразумение
 
-        DocTypeUIs.Add(DocTypeUI);
+        docTypeUIs.Add(docTypeUI);
       }
 
       // Обновление табличных просмотров
-      Guid BrowserGuid;
+      Guid browserGuid;
       if (DocumentViewHandler.CurrentHandler == null)
-        BrowserGuid = Guid.Empty;
+        browserGuid = Guid.Empty;
       else
-        BrowserGuid = DocumentViewHandler.CurrentHandler.BrowserGuid;
+        browserGuid = DocumentViewHandler.CurrentHandler.BrowserGuid;
 
-      foreach (DocTypeUI DocTypeUI in DocTypeUIs)
+      foreach (DocTypeUI docTypeUI in docTypeUIs)
       {
-        for (int i = 0; i < DocTypeUI.Browsers.Count; i++)
+        for (int i = 0; i < docTypeUI.Browsers.Count; i++)
         {
-          DocumentViewHandler dvh=DocTypeUI.Browsers[i];
-          bool IsCaller = (dvh.BrowserGuid == BrowserGuid) && BrowserGuid != Guid.Empty;
+          DocumentViewHandler dvh=docTypeUI.Browsers[i];
+          bool IsCaller = (dvh.BrowserGuid == browserGuid) && browserGuid != Guid.Empty;
           try
           {
             dvh.ApplyChanges(dataSet2, IsCaller);
@@ -434,10 +431,10 @@ namespace FreeLibSet.Forms.Docs
             e.Data["DocumentViewHandler"] = dvh.ToString();
             e.Data["BrowserGuid"] = dvh.BrowserGuid;
             e.Data["IsCaller"] = IsCaller;
-            EFPApp.ShowException(e, "Ошибка обновления просмотра после записи изменений для документов \"" + DocTypeUI.DocType.PluralTitle+"\"");
+            EFPApp.ShowException(e, "Ошибка обновления просмотра после записи изменений для документов \"" + docTypeUI.DocType.PluralTitle+"\"");
           }
         }
-        DocTypeUI.RefreshBufferedData(); // 03.02.2022
+        docTypeUI.RefreshBufferedData(); // 03.02.2022
       }
       //DebugTools.DebugDataSet(DataSet, "Обновленный");
     }
@@ -456,9 +453,9 @@ namespace FreeLibSet.Forms.Docs
     {
       DistributedCallData startData = base.StartServerExecProc(dispArgs);
 
-      DistributedProcCallItem CallItem = new DistributedProcCallItem(startData);
-      CallItem.DisplayName = displayName;
-      NamedValues dispRes = EFPApp.ExecProcList.ExecuteAsyncAndWait(CallItem);
+      DistributedProcCallItem callItem = new DistributedProcCallItem(startData);
+      callItem.DisplayName = displayName;
+      NamedValues dispRes = EFPApp.ExecProcList.ExecuteAsyncAndWait(callItem);
       return dispRes;
     }
 

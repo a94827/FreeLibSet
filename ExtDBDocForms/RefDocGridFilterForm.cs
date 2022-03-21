@@ -31,16 +31,16 @@ namespace FreeLibSet.Forms.Docs
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
-      List<string> ModeNames = new List<string>();
-      ModeNames.Add("Нет фильтра");
-      ModeNames.Add("Выбранные документы");
-      ModeNames.Add("Кроме выбранных документов");
+      List<string> modeNames = new List<string>();
+      modeNames.Add("Нет фильтра");
+      modeNames.Add("Выбранные документы");
+      modeNames.Add("Кроме выбранных документов");
       if (nullable)
       {
-        ModeNames.Add("Ссылка на любой документ");
-        ModeNames.Add("Ссылка не задана");
+        modeNames.Add("Ссылка на любой документ");
+        modeNames.Add("Ссылка не задана");
       }
-      cbMode.Items.AddRange(ModeNames.ToArray());
+      cbMode.Items.AddRange(modeNames.ToArray());
       if (EFPApp.ShowListImages)
         new ListControlImagePainter(cbMode, new ListControlImageEventHandler(PaintModeItem));
       efpMode = new EFPListComboBox(efpForm, cbMode);
@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms.Docs
       efpDocSel.CanBeEmpty = false;
       efpDocSel.Label = grpDocs; // Иначе не найдет из-за таблички фильтров FilterGrid
 
-      EFPGridFilterGridView FilterView = new EFPGridFilterGridView(efpDocSel, FilterGrid);
+      EFPGridFilterGridView filterView = new EFPGridFilterGridView(efpDocSel, FilterGrid);
 
       ActiveControl = grDocSel;
 
@@ -62,24 +62,24 @@ namespace FreeLibSet.Forms.Docs
 
     void efpMode_ValueChanged(object sender, EventArgs args)
     {
-      bool UseDocs;
+      bool useDocs;
       switch (Mode)
       {
         case RefDocFilterMode.Include:
           grpDocs.Text = "Ссылки на документы \"" + DocTypeUI.DocType.PluralTitle + "\"";
-          UseDocs = true;
+          useDocs = true;
           break;
         case RefDocFilterMode.Exclude:
           grpDocs.Text = "Ссылки на документы  \"" + DocTypeUI.DocType.PluralTitle + "\", которые надо исключить";
-          UseDocs = true;
+          useDocs = true;
           break;
         default:
-          UseDocs = false;
+          useDocs = false;
           break;
       }
 
-      grpDocs.Visible = UseDocs;
-      efpDocSel.Enabled = UseDocs; // чтобы проверка не срабатывала
+      grpDocs.Visible = useDocs;
+      efpDocSel.Enabled = useDocs; // чтобы проверка не срабатывала
     }
 
     private static void PaintModeItem(object sender, ListControlImageEventArgs args)
@@ -152,38 +152,38 @@ namespace FreeLibSet.Forms.Docs
 
       #region Показ основной формы
 
-      bool Res = false;
-      RefDocGridFilterForm Form = new RefDocGridFilterForm(docTypeUI, nullable);
+      bool res = false;
+      RefDocGridFilterForm dlg = new RefDocGridFilterForm(docTypeUI, nullable);
       try
       {
-        Form.Text = title;
-        Form.Icon = EFPApp.MainImageIcon("Filter");
-        if ((int)mode >= 0 && (int)mode < Form.cbMode.Items.Count)
-          Form.efpMode.SelectedIndex = (int)(mode);
-        Form.efpDocSel.Ids = ids;
-        Form.efpDocSel.Filters = docFilters;
-        Form.efpDocSel.CommandItems.CanEditFilters = false; // 09.07.2019
+        dlg.Text = title;
+        dlg.Icon = EFPApp.MainImageIcon("Filter");
+        if ((int)mode >= 0 && (int)mode < dlg.cbMode.Items.Count)
+          dlg.efpMode.SelectedIndex = (int)(mode);
+        dlg.efpDocSel.Ids = ids;
+        dlg.efpDocSel.Filters = docFilters;
+        dlg.efpDocSel.CommandItems.CanEditFilters = false; // 09.07.2019
 
-        switch (EFPApp.ShowDialog(Form, false, dialogPosition))
+        switch (EFPApp.ShowDialog(dlg, false, dialogPosition))
         {
           case DialogResult.OK:
-            mode = Form.Mode;
-            ids = Form.efpDocSel.Ids;
-            Res = true;
+            mode = dlg.Mode;
+            ids = dlg.efpDocSel.Ids;
+            res = true;
             break;
           case DialogResult.No:
             mode = RefDocFilterMode.NoFilter;
             ids = null;
             //Values = null;
-            Res = true;
+            res = true;
             break;
         }
       }
       finally
       {
-        Form.Dispose();
+        dlg.Dispose();
       }
-      return Res;
+      return res;
 
       #endregion
     }
@@ -355,18 +355,18 @@ namespace FreeLibSet.Forms.Docs
       }
 
 
-      bool First = true;
-      foreach (Int32 Id in DocIds)
+      bool isFirst = true;
+      foreach (Int32 id in DocIds)
       {
-        if (First)
-          First = false;
+        if (isFirst)
+          isFirst = false;
         else
           sb.Append(", ");
-        sb.Append(UI.TextHandlers.GetTextValue(DocTypeName, Id));
+        sb.Append(UI.TextHandlers.GetTextValue(DocTypeName, id));
         if (UI.DebugShowIds)
         {
           sb.Append(" (Id=)");
-          sb.Append(Id);
+          sb.Append(id);
           sb.Append(")");
         }
       }
@@ -424,15 +424,15 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>true, если фильтр установлен</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      RefDocFilterMode Mode = base.Mode;
-      Int32[] Ids = null;
+      RefDocFilterMode mode = base.Mode;
+      Int32[] ids = null;
       if (base.DocIds != null)
-        Ids = base.DocIds.ToArray();
+        ids = base.DocIds.ToArray();
 
-      bool Res = RefDocGridFilterForm.PerformEdit(DisplayName, UI.DocTypes[DocTypeName], Nullable, ref Mode, ref Ids, DocFilters, dialogPosition, EmptyEditMode);
-      if (Res)
-        SetFilter(Mode, Ids);
-      return Res;
+      bool res = RefDocGridFilterForm.PerformEdit(DisplayName, UI.DocTypes[DocTypeName], Nullable, ref mode, ref ids, DocFilters, dialogPosition, EmptyEditMode);
+      if (res)
+        SetFilter(mode, ids);
+      return res;
     }
 
     //    public override bool CanAsCurrRow(DataRow Row)
@@ -489,15 +489,15 @@ namespace FreeLibSet.Forms.Docs
     /// False, если в выборке нет ссылок на документы подходящего вида</returns>
     public bool ApplyDocSel(DBxDocSelection docSel)
     {
-      Int32[] NewIds = docSel[DocType.Name];
-      if (NewIds.Length == 0)
+      Int32[] newIds = docSel[DocType.Name];
+      if (newIds.Length == 0)
         return false;
-      RefDocFilterMode NewMode;
+      RefDocFilterMode newMode;
       if (Mode == RefDocFilterMode.NoFilter)
-        NewMode = RefDocFilterMode.Include;
+        newMode = RefDocFilterMode.Include;
       else
-        NewMode = Mode;
-      SetFilter(NewMode, NewIds);
+        newMode = Mode;
+      SetFilter(newMode, newIds);
       return true;
     }
 

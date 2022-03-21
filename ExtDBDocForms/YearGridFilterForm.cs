@@ -102,28 +102,28 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      YearGridFilterForm Form = new YearGridFilterForm();
-      Form.Text = DisplayName;
+      YearGridFilterForm form = new YearGridFilterForm();
+      form.Text = DisplayName;
 
-      Form.efpYear.Value = _PrevYear;
+      form.efpYear.Value = _PrevYear;
 
       if (Value.HasValue)
       {
-        Form.efpMode.SelectedIndex = 1;
-        Form.efpYear.Value = Value.Value;
+        form.efpMode.SelectedIndex = 1;
+        form.efpYear.Value = Value.Value;
       }
       else
-        Form.efpMode.SelectedIndex = 0;
+        form.efpMode.SelectedIndex = 0;
 
-      if (EFPApp.ShowDialog(Form, true, dialogPosition) != DialogResult.OK)
+      if (EFPApp.ShowDialog(form, true, dialogPosition) != DialogResult.OK)
         return false;
 
-      if (Form.efpMode.SelectedIndex == 0)
+      if (form.efpMode.SelectedIndex == 0)
         Value = null;
       else
-        Value = Form.efpYear.Value;
+        Value = form.efpYear.Value;
 
-      _PrevYear = Form.efpYear.Value;
+      _PrevYear = form.efpYear.Value;
 
       return true;
     }
@@ -217,26 +217,26 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      YearGridFilterForm Form = new YearGridFilterForm();
-      Form.Text = DisplayName;
-      Form.efpYear.Value = _PrevYear;
+      YearGridFilterForm form = new YearGridFilterForm();
+      form.Text = DisplayName;
+      form.efpYear.Value = _PrevYear;
 
       if (Value == 0)
-        Form.efpMode.SelectedIndex = 0;
+        form.efpMode.SelectedIndex = 0;
       else
       {
-        Form.efpMode.SelectedIndex = 1;
-        Form.efpYear.Value = Value;
+        form.efpMode.SelectedIndex = 1;
+        form.efpYear.Value = Value;
       }
 
-      if (EFPApp.ShowDialog(Form, true, dialogPosition) != DialogResult.OK)
+      if (EFPApp.ShowDialog(form, true, dialogPosition) != DialogResult.OK)
         return false;
 
-      if (Form.efpMode.SelectedIndex == 0)
+      if (form.efpMode.SelectedIndex == 0)
         Value = 0;
       else
-        Value = Form.efpYear.Value;
-      _PrevYear = Form.efpYear.Value;
+        Value = form.efpYear.Value;
+      _PrevYear = form.efpYear.Value;
       return true;
     }
 

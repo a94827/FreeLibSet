@@ -58,28 +58,28 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public void ReadValues()
     {
-      foreach (IDocEditItem Item in this)
-        Item.BeforeReadValues();
+      foreach (IDocEditItem item in this)
+        item.BeforeReadValues();
 
-      foreach (IDocEditItem Item in this)
+      foreach (IDocEditItem item in this)
       {
         try
         {
-          Item.ReadValues();
+          item.ReadValues();
         }
         catch (Exception e)
         {
-          string DisplayName;
-          if (Item.ChangeInfo == null)
-            DisplayName = Item.ToString();
+          string displayName;
+          if (item.ChangeInfo == null)
+            displayName = item.ToString();
           else
-            DisplayName = Item.ChangeInfo.DisplayName;
-          EFPApp.ShowException(e, "Ошибка при считывании значения \"" + DisplayName + "\"");
+            displayName = item.ChangeInfo.DisplayName;
+          EFPApp.ShowException(e, "Ошибка при считывании значения \"" + displayName + "\"");
         }
       }
-      foreach (IDocEditItem Item in this)
+      foreach (IDocEditItem item in this)
       {
-        Item.AfterReadValues();
+        item.AfterReadValues();
         //Item.ChangeInfo = new DepChangeInfoItem(FChangeInfo);
         //Item.ChangeInfo.DisplayName = Item.DisplayName;
       }
@@ -90,8 +90,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public void WriteValues()
     {
-      foreach (IDocEditItem Item in this)
-        Item.WriteValues();
+      foreach (IDocEditItem item in this)
+        item.WriteValues();
     }
 
     #endregion

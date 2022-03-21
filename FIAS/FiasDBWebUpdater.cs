@@ -103,19 +103,19 @@ namespace FreeLibSet.FIAS
         return;
       }
 
-      DateTime FirstDate = (DateTime)(table.DefaultView[0].Row["Date"]);
-      DateTime LastDate = (DateTime)(table.DefaultView[table.DefaultView.Count - 1].Row["Date"]);
+      DateTime firstDate = (DateTime)(table.DefaultView[0].Row["Date"]);
+      DateTime lastDate = (DateTime)(table.DefaultView[table.DefaultView.Count - 1].Row["Date"]);
       Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBWebUpdater. List contains " + table.DefaultView.Count.ToString() + " update(s) from " +
-        FirstDate.ToString("d") + " to " + LastDate.ToString("d") + ". The actual update date is " + _FiasDB.ActualDate.ToString("d"));
+        firstDate.ToString("d") + " to " + lastDate.ToString("d") + ". The actual update date is " + _FiasDB.ActualDate.ToString("d"));
 
-      if (FirstDate.Year < 2011)
-        throw new BugException("Неправильная первая дата в списке обновлений: " + FirstDate.ToString("d"));
+      if (firstDate.Year < 2011)
+        throw new BugException("Неправильная первая дата в списке обновлений: " + firstDate.ToString("d"));
 
-      if (FirstDate > _FiasDB.ActualDate)
-        throw new BugException("Первая дата в списке обновлений : " + FirstDate.ToString("d") + " больше актуальной даты классификатора " +
+      if (firstDate > _FiasDB.ActualDate)
+        throw new BugException("Первая дата в списке обновлений : " + firstDate.ToString("d") + " больше актуальной даты классификатора " +
           _FiasDB.ActualDate.ToString("d"));
 
-      if (LastDate <= _FiasDB.ActualDate)
+      if (lastDate <= _FiasDB.ActualDate)
       {
         Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBWebUpdater. There are no suitable updates");
         return; // Нет свежих обновлений
@@ -147,8 +147,8 @@ namespace FreeLibSet.FIAS
           {
             AbsPath path = new AbsPath(td.Dir, FiasWebLoader.GetFileNameFromUrl(uri));
             WebClient client = new WebClient();
-            DateTime SingleStartTime = DateTime.Now;
-            Trace.WriteLine(SingleStartTime.ToString("G") + " FiasDBWebUpdater. Start loading from " + uri + " ...");
+            DateTime singleStartTime = DateTime.Now;
+            Trace.WriteLine(singleStartTime.ToString("G") + " FiasDBWebUpdater. Start loading from " + uri + " ...");
             client.DownloadFile(uri, path.Path);
             Splash.CheckCancelled();
             Splash.AllowCancel = false;
@@ -156,8 +156,8 @@ namespace FreeLibSet.FIAS
               throw new FileNotFoundException("Не найден файл, скачанный с сайта ФИАС", path.Path);
 
             FileInfo fi = new FileInfo(path.Path);
-            TimeSpan DownloadTime = DateTime.Now - SingleStartTime;
-            Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBWebUpdater. FileSize=" + (fi.Length / FileTools.MByte) + "MB. Download time=" + DownloadTime.TotalMinutes.ToString("0") + " minute(s). Start updating DB ...");
+            TimeSpan downloadTime = DateTime.Now - singleStartTime;
+            Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBWebUpdater. FileSize=" + (fi.Length / FileTools.MByte) + "MB. Download time=" + downloadTime.TotalMinutes.ToString("0") + " minute(s). Start updating DB ...");
             updater.LoadArchiveFile(path, dt);
           }
 
@@ -289,16 +289,16 @@ namespace FreeLibSet.FIAS
       if (table.Rows.Count == 0)
         return;
 
-      DateTime FirstDate = (DateTime)(table.DefaultView[0].Row["Date"]);
-      DateTime LastDate = (DateTime)(table.DefaultView[table.DefaultView.Count - 1].Row["Date"]);
+      DateTime firstDate = (DateTime)(table.DefaultView[0].Row["Date"]);
+      DateTime lastDate = (DateTime)(table.DefaultView[table.DefaultView.Count - 1].Row["Date"]);
 
-      if (FirstDate.Year < 2011)
-        throw new BugException("Неправильная первая дата в списке обновлений: " + FirstDate.ToString("d"));
+      if (firstDate.Year < 2011)
+        throw new BugException("Неправильная первая дата в списке обновлений: " + firstDate.ToString("d"));
 
-      if (FirstDate > ActualDate)
+      if (firstDate > ActualDate)
         return;
 
-      if (LastDate <= ActualDate)
+      if (lastDate <= ActualDate)
         return; // Нет свежих обновлений
 
       // Перебираем обновления
@@ -460,7 +460,6 @@ namespace FreeLibSet.FIAS
         throw;
       }
     }
-
 
     #endregion
   }

@@ -12,7 +12,7 @@ namespace FreeLibSet.Russian
   /// Получение рублей и копеек из суммы
   /// </summary>
   public struct RoublesAndCopecks
-  {                                         
+  {
     #region Конструктор
 
     /// <summary>
@@ -334,7 +334,7 @@ namespace FreeLibSet.Russian
 
       if (value.Negative)
         SpecAppend(sb, "ми-нус ", specChars);
-      int StartPos = sb.Length;
+      int startPos = sb.Length;
       ToString(sb, value.Roubles, RusGender.Masculine, theCase, specChars);
       sb.Append(specChars ? NonBreakSpaceChar : ' ');
       SpecAppend(sb, _RoublesForms[GetCF12(value.Roubles, theCase)], specChars);
@@ -366,7 +366,7 @@ namespace FreeLibSet.Russian
       // В именительном падеже преобразуем к верхнему регистру
       if (theCase == RusCase.Nominative)
       {
-        sb[StartPos] = sb[StartPos].ToString().ToUpperInvariant()[0];
+        sb[startPos] = sb[startPos].ToString().ToUpperInvariant()[0];
       }
     }
 
@@ -532,7 +532,7 @@ namespace FreeLibSet.Russian
         x = x / 1000;
       }
 
-      int StartLength = sb.Length; // Добавляем пробелы, если строка увеличилась
+      int startLength = sb.Length; // Добавляем пробелы, если строка увеличилась
 
       // Группы выводятся в строку в обратном порядке (начиная с миллиардов)
       for (i = x1000.Length - 1; i >= 0; i--)
@@ -559,7 +559,7 @@ namespace FreeLibSet.Russian
           }
 
           // Выводим прописью число в данной группе (от 1 до 999)
-          if (sb.Length > StartLength)
+          if (sb.Length > startLength)
             sb.Append(' ');
           Dig1000(sb, x1000[i], thisForm, theCase, specChars);
 
@@ -567,7 +567,7 @@ namespace FreeLibSet.Russian
           // "миллион" или "миллиард" в нужном числе и падеже
           if (i > 0)
           {
-            if (sb.Length > StartLength)
+            if (sb.Length > startLength)
               sb.Append(' ');
             SpecAppend(sb, _GreatestForms[(i - 1) * 12 + GetCF12((UInt64)(x1000[i]), theCase)], specChars);
           }
@@ -1095,8 +1095,8 @@ namespace FreeLibSet.Russian
         theCase = RusCase.Nominative;
 
       // Преобразуем число в нужную форму в десятичном формате с точкой
-      string NumberMask = "0." + new string('#', maxDecimalPlaces);
-      string s2 = x.ToString(NumberMask, CultureInfo.InvariantCulture);
+      string numberMask = "0." + new string('#', maxDecimalPlaces);
+      string s2 = x.ToString(numberMask, CultureInfo.InvariantCulture);
 
       // Ищем десятичную точку
       int p = s2.IndexOf('.');

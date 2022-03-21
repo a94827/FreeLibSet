@@ -174,17 +174,17 @@ namespace FreeLibSet.Forms.Docs
       if (!DataRows[0].Table.Columns.Contains(columnName))
         return;
 
-      Int32[] Ids = DataTools.GetIdsFromColumn(DataRows, columnName);
+      Int32[] ids = DataTools.GetIdsFromColumn(DataRows, columnName);
       if (useHandler)
       {
         DocTypeUIBase dtb = ControlProvider.UI.DocTypes.FindByTableName(tableName);
         if (dtb == null)
           throw new ArgumentException("Неизвестный вид документа или поддокумента \"" + tableName + "\"", "tableName");
 
-        dtb.PerformGetDocSel(DocSel, Ids, Reason);
+        dtb.PerformGetDocSel(DocSel, ids, Reason);
       }
       else
-        DocSel.Add(tableName, Ids);
+        DocSel.Add(tableName, ids);
     }
 
 
@@ -219,17 +219,17 @@ namespace FreeLibSet.Forms.Docs
 
       for (int i = 0; i < DataRows.Length; i++)
       {
-        Int32 TableId = DataTools.GetInt(DataRows[i][pTable]);
-        Int32 DocId = DataTools.GetInt(DataRows[i][pId]);
-        if (TableId != 0 && DocId != 0)
+        Int32 tableId = DataTools.GetInt(DataRows[i][pTable]);
+        Int32 docId = DataTools.GetInt(DataRows[i][pId]);
+        if (tableId != 0 && docId != 0)
         {
-          DocTypeUI dtui = ControlProvider.UI.DocTypes.FindByTableId(TableId);
+          DocTypeUI dtui = ControlProvider.UI.DocTypes.FindByTableId(tableId);
           if (dtui != null)
           {
             if (useHandler)
-              dtui.PerformGetDocSel(DocSel, DocId, Reason);
+              dtui.PerformGetDocSel(DocSel, docId, Reason);
             else
-              DocSel.Add(dtui.DocType.Name, DocId);
+              DocSel.Add(dtui.DocType.Name, docId);
           }
         }
       }
@@ -237,7 +237,6 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
   }
-
 
   /// <summary>
   /// Делегат события EFPDBxTreeView.GetDocSel
@@ -266,12 +265,12 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификатор документа, поддокумента или записи в какой-либо другой таблице для текущей строки
     /// </summary>
-    Int32 CurrentId { get; set;}
+    Int32 CurrentId { get; set; }
 
     /// <summary>
     /// Массив идентификаторов для выбранных строк таблицы или ущлов дерева
     /// </summary>
-    Int32[] SelectedIds { get; set;}
+    Int32[] SelectedIds { get; set; }
 
     /// <summary>
     /// Событие вызывается, если пользователь изменяет выбор строк
@@ -417,7 +416,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void OnSaveConfig()
     {
-      if (SaveCurrentId && (CurrentId != _PrevSavedId) && CurrentId!=0)
+      if (SaveCurrentId && (CurrentId != _PrevSavedId) && CurrentId != 0)
       {
         ConfigHandler.Changed[EFPConfigCategories.GridView] = true; // для сохранения текущей позиции
         _PrevSavedId = CurrentId;
@@ -565,13 +564,13 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Значение поля "Id"</returns>
     public Int32 GetRowId(DataGridViewRow row)
     {
-      DataRow Row2 = GetDataRow(row);
-      if (Row2 == null)
+      DataRow row2 = GetDataRow(row);
+      if (row2 == null)
         return 0;
-      int p = Row2.Table.Columns.IndexOf("Id");
+      int p = row2.Table.Columns.IndexOf("Id");
       if (p < 0) // 10.03.2016
         return 0;
-      return DataTools.GetInt(Row2[p]);
+      return DataTools.GetInt(row2[p]);
     }
 
     /// <summary>
@@ -582,13 +581,13 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Значение поля "Id"</returns>
     public Int32 GetRowId(int rowIndex)
     {
-      DataRow Row = GetDataRow(rowIndex);
-      if (Row == null)
+      DataRow row = GetDataRow(rowIndex);
+      if (row == null)
         return 0;
-      int p = Row.Table.Columns.IndexOf("Id");
+      int p = row.Table.Columns.IndexOf("Id");
       if (p < 0) // 10.03.2016
         return 0;
-      return DataTools.GetInt(Row[p]);
+      return DataTools.GetInt(row[p]);
     }
 
 
@@ -604,14 +603,14 @@ namespace FreeLibSet.Forms.Docs
     {
       get
       {
-        DataRow[] Rows = SelectedDataRows;
+        DataRow[] rows = SelectedDataRows;
         // return DataTools.GetIds(Rows);
-        return DataTools.GetIdsFromColumn(Rows, "Id"); // 21.01.2016
+        return DataTools.GetIdsFromColumn(rows, "Id"); // 21.01.2016
       }
       set
       {
-        DataRow[] Rows = DataTools.GetRowsFromIds(SourceAsDataTable, value);
-        SelectedDataRows = Rows;
+        DataRow[] rows = DataTools.GetRowsFromIds(SourceAsDataTable, value);
+        SelectedDataRows = rows;
       }
     }
 
@@ -665,25 +664,25 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Control.DataSource != null) // 18.08.2021
       {
-        DataRow[] Rows;
+        DataRow[] rows;
         if (rowIndices == null)
         {
           DataView dv = SourceAsDataView;
           if (dv == null)
             throw new InvalidOperationException("Табличный просмотр не присоединен к DataView");
-          Rows = DataTools.GetDataViewRows(dv);
+          rows = DataTools.GetDataViewRows(dv);
         }
         else
-          Rows = base.GetDataRows(rowIndices);
+          rows = base.GetDataRows(rowIndices);
 
-        Int32[] Ids = DataTools.GetIdsFromColumn(Rows, "Id");
-        if (Ids.Length > 0)
-          ClearCacheForUpdate(Ids); // 24.10.2017
+        Int32[] ids = DataTools.GetIdsFromColumn(rows, "Id");
+        if (ids.Length > 0)
+          ClearCacheForUpdate(ids); // 24.10.2017
 
-        for (int i = 0; i < Rows.Length; i++)
+        for (int i = 0; i < rows.Length; i++)
         {
-          if (Rows[i] != null)
-            LoadDataRowForUpdate(Rows[i]);
+          if (rows[i] != null)
+            LoadDataRowForUpdate(rows[i]);
         }
       }
 
@@ -715,8 +714,8 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="ids">Массив идентификаторов документов</param>
     public void UpdateRowsForIds(Int32[] ids)
     {
-      IdList IdList = new IdList(ids);
-      UpdateRowsForIds(IdList);
+      IdList idList = new IdList(ids);
+      UpdateRowsForIds(idList);
     }
 
     /// <summary>
@@ -738,28 +737,28 @@ namespace FreeLibSet.Forms.Docs
 
       if (IsPrimaryKeyById)
       {
-        List<DataRow> Rows = new List<DataRow>(ids.Count);
-        foreach (Int32 Id in ids)
+        List<DataRow> rows = new List<DataRow>(ids.Count);
+        foreach (Int32 id in ids)
         {
-          DataRow Row = SourceAsDataTable.Rows.Find(Id);
-          if (Row != null)
-            Rows.Add(Row);
+          DataRow row = SourceAsDataTable.Rows.Find(id);
+          if (row != null)
+            rows.Add(row);
         }
-        UpdateDataRows(Rows.ToArray());
+        UpdateDataRows(rows.ToArray());
         return;
       }
 
-      List<int> RowIndices = new List<int>();
+      List<int> rowIndices = new List<int>();
 
       for (int i = 0; i < Control.RowCount; i++)
       {
-        Int32 Id = GetRowId(i);
-        if (ids.Contains(Id))
-          RowIndices.Add(i);
+        Int32 id = GetRowId(i);
+        if (ids.Contains(id))
+          rowIndices.Add(i);
       }
 
-      if (RowIndices.Count > 0)
-        UpdateRows(RowIndices.ToArray());
+      if (rowIndices.Count > 0)
+        UpdateRows(rowIndices.ToArray());
     }
 
     #endregion
@@ -823,14 +822,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public new GridFilters Filters
     {
-      get
-      {
-        return (GridFilters)(base.Filters);
-      }
-      set
-      {
-        base.Filters = value;
-      }
+      get { return (GridFilters)(base.Filters); }
+      set { base.Filters = value; }
     }
 
     /// <summary>
@@ -868,19 +861,19 @@ namespace FreeLibSet.Forms.Docs
     void FilterGridProvider_AddCopyFormats(object sender, DataObjectEventArgs args)
     {
       EFPDataGridViewCommandItems CommandItems = (EFPDataGridViewCommandItems)sender;
-      int[] FilterIndices = CommandItems.Owner.SelectedRowIndices;
+      int[] filterIndices = CommandItems.Owner.SelectedRowIndices;
 
-      DBxDocSelection DocSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
-      for (int i = 0; i < FilterIndices.Length; i++)
+      DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
+      for (int i = 0; i < filterIndices.Length; i++)
       {
-        IDBxDocSelectionFilter Item2 = Filters[FilterIndices[i]] as IDBxDocSelectionFilter;
-        if (Item2 != null)
-          Item2.GetDocSel(DocSel);
+        IDBxDocSelectionFilter item2 = Filters[filterIndices[i]] as IDBxDocSelectionFilter;
+        if (item2 != null)
+          item2.GetDocSel(docSel);
       }
-      if (!DocSel.IsEmpty)
+      if (!docSel.IsEmpty)
       {
-        args.DataObject.SetData(DocSel);
-        UI.OnAddCopyFormats(args.DataObject, DocSel);
+        args.DataObject.SetData(docSel);
+        UI.OnAddCopyFormats(args.DataObject, docSel);
       }
     }
 
@@ -892,18 +885,18 @@ namespace FreeLibSet.Forms.Docs
       if (!efpFilterGrid.CheckSingleRow())
         return;
 
-      DBxCommonFilter Item = Filters[efpFilterGrid.CurrentRowIndex];
-      IDBxDocSelectionFilter Item2 = Item as IDBxDocSelectionFilter;
-      if (Item2 == null)
+      DBxCommonFilter item = Filters[efpFilterGrid.CurrentRowIndex];
+      IDBxDocSelectionFilter item2 = item as IDBxDocSelectionFilter;
+      if (item2 == null)
       {
-        EFPApp.ShowTempMessage("Фильтр \"" + Item.DisplayName + "\" не поддерживает вставку выборки документов");
+        EFPApp.ShowTempMessage("Фильтр \"" + item.DisplayName + "\" не поддерживает вставку выборки документов");
         return;
       }
 
-      if (Item2.ApplyDocSel(fmtDocSel.DocSel))
+      if (item2.ApplyDocSel(fmtDocSel.DocSel))
         efpFilterGrid.PerformRefresh();
       else
-        EFPApp.ShowTempMessage("Выборка документов в буфере обмена не подходит фильтру \"" + Item.DisplayName + "\"");
+        EFPApp.ShowTempMessage("Выборка документов в буфере обмена не подходит фильтру \"" + item.DisplayName + "\"");
     }
 
     #endregion
@@ -921,11 +914,11 @@ namespace FreeLibSet.Forms.Docs
       // столбцы
       for (int i = 0; i < Control.Columns.Count; i++)
       {
-        DataGridViewColumn Column = Control.Columns[i];
-        if (Columns[Column].ColumnProducer != null)
+        DataGridViewColumn gridColumn = Control.Columns[i];
+        if (Columns[gridColumn].ColumnProducer != null)
           continue;
-        if (!String.IsNullOrEmpty(Column.DataPropertyName))
-          columnNames.Add(Column.DataPropertyName);
+        if (!String.IsNullOrEmpty(gridColumn.DataPropertyName))
+          columnNames.Add(gridColumn.DataPropertyName);
       }
     }
 
@@ -997,16 +990,16 @@ namespace FreeLibSet.Forms.Docs
     /// <returns></returns>
     protected override bool GetGridProducerToolTipRequired(int rowIndex)
     {
-      DataRow Row = GetDataRow(rowIndex);
-      if (Row == null)
+      DataRow row = GetDataRow(rowIndex);
+      if (row == null)
         return false;
-      if (Row.RowState == DataRowState.Deleted)
+      if (row.RowState == DataRowState.Deleted)
         return false;
 
-      int p = Row.Table.Columns.IndexOf("Id");
+      int p = row.Table.Columns.IndexOf("Id");
       if (p >= 0)
       {
-        return (DataTools.GetInt(Row[p]) > 0); // условие добавлено 12.08.2020
+        return (DataTools.GetInt(row[p]) > 0); // условие добавлено 12.08.2020
       }
       else
       {
@@ -1165,10 +1158,10 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.BeginWait("Создание выборки документов", "Выборка");
         try
         {
-          EFPDBxGridViewDocSelEventArgs Args = new EFPDBxGridViewDocSelEventArgs(this, reason, rowIndices);
-          OnGetDocSel(Args);
-          if (!Args.DocSel.IsEmpty)
-            DocSel = Args.DocSel;
+          EFPDBxGridViewDocSelEventArgs args = new EFPDBxGridViewDocSelEventArgs(this, reason, rowIndices);
+          OnGetDocSel(args);
+          if (!args.DocSel.IsEmpty)
+            DocSel = args.DocSel;
         }
         finally
         {
@@ -1241,12 +1234,12 @@ namespace FreeLibSet.Forms.Docs
     {
       try
       {
-        DataGridViewColumn Col = Control.Columns[args.ColumnIndex];
-        if (Object.ReferenceEquals(Col, base.MarkRowsGridColumn))
+        DataGridViewColumn gridColumn = Control.Columns[args.ColumnIndex];
+        if (Object.ReferenceEquals(gridColumn, base.MarkRowsGridColumn))
         {
-          Int32 CurrId = this.GetRowId(args.RowIndex);
-          if (CurrId != 0)
-            args.Value = MarkRowIds.Contains(CurrId);
+          Int32 currId = this.GetRowId(args.RowIndex);
+          if (currId != 0)
+            args.Value = MarkRowIds.Contains(currId);
         }
       }
       catch (Exception e)
@@ -1263,17 +1256,17 @@ namespace FreeLibSet.Forms.Docs
     {
       try
       {
-        DataGridViewColumn Col = Control.Columns[args.ColumnIndex];
-        if (Object.ReferenceEquals(Col, base.MarkRowsGridColumn))
+        DataGridViewColumn gridColumn = Control.Columns[args.ColumnIndex];
+        if (Object.ReferenceEquals(gridColumn, base.MarkRowsGridColumn))
         {
-          Int32 CurrId = this.GetRowId(args.RowIndex);
-          if (CurrId != 0)
+          Int32 currId = this.GetRowId(args.RowIndex);
+          if (currId != 0)
           {
-            bool Flag = DataTools.GetBool(args.Value);
-            if (Flag)
-              MarkRowIds.Add(CurrId);
+            bool flag = DataTools.GetBool(args.Value);
+            if (flag)
+              MarkRowIds.Add(currId);
             else
-              MarkRowIds.Remove(CurrId);
+              MarkRowIds.Remove(currId);
           }
           else
             throw new InvalidOperationException("Для строки нет идентификатора");
@@ -1427,11 +1420,11 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args">Аргументы для добавления форматоы</param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
-      if (DocSel != null)
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      if (docSel != null)
       {
-        args.DataObject.SetData(DocSel);
-        Owner.UI.OnAddCopyFormats(args.DataObject, DocSel); // 06.02.2021
+        args.DataObject.SetData(docSel);
+        Owner.UI.OnAddCopyFormats(args.DataObject, docSel); // 06.02.2021
       }
 
       base.OnAddCopyFormats(args);
@@ -1445,13 +1438,13 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
-      if (DocSel == null || DocSel.IsEmpty)
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");
         return;
       }
-      Owner.UI.ShowDocSel(DocSel);
+      Owner.UI.ShowDocSel(docSel);
     }
 
     #endregion
@@ -1507,8 +1500,8 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Провайдер табличного просмотра</returns>
     protected override EFPDataGridView DoCreateControlProvider(DataGridView control)
     {
-      EFPDBxGridView Res = new EFPDBxGridView(BaseProvider, control, _UI);
-      return Res;
+      EFPDBxGridView res = new EFPDBxGridView(BaseProvider, control, _UI);
+      return res;
     }
 
     #endregion

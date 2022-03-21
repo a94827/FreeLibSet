@@ -253,19 +253,19 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       string[] aKeys = keys.Split(',');
       for (int i = 0; i < aKeys.Length; i++)
       {
-        string Key = aKeys[i];
+        string key = aKeys[i];
 #if DEBUG
-        for (int j = 0; j < Key.Length; j++)
+        for (int j = 0; j < key.Length; j++)
         {
-          if (!_ValidChars.ContainsKey(Key[j]))
-            throw new Exception("Ключ \"" + Key + "\" содержит недопустимый символ \"" + Key[j] + "\"");
+          if (!_ValidChars.ContainsKey(key[j]))
+            throw new Exception("Ключ \"" + key + "\" содержит недопустимый символ \"" + key[j] + "\"");
         }
 #endif
 
-        AddCodes2(_Beginning, Key, xBegining);
-        AddCodes2(_BeforeVowel, Key, xBeforeVowel);
-        AddCodes2(_Generic, Key, xGeneric);
-        _MaxSeqLength = Math.Max(_MaxSeqLength, Key.Length);
+        AddCodes2(_Beginning, key, xBegining);
+        AddCodes2(_BeforeVowel, key, xBeforeVowel);
+        AddCodes2(_Generic, key, xGeneric);
+        _MaxSeqLength = Math.Max(_MaxSeqLength, key.Length);
       }
     }
 
@@ -279,7 +279,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     /// <summary>
     /// Коды для некодируемой последовательности символов "NC"
     /// </summary>
-    private static readonly string[] _NonCodedCodes=new string[1] { String.Empty };
+    private static readonly string[] _NonCodedCodes = new string[1] { String.Empty };
 
     private static void AddCodes2(Dictionary<string, string[]> dict, string key, string xValue)
     {
@@ -323,9 +323,9 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     {
       #region Проверка символов в последовательностях
 
-      foreach (KeyValuePair<string, string[]> Pair in dict)
+      foreach (KeyValuePair<string, string[]> pair in dict)
       {
-        string s = Pair.Key;
+        string s = pair.Key;
         for (int i = 0; i < s.Length; i++)
         {
           if (!_ValidChars.ContainsKey(s[i]))
@@ -337,11 +337,11 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
       #region Проверка полноты последовательностей
 
-      foreach (KeyValuePair<char, object> Pair in _ValidChars)
+      foreach (KeyValuePair<char, object> pair in _ValidChars)
       {
-        string s = new string(Pair.Key, 1);
+        string s = new string(pair.Key, 1);
         if (!dict.ContainsKey(s))
-          throw new Exception("Словарь не содержит одиночного символа \"" + s + "\" (0x" + ((int)Pair.Key).ToString("x") + ")");
+          throw new Exception("Словарь не содержит одиночного символа \"" + s + "\" (0x" + ((int)pair.Key).ToString("x") + ")");
       }
 
       #endregion
@@ -399,10 +399,10 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
         int v2 = _Muls[curr._Count] * nCh;
 
-        CodeAccumulator Next = new CodeAccumulator();
-        Next._Count = curr._Count + 1;
-        Next._Value = curr._Value + v2;
-        return Next;
+        CodeAccumulator next = new CodeAccumulator();
+        next._Count = curr._Count + 1;
+        next._Value = curr._Value + v2;
+        return next;
       }
 
       /// <summary>
@@ -414,10 +414,10 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       /// <returns>Новое накопленное значение</returns>
       public static CodeAccumulator operator +(CodeAccumulator curr, string chars)
       {
-        CodeAccumulator Res = curr;
+        CodeAccumulator res = curr;
         for (int i = 0; i < chars.Length; i++)
-          Res += chars[i];
-        return Res;
+          res += chars[i];
+        return res;
       }
 
       #endregion
@@ -474,9 +474,9 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     /// <returns>Массив кодов DM-Soundex</returns>
     public static string[] Calculate(string s, out DMSoundexCodingPart[] debugInfo)
     {
-      List<DMSoundexCodingPart> DebugList = new List<DMSoundexCodingPart>();
-      CodeAccumulator[] a = DoCalculate(s, DebugList);
-      debugInfo = DebugList.ToArray();
+      List<DMSoundexCodingPart> debugList = new List<DMSoundexCodingPart>();
+      CodeAccumulator[] a = DoCalculate(s, debugList);
+      debugInfo = debugList.ToArray();
 
       if (a.Length == 0)
         return _EmptyStrings;
@@ -520,8 +520,8 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         return CodeAccumulator.EmptyArray;
 
       // Чаще всего бывает один код, лищь иногда происходит "ветвление"
-      CodeAccumulator SingleCode = new CodeAccumulator(); // единственный результат
-      List<CodeAccumulator> MultiCodes = null; // множественный результат
+      CodeAccumulator singleCode = new CodeAccumulator(); // единственный результат
+      List<CodeAccumulator> multiCodes = null; // множественный результат
 
       int pos = 0;
       while (pos < s.Length)
@@ -530,13 +530,13 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         int n = Math.Min(_MaxSeqLength, s.Length - pos);
 
         // Пытаемся найти последовательности в порядке укорачивания
-        string[] Codes = null;
+        string[] codes = null;
         string seq = null;
         for (int len = n; len > 0; len--)
         {
           seq = s.Substring(pos, len); // проверяемая последовательность
           if (pos == 0)
-            _Beginning.TryGetValue(seq, out Codes);
+            _Beginning.TryGetValue(seq, out codes);
           else
           {
             bool IsVowel = false;
@@ -546,11 +546,11 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
               IsVowel = _Vowels.ContainsKey(NextChar);
             }
             if (IsVowel)
-              _BeforeVowel.TryGetValue(seq, out Codes);
+              _BeforeVowel.TryGetValue(seq, out codes);
             else
-              _Generic.TryGetValue(seq, out Codes);
+              _Generic.TryGetValue(seq, out codes);
           }
-          if (Codes != null)
+          if (codes != null)
             break;
         }
 
@@ -559,49 +559,49 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         if (seq.Length == 1 && pos > 0)
         {
           if (s[pos - 1] == seq[0])
-            Codes = _NonCodedCodes;
+            codes = _NonCodedCodes;
         }
 
 #if DEBUG
-        if (Codes == null)
+        if (codes == null)
           throw new Exception("Внутрення ошибка. Не найдена последовательность");
-        if (Codes.Length == 0)
+        if (codes.Length == 0)
           throw new Exception("Внутрення ошибка. Найдены пустые коды для последовательности \"" + seq + "\"");
 #endif
 
         if (debugList != null)
         {
-          DMSoundexCodingPart di = new DMSoundexCodingPart(seq, Codes);
+          DMSoundexCodingPart di = new DMSoundexCodingPart(seq, codes);
           debugList.Add(di);
         }
 
-        if (Codes.Length > 1)
+        if (codes.Length > 1)
         {
           // Переходим к множественным кодам
-          if (MultiCodes == null)
+          if (multiCodes == null)
           {
-            MultiCodes = new List<CodeAccumulator>();
-            MultiCodes.Add(SingleCode);
+            multiCodes = new List<CodeAccumulator>();
+            multiCodes.Add(singleCode);
           }
           // Выполняем ветвление
-          int n2 = MultiCodes.Count;
+          int n2 = multiCodes.Count;
           for (int i = 0; i < n2; i++)
           {
-            CodeAccumulator BaseCode = MultiCodes[i];
-            MultiCodes[i] = BaseCode + Codes[0]; 
-            for (int j = 1; j < Codes.Length; j++)
-              MultiCodes.Add(BaseCode + Codes[j]);
+            CodeAccumulator baseCode = multiCodes[i];
+            multiCodes[i] = baseCode + codes[0];
+            for (int j = 1; j < codes.Length; j++)
+              multiCodes.Add(baseCode + codes[j]);
           }
         }
         else // Codes.Length=1
         {
           // Простое добавление кодов
-          if (MultiCodes == null)
-            SingleCode += Codes[0];
+          if (multiCodes == null)
+            singleCode += codes[0];
           else
           {
-            for (int i = 0; i < MultiCodes.Count; i++)
-              MultiCodes[i] += Codes[0];
+            for (int i = 0; i < multiCodes.Count; i++)
+              multiCodes[i] += codes[0];
           }
         }
 
@@ -609,27 +609,27 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         pos += seq.Length;
       }
 
-      if (MultiCodes == null)
-        return new CodeAccumulator[1] { SingleCode };
+      if (multiCodes == null)
+        return new CodeAccumulator[1] { singleCode };
       else
       {
         // Убираем возможно повторяющиеся коды
-        for (int i = MultiCodes.Count - 1; i >= 1; i--)
+        for (int i = multiCodes.Count - 1; i >= 1; i--)
         {
-          bool Remove = false;
+          bool remove = false;
           for (int j = 0; j < i; j++)
           {
-            if (MultiCodes[i].Value == MultiCodes[j].Value)
+            if (multiCodes[i].Value == multiCodes[j].Value)
             {
-              Remove = true;
+              remove = true;
               break;
             }
           }
-          if (Remove)
-            MultiCodes.RemoveAt(i);
+          if (remove)
+            multiCodes.RemoveAt(i);
         }
 
-        return MultiCodes.ToArray();
+        return multiCodes.ToArray();
       }
     }
 

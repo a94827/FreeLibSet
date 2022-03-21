@@ -400,7 +400,7 @@ namespace FreeLibSet.Forms.Docs
         string Message;
         if (GetDeletedValue(out Message))
         {
-          if (CanBeDeletedMode==UIValidateState.Warning)
+          if (CanBeDeletedMode == UIValidateState.Warning)
             SetWarning(Message);
           else
             SetError(Message);
@@ -413,14 +413,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public override object SyncValue
     {
-      get
-      {
-        return Id;
-      }
-      set
-      {
-        Id = (Int32)value;
-      }
+      get { return Id; }
+      set { Id = (Int32)value; }
     }
 
     /// <summary>
@@ -528,8 +522,8 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если документ соответствует, или DocId=0 или DocFilters неактивны</returns>
     public bool TestFilter()
     {
-      DBxCommonFilter BadFilter;
-      return TestFilter(out BadFilter);
+      DBxCommonFilter badFilter;
+      return TestFilter(out badFilter);
     }
 
     /// <summary>
@@ -984,14 +978,14 @@ namespace FreeLibSet.Forms.Docs
     /// одного подходящего документа или не найдено ни одного подходящего</returns>
     public bool SelectByFilter()
     {
-      DBxFilter Filter = Filters.GetSqlFilter();
+      DBxFilter filter = Filters.GetSqlFilter();
       if (UI.DocProvider.DocTypes.UseDeleted) // 23.05.2021
-        Filter &= DBSDocType.DeletedFalseFilter;
-      Int32 NewId = UI.DocProvider.FindRecord(DocTypeName, Filter, true);
-      if (NewId == 0)
+        filter &= DBSDocType.DeletedFalseFilter;
+      Int32 newId = UI.DocProvider.FindRecord(DocTypeName, filter, true);
+      if (newId == 0)
         return false;
 
-      DocId = NewId;
+      DocId = newId;
       return true;
     }
 
@@ -1213,12 +1207,12 @@ namespace FreeLibSet.Forms.Docs
         return true;
 
       // Получаем данные для фильтрации
-      DBxColumnList ColList = new DBxColumnList();
-      Filters.GetColumnNames(ColList);
-      DBxColumns ColumnNames = new DBxColumns(ColList);
+      DBxColumnList colList = new DBxColumnList();
+      Filters.GetColumnNames(colList);
+      DBxColumns columnNames = new DBxColumns(colList);
 
-      object[] Values = UI.TextHandlers.DBCache[DocTypeName].GetValues(docId, ColumnNames);
-      return Filters.TestValues(ColumnNames, Values, out badFilter);
+      object[] values = UI.TextHandlers.DBCache[DocTypeName].GetValues(docId, columnNames);
+      return Filters.TestValues(columnNames, values, out badFilter);
     }
 
     /// <summary>
@@ -1260,10 +1254,10 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Выборка документов</returns>
     protected override DBxDocSelection OnGetDocSel(EFPDBxGridViewDocSelReason reason)
     {
-      DBxDocSelection DocSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
+      DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
       if (DocType != null && DocId != 0)
-        DocTypeUI.PerformGetDocSel(DocSel, DocId, reason);
-      return DocSel;
+        DocTypeUI.PerformGetDocSel(docSel, DocId, reason);
+      return docSel;
     }
 
     /// <summary>
@@ -1279,11 +1273,11 @@ namespace FreeLibSet.Forms.Docs
       // TODO:
       //if (DocTypeName != "Выборки")
       //  DocSel.Normalize(AccDepClientExec.BufTables);
-      Int32 NewId = docSel.GetSingleId(DocTypeName);
-      if (NewId == 0)
+      Int32 newId = docSel.GetSingleId(DocTypeName);
+      if (newId == 0)
         EFPApp.ShowTempMessage("В буфере обмена нет ссылки на документ \"" + DocType.SingularTitle + "\"");
       else
-        Id = NewId;
+        Id = newId;
     }
 
     /// <summary>
@@ -1305,8 +1299,8 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если документ является подходящим</returns>
     public bool TestDocId(Int32 docId)
     {
-      string Message;
-      return TestDocId(docId, out Message);
+      string message;
+      return TestDocId(docId, out message);
     }
 
     /// <summary>
@@ -1346,17 +1340,16 @@ namespace FreeLibSet.Forms.Docs
         }
       }
 
-      DBxCommonFilter BadFilter;
-      if (!DoTestFilter(docId, out BadFilter))
+      DBxCommonFilter badFilter;
+      if (!DoTestFilter(docId, out badFilter))
       {
-        message = "Документ не проходит фильтр \"" + BadFilter.DisplayName + "\"";
+        message = "Документ не проходит фильтр \"" + badFilter.DisplayName + "\"";
         return false;
       }
 
       message = null;
       return true;
     }
-
 
     #endregion
   }
@@ -1387,16 +1380,16 @@ namespace FreeLibSet.Forms.Docs
       if (docTypeNames == null)
         docTypeNames = ui.DocProvider.DocTypes.GetDocTypeNames();
 
-      string[] PluralTitles = new string[docTypeNames.Length];
+      string[] pluralTitles = new string[docTypeNames.Length];
       _DocTypeUIs = new DocTypeUI[docTypeNames.Length];
       for (int i = 0; i < docTypeNames.Length; i++)
       {
         _DocTypeUIs[i] = ui.DocTypes[docTypeNames[i]];
         if (_DocTypeUIs[i] == null)
           throw new ArgumentException("Неизвестный тип документа \"" + docTypeNames[i] + "\"", "docTypeNames");
-        PluralTitles[i] = _DocTypeUIs[i].DocType.PluralTitle;
+        pluralTitles[i] = _DocTypeUIs[i].DocType.PluralTitle;
       }
-      control.Items.AddRange(PluralTitles);
+      control.Items.AddRange(pluralTitles);
       Codes = docTypeNames;
 
       _EmptyText = "[ Нет ]";
@@ -1608,7 +1601,6 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
   /// <summary>
   /// Обработчик для комбоблока, предназначенного для выбора поддокумента
   /// Поддокументы должны быть сохранены в базе данных, а не относиться к текущему редактируемому документу
@@ -1814,10 +1806,10 @@ namespace FreeLibSet.Forms.Docs
       {
         if (AutoSetIfSingle)
         {
-          Int32[] Ids = SubDocTypeUI.GetSubDocIds(DocId);
-          if (Ids.Length == 1)
+          Int32[] ids = SubDocTypeUI.GetSubDocIds(DocId);
+          if (ids.Length == 1)
           {
-            SubDocId = Ids[0];
+            SubDocId = ids[0];
             return;
           }
         }
@@ -1981,9 +1973,9 @@ namespace FreeLibSet.Forms.Docs
         if (value && (DocId != 0) && (SubDocId == 0) &&
           (SubDocTypeUI != null))
         {
-          Int32[] Ids = SubDocTypeUI.GetSubDocIds(DocId);
-          if (Ids.Length == 1)
-            SubDocId = Ids[0];
+          Int32[] ids = SubDocTypeUI.GetSubDocIds(DocId);
+          if (ids.Length == 1)
+            SubDocId = ids[0];
         }
 
         Validate(); // 29.08.2016
@@ -2045,10 +2037,10 @@ namespace FreeLibSet.Forms.Docs
       // Проверяем, что поддокумент относится к выбранному документу
       if (SubDocId != 0 && DocId != 0)
       {
-        Int32 DocId2 = SubDocTypeUI.TableCache.GetInt(SubDocId, "DocId");
-        if (DocId2 != DocId)
+        Int32 docId2 = SubDocTypeUI.TableCache.GetInt(SubDocId, "DocId");
+        if (docId2 != DocId)
           SetError("Выбранный поддокумент \"" + SubDocTypeUI.SubDocType.SingularTitle + "\" относится к документу \"" +
-            SubDocTypeUI.DocTypeUI.GetTextValue(DocId2) + "\", а не \"" + SubDocTypeUI.DocTypeUI.GetTextValue(DocId) + "\"");
+            SubDocTypeUI.DocTypeUI.GetTextValue(docId2) + "\", а не \"" + SubDocTypeUI.DocTypeUI.GetTextValue(DocId) + "\"");
       }
     }
 
@@ -2142,10 +2134,10 @@ namespace FreeLibSet.Forms.Docs
       fltDocId.SingleDocId = DocId;
 #endif
 
-      DBxDocSet DocSet = new DBxDocSet(UI.DocProvider);
-      DBxSingleDoc Doc = DocSet[DocType.Name].View(DocId);
+      DBxDocSet docSet = new DBxDocSet(UI.DocProvider);
+      DBxSingleDoc doc = docSet[DocType.Name].View(DocId);
 
-      DBxMultiSubDocs mSubDocs = Doc.SubDocs[SubDocTypeName].SubDocs;
+      DBxMultiSubDocs mSubDocs = doc.SubDocs[SubDocTypeName].SubDocs;
 #if DEBUG
       if (!Object.ReferenceEquals(mSubDocs.SubDocType, SubDocTypeUI.SubDocType))
         throw new BugException("Объекты DBxMultiSubDocs и SubDocTypeUI содержат ссылки на разные объекты SubDocType");
@@ -2202,19 +2194,19 @@ namespace FreeLibSet.Forms.Docs
         message = "Выбранный поддокумент \"" + SubDocType.SingularTitle + "\" удален";
         return true; // удален поддокумент
       }
-      Int32 DocId = DataTools.GetInt(a[1]);
-      if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(DocId, "Deleted")))
+      Int32 docId = DataTools.GetInt(a[1]);
+      if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(docId, "Deleted")))
       {
-        string DocText;
+        string docText;
         try
         {
-          DocText = UI.DocTypes[DocType.Name].GetTextValue(DocId) + " (DocId=" + DocId.ToString() + ")";
+          docText = UI.DocTypes[DocType.Name].GetTextValue(docId) + " (DocId=" + docId.ToString() + ")";
         }
         catch (Exception e)
         {
-          DocText = "Id=" + DocId.ToString() + ". Ошибка получения текста: " + e.Message;
+          docText = "Id=" + docId.ToString() + ". Ошибка получения текста: " + e.Message;
         }
-        message = "Документ \"" + DocType.SingularTitle + "\" (" + DocText + "), к которому относится выбранный поддокумент, удален";
+        message = "Документ \"" + DocType.SingularTitle + "\" (" + docText + "), к которому относится выбранный поддокумент, удален";
         return true;
       }
       else
@@ -2258,13 +2250,13 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Выборка документов</returns>
     protected override DBxDocSelection OnGetDocSel(EFPDBxGridViewDocSelReason Reason)
     {
-      DBxDocSelection DocSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
+      DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
       if (SubDocId != 0)
       {
-        SubDocTypeUI.PerformGetDocSel(DocSel, SubDocId, Reason);
-        DocSel.Add(DocType.Name, DocId);
+        SubDocTypeUI.PerformGetDocSel(docSel, SubDocId, Reason);
+        docSel.Add(DocType.Name, DocId);
       }
-      return DocSel;
+      return docSel;
     }
 
     #endregion
@@ -2359,8 +2351,8 @@ namespace FreeLibSet.Forms.Docs
           return 0;
         if (_SubDocs == null)
           return 0; // вызов из конструктора базового класса
-        DBxSubDoc SubDoc = _SubDocs[_SubDocIndex];
-        return SubDoc.SubDocId;
+        DBxSubDoc subDoc = _SubDocs[_SubDocIndex];
+        return subDoc.SubDocId;
       }
       set
       {
@@ -2427,8 +2419,8 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Имя изображения для поддокумента</returns>
     protected override string DoGetImageKey()
     {
-      DBxSubDoc SubDoc = SubDocs.GetSubDocById(SubDocId);
-      return UI.ImageHandlers.GetImageKey(SubDoc);
+      DBxSubDoc subDoc = SubDocs.GetSubDocById(SubDocId);
+      return UI.ImageHandlers.GetImageKey(subDoc);
     }
 
     /// <summary>
@@ -2438,8 +2430,8 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="grayed">Сюда записывается true, если строка должна быть выделена серым цветом</param>
     protected override void DoGetValueColor(out EFPDataGridViewColorType colorType, out bool grayed)
     {
-      DBxSubDoc SubDoc = SubDocs.GetSubDocById(SubDocId);
-      UI.ImageHandlers.GetRowColor(SubDoc, out colorType, out grayed);
+      DBxSubDoc subDoc = SubDocs.GetSubDocById(SubDocId);
+      UI.ImageHandlers.GetRowColor(subDoc, out colorType, out grayed);
     }
 
     /*
@@ -2502,15 +2494,15 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_SubDocIndex >= 0)
         {
-          DBxSubDoc SubDoc = _SubDocs[_SubDocIndex];
-          if (SubDoc.SubDocState == DBxDocState.Delete)
+          DBxSubDoc subDoc = _SubDocs[_SubDocIndex];
+          if (subDoc.SubDocState == DBxDocState.Delete)
           {
-            message = "Выбранный поддокумент \"" + SubDoc.SubDocType.SingularTitle + "\" удален";
+            message = "Выбранный поддокумент \"" + subDoc.SubDocType.SingularTitle + "\" удален";
             return true;
           }
-          if (SubDoc.Doc.DocState == DBxDocState.Delete)
+          if (subDoc.Doc.DocState == DBxDocState.Delete)
           {
-            message = "Документ \"" + SubDoc.DocType.SingularTitle + "\", к которому относится выбранный поддокумент, удален";
+            message = "Документ \"" + subDoc.DocType.SingularTitle + "\", к которому относится выбранный поддокумент, удален";
             return true;
           }
         }

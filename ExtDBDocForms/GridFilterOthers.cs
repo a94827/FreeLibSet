@@ -93,25 +93,25 @@ namespace FreeLibSet.Forms.Docs
 
       if (ValueList != null && ValueList.Length > 0)
       {
-        string[] List2 = new string[ValueList.Length + 2];
-        string[] ImageKeys = new string[ValueList.Length + 2];
-        List2[0] = "[ Нет фильтра ]";
-        ImageKeys[0] = EFPGridFilterTools.NoFilterImageKey;
+        string[] list2 = new string[ValueList.Length + 2];
+        string[] imageKeys = new string[ValueList.Length + 2];
+        list2[0] = "[ Нет фильтра ]";
+        imageKeys[0] = EFPGridFilterTools.NoFilterImageKey;
         for (int i = 0; i < ValueList.Length; i++)
         {
-          List2[i + 1] = ValueList[i];
-          ImageKeys[i + 1] = "Filter";
+          list2[i + 1] = ValueList[i];
+          imageKeys[i + 1] = "Filter";
         }
-        List2[ValueList.Length + 1] = "Задать вручную ...";
-        ImageKeys[ValueList.Length + 1] = "Edit";
+        list2[ValueList.Length + 1] = "Задать вручную ...";
+        imageKeys[ValueList.Length + 1] = "Edit";
 
         ListSelectDialog dlg1 = new ListSelectDialog();
         dlg1.Title = DisplayName;
         dlg1.ListTitle = "Значение фильтра";
         dlg1.ImageKey = "Filter";
         dlg1.MultiSelect = false;
-        dlg1.Items = List2;
-        dlg1.ImageKeys = ImageKeys;
+        dlg1.Items = list2;
+        dlg1.ImageKeys = imageKeys;
         dlg1.ConfigSectionName = "GridFilter." + this.Code;
         dlg1.DialogPosition = dialogPosition;
 
@@ -368,12 +368,12 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      int Value = DataTools.GetInt(columnValues[0]);
+      int value = DataTools.GetInt(columnValues[0]);
       string s;
-      if (Value < 0 || Value >= TextValues.Length)
-        s = "Значение " + Value.ToString();
+      if (value < 0 || value >= TextValues.Length)
+        s = "Значение " + value.ToString();
       else
-        s = TextValues[Value];
+        s = TextValues[value];
       return new string[] { s };
     }
 
@@ -675,16 +675,16 @@ namespace FreeLibSet.Forms.Docs
     /// Значок для значения фильтра "False".
     /// Если свойство не установлено, используется стандартный значок фильтра
     /// </summary>
-    public string FilterImageKeyFalse 
-    { 
-      get 
+    public string FilterImageKeyFalse
+    {
+      get
       {
         if (String.IsNullOrEmpty(_FilterImageKeyFalse))
           return EFPGridFilterTools.DefaultFilterImageKey;
         else
-          return _FilterImageKeyFalse; 
-      } 
-      set { _FilterImageKeyFalse = value; } 
+          return _FilterImageKeyFalse;
+      }
+      set { _FilterImageKeyFalse = value; }
     }
     private string _FilterImageKeyFalse;
 
@@ -825,8 +825,8 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      bool Value = DataTools.GetBool(columnValues[0]);
-      return new string[] { Value ? FilterTextTrue : FilterTextFalse };
+      bool value = DataTools.GetBool(columnValues[0]);
+      return new string[] { value ? FilterTextTrue : FilterTextFalse };
     }
 
     #endregion
@@ -917,8 +917,8 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      int Value = DataTools.GetInt(columnValues[0]);
-      return new string[] { Value.ToString() };
+      int value = DataTools.GetInt(columnValues[0]);
+      return new string[] { value.ToString() };
     }
 
     #endregion
@@ -1046,7 +1046,7 @@ namespace FreeLibSet.Forms.Docs
       get
       {
         switch (Value)
-        { 
+        {
           case NullNotNullFilterValue.Null:
             return FilterImageKeyNull;
           case NullNotNullFilterValue.NotNull:
@@ -1127,10 +1127,10 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_DocTypeUIs == null)
         {
-          string[] AllNames = UI.DocProvider.DocTypes.GetDocTypeNames();
-          _DocTypeUIs = new DocTypeUI[AllNames.Length];
-          for (int i = 0; i < AllNames.Length; i++)
-            _DocTypeUIs[i] = UI.DocTypes[AllNames[i]];
+          string[] allNames = UI.DocProvider.DocTypes.GetDocTypeNames();
+          _DocTypeUIs = new DocTypeUI[allNames.Length];
+          for (int i = 0; i < allNames.Length; i++)
+            _DocTypeUIs[i] = UI.DocTypes[allNames[i]];
         }
         return _DocTypeUIs;
       }
@@ -1315,19 +1315,19 @@ namespace FreeLibSet.Forms.Docs
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
       string s;
-      Int32 ThisTableId = DataTools.GetInt(columnValues[0]);
-      if (ThisTableId == 0)
+      Int32 thisTableId = DataTools.GetInt(columnValues[0]);
+      if (thisTableId == 0)
         s = "Нет";
       else
       {
-        DBxDocType DocType = UI.DocProvider.DocTypes.FindByTableId(ThisTableId);
-        if (DocType == null)
-          s = "Неизвестный тип документа с TableId=" + ThisTableId.ToString();
+        DBxDocType docType = UI.DocProvider.DocTypes.FindByTableId(thisTableId);
+        if (docType == null)
+          s = "Неизвестный тип документа с TableId=" + thisTableId.ToString();
         else
         {
-          s = DocType.PluralTitle;
+          s = docType.PluralTitle;
           if (UI.DebugShowIds)
-            s += " (TableId=" + DocType.TableId.ToString() + ")";
+            s += " (TableId=" + docType.TableId.ToString() + ")";
         }
       }
       return new string[] { s };
@@ -1413,7 +1413,6 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
   }
-
 
   /// <summary>
   /// Фильтр с фиксированным SQL-запросом.

@@ -110,10 +110,10 @@ namespace FreeLibSet.Forms.Docs
     public object GetNewDocValue(string columnName)
     {
       // Создаем псевдодокумент
-      DBxDocSet DocSet = new DBxDocSet(DocTypeUI.UI.DocProvider);
-      DBxSingleDoc Doc = DocSet[DocTypeUI.DocType.Name].Insert();
-      InitNewDocValues(Doc);
-      return Doc.Values[columnName].Value;
+      DBxDocSet docSet = new DBxDocSet(DocTypeUI.UI.DocProvider);
+      DBxSingleDoc doc = docSet[DocTypeUI.DocType.Name].Insert();
+      InitNewDocValues(doc);
+      return doc.Values[columnName].Value;
     }
 
 
@@ -157,8 +157,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Count == 0)
         return;
-      foreach (DocumentViewHandler Item in this)
-        Item.UpdateRowsForIds(docIds);
+      foreach (DocumentViewHandler item in this)
+        item.UpdateRowsForIds(docIds);
     }
 
     #endregion
@@ -172,8 +172,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Count == 0)
         return;
-      foreach (DocumentViewHandler Item in this)
-        Item.InvalidateControl();
+      foreach (DocumentViewHandler item in this)
+        item.InvalidateControl();
     }
 
     /// <summary>
@@ -196,9 +196,9 @@ namespace FreeLibSet.Forms.Docs
         return;
 
       documents.DocProvider.UpdateDBCache(documents.DataSet);
-      Int32[] DocIds = documents[_DocTypeUI.DocType.Name].DocIds;
-      if (DocIds.Length > 0)
-        UpdateRowsForIds(DocIds);
+      Int32[] docIds = documents[_DocTypeUI.DocType.Name].DocIds;
+      if (docIds.Length > 0)
+        UpdateRowsForIds(docIds);
       _DocTypeUI.RefreshBufferedData(); // 03.02.2022
     }
 
@@ -343,58 +343,58 @@ namespace FreeLibSet.Forms.Docs
       if (!dataSet.Tables.Contains(docTypeName))
         return; // Нет таблицы
 
-      DataTable SrcTable = dataSet.Tables[docTypeName];
-      List<DataRow> NewSelRows = new List<DataRow>();
+      DataTable srcTable = dataSet.Tables[docTypeName];
+      List<DataRow> newSelRows = new List<DataRow>();
 
-      DBxColumns FilterColumns = null;
+      DBxColumns filterColumns = null;
       if (Owner2 != null)
-        FilterColumns = Owner2.Filters.GetColumnNames();
+        filterColumns = Owner2.Filters.GetColumnNames();
 
       // Есть в таблице первичный ключ по полю "Id"?
-      bool HasPrimaryKey = String.Compare(DataTools.GetPrimaryKey(_Owner.SourceAsDataTable), "Id", StringComparison.OrdinalIgnoreCase) == 0;
+      bool hasPrimaryKey = String.Compare(DataTools.GetPrimaryKey(_Owner.SourceAsDataTable), "Id", StringComparison.OrdinalIgnoreCase) == 0;
 
       // 08.07.2016
       // Таблица может не содержать первичного ключа
       DataView dvFind = null;
-      if (!HasPrimaryKey)
+      if (!hasPrimaryKey)
       {
         dvFind = new DataView(Owner.SourceAsDataTable);
         dvFind.Sort = "Id";
       }
       try
       {
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
           // 15.07.2020. Алгоритм изменен
 
           #region Определяем необходимость наличия строки в просмотре
 
-          bool Visible;
-          switch (SrcRow.RowState)
+          bool isVisible;
+          switch (srcRow.RowState)
           {
             case DataRowState.Added: // нельзя базироваться только на RowState
               if (isCaller)
-                Visible = true; // Не уверен, что надо всегда показывать
+                isVisible = true; // Не уверен, что надо всегда показывать
               else if (Owner2 == null)
-                Visible = false;
+                isVisible = false;
               else
-                Visible = TestFilters(SrcRow, FilterColumns);
+                isVisible = TestFilters(srcRow, filterColumns);
               break;
             case DataRowState.Modified:
               if (Owner2 == null)
-                Visible = true;
+                isVisible = true;
               else
-                Visible = TestFilters(SrcRow, FilterColumns);
+                isVisible = TestFilters(srcRow, filterColumns);
               break;
             case DataRowState.Deleted:
               if (Owner2 == null)
-                Visible = true;
+                isVisible = true;
               else
               {
                 if (Owner2.ShowDeleted)
-                  Visible = TestFilters(SrcRow, FilterColumns);
+                  isVisible = TestFilters(srcRow, filterColumns);
                 else
-                  Visible = false;
+                  isVisible = false;
               }
               break;
             default: // Unchanged
@@ -406,31 +406,31 @@ namespace FreeLibSet.Forms.Docs
 
           #region Определяем существование строки в просмотре
 
-          Int32 DocId;
-          if (SrcRow.RowState == DataRowState.Deleted)
-            DocId = (Int32)(SrcRow["Id", DataRowVersion.Original]);
+          Int32 docId;
+          if (srcRow.RowState == DataRowState.Deleted)
+            docId = (Int32)(srcRow["Id", DataRowVersion.Original]);
           else
-            DocId = (Int32)(SrcRow["Id"]);
-          DataRow ResRow = FindDocRow(DocId, dvFind);
+            docId = (Int32)(srcRow["Id"]);
+          DataRow resRow = FindDocRow(docId, dvFind);
 
           #endregion
 
           #region Добавление / обновление / удаление строки в просмотре
 
-          if (Visible)
+          if (isVisible)
           {
-            if (ResRow == null)
+            if (resRow == null)
             {
-              ResRow = Owner.SourceAsDataTable.NewRow();
-              DataTools.CopyRowValues(SrcRow, ResRow, true);
-              UpdateRefValues(SrcRow, ResRow);
-              Owner.SourceAsDataTable.Rows.Add(ResRow);
+              resRow = Owner.SourceAsDataTable.NewRow();
+              DataTools.CopyRowValues(srcRow, resRow, true);
+              UpdateRefValues(srcRow, resRow);
+              Owner.SourceAsDataTable.Rows.Add(resRow);
             }
             else
             {
-              DataTools.CopyRowValues(SrcRow, ResRow, true);
-              UpdateRefValues(SrcRow, ResRow);
-              Owner.InvalidateDataRow(ResRow); // не Update
+              DataTools.CopyRowValues(srcRow, resRow, true);
+              UpdateRefValues(srcRow, resRow);
+              Owner.InvalidateDataRow(resRow); // не Update
             }
 
             // Перенесено сюда 26.05.2021
@@ -438,13 +438,13 @@ namespace FreeLibSet.Forms.Docs
             // В этом случае предыдущее условие "ResRow==null" выполняется для первого просмотра,
             // а второй просмотр не будет добавлять дублирующую строку в таблицу.
             // Но позиционировать на новую строку надо в любом случае, если она видна в просмотре.
-            if (SrcRow.RowState == DataRowState.Added)
-              NewSelRows.Add(ResRow);
+            if (srcRow.RowState == DataRowState.Added)
+              newSelRows.Add(resRow);
           }
           else
           {
-            if (ResRow != null)
-              ResRow.Delete();
+            if (resRow != null)
+              resRow.Delete();
           }
 
           #endregion
@@ -456,11 +456,11 @@ namespace FreeLibSet.Forms.Docs
           dvFind.Dispose();
       }
 
-      if (NewSelRows.Count > 0)
+      if (newSelRows.Count > 0)
       {
         try
         {
-          Owner.SelectedDataRows = NewSelRows.ToArray();
+          Owner.SelectedDataRows = newSelRows.ToArray();
         }
         catch
         {
@@ -495,20 +495,20 @@ namespace FreeLibSet.Forms.Docs
 
       for (int i = 0; i < resRow.Table.Columns.Count; i++)
       {
-        string ColName = resRow.Table.Columns[i].ColumnName;
-        int p = ColName.IndexOf('.');
+        string colName = resRow.Table.Columns[i].ColumnName;
+        int p = colName.IndexOf('.');
         if (p >= 0)
         {
-          string MainColName = ColName.Substring(0, p);
-          int pCol = srcRow.Table.Columns.IndexOf(MainColName);
+          string mainColName = colName.Substring(0, p);
+          int pCol = srcRow.Table.Columns.IndexOf(mainColName);
           if (pCol >= 0)
           {
-            Int32 RefId = DataTools.GetInt(srcRow, MainColName); // в ResRow может не быть базового поля
-            object RefValue = Owner.UI.TextHandlers.DBCache[DocTypeUI.DocType.Name].GetRefValue(ColName, RefId);
-            if (RefValue == null)
+            Int32 refId = DataTools.GetInt(srcRow, mainColName); // в ResRow может не быть базового поля
+            object refValue = Owner.UI.TextHandlers.DBCache[DocTypeUI.DocType.Name].GetRefValue(colName, refId);
+            if (refValue == null)
               resRow[i] = DBNull.Value; // 26.10.2016
             else
-              resRow[i] = RefValue;
+              resRow[i] = refValue;
           }
         }
       }
@@ -533,27 +533,27 @@ namespace FreeLibSet.Forms.Docs
       NamedValues pairs = new NamedValues();
       for (int i = 0; i < filterColumns.Count; i++)
       {
-        string ColName = filterColumns[i];
+        string colName = filterColumns[i];
         object value;
-        int pDot = ColName.IndexOf('.');
+        int pDot = colName.IndexOf('.');
         if (pDot >= 0)
         {
-          string MainColName = ColName.Substring(0, pDot);
-          int pCol = srcRow.Table.Columns.IndexOf(MainColName);
+          string mainColName = colName.Substring(0, pDot);
+          int pCol = srcRow.Table.Columns.IndexOf(mainColName);
           if (pCol >= 0)
           {
-            Int32 RefId = DataTools.GetInt(srcRow[MainColName, rowVer]);
-            value = Owner.UI.TextHandlers.DBCache[DocTypeUI.DocType.Name].GetRefValue(ColName, RefId);
+            Int32 refId = DataTools.GetInt(srcRow[mainColName, rowVer]);
+            value = Owner.UI.TextHandlers.DBCache[DocTypeUI.DocType.Name].GetRefValue(colName, refId);
           }
           else
-            throw new BugException("Не найдено поле \"" + MainColName + "\"");
+            throw new BugException("Не найдено поле \"" + mainColName + "\"");
         }
         else
-          value = srcRow[ColName, rowVer];
+          value = srcRow[colName, rowVer];
 
         if (value is DBNull)
           value = null;
-        pairs.Add(ColName, value);
+        pairs.Add(colName, value);
       }
 
       return Owner2.Filters.TestValues(pairs);

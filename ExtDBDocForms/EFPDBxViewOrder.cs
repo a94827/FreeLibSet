@@ -97,10 +97,10 @@ namespace FreeLibSet.Forms.Docs
 
       public string[] GetNames()
       {
-        string[] Names = new string[_Table.Columns.Count];
-        for (int i = 0; i < Names.Length; i++)
-          Names[i] = _Table.Columns[i].ColumnName;
-        return Names;
+        string[] names = new string[_Table.Columns.Count];
+        for (int i = 0; i < names.Length; i++)
+          names[i] = _Table.Columns[i].ColumnName;
+        return names;
       }
 
       #endregion
@@ -133,51 +133,51 @@ namespace FreeLibSet.Forms.Docs
       // обычные поля. Вычисляемые столбцы используются только для вычисляемых
       // DataOrderItem, а для простых полей не используются
 
-      DBxSqlBuffer Buf = new DBxSqlBuffer();
-      Buf.Clear();
+      DBxSqlBuffer buf = new DBxSqlBuffer();
+      buf.Clear();
       for (int i = 0; i < Order.Parts.Length; i++)
       {
         if (i > 0)
-          Buf.SB.Append(',');
+          buf.SB.Append(',');
         if ((Order.Parts[i].Expression) is DBxColumn)
           // Простое поле
-          Buf.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
+          buf.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
         else
         {
           // Вычисляемое поле
-          DBxSqlBuffer Buf2 = new DBxSqlBuffer();
-          Buf2.Clear();
-          Buf2.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
-          string Expr = Buf2.SB.ToString();
+          DBxSqlBuffer buf2 = new DBxSqlBuffer();
+          buf2.Clear();
+          buf2.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
+          string Expr = buf2.SB.ToString();
           // Имя столбца
           string ExprColName = "$$Sort_" + DataTools.MD5SumFromString(Expr);
 
           // 16.10.2019
           // Тип данных для столбца проверяем по другому
           DefValAccess dva = new DefValAccess(dv.Table);
-          object DefVal = Order.Parts[i].Expression.GetValue(dva, false);
-          if (DefVal == null)
+          object defVal = Order.Parts[i].Expression.GetValue(dva, false);
+          if (defVal == null)
             throw new NullReferenceException("Для выражения \"" + Expr + "\" порядка сортировки \"" + DisplayName + "\" не удалось вычислить значение по умолчанию, чтобы определить тип данных");
-          Type DataType = DefVal.GetType();
+          Type dataType = defVal.GetType();
 
 
           // Столбец добавляется только при необходимости, чтобы исключить размножение
           // столбцов при каждом переключении сортировки
           if (!dv.Table.Columns.Contains(ExprColName))
           {
-            DataColumn Col = new DataColumn(ExprColName, DataType, Expr);
+            DataColumn Col = new DataColumn(ExprColName, dataType, Expr);
             dv.Table.Columns.Add(Col);
           }
 
           // В Sort добавляется имя вычисляемого столбца
-          Buf.SB.Append(ExprColName);
+          buf.SB.Append(ExprColName);
         }
 
         // Признак обратной сортировки
         if (Order.Parts[i].SortOrder == ListSortDirection.Descending)
-          Buf.SB.Append(" DESC");
+          buf.SB.Append(" DESC");
       }
-      dv.Sort = Buf.SB.ToString();
+      dv.Sort = buf.SB.ToString();
     }
     #endregion
   }
@@ -204,17 +204,17 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("order");
 #endif     
       string name = order.ToString();
-      EFPDBxViewOrder Item = new EFPDBxViewOrder(order.ToString(), order);
-      Item.DisplayName = displayName;
+      EFPDBxViewOrder item = new EFPDBxViewOrder(order.ToString(), order);
+      item.DisplayName = displayName;
       if (!sortInfo.IsEmpty)
-        Item.SortInfo = sortInfo;
-      base.Add(Item);
+        item.SortInfo = sortInfo;
+      base.Add(item);
       //// Если первое поле в порядке сортировки присутствует в просмотре, то столбец
       //// можно щелкать по заголовку
       //EFPDataGridViewColumn Column = GetUsedColumn(Item); // 19.06.2019
       //if (Column != null)
       //  Column.GridColumn.SortMode = DataGridViewColumnSortMode.Programmatic;
-      return Item;
+      return item;
     }
 
     /// <summary>

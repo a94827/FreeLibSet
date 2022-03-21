@@ -318,11 +318,11 @@ namespace FreeLibSet.Forms.Docs
       if (parentControl.HasChildren)
         throw new ArgumentException("В панели не должно быть управляющих элементов", "parentControl");
 
-      SubDocTableViewForm DummyForm = new SubDocTableViewForm();
+      SubDocTableViewForm dummyForm = new SubDocTableViewForm();
 
-      WinFormsTools.MoveControls(DummyForm.ControlPanel, parentControl);
+      WinFormsTools.MoveControls(dummyForm.ControlPanel, parentControl);
 
-      Init(DummyForm, baseProvider, subDocTypeUI, mode, subDocs);
+      Init(dummyForm, baseProvider, subDocTypeUI, mode, subDocs);
 
       base.InitConfigHandler();
       base.ConfigSectionName = SubDocTypeName; // после InitConfigHandler

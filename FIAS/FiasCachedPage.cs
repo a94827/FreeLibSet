@@ -769,9 +769,9 @@ namespace FreeLibSet.FIAS
         string s = DataTools.GetString(drvs[i].Row, "STRUCNUM");
 
         //if (b != buildNum || s != strNum)
-        if (!String.Equals(b, buildNum, StringComparison.OrdinalIgnoreCase) ) // 09.03.2021
+        if (!String.Equals(b, buildNum, StringComparison.OrdinalIgnoreCase)) // 09.03.2021
           continue;
-        if (!String.Equals(s, strNum, StringComparison.OrdinalIgnoreCase) ) // 09.03.2021
+        if (!String.Equals(s, strNum, StringComparison.OrdinalIgnoreCase)) // 09.03.2021
           continue;
 
         if (exact)

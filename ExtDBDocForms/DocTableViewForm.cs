@@ -426,11 +426,11 @@ namespace FreeLibSet.Forms.Docs
       if (parent.HasChildren)
         throw new ArgumentException("В панели не должно быть управляющих элементов", "parent");
 
-      DocTableViewForm DummyForm = new DocTableViewForm();
+      DocTableViewForm dummyForm = new DocTableViewForm();
 
-      WinFormsTools.MoveControls(DummyForm.ControlPanel, parent);
+      WinFormsTools.MoveControls(dummyForm.ControlPanel, parent);
 
-      Init(DummyForm, baseProvider, docTypeUI, mode);
+      Init(dummyForm, baseProvider, docTypeUI, mode);
 
       base.InitConfigHandler();
       base.ConfigSectionName = DocTypeName; // после InitConfigHandler
@@ -892,7 +892,6 @@ namespace FreeLibSet.Forms.Docs
     public GroupDocTypeUI GroupTypeUI { get { return DocTypeUI.GroupDocType; } }
 
 
-
     /// <summary>
     /// true, если дерево групп отображается
     /// </summary>
@@ -1021,24 +1020,24 @@ namespace FreeLibSet.Forms.Docs
       if (CurrentGroupId == 0 && IncludeNestedGroups)
         return; // выбраны все группы или работа с группами не выполняется
 
-      SingleScopeList<Int32> WantedGroupIds = new SingleScopeList<Int32>(); // нельзя использовать IdList, т.к. идентификатор группы 0 может встретиться
+      SingleScopeList<Int32> wantedGroupIds = new SingleScopeList<Int32>(); // нельзя использовать IdList, т.к. идентификатор группы 0 может встретиться
       for (int i = 0; i < docIds.Length; i++)
-        WantedGroupIds.Add(DocTypeUI.TableCache.GetInt(docIds[i], DocTypeUI.DocType.GroupRefColumnName));
+        wantedGroupIds.Add(DocTypeUI.TableCache.GetInt(docIds[i], DocTypeUI.DocType.GroupRefColumnName));
 
-      if (WantedGroupIds.Count == 1)
+      if (wantedGroupIds.Count == 1)
       {
-        if (WantedGroupIds[0] == CurrentGroupId)
+        if (wantedGroupIds[0] == CurrentGroupId)
           return; // выбрана точно совпадающая группа.
       }
 
       ArrayIndexer<Int32> idxAuxFilterGroupIds = new ArrayIndexer<Int32>(AuxFilterGroupIds);
-      if (idxAuxFilterGroupIds.ContainsAll(WantedGroupIds))
+      if (idxAuxFilterGroupIds.ContainsAll(wantedGroupIds))
         return;
 
       // Устанавливаем группу
 
-      if (WantedGroupIds.Count == 1)
-        CurrentGroupId = WantedGroupIds[0];
+      if (wantedGroupIds.Count == 1)
+        CurrentGroupId = wantedGroupIds[0];
       else
       {
         // Если выбраны документы для разных групп, сбрасываем все.
@@ -1228,7 +1227,6 @@ namespace FreeLibSet.Forms.Docs
 
     void CurrentGroupChanged(object sender, EventArgs args)
     {
-
       if (!_GroupTreeView_InsideSelectionChanged)
       {
         _GroupTreeView_InsideSelectionChanged = true;

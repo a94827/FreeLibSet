@@ -148,12 +148,12 @@ namespace FreeLibSet.FIAS
     /// Идентификатор базы данных.
     /// Используется в качестве части ключа при кэшировании данных.
     /// </summary>
-    string DBIdentity { get;}
+    string DBIdentity { get; }
 
     /// <summary>
     /// Настройки базы данных
     /// </summary>
-    FiasDBSettings DBSettings { get;}
+    FiasDBSettings DBSettings { get; }
 
     /// <summary>
     /// Внутренние настройки классификатора
@@ -252,7 +252,7 @@ namespace FreeLibSet.FIAS
     /// <summary>
     /// Возвращает статистику по базе данных классификатора.
     /// </summary>
-    FiasDBStat DBStat { get;}
+    FiasDBStat DBStat { get; }
 
     /// <summary>
     /// Загружает таблицу истории обновлений классификатора

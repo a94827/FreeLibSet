@@ -451,8 +451,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (filterSet == null)
         throw new ArgumentNullException("filterSet");
-      foreach (IEFPGridFilter Item in filterSet)
-        Add((DBxCommonFilter)Item);
+      foreach (IEFPGridFilter item in filterSet)
+        Add((DBxCommonFilter)item);
     }
 
     #endregion

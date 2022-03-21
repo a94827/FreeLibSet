@@ -185,11 +185,11 @@ namespace FreeLibSet.Forms.Docs
       //  // DebugTools.DebugDataTable(SourceAsDataTable, SubDocType.Name);
       //}
 
-      bool ShowDocId;
+      bool showDocId;
       if (mainEditor == null)
-        ShowDocId = subDocs.Owner.DocCount > 1; // ???
+        showDocId = subDocs.Owner.DocCount > 1; // ???
       else
-        ShowDocId = mainEditor.MultiDocMode;
+        showDocId = mainEditor.MultiDocMode;
       //SubDocTypeUI.DoInitGrid(this, false, UsedColumnNames, null, ShowDocId, true);
       //base.CurrentConfigChanged += new CancelEventHandler(GridHandler_CurrentGridConfigChanged);
 
@@ -266,11 +266,11 @@ namespace FreeLibSet.Forms.Docs
     public bool ValidateBeforeEdit
     {
       get { return _ValidateBeforeEdit; }
-      set 
+      set
       {
         if (value && _MainEditor == null)
           throw new InvalidOperationException("Нельзя устанавливать свойство ValidateBeforeEdit в true, т.к. просмотр не относится к DocumentEditor"); // 21.01.2022
-        _ValidateBeforeEdit = value; 
+        _ValidateBeforeEdit = value;
       }
     }
     private bool _ValidateBeforeEdit;
@@ -400,9 +400,9 @@ namespace FreeLibSet.Forms.Docs
 
       if (SourceAsDataTable == null)
       {
-        Int32 OldId = CurrentId;
+        Int32 oldId = CurrentId;
         PerformRefresh(); // обязательно после вызова OnCreated(), иначе UsedColumnNames будет равен null
-        CurrentId = OldId; // 23.11.2017
+        CurrentId = oldId; // 23.11.2017
       }
     }
 
@@ -513,26 +513,26 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      DataTable EmptyTable = SubDocs.DocSet.DocProvider.GetTemplate(SubDocType.DocType.Name, SubDocType.Name);
+      DataTable emptyTable = SubDocs.DocSet.DocProvider.GetTemplate(SubDocType.DocType.Name, SubDocType.Name);
 
-      bool HasEditable = false;
-      bool[] ROs = new bool[this.Columns.Count];
+      bool hasEditable = false;
+      bool[] readOnlyFlags = new bool[this.Columns.Count];
       for (int i = 0; i < this.Columns.Count; i++)
       {
-        ROs[i] = !IsColumnEditable(this.Columns[i], EmptyTable);
-        if (!ROs[i])
-          HasEditable = true;
+        readOnlyFlags[i] = !IsColumnEditable(this.Columns[i], emptyTable);
+        if (!readOnlyFlags[i])
+          hasEditable = true;
 
         //if (!Editable)
         //  DebugTools.DebugObject(GridHandler.Columns[i].GridColumn, "i=" + i.ToString());
       }
 
       //DebugTools.DebugObject(GridHandler.Columns[3].GridColumn, "до");
-      this.Control.ReadOnly = !HasEditable;
-      if (HasEditable)
+      this.Control.ReadOnly = !hasEditable;
+      if (hasEditable)
       {
         for (int i = 0; i < this.Columns.Count; i++)
-          this.Columns[i].GridColumn.ReadOnly = ROs[i];
+          this.Columns[i].GridColumn.ReadOnly = readOnlyFlags[i];
       }
       //DebugTools.DebugObject(GridHandler.Columns[3].GridColumn, "после");
     }
@@ -546,10 +546,10 @@ namespace FreeLibSet.Forms.Docs
       if (String.IsNullOrEmpty(column.GridColumn.DataPropertyName))
         return false; // вычисляемый столбец
 
-      EFPGridProducerColumn ColProducer = column.ColumnProducer as EFPGridProducerColumn;
-      if (ColProducer != null) // 19.04.14
+      EFPGridProducerColumn colProducer = column.ColumnProducer as EFPGridProducerColumn;
+      if (colProducer != null) // 19.04.14
       {
-        if (ColProducer.ReadOnly)
+        if (colProducer.ReadOnly)
           return false;
       }
       if (column.CanIncSearch)
@@ -585,21 +585,21 @@ namespace FreeLibSet.Forms.Docs
       using (DataView dv = new DataView(table))
       {
         dv.Sort = ManualOrderColumn;
-        DataRow[] Rows = DataTools.GetDataViewRows(dv);
+        DataRow[] rows = DataTools.GetDataViewRows(dv);
 
-        bool Changed = false;
+        bool changed = false;
 
-        for (int i = 0; i < Rows.Length; i++)
+        for (int i = 0; i < rows.Length; i++)
         {
-          int ThisN = DataTools.GetInt(Rows[i], ManualOrderColumn);
-          if (ThisN != (i + 1)) // присваиваем только если не совпадает
+          int thisN = DataTools.GetInt(rows[i], ManualOrderColumn);
+          if (thisN != (i + 1)) // присваиваем только если не совпадает
           {
-            Rows[i][ManualOrderColumn] = i + 1;
-            Changed = true;
+            rows[i][ManualOrderColumn] = i + 1;
+            changed = true;
           }
         }
 
-        if (Changed)
+        if (changed)
         {
           if (ManualOrderChanged != null)
             ManualOrderChanged(this, EventArgs.Empty);
@@ -609,7 +609,6 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-
 
     #endregion
 
@@ -737,7 +736,7 @@ namespace FreeLibSet.Forms.Docs
     protected override void OnDetached()
     {
       if (_MainEditor != null)
-        _MainEditor.AfterWrite -= new DocEditEventHandler(MainEditor_AfterWrite); 
+        _MainEditor.AfterWrite -= new DocEditEventHandler(MainEditor_AfterWrite);
 
       base.OnDetached();
     }
@@ -748,7 +747,7 @@ namespace FreeLibSet.Forms.Docs
       // После нажатия кнопки "Запись" в редакторе документа необходимо выполнить обновление просмотра,
       // т.к. иначе он будет ссылаться на старый объект DataTable
 
-      EFPDataGridViewSelectedRowsMode OldMode = base.SelectedRowsMode;
+      EFPDataGridViewSelectedRowsMode oldMode = base.SelectedRowsMode;
       base.SelectedRowsMode = EFPDataGridViewSelectedRowsMode.RowIndex;
       try
       {
@@ -756,7 +755,7 @@ namespace FreeLibSet.Forms.Docs
       }
       finally
       {
-        base.SelectedRowsMode = OldMode;
+        base.SelectedRowsMode = oldMode;
       }
     }
 
@@ -800,44 +799,44 @@ namespace FreeLibSet.Forms.Docs
           return true;
       }
 
-      DataRow[] Rows = null;
-      Int32 DocId;
+      DataRow[] rows = null;
+      Int32 docId;
       if (this.State == EFPDataGridViewState.Insert)
       {
-        if (!SubDocTypeUI.SelectOneDoc(this, out DocId))
+        if (!SubDocTypeUI.SelectOneDoc(this, out docId))
           return true;
       }
       else
       {
-        Rows = GetMasterRows(this.SelectedDataRows);
-        if (Rows.Length == 0)
+        rows = GetMasterRows(this.SelectedDataRows);
+        if (rows.Length == 0)
         {
           EFPApp.MessageBox("Нет выбранных поддокументов \"" + SubDocType.PluralTitle + "\"");
           return true;
         }
 
-        DocId = DataTools.GetInt(Rows[0], "DocId");
+        docId = DataTools.GetInt(rows[0], "DocId");
       }
 
       // TODO: Не должно ли быть это внутри SubDocumentEditor.Run()?
-      DBxMultiSubDocs SubDocs2;
+      DBxMultiSubDocs subDocs2;
       if (this.State == EFPDataGridViewState.Insert)
       {
-        SubDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
-        SubDocs2.Insert();
+        subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
+        subDocs2.Insert();
       }
       else
       {
-        SubDocs2 = new DBxMultiSubDocs(SubDocs, Rows);
+        subDocs2 = new DBxMultiSubDocs(SubDocs, rows);
         if (this.State == EFPDataGridViewState.Delete)
         {
           if (ConfirmDeletion)
           {
             string s;
-            if (SubDocs2.SubDocCount == 1)
-              s = "Удалить запись \"" + SubDocType.SingularTitle + "\" (" + SubDocTypeUI.UI.TextHandlers.GetTextValue(SubDocs2[0]) + ")?";
+            if (subDocs2.SubDocCount == 1)
+              s = "Удалить запись \"" + SubDocType.SingularTitle + "\" (" + SubDocTypeUI.UI.TextHandlers.GetTextValue(subDocs2[0]) + ")?";
             else
-              s = "Удалить выбранные записи \"" + SubDocs.SubDocType.PluralTitle + "\" (" + SubDocs2.SubDocCount.ToString() + ")?";
+              s = "Удалить выбранные записи \"" + SubDocs.SubDocType.PluralTitle + "\" (" + subDocs2.SubDocCount.ToString() + ")?";
             if (EFPApp.MessageBox(s, "Подтверждение удаления",
               MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
               return true;
@@ -848,9 +847,9 @@ namespace FreeLibSet.Forms.Docs
 
           //for (int i = 0; i < SubDocs2.SubDocCount;i++ )
           //  SubDocs[i].Delete();
-          SubDocs2.Delete();
+          subDocs2.Delete();
           //EFPApp.MessageBox(SubDocs.SubDocCount.ToString(), "До очистки");
-          SubDocs.MergeSubSet(SubDocs2);
+          SubDocs.MergeSubSet(subDocs2);
           //EFPApp.MessageBox(SubDocs.SubDocCount.ToString(), "После очистки");
 
           //DebugTools.DebugDataSet(MainEditor.Documents.DataSet, "После удаления");
@@ -864,38 +863,38 @@ namespace FreeLibSet.Forms.Docs
         switch (this.State)
         {
           case EFPDataGridViewState.Edit:
-            SubDocs2.Edit();
+            subDocs2.Edit();
             break;
           case EFPDataGridViewState.InsertCopy:
-            SubDocs2.InsertCopy();
+            subDocs2.InsertCopy();
             break;
         }
       }
 
-      SubDocumentEditor sde = new SubDocumentEditor(MainEditor, SubDocs2, this.State);
+      SubDocumentEditor sde = new SubDocumentEditor(MainEditor, subDocs2, this.State);
       if (sde.Run())
       {
-        int LastOrder = 0;
+        int lastOrder = 0;
         if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
         {
           if (!String.IsNullOrEmpty(ManualOrderColumn))
-            LastOrder = DataTools.MaxInt(SubDocs.SubDocsView, ManualOrderColumn, true) ?? 0;
+            lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, ManualOrderColumn, true) ?? 0;
         }
 
-        SubDocs.MergeSubSet(SubDocs2);
+        SubDocs.MergeSubSet(subDocs2);
 
         if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
         {
-          DataRow LastRow = _SubDocs.SubDocsView.Table.Rows[_SubDocs.SubDocsView.Table.Rows.Count - 1];
+          DataRow lastRow = _SubDocs.SubDocsView.Table.Rows[_SubDocs.SubDocsView.Table.Rows.Count - 1];
           if (!String.IsNullOrEmpty(ManualOrderColumn))
           {
             // Присваиваем новой строке номер по порядку, чтобы она была в конце
             //LastRow[ManualOrderColumn] = FSubDocs.SubDocsView.Table.Rows.Count;
             // Исправлено 21.04.2020
-            LastRow[ManualOrderColumn] = LastOrder + 1;
+            lastRow[ManualOrderColumn] = lastOrder + 1;
           }
 
-          this.CurrentDataRow = GetSlaveRow(LastRow);
+          this.CurrentDataRow = GetSlaveRow(lastRow);
         }
         MainEditor.SubDocsChangeInfo.Changed = true;
         if (this.State == EFPDataGridViewState.Edit)
@@ -943,9 +942,9 @@ namespace FreeLibSet.Forms.Docs
         // Вырезается не прямоугольный блок, а строки
         if (!this.CommandItems.PerformCopy())
           return; // не удалось скопировать
-        DataRow[] Rows = this.SelectedDataRows;
-        for (int i = 0; i < Rows.Length; i++)
-          Rows[i].Delete();
+        DataRow[] rows = this.SelectedDataRows;
+        for (int i = 0; i < rows.Length; i++)
+          rows[i].Delete();
 
         if (!String.IsNullOrEmpty(ManualOrderColumn))
           InitOrderValues(_SubDocs.SubDocsView.Table, true); // 21.04.2020
@@ -965,19 +964,19 @@ namespace FreeLibSet.Forms.Docs
     void CommandItems_AddCopyFormats(object sender, DataObjectEventArgs args)
     {
       // Добавляем в буфер обмена таблицу данных
-      DataRow[] Rows = this.SelectedDataRows;
-      if (Rows.Length == 0)
+      DataRow[] rows = this.SelectedDataRows;
+      if (rows.Length == 0)
         return;
 
       DataSet ds = new DataSet();
       ds.RemotingFormat = SerializationFormat.Binary;
       //ds.ExtendedProperties["WorkAreaIdentity"] = DocProvider.DBIdentity;
       ds.ExtendedProperties["DBIdentity"] = DocProvider.DBIdentity; // 15.05.2020
-      DataTable Table = this.SourceAsDataTable.Clone();
-      Table.TableName = _SubDocTypeUI.SubDocType.Name;
-      ds.Tables.Add(Table);
-      for (int i = 0; i < Rows.Length; i++)
-        Table.Rows.Add(Rows[i].ItemArray);
+      DataTable table = this.SourceAsDataTable.Clone();
+      table.TableName = _SubDocTypeUI.SubDocType.Name;
+      ds.Tables.Add(table);
+      for (int i = 0; i < rows.Length; i++)
+        table.Rows.Add(rows[i].ItemArray);
 
       args.DataObject.SetData(ds);
     }
@@ -1000,22 +999,22 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_PasteSubDocs(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] DocIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
+      Int32[] docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
       //if (DocIds.Length < 0)
-      if (DocIds.Length <= 0) // 28.12.2020
+      if (docIds.Length <= 0) // 28.12.2020
       {
         EFPApp.ErrorMessageBox("Нет выбранных документов \"" + fmtDocSel.DocType.DocType.PluralTitle + "\"");
         return;
       }
 
-      if (DocIds.Length > 100)
+      if (docIds.Length > 100)
       {
         EFPApp.ErrorMessageBox("Выбрано слишком много документов \"" + fmtDocSel.DocType.DocType.PluralTitle + "\" (" +
-          DocIds.Length.ToString() + " шт.). Максимально за один раз могут быть вставлены поддокументы для 100 документов");
+          docIds.Length.ToString() + " шт.). Максимально за один раз могут быть вставлены поддокументы для 100 документов");
         return;
       }
 
-      DBxFilter filter = new IdsFilter("DocId", DocIds);
+      DBxFilter filter = new IdsFilter("DocId", docIds);
       if (UI.DocProvider.DocTypes.UseDeleted) // 23.05.2021
         filter = new AndFilter(filter, DBSSubDocType.DeletedFalseFilter);
 
@@ -1025,7 +1024,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (Table.Rows.Count == 0)
       {
-        EFPApp.ErrorMessageBox("Выбранные документы \"" + fmtDocSel.DocType.DocType.PluralTitle + "\" (" + DocIds.Length.ToString() +
+        EFPApp.ErrorMessageBox("Выбранные документы \"" + fmtDocSel.DocType.DocType.PluralTitle + "\" (" + docIds.Length.ToString() +
           " шт.) не содержат ни одного поддокумента \"" + sdt.SubDocType.SingularTitle + "\"");
         return;
       }
@@ -1036,40 +1035,40 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_PasteDocs(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] DocIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
+      Int32[] docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
       // if (DocIds.Length < 0)
-      if (DocIds.Length == 0) // 28.12.2020
+      if (docIds.Length == 0) // 28.12.2020
       {
         EFPApp.ErrorMessageBox("Нет выбранных документов \"" + fmtDocSel.DocType.DocType.PluralTitle + "\"");
         return;
       }
 
-      DataTable Table = DocProvider.FillSelect(fmtDocSel.DocTypeName, null, new IdsFilter(DocIds));
+      DataTable table = DocProvider.FillSelect(fmtDocSel.DocTypeName, null, new IdsFilter(docIds));
 
       // DoPasteTable(Table, fmtDocSel.DocType);
       // 22.08.2016
       // Вставляем строки в том порядке, как заданы идентификаторы
-      DataTools.SetPrimaryKey(Table, "Id");
-      DataRow[] SrcRows = new DataRow[DocIds.Length];
-      for (int i = 0; i < DocIds.Length; i++)
+      DataTools.SetPrimaryKey(table, "Id");
+      DataRow[] srcRows = new DataRow[docIds.Length];
+      for (int i = 0; i < docIds.Length; i++)
       {
-        DataRow Row = Table.Rows.Find(DocIds[i]);
-        if (Row == null)
+        DataRow row = table.Rows.Find(docIds[i]);
+        if (row == null)
         {
-          EFPApp.ErrorMessageBox("Не удалось загрузить из базы данных строку документа \"" + fmtDocSel.DocType.DocType.SingularTitle + "\" с идентификатором " + DocIds[i]);
+          EFPApp.ErrorMessageBox("Не удалось загрузить из базы данных строку документа \"" + fmtDocSel.DocType.DocType.SingularTitle + "\" с идентификатором " + docIds[i]);
           return;
         }
-        SrcRows[i] = Row;
+        srcRows[i] = row;
       }
 
-      DoPasteRows(SrcRows, fmtDocSel.DocType);
+      DoPasteRows(srcRows, fmtDocSel.DocType);
     }
 
     void DoPasteTable(DataTable srcTable, DocTypeUIBase docTypeBase)
     {
-      DataRow[] SrcRows = new DataRow[srcTable.Rows.Count];
-      srcTable.Rows.CopyTo(SrcRows, 0);
-      DoPasteRows(SrcRows, docTypeBase);
+      DataRow[] srcRows = new DataRow[srcTable.Rows.Count];
+      srcTable.Rows.CopyTo(srcRows, 0);
+      DoPasteRows(srcRows, docTypeBase);
     }
 
     void DoPasteRows(DataRow[] srcRows, DocTypeUIBase docTypeBase)
@@ -1080,55 +1079,55 @@ namespace FreeLibSet.Forms.Docs
           return;
       }
 
-      Int32 DocId;
-      if (!SubDocTypeUI.SelectOneDoc(this, out DocId))
+      Int32 docId;
+      if (!SubDocTypeUI.SelectOneDoc(this, out docId))
         return;
 
-      DBxSingleDoc MainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(DocId);
+      DBxSingleDoc mainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(docId);
 
       // Нельзя использовать в качестве оригинала полученную строку, т.к. таблица в буфере обмена может быть неполной
-      DBxMultiSubDocs SubDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
+      DBxMultiSubDocs subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
 
       int cntCancelled = 0;
-      ErrorMessageList Errors = new ErrorMessageList();
+      ErrorMessageList errors = new ErrorMessageList();
       for (int i = 0; i < srcRows.Length; i++)
       {
-        DBxSubDoc SubDoc2 = SubDocs2.Insert();
-        DBxDocValue.CopyValues(srcRows[i], SubDoc2.Values);
+        DBxSubDoc subDoc2 = subDocs2.Insert();
+        DBxDocValue.CopyValues(srcRows[i], subDoc2.Values);
 
         // Вызываем пользовательский обработчик
-        AdjustPastedSubDocRowEventArgs Args = new AdjustPastedSubDocRowEventArgs(SubDoc2,
-          srcRows[i], srcRows[0].Table.DataSet, srcRows[0].Table.TableName, MainDoc, i == 0);
-        this.SubDocTypeUI.PerformAdjustPastedRow(Args);
-        if (Args.Cancel)
+        AdjustPastedSubDocRowEventArgs args = new AdjustPastedSubDocRowEventArgs(subDoc2,
+          srcRows[i], srcRows[0].Table.DataSet, srcRows[0].Table.TableName, mainDoc, i == 0);
+        this.SubDocTypeUI.PerformAdjustPastedRow(args);
+        if (args.Cancel)
         {
           cntCancelled++;
-          if (String.IsNullOrEmpty(Args.ErrorMessage))
-            Args.ErrorMessage = "Нельзя добавить строку";
-          Errors.AddWarning("Строка " + (i + 1).ToString() + " пропускается. " + Args.ErrorMessage);
-          SubDoc2.Delete();
+          if (String.IsNullOrEmpty(args.ErrorMessage))
+            args.ErrorMessage = "Нельзя добавить строку";
+          errors.AddWarning("Строка " + (i + 1).ToString() + " пропускается. " + args.ErrorMessage);
+          subDoc2.Delete();
         }
       }
 
       // Убираем отмененные строки и возвращаем состояние Insert на место
-      SubDocs2.SubDocsView.Table.AcceptChanges();
-      foreach (DataRow Row in SubDocs2.SubDocsView.Table.Rows)
-        DataTools.SetRowState(Row, DataRowState.Added);
+      subDocs2.SubDocsView.Table.AcceptChanges();
+      foreach (DataRow row in subDocs2.SubDocsView.Table.Rows)
+        DataTools.SetRowState(row, DataRowState.Added);
 
       if (cntCancelled > 0)
       {
-        if (SubDocs2.SubDocCount == 0)
-          Errors.AddError("Ни одна из строк (" + srcRows.Length.ToString() + " шт.) не может быть добавлена");
-        EFPApp.ShowErrorMessageListDialog(Errors, "Вставка");
-        if (SubDocs2.SubDocCount == 0)
+        if (subDocs2.SubDocCount == 0)
+          errors.AddError("Ни одна из строк (" + srcRows.Length.ToString() + " шт.) не может быть добавлена");
+        EFPApp.ShowErrorMessageListDialog(errors, "Вставка");
+        if (subDocs2.SubDocCount == 0)
           return;
       }
 
-      if (SubDocTypeUI.HasEditorHandlers && SubDocs2.SubDocCount == 1)
+      if (SubDocTypeUI.HasEditorHandlers && subDocs2.SubDocCount == 1)
       {
         // Открытие редактора поддокумента
         // Режим должен быть обязательно InsertCopy, иначе значения не прочитаются
-        SubDocumentEditor sde = new SubDocumentEditor(MainEditor, SubDocs2, EFPDataGridViewState.InsertCopy);
+        SubDocumentEditor sde = new SubDocumentEditor(MainEditor, subDocs2, EFPDataGridViewState.InsertCopy);
         sde.SuppressInsertColumnValues = true; // не нужна инициализация, иначе некоторые поля с режимом NewMode=AlwaysDefaultValue очистятся
         if (!sde.Run())
           return;
@@ -1136,34 +1135,34 @@ namespace FreeLibSet.Forms.Docs
       else
       {
         if (EFPApp.MessageBox("Вставить " + (docTypeBase.DocTypeBase.IsSubDoc ?
-          "копии поддокументов" : "копии документов") + " (" + SubDocs2.SubDocCount.ToString() + " шт.)?",
+          "копии поддокументов" : "копии документов") + " (" + subDocs2.SubDocCount.ToString() + " шт.)?",
           "Подтверждение вставки поддокументов \"" + SubDocType.PluralTitle + "\"",
           MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
 
           return;
       }
 
-      int Count = SubDocs.SubDocCount;
-      int LastOrder = 0;
+      int count = SubDocs.SubDocCount;
+      int lastOrder = 0;
       if (!String.IsNullOrEmpty(ManualOrderColumn))
-        LastOrder = DataTools.MaxInt(SubDocs.SubDocsView, ManualOrderColumn, true) ?? 0;
+        lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, ManualOrderColumn, true) ?? 0;
 
-      SubDocs.MergeSubSet(SubDocs2);
-      List<DataRow> ResRows = new List<DataRow>();
-      for (int i = Count; i < SubDocs.SubDocCount; i++)
+      SubDocs.MergeSubSet(subDocs2);
+      List<DataRow> resRows = new List<DataRow>();
+      for (int i = count; i < SubDocs.SubDocCount; i++)
       {
         if (!String.IsNullOrEmpty(ManualOrderColumn))
         {
           // Присваиваем новой строке номер по порядку, чтобы она была в конце
           //SubDocs[i].Values[ManualOrderColumn].SetInteger(i + 1); // исправлено 08.12.2015
           // Еще раз исправлено 21.04.2020
-          LastOrder++;
-          SubDocs[i].Values[ManualOrderColumn].SetInteger(LastOrder); // исправлено 08.12.2015
+          lastOrder++;
+          SubDocs[i].Values[ManualOrderColumn].SetInteger(lastOrder); // исправлено 08.12.2015
         }
-        DataRow ResRow = SubDocs.SubDocsView.Table.Rows[i];
-        ResRows.Add(GetSlaveRow(ResRow));
+        DataRow resRow = SubDocs.SubDocsView.Table.Rows[i];
+        resRows.Add(GetSlaveRow(resRow));
       }
-      this.SelectedDataRows = ResRows.ToArray();
+      this.SelectedDataRows = resRows.ToArray();
       MainEditor.SubDocsChangeInfo.Changed = true;
     }
 

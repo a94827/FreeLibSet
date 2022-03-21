@@ -535,7 +535,7 @@ namespace FreeLibSet.FIAS
 
     #region FiasLevel
 
-    private static Dictionary<FiasLevel, string> LevelNames1 = CreateLevelNames1();
+    private static Dictionary<FiasLevel, string> _LevelNames1 = CreateLevelNames1();
     private static Dictionary<FiasLevel, string> CreateLevelNames1()
     {
       Dictionary<FiasLevel, string> d = new Dictionary<FiasLevel, string>();
@@ -559,7 +559,7 @@ namespace FreeLibSet.FIAS
       return d;
     }
 
-    private static Dictionary<FiasLevel, string> LevelNames2 = CreateLevelNames2();
+    private static Dictionary<FiasLevel, string> _LevelNames2 = CreateLevelNames2();
     private static Dictionary<FiasLevel, string> CreateLevelNames2()
     {
       Dictionary<FiasLevel, string> d = new Dictionary<FiasLevel, string>();
@@ -594,7 +594,7 @@ namespace FreeLibSet.FIAS
     {
       if (level == FiasLevel.Unknown)
         return "Не задан"; // 29.04.2020
-      Dictionary<FiasLevel, string> d = isLong ? LevelNames2 : LevelNames1;
+      Dictionary<FiasLevel, string> d = isLong ? _LevelNames2 : _LevelNames1;
       string s;
       if (d.TryGetValue(level, out s))
         return s;
@@ -682,7 +682,7 @@ namespace FreeLibSet.FIAS
      "Объект нез-го стр-ва" // ФИАС от 23.03.2020
     };
 
-    private static readonly StringArrayIndexer EstateStatusAOTypeIndexer = new StringArrayIndexer(EstateStatusAOTypes, true);
+    private static readonly StringArrayIndexer _EstateStatusAOTypeIndexer = new StringArrayIndexer(EstateStatusAOTypes, true);
 
 
     /// <summary>
@@ -728,7 +728,7 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(s))
         return FiasEstateStatus.Unknown;
 
-      int p = EstateStatusAOTypeIndexer.IndexOf(s);
+      int p = _EstateStatusAOTypeIndexer.IndexOf(s);
       if (p >= 0)
         return (FiasEstateStatus)p;
 
@@ -770,7 +770,7 @@ namespace FreeLibSet.FIAS
       "Сооружение",
       "Литер"};
 
-    private static readonly StringArrayIndexer StructureStatusAOTypeIndexer = new StringArrayIndexer(StructureStatusAOTypes, true);
+    private static readonly StringArrayIndexer _StructureStatusAOTypeIndexer = new StringArrayIndexer(StructureStatusAOTypes, true);
 
     /// <summary>
     /// Признак строения. Сокращение
@@ -808,7 +808,7 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(s))
         return FiasStructureStatus.Unknown;
 
-      int p = StructureStatusAOTypeIndexer.IndexOf(s);
+      int p = _StructureStatusAOTypeIndexer.IndexOf(s);
       if (p >= 0)
         return (FiasStructureStatus)p;
 
@@ -853,7 +853,7 @@ namespace FreeLibSet.FIAS
       "Гараж" // ФИАС от 23.03.2020
     };
 
-    private static readonly StringArrayIndexer FlatTypeAOTypeIndexer = new StringArrayIndexer(FlatTypeAOTypes, true);
+    private static readonly StringArrayIndexer _FlatTypeAOTypeIndexer = new StringArrayIndexer(FlatTypeAOTypes, true);
 
     /// <summary>
     /// Тип помещения. Сокращения
@@ -901,7 +901,7 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(s))
         return FiasFlatType.Unknown;
 
-      int p = FlatTypeAOTypeIndexer.IndexOf(s);
+      int p = _FlatTypeAOTypeIndexer.IndexOf(s);
       if (p >= 0)
         return (FiasFlatType)p;
 
@@ -942,7 +942,7 @@ namespace FreeLibSet.FIAS
       "Помещение"
     };
 
-    private static readonly StringArrayIndexer RoomTypeAOTypeIndexer = new StringArrayIndexer(RoomTypeAOTypes, true);
+    private static readonly StringArrayIndexer _RoomTypeAOTypeIndexer = new StringArrayIndexer(RoomTypeAOTypes, true);
 
     /// <summary>
     /// Тип комнаты. Сокращение
@@ -979,7 +979,7 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(s))
         return FiasRoomType.Unknown;
 
-      int p = RoomTypeAOTypeIndexer.IndexOf(s);
+      int p = _RoomTypeAOTypeIndexer.IndexOf(s);
       if (p >= 0)
         return (FiasRoomType)p;
 

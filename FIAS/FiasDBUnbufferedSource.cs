@@ -71,7 +71,7 @@ namespace FreeLibSet.FIAS
 #endif
 
       if (FiasTools.TraceSwitch.Enabled)
-        Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasDBUnbufferedSource.GetGuidInfo() started. tableType=" + tableType.ToString()+", guids.Length="+guids.Length.ToString());
+        Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasDBUnbufferedSource.GetGuidInfo() started. tableType=" + tableType.ToString() + ", guids.Length=" + guids.Length.ToString());
 
       _FiasDB.CheckIsReady();
 
@@ -283,9 +283,9 @@ namespace FreeLibSet.FIAS
               {
                 while (rdr.Read())
                 {
-                  Guid Child = rdr.GetGuid(0);
-                  Guid Parent = rdr.GetGuid(1);
-                  dict[Child] = new FiasGuidInfo(FiasLevel.House, Parent);
+                  Guid child = rdr.GetGuid(0);
+                  Guid parent = rdr.GetGuid(1);
+                  dict[child] = new FiasGuidInfo(FiasLevel.House, parent);
                   //spl.CheckCancelled();
                 }
               }
@@ -319,9 +319,9 @@ namespace FreeLibSet.FIAS
               {
                 while (rdr.Read())
                 {
-                  Guid Child = rdr.GetGuid(0);
-                  Guid Parent = rdr.GetGuid(1);
-                  dict[Child] = new FiasGuidInfo(FiasLevel.Flat, Parent);
+                  Guid child = rdr.GetGuid(0);
+                  Guid parent = rdr.GetGuid(1);
+                  dict[child] = new FiasGuidInfo(FiasLevel.Flat, parent);
                   //spl.CheckCancelled();
                 }
               }
@@ -1096,7 +1096,8 @@ namespace FreeLibSet.FIAS
         Guid g = (Guid)(drv.Row[pGuidCol]);
         if (g == PrevGuid)
           drv.Row[pTopFlag] = false;
-        else {
+        else
+        {
           drv.Row[pTopFlag] = true;
           PrevGuid = g;
         }
@@ -1105,9 +1106,9 @@ namespace FreeLibSet.FIAS
 
     #region Корректировка дат
 
-    private static readonly DateTime dt19991231 = new DateTime(1999, 12, 31);
-    private static readonly int ndt19991231 = (int)(new DateTime(1999, 12, 31).ToOADate());
-    private static readonly int ndt99991231 = (int)(DateTime.MaxValue.ToOADate());
+    private static readonly DateTime _DT19991231 = new DateTime(1999, 12, 31);
+    private static readonly int _NDT19991231 = (int)(new DateTime(1999, 12, 31).ToOADate());
+    private static readonly int _NDT99991231 = (int)(DateTime.MaxValue.ToOADate());
 
     private void CorrectRowDates(DataRow row, FiasTableType tableType)
     {
@@ -1127,13 +1128,13 @@ namespace FreeLibSet.FIAS
       if (_FiasDB.InternalSettings.UseOADates)
       {
         int dEnd = DataTools.GetInt(row, "dEndDate");
-        if (dEnd == ndt19991231)
-          row["dEndDate"] = ndt99991231;
+        if (dEnd == _NDT19991231)
+          row["dEndDate"] = _NDT99991231;
       }
       else
       {
         DateTime dEnd = DataTools.GetNullableDateTime(row, "ENDDATE") ?? DateTime.MinValue;
-        if (dEnd == dt19991231)
+        if (dEnd == _DT19991231)
           row["ENDDATE"] = DateTime.MaxValue;
       }
     }
@@ -1335,13 +1336,13 @@ namespace FreeLibSet.FIAS
       // Если 1, то сравнение только с текущим PARENTGUID (например, поиск улицы в населенном пункте или нас. пункта в районе)
       // Если 2, то на один уровень больше (например, улицы в городе)
       int maxDist = 0;
-      Guid ParentGuid = Guid.Empty;
+      Guid parentGuid = Guid.Empty;
       if (searchParams.StartAddress != null)
       {
         FiasLevel parentLevel = searchParams.StartAddress.GuidBottomLevel;
         if (parentLevel != FiasLevel.Unknown)
         {
-          ParentGuid = searchParams.StartAddress.GetGuid(parentLevel);
+          parentGuid = searchParams.StartAddress.GetGuid(parentLevel);
           // Список дистанций
           SingleScopeList<int> distList = new SingleScopeList<int>();
           for (int i = 0; i < levels.Length; i++)
@@ -1349,7 +1350,7 @@ namespace FreeLibSet.FIAS
 
           distList.Sort();
           if (distList.Count == 0)
-            throw new ArgumentException("Для базового адреса " + searchParams.StartAddress.ToString() + " (уровень "+FiasEnumNames.ToString(parentLevel, true)+") не удалось определить уровень наследования искомых уровней адресных объектов", "searchParams");
+            throw new ArgumentException("Для базового адреса " + searchParams.StartAddress.ToString() + " (уровень " + FiasEnumNames.ToString(parentLevel, true) + ") не удалось определить уровень наследования искомых уровней адресных объектов", "searchParams");
           maxDist = distList[distList.Count - 1];
         }
       }
@@ -1479,7 +1480,7 @@ namespace FreeLibSet.FIAS
             buffer.SB.Append(" OR ");
           buffer.FormatColumnName("AddrOb_" + i.ToString(), "PARENTGUID");
           buffer.SB.Append(" = ");
-          buffer.FormatValue(ParentGuid, DBxColumnType.Guid);
+          buffer.FormatValue(parentGuid, DBxColumnType.Guid);
         }
         buffer.SB.Append(")");
       }
@@ -1618,7 +1619,7 @@ namespace FreeLibSet.FIAS
     /// Ничего не делает
     /// </summary>
     void IFiasSource.UpdateActualDate()
-    { 
+    {
     }
 
     #endregion

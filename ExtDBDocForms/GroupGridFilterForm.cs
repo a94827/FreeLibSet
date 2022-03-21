@@ -52,25 +52,25 @@ namespace FreeLibSet.Forms.Docs
 
     public static bool PerformEdit(GroupDocTypeUI groupDocTypeUI, string title, string imageKey, ref Int32 groupId, ref bool includeNestedGroups, bool canBeRoot, EFPDialogPosition dialogPosition)
     {
-      using (GroupGridFilterForm Form = new GroupGridFilterForm(groupDocTypeUI))
+      using (GroupGridFilterForm dlg = new GroupGridFilterForm(groupDocTypeUI))
       {
-        Form.Text = title;
+        dlg.Text = title;
         if (!String.IsNullOrEmpty(imageKey))
-          Form.Icon = EFPApp.MainImageIcon(imageKey);
-        Form.efpGroup.CurrentId = groupId;
-        Form.efpIncludeNestedGroups.Checked = includeNestedGroups;
+          dlg.Icon = EFPApp.MainImageIcon(imageKey);
+        dlg.efpGroup.CurrentId = groupId;
+        dlg.efpIncludeNestedGroups.Checked = includeNestedGroups;
 
         if (!canBeRoot)
         {
-          Form.NoButtonProvider.Visible = false; // 18.06.2021
-          Form.FormProvider.AddFormCheck(new UIValidatingEventHandler(Form.efpForm_ValidatingNoRoot));
+          dlg.NoButtonProvider.Visible = false; // 18.06.2021
+          dlg.FormProvider.AddFormCheck(new UIValidatingEventHandler(dlg.efpForm_ValidatingNoRoot));
         }
 
-        switch (EFPApp.ShowDialog(Form, false, dialogPosition))
+        switch (EFPApp.ShowDialog(dlg, false, dialogPosition))
         {
           case DialogResult.OK:
-            groupId = Form.efpGroup.CurrentId;
-            includeNestedGroups = Form.efpIncludeNestedGroups.Checked;
+            groupId = dlg.efpGroup.CurrentId;
+            includeNestedGroups = dlg.efpIncludeNestedGroups.Checked;
             return true;
           case DialogResult.No:
             groupId = 0;
@@ -199,12 +199,12 @@ namespace FreeLibSet.Forms.Docs
     /// <returns></returns>
     public bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      Int32 GroupId2 = GroupId;
-      bool IncludeNestedGroups2 = IncludeNestedGroups;
-      if (GroupGridFilterForm.PerformEdit(GroupDocTypeUI, DisplayName, "Filter", ref GroupId2, ref IncludeNestedGroups2, true, dialogPosition))
+      Int32 groupId2 = GroupId;
+      bool includeNestedGroups2 = IncludeNestedGroups;
+      if (GroupGridFilterForm.PerformEdit(GroupDocTypeUI, DisplayName, "Filter", ref groupId2, ref includeNestedGroups2, true, dialogPosition))
       {
-        GroupId = GroupId2;
-        IncludeNestedGroups = IncludeNestedGroups2;
+        GroupId = groupId2;
+        IncludeNestedGroups = includeNestedGroups2;
         return true;
       }
       else

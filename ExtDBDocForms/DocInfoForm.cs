@@ -230,27 +230,27 @@ namespace FreeLibSet.Forms.Docs
 
     private void ImageColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      UndoAction Action = (UndoAction)(args.GetInt("Action"));
-      string ImageKey = DBUI.GetUndoActionImageKey(Action);
-      args.Value = EFPApp.MainImages.Images[ImageKey];
-      args.ToolTipText = DBUI.GetUndoActionName(Action);
+      UndoAction action = (UndoAction)(args.GetInt("Action"));
+      string imageKey = DBUI.GetUndoActionImageKey(action);
+      args.Value = EFPApp.MainImages.Images[imageKey];
+      args.ToolTipText = DBUI.GetUndoActionName(action);
     }
 
     private void EditTimeColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      DateTime? StartTime = args.GetNullableDateTime("UserActionId.StartTime");
-      DateTime? ApplyChangesTime = args.GetNullableDateTime("UserActionId.ApplyChangesTime");
-      if (StartTime.HasValue && ApplyChangesTime.HasValue)
-        args.Value = ApplyChangesTime.Value - StartTime.Value;
+      DateTime? startTime = args.GetNullableDateTime("UserActionId.StartTime");
+      DateTime? applyChangesTime = args.GetNullableDateTime("UserActionId.ApplyChangesTime");
+      if (startTime.HasValue && applyChangesTime.HasValue)
+        args.Value = applyChangesTime.Value - startTime.Value;
     }
 
     private void UserNameColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 UserId = args.GetInt("UserActionId.UserId");
-      if (UserId == 0)
+      Int32 userId = args.GetInt("UserActionId.UserId");
+      if (userId == 0)
         args.Value = "[ нет ]";
       else
-        args.Value = UI.TextHandlers.GetTextValue(UI.DocProvider.DocTypes.UsersTableName, UserId);
+        args.Value = UI.TextHandlers.GetTextValue(UI.DocProvider.DocTypes.UsersTableName, userId);
     }
 
     #endregion
@@ -279,19 +279,19 @@ namespace FreeLibSet.Forms.Docs
       if (!efpHist.CheckSingleRow())
         return;
 
-      int Version = DataTools.GetInt(efpHist.CurrentDataRow, "Version");
-      DBxDocSet DocSet = new DBxDocSet(UI.DocProvider);
-      DocSet[Params.DocTypeName].ViewVersion(Params.DocId, Version);
+      int version = DataTools.GetInt(efpHist.CurrentDataRow, "Version");
+      DBxDocSet docSet = new DBxDocSet(UI.DocProvider);
+      docSet[Params.DocTypeName].ViewVersion(Params.DocId, version);
       // 06.04.2020
       // Загружаем все поддокументы, иначе их не будет в DataSet'е
-      DocSet[Params.DocTypeName].SubDocs.LoadAll();
+      docSet[Params.DocTypeName].SubDocs.LoadAll();
 
-      string s = DocSet.DataSet.GetXml();
-      XmlDocument XmlDoc = DataTools.XmlDocumentFromString(s);
-      EFPApp.ShowXmlView(XmlDoc,
-        Params.DocTypeUI.DocType.SingularTitle + ", Id=" + Params.DocId.ToString() + ", Version=" + Version.ToString(),
+      string s = docSet.DataSet.GetXml();
+      XmlDocument xmlDoc = DataTools.XmlDocumentFromString(s);
+      EFPApp.ShowXmlView(xmlDoc,
+        Params.DocTypeUI.DocType.SingularTitle + ", Id=" + Params.DocId.ToString() + ", Version=" + version.ToString(),
         false,
-        Params.DocTypeName + "-Id" + Params.DocId.ToString() + "-v" + Version.ToString() + ".xml");
+        Params.DocTypeName + "-Id" + Params.DocId.ToString() + "-v" + version.ToString() + ".xml");
     }
 
     #endregion
@@ -408,7 +408,7 @@ namespace FreeLibSet.Forms.Docs
     public void InitRefPage()
     {
 
-      EFPDataGridViewSelection OldSelStat = efpRefStat.Selection;
+      EFPDataGridViewSelection oldSelStat = efpRefStat.Selection;
 
       try
       {
@@ -416,19 +416,19 @@ namespace FreeLibSet.Forms.Docs
         try
         {
           RefTable = Params.DocTypeUI.GetDocRefTable(Params.DocId, ciShowHiddenRefs.Checked, true);
-          Int32[] FromDocTableIds = DataTools.GetIdsFromColumn(RefTable, "FromDocTableId");
-          DataTable StatTable = new DataTable();
-          StatTable.Columns.Add("FromDocTypeName", typeof(string));
-          StatTable.Columns.Add("FromDocTableId", typeof(Int32));
-          StatTable.Columns.Add("FromDocTypeText", typeof(string));
-          DataTools.SetPrimaryKey(StatTable, "FromDocTableId");
-          for (int i = 0; i < FromDocTableIds.Length; i++)
+          Int32[] fromDocTableIds = DataTools.GetIdsFromColumn(RefTable, "FromDocTableId");
+          DataTable statTable = new DataTable();
+          statTable.Columns.Add("FromDocTypeName", typeof(string));
+          statTable.Columns.Add("FromDocTableId", typeof(Int32));
+          statTable.Columns.Add("FromDocTypeText", typeof(string));
+          DataTools.SetPrimaryKey(statTable, "FromDocTableId");
+          for (int i = 0; i < fromDocTableIds.Length; i++)
           {
-            DBxDocType FromDocType = UI.DocProvider.DocTypes.FindByTableId(FromDocTableIds[i]);
-            StatTable.Rows.Add(FromDocType.Name, FromDocType.TableId, FromDocType.PluralTitle);
+            DBxDocType fromDocType = UI.DocProvider.DocTypes.FindByTableId(fromDocTableIds[i]);
+            statTable.Rows.Add(fromDocType.Name, fromDocType.TableId, fromDocType.PluralTitle);
           }
-          StatTable.DefaultView.Sort = "FromDocTypeText";
-          efpRefStat.Control.DataSource = StatTable;
+          statTable.DefaultView.Sort = "FromDocTypeText";
+          efpRefStat.Control.DataSource = statTable;
         }
         finally
         {
@@ -440,8 +440,7 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowException(e, "Ошибка построения списка ссылок");
       }
 
-
-      efpRefStat.Selection = OldSelStat;
+      efpRefStat.Selection = oldSelStat;
     }
 
     void efpRefStat_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
@@ -450,26 +449,26 @@ namespace FreeLibSet.Forms.Docs
       {
         if (args.DataRow == null)
           return;
-        string DocTypeName = DataTools.GetString(args.DataRow, "FromDocTypeName");
+        string docTypeName = DataTools.GetString(args.DataRow, "FromDocTypeName");
 
-        string ImageKey = null;
-        DocTypeUI dtui = UI.DocTypes[DocTypeName];
+        string imageKey = null;
+        DocTypeUI dtui = UI.DocTypes[docTypeName];
         if (dtui != null)
-          ImageKey = dtui.ImageKey;
-        if (String.IsNullOrEmpty(ImageKey))
+          imageKey = dtui.ImageKey;
+        if (String.IsNullOrEmpty(imageKey))
           args.Value = EFPApp.MainImages.Images["Table"];
         else
-          args.Value = EFPApp.MainImages.Images[ImageKey];
+          args.Value = EFPApp.MainImages.Images[imageKey];
       }
     }
 
     void grRefStat_CurrentCellChanged(object sender, EventArgs args)
     {
-      DBxDocType NewDocType = GetCurrFromDocType();
-      if (NewDocType == _CurrFromDocType)
+      DBxDocType newDocType = GetCurrFromDocType();
+      if (newDocType == _CurrFromDocType)
         return;
 
-      _CurrFromDocType = NewDocType;
+      _CurrFromDocType = newDocType;
       InitRefDetTable();
     }
 
@@ -510,8 +509,8 @@ namespace FreeLibSet.Forms.Docs
         return null;
       else
       {
-        string DocTypeName = DataTools.GetString(efpRefStat.CurrentDataRow, "FromDocTypeName");
-        return UI.DocProvider.DocTypes[DocTypeName];
+        string docTypeName = DataTools.GetString(efpRefStat.CurrentDataRow, "FromDocTypeName");
+        return UI.DocProvider.DocTypes[docTypeName];
       }
     }
 
@@ -542,30 +541,30 @@ namespace FreeLibSet.Forms.Docs
       if (args.DataRow == null)
         return;
 
-      Int32 FromDocTableId = DataTools.GetInt(args.DataRow, "FromDocTableId");
-      string FromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(FromDocTableId);
-      Int32 FromDocId = DataTools.GetInt(args.DataRow, "FromDocId");
+      Int32 fromDocTableId = DataTools.GetInt(args.DataRow, "FromDocTableId");
+      string fromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(fromDocTableId);
+      Int32 fromDocId = DataTools.GetInt(args.DataRow, "FromDocId");
       switch (args.ColumnIndex)
       {
         case 0:
           switch (args.Reason)
           {
             case EFPDataGridViewAttributesReason.View:
-              string ImageKey;
+              string imageKey;
               if (DataTools.GetBool(args.DataRow, "IsSameDoc"))
-                ImageKey = "DocSelfRef";
+                imageKey = "DocSelfRef";
               else
-                ImageKey = UI.ImageHandlers.GetImageKey(FromDocTypeName, FromDocId);
-              args.Value = EFPApp.MainImages.Images[ImageKey];
+                imageKey = UI.ImageHandlers.GetImageKey(fromDocTypeName, fromDocId);
+              args.Value = EFPApp.MainImages.Images[imageKey];
               break;
             case EFPDataGridViewAttributesReason.ToolTip:
-              args.ToolTipText = UI.ImageHandlers.GetToolTipText(FromDocTypeName, FromDocId);
+              args.ToolTipText = UI.ImageHandlers.GetToolTipText(fromDocTypeName, fromDocId);
               break;
           }
           break;
 
         case 1:
-          string s = UI.TextHandlers.GetTextValue(FromDocTypeName, FromDocId);
+          string s = UI.TextHandlers.GetTextValue(fromDocTypeName, fromDocId);
           if (DataTools.GetBool(args.DataRow, "IsSameDoc"))
             s += " (ссылается сам на себя)";
           args.Value = s;
@@ -582,10 +581,10 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      Int32 FromDocTableId = DataTools.GetInt(rows[0], "FromDocTableId");
-      string FromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(FromDocTableId);
-      Int32[] FromDocIds = DataTools.GetIdsFromColumn(rows, "FromDocId");
-      UI.DocTypes[FromDocTypeName].PerformEditing(FromDocIds, efpRefDet.State, false);
+      Int32 fromDocTableId = DataTools.GetInt(rows[0], "FromDocTableId");
+      string fromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(fromDocTableId);
+      Int32[] fromDocIds = DataTools.GetIdsFromColumn(rows, "FromDocId");
+      UI.DocTypes[fromDocTypeName].PerformEditing(fromDocIds, efpRefDet.State, false);
     }
 
     void efpRefDet_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
@@ -598,10 +597,10 @@ namespace FreeLibSet.Forms.Docs
       if (!efpRefDet.CheckSingleRow())
         return;
 
-      Int32 FromDocTableId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocTableId");
-      string FromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(FromDocTableId);
-      Int32 FromDocId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocId");
-      _Report.ShowSingleRef(FromDocTypeName, FromDocId);
+      Int32 fromDocTableId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocTableId");
+      string fromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(fromDocTableId);
+      Int32 fromDocId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocId");
+      _Report.ShowSingleRef(fromDocTypeName, fromDocId);
     }
 
     void ciShowDocInfo_Click(object sender, EventArgs args)
@@ -609,16 +608,15 @@ namespace FreeLibSet.Forms.Docs
       if (!efpRefDet.CheckSingleRow())
         return;
 
-      Int32 FromDocTableId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocTableId");
+      Int32 fromDocTableId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocTableId");
       //string FromDocTypeName = UI.DocProvider.DocTypes.GetTableNameById(FromDocTableId);
-      Int32 FromDocId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocId");
-      UI.DocTypes.FindByTableId(FromDocTableId).ShowDocInfo(FromDocId);
+      Int32 fromDocId = DataTools.GetInt(efpRefDet.CurrentDataRow, "FromDocId");
+      UI.DocTypes.FindByTableId(fromDocTableId).ShowDocInfo(fromDocId);
     }
 
     #endregion
 
     #endregion
-
   }
 
   /// <summary>
@@ -692,10 +690,10 @@ namespace FreeLibSet.Forms.Docs
     public DocInfoReport(DocTypeUI docTypeUI, Int32 docId)
       : this(docTypeUI.UI)
     {
-      DocInfoReportParams Params = new DocInfoReportParams(docTypeUI.UI);
-      Params.DocTypeName = docTypeUI.DocType.Name;
-      Params.DocId = docId;
-      base.ReportParams = Params;
+      DocInfoReportParams reportParams = new DocInfoReportParams(docTypeUI.UI);
+      reportParams.DocTypeName = docTypeUI.DocType.Name;
+      reportParams.DocId = docId;
+      base.ReportParams = reportParams;
     }
 
     /// <summary>
@@ -769,10 +767,10 @@ namespace FreeLibSet.Forms.Docs
       {
         _ReportForm.efpDocText.Text = UI.TextHandlers.GetTextValue(Params.DocTypeName, Params.DocId);
 
-        string ImageKey = Params.DocTypeUI.GetImageKey(Params.DocId);
-        if (String.IsNullOrEmpty(ImageKey))
-          ImageKey = "Item";
-        _ReportForm.DocImageLabel.Image = EFPApp.MainImages.Images[ImageKey];
+        string imageKey = Params.DocTypeUI.GetImageKey(Params.DocId);
+        if (String.IsNullOrEmpty(imageKey))
+          imageKey = "Item";
+        _ReportForm.DocImageLabel.Image = EFPApp.MainImages.Images[imageKey];
       }
       catch (Exception e)
       {
@@ -782,22 +780,22 @@ namespace FreeLibSet.Forms.Docs
       //Form.efpStatus.Text = DataTools.GetString(DstData[0]);
 
       //NamedValues DocVals = UI.DocProvider.GetServiceValues(Params.DocTypeName, Params.DocId);
-      DBxDocServiceInfo Info = UI.DocProvider.GetDocServiceInfo(Params.DocTypeName, Params.DocId, false);
+      DBxDocServiceInfo info = UI.DocProvider.GetDocServiceInfo(Params.DocTypeName, Params.DocId, false);
 
       if (UI.DocProvider.DocTypes.UseDeleted)
-        _ReportForm.efpStatus.Text = Info.Deleted ? "Удален" : "Действует";
+        _ReportForm.efpStatus.Text = info.Deleted ? "Удален" : "Действует";
       else
         _ReportForm.efpStatus.Visible = false;
 
       if (UI.DocProvider.DocTypes.UseVersions)
-        _ReportForm.efpVersion.Text = Info.Version.ToString();
+        _ReportForm.efpVersion.Text = info.Version.ToString();
       else
         _ReportForm.efpVersion.Visible = false;
 
       if (UI.DocProvider.DocTypes.UseTime)
       {
-        _ReportForm.efpCreateTime.Text = MyTimeText(Info.CreateTime);
-        _ReportForm.efpChangeTime.Text = MyTimeText(Info.ChangeTime);
+        _ReportForm.efpCreateTime.Text = MyTimeText(info.CreateTime);
+        _ReportForm.efpChangeTime.Text = MyTimeText(info.ChangeTime);
       }
       else
       {
@@ -806,8 +804,8 @@ namespace FreeLibSet.Forms.Docs
       }
       if (UI.DocProvider.DocTypes.UseUsers)
       {
-        _ReportForm.efpCreateUser.Text = MyUserText(UI, Info.CreateUserId);
-        _ReportForm.efpChangeUser.Text = MyUserText(UI, Info.ChangeUserId);
+        _ReportForm.efpCreateUser.Text = MyUserText(UI, info.CreateUserId);
+        _ReportForm.efpChangeUser.Text = MyUserText(UI, info.ChangeUserId);
       }
       else
       {
@@ -867,31 +865,31 @@ namespace FreeLibSet.Forms.Docs
       if (base.Pages.FindAndActivate("AllPossibleRefs"))
         return;
 
-      EFPReportGridPage RefInfoPage = new EFPReportGridPage();
-      RefInfoPage.Title = "Схема";
-      RefInfoPage.ToolTipText = "Возможные ссылки на документы \"" + Params.DocTypeUI.DocType.PluralTitle + "\"";
-      RefInfoPage.ImageKey = "DocRefSchema";
-      RefInfoPage.InitGrid += new EventHandler(RefInfoPage_InitGrid);
-      RefInfoPage.ExtraPageKey = "AllPossibleRefs";
-      Pages.Add(RefInfoPage);
+      EFPReportGridPage refInfoPage = new EFPReportGridPage();
+      refInfoPage.Title = "Схема";
+      refInfoPage.ToolTipText = "Возможные ссылки на документы \"" + Params.DocTypeUI.DocType.PluralTitle + "\"";
+      refInfoPage.ImageKey = "DocRefSchema";
+      refInfoPage.InitGrid += new EventHandler(RefInfoPage_InitGrid);
+      refInfoPage.ExtraPageKey = "AllPossibleRefs";
+      Pages.Add(refInfoPage);
     }
 
     void RefInfoPage_InitGrid(object sender, EventArgs args)
     {
-      EFPReportGridPage RefInfoPage = (EFPReportGridPage)sender;
-      RefInfoPage.ControlProvider.Control.AutoGenerateColumns = false;
-      RefInfoPage.ControlProvider.Columns.AddImage("FromImage");
-      RefInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = "Значок вида документа / поддокумента, в котором есть ссылочное поле";
-      RefInfoPage.ControlProvider.Columns.AddTextFill("FromDoc", false, "Ссылающийся документ", 100, 10);
-      RefInfoPage.ControlProvider.Columns.AddText("FromColumn", false, "Ссылочное поле", 20, 10);
-      RefInfoPage.ControlProvider.Columns.AddImage("ToImage");
-      RefInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = "Значок вида документа / поддокумента, на который выполняется ссылка";
-      RefInfoPage.ControlProvider.Columns.AddText("ToSubDocType", false, "Ссылка на", 20, 10);
-      RefInfoPage.ControlProvider.DisableOrdering();
-      RefInfoPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ghRefInfo_GetCellAttributes);
-      RefInfoPage.ControlProvider.ReadOnly = true;
-      RefInfoPage.ControlProvider.CanView = false;
-      RefInfoPage.ControlProvider.Control.RowCount = Params.DocTypeUI.ToDocTypeRefs.Length;
+      EFPReportGridPage refInfoPage = (EFPReportGridPage)sender;
+      refInfoPage.ControlProvider.Control.AutoGenerateColumns = false;
+      refInfoPage.ControlProvider.Columns.AddImage("FromImage");
+      refInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = "Значок вида документа / поддокумента, в котором есть ссылочное поле";
+      refInfoPage.ControlProvider.Columns.AddTextFill("FromDoc", false, "Ссылающийся документ", 100, 10);
+      refInfoPage.ControlProvider.Columns.AddText("FromColumn", false, "Ссылочное поле", 20, 10);
+      refInfoPage.ControlProvider.Columns.AddImage("ToImage");
+      refInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = "Значок вида документа / поддокумента, на который выполняется ссылка";
+      refInfoPage.ControlProvider.Columns.AddText("ToSubDocType", false, "Ссылка на", 20, 10);
+      refInfoPage.ControlProvider.DisableOrdering();
+      refInfoPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ghRefInfo_GetCellAttributes);
+      refInfoPage.ControlProvider.ReadOnly = true;
+      refInfoPage.ControlProvider.CanView = false;
+      refInfoPage.ControlProvider.Control.RowCount = Params.DocTypeUI.ToDocTypeRefs.Length;
     }
 
     void ghRefInfo_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
@@ -899,52 +897,52 @@ namespace FreeLibSet.Forms.Docs
       if (args.RowIndex < 0)
         return;
       DBxDocTypeRefInfo[] a = UI.DocProvider.DocTypes.GetToDocTypeRefs(Params.DocTypeName);
-      DBxDocTypeRefInfo Info = a[args.RowIndex];
+      DBxDocTypeRefInfo info = a[args.RowIndex];
 
-      DocTypeUI FromDocTypeUI;
+      DocTypeUI fromDocTypeUI;
       string s;
 
       switch (args.ColumnIndex)
       {
         case 0: // Значок
-          FromDocTypeUI = UI.DocTypes[Info.FromDocType.Name];
-          if (Info.FromSubDocType == null)
-            args.Value = EFPApp.MainImages.Images[FromDocTypeUI.ImageKey];
+          fromDocTypeUI = UI.DocTypes[info.FromDocType.Name];
+          if (info.FromSubDocType == null)
+            args.Value = EFPApp.MainImages.Images[fromDocTypeUI.ImageKey];
           else
-            args.Value = EFPApp.MainImages.Images[FromDocTypeUI.SubDocTypes[Info.FromSubDocType.Name].ImageKey];
+            args.Value = EFPApp.MainImages.Images[fromDocTypeUI.SubDocTypes[info.FromSubDocType.Name].ImageKey];
           break;
         case 1: // Ссылающийся документ
-          s = Info.FromDocType.PluralTitle;
-          if (Info.FromSubDocType != null)
+          s = info.FromDocType.PluralTitle;
+          if (info.FromSubDocType != null)
           {
-            s += " / " + Info.FromSubDocType.PluralTitle;
+            s += " / " + info.FromSubDocType.PluralTitle;
             args.IndentLevel = 1;
           }
           args.Value = s;
           break;
         case 2: // Ссылочное поле
-          switch (Info.RefType)
+          switch (info.RefType)
           {
             case DBxDocTypeRefType.Column:
-              args.Value = Info.FromColumn.ColumnName;
+              args.Value = info.FromColumn.ColumnName;
               break;
             case DBxDocTypeRefType.VTRefernce:
-              args.Value = "VT:" + Info.FromVTReference.Name;
+              args.Value = "VT:" + info.FromVTReference.Name;
               break;
           }
           break;
         case 3:
-          if (Info.ToSubDocType == null)
+          if (info.ToSubDocType == null)
             args.Value = EFPApp.MainImages.Images[Params.DocTypeUI.ImageKey];
           else
-            args.Value = EFPApp.MainImages.Images[Params.DocTypeUI.SubDocTypes[Info.ToSubDocType.Name].ImageKey];
+            args.Value = EFPApp.MainImages.Images[Params.DocTypeUI.SubDocTypes[info.ToSubDocType.Name].ImageKey];
           break;
 
         case 4: // Ссылка на поддокумент
-          if (Info.ToSubDocType == null)
+          if (info.ToSubDocType == null)
             args.Value = "[на документ]";
           else
-            args.Value = Info.ToSubDocType.SingularTitle;
+            args.Value = info.ToSubDocType.SingularTitle;
           break;
       }
     }
@@ -955,47 +953,47 @@ namespace FreeLibSet.Forms.Docs
 
     public void ShowSingleRef(string fromDocTypeName, Int32 fromDocId)
     {
-      string ExtraPageKey = fromDocTypeName + ":" + fromDocId.ToString();
-      if (base.Pages.FindAndActivate(ExtraPageKey))
+      string extraPageKey = fromDocTypeName + ":" + fromDocId.ToString();
+      if (base.Pages.FindAndActivate(extraPageKey))
         return;
 
-      DocTypeUI FromDTUI = UI.DocTypes[fromDocTypeName];
+      DocTypeUI fromDTUI = UI.DocTypes[fromDocTypeName];
 
-      EFPReportDBxGridPage SingleRefPage = new EFPReportDBxGridPage(UI);
-      SingleRefPage.Title = fromDocId.ToString();
-      if (FromDTUI == Params.DocTypeUI && fromDocId == Params.DocId)
-        SingleRefPage.ImageKey = "DocSelfRef";
+      EFPReportDBxGridPage singleRefPage = new EFPReportDBxGridPage(UI);
+      singleRefPage.Title = fromDocId.ToString();
+      if (fromDTUI == Params.DocTypeUI && fromDocId == Params.DocId)
+        singleRefPage.ImageKey = "DocSelfRef";
       else
-        SingleRefPage.ImageKey = FromDTUI.GetImageKey(fromDocId);
-      SingleRefPage.ToolTipText = FromDTUI.DocType.SingularTitle + " Id=" + fromDocId.ToString() +
-        " (" + FromDTUI.GetTextValue(fromDocId) + ")";
-      SingleRefPage.ExtraPageKey = ExtraPageKey;
-      SingleRefPage.FilterInfo.Add("Ссылки из документа", SingleRefPage.ToolTipText);
+        singleRefPage.ImageKey = fromDTUI.GetImageKey(fromDocId);
+      singleRefPage.ToolTipText = fromDTUI.DocType.SingularTitle + " Id=" + fromDocId.ToString() +
+        " (" + fromDTUI.GetTextValue(fromDocId) + ")";
+      singleRefPage.ExtraPageKey = extraPageKey;
+      singleRefPage.FilterInfo.Add("Ссылки из документа", singleRefPage.ToolTipText);
       if (EFPApp.ShowListImages)
-        SingleRefPage.FilterInfo.LastAdded.ImageKey = FromDTUI.GetImageKey(fromDocId);
-      SingleRefPage.InitGrid += new EventHandler(SingleRefPage_InitGrid);
-      SingleRefPage.ShowToolBar = true;
-      base.Pages.Add(SingleRefPage);
+        singleRefPage.FilterInfo.LastAdded.ImageKey = fromDTUI.GetImageKey(fromDocId);
+      singleRefPage.InitGrid += new EventHandler(SingleRefPage_InitGrid);
+      singleRefPage.ShowToolBar = true;
+      base.Pages.Add(singleRefPage);
 
-      SingleRefPage.DataSource = UI.DocProvider.GetDocRefTable(Params.DocTypeName, Params.DocId, true, false,
+      singleRefPage.DataSource = UI.DocProvider.GetDocRefTable(Params.DocTypeName, Params.DocId, true, false,
         fromDocTypeName, fromDocId).DefaultView;
     }
 
     void SingleRefPage_InitGrid(object sender, EventArgs args)
     {
-      EFPReportDBxGridPage SingleRefPage = (EFPReportDBxGridPage)sender;
-      SingleRefPage.ControlProvider.Control.AutoGenerateColumns = false;
-      SingleRefPage.ControlProvider.Columns.AddImage("FromImage");
-      SingleRefPage.ControlProvider.Columns.AddTextFill("FromText", false, "Ссылка из", 50, 20);
-      SingleRefPage.ControlProvider.Columns.AddText("FromColumnName", true, "Ссылочное поле", 15, 10);
-      SingleRefPage.ControlProvider.Columns.AddImage("ToImage");
-      SingleRefPage.ControlProvider.Columns.AddTextFill("ToText", false, "Ссылка на", 50, 20);
-      SingleRefPage.ControlProvider.DisableOrdering();
-      SingleRefPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(SingleRefPage_GetCellAttributes);
+      EFPReportDBxGridPage singleRefPage = (EFPReportDBxGridPage)sender;
+      singleRefPage.ControlProvider.Control.AutoGenerateColumns = false;
+      singleRefPage.ControlProvider.Columns.AddImage("FromImage");
+      singleRefPage.ControlProvider.Columns.AddTextFill("FromText", false, "Ссылка из", 50, 20);
+      singleRefPage.ControlProvider.Columns.AddText("FromColumnName", true, "Ссылочное поле", 15, 10);
+      singleRefPage.ControlProvider.Columns.AddImage("ToImage");
+      singleRefPage.ControlProvider.Columns.AddTextFill("ToText", false, "Ссылка на", 50, 20);
+      singleRefPage.ControlProvider.DisableOrdering();
+      singleRefPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(SingleRefPage_GetCellAttributes);
 
-      SingleRefPage.ControlProvider.ReadOnly = true;
-      SingleRefPage.ControlProvider.CanView = false;
-      SingleRefPage.ControlProvider.Control.ReadOnly = true;
+      singleRefPage.ControlProvider.ReadOnly = true;
+      singleRefPage.ControlProvider.CanView = false;
+      singleRefPage.ControlProvider.Control.ReadOnly = true;
       //SingleRefPage.ControlProvider.Control.MultiSelect = true;
       // бессмысленно SingleRefPage.ControlProvider.EditData += new EventHandler(SingleRefPage_EditData);
       //бессмысленно SingleRefPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(SingleRefPage_GetDocSel);
@@ -1045,8 +1043,8 @@ namespace FreeLibSet.Forms.Docs
       if (deleted)
         return "Cancel";
 
-      string DocTypeName = UI.DocProvider.DocTypes.GetTableNameById(docTableId);
-      DocTypeUI dtui = UI.DocTypes[DocTypeName];
+      string docTypeName = UI.DocProvider.DocTypes.GetTableNameById(docTableId);
+      DocTypeUI dtui = UI.DocTypes[docTypeName];
       if (String.IsNullOrEmpty(subDocTypeName))
         return dtui.GetImageKey(docId);
       else
@@ -1058,8 +1056,8 @@ namespace FreeLibSet.Forms.Docs
 
     private string GetSingleRefText(Int32 docTableId, Int32 docId, string subDocTypeName, Int32 subDocId)
     {
-      string DocTypeName = UI.DocProvider.DocTypes.GetTableNameById(docTableId);
-      DocTypeUI dtui = UI.DocTypes[DocTypeName];
+      string docTypeName = UI.DocProvider.DocTypes.GetTableNameById(docTableId);
+      DocTypeUI dtui = UI.DocTypes[docTypeName];
       if (String.IsNullOrEmpty(subDocTypeName))
         return dtui.GetTextValue(docId);
       else
@@ -1092,8 +1090,8 @@ namespace FreeLibSet.Forms.Docs
 
     public static void PerformShow(DocTypeUI docTypeUI, Int32 docId)
     {
-      DocInfoReport Report = new DocInfoReport(docTypeUI, docId);
-      Report.Run();
+      DocInfoReport report = new DocInfoReport(docTypeUI, docId);
+      report.Run();
     }
 
     #endregion

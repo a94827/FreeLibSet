@@ -223,17 +223,17 @@ namespace FreeLibSet.FIAS
       }
 
       bool res = false;
-      bool AOTypeFound = false;
+      bool aoTypeFound = false;
 
       // Может ли тип адресного объекта быть до или после именной части
-      bool AOTypeBeforeName, AOTypeAfterName;
-      FiasTools.GetAOTypePlace(level, out AOTypeBeforeName, out AOTypeAfterName);
+      bool aoTypeBeforeName, aoTypeAfterName;
+      FiasTools.GetAOTypePlace(level, out aoTypeBeforeName, out aoTypeAfterName);
 
       int[] pSpaces = FindSpacePositions(s2);
       // Сколько частей, разделенных пробелами, может быть в типе адресного объекта?
-      int MaxAOTypeParts = Math.Min(pSpaces.Length, Handler.AOTypes.GetMaxSpaceCount(level) + 1);
+      int maxAOTypeParts = Math.Min(pSpaces.Length, Handler.AOTypes.GetMaxSpaceCount(level) + 1);
 
-      if (AOTypeBeforeName)
+      if (aoTypeBeforeName)
       {
         int pDot = s2.IndexOf('.');
         if (pDot >= 0 && (pSpaces.Length == 0 || pDot < pSpaces[0]))
@@ -246,7 +246,7 @@ namespace FreeLibSet.FIAS
           if (IsValidAOType(level, aoType, out fullAOType))
           {
             // Сокращение подходит для уровня
-            AOTypeFound = true;
+            aoTypeFound = true;
             RemoveNumChar(ref nm, level);
             if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
               res = true;
@@ -257,9 +257,9 @@ namespace FreeLibSet.FIAS
       }
 
       // Перебираем варианты, когда идет тип адресного объекта, а потом - наименование ("город Тюмень")
-      if (AOTypeBeforeName)
+      if (aoTypeBeforeName)
       {
-        for (int i = 0; i < MaxAOTypeParts; i++)
+        for (int i = 0; i < maxAOTypeParts; i++)
         {
           // Предполагаем, что используется сокращение с пробелом, например, "дом 1"
           string aoType = s2.Substring(0, pSpaces[i]);
@@ -268,7 +268,7 @@ namespace FreeLibSet.FIAS
           if (IsValidAOType(level, aoType, out fullAOType))
           {
             // Сокращение подходит для уровня
-            AOTypeFound = true;
+            aoTypeFound = true;
             RemoveNumChar(ref nm, level);
             if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
               res = true;
@@ -279,9 +279,9 @@ namespace FreeLibSet.FIAS
       }
 
       // Перебираем варианты, когда идет наименование, а потом - тип адресного объекта ("Тюменский район")
-      if (AOTypeAfterName)
+      if (aoTypeAfterName)
       {
-        for (int i = 0; i < MaxAOTypeParts; i++)
+        for (int i = 0; i < maxAOTypeParts; i++)
         {
           // Предполагаем, что используется сокращение с пробелом, например, "дом 1"
           string nm = s2.Substring(0, pSpaces[pSpaces.Length - i - 1]);
@@ -290,7 +290,7 @@ namespace FreeLibSet.FIAS
           if (IsValidAOType(level, aoType, out fullAOType))
           {
             // Сокращение подходит для уровня
-            AOTypeFound = true;
+            aoTypeFound = true;
             RemoveNumChar(ref nm, level);
             if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
               res = true;
@@ -298,7 +298,7 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      if ((!AOTypeFound) ||
+      if ((!aoTypeFound) ||
         level == FiasLevel.Region) // В ФИАСе с лета 2020 года заданы наименования регионов "Тюменская область"
       {
         // Предполагаем номер дома без сокращения, например, "1"
@@ -462,12 +462,12 @@ namespace FreeLibSet.FIAS
 
       // Ищем промежуточные разделители
       // Лучше в обратном порядке
-      bool CharSepFound = false;
+      bool charSepFound = false;
       for (int p = s.Length - 2; p >= 1; p--)
       {
         if (s[p] == '-' || s[p] == '/' || s[p] == '\\')
         {
-          CharSepFound = true;
+          charSepFound = true;
           string leftPart = s.Substring(0, p);
           string rightPart = s.Substring(p + 1);
           if (FiasTools.IsValidName(leftPart, level))
@@ -486,7 +486,7 @@ namespace FreeLibSet.FIAS
       }
 
       // Ищем переходы Буква<-->Цифра
-      if (!CharSepFound)
+      if (!charSepFound)
       {
         switch (level)
         {
@@ -496,22 +496,22 @@ namespace FreeLibSet.FIAS
             // Только для уровней, после которых может быть продолжение.
             // Например, дом "1а" - дом 1, литер А
             // Но только, если есть единственный такой переход
-            int TransPos = -1;
-            int TransCount = 0;
+            int transPos = -1;
+            int transCount = 0;
             for (int i = 1; i < s.Length; i++)
             {
               if ((Char.IsDigit(s[i - 1]) && Char.IsLetter(s[i])) ||
                 (Char.IsLetter(s[i - 1]) && Char.IsDigit(s[i])))
               {
-                TransCount++;
-                TransPos = i;
+                transCount++;
+                transPos = i;
               }
             }
 
-            if (TransCount == 1)
+            if (transCount == 1)
             {
-              string leftPart = s.Substring(0, TransPos);
-              string rightPart = s.Substring(TransPos);
+              string leftPart = s.Substring(0, transPos);
+              string rightPart = s.Substring(transPos);
               if (FiasTools.IsValidName(leftPart, level))
               {
                 address.ClearStartingWith(level);
@@ -623,22 +623,22 @@ namespace FreeLibSet.FIAS
       if (!Char.IsLetter(s[0]))
         return false;
 
-      int DigitStart = -1;
-      bool MoreDigitGroups = false;
-      int NextLetterStart = -1;
+      int digitStart = -1;
+      bool moreDigitGroups = false;
+      int nextLetterStart = -1;
       for (int i = 1; i < s.Length; i++)
       {
         if (Char.IsDigit(s[i]))
         {
-          if (DigitStart < 0)
-            DigitStart = i;
+          if (digitStart < 0)
+            digitStart = i;
           else if (!Char.IsDigit(s[i - 1]))
-            MoreDigitGroups = true; // Есть другие числовые группы
+            moreDigitGroups = true; // Есть другие числовые группы
         }
         else if (Char.IsLetter(s[i]))
         {
-          if (NextLetterStart < 0 && Char.IsDigit(s[i - 1]))
-            NextLetterStart = i;
+          if (nextLetterStart < 0 && Char.IsDigit(s[i - 1]))
+            nextLetterStart = i;
         }
         else
         {
@@ -647,27 +647,27 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      if (DigitStart < 0)
+      if (digitStart < 0)
         return false; // текст состоит только из букв, например "дом"
 
-      if (NextLetterStart >= 0)
+      if (nextLetterStart >= 0)
       {
 #if DEBUG
-        if (NextLetterStart < 2)
-          throw new BugException("NextLetterStart=" + NextLetterStart.ToString());
+        if (nextLetterStart < 2)
+          throw new BugException("NextLetterStart=" + nextLetterStart.ToString());
 #endif
-        if (MoreDigitGroups)
+        if (moreDigitGroups)
         {
           // Если есть несколько цифровых групп, например, "дом1стр2", то "стр2" распознаем на следующем такте
-          sOthers = s.Substring(NextLetterStart) + sOthers;
-          s = s.Substring(0, NextLetterStart);
+          sOthers = s.Substring(nextLetterStart) + sOthers;
+          s = s.Substring(0, nextLetterStart);
         }
         // а иначе - это часть текущего уровня, например, "дом1а"
       }
 
 
-      string aoType = s.Substring(0, DigitStart);
-      string nm = s.Substring(DigitStart);
+      string aoType = s.Substring(0, digitStart);
+      string nm = s.Substring(digitStart);
       string fullAOType;
       if (IsValidAOType(level, aoType, out fullAOType) &&
         FiasTools.IsValidName(nm, level)) // это - фиктивное условие, тут все равно только цифры (и, может быть, буквы в конце)

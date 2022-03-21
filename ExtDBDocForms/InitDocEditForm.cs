@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms.Docs
     /// Значок, который по умолчанию задается для первой добавляемой вкладки (DocEditPage.ImageKey).
     /// Возвращает значение DocTypeUIBase.SingleDocImageKey.
     /// </summary>
-    public abstract string MainImageKey { get;}
+    public abstract string MainImageKey { get; }
 
     #endregion
 
@@ -834,7 +834,7 @@ namespace FreeLibSet.Forms.Docs
     /// Свойство возвращает true, если редактор документа или поддокумента
     /// находится в режиме просмотра данных
     /// </summary>
-    public abstract bool IsReadOnly { get;}
+    public abstract bool IsReadOnly { get; }
 
     /// <summary>
     /// Генерирует ObjectReadOnlyException, если IsReadOnly=true
@@ -941,15 +941,15 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Объект для управления вкладкой</returns>
     public DocEditPage AddSubDocsPage(string subDocTableName, out EFPSubDocGridView controlProvider)
     {
-      Panel Panel = new Panel();
+      Panel panel = new Panel();
 
       SubDocTypeUI sdtUI = DocTypeUI.SubDocTypes[subDocTableName];
-      DocEditPage Page = AddPage(sdtUI.SubDocType.PluralTitle, Panel);
-      Page.ImageKey = sdtUI.TableImageKey;
-      EFPControlWithToolBar<DataGridView> cwt = new EFPControlWithToolBar<DataGridView>(Page.BaseProvider, Panel);
+      DocEditPage page = AddPage(sdtUI.SubDocType.PluralTitle, panel);
+      page.ImageKey = sdtUI.TableImageKey;
+      EFPControlWithToolBar<DataGridView> cwt = new EFPControlWithToolBar<DataGridView>(page.BaseProvider, panel);
 
       controlProvider = new EFPSubDocGridView(cwt, _Editor, _MultiDocs.SubDocs[subDocTableName]);
-      return Page;
+      return page;
     }
 
     /// <summary>
@@ -961,8 +961,8 @@ namespace FreeLibSet.Forms.Docs
     public DocEditPage AddSubDocsTreePage(string subDocTableName)
     {
       // TODO: Переделать с использованием отложенной инициализации
-      EFPSubDocTreeView ControlProvider;
-      return AddSubDocsTreePage(subDocTableName, out ControlProvider);
+      EFPSubDocTreeView controlProvider;
+      return AddSubDocsTreePage(subDocTableName, out controlProvider);
     }
 
     /// <summary>
@@ -973,14 +973,14 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Объект для управления вкладкой</returns>
     public DocEditPage AddSubDocsTreePage(string subDocTableName, out EFPSubDocTreeView controlProvider)
     {
-      Panel Panel = new Panel();
+      Panel panel = new Panel();
 
       SubDocTypeUI sdtUI = DocTypeUI.SubDocTypes[subDocTableName];
-      DocEditPage Page = AddPage(sdtUI.SubDocType.PluralTitle, Panel);
-      EFPControlWithToolBar<TreeViewAdv> cwt = new EFPControlWithToolBar<TreeViewAdv>(Page.BaseProvider, Panel);
+      DocEditPage page = AddPage(sdtUI.SubDocType.PluralTitle, panel);
+      EFPControlWithToolBar<TreeViewAdv> cwt = new EFPControlWithToolBar<TreeViewAdv>(page.BaseProvider, panel);
 
       controlProvider = new EFPSubDocTreeView(cwt, _Editor, _MultiDocs.SubDocs[subDocTableName]);
-      return Page;
+      return page;
     }
 
 

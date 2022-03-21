@@ -452,10 +452,10 @@ namespace FreeLibSet.FIAS
 
     private static FiasParsedFormatString TryParse2(ParsingData pd)
     {
-      Token CurrSepToken = null;
+      Token currSepToken = null;
       FiasParsedFormatString res = new FiasParsedFormatString();
-      FiasParsedFormatString.FormatItem CurrItem = new FiasParsedFormatString.FormatItem();
-      Token OpenBracesToken = null;
+      FiasParsedFormatString.FormatItem currItem = new FiasParsedFormatString.FormatItem();
+      Token openBracesToken = null;
 
       for (int i = 0; i < pd.Tokens.Count; i++)
       {
@@ -466,42 +466,42 @@ namespace FreeLibSet.FIAS
             continue;
 
           case "{":
-            if (OpenBracesToken != null)
+            if (openBracesToken != null)
             {
               token.SetError("Вложенные фигурные скобки не допускаются");
               return null;
             }
-            OpenBracesToken = token;
-            CurrItem = new FiasParsedFormatString.FormatItem();
+            openBracesToken = token;
+            currItem = new FiasParsedFormatString.FormatItem();
             break;
 
           case "}":
-            if (OpenBracesToken == null)
+            if (openBracesToken == null)
             {
               token.SetError("Не было открывающей скобки");
               return null;
             }
-            OpenBracesToken = null;
-            if (CurrItem.ItemType == 0)
+            openBracesToken = null;
+            if (currItem.ItemType == 0)
             {
-              if (CurrItem.Suffix != null)
+              if (currItem.Suffix != null)
               {
                 token.SetError("Внутренняя ошибка. Есть суффикс, но нет типа компонента");
                 return null;
               }
-              if (CurrItem.Prefix == null)
+              if (currItem.Prefix == null)
               {
                 token.SetError("Пустой компонент");
                 return null;
               }
-              CurrItem.ItemType = TypeFormConst;
+              currItem.ItemType = TypeFormConst;
             }
-            if (CurrSepToken != null)
+            if (currSepToken != null)
             {
-              CurrItem.Separator = CurrSepToken.AuxData.ToString();
-              CurrSepToken = null;
+              currItem.Separator = currSepToken.AuxData.ToString();
+              currSepToken = null;
             }
-            res.Items.Add(CurrItem);
+            res.Items.Add(currItem);
             break;
 
           case "Type":
@@ -513,71 +513,70 @@ namespace FreeLibSet.FIAS
                 token.SetError("Внутренняя ошибка. Тип компонента имеет нулевую длину");
               else if (sType[0] == '.' || sType[sType.Length - 1] == '.')
                 token.SetError("Тип компонента не может начинаться или заканчиваться на точку");
-              else if (sType.IndexOf("..",StringComparison.Ordinal) >= 0)
+              else if (sType.IndexOf("..", StringComparison.Ordinal) >= 0)
                 token.SetError("В типе компонента не могут быть две точки подряд");
               else
                 token.SetError("Неизвестный тип компонента \"" + sType + "\"");
               return null;
             }
-            if (OpenBracesToken != null)
+            if (openBracesToken != null)
             {
-              if (CurrItem.ItemType != 0)
+              if (currItem.ItemType != 0)
               {
                 token.SetError("Внутри фигурных скобок может быть только один тип компонента");
                 return null;
               }
 
-
-              CurrItem.ItemType = _ComponentTypeValues[pType];
+              currItem.ItemType = _ComponentTypeValues[pType];
             }
             else
             {
               // Одиночный тип вне фигурных скобок
-              CurrItem = new FiasParsedFormatString.FormatItem();
-              CurrItem.ItemType = _ComponentTypeValues[pType];
-              if (CurrSepToken != null)
+              currItem = new FiasParsedFormatString.FormatItem();
+              currItem.ItemType = _ComponentTypeValues[pType];
+              if (currSepToken != null)
               {
-                CurrItem.Separator = CurrSepToken.AuxData.ToString();
-                CurrSepToken = null;
+                currItem.Separator = currSepToken.AuxData.ToString();
+                currSepToken = null;
               }
-              res.Items.Add(CurrItem);
+              res.Items.Add(currItem);
             }
             break;
 
           case "String":
-            if (OpenBracesToken == null)
+            if (openBracesToken == null)
             {
               token.SetError("Внутренняя ошибка. Строка вне фигурных скобок");
               return null;
             }
-            if (CurrItem.ItemType == 0)
+            if (currItem.ItemType == 0)
             {
-              if (CurrItem.Prefix != null)
+              if (currItem.Prefix != null)
               {
                 token.SetError("Два префикса подряд не допускаются");
                 return null;
               }
-              CurrItem.Prefix = token.AuxData.ToString();
+              currItem.Prefix = token.AuxData.ToString();
             }
             else
             {
-              if (CurrItem.Suffix != null)
+              if (currItem.Suffix != null)
               {
                 token.SetError("Два суффикса подряд не допускаются");
                 return null;
               }
-              CurrItem.Suffix = token.AuxData.ToString();
+              currItem.Suffix = token.AuxData.ToString();
             }
             break;
 
           case "Sep":
-            if (CurrSepToken != null)
+            if (currSepToken != null)
             {
               token.SetError("Не могут идти два разделителя подряд");
               return null;
             }
-            CurrSepToken = token;
-            if (OpenBracesToken != null)
+            currSepToken = token;
+            if (openBracesToken != null)
             {
               token.SetError("Внутренняя ошибка. Обнаружен разделитель внутри фигурных скобок");
               return null;
@@ -595,15 +594,15 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      if (OpenBracesToken != null)
+      if (openBracesToken != null)
       {
-        OpenBracesToken.SetError("Не найдена парная закрывающая скобка");
+        openBracesToken.SetError("Не найдена парная закрывающая скобка");
         return null;
       }
 
-      if (CurrSepToken != null)
+      if (currSepToken != null)
       {
-        CurrSepToken.SetError("Разделитель не может идти после последнего компонента");
+        currSepToken.SetError("Разделитель не может идти после последнего компонента");
         return null;
       }
 
@@ -657,14 +656,14 @@ namespace FreeLibSet.FIAS
     {
       #region IParser Members
 
-      private static readonly CharArrayIndexer ValidCharIndexer = new CharArrayIndexer("ABCDEFGHIJKLMNOPQRSTUVWXYZ.", false);
+      private static readonly CharArrayIndexer _ValidCharIndexer = new CharArrayIndexer("ABCDEFGHIJKLMNOPQRSTUVWXYZ.", false);
 
       public void Parse(ParsingData data)
       {
         int cnt = 0;
         for (int i = data.CurrPos; i < data.Text.Text.Length; i++)
         {
-          if (ValidCharIndexer.Contains(data.GetChar(i)))
+          if (_ValidCharIndexer.Contains(data.GetChar(i)))
             cnt++;
           else
             break;
@@ -694,10 +693,10 @@ namespace FreeLibSet.FIAS
 
         // Не будем ориентироваться на свойство ParsingData.CurrPos, т.к. будет ли оно обновляться при вызове Tokens.Add(), зависит от реализации.
         // А здесь может потребоваться добавить не одну лексему, а три (Space, Sep, Space)
-        int CurrPos = data.CurrPos;
+        int currPos = data.CurrPos;
 
         int cntSpace1 = 0;
-        for (int i = CurrPos; i < data.Text.Text.Length; i++)
+        for (int i = currPos; i < data.Text.Text.Length; i++)
         {
           if (data.GetChar(i) == ' ')
             cntSpace1++;
@@ -705,13 +704,13 @@ namespace FreeLibSet.FIAS
             break;
         }
 
-        if (data.GetChar(CurrPos + cntSpace1) != '\"')
+        if (data.GetChar(currPos + cntSpace1) != '\"')
           return; // если не кавычка, то это не наше
 
         if (cntSpace1 > 0)
         {
-          data.Tokens.Add(new Token(data, this, "Space", CurrPos, cntSpace1));
-          CurrPos += cntSpace1;
+          data.Tokens.Add(new Token(data, this, "Space", currPos, cntSpace1));
+          currPos += cntSpace1;
         }
 
         #endregion
@@ -719,8 +718,8 @@ namespace FreeLibSet.FIAS
         #region Текст в кавычках
 
         StringBuilder sb = new StringBuilder();
-        bool QuoteFound = false;
-        int nextpos = CurrPos + 1;
+        bool quoteFound = false;
+        int nextpos = currPos + 1;
         while (nextpos < data.Text.Text.Length)
         {
           if (data.GetChar(nextpos) == '\"')
@@ -735,7 +734,7 @@ namespace FreeLibSet.FIAS
             {
               // Конец разделителя
               nextpos++;
-              QuoteFound = true;
+              quoteFound = true;
               break;
             }
           }
@@ -747,12 +746,12 @@ namespace FreeLibSet.FIAS
           }
         }
 
-        Token SepToken = new Token(data, this, "Sep", CurrPos, nextpos - CurrPos, sb.ToString());
-        data.Tokens.Add(SepToken);
-        CurrPos += SepToken.Length;
-        if (!QuoteFound)
+        Token sepToken = new Token(data, this, "Sep", currPos, nextpos - currPos, sb.ToString());
+        data.Tokens.Add(sepToken);
+        currPos += sepToken.Length;
+        if (!quoteFound)
         {
-          SepToken.SetError("Не найдена завершающая кавычка разделителя");
+          sepToken.SetError("Не найдена завершающая кавычка разделителя");
           return;
         }
 
@@ -761,7 +760,7 @@ namespace FreeLibSet.FIAS
         #region Завершающие пробелы
 
         int cntSpace2 = 0;
-        for (int i = CurrPos; i < data.Text.Text.Length; i++)
+        for (int i = currPos; i < data.Text.Text.Length; i++)
         {
           if (data.GetChar(i) == ' ')
             cntSpace2++;
@@ -770,7 +769,7 @@ namespace FreeLibSet.FIAS
         }
 
         if (cntSpace2 > 0)
-          data.Tokens.Add(new Token(data, this, "Space", CurrPos, cntSpace2));
+          data.Tokens.Add(new Token(data, this, "Space", currPos, cntSpace2));
 
         #endregion
       }

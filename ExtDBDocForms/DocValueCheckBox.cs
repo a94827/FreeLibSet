@@ -30,13 +30,13 @@ namespace FreeLibSet.Forms.Docs
     {
       Inverted = false;
 
-      DepInput<bool> CurrentValueInput = new DepInput<bool>(false, null);
-      CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
-      SetCurrentValueEx(CurrentValueInput);
+      DepInput<bool> currentValueInput = new DepInput<bool>(false, null);
+      currentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
+      SetCurrentValueEx(currentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
-      GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
-      base.GrayedEx = GrayedInput;
+      DepInput<bool> grayedInput = new DepInput<bool>(false, null);
+      grayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
+      base.GrayedEx = grayedInput;
 
       controlProvider.CanBeEmpty = docValue.Grayed;
       if (docValue.Grayed)
@@ -155,13 +155,13 @@ namespace FreeLibSet.Forms.Docs
     {
       _ControlProvider2 = controlProvider2;
 
-      DepInput<TValue> CurrentValueInput = new DepInput<TValue>(default(TValue),CurrentValueInput_ValueChanged); // ???
-      CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
-      base.SetCurrentValueEx(CurrentValueInput);
+      DepInput<TValue> currentValueInput = new DepInput<TValue>(default(TValue),CurrentValueInput_ValueChanged); // ???
+      currentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
+      base.SetCurrentValueEx(currentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
-      GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
-      base.GrayedEx = GrayedInput;
+      DepInput<bool> grayedInput = new DepInput<bool>(false, null);
+      grayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
+      base.GrayedEx = grayedInput;
 
       controlProvider1.CanBeEmpty = docValue.Grayed;
 
@@ -282,7 +282,6 @@ namespace FreeLibSet.Forms.Docs
     {
       return !DocValue.IsReadOnly;
     }
-
 
     #endregion
   }

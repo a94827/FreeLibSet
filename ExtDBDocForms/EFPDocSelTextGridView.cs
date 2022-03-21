@@ -428,33 +428,33 @@ namespace FreeLibSet.Forms.Docs
     {
       //base.OnEditData(Args);
 
-      Int32 Id;
+      Int32 id;
       switch (State)
       {
         case EFPDataGridViewState.Insert:
-          Int32[] SelIds = DocTypeUI.SelectDocs("Добавление документов \"" + DocType.PluralTitle + "\" в просмотр", this.Filters);
-          if (SelIds.Length == 0)
+          Int32[] selIds = DocTypeUI.SelectDocs("Добавление документов \"" + DocType.PluralTitle + "\" в просмотр", this.Filters);
+          if (selIds.Length == 0)
             return true;
-          for (int i = 0; i < SelIds.Length; i++)
-            AddId(SelIds[i]);
-          SelectedIds = SelIds;
+          for (int i = 0; i < selIds.Length; i++)
+            AddId(selIds[i]);
+          SelectedIds = selIds;
           break;
         case EFPDataGridViewState.Delete:
-          DataRow[] SelRows = SelectedDataRows;
-          for (int i = 0; i < SelRows.Length; i++)
-            SelRows[i].Delete();
+          DataRow[] selRows = SelectedDataRows;
+          for (int i = 0; i < selRows.Length; i++)
+            selRows[i].Delete();
           Validate(); // 08.07.2019
           break;
         case EFPDataGridViewState.View:
           DocTypeUI.PerformEditing(CurrentId, true);
           break;
         case EFPDataGridViewState.Edit:
-          Id = CurrentId;
-          if (DocTypeUI.SelectDoc(ref Id, "Изменение ссылки на документ", false, this.Filters))
+          id = CurrentId;
+          if (DocTypeUI.SelectDoc(ref id, "Изменение ссылки на документ", false, this.Filters))
           {
             CurrentDataRow.Delete();
-            AddId(Id);
-            CurrentId = Id;
+            AddId(id);
+            CurrentId = id;
             Validate(); // 08.07.2019
           }
           break;
@@ -499,8 +499,8 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args">Аргументы события GetDocSel</param>
     protected override void OnGetDocSel(EFPDBxGridViewDocSelEventArgs args)
     {
-      Int32[] Ids = DataTools.GetIds(args.DataRows);
-      DocTypeUI.PerformGetDocSel(args.DocSel, Ids, args.Reason);
+      Int32[] ids = DataTools.GetIds(args.DataRows);
+      DocTypeUI.PerformGetDocSel(args.DocSel, ids, args.Reason);
 
       base.OnGetDocSel(args); // если есть пользовательский обработчик
     }
@@ -513,9 +513,9 @@ namespace FreeLibSet.Forms.Docs
     {
       if (CommandItems.PerformCopy())
       {
-        DataRow[] SelRows = SelectedDataRows;
-        for (int i = 0; i < SelRows.Length; i++)
-          SelRows[i].Delete();
+        DataRow[] selRows = SelectedDataRows;
+        for (int i = 0; i < selRows.Length; i++)
+          selRows[i].Delete();
         Validate(); // 08.07.2019
       }
     }
@@ -523,16 +523,16 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_Paste(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] Ids = fmtDocSel.DocSel[DocTypeName];
+      Int32[] ids = fmtDocSel.DocSel[DocTypeName];
 
       int cnt = 0;
-      for (int i = 0; i < Ids.Length; i++)
+      for (int i = 0; i < ids.Length; i++)
       {
-        if (AddId(Ids[i]))
+        if (AddId(ids[i]))
           cnt++;
       }
       if (cnt == 0)
-        EFPApp.ShowTempMessage("Все документы \"" + DocType.PluralTitle + "\" в буфере обмена (" + Ids.Length.ToString() + " шт.) уже есть в списке");
+        EFPApp.ShowTempMessage("Все документы \"" + DocType.PluralTitle + "\" в буфере обмена (" + ids.Length.ToString() + " шт.) уже есть в списке");
     }
 
     #endregion
@@ -588,23 +588,23 @@ namespace FreeLibSet.Forms.Docs
         if (!dataSet.Tables.Contains(Owner.DocType.Name))
           return; // Нет таблицы
 
-        DataTable SrcTable = dataSet.Tables[Owner.DocType.Name];
-        DataRow ResRow;
-        Int32 DocId;
-        bool Changed = false;
+        DataTable srcTable = dataSet.Tables[Owner.DocType.Name];
+        DataRow resRow;
+        Int32 docId;
+        bool changed = false;
 
-        foreach (DataRow SrcRow in SrcTable.Rows)
+        foreach (DataRow srcRow in srcTable.Rows)
         {
-          switch (SrcRow.RowState)
+          switch (srcRow.RowState)
           {
             case DataRowState.Modified:
             case DataRowState.Deleted:
-              DocId = (Int32)(SrcRow["Id"]);
-              ResRow = Owner._Table.Rows.Find(DocId);
-              if (ResRow == null)
+              docId = (Int32)(srcRow["Id"]);
+              resRow = Owner._Table.Rows.Find(docId);
+              if (resRow == null)
                 continue;
-              Owner.InvalidateDataRow(ResRow); // не Update
-              Changed = true;
+              Owner.InvalidateDataRow(resRow); // не Update
+              changed = true;
               break;
           }
         }
@@ -664,7 +664,6 @@ namespace FreeLibSet.Forms.Docs
           return Owner.ToString();
       }
 
-
       #endregion
     }
 
@@ -714,26 +713,26 @@ namespace FreeLibSet.Forms.Docs
       if (Filters.IsEmpty)
         return;
 
-      IdList BadIds;
+      IdList badIds;
       EFPApp.BeginWait("Проверка выбранных документов", "Filter");
       try
       {
         // Список полей для фильтра
-        DBxColumnList ColList = new DBxColumnList();
-        ColList.Add("Id"); // нужен нам для поиска
-        Filters.GetColumnNames(ColList);
+        DBxColumnList colList = new DBxColumnList();
+        colList.Add("Id"); // нужен нам для поиска
+        Filters.GetColumnNames(colList);
         // Загружаем значения
-        DataTable Table2 = DocTypeUI.TableCache.CreateTable(this.Ids, new DBxColumns(ColList));
-        DataTableValueArray va = new DataTableValueArray(Table2);
+        DataTable table2 = DocTypeUI.TableCache.CreateTable(this.Ids, new DBxColumns(colList));
+        DataTableValueArray va = new DataTableValueArray(table2);
 
         // Проверяем попадание
-        BadIds = new IdList();
-        foreach (DataRow Row in Table2.Rows)
+        badIds = new IdList();
+        foreach (DataRow row in table2.Rows)
         {
-          va.CurrentRow = Row;
+          va.CurrentRow = row;
           DBxCommonFilter BadFilter;
           if (!Filters.TestValues(va, out BadFilter))
-            BadIds.Add(DataTools.GetInt(Row, "Id"));
+            badIds.Add(DataTools.GetInt(row, "Id"));
         }
       }
       finally
@@ -741,10 +740,10 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.EndWait();
       }
 
-      if (BadIds.Count > 0)
+      if (badIds.Count > 0)
       {
-        this.SelectedIds = BadIds.ToArray();
-        SetError("Выбранные документы (" + BadIds.Count.ToString() + " из " + Control.RowCount.ToString() + ") не проходят условие фильтра");
+        this.SelectedIds = badIds.ToArray();
+        SetError("Выбранные документы (" + badIds.Count.ToString() + " из " + Control.RowCount.ToString() + ") не проходят условие фильтра");
       }
     }
 

@@ -92,41 +92,41 @@ namespace FreeLibSet.Forms.Docs
     {
       get
       {
-        DBxDocSelection Sel = new DBxDocSelection(UI.DocProvider.DBIdentity);
+        DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
         foreach (EFPPageGridView gh in _TableHandlers.Values)
-          Sel.Add(gh.DocType.Name, gh.BufTable);
-        return Sel;
+          docSel.Add(gh.DocType.Name, gh.BufTable);
+        return docSel;
       }
       set
       {
         if (value == null)
           value = new DBxDocSelection(UI.DocProvider.DBIdentity);
 
-        SingleScopeList<string> TableNames = new SingleScopeList<string>(value.TableNames);
+        SingleScopeList<string> tableNames = new SingleScopeList<string>(value.TableNames);
         foreach (string TableName in _TableHandlers.Keys)
-          TableNames.Add(TableName);
+          tableNames.Add(TableName);
 
-        for (int i = 0; i < TableNames.Count; i++)
+        for (int i = 0; i < tableNames.Count; i++)
         {
-          string TableName = TableNames[i];
-          EFPPageGridView gh = ReadyTable(TableName);
-          DataTable Table2 = UI.DocProvider.DBCache[TableName].CreateTable(value[TableName], gh.UsedColumnNames);
+          string tableName = tableNames[i];
+          EFPPageGridView gh = ReadyTable(tableName);
+          DataTable table2 = UI.DocProvider.DBCache[tableName].CreateTable(value[tableName], gh.UsedColumnNames);
           if (gh.BufTable == null)
-            gh.BufTable = Table2;
+            gh.BufTable = table2;
           else
           {
-            EFPDataGridViewSelection OldSel = gh.Selection;
+            EFPDataGridViewSelection oldSel = gh.Selection;
             gh.BufTable.BeginLoadData();
             try
             {
               gh.BufTable.Rows.Clear();
-              DataTools.CopyRowsToRows(Table2, gh.BufTable, false, true);
+              DataTools.CopyRowsToRows(table2, gh.BufTable, false, true);
             }
             finally
             {
               gh.BufTable.EndLoadData();
             }
-            gh.Selection = OldSel;
+            gh.Selection = oldSel;
           }
           gh.InitTitle();
         }
@@ -137,8 +137,8 @@ namespace FreeLibSet.Forms.Docs
 
     private EFPPageGridView GetInfo(int pageIndex)
     {
-      TabPage Page = _TheTabControl.TabPages[pageIndex];
-      return (EFPPageGridView)(Page.Tag);
+      TabPage page = _TheTabControl.TabPages[pageIndex];
+      return (EFPPageGridView)(page.Tag);
     }
 
     /// <summary>
@@ -179,16 +179,16 @@ namespace FreeLibSet.Forms.Docs
       if (_TableHandlers.TryGetValue(tableName, out gh))
         return gh;
 
-      DBxDocType DocType = UI.DocTypes[tableName].DocType;
-      if (DocType == null)
+      DBxDocType docType = UI.DocTypes[tableName].DocType;
+      if (docType == null)
         throw new ArgumentException("Тип документа \"" + tableName + "\" не найден", "tableName");
 
       // Добавляем новую вкладку
-      _TheTabControl.TabPages.Add(DocType.PluralTitle);
+      _TheTabControl.TabPages.Add(docType.PluralTitle);
       gh = new EFPPageGridView(_BaseProvider,
         _TheTabControl.TabPages[_TheTabControl.TabCount - 1],
         this,
-        DocType.Name);
+        docType.Name);
 
       _TableHandlers.Add(tableName, gh);
       return gh;
@@ -329,10 +329,10 @@ namespace FreeLibSet.Forms.Docs
 
         base.CommandItems.AddSeparator();
 
-        Panel PanSpb = new Panel();
-        PanSpb.Dock = DockStyle.Top;
-        page.Controls.Add(PanSpb);
-        base.ToolBarPanel = PanSpb;
+        Panel panSpb = new Panel();
+        panSpb.Dock = DockStyle.Top;
+        page.Controls.Add(panSpb);
+        base.ToolBarPanel = panSpb;
 
         //Info.BufTable = Info.DocType.TableCache.CreateTable(DataTools.EmptyIds, Info.ControlProvider.UsedColumnNames);
         //Grid.DataSource = Info.BufTable.DefaultView;
@@ -341,13 +341,13 @@ namespace FreeLibSet.Forms.Docs
 
       private static DataGridView CreateDataGridView(TabPage page)
       {
-        DataGridView Grid = new DataGridView();
-        Grid.ReadOnly = true;
-        Grid.Dock = DockStyle.Fill;
-        Grid.AutoGenerateColumns = false;
-        page.Controls.Add(Grid);
+        DataGridView grid = new DataGridView();
+        grid.ReadOnly = true;
+        grid.Dock = DockStyle.Fill;
+        grid.AutoGenerateColumns = false;
+        page.Controls.Add(grid);
 
-        return Grid;
+        return grid;
       }
 
       #endregion
@@ -388,8 +388,8 @@ namespace FreeLibSet.Forms.Docs
       {
         // 16.02.2018 Вместо собственного обработчика
 
-        Int32[] Ids = Editor.DocSel[DocType.Name];
-        BufTable = DocTypeUI.TableCache.CreateTable(Ids, base.UsedColumnNames);
+        Int32[] docIds = Editor.DocSel[DocType.Name];
+        BufTable = DocTypeUI.TableCache.CreateTable(docIds, base.UsedColumnNames);
         base.InitTableRepeaterForGridProducer(BufTable);
       }
 
@@ -398,27 +398,27 @@ namespace FreeLibSet.Forms.Docs
         // Базовый метод не вызываем
         // return base.OnEditData(Args);
 
-        Int32[] Ids;
+        Int32[] docIds;
         switch (base.State)
         {
           case EFPDataGridViewState.Edit:
           case EFPDataGridViewState.View:
 
-            Ids = base.SelectedIds;
-            if (Ids.Length == 0)
+            docIds = base.SelectedIds;
+            if (docIds.Length == 0)
             {
               EFPApp.ShowTempMessage("Строки не выбраны");
               return true;
             }
             if (!DocTypeUI.CanMultiEdit)
             {
-              if (Ids.Length > 1)
+              if (docIds.Length > 1)
               {
                 EFPApp.ShowTempMessage("Множественное редактирование документов \"" + DocType.PluralTitle + "\" не разрешено");
                 return true;
               }
             }
-            DocTypeUI.PerformEditing(Ids, base.State, true);
+            DocTypeUI.PerformEditing(docIds, base.State, true);
             return true;
 
           //case EFPDataGridViewState.Insert:
@@ -477,15 +477,15 @@ namespace FreeLibSet.Forms.Docs
 
       private void DoDelete()
       {
-        DataRow[] Rows = base.SelectedDataRows;
-        if (Rows.Length == 0)
+        DataRow[] rows = base.SelectedDataRows;
+        if (rows.Length == 0)
         {
           EFPApp.ShowTempMessage("Нет выбранных документов");
           return;
         }
 
         RadioSelectDialog dlg = new RadioSelectDialog();
-        dlg.Title = "Удаление строк документов \""+DocTypeUI.DocType.PluralTitle+"\" (" + Rows.Length + ")";
+        dlg.Title = "Удаление строк документов \""+DocTypeUI.DocType.PluralTitle+"\" (" + rows.Length + ")";
         dlg.ImageKey = "Delete";
         dlg.GroupTitle = "Что требуется удалить";
         dlg.Items = new string[]{
@@ -507,22 +507,22 @@ namespace FreeLibSet.Forms.Docs
         // 16.02.2018
         // Если все документы уже помечены на удаления, то удалять "сами документы" еще раз нельзя
 
-        bool HasNotDeletedDocs = false;
+        bool hasNotDeletedDocs = false;
         if (UI.DocProvider.DocTypes.UseDeleted)
         {
-          for (int i = 0; i < Rows.Length; i++)
+          for (int i = 0; i < rows.Length; i++)
           {
-            if (!DataTools.GetBool(Rows[i], "Deleted"))
+            if (!DataTools.GetBool(rows[i], "Deleted"))
             {
-              HasNotDeletedDocs = true;
+              hasNotDeletedDocs = true;
               break;
             }
           }
         }
         else
-          HasNotDeletedDocs = true;
+          hasNotDeletedDocs = true;
 
-        if (!HasNotDeletedDocs)
+        if (!hasNotDeletedDocs)
         {
           dlg.SelectedIndex = 0;
           dlg.EnabledItemFlags[1] = false;
@@ -538,12 +538,12 @@ namespace FreeLibSet.Forms.Docs
         {
           if (!DocTypeUI.PerformEditing(this.SelectedIds, EFPDataGridViewState.Delete, true))
             return;
-          InvalidateDataRows(Rows); // 16.02.2018. Не удаляем строки из таблицы
+          InvalidateDataRows(rows); // 16.02.2018. Не удаляем строки из таблицы
         }
         else
         {
-          for (int i = 0; i < Rows.Length; i++)
-            Rows[i].Delete();
+          for (int i = 0; i < rows.Length; i++)
+            rows[i].Delete();
 
           if (Editor._ChangeInfo != null)
             Editor._ChangeInfo.Changed = true;
@@ -669,28 +669,28 @@ namespace FreeLibSet.Forms.Docs
           return;
         _PasteMode = dlg.SelectedIndex;
 
-        DBxDocSelection Sel1 = Editor.DocSel;
+        DBxDocSelection docSel1 = Editor.DocSel;
         int cnt;
         switch (_PasteMode)
         {
           case 0:
-            cnt = Sel1.Add(sel2);
+            cnt = docSel1.Add(sel2);
             if (cnt > 0)
-              Editor.DocSel = Sel1;
+              Editor.DocSel = docSel1;
             else
               EFPApp.ShowTempMessage("Новых ссылок не добавлено");
             break;
           case 1:
-            cnt = Sel1.Remove(sel2);
+            cnt = docSel1.Remove(sel2);
             if (cnt > 0)
-              Editor.DocSel = Sel1;
+              Editor.DocSel = docSel1;
             else
               EFPApp.ShowTempMessage("Ни одной ссылки не удалено");
             break;
           case 2:
-            cnt = Sel1.RemoveNeg(sel2);
+            cnt = docSel1.RemoveNeg(sel2);
             if (cnt > 0)
-              Editor.DocSel = Sel1;
+              Editor.DocSel = docSel1;
             else
               EFPApp.ShowTempMessage("Ни одной ссылки не удалено");
             break;

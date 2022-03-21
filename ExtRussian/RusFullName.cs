@@ -394,11 +394,11 @@ namespace FreeLibSet.Russian
       if (autoCorrect)
         s = CorrectText(s);
 
-      string Surname = GetNextPart(ref s);
-      string Name = GetNextPart(ref s);
-      string Patronymic = GetNextPart(ref s);
+      string surname = GetNextPart(ref s);
+      string name = GetNextPart(ref s);
+      string patronymic = GetNextPart(ref s);
 
-      res = new RusFullName(Surname, Name, Patronymic);
+      res = new RusFullName(surname, name, patronymic);
       if (autoCorrect)
         res = res.Normalized;
 
@@ -450,8 +450,8 @@ namespace FreeLibSet.Russian
         s2 = s.Substring(p1 + 1, p2 - p1 - 1);
 
       s1 = s.Substring(0, p1);
-      if (SpacedSuffixMaleIndexer.Contains(s2) || 
-        SpacedSuffixFemaleIndexer.Contains(s2)) // испр. 18.06.2021
+      if (_SpacedSuffixMaleIndexer.Contains(s2) ||
+        _SpacedSuffixFemaleIndexer.Contains(s2)) // испр. 18.06.2021
       {
         if (p2 >= s.Length)
           s = String.Empty;
@@ -607,9 +607,9 @@ namespace FreeLibSet.Russian
     /// <returns>Массив из 12 элементов</returns>
     public RusFullName[] GetCases(SexOfPerson sex)
     {
-      RusFullName[] Forms;
-      GetCases(sex, out Forms);
-      return Forms;
+      RusFullName[] forms;
+      GetCases(sex, out forms);
+      return forms;
     }
 
     /// <summary>
@@ -640,41 +640,41 @@ namespace FreeLibSet.Russian
 
       forms = new RusFullName[12];
 
-      RusNounFormArray Surnames = new RusNounFormArray();
-      RusNounFormArray Names = new RusNounFormArray();
-      RusNounFormArray Patronymics = new RusNounFormArray();
+      RusNounFormArray surnames = new RusNounFormArray();
+      RusNounFormArray names = new RusNounFormArray();
+      RusNounFormArray patronymics = new RusNounFormArray();
 
-      bool NoCasesSurname = false;
+      bool noCasesSurname = false;
       if (String.IsNullOrEmpty(Surname))
-        NoCasesSurname = true;
+        noCasesSurname = true;
       else
       {
-        string Surname1 = Surname.ToUpperInvariant();
-        if (Surname1.EndsWith("О") || Surname1.EndsWith("ИХ") || Surname1.EndsWith("ЫХ"))
+        string surname1 = Surname.ToUpperInvariant();
+        if (surname1.EndsWith("О") || surname1.EndsWith("ИХ") || surname1.EndsWith("ЫХ"))
           // Фамилии на "О" не склоняются
-          NoCasesSurname = true;
+          noCasesSurname = true;
 
         // 20.09.2011
         // Женские фамилии, не имеющие суффиксов, не склоняются
         if (Gender == RusGender.Feminine)
         {
-          if ("БВГДЕЖЗИЙКЛМНПРСТУФХЦШЫЬЭЮ".IndexOf(Surname1[Surname1.Length - 1]) >= 0)
-            NoCasesSurname = true;
+          if ("БВГДЕЖЗИЙКЛМНПРСТУФХЦШЫЬЭЮ".IndexOf(surname1[surname1.Length - 1]) >= 0)
+            noCasesSurname = true;
         }
       }
-      if (NoCasesSurname)
-        Surnames.Fill(Surname);
+      if (noCasesSurname)
+        surnames.Fill(Surname);
       else
-        Surnames.GetCases(Surname, Gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which);
+        surnames.GetCases(Surname, Gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which);
 
-      Names.GetCases(Name, Gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name);
-      Patronymics.GetCases(Patronymic, Gender, RusFormArrayGetCasesOptions.NoPlural);
+      names.GetCases(Name, Gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name);
+      patronymics.GetCases(Patronymic, Gender, RusFormArrayGetCasesOptions.NoPlural);
 
-      string[] SurnameItems = Surnames.Items;
-      string[] NameItems = Names.Items;
-      string[] PatronymicItems = Patronymics.Items;
+      string[] surnameItems = surnames.Items;
+      string[] nameItems = names.Items;
+      string[] patronymicItems = patronymics.Items;
       for (int i = 0; i < 12; i++)
-        forms[i] = new RusFullName(SurnameItems[i], NameItems[i], PatronymicItems[i]);
+        forms[i] = new RusFullName(surnameItems[i], nameItems[i], patronymicItems[i]);
       return true;
     }
 
@@ -763,9 +763,9 @@ namespace FreeLibSet.Russian
         return SexOfPerson.Undefined;
 
       string suffix = s.Substring(p + 1);
-      if (SpacedSuffixMaleIndexer.Contains(suffix))
+      if (_SpacedSuffixMaleIndexer.Contains(suffix))
         return SexOfPerson.Male;
-      if (SpacedSuffixFemaleIndexer.Contains(suffix))
+      if (_SpacedSuffixFemaleIndexer.Contains(suffix))
         return SexOfPerson.Female;
 
       return SexOfPerson.Undefined;
@@ -917,9 +917,9 @@ namespace FreeLibSet.Russian
       if ((options & RusFullNameValidateOptions.InitialsAllowed) == RusFullNameValidateOptions.InitialsAllowed &&
         (!String.IsNullOrEmpty(Patronymic)))
       {
-        bool NameIsInitial = Name.Length == 1;
-        bool PatronymicIsInitial = Patronymic.Length == 1;
-        if (NameIsInitial != PatronymicIsInitial)
+        bool nameIsInitial = Name.Length == 1;
+        bool patronymicIsInitial = Patronymic.Length == 1;
+        if (nameIsInitial != patronymicIsInitial)
         {
           errorText = "Имя и отчество либо должны быть заданы полностью, либо оба инициалами";
           return false;
@@ -1041,8 +1041,8 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Суффиксы, которые могут идти после пробела
     /// </summary>
-    private static readonly StringArrayIndexer SpacedSuffixMaleIndexer = new StringArrayIndexer(new string[] { "ОГЛЫ" }, true);
-    private static readonly StringArrayIndexer SpacedSuffixFemaleIndexer = new StringArrayIndexer(new string[] { "КЫЗЫ", "ГЫЗЫ" }, true);
+    private static readonly StringArrayIndexer _SpacedSuffixMaleIndexer = new StringArrayIndexer(new string[] { "ОГЛЫ" }, true);
+    private static readonly StringArrayIndexer _SpacedSuffixFemaleIndexer = new StringArrayIndexer(new string[] { "КЫЗЫ", "ГЫЗЫ" }, true);
 
     /// <summary>
     /// Выполнить проверку фамилии
@@ -1162,16 +1162,16 @@ namespace FreeLibSet.Russian
 
     private static bool TestPart(string s, RusFullNameValidateOptions options, out string errorText, RusFullNamePart part, int charOff)
     {
-      bool WantsUpper = true;
-      bool WantsLower = false;
-      bool HasSpace = false;
+      bool wantsUpper = true;
+      bool wantsLower = false;
+      bool hasSpace = false;
       for (int i = 0; i < s.Length; i++)
       {
-        bool ThisIsUpper;
+        bool thisIsUpper;
         if (RussianTools.UpperRussianCharIndexer.Contains(s[i]))
-          ThisIsUpper = true;
+          thisIsUpper = true;
         else if (RussianTools.LowerRussianCharIndexer.Contains(s[i]))
-          ThisIsUpper = false;
+          thisIsUpper = false;
         else
         {
           switch (s[i])
@@ -1197,8 +1197,8 @@ namespace FreeLibSet.Russian
                 errorText = "Два символа \"--\" подряд в позиции " + (i + charOff + 1).ToString();
                 return false;
               }
-              WantsUpper = true;
-              WantsLower = true;
+              wantsUpper = true;
+              wantsLower = true;
               break;
 
             case ' ':
@@ -1213,14 +1213,14 @@ namespace FreeLibSet.Russian
                 errorText = "Пробел не может быть в начале или в конце отчества";
                 return false;
               }
-              if (HasSpace)
+              if (hasSpace)
               {
                 errorText = "Допускается только один пробел";
                 return false;
               }
-              HasSpace = true;
-              WantsUpper = true;
-              WantsLower = true;
+              hasSpace = true;
+              wantsUpper = true;
+              wantsLower = true;
               break;
 
             default:
@@ -1230,7 +1230,7 @@ namespace FreeLibSet.Russian
           continue;
         } // не буква
 
-        if (WantsUpper)
+        if (wantsUpper)
         {
           if ("ЪЬ".IndexOf(s[i]) >= 0) // 16.11.2020
           {
@@ -1239,19 +1239,19 @@ namespace FreeLibSet.Russian
           }
         }
 
-        if (ThisIsUpper)
+        if (thisIsUpper)
         {
-          if ((!WantsUpper) && (options & RusFullNameValidateOptions.IgnoreCases) == 0)
+          if ((!wantsUpper) && (options & RusFullNameValidateOptions.IgnoreCases) == 0)
           {
             errorText = "Ожидалась буква в нижнем регистре в позиции " + (i + charOff + 1).ToString();
             return false;
           }
-          WantsUpper = false;
-          WantsLower = true;
+          wantsUpper = false;
+          wantsLower = true;
         }
         else
         {
-          if ((!WantsLower) && (options & RusFullNameValidateOptions.IgnoreCases) == 0)
+          if ((!wantsLower) && (options & RusFullNameValidateOptions.IgnoreCases) == 0)
           {
             errorText = "Ожидалась буква в верхнем регистре в позиции " + (i + charOff + 1).ToString();
             return false;
@@ -1288,7 +1288,7 @@ namespace FreeLibSet.Russian
           }
           break;
 
-          // Имя может быть любой длины, например, "Ян".
+        // Имя может быть любой длины, например, "Ян".
 
         case RusFullNamePart.Patronymic:
           if (s.Length > 1 && s.Length < 4)
@@ -1305,9 +1305,9 @@ namespace FreeLibSet.Russian
 
     private static string GetErrorPrefix(RusFullNamePart part, int i)
     {
-      string PartName = GetPartDisplayName(part);
+      string partName = GetPartDisplayName(part);
 
-      return PartName + ", позиция " + (i + 1).ToString() + ". ";
+      return partName + ", позиция " + (i + 1).ToString() + ". ";
     }
 
     private static string GetPartDisplayName(RusFullNamePart part)

@@ -75,22 +75,22 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      DateRangeDialog Dialog = new DateRangeDialog();
-      Dialog.Title = DisplayName;
-      Dialog.CanBeEmpty = true;
-      Dialog.Minimum = Minimum;
-      Dialog.Maximum = Maximum;
+      DateRangeDialog dlg = new DateRangeDialog();
+      dlg.Title = DisplayName;
+      dlg.CanBeEmpty = true;
+      dlg.Minimum = Minimum;
+      dlg.Maximum = Maximum;
 
-      Dialog.NFirstDate = FirstDate;
-      Dialog.NLastDate = LastDate;
+      dlg.NFirstDate = FirstDate;
+      dlg.NLastDate = LastDate;
 
-      Dialog.DialogPosition = dialogPosition;
+      dlg.DialogPosition = dialogPosition;
 
-      if (Dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+      if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
         return false;
 
-      FirstDate = Dialog.NFirstDate;
-      LastDate = Dialog.NLastDate;
+      FirstDate = dlg.NFirstDate;
+      LastDate = dlg.NLastDate;
 
       return true;
     }
@@ -222,22 +222,22 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      DateRangeDialog Dialog = new DateRangeDialog();
-      Dialog.Title = DisplayName;
-      Dialog.CanBeEmpty = true;
-      Dialog.Minimum = Minimum;
-      Dialog.Maximum=Maximum;
+      DateRangeDialog dlg = new DateRangeDialog();
+      dlg.Title = DisplayName;
+      dlg.CanBeEmpty = true;
+      dlg.Minimum = Minimum;
+      dlg.Maximum = Maximum;
 
-      Dialog.NFirstDate = FirstDate;
-      Dialog.NLastDate = LastDate;
+      dlg.NFirstDate = FirstDate;
+      dlg.NLastDate = LastDate;
 
-      Dialog.DialogPosition = dialogPosition;
+      dlg.DialogPosition = dialogPosition;
 
-      if (Dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+      if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
         return false;
 
-      FirstDate = Dialog.NFirstDate;
-      LastDate = Dialog.NLastDate;
+      FirstDate = dlg.NFirstDate;
+      LastDate = dlg.NLastDate;
 
       return true;
     }
@@ -454,25 +454,25 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      IntRangeDialog Dialog = new IntRangeDialog();
-      Dialog.Title = DisplayName;
-      Dialog.CanBeEmpty = true;
-      Dialog.ImageKey = "Filter";
-      Dialog.NFirstValue = FirstValue;
-      Dialog.NLastValue = LastValue;
-      Dialog.CanBeEmpty = true;
-      Dialog.Minimum = Minimum;
-      Dialog.Maximum = Maximum;
-      Dialog.Format = Format;
-      Dialog.FormatProvider = FormatProvider;
-      Dialog.UpDownHandler = UpDownHandler;
-      Dialog.DialogPosition = dialogPosition;
+      IntRangeDialog dlg = new IntRangeDialog();
+      dlg.Title = DisplayName;
+      dlg.CanBeEmpty = true;
+      dlg.ImageKey = "Filter";
+      dlg.NFirstValue = FirstValue;
+      dlg.NLastValue = LastValue;
+      dlg.CanBeEmpty = true;
+      dlg.Minimum = Minimum;
+      dlg.Maximum = Maximum;
+      dlg.Format = Format;
+      dlg.FormatProvider = FormatProvider;
+      dlg.UpDownHandler = UpDownHandler;
+      dlg.DialogPosition = dialogPosition;
 
-      switch (Dialog.ShowDialog())
+      switch (dlg.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NFirstValue;
-          LastValue = Dialog.NLastValue;
+          FirstValue = dlg.NFirstValue;
+          LastValue = dlg.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;
@@ -654,25 +654,25 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      SingleRangeDialog Dialog = new SingleRangeDialog();
-      Dialog.Title = DisplayName;
-      Dialog.CanBeEmpty = true;
-      Dialog.ImageKey = "Filter";
-      Dialog.NFirstValue = FirstValue;
-      Dialog.NLastValue = LastValue;
-      Dialog.CanBeEmpty = true;
-      Dialog.Minimum = Minimum;
-      Dialog.Maximum = Maximum;
-      Dialog.Format = Format;
-      Dialog.FormatProvider = FormatProvider;
-      Dialog.UpDownHandler = UpDownHandler;
-      Dialog.DialogPosition = dialogPosition;
+      SingleRangeDialog dlg = new SingleRangeDialog();
+      dlg.Title = DisplayName;
+      dlg.CanBeEmpty = true;
+      dlg.ImageKey = "Filter";
+      dlg.NFirstValue = FirstValue;
+      dlg.NLastValue = LastValue;
+      dlg.CanBeEmpty = true;
+      dlg.Minimum = Minimum;
+      dlg.Maximum = Maximum;
+      dlg.Format = Format;
+      dlg.FormatProvider = FormatProvider;
+      dlg.UpDownHandler = UpDownHandler;
+      dlg.DialogPosition = dialogPosition;
 
-      switch (Dialog.ShowDialog())
+      switch (dlg.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NFirstValue;
-          LastValue = Dialog.NLastValue;
+          FirstValue = dlg.NFirstValue;
+          LastValue = dlg.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;
@@ -854,25 +854,25 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      DoubleRangeDialog Dialog = new DoubleRangeDialog();
-      Dialog.Title = DisplayName;
-      Dialog.CanBeEmpty = true;
-      Dialog.ImageKey = "Filter";
-      Dialog.NFirstValue = FirstValue;
-      Dialog.NLastValue = LastValue;
-      Dialog.CanBeEmpty = true;
-      Dialog.Minimum = Minimum;
-      Dialog.Maximum = Maximum;
-      Dialog.Format = Format;
-      Dialog.FormatProvider = FormatProvider;
-      Dialog.UpDownHandler = UpDownHandler;
-      Dialog.DialogPosition = dialogPosition;
+      DoubleRangeDialog dlg = new DoubleRangeDialog();
+      dlg.Title = DisplayName;
+      dlg.CanBeEmpty = true;
+      dlg.ImageKey = "Filter";
+      dlg.NFirstValue = FirstValue;
+      dlg.NLastValue = LastValue;
+      dlg.CanBeEmpty = true;
+      dlg.Minimum = Minimum;
+      dlg.Maximum = Maximum;
+      dlg.Format = Format;
+      dlg.FormatProvider = FormatProvider;
+      dlg.UpDownHandler = UpDownHandler;
+      dlg.DialogPosition = dialogPosition;
 
-      switch (Dialog.ShowDialog())
+      switch (dlg.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NFirstValue;
-          LastValue = Dialog.NLastValue;
+          FirstValue = dlg.NFirstValue;
+          LastValue = dlg.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;
@@ -1054,25 +1054,25 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      DecimalRangeDialog Dialog = new DecimalRangeDialog();
-      Dialog.Title = DisplayName;
-      Dialog.CanBeEmpty = true;
-      Dialog.ImageKey = "Filter";
-      Dialog.NFirstValue = FirstValue;
-      Dialog.NLastValue = LastValue;
-      Dialog.CanBeEmpty = true;
-      Dialog.Minimum = Minimum;
-      Dialog.Maximum = Maximum;
-      Dialog.Format = Format;
-      Dialog.FormatProvider = FormatProvider;
-      Dialog.Increment = Increment;
-      Dialog.DialogPosition = dialogPosition;
+      DecimalRangeDialog dlg = new DecimalRangeDialog();
+      dlg.Title = DisplayName;
+      dlg.CanBeEmpty = true;
+      dlg.ImageKey = "Filter";
+      dlg.NFirstValue = FirstValue;
+      dlg.NLastValue = LastValue;
+      dlg.CanBeEmpty = true;
+      dlg.Minimum = Minimum;
+      dlg.Maximum = Maximum;
+      dlg.Format = Format;
+      dlg.FormatProvider = FormatProvider;
+      dlg.Increment = Increment;
+      dlg.DialogPosition = dialogPosition;
 
-      switch (Dialog.ShowDialog())
+      switch (dlg.ShowDialog())
       {
         case System.Windows.Forms.DialogResult.OK:
-          FirstValue = Dialog.NFirstValue;
-          LastValue = Dialog.NLastValue;
+          FirstValue = dlg.NFirstValue;
+          LastValue = dlg.NLastValue;
           return true;
         case System.Windows.Forms.DialogResult.No:
           FirstValue = null;

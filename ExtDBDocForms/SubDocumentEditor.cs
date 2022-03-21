@@ -54,7 +54,7 @@ namespace FreeLibSet.Forms.Docs
   /// Редактор строки в таблице поддокументов в редакторе документа
   /// Одновременно могут редактироваться несколько поддокументов, в том числе и относящиеся к разным документам
   /// </summary>
-  public class SubDocumentEditor:IReadOnlyObject
+  public class SubDocumentEditor : IReadOnlyObject
   {
     #region Конструктор
 
@@ -228,13 +228,13 @@ namespace FreeLibSet.Forms.Docs
         }
       }
 
-      bool Cancel;
-      bool ShowEditor;
-      _SubDocTypeUI.DoBeforeEdit(this, out Cancel, out ShowEditor);
-      if (Cancel)
+      bool cancel;
+      bool showEditor;
+      _SubDocTypeUI.DoBeforeEdit(this, out cancel, out showEditor);
+      if (cancel)
         return false;
 
-      if (ShowEditor)
+      if (showEditor)
       {
         _Form = new DocEditForm(null, this.State);
         try
@@ -257,8 +257,8 @@ namespace FreeLibSet.Forms.Docs
 
           if (AfterReadValues != null)
           {
-            SubDocEditEventArgs Args = new SubDocEditEventArgs(this);
-            AfterReadValues(this, Args);
+            SubDocEditEventArgs args = new SubDocEditEventArgs(this);
+            AfterReadValues(this, args);
           }
 
 
@@ -285,13 +285,13 @@ namespace FreeLibSet.Forms.Docs
           switch (State)
           {
             case EFPDataGridViewState.Edit:
-              _Form.OKButtonProvider.ToolTipText = "Закончить редактирование, сохранив внесенные изменения." +Environment.NewLine+
+              _Form.OKButtonProvider.ToolTipText = "Закончить редактирование, сохранив внесенные изменения." + Environment.NewLine +
                 "Для реальной записи изменений нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
               _Form.CancelButtonProvider.ToolTipText = "Закончить редактирование без сохранения внесенных изменений";
               break;
             case EFPDataGridViewState.Insert:
             case EFPDataGridViewState.InsertCopy:
-              _Form.OKButtonProvider.ToolTipText = "Создать новую запись и закончить редактирование." +Environment.NewLine+
+              _Form.OKButtonProvider.ToolTipText = "Создать новую запись и закончить редактирование." + Environment.NewLine +
                 "Для сохранения записи нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
               _Form.CancelButtonProvider.ToolTipText = "Закончить редактирование без сохранения введенных значений";
               break;
@@ -311,7 +311,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch
         {
-          _Form.Dispose();             
+          _Form.Dispose();
           _Form = null;
           throw;
         }
@@ -336,7 +336,7 @@ namespace FreeLibSet.Forms.Docs
     /// Закрыть окно редактора.
     /// На момент вызова окно редактора должно быть открыто
     /// Возвращает true, если форма успешно закрыта.
-    /// Возврает false, если окно закрыть не удалось (например, не выполнены условия корректности введенных данных)
+    /// Возвращает false, если окно закрыть не удалось (например, не выполнены условия корректности введенных данных)
     /// </summary>
     /// <param name="isOk">true - выполнить запись поддокумента (симуляция нажатия кнопки "ОК"),
     /// false - выйти без записи (симуляция нажатия кнопки "Отмена")</param>
@@ -457,9 +457,9 @@ namespace FreeLibSet.Forms.Docs
       // Посылаем сообщение
       if (BeforeWrite != null)
       {
-        SubDocEditCancelEventArgs Args = new SubDocEditCancelEventArgs(this);
-        BeforeWrite(this, Args);
-        if (Args.Cancel)
+        SubDocEditCancelEventArgs args = new SubDocEditCancelEventArgs(this);
+        BeforeWrite(this, args);
+        if (args.Cancel)
           return false;
       }
 
@@ -535,8 +535,8 @@ namespace FreeLibSet.Forms.Docs
       // Уведомление о выполнении записи
       if (AfterWrite != null)
       {
-        SubDocEditEventArgs Args = new SubDocEditEventArgs(this);
-        AfterWrite(this, Args);
+        SubDocEditEventArgs args = new SubDocEditEventArgs(this);
+        AfterWrite(this, args);
       }
 
 
@@ -575,8 +575,8 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args"></param>
     void MoreButton_Click(object sender, EventArgs args)
     {
-      Button MoreButton = (Button)sender;
-      MoreButton.ContextMenuStrip.Show(MoreButton, MoreButton.Width, MoreButton.Height);
+      Button moreButton = (Button)sender;
+      moreButton.ContextMenuStrip.Show(moreButton, moreButton.Width, moreButton.Height);
     }
 
     private void InitMoreClientItems()

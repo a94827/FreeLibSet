@@ -194,7 +194,6 @@ namespace FreeLibSet.FIAS
       }
     }
 
-
     #endregion
 
     #region —оздание строки
@@ -236,17 +235,17 @@ namespace FreeLibSet.FIAS
         return address.AnyGuid.ToString();
       }
 
-      FiasAddressConvertGuidMode ThisGuidMode = _GuidMode & (FiasAddressConvertGuidMode.AOGuid | FiasAddressConvertGuidMode.HouseGuid | FiasAddressConvertGuidMode.RoomGuid);
+      FiasAddressConvertGuidMode thisGuidMode = _GuidMode & (FiasAddressConvertGuidMode.AOGuid | FiasAddressConvertGuidMode.HouseGuid | FiasAddressConvertGuidMode.RoomGuid);
 
       if (GuidMode == FiasAddressConvertGuidMode.GuidPreferred)
       {
         if (address.AutoPostalCode &&
-        address.GuidBottomLevel == FiasTools.ReplaceToHouseOrFlat(address.NameBottomLevel))
+          address.GuidBottomLevel == FiasTools.ReplaceToHouseOrFlat(address.NameBottomLevel))
         {
           return address.AnyGuid.ToString();
         }
         else
-          ThisGuidMode = FiasAddressConvertGuidMode.RoomGuid;
+          thisGuidMode = FiasAddressConvertGuidMode.RoomGuid;
       }
 
       List<KeyValuePair<string, string>> lst = new List<KeyValuePair<string, string>>();
@@ -255,44 +254,44 @@ namespace FreeLibSet.FIAS
         lst.Add(new KeyValuePair<string, string>("POSTALCODE", address.PostalCode));
 
       // — какого уровн€ записываетс€ текст. Unknown - не писать, Region - писать все
-      FiasLevel FirstTextLevel = FiasLevel.Unknown;
-      if (ThisGuidMode == FiasAddressConvertGuidMode.RoomGuid && address.GetGuid(FiasLevel.Flat) == Guid.Empty)
-        ThisGuidMode = FiasAddressConvertGuidMode.HouseGuid;
-      if (ThisGuidMode == FiasAddressConvertGuidMode.HouseGuid && address.GetGuid(FiasLevel.House) == Guid.Empty)
-        ThisGuidMode = FiasAddressConvertGuidMode.AOGuid;
+      FiasLevel firstTextLevel = FiasLevel.Unknown;
+      if (thisGuidMode == FiasAddressConvertGuidMode.RoomGuid && address.GetGuid(FiasLevel.Flat) == Guid.Empty)
+        thisGuidMode = FiasAddressConvertGuidMode.HouseGuid;
+      if (thisGuidMode == FiasAddressConvertGuidMode.HouseGuid && address.GetGuid(FiasLevel.House) == Guid.Empty)
+        thisGuidMode = FiasAddressConvertGuidMode.AOGuid;
 
-      if (ThisGuidMode == FiasAddressConvertGuidMode.AOGuid && address.AOGuid != Guid.Empty)
+      if (thisGuidMode == FiasAddressConvertGuidMode.AOGuid && address.AOGuid != Guid.Empty)
       {
         lst.Add(new KeyValuePair<string, string>("AOGUID", address.AOGuid.ToString()));
-        FirstTextLevel = FiasLevel.House;
+        firstTextLevel = FiasLevel.House;
         for (int i = 0; i < FiasTools.AOLevels.Length; i++)
         {
           if (address.GetName(FiasTools.AOLevels[i]).Length > 0 && address.GetGuid(FiasTools.AOLevels[i]) == Guid.Empty)
           {
-            FirstTextLevel = FiasTools.AOLevels[i];
+            firstTextLevel = FiasTools.AOLevels[i];
             break;
           }
         }
       }
-      else if (ThisGuidMode == FiasAddressConvertGuidMode.HouseGuid /*&& address.GetGuid(FiasLevel.House) != Guid.Empty*/)
+      else if (thisGuidMode == FiasAddressConvertGuidMode.HouseGuid /*&& address.GetGuid(FiasLevel.House) != Guid.Empty*/)
       {
         lst.Add(new KeyValuePair<string, string>("HOUSEGUID", address.GetGuid(FiasLevel.House).ToString()));
-        FirstTextLevel = FiasLevel.Flat;
+        firstTextLevel = FiasLevel.Flat;
       }
-      else if (ThisGuidMode == FiasAddressConvertGuidMode.RoomGuid /*&& address.GetGuid(FiasLevel.Room) != Guid.Empty*/)
+      else if (thisGuidMode == FiasAddressConvertGuidMode.RoomGuid /*&& address.GetGuid(FiasLevel.Room) != Guid.Empty*/)
       {
         lst.Add(new KeyValuePair<string, string>("ROOMGUID", address.GetGuid(FiasLevel.Flat).ToString()));
-        FirstTextLevel = FiasLevel.Unknown;
+        firstTextLevel = FiasLevel.Unknown;
       }
       else
-        FirstTextLevel = FiasLevel.Region;
+        firstTextLevel = FiasLevel.Region;
 
       if ((_GuidMode & FiasAddressConvertGuidMode.Text) != 0)
-        FirstTextLevel = FiasLevel.Region; // принудительна€ запись всех уровней
+        firstTextLevel = FiasLevel.Region; // принудительна€ запись всех уровней
 
-      if (FirstTextLevel != FiasLevel.Unknown)
+      if (firstTextLevel != FiasLevel.Unknown)
       {
-        for (int i = FiasTools.AllLevelIndexer.IndexOf(FirstTextLevel); i < FiasTools.AllLevels.Length; i++)
+        for (int i = FiasTools.AllLevelIndexer.IndexOf(firstTextLevel); i < FiasTools.AllLevels.Length; i++)
           AddNameAndTypePairs(lst, address, FiasTools.AllLevels[i]);
       }
       return StringKeyValueParser.ToString(lst.ToArray());
@@ -421,7 +420,7 @@ namespace FreeLibSet.FIAS
       {
         // 30.07.2020
         // Ќужно добавл€ть недостающие "автоматические" типы объектов, например, "квартира"
-        SingleScopeList<FiasLevel> MissedAOTypeLevels = null; // создадим, когда понадобитс€. 
+        SingleScopeList<FiasLevel> missedAOTypeLevels = null; // создадим, когда понадобитс€. 
 
         foreach (KeyValuePair<string, string> pair in pairs)
         {
@@ -443,12 +442,12 @@ namespace FreeLibSet.FIAS
                 address.PostalCode = pair.Value;
                 break;
               default:
-                bool IsAOType = false;
+                bool isAOType = false;
                 string key = pair.Key;
                 if (key.EndsWith(".TYPE"))
                 {
                   key = key.Substring(0, key.Length - 5); // без ".TYPE"
-                  IsAOType = true;
+                  isAOType = true;
                 }
 
                 FiasLevel level;
@@ -458,18 +457,18 @@ namespace FreeLibSet.FIAS
                   return false; // Ќеизвестное им€
                 }
 
-                if (MissedAOTypeLevels == null)
-                  MissedAOTypeLevels = new SingleScopeList<FiasLevel>();
+                if (missedAOTypeLevels == null)
+                  missedAOTypeLevels = new SingleScopeList<FiasLevel>();
 
-                if (IsAOType)
+                if (isAOType)
                 {
                   address.SetAOType(level, pair.Value);
-                  MissedAOTypeLevels.Remove(level);
+                  missedAOTypeLevels.Remove(level);
                 }
                 else
                 {
                   address.SetName(level, pair.Value);
-                  MissedAOTypeLevels.Add(level);
+                  missedAOTypeLevels.Add(level);
                 }
                 break;
             }
@@ -482,13 +481,13 @@ namespace FreeLibSet.FIAS
 
         // 30.07.2020
         // ƒобавл€ем автоматические сокращени€
-        if (MissedAOTypeLevels != null)
+        if (missedAOTypeLevels != null)
         {
-          for (int i = 0; i < MissedAOTypeLevels.Count; i++)
+          for (int i = 0; i < missedAOTypeLevels.Count; i++)
           {
-            string aoType = FiasTools.GetDefaultAOType(MissedAOTypeLevels[i]);
+            string aoType = FiasTools.GetDefaultAOType(missedAOTypeLevels[i]);
             if (aoType.Length > 0)
-              address.SetAOType(MissedAOTypeLevels[i], aoType);
+              address.SetAOType(missedAOTypeLevels[i], aoType);
           }
         }
 

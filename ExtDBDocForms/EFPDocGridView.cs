@@ -373,15 +373,15 @@ namespace FreeLibSet.Forms.Docs
       if (FixedDocIds == null)
       {
         // Получаем данные для просмотра с помощью фильтра
-        DBxFilter SqlFilter = Filters.GetSqlFilter();
+        DBxFilter sqlFilter = Filters.GetSqlFilter();
         using (DataView dv = DocTypeUI.CreateDataView(UsedColumnNames,
-          SqlFilter,
+          sqlFilter,
           _ShowDeleted,
           DocType.DefaultOrder, MaxRecordCount))
         {
           if (DataTools.GetBool(dv.Table.ExtendedProperties["Limited"]))
           {
-            LogoutRowCountLimited(SqlFilter);
+            LogoutRowCountLimited(sqlFilter);
           }
           //DebugTools.DebugDataView(dv, "DV");
 
@@ -407,23 +407,23 @@ namespace FreeLibSet.Forms.Docs
 
     // TODO: Это только для отладки. Надо будет убрать, когда пойму, почем выходит "левое" сообщением об ошибке
 
-    private void LogoutRowCountLimited(DBxFilter SqlFilter)
+    private void LogoutRowCountLimited(DBxFilter sqlFilter)
     {
       try
       {
         Exception e = new Exception("Количество строк в просмотре было ограничено");
         e.Data["UsedColumnNames"] = UsedColumnNames;
-        e.Data["SqlFilter"] = SqlFilter;
+        e.Data["SqlFilter"] = sqlFilter;
 
-        Dictionary<string, string> filts = new Dictionary<string, string>();
+        Dictionary<string, string> filtDict = new Dictionary<string, string>();
         // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
         foreach (IEFPGridFilter f in Filters)
-          filts.Add(f.DisplayName, f.FilterText);
-        e.Data["GridFilters"] = filts;
+          filtDict.Add(f.DisplayName, f.FilterText);
+        e.Data["GridFilters"] = filtDict;
 
-        TempCfg Cfg = new TempCfg();
-        Filters.WriteConfig(Cfg);
-        e.Data["FiltersConfig"] = Cfg.AsXmlText;
+        TempCfg cfg = new TempCfg();
+        Filters.WriteConfig(cfg);
+        e.Data["FiltersConfig"] = cfg.AsXmlText;
         e.Data["SaveFiltersAllowed"] = base.SaveFiltersAllowed;
         e.Data["CommandItems.CanEditFilters"] = CommandItems.CanEditFilters;
 #if DEBUG_FILTERS
@@ -523,19 +523,19 @@ namespace FreeLibSet.Forms.Docs
           return;
         if (args.RowIndex < 0 || args.RowIndex >= SourceAsDataView.Count || args.ColumnIndex < 0)
           return;
-        string PropName = Control.Columns[args.ColumnIndex].DataPropertyName;
-        if (string.IsNullOrEmpty(PropName))
+        string propName = Control.Columns[args.ColumnIndex].DataPropertyName;
+        if (string.IsNullOrEmpty(propName))
           return;
 
-        if (!Char.IsLetterOrDigit(PropName, 0))
+        if (!Char.IsLetterOrDigit(propName, 0))
           return; // 30.03.2021
 
-        DataRow Row = GetDataRow(args.RowIndex);
-        if (Row.Table.Columns.Contains(PropName))
+        DataRow row = GetDataRow(args.RowIndex);
+        if (row.Table.Columns.Contains(propName))
           return;
 
-        Int32 Id = DataTools.GetInt(Row, "Id");
-        args.Value = DocTypeUI.TableCache.GetValue(Id, PropName, Row.Table.DataSet);
+        Int32 Id = DataTools.GetInt(row, "Id");
+        args.Value = DocTypeUI.TableCache.GetValue(Id, propName, row.Table.DataSet);
       }
       catch (Exception e)
       {
@@ -576,23 +576,23 @@ namespace FreeLibSet.Forms.Docs
         _AuxFilterGroupIds = value;
         if (SourceAsDataView != null)
         {
-          EFPDataGridViewSelection OldSel = Selection;
+          EFPDataGridViewSelection oldSel = Selection;
           if (AuxFilterGroupIds == null)
             SourceAsDataView.RowFilter = _OriginalRowFilter;
           else
           {
             if (_AuxFilterGroupIds.Length == 0)
             {
-              ValueFilter Filter2 = new ValueFilter(DocTypeUI.DocType.GroupRefColumnName, 0);
-              SourceAsDataView.RowFilter = Filter2.AddToDataViewRowFilter(_OriginalRowFilter);
+              ValueFilter filter2 = new ValueFilter(DocTypeUI.DocType.GroupRefColumnName, 0);
+              SourceAsDataView.RowFilter = filter2.AddToDataViewRowFilter(_OriginalRowFilter);
             }
             else
             {
-              IdsFilter Filter2 = new IdsFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
-              SourceAsDataView.RowFilter = Filter2.AddToDataViewRowFilter(_OriginalRowFilter);
+              IdsFilter filter2 = new IdsFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
+              SourceAsDataView.RowFilter = filter2.AddToDataViewRowFilter(_OriginalRowFilter);
             }
           }
-          Selection = OldSel; // по возможности
+          Selection = oldSel; // по возможности
 
           // 24.11.2017
           // 15.12.2017
@@ -670,8 +670,8 @@ namespace FreeLibSet.Forms.Docs
 
     private void MyEdit(object sender, EventArgs args)
     {
-      Int32[] EditIds = SelectedIds;
-      DocTypeUI.PerformEditing(EditIds, State, Control.FindForm().Modal, _ViewHandler);
+      Int32[] editIds = SelectedIds;
+      DocTypeUI.PerformEditing(editIds, State, Control.FindForm().Modal, _ViewHandler);
     }
 
     #endregion
@@ -751,13 +751,13 @@ namespace FreeLibSet.Forms.Docs
       {
         // 31.08.2018
         // Если просмотр уже выведен, то отключаем источник данных
-        EFPDataGridViewSelection OldSel = this.Selection;
+        EFPDataGridViewSelection oldSel = this.Selection;
         Control.DataSource = null;
 
         PerformInitGrid(true);
         if (!EFPApp.InsideLoadComposition) // 30.05.2019
           PerformRefresh();
-        this.Selection = OldSel;
+        this.Selection = oldSel;
       }
       else
         PerformInitGrid(true);
@@ -1052,16 +1052,16 @@ namespace FreeLibSet.Forms.Docs
       {
         for (int i = 0; i < resRow.Table.Columns.Count; i++)
         {
-          string ColName = resRow.Table.Columns[i].ColumnName;
+          string colName = resRow.Table.Columns[i].ColumnName;
 
           // 12.02.2021, 18.10.2021
-          switch (ColName)
+          switch (colName)
           {
             case "CreateTime":
             case "CreateUserId":
             case "ChangeTime":
             case "ChangeUserId":
-              object value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetValue(DataTools.GetInt(resRow, "Id"), ColName);
+              object value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetValue(DataTools.GetInt(resRow, "Id"), colName);
               if (value == null)
                 resRow[i] = DBNull.Value;
               else
@@ -1073,19 +1073,19 @@ namespace FreeLibSet.Forms.Docs
           // Строка srcRow может быть помечена на удаление
           if (srcRow.RowState != DataRowState.Deleted)
           {
-            int p = ColName.IndexOf('.');
+            int p = colName.IndexOf('.');
             if (p >= 0)
             {
-              string MainColName = ColName.Substring(0, p);
-              int pCol = srcRow.Table.Columns.IndexOf(MainColName);
+              string mainColName = colName.Substring(0, p);
+              int pCol = srcRow.Table.Columns.IndexOf(mainColName);
               if (pCol >= 0)
               {
-                Int32 RefId = DataTools.GetInt(srcRow, MainColName); // в ResRow может не быть базового поля
-                object RefValue = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(ColName, RefId);
-                if (RefValue == null)
+                Int32 refId = DataTools.GetInt(srcRow, mainColName); // в ResRow может не быть базового поля
+                object refValue = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
+                if (refValue == null)
                   resRow[i] = DBNull.Value; // 26.10.2016
                 else
-                  resRow[i] = RefValue;
+                  resRow[i] = refValue;
               }
             }
           }
@@ -1111,27 +1111,27 @@ namespace FreeLibSet.Forms.Docs
         NamedValues pairs = new NamedValues();
         for (int i = 0; i < filterColumns.Count; i++)
         {
-          string ColName = filterColumns[i];
+          string colName = filterColumns[i];
           object value;
-          int pDot = ColName.IndexOf('.');
+          int pDot = colName.IndexOf('.');
           if (pDot >= 0)
           {
-            string MainColName = ColName.Substring(0, pDot);
-            int pCol = srcRow.Table.Columns.IndexOf(MainColName);
+            string mainColName = colName.Substring(0, pDot);
+            int pCol = srcRow.Table.Columns.IndexOf(mainColName);
             if (pCol >= 0)
             {
-              Int32 RefId = DataTools.GetInt(srcRow[MainColName, rowVer]);
-              value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(ColName, RefId);
+              Int32 refId = DataTools.GetInt(srcRow[mainColName, rowVer]);
+              value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
             }
             else
-              throw new BugException("Не найдено поле \"" + MainColName + "\"");
+              throw new BugException("Не найдено поле \"" + mainColName + "\"");
           }
           else
-            value = srcRow[ColName, rowVer];
+            value = srcRow[colName, rowVer];
 
           if (value is DBNull)
             value = null;
-          pairs.Add(ColName, value);
+          pairs.Add(colName, value);
         }
 
         return _Owner.Filters.TestValues(pairs);
@@ -1257,9 +1257,9 @@ namespace FreeLibSet.Forms.Docs
       {
         try
         {
-          Int32 OldId = CurrentId;
+          Int32 oldId = CurrentId;
           PerformRefresh(); // обязательно после вызова OnShown(), иначе UsedColumnNames будет равен null
-          CurrentId = OldId; // 23.11.2017
+          CurrentId = oldId; // 23.11.2017
         }
         catch (Exception e)
         {
@@ -1334,23 +1334,23 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="row">Строка данных. Не может быть null</param>
     protected override void LoadDataRowForUpdate(DataRow row)
     {
-      Int32 DocId = DataTools.GetInt(row, "Id");
-      if (DocId == 0)
+      Int32 docId = DataTools.GetInt(row, "Id");
+      if (docId == 0)
         return;
 
       if (!Object.ReferenceEquals(this.GridProducer, DocTypeUI.GridProducer))
         return; // 25.03.2021. Если заменен GridProducer, то обновление невозможно
 
-      object[] Values = DocTypeUI.TableCache.GetValues(DocId, _UsedColumnNames);
+      object[] values = DocTypeUI.TableCache.GetValues(docId, _UsedColumnNames);
       for (int i = 0; i < _UsedColumnNames.Count; i++)
       {
         int p = row.Table.Columns.IndexOf(_UsedColumnNames[i]);
         if (p >= 0)
         {
-          if (Values[i] == null)
+          if (values[i] == null)
             row[p] = DBNull.Value;
           else
-            row[p] = Values[i];
+            row[p] = values[i];
         }
       }
     }

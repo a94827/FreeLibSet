@@ -101,7 +101,7 @@ namespace FreeLibSet.FIAS
 
         //BeginSplash("!!!Action=" + action.ToString());
         if (FiasTools.TraceSwitch.Enabled)
-          Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasExecProc.OnExecute() started. Action="+action.ToString());
+          Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasExecProc.OnExecute() started. Action=" + action.ToString());
 
         switch (action)
         {

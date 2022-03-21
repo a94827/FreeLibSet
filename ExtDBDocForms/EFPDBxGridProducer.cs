@@ -249,35 +249,35 @@ namespace FreeLibSet.Forms.Docs
 
       public void RefDocTextColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 Id = args.GetInt(_RefColumnName);
-        args.Value = _MasterUI.GetTextValue(Id);
+        Int32 id = args.GetInt(_RefColumnName);
+        args.Value = _MasterUI.GetTextValue(id);
       }
 
       public void RefDocImageColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 Id = args.GetInt(_RefColumnName);
+        Int32 id = args.GetInt(_RefColumnName);
         switch (args.Reason)
         {
           case EFPGridProducerValueReason.Value:
-            args.Value = _MasterUI.GetImageValue(Id);
+            args.Value = _MasterUI.GetImageValue(id);
             break;
           case EFPGridProducerValueReason.ToolTipText:
             //args.ToolTipText = _MasterUI.GetToolTipText(Id);
-            args.ToolTipText = _MasterUI.GetTextValue(Id);
+            args.ToolTipText = _MasterUI.GetTextValue(id);
             break;
         }
       }
 
       public void RefValueColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 Id = args.GetInt(_RefColumnName);
-        args.Value = _MasterUI.TableCache.GetValue(Id, _ValueColumnName);
+        Int32 id = args.GetInt(_RefColumnName);
+        args.Value = _MasterUI.TableCache.GetValue(id, _ValueColumnName);
       }
 
       public object GetRefValue(EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 Id = args.GetInt(_RefColumnName);
-        return _MasterUI.TableCache.GetValue(Id, _ValueColumnName);
+        Int32 id = args.GetInt(_RefColumnName);
+        return _MasterUI.TableCache.GetValue(id, _ValueColumnName);
       }
 
       #endregion
@@ -298,11 +298,11 @@ namespace FreeLibSet.Forms.Docs
 
       private void DateRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
       {
-        Int32 Id = args.GetInt(0);
-        DateTime? FirstDate = _MasterUI.TableCache.GetNullableDateTime(Id, _ValueColumnName);
-        DateTime? LastDate = _MasterUI.TableCache.GetNullableDateTime(Id, _ValueColumnName2);
-        if (FirstDate.HasValue || LastDate.HasValue)
-          args.Value = DateRangeFormatter.Default.ToString(FirstDate, LastDate, longFormat);
+        Int32 id = args.GetInt(0);
+        DateTime? firstDate = _MasterUI.TableCache.GetNullableDateTime(id, _ValueColumnName);
+        DateTime? lastDate = _MasterUI.TableCache.GetNullableDateTime(id, _ValueColumnName2);
+        if (firstDate.HasValue || lastDate.HasValue)
+          args.Value = DateRangeFormatter.Default.ToString(firstDate, lastDate, longFormat);
       }
 
       #endregion
@@ -321,8 +321,8 @@ namespace FreeLibSet.Forms.Docs
 
       private void MonthDayColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
       {
-        Int32 Id = args.GetInt(0);
-        int v = _MasterUI.TableCache.GetInt(Id, _ValueColumnName);
+        Int32 id = args.GetInt(0);
+        int v = _MasterUI.TableCache.GetInt(id, _ValueColumnName);
         if (v == 0)
           return;
         else if (v < 1 || v > 365)
@@ -350,9 +350,9 @@ namespace FreeLibSet.Forms.Docs
 
       private void MonthDayRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
       {
-        Int32 Id = args.GetInt(0);
-        int v1 = _MasterUI.TableCache.GetInt(Id, _ValueColumnName);
-        int v2 = _MasterUI.TableCache.GetInt(Id, _ValueColumnName2);
+        Int32 id = args.GetInt(0);
+        int v1 = _MasterUI.TableCache.GetInt(id, _ValueColumnName);
+        int v2 = _MasterUI.TableCache.GetInt(id, _ValueColumnName2);
         if (v1 == 0 && v2 == 0)
           return;
         else if (v1 < 1 || v1 > 365 || v2 < 1 || v2 > 365)
@@ -454,9 +454,9 @@ namespace FreeLibSet.Forms.Docs
 
     private void VTRefDocTextColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 TableId = args.GetInt(0);
-      Int32 DocId = args.GetInt(1);
-      args.Value = _GridProducer.UI.TextHandlers.GetTextValue(TableId, DocId);
+      Int32 yableId = args.GetInt(0);
+      Int32 docId = args.GetInt(1);
+      args.Value = _GridProducer.UI.TextHandlers.GetTextValue(yableId, docId);
     }
 
     #endregion
@@ -555,17 +555,17 @@ namespace FreeLibSet.Forms.Docs
 
     private void VTRefDocImageColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 TableId = args.GetInt(0);
-      Int32 DocId = args.GetInt(1);
+      Int32 tableId = args.GetInt(0);
+      Int32 docId = args.GetInt(1);
       switch (args.Reason)
       {
         case EFPGridProducerValueReason.Value:
-          string ImageKey = _GridProducer.UI.ImageHandlers.GetImageKey(TableId, DocId);
-          args.Value = EFPApp.MainImages.Images[ImageKey];
+          string imageKey = _GridProducer.UI.ImageHandlers.GetImageKey(tableId, docId);
+          args.Value = EFPApp.MainImages.Images[imageKey];
           break;
         case EFPGridProducerValueReason.ToolTipText:
           //args.ToolTipText = _GridProducer.UI.ImageHandlers.GetToolTipText(TableId, DocId);
-          args.ToolTipText = _GridProducer.UI.TextHandlers.GetTextValue(TableId, DocId);
+          args.ToolTipText = _GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
           break;
       }
     }
@@ -802,14 +802,14 @@ namespace FreeLibSet.Forms.Docs
       string headerText, int textWidth, int minTextWidth)
     {
       EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
-      EFPGridProducerEnumColumn Item = new EFPDBxGridProducerEnumColumn(dri, textValues);
-      Item.HeaderText = headerText;
-      Item.TextAlign = HorizontalAlignment.Left;
-      Item.TextWidth = textWidth;
-      Item.MinTextWidth = minTextWidth;
+      EFPGridProducerEnumColumn item = new EFPDBxGridProducerEnumColumn(dri, textValues);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Left;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     private class EFPDBxGridProducerEnumColumn : EFPGridProducerEnumColumn
@@ -861,11 +861,11 @@ namespace FreeLibSet.Forms.Docs
       string headerText)
     {
       EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
-      EFPGridProducerEnumImageColumn Item = new EFPDBxGridProducerEnumImageColumn(dri, imageKeys);
-      Item.HeaderText = headerText;
+      EFPGridProducerEnumImageColumn item = new EFPDBxGridProducerEnumImageColumn(dri, imageKeys);
+      item.HeaderText = headerText;
 
-      Add(Item);
-      return Item;
+      Add(item);
+      return item;
     }
 
     private class EFPDBxGridProducerEnumImageColumn : EFPGridProducerEnumImageColumn
@@ -973,10 +973,10 @@ namespace FreeLibSet.Forms.Docs
     public EFPGridProducerColumn AddRefDateRange(string name, string refColumnName, DocTypeUIBase masterUI, string firstValueColumnName, string lastValueColumnName,
       string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
-      EFPGridProducerColumn Column = AddRefDateRange(name, refColumnName, masterUI, firstValueColumnName, lastValueColumnName, headerText, longFormat);
-      Column.TextWidth = textWidth;
-      Column.MinTextWidth = minTextWidth;
-      return Column;
+      EFPGridProducerColumn item = AddRefDateRange(name, refColumnName, masterUI, firstValueColumnName, lastValueColumnName, headerText, longFormat);
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      return item;
     }
 
     /// <summary>
@@ -999,23 +999,23 @@ namespace FreeLibSet.Forms.Docs
       string headerText, bool longFormat)
     {
       EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, firstValueColumnName, lastValueColumnName);
-      EFPGridProducerColumn Column = new EFPGridProducerColumn(name, new string[] { refColumnName });
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { refColumnName });
 
-      Column.HeaderText = headerText;
+      item.HeaderText = headerText;
       if (longFormat)
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.DateRangeColumn_LongValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.DateRangeColumn_LongValueNeeded);
       else
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.DateRangeColumn_ShortValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.DateRangeColumn_ShortValueNeeded);
       if (longFormat)
-        Column.TextWidth = DateRangeFormatter.Default.DateRangeLongTextLength;
+        item.TextWidth = DateRangeFormatter.Default.DateRangeLongTextLength;
       else
-        Column.TextWidth = DateRangeFormatter.Default.DateRangeShortTextLength;
-      Column.MinTextWidth = Column.TextWidth;
-      Column.EmptyValue = DateRangeFormatter.Default.ToString(null, null, longFormat);
+        item.TextWidth = DateRangeFormatter.Default.DateRangeShortTextLength;
+      item.MinTextWidth = item.TextWidth;
+      item.EmptyValue = DateRangeFormatter.Default.ToString(null, null, longFormat);
 
-      Column.SizeGroup = longFormat ? "DateRangeLong" : "DateRangeShort";
-      Add(Column);
-      return Column;
+      item.SizeGroup = longFormat ? "DateRangeLong" : "DateRangeShort";
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -1034,10 +1034,10 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddRefMonthDay(string name, string refColumnName, DocTypeUIBase masterUI, string valueColumnName, string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
-      EFPGridProducerColumn Column = AddRefMonthDay(name, refColumnName, masterUI, valueColumnName, headerText, longFormat);
-      Column.TextWidth = textWidth;
-      Column.MinTextWidth = minTextWidth;
-      return Column;
+      EFPGridProducerColumn item = AddRefMonthDay(name, refColumnName, masterUI, valueColumnName, headerText, longFormat);
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      return item;
     }
 
     /// <summary>
@@ -1056,21 +1056,21 @@ namespace FreeLibSet.Forms.Docs
     public EFPGridProducerColumn AddRefMonthDay(string name, string refColumnName, DocTypeUIBase masterUI, string valueColumnName, string headerText, bool longFormat)
     {
       EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
-      EFPGridProducerColumn Column = new EFPGridProducerColumn(name, new string[] { refColumnName });
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { refColumnName });
       if (longFormat)
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayColumn_LongValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayColumn_LongValueNeeded);
       else
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayColumn_ShortValueNeeded);
-      Column.EmptyValue = DateRangeFormatter.Default.ToString(MonthDayRange.Empty, longFormat);
-      Column.HeaderText = headerText;
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayColumn_ShortValueNeeded);
+      item.EmptyValue = DateRangeFormatter.Default.ToString(MonthDayRange.Empty, longFormat);
+      item.HeaderText = headerText;
       if (longFormat)
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayLongTextLength;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayLongTextLength;
       else
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayShortTextLength;
-      Column.MinTextWidth = Column.TextWidth;
-      Column.SizeGroup = longFormat ? "MonthDayLong" : "MonthDayShort";
-      Add(Column);
-      return Column;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayShortTextLength;
+      item.MinTextWidth = item.TextWidth;
+      item.SizeGroup = longFormat ? "MonthDayLong" : "MonthDayShort";
+      Add(item);
+      return item;
     }
 
     /// <summary>
@@ -1090,10 +1090,10 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddRefMonthDayRange(string name, string refColumnName, DocTypeUIBase masterUI, string firstValueColumnName, string lastValueColumnName, string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
-      EFPGridProducerColumn Column = AddRefMonthDayRange(name, refColumnName, masterUI, firstValueColumnName, lastValueColumnName, headerText, longFormat);
-      Column.TextWidth = textWidth;
-      Column.MinTextWidth = minTextWidth;
-      return Column;
+      EFPGridProducerColumn item = AddRefMonthDayRange(name, refColumnName, masterUI, firstValueColumnName, lastValueColumnName, headerText, longFormat);
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      return item;
     }
 
     /// <summary>
@@ -1113,20 +1113,20 @@ namespace FreeLibSet.Forms.Docs
     public EFPGridProducerColumn AddRefMonthDayRange(string name, string refColumnName, DocTypeUIBase masterUI, string firstValueColumnName, string lastValueColumnName, string headerText, bool longFormat)
     {
       EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, firstValueColumnName, lastValueColumnName);
-      EFPGridProducerColumn Column = new EFPGridProducerColumn(name, new string[] { refColumnName });
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { refColumnName });
       if (longFormat)
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayRangeColumn_LongValueNeeded);
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayRangeColumn_LongValueNeeded);
       else
-        Column.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayRangeColumn_ShortValueNeeded);
-      Column.HeaderText = headerText;
+        item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(dri.MonthDayRangeColumn_ShortValueNeeded);
+      item.HeaderText = headerText;
       if (longFormat)
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayRangeLongTextLength;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayRangeLongTextLength;
       else
-        Column.TextWidth = DateRangeFormatter.Default.MonthDayRangeShortTextLength;
-      Column.MinTextWidth = Column.TextWidth;
-      Column.SizeGroup = longFormat ? "MonthDayRangeLong" : "MonthDayRangeShort";
-      Add(Column);
-      return Column;
+        item.TextWidth = DateRangeFormatter.Default.MonthDayRangeShortTextLength;
+      item.MinTextWidth = item.TextWidth;
+      item.SizeGroup = longFormat ? "MonthDayRangeLong" : "MonthDayRangeShort";
+      Add(item);
+      return item;
     }
 
     #endregion
@@ -1261,9 +1261,9 @@ namespace FreeLibSet.Forms.Docs
 
     private void VTRefDocTextColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 TableId = args.GetInt(0);
-      Int32 DocId = args.GetInt(1);
-      args.Value = _GridProducer.UI.TextHandlers.GetTextValue(TableId, DocId);
+      Int32 tableId = args.GetInt(0);
+      Int32 docId = args.GetInt(1);
+      args.Value = _GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
     }
 
 
@@ -1329,41 +1329,41 @@ namespace FreeLibSet.Forms.Docs
 
     private void NodeControl_ValueNeeded(object sender, NodeControlValueEventArgs args)
     {
-      BindableControl NodeControl = (BindableControl)sender;
-      DataRow Row = args.Node.Tag as DataRow;
-      if (Row != null)
+      BindableControl nodeControl = (BindableControl)sender;
+      DataRow row = args.Node.Tag as DataRow;
+      if (row != null)
       {
         if (_ColumnName == null)
         {
           // Инициализация при первом вызове
-          if (Row.Table.Columns.Contains(NodeControl.DataPropertyName))
+          if (row.Table.Columns.Contains(nodeControl.DataPropertyName))
           {
-            _ColumnName = NodeControl.DataPropertyName;
+            _ColumnName = nodeControl.DataPropertyName;
             _UseCache = false;
           }
           else
           {
-            int p = NodeControl.DataPropertyName.IndexOf('.');
+            int p = nodeControl.DataPropertyName.IndexOf('.');
             if (p < 0)
-              throw new InvalidOperationException("Таблица \"" + Row.Table.TableName + "\" не содержит столбца \"" +
-                NodeControl.DataPropertyName + "\"");
-            _ColumnName = NodeControl.DataPropertyName.Substring(0, p);
-            _TableName = Row.Table.TableName;
+              throw new InvalidOperationException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" +
+                nodeControl.DataPropertyName + "\"");
+            _ColumnName = nodeControl.DataPropertyName.Substring(0, p);
+            _TableName = row.Table.TableName;
             _UseCache = true;
           }
         }
 
-        if (Row.RowState == DataRowState.Deleted)
+        if (row.RowState == DataRowState.Deleted)
           args.Value = null;
         else
         {
           if (_UseCache)
           {
-            Int32 RefId = DataTools.GetInt(Row, _ColumnName);
-            args.Value = Cache[_TableName].GetRefValue(NodeControl.DataPropertyName, RefId, Row.Table.DataSet);
+            Int32 RefId = DataTools.GetInt(row, _ColumnName);
+            args.Value = Cache[_TableName].GetRefValue(nodeControl.DataPropertyName, RefId, row.Table.DataSet);
           }
           else
-            args.Value = DataTools.GetString(Row, NodeControl.DataPropertyName);
+            args.Value = DataTools.GetString(row, nodeControl.DataPropertyName);
         }
       }
       else

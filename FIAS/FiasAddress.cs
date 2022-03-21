@@ -466,7 +466,7 @@ namespace FreeLibSet.FIAS
     /// ≈сли в текущем адресе дл€ уровн€ из набора нет значени€, то уровень очищаетс€.
     /// ¬ заполн€мом адресе уровни, не перечисленные в наборе, не замен€ютс€</param>
     public void CopyNamesTo(FiasAddress dest, FiasLevelSet levels)
-    { 
+    {
 #if DEBUG
       if (dest == null)
         throw new ArgumentNullException("dest");
@@ -832,12 +832,12 @@ namespace FreeLibSet.FIAS
     {
       get
       {
-        bool HasHouseGuid = false;
-        bool HasHouseName = false;
-        bool HasRoomGuid = false;
-        bool HasRoomName = false;
+        bool hasHouseGuid = false;
+        bool hasHouseName = false;
+        bool hasRoomGuid = false;
+        bool hasRoomName = false;
 
-        int _IntValue = 0;
+        int intValue = 0;
         for (int i = 0; i < FiasTools.AllLevels.Length; i++)
         {
           switch (FiasTools.AllLevels[i])
@@ -847,11 +847,11 @@ namespace FreeLibSet.FIAS
             case FiasLevel.Structure:
               if (InternalGetString(FiasLevel.House, FiasItemPart.Guid).Length > 0)
               {
-                HasHouseGuid = true;
+                hasHouseGuid = true;
                 if (InternalGetString(FiasTools.AllLevels[i], FiasItemPart.Name).Length > 0)
                 {
-                  _IntValue |= (1 << i);
-                  HasHouseName = true;
+                  intValue |= (1 << i);
+                  hasHouseName = true;
                 }
               }
               break;
@@ -860,26 +860,26 @@ namespace FreeLibSet.FIAS
             case FiasLevel.Room:
               if (InternalGetString(FiasLevel.Flat, FiasItemPart.Guid).Length > 0)
               {
-                HasRoomGuid = true;
+                hasRoomGuid = true;
                 if (InternalGetString(FiasTools.AllLevels[i], FiasItemPart.Name).Length > 0)
                 {
-                  _IntValue |= (1 << i);
-                  HasRoomName = true;
+                  intValue |= (1 << i);
+                  hasRoomName = true;
                 }
               }
               break;
             default:
               if (InternalGetString(FiasTools.AllLevels[i], FiasItemPart.Guid).Length > 0)
-                _IntValue |= (1 << i);
+                intValue |= (1 << i);
               break;
           }
         }
 
-        FiasLevelSet res = new FiasLevelSet(_IntValue);
+        FiasLevelSet res = new FiasLevelSet(intValue);
 
-        if (HasHouseGuid && (!HasHouseName))
+        if (hasHouseGuid && (!hasHouseName))
           res |= FiasLevelSet.HouseLevels;
-        if (HasRoomGuid && (!HasRoomName))
+        if (hasRoomGuid && (!hasRoomName))
           res |= FiasLevelSet.RoomLevels;
 
         return res;
@@ -1441,7 +1441,7 @@ namespace FreeLibSet.FIAS
         return (FiasLevel)(item.Tag);
       else
         return FiasLevel.Unknown;
-    }                       
+    }
 
     #endregion
 
@@ -1567,16 +1567,16 @@ namespace FreeLibSet.FIAS
     /// <returns>–езультат сравнени€</returns>
     public FiasLevelCompareResult CompareTo(FiasEditorLevel editorLevel, out string errorText)
     {
-      FiasLevel BL = this.NameBottomLevel;
-      if (BL == FiasLevel.Unknown)
+      FiasLevel bl = this.NameBottomLevel;
+      if (bl == FiasLevel.Unknown)
       {
         errorText = "јдрес не заполнен";
         return FiasLevelCompareResult.Less;
       }
-      int pBL = FiasTools.AllLevelIndexer.IndexOf(BL);
+      int pBL = FiasTools.AllLevelIndexer.IndexOf(bl);
 #if DEBUG
       if (pBL < 0)
-        throw new BugException("Ќеправильный NameBottomLevel=" + BL.ToString());
+        throw new BugException("Ќеправильный NameBottomLevel=" + bl.ToString());
 #endif
 
       switch (editorLevel)
@@ -1609,7 +1609,7 @@ namespace FreeLibSet.FIAS
             errorText = "Ќе должны заполн€тьс€ уровни ниже улицы";
             return FiasLevelCompareResult.Greater;
           }
-          if (BL == FiasLevel.Village && GetName(FiasLevel.City).Length > 0)
+          if (bl == FiasLevel.Village && GetName(FiasLevel.City).Length > 0)
           {
             errorText = "≈сли заполнен населенный пункт без улицы, то населенный пункт не может располагатьс€ в городе";
             return FiasLevelCompareResult.Less;

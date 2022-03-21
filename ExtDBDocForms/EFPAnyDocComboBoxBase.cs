@@ -526,16 +526,16 @@ namespace FreeLibSet.Forms.Docs
       if (ciShowDocInfo != null)
       {
         // 11.04.2016
-        DBxDocSelection DocSel;
+        DBxDocSelection docSel;
         try
         {
-          DocSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+          docSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
           UserPermissions ups = _ControlProvider.UI.DocProvider.UserPermissions;
-          if (DocSel.IsEmpty || ups == null)
+          if (docSel.IsEmpty || ups == null)
             ciShowDocInfo.Enabled = false;
           else
           {
-            string DocTypeName = DocSel.TableNames[0];
+            string DocTypeName = docSel.TableNames[0];
             ciShowDocInfo.Enabled = DocTypeViewHistoryPermission.GetAllowed(ups, DocTypeName);
           }
         }
@@ -565,25 +565,25 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowTempMessage("Значение не выбрано");
         return;
       }
-      DBxDocSelection DocSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
-      DataObject DObj = new DataObject();
-      DObj.SetData(DocSel);
-      _ControlProvider.UI.OnAddCopyFormats(DObj, DocSel); // 06.02.2021
-      DObj.SetText(_ControlProvider.Control.Text);
-      EFPApp.Clipboard.SetDataObject(DObj, true);
+      DBxDocSelection docSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DataObject dObj = new DataObject();
+      dObj.SetData(docSel);
+      _ControlProvider.UI.OnAddCopyFormats(dObj, docSel); // 06.02.2021
+      dObj.SetText(_ControlProvider.Control.Text);
+      EFPApp.Clipboard.SetDataObject(dObj, true);
     }
 
     void ciPaste_Click(object sender, EventArgs args)
     {
-      DBxDocSelection DocSel = _ControlProvider.UI.PasteDocSel();
-      if (DocSel == null)
+      DBxDocSelection docSel = _ControlProvider.UI.PasteDocSel();
+      if (docSel == null)
       {
         EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
         return;
       }
       // Сами не нормализуем
       // Это может делать виртуальный метод SetDocSel()
-      _ControlProvider.PerformSetDocSel(DocSel);
+      _ControlProvider.PerformSetDocSel(docSel);
     }
 
     #endregion
@@ -599,19 +599,19 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowTempMessage("Значение не выбрано");
         return;
       }
-      DBxDocSelection DocSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
-      if (DocSel.IsEmpty)
+      DBxDocSelection docSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+      if (docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Нет выбранного документа");
         return;
       }
 
       // Наш тип документа - первый в списке
-      string DocTypeName = DocSel.TableNames[0];
-      Int32 DocId = DocSel[DocTypeName][0];
+      string docTypeName = docSel.TableNames[0];
+      Int32 docId = docSel[docTypeName][0];
 
-      DocTypeUI dtui = _ControlProvider.UI.DocTypes[DocTypeName];
-      dtui.ShowDocInfo(DocId);
+      DocTypeUI dtui = _ControlProvider.UI.DocTypes[docTypeName];
+      dtui.ShowDocInfo(docId);
     }
 
     #endregion

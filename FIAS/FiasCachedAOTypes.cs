@@ -217,7 +217,7 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(aoType))
         return 0;
 
-      Int32 AOTypeId;
+      Int32 aoTypeId;
       lock (_DS)
       {
         DataView dv = _DS.Tables[0].DefaultView;
@@ -238,12 +238,12 @@ namespace FreeLibSet.FIAS
             p = dv.Find(aoType.Substring(0, aoType.Length - 1));
         }
         if (p < 0)
-          AOTypeId = 0;
+          aoTypeId = 0;
         else
-          AOTypeId = DataTools.GetInt(dv[p].Row, "Id");
+          aoTypeId = DataTools.GetInt(dv[p].Row, "Id");
       }
 
-      return AOTypeId;
+      return aoTypeId;
     }
 
     /// <summary>
@@ -329,32 +329,32 @@ namespace FreeLibSet.FIAS
               return false;
           }
         case FiasLevel.Structure: // строение
-          FiasStructureStatus StrStatus = FiasEnumNames.ParseStructureStatus(aoType);
-          if (StrStatus == FiasStructureStatus.Unknown)
+          FiasStructureStatus strStatus = FiasEnumNames.ParseStructureStatus(aoType);
+          if (strStatus == FiasStructureStatus.Unknown)
             return false;
           else
           {
-            fullAOType = FiasEnumNames.ToString(StrStatus);
+            fullAOType = FiasEnumNames.ToString(strStatus);
             return true;
           }
 
         case FiasLevel.Flat:
-          FiasFlatType FlatType = FiasEnumNames.ParseFlatType(aoType);
-          if (FlatType == FiasFlatType.Unknown)
+          FiasFlatType flatType = FiasEnumNames.ParseFlatType(aoType);
+          if (flatType == FiasFlatType.Unknown)
             return false;
           else
           {
-            fullAOType = FiasEnumNames.ToString(FlatType);
+            fullAOType = FiasEnumNames.ToString(flatType);
             return true;
           }
 
         case FiasLevel.Room:
-          FiasRoomType RoomType = FiasEnumNames.ParseRoomType(aoType);
-          if (RoomType == FiasRoomType.Unknown)
+          FiasRoomType roomType = FiasEnumNames.ParseRoomType(aoType);
+          if (roomType == FiasRoomType.Unknown)
             return false;
           else
           {
-            fullAOType = FiasEnumNames.ToString(RoomType);
+            fullAOType = FiasEnumNames.ToString(roomType);
             return true;
           }
 
@@ -391,50 +391,50 @@ namespace FreeLibSet.FIAS
     /// <summary>
     /// Возвращает сокращение, соответствующее заданному типу адресообразующего элемента
     /// </summary>
-    /// <param name="AOType">Тип адресообразующего элемента</param>
+    /// <param name="aoType">Тип адресообразующего элемента</param>
     /// <param name="level">Уровень</param>
     /// <returns>Сокращение</returns>
-    public string GetAbbreviation(string AOType, FiasLevel level)
+    public string GetAbbreviation(string aoType, FiasLevel level)
     {
       switch (level)
       {
         case FiasLevel.House: // 01.09.2021
-          FiasEstateStatus estStatus = FiasEnumNames.ParseEstateStatus(AOType);
+          FiasEstateStatus estStatus = FiasEnumNames.ParseEstateStatus(aoType);
           if (estStatus != FiasEstateStatus.Unknown)
             return FiasEnumNames.EstateStatusAbbrs[(int)estStatus];
           else
             break; // вдруг есть в справочнике
         case FiasLevel.Building:
-          if (AOType == "Корпус")
+          if (aoType == "Корпус")
             return "корп.";
           else
-            return AOType;
+            return aoType;
         case FiasLevel.Structure:
-          FiasStructureStatus strStatus = FiasEnumNames.ParseStructureStatus(AOType);
+          FiasStructureStatus strStatus = FiasEnumNames.ParseStructureStatus(aoType);
           if (strStatus == FiasStructureStatus.Unknown)
-            return AOType;
+            return aoType;
           else
             return FiasEnumNames.StructureStatusAbbrs[(int)strStatus];
         case FiasLevel.Flat:
-          FiasFlatType flatType = FiasEnumNames.ParseFlatType(AOType);
+          FiasFlatType flatType = FiasEnumNames.ParseFlatType(aoType);
           if (flatType == FiasFlatType.Unknown)
-            return AOType;
+            return aoType;
           else
             return FiasEnumNames.FlatTypeAbbrs[(int)flatType];
         case FiasLevel.Room:
-          FiasRoomType roomType = FiasEnumNames.ParseRoomType(AOType);
+          FiasRoomType roomType = FiasEnumNames.ParseRoomType(aoType);
           if (roomType == FiasRoomType.Unknown)
-            return AOType;
+            return aoType;
           else
             return FiasEnumNames.RoomTypeAbbrs[(int)roomType];
       }
 
       // Общий случай. Используем справочник
-      Int32 id = FindAOTypeId(level, AOType);
+      Int32 id = FindAOTypeId(level, aoType);
       if (id >= 0)
         return GetAOType(id, FiasAOTypeMode.Abbreviation);
       else
-        return AOType; // если не нашли, обойдемся без сокращения
+        return aoType; // если не нашли, обойдемся без сокращения
     }
 
     #endregion

@@ -146,37 +146,37 @@ namespace FreeLibSet.FIAS
 
     private bool ReplaceUnknownGuids(FiasAddress[] addresses)
     {
-      SingleScopeList<Guid> UnknownGuids = null;
+      SingleScopeList<Guid> unknownGuids = null;
       for (int i = 0; i < addresses.Length; i++)
       {
         if (addresses[i].UnknownGuid != Guid.Empty)
         {
-          if (UnknownGuids == null)
-            UnknownGuids = new SingleScopeList<Guid>();
-          UnknownGuids.Add(addresses[i].UnknownGuid);
+          if (unknownGuids == null)
+            unknownGuids = new SingleScopeList<Guid>();
+          unknownGuids.Add(addresses[i].UnknownGuid);
         }
       }
-      if (UnknownGuids == null)
+      if (unknownGuids == null)
         return false;
 
-      IDictionary<Guid, FiasGuidInfo> dictGuid = Source.GetGuidInfo(UnknownGuids.ToArray(), FiasTableType.Unknown);
+      IDictionary<Guid, FiasGuidInfo> dictGuid = Source.GetGuidInfo(unknownGuids.ToArray(), FiasTableType.Unknown);
 
       // 25.02.2021
       // Если GUID не найден, то это может быть идентификатор записи RecId.
       // Собираем еще одну коллекцию
-      List<Guid> UnknownRecIds = null; // не обязательно использовать SingleScopeList, GUIDы уже уникальны
+      List<Guid> unknownRecIds = null; // не обязательно использовать SingleScopeList, GUIDы уже уникальны
       foreach (KeyValuePair<Guid, FiasGuidInfo> pair in dictGuid)
       {
         if (pair.Value.Level == FiasLevel.Unknown)
         {
-          if (UnknownRecIds == null)
-            UnknownRecIds = new List<Guid>();
-          UnknownRecIds.Add(pair.Key);
+          if (unknownRecIds == null)
+            unknownRecIds = new List<Guid>();
+          unknownRecIds.Add(pair.Key);
         }
       }
       IDictionary<Guid, FiasGuidInfo> dictRecId = null;
-      if (UnknownRecIds != null)
-        dictRecId = Source.GetRecIdInfo(UnknownRecIds.ToArray(), FiasTableType.Unknown);
+      if (unknownRecIds != null)
+        dictRecId = Source.GetRecIdInfo(unknownRecIds.ToArray(), FiasTableType.Unknown);
 
 
       for (int i = 0; i < addresses.Length; i++)
@@ -889,10 +889,10 @@ namespace FreeLibSet.FIAS
 
     private void DoFillAddressByNames(FiasAddress address, PageLoader loader)
     {
-      bool HasErrors = false;
-      FiasLevel BottomLevel = address.GuidBottomLevel;
+      bool hasErrors = false;
+      FiasLevel bottomLevel = address.GuidBottomLevel;
 
-      int i = FiasTools.AllLevelIndexer.IndexOf(BottomLevel) + 1;
+      int i = FiasTools.AllLevelIndexer.IndexOf(bottomLevel) + 1;
       while (i < FiasTools.AOLevels.Length)
       {
         FiasLevel thisLevel = FiasTools.AOLevels[i];
@@ -915,8 +915,8 @@ namespace FreeLibSet.FIAS
             break; // следующий заполненный уровень
 
           Guid pageAOGuid = Guid.Empty;
-          if (BottomLevel != FiasLevel.Unknown)
-            pageAOGuid = address.GetGuid(BottomLevel);
+          if (bottomLevel != FiasLevel.Unknown)
+            pageAOGuid = address.GetGuid(bottomLevel);
 
           FiasCachedPageAddrOb page = loader.GetAOPage(pageAOGuid, FiasTools.AOLevels[j]);
           Int32 aoTypeId = AOTypes.FindAOTypeId(FiasTools.AOLevels[j], aoType);
@@ -940,7 +940,7 @@ namespace FreeLibSet.FIAS
             address.AddMessage(ErrorMessageKind.Error, "Адресный объект с уровнем [" + FiasEnumNames.ToString(thisLevel, true) + "] не может быть объектом верхнего уровня", thisLevel);
           else
             address.AddMessage(ErrorMessageKind.Error, "Адресный объект с уровнем [" + FiasEnumNames.ToString(thisLevel, true) + "] не может иметь родителя с уровнем [" + FiasEnumNames.ToString(testLevel, true) + "]", thisLevel);
-          HasErrors = true;
+          hasErrors = true;
         }
         else
         {
@@ -949,15 +949,15 @@ namespace FreeLibSet.FIAS
             case FiasSearchRowCount.Ok:
               _AddrObExtractor.Row = searchRes.Row;
               DoFillAddressAOPart(address, true);
-              BottomLevel = _AddrObExtractor.Level;
+              bottomLevel = _AddrObExtractor.Level;
               break;
             case FiasSearchRowCount.NotFound:
               address.AddMessage(ErrorMessageKind.Warning, "Не найден адресный объект для уровня [" + FiasEnumNames.ToString(thisLevel, false) + "]: \"" + name + " " + aoType + "\"", FiasTools.AOLevels[i]);
-              HasErrors = true;
+              hasErrors = true;
               break;
             case FiasSearchRowCount.Multi:
               address.AddMessage(ErrorMessageKind.Warning, "Найдено больше одного адресного объекта для уровня [" + FiasEnumNames.ToString(thisLevel, false) + "]: \"" + name + " " + aoType + "\"", FiasTools.AOLevels[i]);
-              HasErrors = true;
+              hasErrors = true;
               break;
           }
         }
@@ -985,18 +985,18 @@ namespace FreeLibSet.FIAS
       //  HasErrors = true;
       //}
 
-      bool HasHouse = (houseNum.Length + buildNum.Length + strNum.Length) > 0;
-      if (HasHouse)
+      bool hasHouse = (houseNum.Length + buildNum.Length + strNum.Length) > 0;
+      if (hasHouse)
       {
         if (address.GetName(FiasLevel.Village).Length +
           address.GetName(FiasLevel.PlanningStructure).Length /* 02.10.2020 */ +
           address.GetName(FiasLevel.Street).Length == 0)
         {
           address.AddHouseMessage(ErrorMessageKind.Error, "Задано здание, но не задан ни населенный пункт, ни улица");
-          HasErrors = true; // 26.10.2020
+          hasErrors = true; // 26.10.2020
         }
 
-        if (!HasErrors)
+        if (!hasErrors)
         {
           if (_Source.DBSettings.UseHouse)
           {
@@ -1034,7 +1034,7 @@ namespace FreeLibSet.FIAS
                     address.AddMessage(ErrorMessageKind.Warning, "Не задана улица, хотя в ФИАС есть улицы для населенного пункта \"" + address[FiasLevel.Village] + "\"", FiasLevel.Street); // 26.10.2020
                 }
               }
-              HasErrors = true;
+              hasErrors = true;
             }
           }
         } // HasErrors
@@ -1054,15 +1054,15 @@ namespace FreeLibSet.FIAS
       //  HasErrors = true;
       //}
 
-      bool HasRoom = (flatNum.Length + roomNum.Length) > 0;
-      if (HasRoom)
+      bool hasRoom = (flatNum.Length + roomNum.Length) > 0;
+      if (hasRoom)
       {
-        if (!HasHouse)
+        if (!hasHouse)
         {
           address.AddRoomMessage(ErrorMessageKind.Error, "Задано помещение, но не задано здание");
-          HasErrors = true; // 26.10.2020
+          hasErrors = true; // 26.10.2020
         }
-        if (_Source.DBSettings.UseRoom && (!HasErrors))
+        if (_Source.DBSettings.UseRoom && (!hasErrors))
         {
           string flatAOType = GetCorrectedAOType(address, FiasLevel.Flat);
           FiasFlatType flatType = FiasEnumNames.ParseFlatType(flatAOType);
@@ -1084,7 +1084,7 @@ namespace FreeLibSet.FIAS
                 "\" в справочнике для здания, хотя другие помещения есть");
             else
               address.AddHouseMessage(ErrorMessageKind.Info, "Справочник здания не содержит помещений");
-            HasErrors = true;
+            hasErrors = true;
           }
         }
       }
@@ -1910,10 +1910,10 @@ namespace FreeLibSet.FIAS
       for (int i = 0; i < a.Length; i++)
       {
         // Почтовый индекс мешается
-        string PostalCode = a[i].PostalCode;
+        string postalCode = a[i].PostalCode;
         a[i].PostalCode = String.Empty;
         DataRow row2 = table2.Rows.Add(i, a[i].ToString(), (int)(a[i].Actuality));
-        a[i].PostalCode = PostalCode;
+        a[i].PostalCode = postalCode;
 
 #if XXX // Куда засунуть даты?
         if (_Source.DBSettings.UseDates)
@@ -2554,7 +2554,7 @@ namespace FreeLibSet.FIAS
       return address;
     }
 
-    private static readonly char[] AuxSepChars = new char[] { ' ', '-' };
+    private static readonly char[] _AuxSepChars = new char[] { ' ', '-' };
 
     private void DoOldParseAddressPart(string part, FiasAddress address, OldFiasParseSettings parseSettings, PageLoader loader, ErrorMessageList parseErrors, ref bool useRB, bool isLastPart)
     {
@@ -2617,18 +2617,18 @@ namespace FreeLibSet.FIAS
 #endif
 
         int cnt = part.Length;
-        bool PartFound = false;
-        while ((cnt = part.LastIndexOfAny(AuxSepChars, cnt - 1, cnt)) > 0)
+        bool partFound = false;
+        while ((cnt = part.LastIndexOfAny(_AuxSepChars, cnt - 1, cnt)) > 0)
         {
           string s2 = part.Substring(0, cnt);
           if (OldAddPartToAddress(parseSettings, address, s2, loader, parseErrors))
           {
             part = part.Substring(cnt + 1);
-            PartFound = true;
+            partFound = true;
             break;
           }
         }
-        if (!PartFound)
+        if (!partFound)
           break;
       }
 
@@ -2725,12 +2725,12 @@ namespace FreeLibSet.FIAS
       if (name.Length == 0)
         return false;
 
-      FiasLevel PrevLevel = address.NameBottomLevel;
+      FiasLevel prevLevel = address.NameBottomLevel;
       int pBottomLevel = FiasTools.ParseLevelIndexer.IndexOf(parseSettings.InternalBottomLevel);
-      for (int pLevel = FiasTools.ParseLevelIndexer.IndexOf(PrevLevel) + 1; pLevel <= pBottomLevel; pLevel++)
+      for (int pLevel = FiasTools.ParseLevelIndexer.IndexOf(prevLevel) + 1; pLevel <= pBottomLevel; pLevel++)
       {
         FiasLevel level = FiasTools.ParseLevels[pLevel];
-        if (!FiasTools.IsInheritableLevel(PrevLevel, level, true /* 01.03.2021 */))
+        if (!FiasTools.IsInheritableLevel(prevLevel, level, true /* 01.03.2021 */))
           continue;
 
         switch (FiasTools.GetTableType(level))

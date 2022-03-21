@@ -218,61 +218,61 @@ efpMode.Enabled = false;
     {
       // Не вызываем base.CreateEditor(Editor);
 
-      EditDocTypePermissionForm Form = new EditDocTypePermissionForm(editor.BaseProvider, UI, DocTypeNames, ExcludedDocTypeNames, base.TextValues, base.ImageKeys, editor.IsReadOnly);
-      Form.efpSelMode[0].Enabled = CanBeEmpty;
+      EditDocTypePermissionForm form = new EditDocTypePermissionForm(editor.BaseProvider, UI, DocTypeNames, ExcludedDocTypeNames, base.TextValues, base.ImageKeys, editor.IsReadOnly);
+      form.efpSelMode[0].Enabled = CanBeEmpty;
       if (CanBeEmpty)
       { 
-        Form.efpDocType.EmptyText = "[ Все типы документов ]";
-        Form.efpDocType.EmptyImageKey = "Table";
+        form.efpDocType.EmptyText = "[ Все типы документов ]";
+        form.efpDocType.EmptyImageKey = "Table";
       }
-      editor.Control = Form.MainPanel;
-      editor.UserData = Form;
+      editor.Control = form.MainPanel;
+      editor.UserData = form;
       editor.ReadValues += new UserPermissionEditorRWEventHandler(Editor_ReadValues);
       editor.WriteValues += new UserPermissionEditorRWEventHandler(Editor_WriteValues);
     }
 
     void Editor_ReadValues(object sender, UserPermissionEditorRWEventArgs args)
     {
-      UserPermissionEditor Editor = (UserPermissionEditor)sender;
-      EditDocTypePermissionForm Form = (EditDocTypePermissionForm)(Editor.UserData);
+      UserPermissionEditor editor = (UserPermissionEditor)sender;
+      EditDocTypePermissionForm form = (EditDocTypePermissionForm)(editor.UserData);
 
-      string[] DocTypeNames = GetDocTypeNames(args.Permission);
-      if (DocTypeNames == null)
-        DocTypeNames = DataTools.EmptyStrings;
-      if (DocTypeNames.Length == 0)
+      string[] docTypeNames = GetDocTypeNames(args.Permission);
+      if (docTypeNames == null)
+        docTypeNames = DataTools.EmptyStrings;
+      if (docTypeNames.Length == 0)
       {
         if (CanBeEmpty)
-          Form.efpSelMode.SelectedIndex = 0;
+          form.efpSelMode.SelectedIndex = 0;
         else
-          Form.efpSelMode.SelectedIndex = 1;
-        Form.efpDocType.DocTypeName = String.Empty;
+          form.efpSelMode.SelectedIndex = 1;
+        form.efpDocType.DocTypeName = String.Empty;
       }
       else
       {
-        Form.efpDocType.DocTypeName = DocTypeNames[0];
-        Form.efpSelMode.SelectedIndex = 1;
-        if (DocTypeNames.Length > 1)
+        form.efpDocType.DocTypeName = docTypeNames[0];
+        form.efpSelMode.SelectedIndex = 1;
+        if (docTypeNames.Length > 1)
           EFPApp.ErrorMessageBox("В редактируемом разрешениии указано несколько видов документов. Редактирование таких разрешений не поддерживается");
       }
 
-      int IntValue = GetIndexValue(args.Permission);
-      Form.efpMode.SelectedIndex = IntValue;
+      int intValue = GetIndexValue(args.Permission);
+      form.efpMode.SelectedIndex = intValue;
     }
 
     void Editor_WriteValues(object sender, UserPermissionEditorRWEventArgs args)
     {
-      UserPermissionEditor Editor = (UserPermissionEditor)sender;
-      EditDocTypePermissionForm Form = (EditDocTypePermissionForm)(Editor.UserData);
+      UserPermissionEditor editor = (UserPermissionEditor)sender;
+      EditDocTypePermissionForm form = (EditDocTypePermissionForm)(editor.UserData);
 
-      if (Form.efpSelMode.SelectedIndex == 0)
+      if (form.efpSelMode.SelectedIndex == 0)
         SetDocTypeNames(args.Permission, null);
-      else if (Form.efpDocType.DocType == null)
+      else if (form.efpDocType.DocType == null)
         throw new BugException("Тип документов не выбран");
       else
-        SetDocTypeNames(args.Permission, new string[] { Form.efpDocType.DocTypeName });
+        SetDocTypeNames(args.Permission, new string[] { form.efpDocType.DocTypeName });
 
-      int IntValue = Form.efpMode.SelectedIndex;
-      SetIndexValue(args.Permission, IntValue);
+      int intValue = form.efpMode.SelectedIndex;
+      SetIndexValue(args.Permission, intValue);
     }
 
     /// <summary>

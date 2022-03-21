@@ -210,11 +210,11 @@ namespace FreeLibSet.Forms.Docs
     public bool ValidateBeforeEdit
     {
       get { return _ValidateBeforeEdit; }
-      set 
+      set
       {
         if (value && _MainEditor == null)
           throw new InvalidOperationException("Нельзя устанавливать свойство ValidateBeforeEdit в true, т.к. просмотр не относится к DocumentEditor"); // 21.01.2022
-        _ValidateBeforeEdit = value; 
+        _ValidateBeforeEdit = value;
       }
     }
     private bool _ValidateBeforeEdit;
@@ -223,7 +223,7 @@ namespace FreeLibSet.Forms.Docs
     /// Поля, которые требуются просмотру
     /// </summary>
     internal DBxColumns UsedColumnNames { get { return _UsedColumnNames; } }
-    private DBxColumns _UsedColumnNames; 
+    private DBxColumns _UsedColumnNames;
 
     /// <summary>
     /// Если true (по умолчанию), то допускается редактирование "по месту".
@@ -240,7 +240,6 @@ namespace FreeLibSet.Forms.Docs
     #endregion
 
     #region Методы
-
 
     /// <summary>
     /// Закончить инициализацию просмотра. 

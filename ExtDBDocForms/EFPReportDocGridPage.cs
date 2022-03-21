@@ -24,7 +24,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="docTypeUI">Интерфейс для вида документа</param>
     public EFPReportDocGridPage(DocTypeUI docTypeUI)
-      :base(docTypeUI.UI)
+      : base(docTypeUI.UI)
     {
       //if (docTypeUI == null)
       //  throw new ArgumentNullException("docTypeUI");
@@ -80,14 +80,14 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Провайдер управляющего элемента</returns>
     protected override EFPDataGridView DoCreateControlProvider(DataGridView control)
     {
-      EFPDocGridView Res = new EFPDocGridView(BaseProvider, control, _DocTypeUI);
-      Res.Filters = new GridFilters();
-      Res.CommandItems.CanEditFilters = false; // 19.10.2015
+      EFPDocGridView res = new EFPDocGridView(BaseProvider, control, _DocTypeUI);
+      res.Filters = new GridFilters();
+      res.CommandItems.CanEditFilters = false; // 19.10.2015
       // 06.07.2021
       // Можно задавать порядок сортировки
       //Res.UseGridProducerOrders = false;
       //Res.CustomOrderAllowed = false; // 05.07.2021
-      return Res;
+      return res;
     }
 
     /// <summary>
@@ -99,7 +99,6 @@ namespace FreeLibSet.Forms.Docs
         ControlProvider.FixedDocIds = FixedDocIds;
       base.InitData();
     }
-
 
     #endregion
   }

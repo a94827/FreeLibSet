@@ -93,7 +93,7 @@ namespace FreeLibSet.FIAS
       else
         sb.Append(", включая исторические");
       sb.Append(", в: ");
-      if(_StartAddress.IsEmpty)
+      if (_StartAddress.IsEmpty)
         sb.Append("Весь справочник");
       else
         sb.Append(_StartAddress.ToString());

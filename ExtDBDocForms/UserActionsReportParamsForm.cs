@@ -303,27 +303,27 @@ namespace FreeLibSet.Forms.Docs
 
     protected override bool QueryParams()
     {
-      UserActionsReportParamsForm ParamForm = new UserActionsReportParamsForm(UI);
-      ParamForm.efpPeriod.First.NValue = Params.FirstDate;
-      ParamForm.efpPeriod.Last.NValue = Params.LastDate;
+      UserActionsReportParamsForm paramForm = new UserActionsReportParamsForm(UI);
+      paramForm.efpPeriod.First.NValue = Params.FirstDate;
+      paramForm.efpPeriod.Last.NValue = Params.LastDate;
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
-        ParamForm.efpUser.DocId = Params.UserId;
-      ParamForm.efpOneType.Checked = !String.IsNullOrEmpty(Params.SingleDocTypeName);
+        paramForm.efpUser.DocId = Params.UserId;
+      paramForm.efpOneType.Checked = !String.IsNullOrEmpty(Params.SingleDocTypeName);
       try
       {
-        ParamForm.efpDocType.DocTypeName = Params.SingleDocTypeName;
+        paramForm.efpDocType.DocTypeName = Params.SingleDocTypeName;
       }
       catch { }
 
-      if (EFPApp.ShowDialog(ParamForm, true) != DialogResult.OK)
+      if (EFPApp.ShowDialog(paramForm, true) != DialogResult.OK)
         return false;
 
-      Params.FirstDate = ParamForm.efpPeriod.First.NValue;
-      Params.LastDate = ParamForm.efpPeriod.Last.NValue;
+      Params.FirstDate = paramForm.efpPeriod.First.NValue;
+      Params.LastDate = paramForm.efpPeriod.Last.NValue;
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
-        Params.UserId = ParamForm.efpUser.DocId;
-      if (ParamForm.efpOneType.Checked)
-        Params.SingleDocTypeName = ParamForm.efpDocType.DocTypeName;
+        Params.UserId = paramForm.efpUser.DocId;
+      if (paramForm.efpOneType.Checked)
+        Params.SingleDocTypeName = paramForm.efpDocType.DocTypeName;
       else
         Params.SingleDocTypeName = String.Empty;
       return true;
@@ -391,15 +391,15 @@ namespace FreeLibSet.Forms.Docs
       switch (args.ColumnName)
       {
         case "UserId.UserName":
-          Int32 UserId = DataTools.GetInt(args.DataRow, "UserId");
-          if (UserId != 0)
-            args.Value = ControlProvider.UI.TextHandlers.GetTextValue(ControlProvider.UI.DocProvider.DocTypes.UsersTableName, UserId);
+          Int32 userId = DataTools.GetInt(args.DataRow, "UserId");
+          if (userId != 0)
+            args.Value = ControlProvider.UI.TextHandlers.GetTextValue(ControlProvider.UI.DocProvider.DocTypes.UsersTableName, userId);
           break;
         case "EditTime":
-          DateTime? StartTime = DataTools.GetNullableDateTime(args.DataRow, "StartTime");
-          DateTime? ApplyChangesTime = DataTools.GetNullableDateTime(args.DataRow, "ApplyChangesTime");
-          if (StartTime.HasValue && ApplyChangesTime.HasValue)
-            args.Value = ApplyChangesTime.Value - StartTime.Value;
+          DateTime? startTime = DataTools.GetNullableDateTime(args.DataRow, "StartTime");
+          DateTime? applyChangesTime = DataTools.GetNullableDateTime(args.DataRow, "ApplyChangesTime");
+          if (startTime.HasValue && applyChangesTime.HasValue)
+            args.Value = applyChangesTime.Value - startTime.Value;
           break;
       }
     }
@@ -407,53 +407,53 @@ namespace FreeLibSet.Forms.Docs
     private void MainGridHandler_EditData(object sender, EventArgs args)
     {
       // Открытие дополнительной закладки для редактирования
-      EFPDBxGridView ControlProvider = (EFPDBxGridView)sender;
-      if (ControlProvider.State != EFPDataGridViewState.View)
+      EFPDBxGridView controlProvider = (EFPDBxGridView)sender;
+      if (controlProvider.State != EFPDataGridViewState.View)
       {
         EFPApp.ShowTempMessage("Неизвестный режим редактирования");
         return;
       }
-      DataRow Row = ControlProvider.CurrentDataRow;
-      if (Row == null)
+      DataRow row = controlProvider.CurrentDataRow;
+      if (row == null)
       {
         EFPApp.ShowTempMessage("Строка не выбрана");
         return;
       }
 
-      Int32 ActionId = DataTools.GetInt(Row, "Id");
+      Int32 actionId = DataTools.GetInt(row, "Id");
 
-      if (Pages.FindAndActivate(ActionId.ToString()))
+      if (Pages.FindAndActivate(actionId.ToString()))
         return; // Уже была закладка
 
 
-      EFPReportDBxGridPage ActionPage = new EFPReportDBxGridPage(UI);
-      ActionPage.Title = ActionId.ToString();
-      ActionPage.ToolTipText = DataTools.GetDateTime(Row, "ActionTime").ToString() + Environment.NewLine +
-        DataTools.GetString(Row, "ActionInfo");
-      ActionPage.InitGrid += new EventHandler(ActionPage_InitGrid);
+      EFPReportDBxGridPage actionPage = new EFPReportDBxGridPage(UI);
+      actionPage.Title = actionId.ToString();
+      actionPage.ToolTipText = DataTools.GetDateTime(row, "ActionTime").ToString() + Environment.NewLine +
+        DataTools.GetString(row, "ActionInfo");
+      actionPage.InitGrid += new EventHandler(ActionPage_InitGrid);
 
-      ActionPage.DataSource = UI.DocProvider.GetUserActionDocTable(ActionId).DefaultView;
+      actionPage.DataSource = UI.DocProvider.GetUserActionDocTable(actionId).DefaultView;
 
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
       {
-        Int32 UserId = DataTools.GetInt(Row, "UserId");
-        string UserName = UI.DocTypes[UI.DocProvider.DocTypes.UsersTableName].GetTextValue(UserId);
-        Int32 SessionId = 0;
+        Int32 userId = DataTools.GetInt(row, "UserId");
+        string userName = UI.DocTypes[UI.DocProvider.DocTypes.UsersTableName].GetTextValue(userId);
+        Int32 sessionId = 0;
         if (UI.DocProvider.DocTypes.UseSessionId)
-          SessionId = DataTools.GetInt(Row, "SessionId");
-        ActionPage.FilterInfo.Add("Пользователь", UserName + " (UserId=" + UserId.ToString() + ")" +
-          (SessionId == 0 ? String.Empty : (" (SessionId=" + SessionId.ToString() + ")")));
+          sessionId = DataTools.GetInt(row, "SessionId");
+        actionPage.FilterInfo.Add("Пользователь", userName + " (UserId=" + userId.ToString() + ")" +
+          (sessionId == 0 ? String.Empty : (" (SessionId=" + sessionId.ToString() + ")")));
         if (EFPApp.ShowListImages)
-          ActionPage.FilterInfo.LastAdded.ImageKey = UI.GetUserImageKey(UserId);
+          actionPage.FilterInfo.LastAdded.ImageKey = UI.GetUserImageKey(userId);
       }
-      DateTime? ActionTime = DataTools.GetNullableDateTime(Row, "ActionTime");
-      string ActionInfo = DataTools.GetString(Row, "ActionInfo");
+      DateTime? actionTime = DataTools.GetNullableDateTime(row, "ActionTime");
+      string actionInfo = DataTools.GetString(row, "ActionInfo");
 
 
-      ActionPage.FilterInfo.Add("Время", ActionTime.ToString());
-      ActionPage.FilterInfo.Add("Действие", ActionInfo);
-      ActionPage.ExtraPageKey = ActionId.ToString();
-      Pages.Add(ActionPage);
+      actionPage.FilterInfo.Add("Время", actionTime.ToString());
+      actionPage.FilterInfo.Add("Действие", actionInfo);
+      actionPage.ExtraPageKey = actionId.ToString();
+      Pages.Add(actionPage);
     }
 
     private void MainGridHandler_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
@@ -469,15 +469,15 @@ namespace FreeLibSet.Forms.Docs
           spl.AllowCancel = true;
           for (int i = 0; i < args.DataRows.Length; i++)
           {
-            Int32 ActionId = DataTools.GetInt(args.DataRows[i], "Id");
-            DataTable Table = UI.DocProvider.GetUserActionDocTable(ActionId); // не оптимально
-            foreach (DataRow Row in Table.Rows)
+            Int32 actionId = DataTools.GetInt(args.DataRows[i], "Id");
+            DataTable table = UI.DocProvider.GetUserActionDocTable(actionId); // не оптимально
+            foreach (DataRow row in table.Rows)
             {
-              Int32 DocTableId = DataTools.GetInt(Row, "DocTableId");
-              DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(DocTableId);
+              Int32 docTableId = DataTools.GetInt(row, "DocTableId");
+              DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
               if (dt == null)
                 continue;
-              Int32 DocId = DataTools.GetInt(Row, "DocId");
+              Int32 DocId = DataTools.GetInt(row, "DocId");
               args.DocSel.Add(dt.Name, DocId);
             }
             spl.IncPercent();
@@ -499,45 +499,45 @@ namespace FreeLibSet.Forms.Docs
 
     void ActionPage_InitGrid(object sender, EventArgs args)
     {
-      EFPReportDBxGridPage ActionPage = (EFPReportDBxGridPage)sender;
+      EFPReportDBxGridPage actionPage = (EFPReportDBxGridPage)sender;
 
-      ActionPage.ControlProvider.Columns.AddImage("Image1");
+      actionPage.ControlProvider.Columns.AddImage("Image1");
       if (UI.DebugShowIds)
-        ActionPage.ControlProvider.Columns.AddInt("DocTableId", true, "DocTableId", 5);
-      ActionPage.ControlProvider.Columns.AddText("ВидДокумента", false, "Вид документа", 10, 5);
+        actionPage.ControlProvider.Columns.AddInt("DocTableId", true, "DocTableId", 5);
+      actionPage.ControlProvider.Columns.AddText("ВидДокумента", false, "Вид документа", 10, 5);
 
-      ActionPage.ControlProvider.Columns.AddImage("Image2");
+      actionPage.ControlProvider.Columns.AddImage("Image2");
       if (UI.DebugShowIds)
-        ActionPage.ControlProvider.Columns.AddInt("Action", true, "Action", 5);
-      ActionPage.ControlProvider.Columns.AddText("Действие", false, "Действие пользователя", 10, 5);
+        actionPage.ControlProvider.Columns.AddInt("Action", true, "Action", 5);
+      actionPage.ControlProvider.Columns.AddText("Действие", false, "Действие пользователя", 10, 5);
 
-      ActionPage.ControlProvider.Columns.AddInt("DocId", true, "DocId", 5);
-      ActionPage.ControlProvider.Columns.AddTextFill("Документ", false, "Документ", 100, 30);
-      ActionPage.ControlProvider.Columns.AddInt("Id", true, "DocActionId", 5);
+      actionPage.ControlProvider.Columns.AddInt("DocId", true, "DocId", 5);
+      actionPage.ControlProvider.Columns.AddTextFill("Документ", false, "Документ", 100, 30);
+      actionPage.ControlProvider.Columns.AddInt("Id", true, "DocActionId", 5);
 
-      ActionPage.ControlProvider.DisableOrdering();
-      ActionPage.ControlProvider.ConfigSectionName = "ПросмотрОдногоДействия";
+      actionPage.ControlProvider.DisableOrdering();
+      actionPage.ControlProvider.ConfigSectionName = "ПросмотрОдногоДействия";
 
-      ActionPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ActionGridHandler_GetRowAttributes);
-      ActionPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ActionGridHandler_GetCellAttributes);
-      ActionPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
+      actionPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ActionGridHandler_GetRowAttributes);
+      actionPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ActionGridHandler_GetCellAttributes);
+      actionPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
 
 
-      ActionPage.ControlProvider.CanMultiEdit = false;
-      ActionPage.ControlProvider.ReadOnly = true;
-      ActionPage.ControlProvider.CanView = true;
-      ActionPage.ControlProvider.EditData += new EventHandler(ActionGridHandler_EditData);
+      actionPage.ControlProvider.CanMultiEdit = false;
+      actionPage.ControlProvider.ReadOnly = true;
+      actionPage.ControlProvider.CanView = true;
+      actionPage.ControlProvider.EditData += new EventHandler(ActionGridHandler_EditData);
 
       EFPCommandItem ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
       ciShowDocInfo.MenuText = "Информация о документе";
       ciShowDocInfo.ToolTipText = "Информация о документе";
       ciShowDocInfo.ShortCut = Keys.F12;
       ciShowDocInfo.ImageKey = "Information";
-      ciShowDocInfo.Tag = ActionPage.ControlProvider;
+      ciShowDocInfo.Tag = actionPage.ControlProvider;
       ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
-      ActionPage.ControlProvider.CommandItems.Add(ciShowDocInfo);
+      actionPage.ControlProvider.CommandItems.Add(ciShowDocInfo);
 
-      ActionPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(ActionPage_GetDocSel);
+      actionPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(ActionPage_GetDocSel);
     }
 
 
@@ -552,33 +552,33 @@ namespace FreeLibSet.Forms.Docs
       _CurrRow = args.DataRow;
       if (_CurrRow == null)
         return;
-      int DocTableId = DataTools.GetInt(_CurrRow, "DocTableId");
-      DBxDocType DocType = UI.DocProvider.DocTypes.FindByTableId(DocTableId);
-      if (DocType == null)
+      Int32 docTableId = DataTools.GetInt(_CurrRow, "DocTableId");
+      DBxDocType docType = UI.DocProvider.DocTypes.FindByTableId(docTableId);
+      if (docType == null)
         _CurrDocType = null;
       else
-        _CurrDocType = UI.DocTypes[DocType.Name];
+        _CurrDocType = UI.DocTypes[docType.Name];
     }
 
     void ActionGridHandler_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
-      UndoAction Action;
-      string ImageKey;
+      UndoAction action;
+      string imageKey;
       if (_CurrRow == null)
         return;
       switch (args.ColumnName)
       {
         case "Image1":
           if (_CurrDocType == null)
-            ImageKey = "No";
+            imageKey = "No";
           else
           {
             if (String.IsNullOrEmpty(_CurrDocType.ImageKey))
-              ImageKey = "Item";
+              imageKey = "Item";
             else
-              ImageKey = _CurrDocType.ImageKey;
+              imageKey = _CurrDocType.ImageKey;
           }
-          args.Value = EFPApp.MainImages.Images[ImageKey];
+          args.Value = EFPApp.MainImages.Images[imageKey];
           break;
         case "ВидДокумента":
           if (_CurrDocType == null)
@@ -587,20 +587,20 @@ namespace FreeLibSet.Forms.Docs
             args.Value = _CurrDocType.DocType.SingularTitle;
           break;
         case "Image2":
-          Action = (UndoAction)(DataTools.GetInt(_CurrRow, "Action"));
-          ImageKey = DBUI.GetUndoActionImageKey(Action);
-          args.Value = EFPApp.MainImages.Images[ImageKey];
+          action = (UndoAction)(DataTools.GetInt(_CurrRow, "Action"));
+          imageKey = DBUI.GetUndoActionImageKey(action);
+          args.Value = EFPApp.MainImages.Images[imageKey];
           break;
         case "Действие":
-          Action = (UndoAction)(DataTools.GetInt(_CurrRow, "Action"));
-          args.Value = DBUI.GetUndoActionName((UndoAction)Action);
+          action = (UndoAction)(DataTools.GetInt(_CurrRow, "Action"));
+          args.Value = DBUI.GetUndoActionName((UndoAction)action);
           break;
         case "Документ":
-          Int32 DocId = DataTools.GetInt(_CurrRow, "DocId");
+          Int32 docId = DataTools.GetInt(_CurrRow, "DocId");
           if (_CurrDocType == null)
-            args.Value = "DocId=" + DocId.ToString();
+            args.Value = "DocId=" + docId.ToString();
           else
-            args.Value = _CurrDocType.GetTextValue(DocId);
+            args.Value = _CurrDocType.GetTextValue(docId);
           break;
         default:
           return;
@@ -609,21 +609,21 @@ namespace FreeLibSet.Forms.Docs
 
     void ActionGridHandler_EditData(object sender, EventArgs args)
     {
-      EFPDBxGridView ControlProvider = (EFPDBxGridView)sender;
-      if (!ControlProvider.CheckSingleRow())
+      EFPDBxGridView controlProvider = (EFPDBxGridView)sender;
+      if (!controlProvider.CheckSingleRow())
         return;
-      DataRow Row = ControlProvider.CurrentDataRow;
-      int DocTableId = DataTools.GetInt(_CurrRow, "DocTableId");
-      DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(DocTableId);
+      DataRow row = controlProvider.CurrentDataRow;
+      Int32 docTableId = DataTools.GetInt(_CurrRow, "DocTableId");
+      DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
       if (dt == null)
       {
-        EFPApp.MessageBox("Тип документа " + DocTableId.ToString() +
+        EFPApp.MessageBox("Тип документа " + docTableId.ToString() +
         " не зарегистрирован. Вероятно, модуль, который использовал такие документы, сейчас не подключен",
         "Неизвестный тип документа", MessageBoxButtons.OK, MessageBoxIcon.Error);
         return;
       }
-      Int32 DocId = DataTools.GetInt(_CurrRow, "DocId");
-      if (DocId == 0)
+      Int32 docId = DataTools.GetInt(_CurrRow, "DocId");
+      if (docId == 0)
       {
         EFPApp.ShowTempMessage("Документ не выбран");
         return;
@@ -633,11 +633,11 @@ namespace FreeLibSet.Forms.Docs
 
       //dt2.PerformEditing(DocId, true);
       // Просмотр истории
-      int Version = DataTools.GetInt(Row, "Version");
+      int version = DataTools.GetInt(row, "Version");
 
-      DBxDocSet DocSet = new DBxDocSet(UI.DocProvider);
-      DocSet[dt.Name].ViewVersion(DocId, Version);
-      DocumentEditor de = new DocumentEditor(UI, DocSet);
+      DBxDocSet docSet = new DBxDocSet(UI.DocProvider);
+      docSet[dt.Name].ViewVersion(docId, version);
+      DocumentEditor de = new DocumentEditor(UI, docSet);
       de.Run();
 
     }
@@ -645,25 +645,25 @@ namespace FreeLibSet.Forms.Docs
     void ciShowDocInfo_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
-      EFPDBxGridView ControlProvider = (EFPDBxGridView)(ci.Tag);
+      EFPDBxGridView controlProvider = (EFPDBxGridView)(ci.Tag);
 
-      DataRow Row = ControlProvider.CurrentDataRow;
-      if (Row == null)
+      DataRow row = controlProvider.CurrentDataRow;
+      if (row == null)
       {
         EFPApp.ShowTempMessage("Строка не выбрана");
         return;
       }
-      int DocTableId = DataTools.GetInt(_CurrRow, "DocTableId");
-      DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(DocTableId);
+      Int32 docTableId = DataTools.GetInt(_CurrRow, "DocTableId");
+      DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
       if (dt == null)
       {
-        EFPApp.MessageBox("Тип документа " + DocTableId.ToString() +
+        EFPApp.MessageBox("Тип документа " + docTableId.ToString() +
         " не зарегистрирован. Вероятно, модуль, который использовал такие документы, сейчас не подключен",
         "Неизвестный тип документа", MessageBoxButtons.OK, MessageBoxIcon.Error);
         return;
       }
-      Int32 DocId = DataTools.GetInt(_CurrRow, "DocId");
-      if (DocId == 0)
+      Int32 docId = DataTools.GetInt(_CurrRow, "DocId");
+      if (docId == 0)
       {
         EFPApp.ShowTempMessage("Документ не выбран");
         return;
@@ -671,19 +671,19 @@ namespace FreeLibSet.Forms.Docs
 
 
       DocTypeUI dt2 = UI.DocTypes[dt.Name];
-      dt2.ShowDocInfo(DocId);
+      dt2.ShowDocInfo(docId);
     }
 
     void ActionPage_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
     {
       for (int i = 0; i < args.DataRows.Length; i++)
       {
-        Int32 DocTableId = DataTools.GetInt(args.DataRows[i], "DocTableId");
-        DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(DocTableId);
+        Int32 docTableId = DataTools.GetInt(args.DataRows[i], "DocTableId");
+        DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
         if (dt == null)
           continue;
-        Int32 DocId = DataTools.GetInt(args.DataRows[i], "DocId");
-        args.DocSel.Add(dt.Name, DocId);
+        Int32 docId = DataTools.GetInt(args.DataRows[i], "DocId");
+        args.DocSel.Add(dt.Name, docId);
       }
     }
 

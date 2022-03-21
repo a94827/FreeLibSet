@@ -194,18 +194,18 @@ namespace FreeLibSet.Forms.Docs
       {
         case EFPDataGridViewState.Edit:
         case EFPDataGridViewState.View:
-          DBxDocSelection DocSel = CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
-          if (DocSel != null)
+          DBxDocSelection docSel = CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+          if (docSel != null)
           {
-            if (!DocSel.IsEmpty)
+            if (!docSel.IsEmpty)
             {
               // Всегда берем первую таблицу для редактирования
-              string DocTypeName = DocSel.TableNames[0];
-              Int32[] DocIds = DocSel[DocTypeName];
-              if (DocIds.Length > 1 && (!UI.DocTypes[DocTypeName].CanMultiEdit))
-                UI.ShowDocSel(DocSel); // групповое редактирование запрещено
+              string docTypeName = docSel.TableNames[0];
+              Int32[] docIds = docSel[docTypeName];
+              if (docIds.Length > 1 && (!UI.DocTypes[docTypeName].CanMultiEdit))
+                UI.ShowDocSel(docSel); // групповое редактирование запрещено
               else
-                UI.DocTypes[DocTypeName].PerformEditing(DocIds, State, false);
+                UI.DocTypes[docTypeName].PerformEditing(docIds, State, false);
               return true;
             }
           }
@@ -303,20 +303,20 @@ namespace FreeLibSet.Forms.Docs
       if (rowIndices == null)
         rowIndices = base.SelectedRowIndices;
 
-      ErrorMessageItem[] Items = new ErrorMessageItem[rowIndices.Length];
+      ErrorMessageItem[] items = new ErrorMessageItem[rowIndices.Length];
       for (int i = 0; i < rowIndices.Length; i++)
-        Items[i] = ErrorMessages[rowIndices[i]];
+        items[i] = ErrorMessages[rowIndices[i]];
 
-      DBxDocSelection DocSel = null;
+      DBxDocSelection docSel = null;
       try
       {
         EFPApp.BeginWait("Создание выборки документов", "Выборка");
         try
         {
-          EFPDBxErrorGridViewDocSelEventArgs Args = new EFPDBxErrorGridViewDocSelEventArgs(Items, UI, reason);
-          OnGetDocSel(Args);
-          if (!Args.DocSel.IsEmpty)
-            DocSel = Args.DocSel;
+          EFPDBxErrorGridViewDocSelEventArgs args = new EFPDBxErrorGridViewDocSelEventArgs(items, UI, reason);
+          OnGetDocSel(args);
+          if (!args.DocSel.IsEmpty)
+            docSel = args.DocSel;
         }
         finally
         {
@@ -327,7 +327,7 @@ namespace FreeLibSet.Forms.Docs
       {
         EFPApp.ShowException(e, "Ошибка создания выборки документов для табличного просмотра");
       }
-      return DocSel;
+      return docSel;
     }
 
     #endregion
@@ -391,9 +391,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args"></param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
-      if (DocSel != null)
-        args.DataObject.SetData(DocSel);
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      if (docSel != null)
+        args.DataObject.SetData(docSel);
 
       base.OnAddCopyFormats(args);
     }
@@ -404,13 +404,13 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
-      if (DocSel == null || DocSel.IsEmpty)
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");
         return;
       }
-      Owner.UI.ShowDocSel(DocSel);
+      Owner.UI.ShowDocSel(docSel);
     }
 
     #endregion
@@ -455,10 +455,10 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Провайдер управляющего элемента</returns>
     protected override EFPErrorDataGridView CreateControlProvider(DataGridView control)
     {
-      EFPDBxErrorGridView ControlProvider = new EFPDBxErrorGridView(BaseProvider, control, UI);
+      EFPDBxErrorGridView controlProvider = new EFPDBxErrorGridView(BaseProvider, control, UI);
       if (GetDocSel != null)
-        ControlProvider.GetDocSel += new EFPDBxErrorGridViewDocSelEventHandler(ControlProvider_GetDocSel);
-      return ControlProvider;
+        controlProvider.GetDocSel += new EFPDBxErrorGridViewDocSelEventHandler(ControlProvider_GetDocSel);
+      return controlProvider;
     }
 
     #endregion

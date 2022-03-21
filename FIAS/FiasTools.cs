@@ -680,20 +680,20 @@ namespace FreeLibSet.FIAS
 
     #region Поля дат
 
-    internal static DateTime? GetStartOrEndDate(IFiasSource _Source, DataRow _Row, bool isStartDate)
+    internal static DateTime? GetStartOrEndDate(IFiasSource source, DataRow row, bool isStartDate)
     {
-      if (_Source.DBSettings.UseDates)
+      if (source.DBSettings.UseDates)
       {
-        if (_Source.InternalSettings.UseOADates)
+        if (source.InternalSettings.UseOADates)
         {
-          int v = DataTools.GetInt(_Row, isStartDate ? "dStartDate" : "dEndDate");
+          int v = DataTools.GetInt(row, isStartDate ? "dStartDate" : "dEndDate");
           if (v == 0)
             return null;
           else
             return DateTime.FromOADate(v);
         }
         else
-          return DataTools.GetNullableDateTime(_Row, isStartDate ? "STARTDATE" : "ENDDATE");
+          return DataTools.GetNullableDateTime(row, isStartDate ? "STARTDATE" : "ENDDATE");
       }
       else
         return null;
@@ -867,7 +867,7 @@ namespace FreeLibSet.FIAS
 
     #region GUID'ы
 
-    private static readonly CharArrayIndexer GuidChars = new CharArrayIndexer("0123456789abcdefABCDEF-(){}[]", false);
+    private static readonly CharArrayIndexer _GuidChars = new CharArrayIndexer("0123456789abcdefABCDEF-(){}[]", false);
 
     [DebuggerStepThrough]
     internal static bool TryParseGuid(string s, out Guid value)
@@ -877,7 +877,7 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(s))
         return true;
 
-      if (DataTools.IndexOfAnyOther(s, GuidChars) >= 0)
+      if (DataTools.IndexOfAnyOther(s, _GuidChars) >= 0)
         return false;
 
       try

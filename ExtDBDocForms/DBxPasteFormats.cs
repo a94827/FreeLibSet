@@ -298,15 +298,15 @@ namespace FreeLibSet.Forms.Docs
         return false;
       }
 
-      string DBIdentity = DataTools.GetString(_DataSet.ExtendedProperties["DBIdentity"]);
-      if (!String.IsNullOrEmpty(DBIdentity))
+      string dbIdentity = DataTools.GetString(_DataSet.ExtendedProperties["DBIdentity"]);
+      if (!String.IsNullOrEmpty(dbIdentity))
       {
         // Нельзя всегда проверять идентичность.
         // Таблица в буфере обмена может быть создана пользователем, который не
         // задал значение. Или таблица может не содержать ссылочных полей, и тогда
         // вставка является вполне допустимой
 
-        if (DBIdentity != _UI.DocProvider.DBIdentity)
+        if (dbIdentity != _UI.DocProvider.DBIdentity)
         {
           _DataSet = null;
           dataInfoText = "Таблица в буфере обмена относится к другой базе данных";

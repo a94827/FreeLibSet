@@ -49,13 +49,13 @@ namespace FreeLibSet.Forms.Docs
       _UI = ui;
       _State = state;
 
-      DBxDocType DocType = _UI.DocTypes[docTypeName].DocType;
-      DBxAccessMode AccessMode = ui.DocProvider.DBPermissions.TableModes[docTypeName];
+      DBxDocType docType = _UI.DocTypes[docTypeName].DocType;
+      DBxAccessMode accessMode = ui.DocProvider.DBPermissions.TableModes[docTypeName];
 
-      switch (AccessMode)
+      switch (accessMode)
       {
         case DBxAccessMode.None:
-          EFPApp.ErrorMessageBox("У Вас нет права доступа к документам \"" + DocType.PluralTitle + "\"");
+          EFPApp.ErrorMessageBox("У Вас нет права доступа к документам \"" + docType.PluralTitle + "\"");
           return;
         case DBxAccessMode.ReadOnly:
           switch (_State)
@@ -66,7 +66,7 @@ namespace FreeLibSet.Forms.Docs
               _State = EFPDataGridViewState.View;
               break;
             default:
-              EFPApp.ErrorMessageBox("У Вас нет права добавлять, удалять или редактировать документы \"" + DocType.PluralTitle + "\". Есть право только на просмотр", "Доступ запрещен");
+              EFPApp.ErrorMessageBox("У Вас нет права добавлять, удалять или редактировать документы \"" + docType.PluralTitle + "\". Есть право только на просмотр", "Доступ запрещен");
               return;
           }
           break;
@@ -75,9 +75,9 @@ namespace FreeLibSet.Forms.Docs
 
       _Documents = new DBxDocSet(ui.DocProvider);
       _Documents.CheckDocs = true;
-      DBxMultiDocs Docs = _Documents[docTypeName];
+      DBxMultiDocs mDocs = _Documents[docTypeName];
 
-      if (_State == EFPDataGridViewState.Edit && Docs.Permissions == DBxAccessMode.ReadOnly)
+      if (_State == EFPDataGridViewState.Edit && mDocs.Permissions == DBxAccessMode.ReadOnly)
         _State = EFPDataGridViewState.View; // чтобы не выбрасывалось исключение
 
       try
@@ -87,7 +87,7 @@ namespace FreeLibSet.Forms.Docs
           case EFPDataGridViewState.Edit:
             try
             {
-              Docs.Edit(docIds);
+              mDocs.Edit(docIds);
             }
             catch (DBxAccessException)
             {
@@ -96,26 +96,26 @@ namespace FreeLibSet.Forms.Docs
               // В большинстве случаев, при этой ошибке документы находятся в режиме View,
               // но теоретически может быть, что часть документов перешло в режим Edit, а часть - нет.
               // Или, документы вообще не загрузились
-              if (Docs.DocCount != docIds.Length || Docs.DocState != DBxDocState.View)
+              if (mDocs.DocCount != docIds.Length || mDocs.DocState != DBxDocState.View)
               {
-                Docs.ClearList();
-                Docs.View(docIds);
+                mDocs.ClearList();
+                mDocs.View(docIds);
               }
             }
             //DebugTools.DebugDataSet(FDocuments.DebugDataSet, "загружено");
             //int x=Docs.DocCount;
             break;
           case EFPDataGridViewState.Insert:
-            Docs.Insert();
+            mDocs.Insert();
             break;
           case EFPDataGridViewState.InsertCopy:
-            Docs.InsertCopy(docIds);
+            mDocs.InsertCopy(docIds);
             break;
           case EFPDataGridViewState.View:
-            Docs.View(docIds);
+            mDocs.View(docIds);
             break;
           case EFPDataGridViewState.Delete:
-            Docs.View(docIds);
+            mDocs.View(docIds);
             break;
           default:
             throw new InvalidEnumArgumentException("state", (int)_State, typeof(EFPDataGridViewState));
@@ -189,58 +189,58 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     private void InitActionInfo()
     {
-      DBxMultiDocs MainDocs = _Documents[0];
+      DBxMultiDocs mainDocs = _Documents[0];
       switch (_State)
       {
         case EFPDataGridViewState.Edit:
-          bool HasEdit = false;
-          bool HasRestore = false;
-          for (int i = 0; i < MainDocs.DocCount; i++)
+          bool hasEdit = false;
+          bool hasRestore = false;
+          for (int i = 0; i < mainDocs.DocCount; i++)
           {
-            if (MainDocs[i].Deleted)
-              HasRestore = true;
+            if (mainDocs[i].Deleted)
+              hasRestore = true;
             else
-              HasEdit = true;
+              hasEdit = true;
           }
 
-          string Text1;
-          if (HasRestore)
+          string text1;
+          if (hasRestore)
           {
-            if (HasEdit)
-              Text1 = "Редактирование / восстановление";
+            if (hasEdit)
+              text1 = "Редактирование / восстановление";
             else
-              Text1 = "Восстановление";
+              text1 = "Восстановление";
           }
           else
-            Text1 = "Редактирование";
+            text1 = "Редактирование";
 
           // 05.11.2015
           // UI.Text.GetTextValue(MainDocs[0]) не будет работать правильно, если текстовое представление документа
           // зависит от вычисляемых полей. Вычисление выполняется на стороне сервера.
           // Можно в ActionInfo сделать что-нибудь вроде %DOCTEXT% для подстановки на стороне сервера
 
-          if (MainDocs.DocCount == 1)
-            _Documents.ActionInfo = Text1 + " документа \"" + MainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
+          if (mainDocs.DocCount == 1)
+            _Documents.ActionInfo = text1 + " документа \"" + mainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
           else
             //FDocuments.ActionInfo = Text1 + " " + RusNumberConvert.IntWithNoun(MainDocs.Count,
             //  "документа", "документов", "документов") + " \"" + DocType.PluralTitle + "\"";
-            _Documents.ActionInfo = Text1 + " документов \"" + MainDocs.DocType.PluralTitle + "\"";
+            _Documents.ActionInfo = text1 + " документов \"" + mainDocs.DocType.PluralTitle + "\"";
           break;
         case EFPDataGridViewState.Insert:
-          _Documents.ActionInfo = "Создание документа \"" + MainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
+          _Documents.ActionInfo = "Создание документа \"" + mainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
           break;
         case EFPDataGridViewState.InsertCopy:
-          _Documents.ActionInfo = "Копирование документа \"" + MainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
+          _Documents.ActionInfo = "Копирование документа \"" + mainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
           break;
         case EFPDataGridViewState.View:
           break;
         case EFPDataGridViewState.Delete:
-          if (MainDocs.DocCount == 1)
-            _Documents.ActionInfo = "Удаление документа \"" + MainDocs.DocType.SingularTitle + "\"";
+          if (mainDocs.DocCount == 1)
+            _Documents.ActionInfo = "Удаление документа \"" + mainDocs.DocType.SingularTitle + "\"";
           else
             //FDocuments.ActionInfo = "Удаление " + RusNumberConvert.IntWithNoun(MainDocs.Count,
             //  "документа", "документов", "документов") + " \"" + DocType.PluralTitle + "\"";
-            _Documents.ActionInfo = "Удаление документов \"" + MainDocs.DocType.PluralTitle + "\"";
+            _Documents.ActionInfo = "Удаление документов \"" + mainDocs.DocType.PluralTitle + "\"";
           break;
         default:
           throw new BugException("Неизвестное значение State=" + State.ToString());
@@ -574,17 +574,17 @@ namespace FreeLibSet.Forms.Docs
 
       // Инициализация начальных значений для режима создания и копирования документа
       //TODO: AccDepClientExec.DocTypes.LoadSavedFieldValues();
-      List<string> InitNewDocTypes = new List<string>();
-      InitNewDocValues(InitNewDocTypes);
+      List<string> initNewDocTypes = new List<string>();
+      InitNewDocValues(initNewDocTypes);
 
       // Запуск внешних средств редактирования
-      bool Cancel, ShowEditor;
-      UI.DocTypes[DocTypeName].DoBeforeEdit(this, out Cancel, out ShowEditor);
-      if (Cancel)
+      bool cancel, showEditor;
+      UI.DocTypes[DocTypeName].DoBeforeEdit(this, out cancel, out showEditor);
+      if (cancel)
         return;
 
       // 25.03.2010. Инициализация начальных значений полей документов, добавленных в BeforeInsert
-      InitNewDocValues(InitNewDocTypes);
+      InitNewDocValues(initNewDocTypes);
 
       // TODO:
       /*
@@ -623,10 +623,10 @@ namespace FreeLibSet.Forms.Docs
       {
         #region Проверка прав на удаление
 
-        string ErrorText;
-        if (!_Documents.DocProvider.DocPermissions.TestDocuments(_Documents, DBxDocPermissionReason.BeforeDelete, out ErrorText))
+        string errorText;
+        if (!_Documents.DocProvider.DocPermissions.TestDocuments(_Documents, DBxDocPermissionReason.BeforeDelete, out errorText))
         {
-          EFPApp.ErrorMessageBox(ErrorText, "Нельзя удалить документ");
+          EFPApp.ErrorMessageBox(errorText, "Нельзя удалить документ");
           return;
         }
 
@@ -687,17 +687,17 @@ namespace FreeLibSet.Forms.Docs
 
         #endregion
 
-        ShowEditor = false;
+        showEditor = false;
       }
 
-      if (ShowEditor)
+      if (showEditor)
       {
-        DBxDocSelection EditDocSel = _Documents.GetDocSelection(DBxDocState.Edit);
-        if (!EditDocSel.IsEmpty)
+        DBxDocSelection editDocSel = _Documents.GetDocSelection(DBxDocState.Edit);
+        if (!editDocSel.IsEmpty)
         {
           try
           {
-            _LockGuid = Documents.AddLongLock(EditDocSel);
+            _LockGuid = Documents.AddLongLock(editDocSel);
           }
           catch (DBxDocsLockException e)
           {
@@ -743,8 +743,8 @@ namespace FreeLibSet.Forms.Docs
             {
               if (Documents[i].DocCount == 0)
                 continue; // нет документов такого типа
-              DocTypeUI ThisType = UI.DocTypes[Documents[i].DocType.Name];
-              ThisType.PerformInitEditForm(this, Documents[i]);
+              DocTypeUI thisType = UI.DocTypes[Documents[i].DocType.Name];
+              thisType.PerformInitEditForm(this, Documents[i]);
             }
 
             // Только после инициализации всех закладок можно запомнить исходные значения
@@ -871,16 +871,16 @@ namespace FreeLibSet.Forms.Docs
       {
         if (Documents[i].DocCount == 0)
           continue; // нет документов такого типа
-        DocTypeUI ThisType = UI.DocTypes[Documents[i].DocType.Name];
+        DocTypeUI thisType = UI.DocTypes[Documents[i].DocType.Name];
 
         // Используем сохраненные значения по умолчанию
         if (Documents[i].DocState == DBxDocState.Insert && (!DocumentsAreExternal))
         {
-          if (initNewDocTypes.Contains(ThisType.DocType.Name))
+          if (initNewDocTypes.Contains(thisType.DocType.Name))
             continue; // Уже инициализировался
           try
           {
-            ThisType.Columns.PerformInsert(Documents[i][0].Values, State == EFPDataGridViewState.InsertCopy);
+            thisType.Columns.PerformInsert(Documents[i][0].Values, State == EFPDataGridViewState.InsertCopy);
 
             // В режиме создания нового документа, если редактор вызывается из RBExec, 
             // пытаемся применить установленные фильтры к новому документу до редактирования.
@@ -890,9 +890,9 @@ namespace FreeLibSet.Forms.Docs
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Ошибка при инициализации новых значений документа \"" + ThisType.DocType.SingularTitle + "\" в редакторе");
+            EFPApp.ShowException(e, "Ошибка при инициализации новых значений документа \"" + thisType.DocType.SingularTitle + "\" в редакторе");
           }
-          initNewDocTypes.Add(ThisType.DocType.Name);
+          initNewDocTypes.Add(thisType.DocType.Name);
         }
       }
     }
@@ -921,31 +921,31 @@ namespace FreeLibSet.Forms.Docs
     public void ReloadData()
     {
 
-      foreach (IDocEditItem Item in DocEditItems)
-        Item.BeforeReadValues();
-      foreach (IDocEditItem Item in DocEditItems)
+      foreach (IDocEditItem item in DocEditItems)
+        item.BeforeReadValues();
+      foreach (IDocEditItem item in DocEditItems)
       {
         try
         {
-          Item.ReadValues();
+          item.ReadValues();
         }
         catch (Exception e)
         {
-          string DisplayName;
-          if (Item.ChangeInfo == null)
-            DisplayName = Item.ToString();
+          string displayName;
+          if (item.ChangeInfo == null)
+            displayName = item.ToString();
           else
-            DisplayName = Item.ChangeInfo.DisplayName;
-          EFPApp.ShowException(e, "Ошибка при считывании значения \"" + DisplayName + "\"");
+            displayName = item.ChangeInfo.DisplayName;
+          EFPApp.ShowException(e, "Ошибка при считывании значения \"" + displayName + "\"");
         }
       }
-      foreach (IDocEditItem Item in DocEditItems)
-        Item.AfterReadValues();
+      foreach (IDocEditItem item in DocEditItems)
+        item.AfterReadValues();
 
       if (AfterReadValues != null)
       {
-        DocEditEventArgs Args = new DocEditEventArgs(this);
-        AfterReadValues(this, Args);
+        DocEditEventArgs args = new DocEditEventArgs(this);
+        AfterReadValues(this, args);
       }
     }
 
@@ -1028,24 +1028,24 @@ namespace FreeLibSet.Forms.Docs
 
       string s1;
 
-      bool IsSingle = Documents[0].DocCount == 1;
-      DBxDocType DocType = Documents[0].DocType;
+      bool isSingle = Documents[0].DocCount == 1;
+      DBxDocType docType = Documents[0].DocType;
 
-      if (IsSingle)
+      if (isSingle)
       {
         if (String.IsNullOrEmpty(DocumentTextValue))
         {
-          Int32 DocId = Documents[0][0].DocId;
-          if (this.UI.TextHandlers.Contains(this.DocTypeUI.DocType.Name) && this.UI.DocProvider.IsRealDocId(DocId))
-            s1 = DocType.SingularTitle + ": " + this.DocTypeUI.GetTextValue(DocId);
+          Int32 docId = Documents[0][0].DocId;
+          if (this.UI.TextHandlers.Contains(this.DocTypeUI.DocType.Name) && this.UI.DocProvider.IsRealDocId(docId))
+            s1 = docType.SingularTitle + ": " + this.DocTypeUI.GetTextValue(docId);
           else
-            s1 = DocType.SingularTitle;
+            s1 = docType.SingularTitle;
         }
         else
-          s1 = DocType.SingularTitle + ": " + DocumentTextValue;
+          s1 = docType.SingularTitle + ": " + DocumentTextValue;
       }
       else
-        s1 = DocType.PluralTitle + ": " + Documents[0].DocCount.ToString();
+        s1 = docType.PluralTitle + ": " + Documents[0].DocCount.ToString();
 
       #endregion
 
@@ -1056,7 +1056,7 @@ namespace FreeLibSet.Forms.Docs
       switch (State)
       {
         case EFPDataGridViewState.Edit:
-          if (IsSingle)
+          if (isSingle)
           {
             if (Documents[0][0].Deleted)
               s2 = "(Восстановление)";
@@ -1078,10 +1078,10 @@ namespace FreeLibSet.Forms.Docs
         case EFPDataGridViewState.View:
           if (Documents.VersionView)
           {
-            if (IsSingle)
+            if (isSingle)
             {
-              int Version = Documents[0][0].Version;
-              s2 = "(Просмотр версии " + Version.ToString() + ")";
+              int version = Documents[0][0].Version;
+              s2 = "(Просмотр версии " + version.ToString() + ")";
             }
             else
               s2 = "(Просмотр предыдущих версий)";
@@ -1089,7 +1089,7 @@ namespace FreeLibSet.Forms.Docs
           else
           {
             // Обычный просмотр
-            if (IsSingle)
+            if (isSingle)
             {
               if (Documents[0][0].Deleted)
                 s2 = "(Просмотр удаленного документа)";
@@ -1109,7 +1109,7 @@ namespace FreeLibSet.Forms.Docs
       #endregion
 
       _Form.Text = s1 + " " + s2;
-      if (UI.DebugShowIds && State != EFPDataGridViewState.Insert && IsSingle)
+      if (UI.DebugShowIds && State != EFPDataGridViewState.Insert && isSingle)
         _Form.Text += " Id=" + Documents[0][0].DocId.ToString();
     }
 
@@ -1132,8 +1132,8 @@ namespace FreeLibSet.Forms.Docs
           // Вызываем свое событие
           if (EditorShown != null)
           {
-            DocEditEventArgs EdArgs = new DocEditEventArgs(this);
-            EditorShown(this, EdArgs);
+            DocEditEventArgs edArgs = new DocEditEventArgs(this);
+            EditorShown(this, edArgs);
           }
         }
       }
@@ -1274,7 +1274,7 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает true во время работы метода ValidateData
     /// </summary>
     public bool InsideValidateData { get { return _InsideValidateData; } }
-    private bool _InsideValidateData = false;
+    private bool _InsideValidateData;
 
     /// <summary>
     /// Проверка корректности введенных данных и копирование их из полей ввода
@@ -1319,17 +1319,17 @@ namespace FreeLibSet.Forms.Docs
       if (_InsideValidateData)
         throw new BugException("Рекурсивный вызов DocumentEditor.ValidateData()");
 
-      bool Res;
+      bool res;
       _InsideValidateData = true;
       try
       {
-        Res = ValidateData3(validate);
+        res = ValidateData3(validate);
       }
       finally
       {
         _InsideValidateData = false;
       }
-      return Res;
+      return res;
     }
 
     private bool ValidateData3(bool validate)
@@ -1339,18 +1339,18 @@ namespace FreeLibSet.Forms.Docs
       // Посылаем сообщение
       if (BeforeWrite != null)
       {
-        DocEditCancelEventArgs Args = new DocEditCancelEventArgs(this);
-        BeforeWrite(this, Args);
+        DocEditCancelEventArgs args = new DocEditCancelEventArgs(this);
+        BeforeWrite(this, args);
         if (validate)
         {
-          if (Args.Cancel)
+          if (args.Cancel)
             return false;
         }
       }
 
       if (validate)
       {
-        bool Res;
+        bool res;
         // 12.08.2007
         // На время проверки надо устанавливать признак OK даже если нажимается
         // кнопка "Запись", иначе проверка не будет выполнена
@@ -1358,13 +1358,13 @@ namespace FreeLibSet.Forms.Docs
         try
         {
           Form.DialogResult = DialogResult.OK;
-          Res = Form.FormProvider.ValidateForm();
+          res = Form.FormProvider.ValidateForm();
         }
         finally
         {
           Form.DialogResult = oldDR;
         }
-        if (!Res)
+        if (!res)
           return false;
       }
 
@@ -1420,12 +1420,12 @@ namespace FreeLibSet.Forms.Docs
       //DBxDocState DocState2 = Documents[0][0].DocState;
 
       // Передаем изменение, возможно внесенные сервером, в управляющие элементы
-      foreach (IDocEditItem Item in DocEditItems)
-        Item.BeforeReadValues();
-      foreach (IDocEditItem Item in DocEditItems)
-        Item.ReadValues();
-      foreach (IDocEditItem Item in DocEditItems)
-        Item.AfterReadValues();
+      foreach (IDocEditItem item in DocEditItems)
+        item.BeforeReadValues();
+      foreach (IDocEditItem item in DocEditItems)
+        item.ReadValues();
+      foreach (IDocEditItem item in DocEditItems)
+        item.AfterReadValues();
 
       Form.CancelButtonProvider.Text = "Закрыть";
       ChangeInfo.ResetChanges();
@@ -1465,19 +1465,19 @@ namespace FreeLibSet.Forms.Docs
         return false;
       }
       _InsideDoWrite = true;
-      bool Res;
+      bool res;
       try
       {
-        Res = DoWrite2(applyClicked);
+        res = DoWrite2(applyClicked);
       }
       finally
       {
         _InsideDoWrite = false;
       }
-      return Res;
+      return res;
     }
 
-    private static bool _InsideDoWrite = false;
+    private static bool _InsideDoWrite;
 
     private bool DoWrite2(bool applyClicked)
     {
@@ -1492,8 +1492,8 @@ namespace FreeLibSet.Forms.Docs
         // Ничего серверу передавать не надо
         try
         {
-          foreach (DBxMultiDocs Docs in Documents)
-            Docs.Delete();
+          foreach (DBxMultiDocs mDocs in Documents)
+            mDocs.Delete();
           DoApplyChanges();
         }
         catch (Exception e)
@@ -1546,12 +1546,12 @@ namespace FreeLibSet.Forms.Docs
            _State == EFPDataGridViewState.InsertCopy) && // добавлено 05.07.2016
            _LockGuid == Guid.Empty)
         {
-          DBxDocSelection EditDocSel = _Documents.GetDocSelection(DBxDocState.Insert);
-          if (!EditDocSel.IsEmpty)
+          DBxDocSelection editDocSel = _Documents.GetDocSelection(DBxDocState.Insert);
+          if (!editDocSel.IsEmpty)
           {
             try
             {
-              _LockGuid = Documents.AddLongLock(EditDocSel);
+              _LockGuid = Documents.AddLongLock(editDocSel);
             }
             catch (DBxDocsLockException e)
             {
@@ -1615,17 +1615,17 @@ namespace FreeLibSet.Forms.Docs
       {
         if (Documents[i].DocCount == 0)
           continue;
-        DocTypeUI ThisType = UI.DocTypes[Documents[i].DocType.Name];
+        DocTypeUI thisType = UI.DocTypes[Documents[i].DocType.Name];
         try
         {
-          DBxMemoryDocValues OrgVals1 = null;
+          DBxMemoryDocValues orgVals1 = null;
           if (_OrgVals != null)
-            OrgVals1 = _OrgVals[i];
-          ThisType.Columns.PerformPost(Documents[i].Values, OrgVals1);
+            orgVals1 = _OrgVals[i];
+          thisType.Columns.PerformPost(Documents[i].Values, orgVals1);
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка сохранения копий значений документа \"" + ThisType.DocType.SingularTitle + "\" для будущего использования");
+          EFPApp.ShowException(e, "Ошибка сохранения копий значений документа \"" + thisType.DocType.SingularTitle + "\" для будущего использования");
         }
       }
 
@@ -1732,16 +1732,16 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Иконка для формы</returns>
     public static Icon GetEditorStateIcon(EFPDataGridViewState state)
     {
-      string ImageKey;
+      string imageKey;
       switch (state)
       {
-        case EFPDataGridViewState.Edit: ImageKey = "Edit"; break;
-        case EFPDataGridViewState.Insert: ImageKey = "Insert"; break;
-        case EFPDataGridViewState.InsertCopy: ImageKey = "InsertCopy"; break;
-        case EFPDataGridViewState.Delete: ImageKey = "Delete"; break;
-        default: ImageKey = "View"; break;
+        case EFPDataGridViewState.Edit: imageKey = "Edit"; break;
+        case EFPDataGridViewState.Insert: imageKey = "Insert"; break;
+        case EFPDataGridViewState.InsertCopy: imageKey = "InsertCopy"; break;
+        case EFPDataGridViewState.Delete: imageKey = "Delete"; break;
+        default: imageKey = "View"; break;
       }
-      return EFPApp.MainImageIcon(ImageKey);
+      return EFPApp.MainImageIcon(imageKey);
     }
 
 
@@ -1756,17 +1756,17 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Было ли закрыто окно редактора</returns>
     public bool CloseForm(bool isOk)
     {
-      bool Res;
+      bool res;
       _NoCheckUnsavedChanges = true;
       try
       {
-        Res = _Form.FormProvider.CloseForm(isOk ? DialogResult.OK : DialogResult.Cancel);
+        res = _Form.FormProvider.CloseForm(isOk ? DialogResult.OK : DialogResult.Cancel);
       }
       finally
       {
         _NoCheckUnsavedChanges = false;
       }
-      return Res;
+      return res;
     }
 
     #endregion
@@ -1925,13 +1925,13 @@ namespace FreeLibSet.Forms.Docs
 
     private void DoShowDocInfo(int docTypeIndex)
     {
-      Int32 DocId = Documents[docTypeIndex][0].RealDocId;
-      if (DocId == 0)
+      Int32 docId = Documents[docTypeIndex][0].RealDocId;
+      if (docId == 0)
       {
         EFPApp.ShowTempMessage("Документ \"" + Documents[docTypeIndex].DocType.SingularTitle + "\" не был записан");
         return;
       }
-      UI.DocTypes[Documents[docTypeIndex].DocType.Name].ShowDocInfo(DocId);
+      UI.DocTypes[Documents[docTypeIndex].DocType.Name].ShowDocInfo(docId);
     }
 
     #endregion
@@ -2104,8 +2104,8 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("ui");
 #endif
 
-      DBxDocSelection DocSel = ui.CreateDocSelection(docTypeName, docIds);
-      return FindEditor(DocSel);
+      DBxDocSelection docSel = ui.CreateDocSelection(docTypeName, docIds);
+      return FindEditor(docSel);
     }
 
     /// <summary>
@@ -2126,14 +2126,14 @@ namespace FreeLibSet.Forms.Docs
       if (docSel.IsEmpty)
         return null;
 
-      Form[] Forms = EFPApp.GetDialogStack();
-      DocumentEditor de = DoFindEditor(Forms, docSel);
+      Form[] forms = EFPApp.GetDialogStack();
+      DocumentEditor de = DoFindEditor(forms, docSel);
       if (de != null)
         return de;
       if (EFPApp.Interface != null)
       {
-        Forms = EFPApp.Interface.GetChildForms(false);
-        de = DoFindEditor(Forms, docSel);
+        forms = EFPApp.Interface.GetChildForms(false);
+        de = DoFindEditor(forms, docSel);
         if (de != null)
           return de;
       }

@@ -1141,13 +1141,13 @@ namespace FreeLibSet.Forms.Docs
       if (controlProvider.Controls.Length != 2)
         throw new ArgumentException("Группа должна состоять из двух радиокнопок", "controlProvider");
 
-      DepInput<bool> CurrentValueInput = new DepInput<bool>(false, null);
-      CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
-      SetCurrentValueEx(CurrentValueInput);
+      DepInput<bool> currentValueInput = new DepInput<bool>(false, null);
+      currentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
+      SetCurrentValueEx(currentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
-      GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
-      base.GrayedEx = GrayedInput;
+      DepInput<bool> grayedInput = new DepInput<bool>(false, null);
+      grayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
+      base.GrayedEx = grayedInput;
 
       controlProvider.SelectedIndexEx = new DepExpr2<int, bool, bool>(GrayedEx, CurrentValueEx,
         new DepFunction2<int, bool, bool>(CalcSelectedIndex));
@@ -1232,13 +1232,13 @@ namespace FreeLibSet.Forms.Docs
       : base(docValue, controlProvider, false, canMultiEdit)
     {
 
-      DepInput<bool> CurrentValueInput = new DepInput<bool>(false, null);
-      CurrentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
-      SetCurrentValueEx(CurrentValueInput);
+      DepInput<bool> currentValueInput = new DepInput<bool>(false, null);
+      currentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");
+      SetCurrentValueEx(currentValueInput);
 
-      DepInput<bool> GrayedInput = new DepInput<bool>(false, null);
-      GrayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
-      base.GrayedEx = GrayedInput;
+      DepInput<bool> grayedInput = new DepInput<bool>(false, null);
+      grayedInput.OwnerInfo = new DepOwnerInfo(this, "GrayedInput");
+      base.GrayedEx = grayedInput;
 
       controlProvider.SelectedIndexEx = new DepExpr2<int, bool, bool>(GrayedEx, CurrentValueEx,
         new DepFunction2<int, bool, bool>(CalcSelectedIndex));
@@ -1639,7 +1639,7 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-#if XXXX
+#if XXX
   // ??? Сомнительная реализация
   public class DocValueDocComboBoxByTableId : DocValueControl<int, EFPDocComboBox>
   {

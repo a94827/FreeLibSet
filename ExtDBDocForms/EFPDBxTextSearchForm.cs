@@ -85,16 +85,16 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь нажал "ОК" и требуется выполнить поиск</returns>
     protected override bool QueryParams(EFPTextSearchInfo searchInfo)
     {
-      EFPDBxTextSearchForm Form = new EFPDBxTextSearchForm();
-      Form.SetValues(searchInfo);
-      Form.btnDocSel.Enabled = Owner.HasGetDocSelHandler;
-      switch (EFPApp.ShowDialog(Form, true))
+      EFPDBxTextSearchForm form = new EFPDBxTextSearchForm();
+      form.SetValues(searchInfo);
+      form.btnDocSel.Enabled = Owner.HasGetDocSelHandler;
+      switch (EFPApp.ShowDialog(form, true))
       {
         case DialogResult.OK:
-          Form.GetValues(searchInfo);
+          form.GetValues(searchInfo);
           return true;
         case DialogResult.Yes:
-          Form.GetValues(searchInfo);
+          form.GetValues(searchInfo);
           CreateDocSel();
           return false;
         default:
@@ -108,15 +108,15 @@ namespace FreeLibSet.Forms.Docs
 
     private void CreateDocSel()
     {
-      int[] RowIndices = base.FindAllRowIndices();
-      if (RowIndices == null)
+      int[] rowIndices = base.FindAllRowIndices();
+      if (rowIndices == null)
       {
         EFPApp.ShowTempMessage("Нет подходящих строк");
         return;
       }
 
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo, RowIndices);
-      Owner.UI.ShowDocSel(DocSel, "Результаты поиска");
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo, rowIndices);
+      Owner.UI.ShowDocSel(docSel, "Результаты поиска");
     }
 
     #endregion
@@ -155,16 +155,16 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>True, если пользователь нажал "ОК" и требуется выполнить поиск</returns>
     protected override bool QueryParams(EFPTextSearchInfo searchInfo)
     {
-      EFPDBxTextSearchForm Form = new EFPDBxTextSearchForm();
-      Form.SetValues(searchInfo);
-      Form.btnDocSel.Enabled = Owner.HasGetDocSelHandler;
-      switch (EFPApp.ShowDialog(Form, true))
+      EFPDBxTextSearchForm form = new EFPDBxTextSearchForm();
+      form.SetValues(searchInfo);
+      form.btnDocSel.Enabled = Owner.HasGetDocSelHandler;
+      switch (EFPApp.ShowDialog(form, true))
       {
         case DialogResult.OK:
-          Form.GetValues(searchInfo);
+          form.GetValues(searchInfo);
           return true;
         case DialogResult.Yes:
-          Form.GetValues(searchInfo);
+          form.GetValues(searchInfo);
           CreateDocSel();
           return false;
         default:
@@ -178,15 +178,15 @@ namespace FreeLibSet.Forms.Docs
 
     private void CreateDocSel()
     {
-      FreeLibSet.Controls.TreeNodeAdv[] Nodes = base.FindAllNodes();
-      if (Nodes == null)
+      FreeLibSet.Controls.TreeNodeAdv[] nodes = base.FindAllNodes();
+      if (nodes == null)
       {
         EFPApp.ShowTempMessage("Нет подходящих строк");
         return;
       }
 
-      DBxDocSelection DocSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo, Nodes);
-      Owner.UI.ShowDocSel(DocSel, "Результаты поиска");
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo, nodes);
+      Owner.UI.ShowDocSel(docSel, "Результаты поиска");
     }
 
     #endregion

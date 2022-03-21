@@ -23,7 +23,7 @@ using System.Net;
 // 
 
 
-[System.Web.Services.WebServiceBindingAttribute(Name = "BasicHttpBinding_IDownloadService", 
+[System.Web.Services.WebServiceBindingAttribute(Name = "BasicHttpBinding_IDownloadService",
   Namespace = "https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/")]
 public partial class IDownloadService : System.Web.Services.Protocols.SoapHttpClientProtocol
 {
@@ -35,7 +35,7 @@ public partial class IDownloadService : System.Web.Services.Protocols.SoapHttpCl
     this.RequestEncoding = Encoding.UTF8;
     //this.AllowAutoRedirect = true;
     this.EnableDecompression = true;
-//    this.SoapVersion = SoapProtocolVersion.Soap12;
+    //    this.SoapVersion = SoapProtocolVersion.Soap12;
   }
 
 
@@ -51,10 +51,10 @@ public partial class IDownloadService : System.Web.Services.Protocols.SoapHttpCl
     return ((DownloadFileInfo[])(results[0]));
   }
 
-  [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/GetLastDownloadFileInfo", 
-    RequestNamespace = "https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/", 
-    ResponseNamespace = "https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/", 
-    Use = System.Web.Services.Description.SoapBindingUse.Literal, 
+  [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/GetLastDownloadFileInfo",
+    RequestNamespace = "https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/",
+    ResponseNamespace = "https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/",
+    Use = System.Web.Services.Description.SoapBindingUse.Literal,
     ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
   public DownloadFileInfo GetLastDownloadFileInfo()
   {
@@ -66,7 +66,7 @@ public partial class IDownloadService : System.Web.Services.Protocols.SoapHttpCl
   protected override System.Net.WebRequest GetWebRequest(Uri uri)
   {
     System.Net.WebRequest wr = base.GetWebRequest(uri);
-    ((HttpWebRequest)wr).KeepAlive=true;
+    ((HttpWebRequest)wr).KeepAlive = true;
     wr.Headers.Add("SOAPAction", "https://fias.nalog.ru/WebServices/Public/DownloadService.asmx/GetAllDownloadFileInfo");
     //wr.Headers.Add("Host", "fias.nalog.ru");
     ((HttpWebRequest)wr).MaximumResponseHeadersLength = 1000000;

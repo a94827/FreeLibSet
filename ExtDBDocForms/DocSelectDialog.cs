@@ -278,18 +278,18 @@ namespace FreeLibSet.Forms.Docs
 
     private DialogResult ShowDialogNormal()
     {
-      DialogResult Res = DialogResult.Cancel;
+      DialogResult res = DialogResult.Cancel;
 
-      using (DocTableViewForm Form = new DocTableViewForm(DocTypeUI, GetDocTableViewMode(SelectionMode)))
+      using (DocTableViewForm form = new DocTableViewForm(DocTypeUI, GetDocTableViewMode(SelectionMode)))
       {
-        Form.Text = Title;
-        Form.CanBeEmpty = CanBeEmpty;
+        form.Text = Title;
+        form.CanBeEmpty = CanBeEmpty;
         try
         {
           if (MultiSelect)
-            Form.SelectedDocIds = DocIds;
+            form.SelectedDocIds = DocIds;
           else
-            Form.CurrentDocId = DocId;
+            form.CurrentDocId = DocId;
         }
         catch (Exception e)
         {
@@ -298,8 +298,8 @@ namespace FreeLibSet.Forms.Docs
           else
             EFPApp.ShowException(e, "Ќе удалось установить выбранный документ \"" + DocTypeUI.DocType.SingularTitle + "\" с DocId=" + DocId.ToString());
         }
-        Form.ExternalFilters = Filters;
-        Form.ExternalEditorCaller = EditorCaller;
+        form.ExternalFilters = Filters;
+        form.ExternalEditorCaller = EditorCaller;
         /*
         if (Form.ViewProvider.DocGridView != null)
         {
@@ -312,22 +312,22 @@ namespace FreeLibSet.Forms.Docs
           Form.ViewProvider.DocTreeView.UserInitData = UserInitData;
         }
           */
-        switch (EFPApp.ShowDialog(Form, false, DialogPosition))
+        switch (EFPApp.ShowDialog(form, false, DialogPosition))
         {
           case DialogResult.OK:
             if (MultiSelect)
-              DocIds = Form.SelectedDocIds;
+              DocIds = form.SelectedDocIds;
             else
-              DocId = Form.CurrentDocId;
-            Res = DialogResult.OK;
+              DocId = form.CurrentDocId;
+            res = DialogResult.OK;
             break;
           case DialogResult.No:
             DocId = 0;
-            Res = DialogResult.OK;
+            res = DialogResult.OK;
             break;
         }
       }
-      return Res;
+      return res;
     }
 
     internal static DocTableViewMode GetDocTableViewMode(DocSelectionMode selectionMode)
@@ -349,13 +349,13 @@ namespace FreeLibSet.Forms.Docs
 
     private DialogResult ShowDialogMultiList()
     {
-      DialogResult Res = DialogResult.Cancel;
-      using (OKCancelGridForm Form = new OKCancelGridForm())
+      DialogResult res = DialogResult.Cancel;
+      using (OKCancelGridForm form = new OKCancelGridForm())
       {
-        Form.Text = Title;
-        Form.FormProvider.ConfigSectionName = DocTypeUI.DocType.Name + "_MultiList";
+        form.Text = Title;
+        form.FormProvider.ConfigSectionName = DocTypeUI.DocType.Name + "_MultiList";
 
-        EFPDocSelTextGridView gh = new EFPDocSelTextGridView(Form.ControlWithToolBar, DocTypeUI);
+        EFPDocSelTextGridView gh = new EFPDocSelTextGridView(form.ControlWithToolBar, DocTypeUI);
         if (Filters != null)
           gh.Filters = Filters;
         gh.CommandItems.CanEditFilters = false; // 09.07.2019
@@ -365,14 +365,14 @@ namespace FreeLibSet.Forms.Docs
         gh.CanBeEmpty = CanBeEmpty;
         gh.OrderMode = EFPDocSelGridViewOrderMode.Manual;
 
-        if (EFPApp.ShowDialog(Form, false, DialogPosition) == DialogResult.OK)
+        if (EFPApp.ShowDialog(form, false, DialogPosition) == DialogResult.OK)
         {
           DocIds = gh.Ids;
-          Res = DialogResult.OK;
+          res = DialogResult.OK;
         }
       }
 
-      return Res;
+      return res;
     }
 
     #endregion
@@ -381,14 +381,14 @@ namespace FreeLibSet.Forms.Docs
 
     private DialogResult ShowDialogFixedIds()
     {
-      DialogResult Res = DialogResult.Cancel;
-      using (OKCancelGridForm Form = new OKCancelGridForm())
+      DialogResult res = DialogResult.Cancel;
+      using (OKCancelGridForm form = new OKCancelGridForm())
       {
-        Form.Text = Title;
-        Form.FormProvider.ConfigSectionName = DocTypeUI.DocType.Name + "_FixedIds";
-        Form.NoButtonProvider.Visible = CanBeEmpty;
+        form.Text = Title;
+        form.FormProvider.ConfigSectionName = DocTypeUI.DocType.Name + "_FixedIds";
+        form.NoButtonProvider.Visible = CanBeEmpty;
 
-        EFPDocGridView gh = new EFPDocGridView(Form.ControlWithToolBar, DocTypeUI);
+        EFPDocGridView gh = new EFPDocGridView(form.ControlWithToolBar, DocTypeUI);
         gh.FixedDocIds = FixedDocIds;
         gh.Validating += new UIValidatingEventHandler(SelectSingleDoc_ValidateNotEmpty);
         gh.Control.MultiSelect = MultiSelect;
@@ -406,22 +406,22 @@ namespace FreeLibSet.Forms.Docs
           EFPApp.ShowException(e, "Ќе удалось установить выбранный документ \"" + DocTypeUI.DocType.SingularTitle + "\" с DocId=" + DocId.ToString());
         }
 
-        switch (EFPApp.ShowDialog(Form, false, DialogPosition))
+        switch (EFPApp.ShowDialog(form, false, DialogPosition))
         {
           case DialogResult.OK:
             if (MultiSelect)
               DocIds = gh.SelectedIds;
             else
               DocId = gh.CurrentId;
-            Res = DialogResult.OK;
+            res = DialogResult.OK;
             break;
           case DialogResult.No:
             DocId = 0;
-            Res = DialogResult.OK;
+            res = DialogResult.OK;
             break;
         }
       }
-      return Res;
+      return res;
     }
 
     private void SelectSingleDoc_ValidateNotEmpty(object sender, UIValidatingEventArgs args)
@@ -466,11 +466,11 @@ namespace FreeLibSet.Forms.Docs
 
     private DialogResult ShowDialogForGroups()
     {
-      GroupDocTypeUI DocTypeUI2 = (GroupDocTypeUI)_DocTypeUI;
+      GroupDocTypeUI docTypeUI2 = (GroupDocTypeUI)_DocTypeUI;
 
-      if (!GroupGridFilterForm.PerformEdit(DocTypeUI2, Title, DocTypeUI2.ImageKey, ref DocTypeUI2.LastGroupId, ref DocTypeUI2.LastIncludeNestedGroups, CanBeEmpty, DialogPosition))
+      if (!GroupGridFilterForm.PerformEdit(docTypeUI2, Title, docTypeUI2.ImageKey, ref docTypeUI2.LastGroupId, ref docTypeUI2.LastIncludeNestedGroups, CanBeEmpty, DialogPosition))
         return DialogResult.Cancel;
-      IdList groupIds = DocTypeUI2.GetAuxFilterGroupIdList(DocTypeUI2.LastGroupId, DocTypeUI2.LastIncludeNestedGroups);
+      IdList groupIds = docTypeUI2.GetAuxFilterGroupIdList(docTypeUI2.LastGroupId, docTypeUI2.LastIncludeNestedGroups);
       if (groupIds != null)
         DocIds = groupIds.ToArray();
       else
@@ -478,7 +478,6 @@ namespace FreeLibSet.Forms.Docs
 
       return DialogResult.OK;
     }
-
 
     #endregion
 
@@ -681,17 +680,17 @@ namespace FreeLibSet.Forms.Docs
     /// <returns></returns>
     public DialogResult ShowDialog()
     {
-      DialogResult Res = DialogResult.Cancel;
-      using (SubDocTableViewForm Form = new SubDocTableViewForm(SubDocTypeUI, DocSelectDialog.GetDocTableViewMode(SelectionMode), SubDocs))
+      DialogResult res = DialogResult.Cancel;
+      using (SubDocTableViewForm form = new SubDocTableViewForm(SubDocTypeUI, DocSelectDialog.GetDocTableViewMode(SelectionMode), SubDocs))
       {
-        Form.Text = Title;
-        Form.CanBeEmpty = CanBeEmpty;
+        form.Text = Title;
+        form.CanBeEmpty = CanBeEmpty;
         try
         {
           if (MultiSelect)
-            Form.SelectedSubDocIds = SubDocIds;
+            form.SelectedSubDocIds = SubDocIds;
           else
-            Form.CurrentSubDocId = SubDocId;
+            form.CurrentSubDocId = SubDocId;
         }
         catch (Exception e)
         {
@@ -702,22 +701,22 @@ namespace FreeLibSet.Forms.Docs
         }
         //Form.ExternalFilters = Filters;
 
-        switch (EFPApp.ShowDialog(Form, false, DialogPosition))
+        switch (EFPApp.ShowDialog(form, false, DialogPosition))
         {
           case DialogResult.OK:
             if (MultiSelect)
-              SubDocIds = Form.SelectedSubDocIds;
+              SubDocIds = form.SelectedSubDocIds;
             else
-              SubDocId = Form.CurrentSubDocId;
-            Res = DialogResult.OK;
+              SubDocId = form.CurrentSubDocId;
+            res = DialogResult.OK;
             break;
           case DialogResult.No:
             SubDocId = 0;
-            Res = DialogResult.OK;
+            res = DialogResult.OK;
             break;
         }
       }
-      return Res;
+      return res;
     }
 
     #endregion
