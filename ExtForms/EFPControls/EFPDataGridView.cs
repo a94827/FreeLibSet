@@ -5091,8 +5091,10 @@ namespace FreeLibSet.Forms
           }
           else
           {
-            if (OrderChanged == null)
-              throw new InvalidOperationException("OrderChangesToRefresh=false, AutoSort=false и событие OrderChanged не имеет обработчика");
+            //if (OrderChanged == null)
+            //  throw new InvalidOperationException("OrderChangesToRefresh=false, AutoSort=false и событие OrderChanged не имеет обработчика");
+
+            // 22.03.2022. Отсутствие обработчика больше не считается ошибкой
             OnOrderChanged(EventArgs.Empty);
           }
         }
@@ -5372,8 +5374,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Это событие должно обрабатывать установку порядка строк
     /// Событие не вызывается, если установлено свойство AutoSort или
-    /// если вызывается метод PerformRefresh.
-    /// Поэтому, обработчик Refresh также должен устанвливать порядок строки
+    /// если вызывается метод PerformRefresh().
+    /// Поэтому обработчик Refresh также должен устанавливать порядок строки.
     /// </summary>
     public event EventHandler OrderChanged;
 

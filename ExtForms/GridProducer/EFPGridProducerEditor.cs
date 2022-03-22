@@ -377,13 +377,13 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private void cbActivateCol_Enter(object sender, EventArgs e)
+    private void cbActivateCol_Enter(object sender, EventArgs args)
     {
       // При входе в элемент перестраиваем список
       InitCBStartCol();
     }
 
-    private void cbActivateCol_SelectedIndexChanged(object sender, EventArgs e)
+    private void cbActivateCol_SelectedIndexChanged(object sender, EventArgs args)
     {
       if (InsideSelectStartColumn)
         return;

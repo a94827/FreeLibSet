@@ -442,7 +442,22 @@ namespace FreeLibSet.Forms
       if (dlg.ShowDialog() != DialogResult.OK)
         return false;
 
-      CurrentConfig = dlg.Value;
+      try
+      {
+        CurrentConfig = dlg.Value;
+      }
+      catch (Exception e)
+      {
+        e.Data["EFPConfigurableGridView.DisplayName"] = DisplayName;
+        try
+        {
+          TempCfg cfg = new TempCfg();
+          dlg.Value.WriteConfig(cfg);
+          e.Data["EFPDataGridViewConfig.AsXmlText"] = cfg.AsXmlText;
+        }
+        catch { }
+        throw;
+      }
       ConfigHandler.Changed[EFPConfigCategories.GridConfig] = true;
 
       return true;

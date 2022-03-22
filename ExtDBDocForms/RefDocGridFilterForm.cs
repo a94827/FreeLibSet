@@ -132,17 +132,17 @@ namespace FreeLibSet.Forms.Docs
 
       if (mode == RefDocFilterMode.NoFilter && emptyEditMode != RefDocGridFilterEmptyEditMode.ShowFilterDialog)
       {
-        DocSelectDialog dlg = new DocSelectDialog(docTypeUI);
+        DocSelectDialog dlg1 = new DocSelectDialog(docTypeUI);
         //dlg.Title = "Добавление документов \"" + docTypeUI.DocType.PluralTitle + "\" в фильтр \""+title+"\"";
-        dlg.Title = title;
-        dlg.SelectionMode = DocSelectionMode.MultiSelect;
-        dlg.CanBeEmpty = false;
-        dlg.DialogPosition = dialogPosition;
-        dlg.Filters = docFilters; // 10.09.2021
-        if (dlg.ShowDialog() == DialogResult.OK)
+        dlg1.Title = title;
+        dlg1.SelectionMode = DocSelectionMode.MultiSelect;
+        dlg1.CanBeEmpty = false;
+        dlg1.DialogPosition = dialogPosition;
+        dlg1.Filters = docFilters; // 10.09.2021
+        if (dlg1.ShowDialog() == DialogResult.OK)
         {
           mode = RefDocFilterMode.Include;
-          ids = dlg.DocIds;
+          ids = dlg1.DocIds;
           if (emptyEditMode == RefDocGridFilterEmptyEditMode.SelectIncudedDocs)
             return true;
         }
@@ -153,22 +153,22 @@ namespace FreeLibSet.Forms.Docs
       #region Показ основной формы
 
       bool res = false;
-      RefDocGridFilterForm dlg = new RefDocGridFilterForm(docTypeUI, nullable);
+      RefDocGridFilterForm dlg2 = new RefDocGridFilterForm(docTypeUI, nullable);
       try
       {
-        dlg.Text = title;
-        dlg.Icon = EFPApp.MainImageIcon("Filter");
-        if ((int)mode >= 0 && (int)mode < dlg.cbMode.Items.Count)
-          dlg.efpMode.SelectedIndex = (int)(mode);
-        dlg.efpDocSel.Ids = ids;
-        dlg.efpDocSel.Filters = docFilters;
-        dlg.efpDocSel.CommandItems.CanEditFilters = false; // 09.07.2019
+        dlg2.Text = title;
+        dlg2.Icon = EFPApp.MainImageIcon("Filter");
+        if ((int)mode >= 0 && (int)mode < dlg2.cbMode.Items.Count)
+          dlg2.efpMode.SelectedIndex = (int)(mode);
+        dlg2.efpDocSel.Ids = ids;
+        dlg2.efpDocSel.Filters = docFilters;
+        dlg2.efpDocSel.CommandItems.CanEditFilters = false; // 09.07.2019
 
-        switch (EFPApp.ShowDialog(dlg, false, dialogPosition))
+        switch (EFPApp.ShowDialog(dlg2, false, dialogPosition))
         {
           case DialogResult.OK:
-            mode = dlg.Mode;
-            ids = dlg.efpDocSel.Ids;
+            mode = dlg2.Mode;
+            ids = dlg2.efpDocSel.Ids;
             res = true;
             break;
           case DialogResult.No:
@@ -181,7 +181,7 @@ namespace FreeLibSet.Forms.Docs
       }
       finally
       {
-        dlg.Dispose();
+        dlg2.Dispose();
       }
       return res;
 

@@ -2547,38 +2547,43 @@ namespace FreeLibSet.Forms
         if (value < 0 || value >= OrderCount)
           throw new ArgumentOutOfRangeException("value",
             "Индекс сортировки должен быть в диапазоне от 0 до " + (OrderCount - 1).ToString());
-
-        EFPDataTreeViewSelection oldSel = Selection;
-
         _CurrentOrderIndex = value;
-        CommandItems.InitCurentOrder();
-        if (WinFormsTools.AreControlAndFormVisible(Control))
-        {
-          if (OrderChangesToRefresh)
-            PerformRefresh();
-          else
-          {
-            if (AutoSort)
-            {
-              //TODO: if (Control.DataSource != null)
-              PerformAutoSort();
-            }
-            else
-            {
-              if (OrderChanged == null)
-                throw new InvalidOperationException("OrderChangesToRefresh=false, AutoSort=false и событие OrderChanged не имеет обработчика");
-              OnOrderChanged(EventArgs.Empty);
-            }
-          }
-        }
 
-        Selection = oldSel;
-
-        OnCurrentOrderChanged(EventArgs.Empty);
+        InternalSetCurrentOrder();
       }
     }
-
     private int _CurrentOrderIndex;
+
+    private void InternalSetCurrentOrder()
+    {
+      EFPDataTreeViewSelection oldSel = Selection;
+
+      CommandItems.InitCurentOrder();
+      if (WinFormsTools.AreControlAndFormVisible(Control))
+      {
+        if (OrderChangesToRefresh)
+          PerformRefresh();
+        else
+        {
+          if (AutoSort)
+          {
+            //TODO: if (Control.DataSource != null)
+            PerformAutoSort();
+          }
+          else
+          {
+            //if (OrderChanged == null)
+            //  throw new InvalidOperationException("OrderChangesToRefresh=false, AutoSort=false и событие OrderChanged не имеет обработчика");
+            // 22.03.2022. Отсутствие обработчика больше не считается ошибкой
+            OnOrderChanged(EventArgs.Empty);
+          }
+        }
+      }
+
+      Selection = oldSel;
+
+      OnCurrentOrderChanged(EventArgs.Empty);
+    }
 
     /// <summary>
     /// Текущий выбранный порядок сортировки
@@ -2650,7 +2655,7 @@ namespace FreeLibSet.Forms
     /// Это событие должно обрабатывать установку порядка строк
     /// Событие не вызывается, если установлено свойство AutoSort или
     /// если вызывается метод PerformRefresh.
-    /// Поэтому, обработчик Refresh также должен устанвливать порядок строки
+    /// Поэтому обработчик Refresh также должен устанавливать порядок строки.
     /// </summary>
     public event EventHandler OrderChanged;
 
