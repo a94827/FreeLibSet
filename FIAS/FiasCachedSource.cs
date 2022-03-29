@@ -580,6 +580,7 @@ namespace FreeLibSet.FIAS
 
         if (wanted != null)
         {
+          spl.PhaseText = "«апрос недостающих страниц в базе данных (" + wanted.Count.ToString() + ")";
           if (FiasTools.TraceSwitch.Enabled)
             Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasCachedSource.GetAddrObPages(). Pages found in cache: " + (pageAOGuids.Length - wanted.Count).ToString() + ", required from BaseSource: " + wanted.Count.ToString());
 
@@ -731,6 +732,7 @@ namespace FreeLibSet.FIAS
 
         if (wanted != null)
         {
+          spl.PhaseText = "«апрос недостающих страниц в базе данных (" + wanted.Count.ToString() + ")";
           if (FiasTools.TraceSwitch.Enabled)
             Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasCachedSource.GetHousePages(). Pages found in cache: " + (pageAOGuids.Length - wanted.Count).ToString() + ", required from BaseSource: " + wanted.Count.ToString());
 
@@ -836,6 +838,7 @@ namespace FreeLibSet.FIAS
 
         if (wanted != null)
         {
+          spl.PhaseText = "«апрос недостающих страниц в базе данных (" + wanted.Count.ToString() + ")";
           if (FiasTools.TraceSwitch.Enabled)
             Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasCachedSource.GetRoomPages(). Pages found in cache: " + (pageHouseGuids.Length - wanted.Count).ToString() + ", required from BaseSource: " + wanted.Count.ToString());
 

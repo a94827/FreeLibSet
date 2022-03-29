@@ -443,12 +443,12 @@ namespace FreeLibSet.Forms
       if (Control == null)
         return; // вызов из конструктора
 
-      if (_InsideSetProviderState)
+      if (InsideSetProviderState)
         return; // реентрантный вызов
 
       if (ProviderState == EFPControlProviderState.Initialization)
       {
-        InternalSetProviderState(EFPControlProviderState.Created);
+        InternalSetProviderState(EFPControlProviderState.Created, EFPControlSetProviderStateReason.UpdateFormProviderState);
         if (ProviderState == EFPControlProviderState.Initialization)
           // возникла ошибка, отчет выведен
           return; // 09.07.2021
@@ -458,12 +458,12 @@ namespace FreeLibSet.Forms
       {
         case EFPControlProviderState.Attached:
           if (!BaseProvider.IsFormVisible)
-            InternalSetProviderState(EFPControlProviderState.Detached);
+            InternalSetProviderState(EFPControlProviderState.Detached, EFPControlSetProviderStateReason.UpdateFormProviderState);
           break;
         case EFPControlProviderState.Created:
         case EFPControlProviderState.Detached:
           if (BaseProvider.IsFormVisible && ControlVisible)
-            InternalSetProviderState(EFPControlProviderState.Attached);
+            InternalSetProviderState(EFPControlProviderState.Attached, EFPControlSetProviderStateReason.UpdateFormProviderState);
           else
             InitLabelVisible(); // Иначе будут висячие метки
           break;
@@ -498,26 +498,46 @@ namespace FreeLibSet.Forms
     public EFPControlProviderState ProviderState { get { return _ProviderState; } }
     private EFPControlProviderState _ProviderState;
 
+    private enum EFPControlSetProviderStateReason
+    {
+      None,
+      UpdateFormProviderState,
+      ControlDisposed
+    }
+
     /// <summary>
     /// Возвращает true, если в данный момент выполняется установка состояния ProviderState и вызывается один из обработчиков.
     /// При этом свойство ProviderState возврашает новое значение
     /// </summary>
-    public bool InsideSetProviderState { get { return _InsideSetProviderState; } }
-    private bool _InsideSetProviderState;
+    public bool InsideSetProviderState { get { return _InsideSetProviderStateReason != EFPControlSetProviderStateReason.None; } }
+    private EFPControlSetProviderStateReason _InsideSetProviderStateReason;
 
-    private void InternalSetProviderState(EFPControlProviderState value)
+    private void InternalSetProviderState(EFPControlProviderState value, EFPControlSetProviderStateReason reason)
     {
-      if (_InsideSetProviderState)
+#if DEBUG
+      if (reason == EFPControlSetProviderStateReason.None)
+        throw new ArgumentException("reason=None", "reason");
+#endif
+
+      if (InsideSetProviderState)
       {
         if (value == _ProviderState)
           return;
         else
-          throw new InvalidOperationException("Вложенный вызов InternalSetProviderState(). В данный момент выполняется установка другого состояния: " + _ProviderState.ToString());
+        {
+          Exception e = new InvalidOperationException("Вложенный вызов InternalSetProviderState(). В данный момент выполняется установка другого состояния");
+          AddExceptionInfo(e);
+          e.Data["InternalSetProviderState.NewState"] = value;
+          e.Data["InternalSetProviderState.OldState"] = _ProviderState;
+          e.Data["InternalSetProviderState.NewReason"] = reason;
+          e.Data["InternalSetProviderState.OldReason"] = _InsideSetProviderStateReason;
+          throw e;
+        }
       }
 
       EFPControlProviderState oldState = _ProviderState;
 
-      _InsideSetProviderState = true;
+      _InsideSetProviderStateReason = reason;
       try
       {
         try
@@ -556,6 +576,7 @@ namespace FreeLibSet.Forms
           AddExceptionInfo(e);
           e.Data["InternalSetProviderState.NewState"] = value;
           e.Data["InternalSetProviderState.OldState"] = oldState;
+          e.Data["InternalSetProviderState.Reason"] = reason;
           _ProviderState = oldState; // 07.07.2021
 #if DEBUG
           if (TraceProviderState)
@@ -570,7 +591,7 @@ namespace FreeLibSet.Forms
       }
       finally
       {
-        _InsideSetProviderState = false;
+        _InsideSetProviderStateReason = EFPControlSetProviderStateReason.None;
       }
     }
 
@@ -815,10 +836,13 @@ namespace FreeLibSet.Forms
 
     void Control_Disposed(object sender, EventArgs args)
     {
+      if (_InsideSetProviderStateReason == EFPControlSetProviderStateReason.ControlDisposed)
+        return; // 28.03.2022. Вложенный вызов события
+
       try
       {
         if (ProviderState == EFPControlProviderState.Attached)
-          InternalSetProviderState(EFPControlProviderState.Detached); // 16.09.2021
+          InternalSetProviderState(EFPControlProviderState.Detached, EFPControlSetProviderStateReason.ControlDisposed); // 16.09.2021
       }
       catch (Exception e)
       {
@@ -829,7 +853,7 @@ namespace FreeLibSet.Forms
 
       try
       {
-        InternalSetProviderState(EFPControlProviderState.Disposed);
+        InternalSetProviderState(EFPControlProviderState.Disposed, EFPControlSetProviderStateReason.ControlDisposed);
       }
       catch (Exception e) // 25.01.2022
       {

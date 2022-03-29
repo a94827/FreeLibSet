@@ -42,6 +42,8 @@ namespace FreeLibSet.Forms.FIAS
       this.cbVillage = new System.Windows.Forms.CheckBox();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.cbActual = new System.Windows.Forms.CheckBox();
+      this.cbDistrict = new System.Windows.Forms.CheckBox();
+      this.cbCity = new System.Windows.Forms.CheckBox();
       this.panel1.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
@@ -53,7 +55,7 @@ namespace FreeLibSet.Forms.FIAS
       this.panel1.Controls.Add(this.btnCancel);
       this.panel1.Controls.Add(this.btnOk);
       this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel1.Location = new System.Drawing.Point(0, 214);
+      this.panel1.Location = new System.Drawing.Point(0, 261);
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(545, 40);
       this.panel1.TabIndex = 3;
@@ -92,8 +94,8 @@ namespace FreeLibSet.Forms.FIAS
       // 
       // cbText
       // 
-      this.cbText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.cbText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.cbText.FormattingEnabled = true;
       this.cbText.Location = new System.Drawing.Point(128, 23);
       this.cbText.Name = "cbText";
@@ -111,6 +113,8 @@ namespace FreeLibSet.Forms.FIAS
       // 
       // groupBox2
       // 
+      this.groupBox2.Controls.Add(this.cbCity);
+      this.groupBox2.Controls.Add(this.cbDistrict);
       this.groupBox2.Controls.Add(this.edStartAddress);
       this.groupBox2.Controls.Add(this.label2);
       this.groupBox2.Controls.Add(this.cbStreet);
@@ -119,21 +123,21 @@ namespace FreeLibSet.Forms.FIAS
       this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
       this.groupBox2.Location = new System.Drawing.Point(0, 59);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(545, 100);
+      this.groupBox2.Size = new System.Drawing.Size(545, 144);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Где искать";
       // 
       // edStartAddress
       // 
-      this.edStartAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.edStartAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.edStartAddress.Location = new System.Drawing.Point(241, 40);
       this.edStartAddress.Multiline = true;
       this.edStartAddress.Name = "edStartAddress";
       this.edStartAddress.ReadOnly = true;
-      this.edStartAddress.Size = new System.Drawing.Size(292, 47);
+      this.edStartAddress.Size = new System.Drawing.Size(292, 91);
       this.edStartAddress.TabIndex = 4;
       // 
       // label2
@@ -148,7 +152,7 @@ namespace FreeLibSet.Forms.FIAS
       // cbStreet
       // 
       this.cbStreet.AutoSize = true;
-      this.cbStreet.Location = new System.Drawing.Point(19, 70);
+      this.cbStreet.Location = new System.Drawing.Point(25, 111);
       this.cbStreet.Name = "cbStreet";
       this.cbStreet.Size = new System.Drawing.Size(58, 17);
       this.cbStreet.TabIndex = 2;
@@ -158,7 +162,7 @@ namespace FreeLibSet.Forms.FIAS
       // cbPlanningStructure
       // 
       this.cbPlanningStructure.AutoSize = true;
-      this.cbPlanningStructure.Location = new System.Drawing.Point(19, 47);
+      this.cbPlanningStructure.Location = new System.Drawing.Point(25, 88);
       this.cbPlanningStructure.Name = "cbPlanningStructure";
       this.cbPlanningStructure.Size = new System.Drawing.Size(158, 17);
       this.cbPlanningStructure.TabIndex = 1;
@@ -168,7 +172,7 @@ namespace FreeLibSet.Forms.FIAS
       // cbVillage
       // 
       this.cbVillage.AutoSize = true;
-      this.cbVillage.Location = new System.Drawing.Point(19, 24);
+      this.cbVillage.Location = new System.Drawing.Point(25, 65);
       this.cbVillage.Name = "cbVillage";
       this.cbVillage.Size = new System.Drawing.Size(121, 17);
       this.cbVillage.TabIndex = 0;
@@ -179,7 +183,7 @@ namespace FreeLibSet.Forms.FIAS
       // 
       this.groupBox3.Controls.Add(this.cbActual);
       this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
-      this.groupBox3.Location = new System.Drawing.Point(0, 159);
+      this.groupBox3.Location = new System.Drawing.Point(0, 203);
       this.groupBox3.Name = "groupBox3";
       this.groupBox3.Size = new System.Drawing.Size(545, 52);
       this.groupBox3.TabIndex = 2;
@@ -189,12 +193,32 @@ namespace FreeLibSet.Forms.FIAS
       // cbActual
       // 
       this.cbActual.AutoSize = true;
-      this.cbActual.Location = new System.Drawing.Point(19, 28);
+      this.cbActual.Location = new System.Drawing.Point(25, 28);
       this.cbActual.Name = "cbActual";
       this.cbActual.Size = new System.Drawing.Size(126, 17);
       this.cbActual.TabIndex = 0;
       this.cbActual.Text = "Только актуальные";
       this.cbActual.UseVisualStyleBackColor = true;
+      // 
+      // cbDistrict
+      // 
+      this.cbDistrict.AutoSize = true;
+      this.cbDistrict.Location = new System.Drawing.Point(25, 20);
+      this.cbDistrict.Name = "cbDistrict";
+      this.cbDistrict.Size = new System.Drawing.Size(57, 17);
+      this.cbDistrict.TabIndex = 5;
+      this.cbDistrict.Text = "Район";
+      this.cbDistrict.UseVisualStyleBackColor = true;
+      // 
+      // cbCity
+      // 
+      this.cbCity.AutoSize = true;
+      this.cbCity.Location = new System.Drawing.Point(25, 42);
+      this.cbCity.Name = "cbCity";
+      this.cbCity.Size = new System.Drawing.Size(56, 17);
+      this.cbCity.TabIndex = 6;
+      this.cbCity.Text = "Город";
+      this.cbCity.UseVisualStyleBackColor = true;
       // 
       // FiasSearchForm
       // 
@@ -202,7 +226,7 @@ namespace FreeLibSet.Forms.FIAS
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(545, 254);
+      this.ClientSize = new System.Drawing.Size(545, 301);
       this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
@@ -239,5 +263,7 @@ namespace FreeLibSet.Forms.FIAS
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.GroupBox groupBox3;
     private System.Windows.Forms.CheckBox cbActual;
+    private System.Windows.Forms.CheckBox cbCity;
+    private System.Windows.Forms.CheckBox cbDistrict;
   }
 }

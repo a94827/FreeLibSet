@@ -366,6 +366,24 @@ namespace FreeLibSet.FIAS
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если в адресе заполнен указанный уровень или уровень ниже заданного.
+    /// Если <paramref name="level"/>=FiasLevel.Unknown, то выбрасывается исключение
+    /// </summary>
+    /// <param name="level">Проверяемый уровень</param>
+    /// <returns>Наличие уровня</returns>
+    public bool ContainsLevelOrBelow(FiasLevel level)
+    {
+      int p = FiasTools.AOLevelIndexer.IndexOf(level);
+      if (p < 0)
+        throw new ArgumentException("Неизвестный уровень: " + level.ToString(), "level");
+      for (int i = p; i < FiasTools.AllLevels.Length; i++)
+      {
+        if (GetName(FiasTools.AllLevels[i]).Length > 0)
+          return true;
+      }
+      return false;
+    }
 
     /// <summary>
     /// Возвращает предыдущий заполненный уровень адреса, расположенный выше заданного.

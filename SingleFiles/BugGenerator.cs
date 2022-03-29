@@ -35,7 +35,7 @@ namespace FreeLibSet
         {
           Flag = true;
           lock (Obj1) // не может быть выполнена
-          { 
+          {
           }
         }
       }
@@ -50,21 +50,21 @@ namespace FreeLibSet
     /// </summary>
     public static void PerformDeadLock()
     {
-      DeadLockThreadObj ThreadObj = new DeadLockThreadObj();
-      ThreadObj.Obj1 = new object();
-      ThreadObj.Obj2 = new object();
+      DeadLockThreadObj threadObj = new DeadLockThreadObj();
+      threadObj.Obj1 = new object();
+      threadObj.Obj2 = new object();
 
-      lock (ThreadObj.Obj1)
+      lock (threadObj.Obj1)
       {
-        Thread trd = new Thread(ThreadObj.Execute);
+        Thread trd = new Thread(threadObj.Execute);
         trd.Start();
 
         // Дожидаемся запуска процедуры потока, когда она заблокирует Obj2
-        while (!ThreadObj.Flag)
+        while (!threadObj.Flag)
           Thread.Sleep(50);
 
-        lock (ThreadObj.Obj2) // это не может быть выполнено
-        { 
+        lock (threadObj.Obj2) // это не может быть выполнено
+        {
         }
       }
     }

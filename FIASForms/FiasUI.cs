@@ -194,6 +194,7 @@ namespace FreeLibSet.Forms.FIAS
     {
       #region Запрос параметров
 
+
       FiasSearchForm frm1 = new FiasSearchForm();
       FiasAddress startAddress = address.Clone();
       startAddress.ClearStartingWith(FiasLevel.Street);
@@ -216,9 +217,32 @@ namespace FreeLibSet.Forms.FIAS
       using (EFPApp.ConfigManager.GetConfig(CfgInfo, EFPConfigMode.Read, out cfg))
       {
         frm1.efpText.HistList = cfg.GetHist("Text");
-        frm1.efpVillage.Checked = cfg.GetBoolDef("Village", true);
-        frm1.efpPlanningStructure.Checked = cfg.GetBoolDef("PlanningStructure", true);
-        frm1.efpStreet.Checked = cfg.GetBoolDef("Street", true);
+
+        if (startAddress.ContainsLevelOrBelow(FiasLevel.District))
+          frm1.efpDistrict.Enabled = false;
+        else
+          frm1.efpDistrict.Checked = cfg.GetBoolDef("District", true);
+
+        if (startAddress.ContainsLevelOrBelow(FiasLevel.City))
+          frm1.efpCity.Enabled = false;
+        else
+          frm1.efpCity.Checked = cfg.GetBoolDef("City", true);
+
+        if (startAddress.ContainsLevelOrBelow(FiasLevel.Village))
+          frm1.efpVillage.Enabled = false;
+        else
+          frm1.efpVillage.Checked = cfg.GetBoolDef("Village", true);
+
+        if (startAddress.ContainsLevelOrBelow(FiasLevel.PlanningStructure))
+          frm1.efpPlanningStructure.Enabled = false;
+        else
+          frm1.efpPlanningStructure.Checked = cfg.GetBoolDef("PlanningStructure", true);
+
+        if (startAddress.ContainsLevelOrBelow(FiasLevel.Street))
+          frm1.efpStreet.Enabled = false;
+        else
+          frm1.efpStreet.Checked = cfg.GetBoolDef("Street", true);
+
         if (DBSettings.UseHistory)
           frm1.efpActual.Checked = cfg.GetBoolDef("ActualOnly", true);
         else
@@ -234,9 +258,16 @@ namespace FreeLibSet.Forms.FIAS
       using (EFPApp.ConfigManager.GetConfig(CfgInfo, EFPConfigMode.Write, out cfg))
       {
         cfg.SetHist("Text", frm1.efpText.HistList);
-        cfg.SetBool("Village", frm1.efpVillage.Checked);
-        cfg.SetBool("PlanningStructure", frm1.efpPlanningStructure.Checked);
-        cfg.SetBool("Street", frm1.efpStreet.Checked);
+        if (frm1.efpDistrict.Enabled)
+          cfg.SetBool("District", frm1.efpDistrict.Checked);
+        if (frm1.efpCity.Enabled)
+          cfg.SetBool("City", frm1.efpCity.Checked);
+        if (frm1.efpVillage.Enabled)
+          cfg.SetBool("Village", frm1.efpVillage.Checked);
+        if (frm1.efpPlanningStructure.Enabled)
+          cfg.SetBool("PlanningStructure", frm1.efpPlanningStructure.Checked);
+        if (frm1.efpStreet.Enabled)
+          cfg.SetBool("Street", frm1.efpStreet.Checked);
         if (DBSettings.UseHistory)
           cfg.SetBool("ActualOnly", frm1.efpActual.Checked);
       }
@@ -248,11 +279,15 @@ namespace FreeLibSet.Forms.FIAS
       FiasAddressSearchParams searchParams = new FiasAddressSearchParams();
       searchParams.Text = frm1.efpText.Text;
       List<FiasLevel> lvls = new List<FiasLevel>();
-      if (frm1.efpVillage.Checked)
+      if (frm1.efpDistrict.Enabled && frm1.efpDistrict.Checked)
+        lvls.Add(FiasLevel.District);
+      if (frm1.efpCity.Enabled && frm1.efpCity.Checked)
+        lvls.Add(FiasLevel.City);
+      if (frm1.efpVillage.Enabled && frm1.efpVillage.Checked)
         lvls.Add(FiasLevel.Village);
-      if (frm1.efpPlanningStructure.Checked)
+      if (frm1.efpPlanningStructure.Enabled && frm1.efpPlanningStructure.Checked)
         lvls.Add(FiasLevel.PlanningStructure);
-      if (frm1.efpStreet.Checked)
+      if (frm1.efpStreet.Enabled && frm1.efpStreet.Checked)
         lvls.Add(FiasLevel.Street);
       searchParams.Levels = lvls.ToArray();
       searchParams.ActualOnly = frm1.efpActual.Checked;

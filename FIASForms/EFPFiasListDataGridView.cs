@@ -73,6 +73,17 @@ namespace FreeLibSet.Forms.FIAS
           }
           Columns.AddText("POSTALCODE", true, "Почтовый индекс", 6, 6); 
           Columns.LastAdded.TextAlign = HorizontalAlignment.Center;
+
+          if (_Handler.Source.DBSettings.UseOKATO)
+            Columns.AddText("OKATO", true, "ОКАТО", 11, 11);
+          if (_Handler.Source.DBSettings.UseOKTMO)
+            Columns.AddText("OKTMO", true, "ОКТМО", 11, 11);
+          if (_Handler.Source.DBSettings.UseIFNS)
+          {
+            Columns.AddText("IFNSFL", true, "ИФНС ФЛ", 4, 4);
+            Columns.AddText("IFNSUL", true, "ИФНС ЮЛ", 4, 4);
+          }
+
           FrozenColumns = 3;
           break;
 
@@ -96,6 +107,17 @@ namespace FreeLibSet.Forms.FIAS
           }
           Columns.AddText("POSTALCODE", true, "Почтовый индекс", 6, 6);
           Columns.LastAdded.TextAlign = HorizontalAlignment.Center;
+
+          if (_Handler.Source.DBSettings.UseOKATO)
+            Columns.AddText("OKATO", true, "ОКАТО", 11, 11);
+          if (_Handler.Source.DBSettings.UseOKTMO)
+            Columns.AddText("OKTMO", true, "ОКТМО", 11, 11);
+          if (_Handler.Source.DBSettings.UseIFNS)
+          {
+            Columns.AddText("IFNSFL", true, "ИФНС ФЛ", 4, 4);
+            Columns.AddText("IFNSUL", true, "ИФНС ЮЛ", 4, 4);
+          }
+
           FrozenColumns = 2;
           break;
 
@@ -448,7 +470,14 @@ namespace FreeLibSet.Forms.FIAS
             }
             break;
           case "POSTALCODE":
-            if (DataTools.GetInt(args.DataRow, "POSTALCODE") == 0)
+          case "IFNSFL":
+          case "IFNSUL":
+            if (DataTools.GetInt(args.DataRow, args.ColumnName) == 0)
+              args.Value = null; // поле является числовым
+            break;
+          case "OKATO":
+          case "OKTMO":
+            if (DataTools.GetInt64(args.DataRow, args.ColumnName) == 0L)
               args.Value = null; // поле является числовым
             break;
         }

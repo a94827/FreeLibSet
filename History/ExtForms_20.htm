@@ -3,9 +3,9 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
-	<meta name="generator" content="LibreOffice 7.2.6.2 (Windows)"/>
+	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-03-22T12:06:18.074000000"/>
+	<meta name="changed" content="2022-03-28T14:37:52.236000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -217,69 +217,74 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		@page { size: 21cm 29.7cm; margin: 2cm }
-		p { line-height: 120%; margin-bottom: 0.25cm; background: transparent; background: transparent }
-		h1 { margin-bottom: 0.21cm; background: transparent; background: transparent; page-break-after: avoid }
-		h1.western { font-family: "Liberation Serif", serif; font-size: 24pt; font-weight: bold }
-		h1.cjk { font-family: "SimSun"; font-size: 24pt; font-weight: bold }
-		h1.ctl { font-family: "Mangal"; font-size: 24pt; font-weight: bold }
-		td p { line-height: 120%; orphans: 0; widows: 0; margin-bottom: 0.25cm; background: transparent; background: transparent }
-		a:link { color: #000080; so-language: zxx; text-decoration: underline }
-		a:visited { color: #800080; so-language: zxx; text-decoration: underline }
+		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
+		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 0; widows: 0 }
+		h1 { margin-bottom: 0.21cm; background: transparent }
+		h1.western { font-family: "Liberation Serif", serif }
+		h1.cjk { font-family: "SimSun"; font-size: 24pt }
+		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		a:link { so-language: zxx }
+		a:visited { color: #800080 }
 	</style>
 </head>
-<body lang="ru-RU" link="#000080" vlink="#800080" dir="ltr"><h1 class="western">
-История изменений в программе<br/>
-Модуль <span lang="en-US">ExtForms</span>.<span lang="en-US">dll
-</span>(Расширение пользовательского интерфейса)</h1>
+<body lang="ru-RU" vlink="#800080" dir="ltr">
+<h1 class="western">История изменений в программе<br/>
+Модуль
+<span lang="en-US">ExtForms</span>.<span lang="en-US">dll </span>(Расширение
+пользовательского интерфейса)</h1>
 <h1 class="western">Версия <span lang="en-US">2</span>.<span lang="en-US">0</span></h1>
 <p>Полный номер версии файла, который можно узнать, посмотрев
 свойства файла или в меню &laquo;О программе&raquo;, состоит из
 четырех чисел и имеет вид &laquo;<span lang="en-US">2</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
 В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
 <table width="100%" cellpadding="2" cellspacing="0">
-	<col width="25*"/>
-
-	<col width="35*"/>
-
-	<col width="196*"/>
-
+	<col width="25*">
+	<col width="35*">
+	<col width="196*">
 	<tr valign="top">
-		<td width="10%" style="border: 1.00pt solid #000000; padding: 0.05cm"><p align="center">
-			Версия</p>
+		<td width="10%" style="border: 1.00pt solid #000000; padding: 0.05cm">
+			<p align="center">Версия</p>
 		</td>
-		<td width="14%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
-			Дата</p>
+		<td width="14%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Дата</p>
 		</td>
-		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
-			Что сделано</p>
+		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Что сделано</p>
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			313</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">313</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			17.03.2022-22.03.2022</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">17.03.2022-28.03.2022</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
-			1. <span lang="ru-RU">Оптимизация метода
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Оптимизация метода
 			</span>EFPCommandItem.IsShortCut()</p>
 			<p lang="en-US">2. EFPDataGridView,
-			EFPDataTreeView.InternalSetCurrentOrder() <span lang="ru-RU">больше
+			EFPDataTreeView.InternalSetCurrentOrder() <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v291p3">v.291
+			<span lang="ru-RU">п.3</span></a><span lang="ru-RU">) </span><span lang="ru-RU">больше
 			не выбрасывает исключение при отсутствии обработчика события
 			</span>OrderChanged</p>
+			<p lang="en-US">3. EFPControlBase <span lang="ru-RU">обрабатывает
+			вложенный вызов события </span>Control.Disposed<span lang="ru-RU">
+			(</span><a href="ExtForms_11.htm#v285p1">v.285 <span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span>.
+			<span lang="ru-RU">Внутренний метод InternalSetProviderState()
+			принимает аргумент </span>reason <span lang="ru-RU">для улучшения
+			диагностики ошибок.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			312</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">312</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			07.03.2022</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">07.03.2022</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
-			1. <span lang="ru-RU">Внутреннее свойство
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Внутреннее свойство
 			</span>EFPFormProvider.VisibleCompleted. <span lang="ru-RU">Используется
 			в </span>EFPApp.ActiveDialog. <span lang="ru-RU">Должно
 			предотвращать появление &quot;висячих&quot; временных заставок,
@@ -288,14 +293,14 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			311</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">311</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			07.02.2022-<span lang="ru-RU">21</span>.02.2022</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">07.02.2022-<span lang="ru-RU">21</span>.02.2022</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
-			<span lang="en-US">1. </span><span lang="ru-RU">Управляющий
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Управляющий
 			элемент </span><span lang="en-US">TwoListSelector (<a href="ExtForms_11.htm#v286p8">v.286
 			</a></span><a href="ExtForms_11.htm#v286p8"><span lang="ru-RU">п.8</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">реализует интерфейс </span><span lang="en-US">ISupportInitialize</span></p>
@@ -360,14 +365,14 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			310</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">310</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			04.02.2022</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">04.02.2022</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
-			1. <span lang="ru-RU">Изменена реализация
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Изменена реализация
 			</span>EFPDataGridView.PasteText(). <span lang="ru-RU">Для
 			добавления недостающих строк вызывается </span>IBindingList.AddNew(),
 			<span lang="ru-RU">если интерфейс реализуется присоединенным
@@ -377,14 +382,14 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			308</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">308</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			07.01.2022-25.01.2022</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">07.01.2022-25.01.2022</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
-			<span lang="en-US">1. </span><span lang="ru-RU">У свойства
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">У свойства
 			</span><span lang="en-US">NumEditBoxBase&lt;T&gt;.UpDownHandler
 			(<a href="#v301p12">v.301 </a></span><a href="#v301p12"><span lang="ru-RU">п.12</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">установлен атрибут
@@ -452,14 +457,14 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			306</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">306</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			15.12.2021<span lang="ru-RU">-</span>23.12.2021</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">15.12.2021<span lang="ru-RU">-</span>23.12.2021</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
-			<span lang="en-US">1. </span><span lang="ru-RU">Убрано свойство
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Убрано свойство
 			</span><span lang="en-US">EFPApp.IsMono (<a href="ExtForms_11.htm#v050p1">v.50
 			</a></span><a href="ExtForms_11.htm#v050p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">),
 			</span><span lang="ru-RU">которое дублировало свойство в
@@ -474,17 +479,17 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			305</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">305</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			06.12.2021-<span lang="ru-RU">11</span>.12.2021</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">06.12.2021-<span lang="ru-RU">11</span>.12.2021</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
-			1. <span lang="ru-RU">Если установлены свойства </span>Dialog <span lang="ru-RU">и
-			</span>StandardDialog.ErrorMessage, <span lang="ru-RU">то перед
-			выводом диалога выводится </span>MessageBox <span lang="ru-RU">с
-			сообщением об ошибке.</span></p>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Если установлены свойства
+			</span>Dialog <span lang="ru-RU">и </span>StandardDialog.ErrorMessage,
+			<span lang="ru-RU">то перед выводом диалога выводится </span>MessageBox
+			<span lang="ru-RU">с сообщением об ошибке.</span></p>
 			<p><span lang="en-US">2. </span><span lang="ru-RU">Использование
 			</span><span lang="en-US">UIInputGridTable </span><span lang="ru-RU">(</span><a href="ExtTools_20.htm#v305p8"><span lang="en-US">ExtTools,
 			v.305 </span><span lang="ru-RU">п.8</span></a><span lang="ru-RU">)
@@ -507,14 +512,14 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p align="center">
-			304</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">304</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p align="center">
-			26.11.2021-<span lang="en-US">30</span>.11.2021</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">26.11.2021-<span lang="en-US">30</span>.11.2021</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
-			<span lang="en-US">1. </span><span lang="ru-RU">Поддержка
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Поддержка
 			</span><span lang="en-US">RI.MaskedTextBox</span> <span lang="en-US">(<a href="ExtTools_20.htm#v304p1">ExtTools,
 			v.304 </a></span><a href="ExtTools_20.htm#v304p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">2. </span><span lang="ru-RU">Значением по
@@ -539,14 +544,14 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			303</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">303</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			24.11.2021-25.11.2021</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">24.11.2021-25.11.2021</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
-			<span lang="en-US">1. </span><span lang="ru-RU">Класс
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Класс
 			InputGridDataDialog (</span><a href="ExtForms_11.htm#v276p2"><span lang="en-US">v.276
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
 			переименован </span><span lang="en-US">в </span><span lang="ru-RU">InputDataGridDialog</span><span lang="en-US">.
@@ -577,15 +582,15 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			302</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">302</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			23.11.2021</p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">23.11.2021</p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p>
-			<span lang="en-US">1. </span><span lang="ru-RU">Исправлена ошибка
-			в E</span><span lang="en-US">FPAppRI.RadioGroupItem (<a href="ExtForms_11.htm#v094p6">v.94
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Исправлена
+			ошибка в E</span><span lang="en-US">FPAppRI.RadioGroupItem (<a href="ExtForms_11.htm#v094p6">v.94
 			</a></span><a href="ExtForms_11.htm#v094p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">).
 			</span><span lang="ru-RU">Начальное состояние инициализировалось
 			неправильно.</span></p>
@@ -604,14 +609,14 @@
 		</td>
 	</tr>
 	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			301</p>
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">301</p>
 		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US" align="center">
-			21.10.2021-22<span lang="ru-RU">.11.2021</span></p>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">21.10.2021-22<span lang="ru-RU">.11.2021</span></p>
 		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm"><p lang="en-US">
-			1. <span lang="ru-RU">Изменения пространств имен</span></p>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Изменения пространств имен</span></p>
 			<p>2. Убран метод <span lang="en-US">Debug</span>Tools.LogoutException<span lang="en-US">()</span>
 			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v085p1"><span lang="en-US">v.85
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>

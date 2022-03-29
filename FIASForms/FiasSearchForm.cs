@@ -32,10 +32,12 @@ namespace FreeLibSet.Forms.FIAS
       efpText.CanBeEmpty = false;
       efpText.CommandItems.UseStatusBarRC = false;
 
+      efpDistrict = new EFPCheckBox(efpForm, cbDistrict);
+      efpCity = new EFPCheckBox(efpForm, cbCity);
       efpVillage = new EFPCheckBox(efpForm, cbVillage);
       efpPlanningStructure = new EFPCheckBox(efpForm, cbPlanningStructure);
       efpStreet = new EFPCheckBox(efpForm, cbStreet);
-      EFPCheckBox.AddGroupAtLeastOneCheck(efpVillage, efpPlanningStructure, efpStreet);
+      EFPCheckBox.AddGroupAtLeastOneCheck(efpDistrict, efpCity, efpVillage, efpPlanningStructure, efpStreet);
 
       efpStartAddress = new EFPTextBox(efpForm, edStartAddress);
       efpStartAddress.CommandItems.UseStatusBarRC = false;
@@ -49,7 +51,7 @@ namespace FreeLibSet.Forms.FIAS
 
     public EFPHistComboBox efpText;
 
-    public EFPCheckBox efpVillage, efpPlanningStructure, efpStreet;
+    public EFPCheckBox efpDistrict, efpCity, efpVillage, efpPlanningStructure, efpStreet;
 
     public EFPTextBox efpStartAddress;
 

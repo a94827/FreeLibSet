@@ -1050,7 +1050,36 @@ namespace FreeLibSet.Forms.FIAS
         {
           using (OKCancelGridForm form = new OKCancelGridForm())
           {
-            form.Text = "Выбор из справочника уровня [" + FiasEnumNames.ToString(this.Level, true) + "] (PARENTGUID=" + ParentGuid.ToString() + ")";
+            form.Text = "Выбор из справочника уровня [" + FiasEnumNames.ToString(this.Level, false) + "]";
+            //if (Level != FiasLevel.Region)
+            if (ParentGuid != Guid.Empty)
+            {
+              #region Табличка фильтров
+
+              //InfoLabel lbl = form.AddInfoLabel(DockStyle.Top);
+              //lbl.Text = "PARENTGUID=" + ParentGuid.ToString();
+
+              List<EFPReportFilterItem> filtItems = new List<EFPReportFilterItem>();
+
+              EFPReportFilterItem fi1 = new EFPReportFilterItem("Родительский объект");
+              FiasAddress a1 = new FiasAddress();
+              a1.AOGuid = ParentGuid;
+              Owner._Handler.FillAddress(a1);
+              fi1.Value = Owner._Handler.GetTextWithoutPostalCode(a1);
+              filtItems.Add(fi1);
+
+              if (Owner.UI.ShowGuidsInTables)
+              {
+                EFPReportFilterItem fi2 = new EFPReportFilterItem("PARENTGUID");
+                fi2.Value = ParentGuid.ToString();
+                filtItems.Add(fi2);
+              }
+
+              EFPReportFilterGridView efpFilter = new EFPReportFilterGridView(form.FormProvider, form.FilterGrid);
+              efpFilter.Filters = filtItems.ToArray();
+
+              #endregion
+            }
             form.NoButtonProvider.Visible = true;
             form.FormProvider.ConfigSectionName = "Fias_Sel_" + Level.ToString();
             EFPFiasListDataGridView efpGrid = new EFPFiasListDataGridView(form.ControlWithToolBar, Owner.UI, FiasTableType.AddrOb, false);
@@ -1208,14 +1237,31 @@ namespace FreeLibSet.Forms.FIAS
         {
           using (OKCancelGridForm form = new OKCancelGridForm())
           {
-            form.Text = "Выбор из справочника домов (AOGUID=" + ParentGuid.ToString() + ")";
+            form.Text = "Выбор из справочника зданий";
             form.NoButtonProvider.Visible = true;
 
+            #region Табличка фильтров
+
+            List<EFPReportFilterItem> filtItems = new List<EFPReportFilterItem>();
+
+            EFPReportFilterItem fi1 = new EFPReportFilterItem("Адресный объект");
             FiasAddress a1 = new FiasAddress();
             a1.AOGuid = ParentGuid;
             Owner._Handler.FillAddress(a1);
-            InfoLabel lbl = form.AddInfoLabel(DockStyle.Top);
-            lbl.Text = "Адресный объект: " + Owner._Handler.GetTextWithoutPostalCode(a1);
+            fi1.Value = Owner._Handler.GetTextWithoutPostalCode(a1);
+            filtItems.Add(fi1);
+
+            if (Owner.UI.ShowGuidsInTables)
+            {
+              EFPReportFilterItem fi2 = new EFPReportFilterItem("AOGUID");
+              fi2.Value = ParentGuid.ToString();
+              filtItems.Add(fi2);
+            }
+
+            EFPReportFilterGridView efpFilter = new EFPReportFilterGridView(form.FormProvider, form.FilterGrid);
+            efpFilter.Filters = filtItems.ToArray();
+
+            #endregion
 
             EFPFiasListDataGridView efpGrid = new EFPFiasListDataGridView(form.ControlWithToolBar, Owner.UI, FiasTableType.House, false);
 
@@ -1266,8 +1312,6 @@ namespace FreeLibSet.Forms.FIAS
           }
         }
       }
-
-
 
       #endregion
 
@@ -1402,14 +1446,31 @@ namespace FreeLibSet.Forms.FIAS
         {
           using (OKCancelGridForm form = new OKCancelGridForm())
           {
-            form.Text = "Выбор из справочника помещений (HOUSEGUID=" + ParentGuid.ToString() + ")";
+            form.Text = "Выбор из справочника помещений";
             form.NoButtonProvider.Visible = true;
 
+            #region Табличка фильтров
+
+            List<EFPReportFilterItem> filtItems = new List<EFPReportFilterItem>();
+
+            EFPReportFilterItem fi1 = new EFPReportFilterItem("Здание");
             FiasAddress a1 = new FiasAddress();
-            a1.SetGuid(FiasLevel.House, ParentGuid);
+            a1.AOGuid = ParentGuid;
             Owner._Handler.FillAddress(a1);
-            InfoLabel lbl = form.AddInfoLabel(DockStyle.Top);
-            lbl.Text = "Здание: " + Owner._Handler.GetTextWithoutPostalCode(a1);
+            fi1.Value = Owner._Handler.GetTextWithoutPostalCode(a1);
+            filtItems.Add(fi1);
+
+            if (Owner.UI.ShowGuidsInTables)
+            {
+              EFPReportFilterItem fi2 = new EFPReportFilterItem("HOUSEGUID");
+              fi2.Value = ParentGuid.ToString();
+              filtItems.Add(fi2);
+            }
+
+            EFPReportFilterGridView efpFilter = new EFPReportFilterGridView(form.FormProvider, form.FilterGrid);
+            efpFilter.Filters = filtItems.ToArray();
+
+            #endregion
 
             EFPFiasListDataGridView efpGrid = new EFPFiasListDataGridView(form.ControlWithToolBar, Owner.UI, FiasTableType.Room, false);
 
@@ -1849,7 +1910,7 @@ namespace FreeLibSet.Forms.FIAS
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
+        _ReadOnlyEx = new DepInput<Boolean>(false, ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
       }
     }
