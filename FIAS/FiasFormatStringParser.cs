@@ -154,6 +154,7 @@ namespace FreeLibSet.FIAS
         "AT.DISTRICT",
         "AT.CITY",
         "AT.VILLAGE",
+        "AT.PS",
         "AT.STREET",
         "AT.HOUSE",
 
@@ -187,6 +188,13 @@ namespace FreeLibSet.FIAS
         "VILLAGE.ABBR",
         "VILLAGE.GUID",
         "VILLAGE.RECID",
+        
+        "PS",
+        "PS.NAME",
+        "PS.TYPE",
+        "PS.ABBR",
+        "PS.GUID",
+        "PS.RECID",
         
         "STREET",
         "STREET.NAME",
@@ -240,6 +248,7 @@ namespace FreeLibSet.FIAS
         TypeFormAt | (int)FiasLevel.District,
         TypeFormAt | (int)FiasLevel.City,
         TypeFormAt | (int)FiasLevel.Village,
+        TypeFormAt | (int)FiasLevel.PlanningStructure,
         TypeFormAt | (int)FiasLevel.Street,
         TypeFormAt | (int)FiasLevel.House,
 
@@ -273,6 +282,13 @@ namespace FreeLibSet.FIAS
         TypeFormAbbr | (int)FiasLevel.Village,
         TypeFormGuid | (int)FiasLevel.Village,
         TypeFormRecId | (int)FiasLevel.Village,
+
+        TypeFormNameAndAbbr | (int)FiasLevel.PlanningStructure,
+        TypeFormName | (int)FiasLevel.PlanningStructure,
+        TypeFormType | (int)FiasLevel.PlanningStructure,
+        TypeFormAbbr | (int)FiasLevel.PlanningStructure,
+        TypeFormGuid | (int)FiasLevel.PlanningStructure,
+        TypeFormRecId | (int)FiasLevel.PlanningStructure,
 
         TypeFormNameAndAbbr | (int)FiasLevel.Street,
         TypeFormName | (int)FiasLevel.Street,
@@ -837,6 +853,43 @@ namespace FreeLibSet.FIAS
       }
 
       #endregion
+    }
+
+    #endregion
+
+    #region Форматы для отдельных уровней
+
+    private static Dictionary<FiasLevel, FiasParsedFormatString> _LevelFormats;
+
+    private static Dictionary<FiasLevel, FiasParsedFormatString> InitLevelFormats()
+    {
+      Dictionary<FiasLevel, FiasParsedFormatString> dict = new Dictionary<FiasLevel, FiasParsedFormatString>();
+      dict.Add(FiasLevel.Region, Parse("REGION"));
+      dict.Add(FiasLevel.District, Parse("DISTRICT"));
+      dict.Add(FiasLevel.City, Parse("CITY"));
+      dict.Add(FiasLevel.Village, Parse("VILLAGE"));
+      dict.Add(FiasLevel.PlanningStructure, Parse("PS"));
+      dict.Add(FiasLevel.Street, Parse("STREET"));
+      dict.Add(FiasLevel.House, Parse("HOUSE.ABBR HOUSE.NUM"));
+      dict.Add(FiasLevel.Building, Parse("BUILD.ABBR BUILD.NUM"));
+      dict.Add(FiasLevel.Structure, Parse("STR.ABBR STR.NUM"));
+      dict.Add(FiasLevel.Flat, Parse("FLAT.ABBR FLAT.NUM"));
+      dict.Add(FiasLevel.Room, Parse("ROOM.ABBR ROOM.NUM"));
+
+      return dict;
+    }
+
+
+    internal static FiasParsedFormatString GetFormat(FiasLevel level)
+    {
+      if (_LevelFormats == null)
+        _LevelFormats = InitLevelFormats();
+
+      FiasParsedFormatString res;
+      if (_LevelFormats.TryGetValue(level, out res))
+        return res;
+      else
+        throw new ArgumentException("Неизвестный уровень: " + level.ToString(), "level");
     }
 
     #endregion

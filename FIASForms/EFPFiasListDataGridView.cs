@@ -57,7 +57,7 @@ namespace FreeLibSet.Forms.FIAS
           Columns.AddTextFill("PARENTNAME", false, "Родительский объект", 50, 40);
           Columns.LastAdded.Grayed = true;
 
-          if (ui.ShowGuidsInTables)
+          if (ui.ShowGuids)
           {
             Columns.AddText("AOGUID", true, "AOGUID", 36);
             Columns.LastAdded.CanIncSearch = true;
@@ -96,7 +96,7 @@ namespace FreeLibSet.Forms.FIAS
           Columns.LastAdded.CanIncSearch = true;
           Columns.AddText("STRUCNUM", true, "Строение", 15, 10);
           Columns.LastAdded.CanIncSearch = true;
-          if (ui.ShowGuidsInTables)
+          if (ui.ShowGuids)
           {
             Columns.AddText("HOUSEGUID", true, "HOUSEGUID", 36);
             Columns.LastAdded.CanIncSearch = true;
@@ -127,7 +127,7 @@ namespace FreeLibSet.Forms.FIAS
           Columns.LastAdded.CanIncSearch = true;
           Columns.AddText("ROOMNUMBER", true, "Комната", 15, 10);
           Columns.LastAdded.CanIncSearch = true;
-          if (ui.ShowGuidsInTables)
+          if (ui.ShowGuids)
           {
             Columns.AddText("ROOMGUID", true, "ROOMGUID", 36);
             Columns.LastAdded.CanIncSearch = true;
@@ -166,7 +166,7 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       _UseNextPrev = false;
-      if (isHistView && ui.ShowGuidsInTables)
+      if (isHistView && ui.ShowGuids)
       {
         switch (tableType)
         {
@@ -353,7 +353,7 @@ namespace FreeLibSet.Forms.FIAS
             args.Value = EFPApp.MainImages.Images[GetImageKey(Actual ? FiasActuality.Actual : FiasActuality.Historical)];
             break;
 
-          #region Вызовы IsValidName
+          #region Вызовы IsValidName()
 
           // 03.03.2021
           // Вызываем IsValidName() в основном, чтобы протестировать эту функцию
@@ -430,8 +430,9 @@ namespace FreeLibSet.Forms.FIAS
                 FiasLevel lvl = addr.GuidBottomLevel;
                 if (lvl == FiasLevel.Unknown)
                   parentname = "???";
-                else
-                  parentname = addr[lvl].ToString();
+                else 
+                  //parentname = addr[lvl];
+                  parentname = _Handler.Format(addr, lvl); // 30.03.2022
               }
 
               _ParentNames.Add(ParentGuid, parentname);

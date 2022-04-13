@@ -2415,6 +2415,37 @@ namespace FreeLibSet.FIAS
       _InternalSB.Append(guid.ToString("D")); // без скобок
     }
 
+    /// <summary>
+    /// Получение текстового представления для одного компонента адреса.
+    /// Используйте этот метод в качестве альтернативы обращения к индексированному свойству <paramref name="address"/>[<paramref name="level"/>].
+    /// Метод обеспечивает правильный порядок следования наименования и сокращения.
+    /// </summary>
+    /// <param name="address">Заполненный объект адреса. Не может быть null.</param>
+    /// <param name="level">Требуемый уровень</param>
+    /// <returns>Текстовое представление уровня</returns>
+    public string Format(FiasAddress address, FiasLevel level)
+    {
+      StringBuilder sb = new StringBuilder();
+      Format(sb, address, level);
+      return sb.ToString();
+    }
+
+    /// <summary>
+    /// Получение текстового представления для одного компонента адреса.
+    /// Используйте этот метод в качестве альтернативы обращения к индексированному свойству <paramref name="address"/>[<paramref name="level"/>].
+    /// Метод обеспечивает правильный порядок следования наименования и сокращения.
+    /// </summary>
+    /// <param name="sb">Буфер, куда добавляется текстовое представление в соответствии со строкой форматирования</param>
+    /// <param name="address">Заполненный объект адреса. Не может быть null.</param>
+    /// <param name="level">Требуемый уровень</param>
+    /// <returns>Текстовое представление уровня</returns>
+    public void Format(StringBuilder sb, FiasAddress address, FiasLevel level)
+    {
+      Format(sb, address, FiasFormatStringParser.GetFormat(level));
+    }
+
+
+
     #endregion
 
     #region Получение адресов из текста без колонок

@@ -100,6 +100,29 @@ namespace FreeLibSet.Data.Npgsql
 
     #region FormatFilter
 
+    /// <summary>
+    /// Форматирование фильтра Выражение LIKE Шаблон%.
+    /// Если требуется сравнение без учета регистра, используется нестандартный оператор ILIKE.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = true;
+      formatInfo.WantedColumnType = DBxColumnType.String;
+      formatInfo.NoParentheses = false;
+      buffer.FormatExpression(filter.Expression, formatInfo);
+      if ( filter.IgnoreCase && StringIsCaseSensitive(filter.Value))
+        buffer.SB.Append(" LIKE '");
+      else
+        buffer.SB.Append(" LIKE '");
+
+      MakeEscapedChars(buffer, filter.Value, new char[] { '%', '_', '[', '\'' }, "[", "]");
+      buffer.SB.Append("%\'");
+    }
+
+
     // TODO: ?
 
     ///// <summary>

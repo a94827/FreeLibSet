@@ -50,6 +50,7 @@
     <Compile Include="DBxTestHelpers.cs" />
     <Compile Include="SQLiteDBxTests.cs" />
     <Compile Include="SQLiteDBxTests_InMemory.cs" />
+    <Compile Include="SQLiteDBxTests_StringFilters.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtDB\ExtDB.csproj">

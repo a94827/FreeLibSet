@@ -43,7 +43,7 @@ namespace FreeLibSet.Forms.FIAS
 
       //_Level = FiasLevel.Flat;
 
-      ShowGuidsInTables = true;
+      ShowGuids = true;
       //ShowDates = true;
       ShowDates = source.DBSettings.UseDates; // 28.04.2020
     }
@@ -96,8 +96,13 @@ namespace FreeLibSet.Forms.FIAS
 
     #region ѕараметры дл€ редактора адреса
 
-
-    internal bool ShowGuidsInTables;
+    /// <summary>
+    /// Ќужно ли показывать колонки идентификаторов (AOGUID, HOUSEGUID, ROOMGUID) при выборе из справочника
+    /// в редакторе адреса.
+    /// ѕо умолчанию - false - колонки не показываютс€
+    /// </summary>
+    public bool ShowGuids { get { return _ShowGuids; } set { _ShowGuids = value; } }
+    private bool _ShowGuids;
 
     internal bool ShowDates;
 
@@ -207,7 +212,7 @@ namespace FreeLibSet.Forms.FIAS
       else
       {
         string s = startAddress.ToString();
-        if (ShowGuidsInTables)
+        if (ShowGuids)
           s += Environment.NewLine + "(AOGUID=" + startAddress.AOGuid.ToString() + ")";
         frm1.efpStartAddress.Text = s;
       }

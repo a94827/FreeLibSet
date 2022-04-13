@@ -27,22 +27,26 @@ namespace FreeLibSet.Data.SQLite
     internal const string MemoryFileName = ":memory:";
 
     /// <summary>
+    /// Устанавливается в 1 при первом вызове конструктора
+    /// </summary>
+    private static int _FirstFlagValue = 0;
+
+    /// <summary>
     /// Создание подключение к базе данных.
     /// Автоматически создается основная точка подключения
     /// </summary>
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public SQLiteDBx(SQLiteConnectionStringBuilder connectionStringBuilder)
     {
-      LoadDLLs();
-
-      if (_FirstFlag)
+      bool firstCall = false;
+      if (System.Threading.Interlocked.Exchange(ref _FirstFlagValue, 1) == 0) // могут быть асинхронные вызовы конструктора
       {
-        _FirstFlag = false;
+        LoadDLLs();
         LogoutTools.LogoutInfoNeeded += new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded);
+        firstCall = true;
       }
 
-      SyncRoot = new object();
-
+      _SyncRoot = new object();
 
       _InMemory = connectionStringBuilder.DataSource.EndsWith(MemoryFileName);
       if (!InMemory)
@@ -66,7 +70,10 @@ namespace FreeLibSet.Data.SQLite
       }
 
       new SQLiteDBxEntry(this, connectionStringBuilder);
-    }
+
+      if (firstCall && UseInvariantStringFunctions)
+        InitInvariantStringFunctions();
+    }                                                                                   
 
     /// <summary>
     /// Создание подключение к базе данных.
@@ -104,7 +111,7 @@ namespace FreeLibSet.Data.SQLite
     /// Эта версия конструктора предназначена для создания базы данных в памяти
     /// </summary>
     public SQLiteDBx()
-      : this("Data Source=" + MemoryFileName + 
+      : this("Data Source=" + MemoryFileName +
       ";foreign keys=true") // 02.02.2022
     {
     }
@@ -158,7 +165,7 @@ namespace FreeLibSet.Data.SQLite
       return new SQLiteDBxEntry(this, MainEntry.ConnectionStringBuilder, permissions);
     }
 
-    private object SyncRoot;
+    private object _SyncRoot;
 
     /// <summary>
     /// Текстовое представление версии сервера
@@ -167,7 +174,7 @@ namespace FreeLibSet.Data.SQLite
     {
       get
       {
-        lock (SyncRoot)
+        lock (_SyncRoot)
         {
           if (_ServerVersionText == null)
           {
@@ -352,31 +359,92 @@ namespace FreeLibSet.Data.SQLite
     #region Загрузка библиотек доступа к SQLite
 
     /// <summary>
-    /// Загружает библиотеки, необходимы для работы с SQLite.
+    /// Загружает библиотеки, необходимые для работы с SQLite.
     /// Повторные вызовы игнорируются
     /// </summary>
     public static void LoadDLLs()
     {
-      if (_LoadDLLsFlag)
-        return; // повторный вызов
-
       //if (IntPtr.Size == 8)
       //  System.Reflection.Assembly.Load("SQLite.Interop.x64");
       //else
       //  System.Reflection.Assembly.Load("SQLite.Interop.x86");
 
       System.Reflection.Assembly.Load("System.Data.SQLite"); // обязательно после SQLite.Interop.dll
-
-      _LoadDLLsFlag = true;
     }
 
-    private static bool _LoadDLLsFlag = false;
+    #endregion
+
+    #region Инициализация функций          
+
+    /// <summary>
+    /// Если true (по умолчанию), то будут заменены функции UPPER(s) и LOWER().
+    /// Они будут вызывать методы String.ToUpperInvariant() и ToLowerInvariant() соответственно.
+    /// Свойство можно устанавливать только до первого вызова конструктора SQLiteDBx.
+    /// </summary>
+    public static bool UseInvariantStringFunctions
+    {
+      get { return _UseInvariantStringFunctions; }
+      set
+      {                                                         
+        if (_FirstFlagValue != 0)
+          throw new InvalidOperationException("Уже был вызов конструктора");
+        _UseInvariantStringFunctions = value;
+      }
+    }                                                       
+    private static bool _UseInvariantStringFunctions = true;
+                                                                                                     
+    /// <summary>
+    /// Инициализация функций UPPER() и LOWER().
+    /// Вызывается в конце работы конструктора при создании первой базы данных
+    /// </summary>
+    private void InitInvariantStringFunctions()
+    {
+      // До инициализации функций меняем установку для LIKE, делая его регистрочувствительным
+      /* Как-то не так работает, как ожидается
+      using (DBxConBase con = MainEntry.CreateCon())
+      {
+        con.SQLExecuteNonQuery("PRAGMA case_sensitive_like=1");
+      }
+       * */
+
+      // См. https://stackoverflow.com/questions/10349839/turkish-character-in-sqlite-while-using-like-expression/10361892#10361892
+      // Только там определены функция TOUPPER() а не UPPER
+
+      SQLiteFunction.RegisterFunction(typeof(UPPERFunction));
+      SQLiteFunction.RegisterFunction(typeof(LOWERFunction));
+      //CollationCaseInsensitive.RegisterFunction(typeof(CollationCaseInsensitive));
+    }
+
+    [SQLiteFunction(Name = "UPPER", Arguments = 1, FuncType = FunctionType.Scalar)]
+    private class UPPERFunction : SQLiteFunction
+    {
+      public override object Invoke(object[] args)
+      {
+        return args[0].ToString().ToUpperInvariant();
+      }
+    }
+
+    [SQLiteFunction(Name = "LOWER", Arguments = 1, FuncType = FunctionType.Scalar)]
+    private class LOWERFunction : SQLiteFunction
+    {
+      public override object Invoke(object[] args)
+      {
+        return args[0].ToString().ToLowerInvariant();
+      }
+    }
+
+    //[SQLiteFunction(Name = "COLLATION_CASE_INSENSITIVE", FuncType = FunctionType.Collation)]
+    //class CollationCaseInsensitive : SQLiteFunction
+    //{
+    //  public override int Compare(string param1, string param2) //According to Turkish character sorting to patch
+    //  {
+    //    return String.Compare(param1, param2, true);
+    //  }
+    //}
 
     #endregion
 
     #region Отладка использования памяти
-
-    private static bool _FirstFlag = true;
 
     private static void LogoutTools_LogoutInfoNeeded(object sender, LogoutInfoNeededEventArgs args)
     {

@@ -1068,7 +1068,7 @@ namespace FreeLibSet.Forms.FIAS
               fi1.Value = Owner._Handler.GetTextWithoutPostalCode(a1);
               filtItems.Add(fi1);
 
-              if (Owner.UI.ShowGuidsInTables)
+              if (Owner.UI.ShowGuids)
               {
                 EFPReportFilterItem fi2 = new EFPReportFilterItem("PARENTGUID");
                 fi2.Value = ParentGuid.ToString();
@@ -1084,6 +1084,8 @@ namespace FreeLibSet.Forms.FIAS
             form.FormProvider.ConfigSectionName = "Fias_Sel_" + Level.ToString();
             EFPFiasListDataGridView efpGrid = new EFPFiasListDataGridView(form.ControlWithToolBar, Owner.UI, FiasTableType.AddrOb, false);
             efpGrid.CommandItems.EnterAsOk = true;
+            if (Level == FiasLevel.Region)
+              efpGrid.Columns["PARENTNAME"].GridColumn.Visible = false; // 29.03.2022
 
             efpGrid.Control.DataSource = dv;
 
@@ -1251,7 +1253,7 @@ namespace FreeLibSet.Forms.FIAS
             fi1.Value = Owner._Handler.GetTextWithoutPostalCode(a1);
             filtItems.Add(fi1);
 
-            if (Owner.UI.ShowGuidsInTables)
+            if (Owner.UI.ShowGuids)
             {
               EFPReportFilterItem fi2 = new EFPReportFilterItem("AOGUID");
               fi2.Value = ParentGuid.ToString();
@@ -1460,7 +1462,7 @@ namespace FreeLibSet.Forms.FIAS
             fi1.Value = Owner._Handler.GetTextWithoutPostalCode(a1);
             filtItems.Add(fi1);
 
-            if (Owner.UI.ShowGuidsInTables)
+            if (Owner.UI.ShowGuids)
             {
               EFPReportFilterItem fi2 = new EFPReportFilterItem("HOUSEGUID");
               fi2.Value = ParentGuid.ToString();

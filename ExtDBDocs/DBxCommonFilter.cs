@@ -501,7 +501,7 @@ namespace FreeLibSet.Data.Docs
         if (this[i].UseSqlFilter && (!this[i].IsEmpty))
           filters.Add(this[i].GetSqlFilter());
       }
-      return AndFilter.FromArray(filters.ToArray());
+      return AndFilter.FromList(filters);
     }
 
 
@@ -861,7 +861,7 @@ namespace FreeLibSet.Data.Docs
         if (this[i].UseSqlFilter && (!this[i].IsEmpty))
           filters.Add(this[i].GetSqlFilter());
       }
-      return AndFilter.FromArray(filters.ToArray());
+      return AndFilter.FromList(filters);
     }
 
 

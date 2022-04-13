@@ -47,7 +47,7 @@ namespace ExtDB_tests.Data_SQLite
       }
     }
 
-    private SQLiteDBx CreateSampleDB()
+    private static SQLiteDBx CreateSampleDB()
     {
       DBxStruct dbs = new DBxStruct();
       DBxTableStruct ts = dbs.Tables.Add("FirstTable");
@@ -61,7 +61,7 @@ namespace ExtDB_tests.Data_SQLite
       return db;
     }
 
-    private void AddTestRows(SQLiteDBx db, int v1, int v2)
+    private static void AddTestRows(SQLiteDBx db, int v1, int v2)
     {
       using (DBxCon con = new DBxCon(db.MainEntry))
       {

@@ -5,7 +5,9 @@
 	<title>Изменения в модуле ExtDB.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-02-02T14:47:55.632000000"/>
+	<meta name="changed" content="2022-04-13T11:12:08.072000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -1113,9 +1115,9 @@
 			<p align="center">10.10.2019-21.10.2019</p>
 		</td>
 		<td width="78%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p>1. <span lang="ru-RU">Поддержка выражений. Класс </span>DBxExpression
-			<span lang="ru-RU">и производные от него: </span>DBxColumn,
-			DBxFunction <span lang="ru-RU">и </span>DBxConst.</p>
+			<p><a name="v045p1"></a>1. <span lang="ru-RU">Поддержка выражений.
+			Класс </span>DBxExpression <span lang="ru-RU">и производные от
+			него: </span>DBxColumn, DBxFunction <span lang="ru-RU">и </span>DBxConst.</p>
 			<p><a name="v045p2"></a>2. При форматировании выражений
 			используется структура <span lang="en-US">DBxFormatExpressionInfo.</span></p>
 			<p><a name="v045p3"></a><span lang="ru-RU">3. </span><span lang="en-US">З</span><span lang="ru-RU">начительно
@@ -1421,10 +1423,12 @@
 			<p>4. Свойство <span lang="en-US">IdsFilter.Ids</span> <span lang="en-US">(<a href="#v001p3">v.1
 			</a></span><a href="#v001p3">п.3</a><span lang="en-US">) </span>имеет
 			тип <span lang="en-US">IdList, </span>а не <span lang="en-US">Int32[]</span></p>
-			<p><span lang="en-US">5. </span><span lang="ru-RU">Свойство
+			<p><a name="v038p5"></a><span lang="en-US">5. </span><span lang="ru-RU">Свойство
 			SubstringFilter.</span><span lang="en-US">IgnoreCase (<a href="#v001p3">v.1
 			</a><a href="#v001p3">п.3</a>)</span><span lang="ru-RU">, как в
-			StringValueFilter и StartsWithFilter (</span><a href="#v020p1"><span lang="en-US">v.20
+			StringValueFilter (</span><a href="#v020p2"><span lang="en-US">v.20
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">) и
+			StartsWithFilter (</span><a href="#v020p1"><span lang="en-US">v.20
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">).</span></p>
 			<p><span lang="en-US">6. </span><span lang="ru-RU">Изменена
 			реализация DataViewDBxSqlFormatter.OnFormatDateRangeCrossFilter()
@@ -1805,9 +1809,10 @@
 			<p align="center"><span lang="en-US">06.06.2017</span>-09.06.2017</p>
 		</td>
 		<td width="78%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p>1. В фильтр <span lang="en-US">StartsWithFilter </span>(<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
+			<p><a name="v020p1"></a>1. В фильтр <span lang="en-US">StartsWithFilter
+			</span>(<a href="#v001p3"><span lang="en-US">v</span><span lang="ru-RU">.1
 			п.3</span></a>) добавлено свойство <span lang="en-US">IgnoreCase</span></p>
-			<p>2. Новый фильтр <span lang="en-US">StringValueFilter</span></p>
+			<p><a name="v020p2"></a>2. Новый фильтр <span lang="en-US">StringValueFilter</span></p>
 			<p>3. Промежуточный класс <span lang="en-US">BaseDBxSqlFormatter</span>,
 			используемый вместо <span lang="en-US">DataViewDBxSqlFormatter
 			</span>форматизаторами баз данных (<a href="#v001p5"><span lang="en-US">v</span><span lang="ru-RU">.1

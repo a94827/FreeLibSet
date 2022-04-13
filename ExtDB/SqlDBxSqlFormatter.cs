@@ -221,6 +221,88 @@ namespace FreeLibSet.Data.SqlClient
 
     #region FormatFilter
 
+    #region Строковые фильтры
+
+    /// <summary>
+    /// Форматирование фильтра Выражение=СтрокоеЗначение.
+    /// Добавляет справа от выражения оператор COLLATE, чтобы обеспечить правильный учет или игнорирование регистра
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatStringValueFilter(DBxSqlBuffer buffer, StringValueFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = true;
+      formatInfo.WantedColumnType = DBxColumnType.String;
+
+      buffer.FormatExpression(filter.Expression, formatInfo);
+      if (StringIsCaseSensitive(filter.Value))
+      {
+        if (filter.IgnoreCase)
+          buffer.SB.Append(" COLLATE Latin1_General_CI_AS");
+        else
+          buffer.SB.Append(" COLLATE Latin1_General_CS_AS");
+      }
+      buffer.SB.Append("=");
+      buffer.FormatValue(filter.Value, DBxColumnType.String);
+    }
+
+    /// <summary>
+    /// Форматирование фильтра Выражение LIKE Шаблон%.
+    /// Добавляет справа от выражения оператор COLLATE, чтобы обеспечить правильный учет или игнорирование регистра
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = true;
+      formatInfo.WantedColumnType = DBxColumnType.String;
+      formatInfo.NoParentheses = false;
+      buffer.FormatExpression(filter.Expression, formatInfo);
+      if (StringIsCaseSensitive(filter.Value))
+      {
+        if (filter.IgnoreCase)
+          buffer.SB.Append(" COLLATE Latin1_General_CI_AS");
+        else
+          buffer.SB.Append(" COLLATE Latin1_General_CS_AS");
+      }
+      buffer.SB.Append(" LIKE '");
+
+      MakeEscapedChars(buffer, filter.Value, new char[] { '%', '_', '[', '\'' }, "[", "]");
+      buffer.SB.Append("%\'");
+    }
+
+    /// <summary>
+    /// Форматирование фильтра SUBSTRING(Выражение,Позиция,Длина)=СтроковоеВыражение.
+    /// Добавляет справа от выражения оператор COLLATE, чтобы обеспечить правильный учет или игнорирование регистра
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatSubstringFilter(DBxSqlBuffer buffer, SubstringFilter filter)
+    {
+      DBxExpression expr1 = new DBxFunction(DBxFunctionKind.Substring,
+          filter.Expression,
+          new DBxConst(filter.StartIndex + 1),
+          new DBxConst(filter.Value.Length));
+
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = true;
+      formatInfo.WantedColumnType = DBxColumnType.String;
+      buffer.FormatExpression(expr1, formatInfo);
+      if (StringIsCaseSensitive(filter.Value))
+      {
+        if (filter.IgnoreCase)
+          buffer.SB.Append(" COLLATE Latin1_General_CI_AS");
+        else
+          buffer.SB.Append(" COLLATE Latin1_General_CS_AS");
+      }
+      buffer.SB.Append("=");
+      buffer.FormatValue(filter.Value, DBxColumnType.String);
+    }
+
+    #endregion
+
     #endregion
 
     #region FormatOrder

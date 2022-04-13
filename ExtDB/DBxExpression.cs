@@ -564,6 +564,10 @@ namespace FreeLibSet.Data
           minArgCount = 1;
           maxArgCount = 1;
           break;
+        case DBxFunctionKind.Substring:
+          minArgCount = 3;
+          maxArgCount = 3;
+          break;
 
         #endregion
 

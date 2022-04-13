@@ -914,8 +914,10 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatStringValueFilter(DBxSqlBuffer buffer, StringValueFilter filter)
     {
+      bool ignoreCase = filter.IgnoreCase && StringIsCaseSensitive(filter.Value);
+
       DBxExpression expr1, expr2;
-      if (filter.IgnoreCase)
+      if (ignoreCase)
       {
         expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
         expr2 = new DBxConst(filter.Value.ToUpperInvariant(), DBxColumnType.String);
@@ -936,8 +938,10 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
     {
+      bool ignoreCase = filter.IgnoreCase && StringIsCaseSensitive(filter.Value);
+
       DBxExpression expr1;
-      if (filter.IgnoreCase)
+      if (ignoreCase)
         expr1 = new DBxFunction(DBxFunctionKind.Upper, filter.Expression);
       else
         expr1 = filter.Expression;
@@ -950,7 +954,7 @@ namespace FreeLibSet.Data
       buffer.SB.Append(" LIKE '");
 
       string v = filter.Value;
-      if (filter.IgnoreCase)
+      if (ignoreCase)
         v = v.ToUpperInvariant();
       MakeEscapedChars(buffer, v, new char[] { '%', '_', '[', '\'' }, "[", "]");
       buffer.SB.Append("%\'");
@@ -998,10 +1002,12 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatSubstringFilter(DBxSqlBuffer buffer, SubstringFilter filter)
     {
+      bool ignoreCase = filter.IgnoreCase && StringIsCaseSensitive(filter.Value);
+
       // 24.06.2019.
       // То же, что и классе DataViewDBxSqlFormatter, но с переводом к верхнему регистру
       DBxExpression expr1, expr2;
-      if (filter.IgnoreCase)
+      if (ignoreCase)
       {
         expr1 = new DBxFunction(DBxFunctionKind.Upper, new DBxFunction(DBxFunctionKind.Substring,
           filter.Expression,
@@ -1020,6 +1026,19 @@ namespace FreeLibSet.Data
 
       CompareFilter filter2 = new CompareFilter(expr1, expr2, CompareKind.Equal, true);
       buffer.FormatFilter(filter2);
+    }
+
+    /// <summary>
+    /// Возращает true, если переданная строка содержит буквенные символы.
+    /// В этом случае имеет значение режим сравнения для строковых фильтров.
+    /// </summary>
+    /// <param name="s">Проверяемое строковое выражение</param>
+    /// <returns>Чувствительность к регистру</returns>
+    protected static bool StringIsCaseSensitive(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return false;
+      return !String.Equals(s.ToUpperInvariant(), s.ToLowerInvariant(), StringComparison.Ordinal);
     }
 
     #endregion

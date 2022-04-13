@@ -176,6 +176,23 @@ namespace FreeLibSet.Data.SQLite
 
     #region FormatFilter
 
+    /// <summary>
+    /// Заменяет фильтр StartsWithFilter на SubstringFilter и использует его для форматирования
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
+    {
+      // Для SQLite есть странности при использовании оператора LIKE.
+      // По умолчанию он игнорирует регистр символов, но только латиницы.
+      // Есть директива "PRAGMA case_sensitive_like=1", которая, по идее должна делать сравнение чувствительным к регистру,
+      // но она работает странно.
+      // Заменяем на фильтр по подстроке, и не думаем ни о чем.
+
+      SubstringFilter filter2 = new SubstringFilter(filter.Expression, 0, filter.Value, filter.IgnoreCase);
+      OnFormatSubstringFilter(buffer, filter2);
+    }
+
 
     ///// <summary>
     ///// Заменяем функцию ISNULL(a,b) на COALESCE
@@ -376,6 +393,22 @@ namespace FreeLibSet.Data.SQLite
       get
       {
         return SQLITE_MAX_SQL_LENGTH;
+      }
+    }
+
+    /// <summary>
+    /// Возвращается "нестандартное" имя функции "SUBSTR".
+    /// </summary>
+    /// <param name="function">Функция</param>
+    /// <returns>Имя функции в SQLite</returns>
+    protected override string GetFunctionName(DBxFunctionKind function)
+    {
+      switch (function)
+      {
+        case DBxFunctionKind.Substring:
+          return "SUBSTR";
+        default:
+          return base.GetFunctionName(function);
       }
     }
 

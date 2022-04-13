@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms.FIAS
         _Table.Columns.Add("IFNSFL", typeof(string));
         _Table.Columns.Add("IFNSUL", typeof(string));
       }
-      if (ui.ShowGuidsInTables)
+      if (ui.ShowGuids)
         _Table.Columns.Add("RecId", typeof(Guid));
       if (ui.DBSettings.UseHistory)
       {
@@ -84,7 +84,8 @@ namespace FreeLibSet.Forms.FIAS
       Columns.AddText("LevelName", true, "Уровень", 10);
       Columns.AddText("Name", true, "Наименование", 20, 10);
       Columns.AddText("Abbreviation", true, "Сокращение", 10, 5);
-      Columns.AddText("Guid", true, "GUID", 36, 36);
+      if (ui.ShowGuids)
+        Columns.AddText("Guid", true, "GUID", 36, 36);
       Columns.AddText("PostalCode", true, "Почтовый индекс", 6, 6);
       if (ui.DBSettings.UseOKATO)
         Columns.AddText("OKATO", true, "ОКАТО", 11, 11);
@@ -95,7 +96,7 @@ namespace FreeLibSet.Forms.FIAS
         Columns.AddText("IFNSFL", true, "Код ИФНС ФЛ", 4, 4);
         Columns.AddText("IFNSUL", true, "Код ИФНС ЮЛ", 4, 4);
       }
-      if (ui.ShowGuidsInTables)
+      if (ui.ShowGuids)
         Columns.AddText("RecId", true, "RecId (неустойчивый идентификатор записи)", 36, 36);
       if (ui.DBSettings.UseHistory)
       {
@@ -225,7 +226,7 @@ namespace FreeLibSet.Forms.FIAS
       row["Name"] = a2.GetName(level);
       row["Abbreviation"] = a2.GetAOType(level);
       row["Guid"] = a2.GetGuid(level).ToString();
-      if (_UI.ShowGuidsInTables)
+      if (_UI.ShowGuids)
         row["RecId"] = a2.GetRecId(level).ToString();
 
       row["PostalCode"] = a2.PostalCode;

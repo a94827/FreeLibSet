@@ -5,7 +5,9 @@
 	<title>Изменения в модуле ExtDB.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-02-23T22:38:50.595000000"/>
+	<meta name="changed" content="2022-04-13T12:22:19.197000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -142,6 +144,64 @@
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="314" sdnum="1049;">
+			<p align="center">314</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">12.04.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>1. <span lang="ru-RU">Уточнена регистрочувствительность для
+			строковых фильтров </span><span lang="en-US">StringValueFilter</span>
+			<span lang="ru-RU">(</span><a href="ExtDB_11.htm#v020p2"><span lang="en-US">v.20
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">,
+			SubstringFilter (<a href="ExtDB_11.htm#v038p5">v.38 </a></span><a href="ExtDB_11.htm#v038p5"><span lang="ru-RU">п.5</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">и StartsWithFilter (</span><a href="ExtDB_11.htm#v020p1"><span lang="en-US">v.20
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="ru-RU">- Защищенный статический метод
+			BaseDBxSqlFormatter.StringIsCaseSensitive() (</span><a href="ExtDB_11.htm#v045p3"><span lang="en-US">v.45
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">). </span>
+			</p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">В методах
+			обобщенной реализации
+			BaseDBxSqlFormatter.</span><span lang="en-US">OnFormatStringValueFilter(),
+			OnFormatSubstringFilter() </span><span lang="ru-RU">и
+			</span><span lang="en-US">OnFormatStartsWithFiter()</span><span lang="ru-RU">,
+			если </span><span lang="en-US">Value </span><span lang="ru-RU">не
+			содержит букв, не выполняется вызов</span> <span lang="en-US">UPPER()</span></p>
+			<p>- В <span lang="en-US">SqlDBxFormatter </span>(<a href="ExtDB_11.htm#v001p11"><span lang="en-US">v.1
+			</span>п.11</a>) для этих фильтров добавляется оператор <span lang="en-US">COLLATE,
+			</span>чтобы обеспечить правильное сравнение</p>
+			<p><span lang="en-US">-
+			NpgsqlDBxSqlFormatter.OnFormatStartsWithFilter() </span><span lang="ru-RU">(</span><a href="ExtDB_11.htm#v009p1"><span lang="en-US">v.9
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			использует нестандартный оператор </span><span lang="en-US">ILIKE
+			</span><span lang="ru-RU">в </span><span lang="en-US">PostgreSQL.
+			</span><span lang="ru-RU">Для других фильтров используется
+			обобщенная реализация.</span></p>
+			<p><span lang="ru-RU">- При создании первого объекта </span><span lang="en-US">SQLiteDBx
+			(<a href="ExtDB_11.htm#v029p1">v.29 </a></span><a href="ExtDB_11.htm#v029p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">устанавливаются пользовательские
+			реализации функций </span><span lang="en-US">UPPER() </span><span lang="ru-RU">и
+			</span><span lang="en-US">LOWER()</span><span lang="ru-RU"> взамен
+			ограниченной стандартной реализации</span><span lang="en-US">. </span><span lang="ru-RU">Они
+			вызывают методы </span><span lang="en-US">String.ToUpperInvariant()
+			</span><span lang="ru-RU">и </span><span lang="en-US">ToLowerInvariant()</span><span lang="ru-RU">.
+			Управляющее статическое свойство UseInvariantStringFunctions.</span></p>
+			<p>-  <span lang="en-US">SQLiteDBxFormatter.OnFormatStartsWithFilter()
+			</span>заменяет фильтр на <span lang="en-US">SubstringFilter,
+			</span>чтобы отказаться от использования ненадежного оператора
+			<span lang="en-US">LIKE.</span></p>
+			<p><span lang="ru-RU">2. Метод
+			</span><span lang="en-US">SQLiteDBxFormatter.GetFunctionName()
+			(<a href="ExtDB_11.htm#v045p1">v.45 </a></span><a href="ExtDB_11.htm#v045p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">возвращает</span><span lang="en-US"> </span><span lang="ru-RU">имя
+			функции &quot;</span><span lang="en-US">SUBSTR</span><span lang="ru-RU">&quot;,
+			а не &quot;</span><span lang="en-US">SUBSTRING</span><span lang="ru-RU">&quot;
+			как в других БД.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

@@ -77,12 +77,12 @@ namespace FreeLibSet.Forms.FIAS
 
       gh = new EFPDataGridView(ControlWithToolBar);
       gh.Columns.AddTextFill("AddressText", false, "Адрес", 100, 10);
-      if (ui.ShowGuidsInTables)
+      if (ui.ShowGuids)
       {
         gh.Columns.AddText("AOGUID", false, "AOGUID", 36, 36);
         gh.Columns.LastAdded.CanIncSearch = true;
       }
-      if (ui.ShowGuidsInTables)
+      if (ui.ShowGuids)
       {
         gh.Columns.AddText("RecId", false, "RecId (неустойчивый идентификатор записи)", 36, 36);
         gh.Columns.LastAdded.CanIncSearch = true;
