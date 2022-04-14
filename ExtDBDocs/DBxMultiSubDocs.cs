@@ -98,11 +98,11 @@ namespace FreeLibSet.Data.Docs
     #region Конструктор для подмножества
 
     /// <summary>
-    /// Создание подмножества строк
+    /// Создание подмножества строк.
     /// В полученном наборе для всех поддокументов устанавливается состояние View, независимо от состояния поддокументов
-    /// в исходном наборе <paramref name="mainObj"/>. В исходном наборе состояние поддокументов не меняется
+    /// в исходном наборе <paramref name="mainObj"/>. В исходном наборе состояние поддокументов не меняется.
     /// </summary>
-    /// <param name="mainObj">Основной набор поддокументов, присоединененный к DBxDocSet</param>
+    /// <param name="mainObj">Основной набор поддокументов, присоединенный к DBxDocSet</param>
     /// <param name="subDocIds">Идентификаторы поддокументов, которые должны попасть в подмножество. 
     /// Могут быть фиктивные идентификаторы для несохраненных поддокументов</param>
     public DBxMultiSubDocs(DBxMultiSubDocs mainObj, Int32[] subDocIds)
@@ -137,10 +137,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Эта версия конструктора используется в табличном просмотре поддокументов, относящихся к некоторому документу.
-    /// Не предназначено для использования непосредственно в пользовательском коде
+    /// Не предназначено для использования непосредственно в пользовательском коде.
     /// </summary>         
-    /// <param name="mainObj"></param>
-    /// <param name="srcSubDocRows"></param>
+    /// <param name="mainObj">Основной набор поддокументов, присоединенный к DBxDocSet</param>
+    /// <param name="srcSubDocRows">Строки поддокументов. Строки должны относиться к таблице в <paramref name="mainObj"/>.</param>
     public DBxMultiSubDocs(DBxMultiSubDocs mainObj, DataRow[] srcSubDocRows)
       : this(mainObj._Owner, mainObj.SubDocType)
     {
@@ -530,7 +530,7 @@ namespace FreeLibSet.Data.Docs
       #region Конструктор
 
       public MultiSubDocValues(DBxMultiSubDocs multiSubDocs)
-        : base(multiSubDocs._Table, multiSubDocs.ColumnNameIndexer) // Важно, что _Table, а не Table. Иначе булет рекурсия
+        : base(multiSubDocs._Table, multiSubDocs.ColumnNameIndexer) // Важно, что _Table, а не Table. Иначе будет рекурсия
       {
         _MultiSubDocs = multiSubDocs;
       }

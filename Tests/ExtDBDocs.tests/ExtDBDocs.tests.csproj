@@ -49,6 +49,7 @@
     <Compile Include="DBxDocSetTests.cs" />
     <Compile Include="DBxDocTypesTests.cs" />
     <Compile Include="DBxMemoryDocValuesTests.cs" />
+    <Compile Include="DBxMultiSubDocsTests.cs" />
     <Compile Include="DBxRealDocProviderGlobalTests.cs" />
     <Compile Include="DBxDocProviderTests.cs" />
   </ItemGroup>
