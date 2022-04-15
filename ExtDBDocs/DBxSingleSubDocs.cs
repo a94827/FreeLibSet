@@ -159,7 +159,7 @@ namespace FreeLibSet.Data.Docs
       get
       {
         DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
-        int cnt=0;
+        int cnt = 0;
         for (int i = 0; i < subDocRows.Length; i++)
         {
           if (subDocRows[i].RowState != DataRowState.Deleted)
@@ -224,6 +224,29 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentException("Поддокумент \"" + SubDocs.SubDocType.SingularTitle + "\" c SubDocId=" + subDocId.ToString() + " относится к документу \"" +
           Doc.DocType.SingularTitle + "\" с DocId=" + res.DocId.ToString() + ", а не " + Doc.DocId.ToString(), "subDocId");
       return res;
+    }
+
+    /// <summary>
+    /// Возвращает массив идентификаторов поддокументов.
+    /// В массиве могут быть фиктивные идентификаторы, если есть были созданы поддокументы
+    /// </summary>
+    public Int32[] SubDocIds
+    {
+      get
+      {
+        DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
+        if (subDocRows.Length == 0)
+          return DataTools.EmptyIds;
+        int pId = subDocRows[0].Table.Columns.IndexOf("Id");
+#if DEBUG
+        if (pId < 0)
+          throw new BugException();
+#endif
+        Int32[] ids = new Int32[subDocRows.Length];
+        for (int i = 0; i < ids.Length; i++)
+          ids[i] = (Int32)(subDocRows[i][pId]);
+        return ids;
+      }
     }
 
     #endregion

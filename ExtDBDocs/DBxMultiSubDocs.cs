@@ -152,6 +152,7 @@ namespace FreeLibSet.Data.Docs
       _MainObj = mainObj;
 
       // Для подмножества сразу создаем таблицу
+      mainObj.GetTableReady(); // 15.04.2022
       _Table = mainObj._Table.Clone();
       DataTools.SetPrimaryKey(_Table, "Id");
 
