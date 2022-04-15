@@ -898,9 +898,7 @@ namespace FreeLibSet.Forms.Docs
       {
         try
         {
-          Int32 oldId = CurrentId;
           PerformRefresh(); // обязательно после вызова OnCreated(), иначе UsedColumnNames будет равен null
-          CurrentId = oldId; // 23.11.2017
         }
         catch (Exception e) // 04.02.2022
         {

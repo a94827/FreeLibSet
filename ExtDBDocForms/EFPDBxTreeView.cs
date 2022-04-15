@@ -524,7 +524,10 @@ namespace FreeLibSet.Forms.Docs
       if (_DelayedSelectedIds != null)
         SelectedIds = _DelayedSelectedIds;
       if (_DelayedCurrentId != 0)
-        CurrentId = _DelayedCurrentId;
+      {
+        try { CurrentId = _DelayedCurrentId; }
+        catch { }
+      }
     }
 
 
@@ -1103,24 +1106,6 @@ namespace FreeLibSet.Forms.Docs
     protected override IEFPTextSearchContext CreateTextSearchContext()
     {
       return new EFPDBxTreeViewSearchContext(this);
-    }
-
-    #endregion
-
-    #region Обновление данных
-
-    /// <summary>
-    /// Принудительное обновление просмотра
-    /// </summary>
-    public override void PerformRefresh()
-    {
-      // TODO: 31.10.2017 Затычка. Нужно сделать сохранение / восстановление текущей позиции через свойство Selection
-
-      Int32 oldId = this.CurrentId;
-
-      base.PerformRefresh();
-
-      this.CurrentId = oldId;
     }
 
     #endregion

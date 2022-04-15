@@ -865,16 +865,20 @@ namespace FreeLibSet.Forms.Docs
 
     private void InitDelayedProperties()
     {
-      if (_DelayedSelectedDocIds != null)
+      try
       {
-        SetSelectedDocIds(_DelayedSelectedDocIds);
-        _DelayedSelectedDocIds = null;
+        if (_DelayedSelectedDocIds != null)
+        {
+          SetSelectedDocIds(_DelayedSelectedDocIds);
+          _DelayedSelectedDocIds = null;
+        }
+        if (_DelayedCurrentDocId != 0)
+        {
+          SetCurrentDocId(_DelayedCurrentDocId);
+          _DelayedCurrentDocId = 0;
+        }
       }
-      if (_DelayedCurrentDocId != 0)
-      {
-        SetCurrentDocId(_DelayedCurrentDocId);
-        _DelayedCurrentDocId = 0;
-      }
+      catch { } // 15.04.2022
     }
 
     #endregion
