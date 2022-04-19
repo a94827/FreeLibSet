@@ -633,7 +633,7 @@ namespace FreeLibSet.Data
         if (String.IsNullOrEmpty(tableName))
           throw new ArgumentNullException("tableName");
         else
-          throw new ArgumentException("Нет описания структуры таблицы \"" + tableName + "\"", "tableName");
+          throw new KeyNotFoundException("Нет описания структуры таблицы \"" + tableName + "\"");
       }
       return tstr;
     }

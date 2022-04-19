@@ -1011,6 +1011,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="code">Код объекта</param>
     /// <returns>Объект</returns>
+    /// <exception cref="System.Collections.Generic.KeyNotFoundException">Если не найден объект с заданным кодом</exception>
     public T GetRequired(string code)
     {
       int index = IndexOf(code); // восстанавливает словарь
@@ -1019,7 +1020,7 @@ namespace FreeLibSet.Collections
       else if (string.IsNullOrEmpty(code))
         throw new ArgumentNullException("code");
       else
-        throw new ArgumentException("В списке нет элемента с кодом \"" + code + "\"");
+        throw new KeyNotFoundException("В списке нет элемента с кодом \"" + code + "\"");
     }
 
     /// <summary>
@@ -2570,6 +2571,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="code">Код объекта</param>
     /// <returns>Объект</returns>
+    /// <exception cref="System.Collections.Generic.KeyNotFoundException">Если не найден объект с заданным кодом</exception>
     public T GetRequired(string code)
     {
       int index = IndexOf(code); // восстанавливает словарь
@@ -2578,7 +2580,7 @@ namespace FreeLibSet.Collections
       else if (string.IsNullOrEmpty(code))
         throw new ArgumentNullException("code");
       else
-        throw new ArgumentException("В списке нет элемента с кодом \"" + code + "\"", "code");
+        throw new KeyNotFoundException("В списке нет элемента с кодом \"" + code + "\"");
     }
 
     /// <summary>
@@ -3490,6 +3492,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="code">Код элемента</param>
     /// <returns>Найденный элемент или пустое значение</returns>
+    /// <exception cref="System.Collections.Generic.KeyNotFoundException">Если не найден объект с заданным кодом</exception>
     public T GetRequired(string code)
     {
       T res;
@@ -3502,7 +3505,7 @@ namespace FreeLibSet.Collections
       if (_Dict.TryGetValue(code, out res))
         return res;
       else
-        throw new ArgumentException("В коллекции нет элемента с кодом \"" + code + "\"", "code");
+        throw new KeyNotFoundException("В коллекции нет элемента с кодом \"" + code + "\"");
     }
 
     /// <summary>
@@ -3943,6 +3946,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="code">Код элемента</param>
     /// <returns>Найденный элемент</returns>
+    /// <exception cref="System.Collections.Generic.KeyNotFoundException">Если не найден объект с заданным кодом</exception>
     public T GetRequired(string code)
     {
       lock (SyncRoot)
@@ -3950,7 +3954,6 @@ namespace FreeLibSet.Collections
         return Source.GetRequired(code);
       }
     }
-
 
     #endregion
 

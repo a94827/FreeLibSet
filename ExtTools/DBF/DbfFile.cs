@@ -1593,14 +1593,19 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Сбрасывает на диск несохраненные изменения и закрывает файлы, если использовался конструктор,
-    /// принимающий имя файла
+    /// принимающий имя файла.
+    /// Если <paramref name="disposing"/>=false, никаких действий не выполняется во избежания
+    /// выброса необрабатываемого исключения.
     /// </summary>
     /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
-      FlushRecord();
-      FlushHeader();
-      DisposeStreams();
+      if (disposing)
+      {
+        FlushRecord();
+        FlushHeader();
+        DisposeStreams();
+      }
       base.Dispose(disposing);
     }
 
