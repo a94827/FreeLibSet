@@ -3371,7 +3371,9 @@ namespace FreeLibSet.Collections
     private Dictionary<T, object> _Dict;
 
     /// <summary>
-    /// Для восстановления поля _Dict после десериализации
+    /// Для восстановления поля _Dict после десериализации.
+    /// Также используется при поиске.
+    /// Может быть null.
     /// </summary>
     private IEqualityComparer<T> _Comparer;
 
@@ -3379,7 +3381,7 @@ namespace FreeLibSet.Collections
     /// Доступ по индексу. 
     /// Индекс должен быть в диапазоне от 0 до (Count-1).
     /// Установка значения элемента выполняет замену элемента на новый. При этом может возникнуть
-    /// исключение, если новый элемент отличается от старого и такой элемент уже есть в списке
+    /// исключение, если новый элемент отличается от старого и такой элемент уже есть в списке.
     /// </summary>                              
     /// <param name="index">Индекс элемента</param>
     /// <returns>Элемент</returns>
@@ -3391,7 +3393,10 @@ namespace FreeLibSet.Collections
         CheckNotReadOnly();
 
         if (_Dict.ContainsKey(value))
-          throw new InvalidOperationException("Значение " + value.ToString() + " уже есть в списке");
+        {
+          if (IndexOf(value) != index) // Условие добавлено 21.04.2022
+            throw new InvalidOperationException("Значение " + value.ToString() + " уже есть в списке");
+        }
 
         T oldItem = _List[index];
         _Dict.Remove(oldItem);
@@ -3492,7 +3497,27 @@ namespace FreeLibSet.Collections
     /// <returns>Индекс</returns>
     public int IndexOf(T item)
     {
-      return _List.IndexOf(item);
+      // Сначала может иметь смысл убедиться в наличии элемента
+      if (_List.Count > 20)
+      {
+        if (!_Dict.ContainsKey(item))
+          return -1;
+      }
+
+      // 21.04.2022
+      // Требуется перебор с помощью компаратора
+
+      if (_Comparer == null)
+        return _List.IndexOf(item);
+
+
+      for (int i = 0; i < _List.Count; i++)
+      {
+        if (_Comparer.Equals(item, _List[i]))
+          return i;
+      }
+
+      return -1;
     }
 
     /// <summary>
@@ -3582,7 +3607,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Удаляет элемент, если он есть в списке
+    /// Удаляет элемент, если он есть в списке.
     /// </summary>
     /// <param name="item">Удаляемый элемент</param>
     /// <returns>true, если элемент был в списке</returns>
@@ -3590,9 +3615,21 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 
-      if (_List.Remove(item))
+      //if (_List.Remove(item))
+      //{
+      //  _Dict.Remove(item);
+      //  return true;
+      //}
+      //else
+      //  return false;
+
+      // 21.04.2022
+      // Так не правильно. Метод List.Remove() не использует компаратор.
+
+      int p = IndexOf(item);
+      if (p >= 0)
       {
-        _Dict.Remove(item);
+        RemoveAt(p);
         return true;
       }
       else
@@ -3637,12 +3674,19 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Сортировка списка с использованием правил сравнения по умолчанию.
+    /// Если в конструкторе был задан компаратор, который реализует интерфейс IComparer of T,
+    /// то используется этот компаратор.
     /// </summary>
     public void Sort()
     {
       CheckNotReadOnly();
 
-      _List.Sort();
+      IComparer<T> comparer = _Comparer as IComparer<T>;
+
+      if (comparer == null)
+        _List.Sort();
+      else
+        _List.Sort(comparer);
     }
 
     /// <summary>

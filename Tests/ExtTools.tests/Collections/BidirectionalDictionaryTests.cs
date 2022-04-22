@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Collections;
+using FreeLibSet.Remoting;
+using FreeLibSet.Core;
 
 namespace ExtTools_tests.Collections
 {
   [TestFixture]
   public class BidirectionalDictionaryTests
   {
+    #region Конструкторы
+
     [Test]
     public void Constructor_empty()
     {
@@ -53,6 +57,8 @@ namespace ExtTools_tests.Collections
       sut.Add(3, "CCC");
       return sut;
     }
+
+    #endregion
 
     [Test]
     public void Add()
@@ -175,5 +181,23 @@ namespace ExtTools_tests.Collections
 
     //  Assert.AreEqual(3, sut.Count, "Count");
     //}
+
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      BidirectionalDictionary<int, string> sut1 = CreateTestObject();
+
+      byte[] bytes = SerializationTools.SerializeBinary(sut1);
+      BidirectionalDictionary<int, string> sut2 = (BidirectionalDictionary<int, string>)(SerializationTools.DeserializeBinary(bytes));
+
+      Assert.AreEqual(DataTools.CreateArray<int>(sut1.Keys), DataTools.CreateArray<int>(sut2.Keys), "Keys");
+      Assert.AreEqual(DataTools.CreateArray<string>(sut1.Values), DataTools.CreateArray<string>(sut2.Values), "Values");
+    }
+
+    #endregion
+
   }
 }

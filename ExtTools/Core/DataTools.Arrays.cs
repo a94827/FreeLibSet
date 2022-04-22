@@ -954,6 +954,37 @@ namespace FreeLibSet.Core
       return cnt;
     }
 
+#if XXX // Есть CreateArray()
+    /// <summary>
+    /// Создает массив из объекта ICollection, используя CopyTo().
+    /// Удобно использовать, например, для получения списка ключей и значений словарей, когда
+    /// свойства Keys и Values возвращают только типизированный интерфейс ICollection.
+    /// Не используйте метод для асинхронных словарей.
+    /// </summary>
+    /// <typeparam name="T">Тип значений, хранщихся в коллекции</typeparam>
+    /// <param name="source">Исходная коллекция</param>
+    public static T[] ToArray<T>(ICollection<T> source)
+    {
+      T[] a = new T[source.Count];
+      source.CopyTo(a, 0);
+      return a;
+    }
+
+    /// <summary>
+    /// Создает массив из перечислителя 
+    /// </summary>
+    /// <typeparam name="T">Тип значений, хранщихся в коллекции</typeparam>
+    /// <param name="source">Исходная коллекция</param>
+    /// <returns>Массив значений</returns>
+    public static T[] ToArray<T>(IEnumerable<T> source)
+    {
+      List<T> lst = new List<T>();
+      foreach (T item in source)
+        lst.Add(item);
+      return lst.ToArray();
+    }
+#endif
+
     #endregion
   }
 }

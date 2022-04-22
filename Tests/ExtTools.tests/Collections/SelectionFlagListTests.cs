@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Collections;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Collections
 {
@@ -230,6 +231,23 @@ namespace ExtTools_tests.Collections
 
       // в текущей реализации - допускается
       //Assert.Catch<ArgumentException>(delegate() { sut.SelectedIndices = new int[3]; }, "out of range");
+    }
+
+    #endregion
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      SelectionFlagList sut1 = new SelectionFlagList(3);
+      sut1[0] = true;
+      sut1[2] = true;
+
+      byte[] bytes = SerializationTools.SerializeBinary(sut1);
+      SelectionFlagList sut2 = (SelectionFlagList)(SerializationTools.DeserializeBinary(bytes));
+
+      Assert.AreEqual(sut1.ToArray(), sut2.ToArray());
     }
 
     #endregion

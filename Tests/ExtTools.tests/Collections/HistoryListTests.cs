@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Collections;
 using NUnit.Framework;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Collections
 {
@@ -228,5 +229,20 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(0, sut.Count, "Count");
       Assert.IsTrue(sut.IsEmpty, "IsEmpty");
     }
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      HistoryList sut1 = new HistoryList(new string[] { "AAA", "BBB", "CCC" });
+
+      byte[] bytes = SerializationTools.SerializeBinary(sut1);
+      HistoryList sut2 = (HistoryList)(SerializationTools.DeserializeBinary(bytes));
+
+      Assert.AreEqual(sut1.ToArray(), sut2.ToArray());
+    }
+
+    #endregion
   }
 }

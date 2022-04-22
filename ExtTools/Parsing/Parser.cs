@@ -808,40 +808,54 @@ namespace FreeLibSet.Parsing
     #region Вспомогательные методы установки ошибок
 
     /// <summary>
-    /// Устанавливает ошибку для лексемы
+    /// Устанавливает ошибку для лексемы.
+    /// Если ErrorMessage уже содержит ошибку, то она не заменяется.
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     public void SetError(string text)
     {
-      this.ErrorMessage = new ErrorMessageItem(ErrorMessageKind.Error, text);
+      SetError(text, String.Empty);
     }
 
     /// <summary>
-    /// Устанавливает ошибку для лексемы
+    /// Устанавливает ошибку для лексемы.
+    /// Если ErrorMessage уже содержит ошибку, то она не заменяется.
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     /// <param name="code">Код ошибки</param>
     public void SetError(string text, string code)
     {
+      if (this.ErrorMessage.HasValue)
+      {
+        if (this.ErrorMessage.Value.Kind == ErrorMessageKind.Error)
+          return; // 21.04.2022. 
+      }
       this.ErrorMessage = new ErrorMessageItem(ErrorMessageKind.Error, text, code);
     }
 
     /// <summary>
-    /// Устанавливает предупреждение для лексемы
+    /// Устанавливает предупреждение для лексемы.
+    /// Если ErrorMessage уже содержит ошибку или предупреждение, то оно не заменяется.
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     public void SetWarning(string text)
     {
-      this.ErrorMessage = new ErrorMessageItem(ErrorMessageKind.Warning, text);
+      SetWarning(text, String.Empty);
     }
 
     /// <summary>
-    /// Устанавливает предупреждение для лексемы
+    /// Устанавливает предупреждение для лексемы.
+    /// Если ErrorMessage уже содержит ошибку или предупреждение, то оно не заменяется.
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     /// <param name="code">Код ошибки</param>
     public void SetWarning(string text, string code)
     {
+      if (this.ErrorMessage.HasValue)
+      {
+        if (this.ErrorMessage.Value.Kind != ErrorMessageKind.Info)
+          return; // 21.04.2022
+      }
       this.ErrorMessage = new ErrorMessageItem(ErrorMessageKind.Warning, text, code);
     }
 
