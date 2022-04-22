@@ -40,8 +40,11 @@
   <ItemGroup>
     <Compile Include="Collections\ArrayIndexerTests.cs" />
     <Compile Include="Collections\BidirectionalDictionaryTests.cs" />
+    <Compile Include="Collections\DictionaryWithReadOnlyTests.cs" />
+    <Compile Include="Collections\DummyListTests.cs" />
     <Compile Include="Collections\HistoryListTests.cs" />
     <Compile Include="Collections\ObjectWithCodeComparerTests.cs" />
+    <Compile Include="Collections\OrderSortedListTests.cs" />
     <Compile Include="Collections\SelectionFlagListTests.cs" />
     <Compile Include="Collections\SingleScopeStringListTests.cs" />
     <Compile Include="Core\DataRowValueArrayTests.cs" />

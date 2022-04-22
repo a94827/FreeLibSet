@@ -162,7 +162,24 @@ namespace FreeLibSet.Collections
       /// <returns></returns>
       public int IndexOf(TKey item)
       {
-        return _Owner._List.IndexOf(item);
+        if (_Owner.Count>20)
+        {
+          if (!_Owner._Dict.ContainsKey(item))
+            return -1;
+        }
+
+        if (_Owner._KeyComparer == null)
+          return _Owner._List.IndexOf(item);
+        else // 22.04.2022
+        {
+          int n = _Owner._List.Count;
+          for (int i = 0; i < n; i++)
+          {
+            if (_Owner._KeyComparer.Equals(item, _Owner._List[i]))
+              return i;
+          }
+          return -1;
+        }
       }
 
       void IList<TKey>.Insert(int index, TKey item)
@@ -633,8 +650,22 @@ namespace FreeLibSet.Collections
       {
         CheckNotReadOnly();
 
-        Remove(key);
-        Add(key, value);
+        // Remove(key);
+        // Add(key, value);
+        // 22.04.2022
+        // Так неправильно. Элемент оказывается в конце списка
+
+
+        if (ContainsKey(key))
+        {
+          // режим замены
+          _Dict[key] = value;
+        }
+        else
+        { 
+          // режим добавления
+          Add(key, value);
+        }
       }
     }
 
@@ -722,9 +753,13 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 
-      if (_Dict.Remove(key))
+      // 22.04.2022 Реализация изменена
+
+      int p = Keys.IndexOf(key);
+      if (p>=0)
       {
-        _List.Remove(key);
+        _Dict.Remove(key);
+        _List.RemoveAt(p);
         return true;
       }
       else

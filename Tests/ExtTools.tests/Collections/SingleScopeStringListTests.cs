@@ -405,7 +405,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Сериализация      
+    #region Сериализация
 
     [Test]
     public void Serialization([Values(true, false)] bool ignoreCase)
