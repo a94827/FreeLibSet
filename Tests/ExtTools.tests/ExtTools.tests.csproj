@@ -46,6 +46,7 @@
     <Compile Include="Collections\ObjectWithCodeComparerTests.cs" />
     <Compile Include="Collections\OrderSortedListTests.cs" />
     <Compile Include="Collections\SelectionFlagListTests.cs" />
+    <Compile Include="Collections\SingleScopeSortedListTests.cs" />
     <Compile Include="Collections\SingleScopeStringListTests.cs" />
     <Compile Include="Core\DataRowValueArrayTests.cs" />
     <Compile Include="Core\DataTableValueArrayTests.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="DependedValues\DepEvalExprTests.cs" />
     <Compile Include="DependedValues\DepFromArrayTests.cs" />
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />
+    <Compile Include="Collections\HashtableTests.cs" />
     <Compile Include="Models\DataTableTreeModelTests.cs" />
     <Compile Include="Models\DataTableTreeModelWithIdsTests.cs" />
     <Compile Include="Models\TreePathTests.cs" />

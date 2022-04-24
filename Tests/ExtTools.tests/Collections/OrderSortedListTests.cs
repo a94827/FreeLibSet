@@ -22,6 +22,7 @@ namespace ExtTools_tests.Collections
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
       Assert.AreEqual(0, sut.Keys.Count, "Keys.Count");
       Assert.AreEqual(0, sut.Values.Count, "Keys.Count");
+      Assert.AreSame(EqualityComparer<int>.Default, sut.Comparer, "Comparer");
     }
 
     [Test]
@@ -46,6 +47,7 @@ namespace ExtTools_tests.Collections
       dict.Add("AAA", 222);
 
       OrderSortedList<string, int> sut = new OrderSortedList<string, int>(dict, StringComparer.OrdinalIgnoreCase);
+      Assert.AreSame(StringComparer.OrdinalIgnoreCase, sut.Comparer, "Comparer");
 
       Assert.Catch(delegate() { sut.Add("aaa", 333); });
 

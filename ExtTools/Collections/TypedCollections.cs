@@ -69,11 +69,11 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Создает пустую коллекцию с заданным объектом сравнения
     /// </summary>
-    public OrderSortedList(IEqualityComparer<TKey> keyComparer)
+    public OrderSortedList(IEqualityComparer<TKey> comparer)
     {
       _List = new List<TKey>();
-      _Dict = new Dictionary<TKey, TValue>(keyComparer);
-      _KeyComparer = keyComparer;
+      _Dict = new Dictionary<TKey, TValue>(comparer);
+      _Comparer = comparer;
       _Keys = new KeyCollection(this);
       _Values = new ValueCollection(this);
     }
@@ -96,12 +96,12 @@ namespace FreeLibSet.Collections
     /// Используйте эту версию конструктора, если заранее известно число элементов.
     /// </summary>
     /// <param name="capacity">Начальная емкость в коллекции</param>
-    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
-    public OrderSortedList(int capacity, IEqualityComparer<TKey> keyComparer)
+    /// <param name="comparer">Интерфейс для сравнения ключей</param>
+    public OrderSortedList(int capacity, IEqualityComparer<TKey> comparer)
     {
       _List = new List<TKey>(capacity);
-      _Dict = new Dictionary<TKey, TValue>(capacity, keyComparer);
-      _KeyComparer = keyComparer;
+      _Dict = new Dictionary<TKey, TValue>(capacity, comparer);
+      _Comparer = comparer;
       _Keys = new KeyCollection(this);
       _Values = new ValueCollection(this);
     }
@@ -121,9 +121,9 @@ namespace FreeLibSet.Collections
     /// Конструктор копирования
     /// </summary>
     /// <param name="dictionary">Источник данных</param>
-    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
-    public OrderSortedList(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> keyComparer)
-      : this(dictionary.Count, keyComparer)
+    /// <param name="comparer">Интерфейс для сравнения ключей</param>
+    public OrderSortedList(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
+      : this(dictionary.Count, comparer)
     {
       foreach (KeyValuePair<TKey, TValue> Pair in dictionary)
         Add(Pair.Key, Pair.Value);
@@ -168,14 +168,14 @@ namespace FreeLibSet.Collections
             return -1;
         }
 
-        if (_Owner._KeyComparer == null)
+        if (_Owner._Comparer == null)
           return _Owner._List.IndexOf(item);
         else // 22.04.2022
         {
           int n = _Owner._List.Count;
           for (int i = 0; i < n; i++)
           {
-            if (_Owner._KeyComparer.Equals(item, _Owner._List[i]))
+            if (_Owner._Comparer.Equals(item, _Owner._List[i]))
               return i;
           }
           return -1;
@@ -629,9 +629,20 @@ namespace FreeLibSet.Collections
     private Dictionary<TKey, TValue> _Dict;
 
     /// <summary>
-    /// Для восстановления поля _Dict после десериализации
+    /// Компратор для сравнения ключей.
+    /// Если не был задан в явном виде в конструкторе объекта, возвращается EqualityComparer.Default
     /// </summary>
-    private IEqualityComparer<TKey> _KeyComparer;
+    public IEqualityComparer<TKey> Comparer 
+    { 
+      get 
+      {
+        if (_Comparer == null)
+          return EqualityComparer<TKey>.Default;
+        else
+          return _Comparer; 
+      } 
+    }
+    private IEqualityComparer<TKey> _Comparer;
 
     /// <summary>
     /// Доступ по ключу
@@ -982,7 +993,7 @@ namespace FreeLibSet.Collections
 #endif
 
       _List = new List<TKey>(InternalKeys.Length);
-      _Dict = new Dictionary<TKey, TValue>(InternalKeys.Length, _KeyComparer);
+      _Dict = new Dictionary<TKey, TValue>(InternalKeys.Length, _Comparer);
       _List.AddRange(InternalKeys);
       for (int i = 0; i < InternalKeys.Length; i++)
         _Dict.Add(InternalKeys[i], InternalValues[i]);
@@ -3030,10 +3041,10 @@ namespace FreeLibSet.Collections
     /// Создает пустую коллекцию.
     /// Эта версия конструктора бесполезна, если не создан производный класс, вызывающий SetReadOnly().
     /// </summary>
-    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
-    public DictionaryWithReadOnly(IEqualityComparer<TKey> keyComparer)
+    /// <param name="comparer">Интерфейс для сравнения ключей</param>
+    public DictionaryWithReadOnly(IEqualityComparer<TKey> comparer)
     {
-      _Source = new Dictionary<TKey, TValue>(keyComparer);
+      _Source = new Dictionary<TKey, TValue>(comparer);
     }
 
     /// <summary>
@@ -3051,10 +3062,10 @@ namespace FreeLibSet.Collections
     /// Эта версия конструктора бесполезна, если не создан производный класс, вызывающий SetReadOnly().
     /// </summary>
     /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="keyComparer">Интерфейс для сравнения ключей</param>
-    protected DictionaryWithReadOnly(int capacity, IEqualityComparer<TKey> keyComparer)
+    /// <param name="comparer">Интерфейс для сравнения ключей</param>
+    protected DictionaryWithReadOnly(int capacity, IEqualityComparer<TKey> comparer)
     {
-      _Source = new Dictionary<TKey, TValue>(capacity, keyComparer);
+      _Source = new Dictionary<TKey, TValue>(capacity, comparer);
     }
 
     #endregion
@@ -3406,11 +3417,20 @@ namespace FreeLibSet.Collections
     private Dictionary<T, object> _Dict;
 
     /// <summary>
-    /// Для восстановления поля _Dict после десериализации.
-    /// Также используется при поиске.
-    /// Может быть null.
+    /// Компаратор для сравнения ключей.
+    /// Если не был задан явно в конструкторе объекта, возвращается EquallityComparer.Default
     /// </summary>
-    private IEqualityComparer<T> _Comparer;
+    public IEqualityComparer<T> Comparer
+    {
+      get
+      {
+        if (_Comparer == null)
+          return EqualityComparer<T>.Default;
+        else
+          return _Comparer;
+      }
+    }
+    private readonly IEqualityComparer<T> _Comparer; // может быть null
 
     /// <summary>
     /// Доступ по индексу. 
@@ -3806,7 +3826,7 @@ namespace FreeLibSet.Collections
   /// <summary>
   /// Список значением с однократным вхождением и сортировкой.
   /// Значения null не допускаются.
-  /// После установки свойства ReadOnly=true, список становится потокобезопасным.
+  /// После установки свойства IsReadOnly=true, список становится потокобезопасным.
   /// Является надстройкой над SortedList, используя только ключи.
   /// </summary>
   [Serializable]
@@ -4118,7 +4138,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Дополнительные методы
+    #region Дополнительные методы и свойства
+
+    /// <summary>
+    /// Компаратор, используемый для сравнения и сортировки элементов.
+    /// Если не задан в явном виде в конструкторе объекта, возвращается Comparer.Default.
+    /// </summary>
+    public IComparer<T> Comparer { get { return _List.Comparer; } }
 
     /// <summary>
     /// Создает массив со всеми элементами списка
@@ -4214,6 +4240,7 @@ namespace FreeLibSet.Collections
     #endregion
   }
 
+#if XXX // Убрано 24.04.2022
   /// <summary>
   /// Реализация типизированной Hashtable
   /// Простая надстройка над словарем Dictionary с переопределенным доступом по ключу
@@ -4324,6 +4351,8 @@ namespace FreeLibSet.Collections
     #endregion
   }
 
+#endif
+
   /// <summary>
   /// Реализация типизированной Hashtable с возможностью перевода в режим просмотра
   /// Простая надстройка над словарем Dictionary с переопределенным доступом по ключу
@@ -4332,14 +4361,14 @@ namespace FreeLibSet.Collections
   /// <typeparam name="TKey">Ключ</typeparam>
   /// <typeparam name="TValue">Значение</typeparam>
   [Serializable]
-  public class HashtableWithReadOnly<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyObject
+  public class Hashtable<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyObject
   {
     #region Конструкторы
 
     /// <summary>
     /// Создает пустую таблицу
     /// </summary>
-    protected HashtableWithReadOnly()
+    public Hashtable()
     {
       _Items = new Dictionary<TKey, TValue>();
     }
@@ -4348,7 +4377,7 @@ namespace FreeLibSet.Collections
     /// Создает таблицу и заполняет ее элементами из словаря
     /// </summary>
     /// <param name="dictionary">Исходный словарь</param>
-    protected HashtableWithReadOnly(IDictionary<TKey, TValue> dictionary)
+    public Hashtable(IDictionary<TKey, TValue> dictionary)
     {
       _Items = new Dictionary<TKey, TValue>(dictionary);
     }
@@ -4358,7 +4387,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="dictionary">Исходный словарь</param>
     /// <param name="isReadOnly">Позволяет сразу перевести таблицу в режим "только чтение"</param>
-    public HashtableWithReadOnly(IDictionary<TKey, TValue> dictionary, bool isReadOnly)
+    public Hashtable(IDictionary<TKey, TValue> dictionary, bool isReadOnly)
     {
       _Items = new Dictionary<TKey, TValue>(dictionary);
       _IsReadOnly = isReadOnly;
@@ -4368,7 +4397,7 @@ namespace FreeLibSet.Collections
     /// Создает пустую таблицу
     /// </summary>
     /// <param name="comparer">Сравниватель</param>
-    protected HashtableWithReadOnly(IEqualityComparer<TKey> comparer)
+    public Hashtable(IEqualityComparer<TKey> comparer)
     {
       _Items = new Dictionary<TKey, TValue>(comparer);
     }
@@ -4377,7 +4406,7 @@ namespace FreeLibSet.Collections
     /// Создает пустую таблицу заданной емкости
     /// </summary>
     /// <param name="capacity">Начальная емкость</param>
-    protected HashtableWithReadOnly(int capacity)
+    public Hashtable(int capacity)
     {
       _Items = new Dictionary<TKey, TValue>(capacity);
     }
@@ -4388,7 +4417,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="dictionary">Исходный словарь</param>
     /// <param name="comparer">Cравниватель</param>
-    protected HashtableWithReadOnly(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
+    public Hashtable(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
     {
       _Items = new Dictionary<TKey, TValue>(dictionary, comparer);
     }
@@ -4399,7 +4428,7 @@ namespace FreeLibSet.Collections
     /// <param name="dictionary">Исходный словарь</param>
     /// <param name="comparer">Cравниватель</param>
     /// <param name="IsReadOnly">Позволяет сразу перевести таблицу в режим "только чтение"</param>
-    public HashtableWithReadOnly(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer, bool IsReadOnly)
+    public Hashtable(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer, bool IsReadOnly)
     {
       _Items = new Dictionary<TKey, TValue>(dictionary, comparer);
       _IsReadOnly = IsReadOnly;
@@ -4410,7 +4439,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="capacity">Начальная емкость</param>
     /// <param name="comparer">Cравниватель</param>
-    protected HashtableWithReadOnly(int capacity, IEqualityComparer<TKey> comparer)
+    public Hashtable(int capacity, IEqualityComparer<TKey> comparer)
     {
       _Items = new Dictionary<TKey, TValue>(capacity, comparer);
     }
@@ -4635,7 +4664,12 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Дополнительные методы
+    #region Дополнительные методы и свойства
+
+    /// <summary>
+    /// Возвращает компаратор для ключей.
+    /// </summary>
+    public IEqualityComparer<TKey> Comparer { get { return _Items.Comparer; } }
 
     /// <summary>
     /// Возвращает "Count=XXX"
@@ -4948,8 +4982,23 @@ namespace FreeLibSet.Collections
     private Dictionary<TValue, TKey> _ReversedDict;
 
     /// <summary>
-    /// Хранение сравнивателя значений между конструктором и вызовом метода PrepareReversed.
+    /// Компаратор для ключей.
     /// </summary>
+    public IEqualityComparer<TKey> KeyComparer { get { return _MainDict.Comparer; } }
+
+    /// <summary>
+    /// Компаратор для значений
+    /// </summary>
+    public IEqualityComparer<TValue> ValueComparer
+    {
+      get
+      {
+        if (_ValueComparer == null)
+          return EqualityComparer<TValue>.Default;
+        else
+          return _ValueComparer;
+      }
+    }
     private IEqualityComparer<TValue> _ValueComparer;
 
     private void PrepareReversed()

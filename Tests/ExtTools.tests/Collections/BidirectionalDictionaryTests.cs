@@ -22,6 +22,8 @@ namespace ExtTools_tests.Collections
       sut.CheckNotReadOnly();
       Assert.AreEqual(0, sut.Keys.Count, "Keys.Count");
       Assert.AreEqual(0, sut.Values.Count, "Values.Count");
+      Assert.AreSame(sut.KeyComparer, EqualityComparer<int>.Default);
+      Assert.AreSame(sut.ValueComparer, EqualityComparer<string>.Default);
     }
 
     [Test]
@@ -35,6 +37,8 @@ namespace ExtTools_tests.Collections
       BidirectionalDictionary<int, string> sut = new BidirectionalDictionary<int, string>(dict);
       Assert.AreEqual(3, sut.Count, "Count");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
+      Assert.AreSame(sut.KeyComparer, EqualityComparer<int>.Default);
+      Assert.AreSame(sut.ValueComparer, EqualityComparer<string>.Default);
     }
 
     [Test]
@@ -58,7 +62,46 @@ namespace ExtTools_tests.Collections
       return sut;
     }
 
+    /// <summary>
+    /// Тестовый компатор, который считает одинаковыми положительные и отрицательные числа
+    /// </summary>
+    private class IntUnsignedComparer : IEqualityComparer<int>
+    {
+      #region IEqualityComparer<int> Members
+
+      public bool Equals(int x, int y)
+      {
+        return Math.Abs(x) == Math.Abs(y);
+      }
+
+      public int GetHashCode(int obj)
+      {
+        return Math.Abs(obj);
+      }
+
+      #endregion
+    }
+
+    [Test]
+    public void Constructor_Comparators()
+    {
+      IEqualityComparer<int> keyComparer = new IntUnsignedComparer();
+      IEqualityComparer<string> valueComparer = StringComparer.OrdinalIgnoreCase;
+      BidirectionalDictionary<int, string> sut = new BidirectionalDictionary<int, string>(keyComparer, valueComparer);
+      Assert.AreSame(keyComparer, sut.KeyComparer, "KeyComparer");
+      Assert.AreSame(valueComparer, sut.ValueComparer, "ValueComparer");
+
+      sut.Add(1, "AAA");
+      sut.Add(2, "BBB");
+      Assert.Catch(delegate() { sut.Add(-1, "CCC"); }, "Same key");
+
+      // Это не вызывает исключения в текущей реализации
+      //Assert.Catch(delegate() { sut.Add(3, "bbb"); }, "Same value");
+    }
+
     #endregion
+
+    #region AddRemove()
 
     [Test]
     public void Add()
@@ -77,14 +120,9 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(newCount, sut.Count, "Count");
     }
 
-    [TestCase(1, true)]
-    [TestCase(3, true)]
-    [TestCase(4, false)]
-    public void ContainsKey(int key, bool wanted)
-    {
-      BidirectionalDictionary<int, string> sut = CreateTestObject();
-      Assert.AreEqual(wanted, sut.ContainsKey(key));
-    }
+    #endregion
+
+    #region Прямые методы доступа
 
     [TestCase(1, true, "AAA")]
     [TestCase(4, false, null)]
@@ -106,6 +144,7 @@ namespace ExtTools_tests.Collections
       string dummy;
       Assert.Catch(delegate() { dummy = sut[4]; }, "[4]");
     }
+
     [Test]
     public void Item_set()
     {
@@ -120,23 +159,18 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(4, sut.Count, "count after add");
     }
 
-    [Test]
-    public void Clear()
+    [TestCase(1, true)]
+    [TestCase(3, true)]
+    [TestCase(4, false)]
+    public void ContainsKey(int key, bool wanted)
     {
       BidirectionalDictionary<int, string> sut = CreateTestObject();
-      sut.Clear();
-      Assert.AreEqual(0, sut.Count);
+      Assert.AreEqual(wanted, sut.ContainsKey(key));
     }
 
-    [Test]
-    public void GetEnumerator()
-    {
-      BidirectionalDictionary<int, string> sut = CreateTestObject();
-      int sum=0;
-      foreach (KeyValuePair<int, string> pair in sut)
-        sum += pair.Key;
-      Assert.AreEqual(6, sum);
-    }
+    #endregion
+
+    #region Обратные методы доступа
 
     [TestCase("AAA", true)]
     [TestCase("DDD", false)]
@@ -156,6 +190,7 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(wantedKey, key, "Key");
     }
 
+
     [TestCase("AAA", true, 2)]
     [TestCase("DDD", false, 3)]
     public void RemoveValue(string value, bool wanted, int newCount)
@@ -165,22 +200,66 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(newCount, sut.Count, "Count");
     }
 
+    #endregion
 
-    //[Test]
-    //public void SetReadOnly()
-    //{
-    //  BidirectionalDictionary<int, string> sut = CreateTestObject();
-    //  sut.SetReadOnly();
+    #region Прочие методы
 
-    //  Assert.IsTrue(sut.IsReadOnly, "IsReadOnly");
-    //  Assert.Catch(delegate() { sut.CheckNotReadOnly(); });
-    //  Assert.Catch(delegate() { sut.Add(4, "DDD"); });
-    //  Assert.Catch(delegate() { sut.Remove(5); });
-    //  Assert.Catch(delegate() { sut.RemoveValue("EEE"); });
-    //  Assert.Catch(delegate() { sut.Clear(); });
+    [Test]
+    public void Clear()
+    {
+      BidirectionalDictionary<int, string> sut = CreateTestObject();
+      sut.Clear();
+      Assert.AreEqual(0, sut.Count);
+    }
 
-    //  Assert.AreEqual(3, sut.Count, "Count");
-    //}
+    #endregion
+
+    #region Перечислитель
+
+    [Test]
+    public void GetEnumerator()
+    {
+      BidirectionalDictionary<int, string> sut = CreateTestObject();
+      int sum=0;
+      foreach (KeyValuePair<int, string> pair in sut)
+        sum += pair.Key;
+      Assert.AreEqual(6, sum);
+    }
+
+    #endregion
+
+    #region SetReadOnly
+
+    private class BidirectionalDictionary_RO<TKey, TValue> : BidirectionalDictionary<TKey, TValue>
+    {
+      #region SetReadOnly()
+
+      public new void SetReadOnly()
+      {
+        base.SetReadOnly();
+      }
+
+      #endregion
+    }
+
+    [Test]
+    public void SetReadOnly()
+    {
+      BidirectionalDictionary_RO<int, string> sut = new BidirectionalDictionary_RO<int, string>();
+      sut.Add(1, "AAA");
+      sut.SetReadOnly();
+      Assert.IsTrue(sut.IsReadOnly, "IsReadOnly");
+      Assert.Catch(delegate() { sut.CheckNotReadOnly(); }, "CheckNotReadOnly()");
+      Assert.Catch(delegate() { sut.Add(4, "DDD"); }, "Add()");
+      Assert.Catch(delegate() { sut[1] = "BBB"; }, "Item_set()");
+      Assert.Catch(delegate() { sut.Remove(1); }, "Remove()");
+      Assert.Catch(delegate() { sut.RemoveValue("AAA"); }, "RemoveValue()");
+      Assert.Catch(delegate() { sut.Clear(); }, "Clear()");
+
+      Assert.AreEqual(1, sut.Count, "Count");
+    }
+
+    #endregion
 
 
     #region Сериализация

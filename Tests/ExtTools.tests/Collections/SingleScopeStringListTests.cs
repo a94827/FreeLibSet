@@ -21,6 +21,7 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(ignoreCase, sut.IgnoreCase, "IgnoreCase");
       Assert.AreEqual(0, sut.Count, "Count");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
+      Assert.AreSame(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal, sut.Comparer, "Comparer");
     }
 
     [TestCase("Ordinal", false)]
@@ -37,6 +38,7 @@ namespace ExtTools_tests.Collections
         throw new NullReferenceException("StringComparer not found");
 
       SingleScopeStringList sut = new SingleScopeStringList(comparer);
+      Assert.AreSame(comparer, sut.Comparer, "Comparer");
       Assert.AreEqual(wantedIgnoreCase, sut.IgnoreCase, "IgnoreCase");
     }
 
