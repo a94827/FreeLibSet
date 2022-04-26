@@ -472,6 +472,10 @@ namespace FreeLibSet.Forms
         default:
           throw new BugException("ProviderState=" + ProviderState.ToString());
       }
+
+      // 26.04.2022
+      if (ProviderState == EFPControlProviderState.Detached && Control.IsDisposed)
+        InternalSetProviderState(EFPControlProviderState.Disposed, EFPControlSetProviderStateReason.UpdateFormProviderState);
     }
 
     /// <summary>
@@ -838,6 +842,9 @@ namespace FreeLibSet.Forms
     {
       if (_InsideSetProviderStateReason == EFPControlSetProviderStateReason.ControlDisposed)
         return; // 28.03.2022. Вложенный вызов события
+
+      if (_InsideSetProviderStateReason == EFPControlSetProviderStateReason.UpdateFormProviderState)
+        return; // 26.04.2022. Может возникнуть событие Control.Disposed в процессе UpdateFormProviderState
 
       try
       {

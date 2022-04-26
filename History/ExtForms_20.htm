@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-03-28T14:37:52.236000000"/>
+	<meta name="changed" content="2022-04-26T20:35:05.931000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -255,6 +255,22 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">316</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">26.04.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1.  EFPControlBase <span lang="ru-RU">может
+			обрабатывать событие </span>Control.Disposed<span lang="ru-RU">,
+			если оно возникает в процессе работы метода
+			</span>UpdateFormProviderState() (<a href="#v313p3">v.313 <span lang="ru-RU">п.3</span></a>).<span lang="ru-RU">
+			Переключение в состояние </span>ProviderState=Disposed<span lang="ru-RU">
+			в этом случае выполняет метод, а не обработчик события.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">313</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -263,17 +279,18 @@
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US">1. <span lang="ru-RU">Оптимизация метода
 			</span>EFPCommandItem.IsShortCut()</p>
-			<p lang="en-US">2. EFPDataGridView,
-			EFPDataTreeView.InternalSetCurrentOrder() <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v291p3">v.291
-			<span lang="ru-RU">п.3</span></a><span lang="ru-RU">) </span><span lang="ru-RU">больше
-			не выбрасывает исключение при отсутствии обработчика события
-			</span>OrderChanged</p>
-			<p lang="en-US">3. EFPControlBase <span lang="ru-RU">обрабатывает
-			вложенный вызов события </span>Control.Disposed<span lang="ru-RU">
-			(</span><a href="ExtForms_11.htm#v285p1">v.285 <span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span>.
-			<span lang="ru-RU">Внутренний метод InternalSetProviderState()
-			принимает аргумент </span>reason <span lang="ru-RU">для улучшения
-			диагностики ошибок.</span></p>
+			<p><span lang="en-US">2. EFPDataGridView,
+			EFPDataTreeView.InternalSetCurrentOrder() </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v291p3"><span lang="en-US">v.291
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
+			больше не выбрасывает исключение при отсутствии обработчика
+			события </span><span lang="en-US">OrderChanged</span></p>
+			<p><a name="v313p3"></a><span lang="en-US">3. EFPControlBase
+			</span><span lang="ru-RU">обрабатывает вложенный вызов события
+			</span><span lang="en-US">Control.Disposed </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v285p1"><span lang="en-US">v.285
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Внутренний метод
+			InternalSetProviderState() принимает аргумент </span><span lang="en-US">reason
+			</span><span lang="ru-RU">для улучшения диагностики ошибок.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
