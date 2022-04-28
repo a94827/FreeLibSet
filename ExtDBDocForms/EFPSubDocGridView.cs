@@ -894,7 +894,8 @@ namespace FreeLibSet.Forms.Docs
             lastRow[ManualOrderColumn] = lastOrder + 1;
           }
 
-          this.CurrentDataRow = GetSlaveRow(lastRow);
+          try { this.CurrentDataRow = GetSlaveRow(lastRow); }
+          catch { } // 28.04.2022
         }
         MainEditor.SubDocsChangeInfo.Changed = true;
         if (this.State == EFPDataGridViewState.Edit)

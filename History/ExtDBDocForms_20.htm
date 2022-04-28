@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2022-04-15T19:38:03.391000000"/>
+	<meta name="changed" content="2022-04-28T20:52:00.267000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -87,12 +87,12 @@
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
 		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -106,8 +106,9 @@ Forms</span>)</h1>
 и является свободным программным обеспечением (Free Software)</p>
 <h1 class="western">Версия <span lang="en-US">2</span>.<span lang="en-US">0</span></h1>
 <p>Полный номер версии файла, который можно узнать, посмотрев
-свойства файла или в меню &laquo;О программе&raquo;, состоит из
-четырех чисел и имеет вид &laquo;<span lang="en-US">2</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
+свойства файла или в меню &laquo;О
+программе&raquo;<a href="ExtDBDocForms_11.htm#v014p2">file:///D:/%D0%90%D0%B3%D0%B5%D0%B5%D0%B2/FreeLibSet/History/ExtDBDocForms_11.htm#v014p2</a>,
+состоит из четырех чисел и имеет вид &laquo;<span lang="en-US">2</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
 В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
 <table width="100%" cellpadding="2" cellspacing="0">
 	<col width="25*">
@@ -126,6 +127,39 @@ Forms</span>)</h1>
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">316</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">28.04.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">В просмотре</span>
+			<span lang="ru-RU">поддокументов </span><span lang="en-US">EFPSubDocTreeView
+			(<a href="ExtDBDocForms_11.htm#v001p4">v.1 </a></span><a href="ExtDBDocForms_11.htm#v001p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">внутри редактора документа</span>
+			<span lang="ru-RU">выполняется обновление таблицы после нажатия
+			кнопки &quot;Запись&quot; в редакторе. Добавляется обработчик
+			события </span><span lang="en-US">DocumentEditor.AfterWrite.</span></p>
+			<p>Сценарий, который приводил к возникновению исключения:</p>
+			<p>- Открыть редактор документа, внести какие-нибудь изменения и
+			нажать кнопку &quot;Запись&quot;.</p>
+			<p>- В иерархическом просмотре нажать <span lang="en-US">[+]</span>
+			для создания поддокумента. Нажать <span lang="en-US">&lt;</span>ОК<span lang="en-US">&gt;</span>.
+			В момент обновления просмотра возникала ошибка, так как модель
+			DBxSubDocTreeModel, на которую ссылается просмотр, использует
+			таблицу, которая была до нажатия кнопки &quot;Запись&quot;, а не
+			полученная от <span lang="en-US">ApplyChanges()</span>.</p>
+			<p>Аналогичная ошибка была давно исправлена дл<span lang="ru-RU">я
+			</span><span lang="en-US">EFPSubDocGridView</span> <span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v014p2"><span lang="en-US">v.14
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
+			<p lang="en-US">2. EFPSubDocTableView.Init() <span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v085p1">v.85
+			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">) больше не
+			выполняет проверку на равенство ссылок subDocTypeUI.SubDocType и
+			subDocs.SubDocType.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p align="center">315</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -138,10 +172,11 @@ Forms</span>)</h1>
 			</span><span lang="ru-RU">самостоятельно восстанавливает текущую
 			выбранную позицию в дереве (</span><a href="ExtForms_11.htm#v269p6"><span lang="en-US">ExtForms,
 			v.269 </span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">).</span></p>
-			<p lang="en-US">2.<span lang="ru-RU">Внутренний метод
-			</span>EFPDocTableView.InitDelayedProperties() <span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v085p1">v.85
-			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">) проглатывает
-			исключения.</span></p>
+			<p><span lang="en-US">2.</span><span lang="ru-RU">Внутренний метод
+			</span><span lang="en-US">EFPDocTableView.InitDelayedProperties()
+			</span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v085p1"><span lang="en-US">v.85
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			проглатывает исключения.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

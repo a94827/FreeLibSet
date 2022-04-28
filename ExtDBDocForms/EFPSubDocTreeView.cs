@@ -514,6 +514,34 @@ namespace FreeLibSet.Forms.Docs
 
     #region Редактирование поддокумента
 
+
+    /// <summary>
+    /// Присоединяет обработчик в DocumentEditor
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      if (_MainEditor != null)
+        _MainEditor.AfterWrite += new DocEditEventHandler(MainEditor_AfterWrite);
+    }
+
+    /// <summary>
+    /// Отсоединяет обработчик от DocumentEditor
+    /// </summary>
+    protected override void OnDetached()
+    {
+      if (_MainEditor != null)
+        _MainEditor.AfterWrite -= new DocEditEventHandler(MainEditor_AfterWrite);
+
+      base.OnDetached();
+    }
+
+    void MainEditor_AfterWrite(object sender, DocEditEventArgs args)
+    {
+      PerformRefresh(); // 28.04.2022
+    }
+
     /// <summary>
     /// Если true (по умолчанию), то перед удалением выбранных поддокументов запрашивается подтверждение.
     /// Если false, то удаление выполняется немедленно без запроса.
@@ -637,7 +665,9 @@ namespace FreeLibSet.Forms.Docs
           //  // Присваиваем новой строке номер по порядку, чтобы она была в конце
           //  LastRow[ManualOrderColumn] = FSubDocs.SubDocsView.Table.Rows.Count;
           //}
-          this.CurrentDataRow = lastRow;
+
+          try { this.CurrentDataRow = lastRow; }
+          catch { } // 28.04.2022
         }
         MainEditor.SubDocsChangeInfo.Changed = true;
         if (this.State == EFPDataGridViewState.Edit)

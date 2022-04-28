@@ -501,6 +501,8 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("subDocTypeUI");
       if (subDocs == null)
         throw new ArgumentNullException("subDocs");
+      //if (!Object.ReferenceEquals(subDocTypeUI.SubDocType, subDocs.SubDocType))
+      //  throw new ArgumentException("SubDocTypeUI и SubDocs относятся к разным объектам SubDocType", "subDocs");
 
       _SubDocTypeUI = subDocTypeUI;
       _SubDocs = subDocs;

@@ -2283,6 +2283,9 @@ namespace FreeLibSet.Forms.Docs
       if (subDocs == null)
         throw new ArgumentNullException("subDocs");
       _SubDocs = subDocs;
+      //if (!Object.ReferenceEquals(this.SubDocTypeUI.SubDocType, subDocs.SubDocType))
+      //  throw new ArgumentException("SubDocTypeUI и SubDocs относятся к разным объектам SubDocType", "subDocs");
+
 
       control.PopupButtonToolTipText = "Выбрать: " + subDocs.SubDocType.SingularTitle; // 13.06.2021
       control.ClearButtonToolTipText = "Очистить поле выбора";

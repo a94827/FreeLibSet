@@ -335,8 +335,14 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("subDocTypeUI");
       if (subDocs == null)
         throw new ArgumentNullException("subDocs");
-      if (!Object.ReferenceEquals(subDocTypeUI.SubDocType, subDocs.SubDocType))
-        throw new ArgumentException("SubDocTypeUI и SubDocs относятся к разным объектам SubDocType", "subDocs");
+      
+      // Убрано 28.04.2022
+      // В процессе показа редактора документа может быть заменен DocTypeUI.DocProvider.
+      // После этого subDocTypeUI.SubDocType будет указывать на новый объект, полученный от сервера,
+      // а subDocs.SubDocType - на старый.
+
+      //if (!Object.ReferenceEquals(subDocTypeUI.SubDocType, subDocs.SubDocType))
+      //  throw new ArgumentException("SubDocTypeUI и SubDocs относятся к разным объектам SubDocType", "subDocs");
 
       _Form = form;
 
