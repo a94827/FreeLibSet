@@ -108,8 +108,6 @@ namespace FreeLibSet.Forms.Docs
       base.CanMultiEdit = SubDocTypeUI.CanMultiEdit; // 14.03.2019
       CommandItems.ManualOrderChanged += new EventHandler(CommandItems_ManualOrderChanged);
 
-      if (DocProvider.DBPermissions.TableModes[SubDocType.Name] != DBxAccessMode.None)
-        RefreshData += new EventHandler(MyRefresh);
       if (_SubDocTypeUI.HasEditorHandlers && mainEditor != null)
       {
         this.ReadOnly = DocProvider.DBPermissions.TableModes[SubDocType.Name] != DBxAccessMode.Full;
@@ -709,10 +707,21 @@ namespace FreeLibSet.Forms.Docs
 
     #region Обновление данные
 
-    void MyRefresh(object sender, EventArgs args)
+    /// <summary>
+    /// Обновление или первичная инициализация просмотра
+    /// </summary>
+    /// <param name="args"></param>
+    protected override void OnRefreshData(EventArgs args)
     {
-      _SubDocTypeUI.DBCache.Clear();
-      InitTreeSource();
+      if (Control.Model != null) // 02.05.2022 - реальная перезагрузка.
+        _SubDocTypeUI.DBCache.Clear();
+
+      if (DocProvider.DBPermissions.TableModes[SubDocType.Name] != DBxAccessMode.None)
+      {
+        InitTreeSource();
+      }
+
+      base.OnRefreshData(args);
     }
 
     void InitTreeSource()
@@ -725,6 +734,11 @@ namespace FreeLibSet.Forms.Docs
       else
         Control.Model = null;
     }
+
+    /// <summary>
+    /// Возвращает true
+    /// </summary>
+    public override bool HasRefreshDataHandler { get { return true; } }
 
     #endregion
 

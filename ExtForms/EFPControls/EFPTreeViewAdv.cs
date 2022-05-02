@@ -588,8 +588,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Непереопределенный метод вызывает событие RefreshData
-    /// Если метод переопределен, также должно быть переопределно свойство HasRefreshDataHandler
+    /// Непереопределенный метод вызывает событие RefreshData.
+    /// Если метод переопределен, также должно быть переопределено свойство HasRefreshDataHandler.
     /// </summary>
     /// <param name="args"></param>
     protected virtual void OnRefreshData(EventArgs args)

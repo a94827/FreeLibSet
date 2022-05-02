@@ -684,27 +684,28 @@ namespace FreeLibSet.Forms.Docs
 
           rep.MasterTable = dv.Table;
           dv = rep.SlaveTable.DefaultView;
+          // dv.Sort = SubDocs.SubDocsView.Sort; //
         }
 
+        string dvSort = SubDocType.DefaultOrder.ToString(); // 02.05.2022
         if (!String.IsNullOrEmpty(ManualOrderColumn))
           dv.Sort = ManualOrderColumn;
-        //else
-        //  SourceAsDataView.Sort = SubDocType.DefaultOrder.ToString();
 
         if (MainEditor != null)
         {
           if (MainEditor.MultiDocMode)
           {
             if (String.IsNullOrEmpty(dv.Sort))
-              dv.Sort = "DocId";
+              dvSort = "DocId";
             else
-              dv.Sort += ",DocId";
+              dvSort += ",DocId";
           }
         }
         if (rep == null)
           Control.DataSource = dv;
         else
           base.TableRepeater = rep;
+        SourceAsDataView.Sort = dvSort; // 02.05.2022
       }
 
       base.OnRefreshData(args);
