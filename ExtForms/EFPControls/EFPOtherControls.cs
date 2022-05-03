@@ -119,9 +119,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     public EFPEMailLabelCommandItems(EFPEMailLabel controlProvider)
+      :base(controlProvider)
     {
-      _ControlProvider = controlProvider;
-
       ciStart = new EFPCommandItem("Service", "SendMail");
       ciStart.MenuText = "Запустить почтовую программу";
       ciStart.ImageKey = "LetterClosed";
@@ -141,8 +140,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public EFPEMailLabel Owner { get { return _ControlProvider; } }
-    private EFPEMailLabel _ControlProvider;
+    public new EFPEMailLabel ControlProvider { get { return (EFPEMailLabel)(base.ControlProvider); } }
 
     #endregion
 
@@ -152,15 +150,15 @@ namespace FreeLibSet.Forms
 
     void ciStart_Click(object sender, EventArgs args)
     {
-      EFPEMailLabel.StartMailTo(Owner.Address);
+      EFPEMailLabel.StartMailTo(ControlProvider.Address);
     }
 
     void ciCopy_Click(object sender, EventArgs args)
     {
-      if (String.IsNullOrEmpty(Owner.Address))
+      if (String.IsNullOrEmpty(ControlProvider.Address))
         EFPApp.ShowTempMessage("Адрес электронной почты не задан");
       else
-        EFPApp.Clipboard.SetText(Owner.Address);
+        EFPApp.Clipboard.SetText(ControlProvider.Address);
     }
 
     #endregion

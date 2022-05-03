@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms
     protected virtual void InitEditCommandItems()
     {
       ReadOnly = !(HasEditMessageHandler);
-      if (CommandItems.Control == null) // 03.02.2018
+      if (!CommandItems.IsReadOnly) // 03.02.2018
         CommandItems.EnterAsOk = !HasEditMessageHandler;
     }
 

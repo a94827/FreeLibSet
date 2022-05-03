@@ -3163,7 +3163,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Команды меню, относящиеся к отчету в целом
   /// </summary>
-  public class EFPReportCommandItems : EFPControlCommandItems
+  public class EFPReportCommandItems : EFPCommandItems
   {
     #region Конструктор
 

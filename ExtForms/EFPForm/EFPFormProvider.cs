@@ -274,7 +274,7 @@ namespace FreeLibSet.Forms
     /// Сюда могут быть добавлены команды локального меню для формы в-целом
     /// Если задано свойство HelpContext, то будет добавлена команда меню "Справка"
     /// </summary>
-    public EFPControlCommandItems CommandItems
+    public EFPFormCommandItems CommandItems
     {
       get
       {
@@ -287,15 +287,15 @@ namespace FreeLibSet.Forms
         _CommandItems = value;
       }
     }
-    private EFPControlCommandItems _CommandItems;
+    private EFPFormCommandItems _CommandItems;
 
     /// <summary>
     /// Команды локального меню для формы в-целом
     /// </summary>
     /// <returns></returns>
-    protected virtual EFPControlCommandItems GetCommandItems()
+    protected virtual EFPFormCommandItems GetCommandItems()
     {
-      return new EFPControlCommandItems();
+      return new EFPFormCommandItems(this);
     }
 
     /// <summary>
@@ -439,11 +439,9 @@ namespace FreeLibSet.Forms
           _Form.SetBounds(_Form.Left, _Form.Top, _Form.Width, _Form.Height + 1);
         }
 
-        if (CommandItems.Control == null)
+        if (!CommandItems.IsReadOnly)
         {
-          CommandItems.CallBeforeControlAssigned();
-          CommandItems.SetControl(_Form);
-          CommandItems.CallAfterControlAssigned();
+          CommandItems.SetReadOnly();
 
           if (CommandItems.Count > 0)
           {
@@ -1239,7 +1237,7 @@ namespace FreeLibSet.Forms
     {
       if (_FormHelpButtonClickedHandler != null)
         return; // не первый вызов
-      if (CommandItems.Control != null)
+      if (CommandItems.IsReadOnly)
         throw new InvalidOperationException("Нельзя первоначально инициализировать контекст справки, когда форма уже выведена");
 
       _FormHelpButtonClickedHandler = new CancelEventHandler(FormHelpButtonClickedProc);

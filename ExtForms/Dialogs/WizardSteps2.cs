@@ -486,7 +486,7 @@ namespace FreeLibSet.Forms
     /// <param name="action">Действие</param>
     internal protected override void OnBeginStep(WizardAction action)
     {
-      if (_TheControlProvider.CommandItems.Control == null)
+      if (!_TheControlProvider.CommandItems.IsReadOnly)
         _TheControlProvider.ToolBarPanel = _TheSpeedPanel;
 
       if (_TheControlProvider.UseRowImages &&

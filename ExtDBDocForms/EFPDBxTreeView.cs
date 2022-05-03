@@ -594,7 +594,7 @@ namespace FreeLibSet.Forms.Docs
     void FilterGridProvider_AddCopyFormats(object sender, DataObjectEventArgs args)
     {
       EFPDataGridViewCommandItems commandItems = (EFPDataGridViewCommandItems)sender;
-      int[] filterIndices = commandItems.Owner.SelectedRowIndices;
+      int[] filterIndices = commandItems.ControlProvider.SelectedRowIndices;
 
       DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
       for (int i = 0; i < filterIndices.Length; i++)
@@ -1190,16 +1190,16 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new EFPDBxTreeView Owner { get { return (EFPDBxTreeView)(base.Owner); } }
+    public new EFPDBxTreeView ControlProvider { get { return (EFPDBxTreeView)(base.ControlProvider); } }
 
     /// <summary>
     /// Установка свойств EFPCommandItem.Usage
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
-      if (!Owner.HasGetDocSelHandler) // Есть обработчик
+      if (!ControlProvider.HasGetDocSelHandler) // Есть обработчик
         ciSendTo.Usage = EFPCommandItemUsage.None;
     }
 
@@ -1214,11 +1214,11 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args">Аргументы события</param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
       if (docSel != null)
       {
         args.DataObject.SetData(docSel);
-        Owner.UI.OnAddCopyFormats(args.DataObject, docSel);
+        ControlProvider.UI.OnAddCopyFormats(args.DataObject, docSel);
       }
 
       base.OnAddCopyFormats(args);
@@ -1232,13 +1232,13 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");
         return;
       }
-      Owner.UI.ShowDocSel(docSel);
+      ControlProvider.UI.ShowDocSel(docSel);
     }
 
     #endregion

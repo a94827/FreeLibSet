@@ -1652,7 +1652,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер табличного просмотра
     /// </summary>
-    public new EFPSelRCDataGridView Owner { get { return (EFPSelRCDataGridView)(base.Owner); } }
+    public new EFPSelRCDataGridView ControlProvider { get { return (EFPSelRCDataGridView)(base.ControlProvider); } }
 
     #endregion
 
@@ -1662,8 +1662,8 @@ namespace FreeLibSet.Forms
 
     void ciClearColumns_Click(object sender, EventArgs args)
     {
-      for (int i = 0; i < Owner.SelColumns.Length; i++)
-        Owner.SetSelColumn(i, null);
+      for (int i = 0; i < ControlProvider.SelColumns.Length; i++)
+        ControlProvider.SetSelColumn(i, null);
     }
 
     #endregion

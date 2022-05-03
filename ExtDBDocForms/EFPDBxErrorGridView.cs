@@ -168,7 +168,7 @@ namespace FreeLibSet.Forms.Docs
         base.CanMultiEdit = true;
         ReadOnly = (ErrorMessages == null);
         // if (Control == null)
-        if (CommandItems.Control == null) // 05.12.2016
+        if (!CommandItems.IsReadOnly) // 05.12.2016
           CommandItems.EnterAsOk = false;
       }
       // иначе базовый класс правильно установил свойство
@@ -359,17 +359,17 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Провайдер табличного просмотра
     /// </summary>
-    public new EFPDBxErrorGridView Owner { get { return (EFPDBxErrorGridView)(base.Owner); } }
+    public new EFPDBxErrorGridView ControlProvider { get { return (EFPDBxErrorGridView)(base.ControlProvider); } }
 
     /// <summary>
     /// Добавляет команду "Отправить" - "Выборка документов"
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
 
-      if (Owner.HasGetDocSelHandler /*&& AccDepMainMenu.MenuSendTo != null*/) // Есть обработчик
+      if (ControlProvider.HasGetDocSelHandler /*&& AccDepMainMenu.MenuSendTo != null*/) // Есть обработчик
       {
         EFPCommandItem ci = new EFPCommandItem("Send", "DocSel");
         ci.MenuText = "Выборка документов";
@@ -391,7 +391,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args"></param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
       if (docSel != null)
         args.DataObject.SetData(docSel);
 
@@ -404,13 +404,13 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");
         return;
       }
-      Owner.UI.ShowDocSel(docSel);
+      ControlProvider.UI.ShowDocSel(docSel);
     }
 
     #endregion

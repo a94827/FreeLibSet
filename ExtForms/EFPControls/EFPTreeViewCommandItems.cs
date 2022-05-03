@@ -20,12 +20,13 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
-    protected EFPTreeViewCommandItemsBase(IEFPTreeView owner)
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    protected EFPTreeViewCommandItemsBase(IEFPTreeView controlProvider)
+      :base((EFPControlBase)controlProvider)
     {
-      if (owner == null)
-        throw new ArgumentNullException("owner");
-      _Owner = owner;
+      if (controlProvider == null)
+        throw new ArgumentNullException("controlProvider");
+      _Owner = controlProvider;
     }
 
     /// <summary>
@@ -118,9 +119,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация свойств EFPCommandItem.Usage
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
       EFPCommandItemUsage clipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
       if (ClipboardInToolBar)
@@ -151,14 +152,6 @@ namespace FreeLibSet.Forms
         ciFind.Usage = EFPCommandItemUsage.None;
         ciFindNext.Usage = EFPCommandItemUsage.None;
       }
-    }
-
-    /// <summary>
-    /// Инициализация видимости команд
-    /// </summary>
-    protected override void AfterControlAssigned()
-    {
-      base.AfterControlAssigned();
 
       ciCheckAll.Visible = _Owner.CheckBoxes;
       ciUncheckAll.Visible = _Owner.CheckBoxes;
@@ -181,7 +174,7 @@ namespace FreeLibSet.Forms
       get { return _ClipboardInToolBar; } 
       set 
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _ClipboardInToolBar = value; 
       } 
     }

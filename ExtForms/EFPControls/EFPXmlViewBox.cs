@@ -472,12 +472,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает конструктор
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="fileExt">Расширение файла, например, ".html" или ".xml"</param>
-    protected EFPWebBrowserCommandItems(EFPWebBrowser owner, string fileExt)
+    protected EFPWebBrowserCommandItems(EFPWebBrowser controlProvider, string fileExt)
+      :base(controlProvider)
     {
-      _Owner = owner;
-
       ciPageSetup = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PageSetup);
       ciPageSetup.Click += new EventHandler(ciPageSetup_Click);
       ciPageSetup.GroupBegin = true;
@@ -541,8 +540,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public EFPWebBrowser Owner { get { return _Owner; } }
-    private EFPWebBrowser _Owner;
+    public new EFPWebBrowser ControlProvider { get { return (EFPWebBrowser)(base.ControlProvider); } }
 
     #endregion
 
@@ -552,22 +550,22 @@ namespace FreeLibSet.Forms
 
     void ciPrint_Click(object sender, EventArgs args)
     {
-      Owner.Control.ShowPrintDialog();
+      ControlProvider.Control.ShowPrintDialog();
     }
 
     void ciPrintDefault_Click(object sender, EventArgs args)
     {
-      Owner.Control.Print();
+      ControlProvider.Control.Print();
     }
 
     void ciPreview_Click(object sender, EventArgs args)
     {
-      Owner.Control.ShowPrintPreviewDialog();
+      ControlProvider.Control.ShowPrintPreviewDialog();
     }
 
     void ciPageSetup_Click(object sender, EventArgs args)
     {
-      Owner.Control.ShowPageSetupDialog();
+      ControlProvider.Control.ShowPageSetupDialog();
     }
 
     #endregion
@@ -589,7 +587,7 @@ namespace FreeLibSet.Forms
     {
       // для HTML-файла каждый раз создаем новую копию
 
-      if (Owner.Control.DocumentStream == null)
+      if (ControlProvider.Control.DocumentStream == null)
       {
         EFPApp.ShowTempMessage("Нет документа");
         args.Cancel = true;
@@ -597,7 +595,7 @@ namespace FreeLibSet.Forms
       }
 
       FileAssociationsHandler.FilePath = EFPApp.SharedTempDir.GetTempFileName("HTML");
-      FileTools.WriteStream(FileAssociationsHandler.FilePath, Owner.Control.DocumentStream);
+      FileTools.WriteStream(FileAssociationsHandler.FilePath, ControlProvider.Control.DocumentStream);
     }
 
     #endregion
@@ -613,13 +611,13 @@ namespace FreeLibSet.Forms
 
     private string CreateTempFile()
     {
-      if (Owner.Control.DocumentStream == null)
+      if (ControlProvider.Control.DocumentStream == null)
       {
         EFPApp.ShowTempMessage("Нет документа");
         return null;
       }
       AbsPath tempFilePath = EFPApp.SharedTempDir.GetTempFileName("HTML");
-      FileTools.WriteStream(tempFilePath, Owner.Control.DocumentStream);
+      FileTools.WriteStream(tempFilePath, ControlProvider.Control.DocumentStream);
       return tempFilePath.Path;
     }
 
@@ -687,12 +685,12 @@ namespace FreeLibSet.Forms
 
     void ciCopy_Click(object sender, EventArgs args)
     {
-      Owner.Control.Document.ExecCommand("copy", false, null);
+      ControlProvider.Control.Document.ExecCommand("copy", false, null);
     }
 
     void ciSelectAll_Click(object sender, EventArgs args)
     {
-      Owner.Control.Document.ExecCommand("selectall", false, null);
+      ControlProvider.Control.Document.ExecCommand("selectall", false, null);
     }
 
     #endregion
@@ -716,7 +714,7 @@ namespace FreeLibSet.Forms
       if (IsFullScreen)
       {
         // Закрываем текущую форму
-        Control.FindForm().Close();
+        ControlProvider.Control.FindForm().Close();
       }
       else
       {
@@ -724,18 +722,18 @@ namespace FreeLibSet.Forms
         Form frm = new Form();
         frm.FormBorderStyle = FormBorderStyle.None;
         frm.Location = new Point(0, 0);
-        frm.Size = Screen.FromControl(Control).Bounds.Size;
+        frm.Size = Screen.FromControl(ControlProvider.Control).Bounds.Size;
         frm.ShowInTaskbar = false;
         EFPFormProvider efpForm = new EFPFormProvider(frm);
 
         EFPWebBrowser efpNewControl;
         // Управляющий элемент 
-        if (Owner.Control is XmlViewBox)
+        if (ControlProvider.Control is XmlViewBox)
         {
           XmlViewBox NewControl = new XmlViewBox();
           NewControl.Dock = DockStyle.Fill;
           frm.Controls.Add(NewControl);
-          NewControl.XmlBytes = ((XmlViewBox)(Owner.Control)).XmlBytes;
+          NewControl.XmlBytes = ((XmlViewBox)(ControlProvider.Control)).XmlBytes;
 
           efpNewControl = new EFPXmlViewBox(efpForm, NewControl);
         }
@@ -748,7 +746,7 @@ namespace FreeLibSet.Forms
           newControl.WebBrowserShortcutsEnabled = false;
           newControl.IsWebBrowserContextMenuEnabled = false;
           frm.Controls.Add(newControl);
-          newControl.DocumentStream = Owner.Control.DocumentStream;
+          newControl.DocumentStream = ControlProvider.Control.DocumentStream;
 
           efpNewControl = new EFPWebBrowser(efpForm, newControl);
         }
@@ -777,9 +775,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает команды
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
-    public EFPXmlViewBoxCommandItems(EFPXmlViewBox owner)
-      : base(owner, ".xml")
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    public EFPXmlViewBoxCommandItems(EFPXmlViewBox controlProvider)
+      : base(controlProvider, ".xml")
     {
     }
 
@@ -790,7 +788,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает провайдер управляющего элемента
     /// </summary>
-    public new EFPXmlViewBox Owner { get { return (EFPXmlViewBox)(base.Owner); } }
+    public new EFPXmlViewBox ControlProvider { get { return (EFPXmlViewBox)(base.ControlProvider); } }
 
     #endregion
 
@@ -803,14 +801,14 @@ namespace FreeLibSet.Forms
     /// <param name="args">Не используется</param>
     protected override void FileAssociationsHandler_FileNeeded(object sender, CancelEventArgs args)
     {
-      if (Owner.Control.IsEmpty)
+      if (ControlProvider.Control.IsEmpty)
       {
         EFPApp.ShowTempMessage("Нет данных для отправки");
         args.Cancel = true;
         return;
       }
 
-      FileAssociationsHandler.FilePath = Owner.GetFilePath();
+      FileAssociationsHandler.FilePath = ControlProvider.GetFilePath();
     }
 
     #endregion;
@@ -824,13 +822,13 @@ namespace FreeLibSet.Forms
     /// <param name="args">Не используется</param>
     protected override void SendToOpenOfficeWriter(object sender, EventArgs args)
     {
-      if (Owner.Control.IsEmpty)
+      if (ControlProvider.Control.IsEmpty)
       {
         EFPApp.ShowTempMessage("Нет данных для отправки");
         return;
       }
 
-      AbsPath filePath = Owner.GetFilePath();
+      AbsPath filePath = ControlProvider.GetFilePath();
 
       try
       {

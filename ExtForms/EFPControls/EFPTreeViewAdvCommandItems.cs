@@ -150,7 +150,7 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _EnterAsOk = value;
       }
     }
@@ -167,7 +167,7 @@ namespace FreeLibSet.Forms
       get { return _UseEditView; } 
       set 
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseEditView = value; 
       }
     }
@@ -182,7 +182,7 @@ namespace FreeLibSet.Forms
       get { return _UseRefresh; } 
       set 
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseRefresh = value; 
       } 
     }
@@ -196,7 +196,7 @@ namespace FreeLibSet.Forms
       get { return _UseSelectAll; } 
       set 
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseSelectAll = value; 
       } 
     }
@@ -209,14 +209,14 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new EFPTreeViewAdv Owner { get { return (EFPTreeViewAdv)(base.Owner); } }
+    public new EFPTreeViewAdv ControlProvider { get { return (EFPTreeViewAdv)(base.ControlProvider); } }
 
     /// <summary>
     /// Установка свойств EFPCommandItem.Usage
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
       // Отключаем ненужные команды
       if (!UseEditView)
@@ -230,21 +230,12 @@ namespace FreeLibSet.Forms
       }
 
       if (UseRefresh)
-        ciRefresh.Visible = Owner.HasRefreshDataHandler;
+        ciRefresh.Visible = ControlProvider.HasRefreshDataHandler;
       else
         ciRefresh.Usage = EFPCommandItemUsage.None;
 
       if (!UseSelectAll)
         ciSelectAll.Usage = EFPCommandItemUsage.None;
-
-    }
-
-    /// <summary>
-    /// Дополнительная инициализация команд
-    /// </summary>
-    protected override void AfterControlAssigned()
-    {
-      base.AfterControlAssigned();
 
       // Доназначаем обработчики и горячие клавиши в зависимости от свойства EnterAsOk
       if (EnterAsOk)
@@ -260,9 +251,9 @@ namespace FreeLibSet.Forms
         ciEdit2.ShortCut = Keys.Control | Keys.Return;
       }
 
-      Owner.Control.NodeMouseDoubleClick += Control_NodeMouseDoubleClick;
-      Owner.Control.MouseDown += new MouseEventHandler(Control_MouseDown);
-      Owner.Control.MouseUp += new MouseEventHandler(Control_MouseUp);
+      ControlProvider.Control.NodeMouseDoubleClick += Control_NodeMouseDoubleClick;
+      ControlProvider.Control.MouseDown += new MouseEventHandler(Control_MouseDown);
+      ControlProvider.Control.MouseUp += new MouseEventHandler(Control_MouseUp);
       //Owner.Grid_VisibleChanged(null, null);
 
 
@@ -279,7 +270,7 @@ namespace FreeLibSet.Forms
     {
       base.DoRefreshItems();
 
-      EFPDataGridViewSelectedRowsState selState = Owner.SelectedRowsState;
+      EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
 
       if (UseEditView)
       {
@@ -305,14 +296,14 @@ namespace FreeLibSet.Forms
           ciView.Enabled = false;
 #else
         // 21.08.2019
-        ciEdit.Visible = !Owner.ReadOnly;
-        ciInsert.Visible = (!Owner.ReadOnly) && Owner.CanInsert;
-        ciInsertCopy.Visible = (!Owner.ReadOnly) && Owner.CanInsertCopy;
-        ciDelete.Visible = (!Owner.ReadOnly) && Owner.CanDelete;
-        ciView.Visible = Owner.CanView;
+        ciEdit.Visible = !ControlProvider.ReadOnly;
+        ciInsert.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsert;
+        ciInsertCopy.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsertCopy;
+        ciDelete.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanDelete;
+        ciView.Visible = ControlProvider.CanView;
 
 
-        if (Owner.CanMultiEdit)
+        if (ControlProvider.CanMultiEdit)
           ciEdit.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
         else
           ciEdit.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
@@ -324,22 +315,22 @@ namespace FreeLibSet.Forms
 
         if (selState == EFPDataGridViewSelectedRowsState.MultiRows)
         {
-          if (!Owner.ReadOnly)
+          if (!ControlProvider.ReadOnly)
           {
             ciEdit.MenuText = "Редактировать выбранные записи";
             ciDelete.MenuText = "Удалить выбранные записи";
           }
-          if (Owner.CanView)
+          if (ControlProvider.CanView)
             ciView.MenuText = "Просмотреть выбранные записи";
         }
         else
         {
-          if (!Owner.ReadOnly)
+          if (!ControlProvider.ReadOnly)
           {
             ciEdit.MenuText = "Редактировать запись";
             ciDelete.MenuText = "Удалить запись";
           }
-          if (Owner.CanView)
+          if (ControlProvider.CanView)
             ciView.MenuText = "Просмотреть запись";
         }
 
@@ -351,9 +342,9 @@ namespace FreeLibSet.Forms
 
       if (ciInlineEditStatus != null)
       {
-        BaseTextControl btc = Owner.Control.CurrentEditorOwner as BaseTextControl;
+        BaseTextControl btc = ControlProvider.Control.CurrentEditorOwner as BaseTextControl;
 
-        if (Owner.ControlIsReadOnly)
+        if (ControlProvider.ControlIsReadOnly)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditReadOnlyTable";
           ciInlineEditStatus.ToolTipText = "Просмотр не поддерживает редактирование по месту";
@@ -383,7 +374,7 @@ namespace FreeLibSet.Forms
       if (ciSelectAll != null)
       {
         ciSelectAll.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) &&
-          Owner.Control.SelectionMode == TreeViewAdvSelectionMode.Multi;
+          ControlProvider.Control.SelectionMode == TreeViewAdvSelectionMode.Multi;
       }
 
     }
@@ -424,7 +415,7 @@ namespace FreeLibSet.Forms
     private void ClickOKButton(object sender, EventArgs args)
     {
       // Нажимаем в блоке диалога кнопку по умолчанию
-      Form frm = Owner.Control.FindForm();
+      Form frm = ControlProvider.Control.FindForm();
       if (frm.AcceptButton == null)
         return;
       frm.AcceptButton.PerformClick();
@@ -464,7 +455,7 @@ namespace FreeLibSet.Forms
           // 16.08.2012
           // Если текущая ячейка допускает inline-редактирование, то нажимать кнопку
           // по умолчанию - неправильно
-          if (Owner.Control.SelectedNode != null)
+          if (ControlProvider.Control.SelectedNode != null)
           {
             // TODO: string ReadOnlyMessage;
             // TODO: if (!Owner.GetCellReadOnly(Owner.Control.CurrentCell, out ReadOnlyMessage))
@@ -475,7 +466,7 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if ((!Owner.ReadOnly) || Owner.CanView /*|| (!Handler.MainGrid.ReadOnly)*/)
+          if ((!ControlProvider.ReadOnly) || ControlProvider.CanView /*|| (!Handler.MainGrid.ReadOnly)*/)
             ciEdit_Click(null, null);
         }
       }
@@ -491,11 +482,11 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(Owner.ReadOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit);
+        ControlProvider.PerformEditData(ControlProvider.ReadOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit);
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при " + (Owner.ReadOnly ? "просмотре" : "редактировании") + " данных");
+        EFPApp.ShowException(e, "Ошибка при " + (ControlProvider.ReadOnly ? "просмотре" : "редактировании") + " данных");
       }
     }
 
@@ -503,7 +494,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.Insert);
+        ControlProvider.PerformEditData(EFPDataGridViewState.Insert);
       }
       catch (Exception e)
       {
@@ -516,7 +507,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.InsertCopy);
+        ControlProvider.PerformEditData(EFPDataGridViewState.InsertCopy);
       }
       catch (Exception e)
       {
@@ -529,7 +520,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.Delete);
+        ControlProvider.PerformEditData(EFPDataGridViewState.Delete);
       }
       catch (Exception e)
       {
@@ -541,7 +532,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.View);
+        ControlProvider.PerformEditData(EFPDataGridViewState.View);
       }
       catch (Exception e)
       {
@@ -567,7 +558,7 @@ namespace FreeLibSet.Forms
 
     private void Refresh(object sender, EventArgs args)
     {
-      Owner.PerformRefresh();
+      ControlProvider.PerformRefresh();
     }
 
     #endregion
@@ -578,8 +569,8 @@ namespace FreeLibSet.Forms
 
     private void SelectAll(object sender, EventArgs args)
     {
-      Owner.Control.ExpandAll();
-      Owner.Control.SelectAllNodes();
+      ControlProvider.Control.ExpandAll();
+      ControlProvider.Control.SelectAllNodes();
       PerformRefreshItems();
     }
 

@@ -741,15 +741,13 @@ namespace FreeLibSet.Forms
 
       Validate(); // 09.07.2019
 
-      if (ToolBarPanel != null)
-        PrepareContextMenu(); // 24.06.2021
-
-      if (Control.ContainsFocus)
-        CommandItems.Active = true; // 05.07.2021
-
       UpdateVisibleState();
 
       AttachValidators();
+
+      if (ToolBarPanel != null)
+        PrepareContextMenu(); // 24.06.2021
+      UpdateCommandItemsActive();
     }
 
     private void AttachValidators()
@@ -1566,7 +1564,7 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     protected virtual EFPControlCommandItems GetCommandItems()
     {
-      return new EFPControlCommandItems();
+      return new EFPControlCommandItems(this);
     }
 
     /// <summary>
@@ -1620,7 +1618,8 @@ namespace FreeLibSet.Forms
 
       if (wantsActive)
         PrepareContextMenu();
-      CommandItems.Active = wantsActive;
+      if (_CommandItems!=null)
+        _CommandItems.Active = wantsActive;
     }
 
 
@@ -1776,7 +1775,7 @@ namespace FreeLibSet.Forms
         _ToolBar = new EFPPanelToolBar();
         _ToolBar.Attach(value);
 
-        if (CommandItems.Control != null)
+        if (CommandItems.IsReadOnly)
         {
           ToolBar.Add(CommandItems);
           ToolBar.ToolBarVisible = ToolBar.Count > 0; // 10.09.2012
@@ -1803,7 +1802,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public bool PrepareCommandItems()
     {
-      if (CommandItems.Control != null)
+      if (CommandItems.IsReadOnly)
         return true;
 
       if (Control.IsDisposed)
@@ -1814,9 +1813,8 @@ namespace FreeLibSet.Forms
 
       OnBeforePrepareCommandItems(); // 28.09.2018
 
-      CommandItems.CallBeforeControlAssigned();
+      CommandItems.SetReadOnly();
 
-      // Статусная строка должна быть собрана заранее, до установки Control
       bool sbFlag = false;
       foreach (EFPCommandItem item in CommandItems)
       {
@@ -1834,17 +1832,11 @@ namespace FreeLibSet.Forms
         CommandItems.StatusBarPanels = sbPanels;
       }
 
-      CommandItems.SetControl(Control);
-      CommandItems.CallAfterControlAssigned();
-
       if (ToolBar != null)
       {
         ToolBar.Add(CommandItems);
         ToolBar.ToolBarVisible = ToolBar.Count > 0; // 10.09.2012
       }
-
-      if (Control.ContainsFocus)
-        CommandItems.Active = true;
 
       return true;
     }

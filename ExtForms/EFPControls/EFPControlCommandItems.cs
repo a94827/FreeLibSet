@@ -8,88 +8,22 @@ using System.Text;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Команды, относящиеся к управляющему элементу или форме. Объект
-  /// осуществляет подключение и отключение отношений Master - Servant
-  /// при изменении фокуса ввода
+  /// Базовый класс для EFPControlCommandItems и EFPFormCommandItems 
   /// </summary>
-  public class EFPControlCommandItems : EFPCommandItems
+  public abstract class EFPContextCommandItems : EFPCommandItems
   {
     #region Конструктор
 
-    /// <summary>
-    /// Создает пустой список команд
-    /// </summary>
-    public EFPControlCommandItems()
+    internal EFPContextCommandItems()
     {
       _Active = false;
-
-    }
-
-    private EFPControlCommandItems(bool SetReadOnly)
-      : this()
-    {
-      base.IsReadOnly = SetReadOnly;
     }
 
     #endregion
 
-    #region Общие методы и свойства
+    #region Свойство Active
 
-    /// <summary>
-    /// Возвращает управляющий элемент, к которому относится список команд,
-    /// если метод EFPControl.PrepareCommandItems() был успешно вызван.
-    /// До этого список команд находится в процессе заполнения и возвращает null
-    /// </summary>
-    public Control Control { get { return _Control; } }
-    private Control _Control;
-
-    internal void SetControl(Control control)
-    {
-      if (control == null)
-        throw new ArgumentNullException("control");
-
-      if (_Control != null)
-        throw new InvalidOperationException("Свойство Control можно устанавливать только один раз");
-
-      _Control = control;
-    }
-
-    /// <summary>
-    /// Выполняет проверку, что список команд еще не присоединен к управляющему элементу.
-    /// Если свойство Control уже установлено, то генерируется исключение InvalidOperationException.
-    /// Метод используется при установке управляющих свойств, которые не могут меняться в процессе работы.
-    /// </summary>
-    public void CheckNotAssigned()
-    {
-      if (Control != null)
-        throw new InvalidOperationException("Действие может выполняться только до вызова EFPDataGridView.SetCommandItems()");
-    }
-
-    internal void CallBeforeControlAssigned()
-    {
-      BeforeControlAssigned();
-    }
-
-    /// <summary>
-    /// Вызывается перед присвоением значения свойству Control
-    /// Метод вызывается однократно.
-    /// </summary>
-    protected virtual void BeforeControlAssigned()
-    {
-    }
-
-    internal void CallAfterControlAssigned()
-    {
-      AfterControlAssigned();
-    }
-
-    /// <summary>
-    /// Вызывается после присвоения значения свойству Control
-    /// Метод вызывается однократно.
-    /// </summary>
-    protected virtual void AfterControlAssigned()
-    {
-    }
+    internal abstract bool GetIsModalForm();
 
     private bool _IsModalForm;
 
@@ -110,14 +44,10 @@ namespace FreeLibSet.Forms
         if (value == _Active)
           return;
 
-        if (_Control == null)
-          throw new InvalidOperationException("Свойство Control должно быть задано до установки свойства Active");
-
         // Модальность формы проверяем только при активации меню, при дезактивации
         // используем предыдущее значение
-        // 15.12.2011: Еще проверяем наличие самой формы
-        if (value/* && Control.FindForm()!=null*/)
-          _IsModalForm = Control.FindForm().Modal;
+        if (value)
+          _IsModalForm = GetIsModalForm();
 
         _Active = value;
         foreach (EFPCommandItem item in this)
@@ -142,9 +72,17 @@ namespace FreeLibSet.Forms
     }
     private bool _Active;
 
+    #endregion
+
+    #region Свойство IsModalForm
+
+
+    #endregion
+
+    #region Свойство StatusBarPanels
+
     /// <summary>
-    /// Панели статусной строки. Объект должен быть заполнен заранее
-    /// и присоединен до установки свойства Control
+    /// Панели статусной строки. 
     /// </summary>
     public EFPStatusBarPanels StatusBarPanels
     {
@@ -154,62 +92,32 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        if (Control != null)
-          throw new InvalidOperationException("Свойство должно устанавливаться до Control");
         _StatusBarPanels = value;
       }
     }
     private EFPStatusBarPanels _StatusBarPanels;
 
-
-    /// <summary>
-    /// Возвращает отладочную информацию
-    /// </summary>
-    /// <returns>Текстовое представление</returns>
-    public override string ToString()
-    {
-      StringBuilder sb = new StringBuilder();
-      sb.Append(GetType().Name);
-      sb.Append(" Сontrol=");
-      if (Control == null)
-        sb.Append("null");
-      else
-        sb.Append(Control.ToString());
-      sb.Append(" Active=");
-      sb.Append(Active.ToString());
-      sb.Append(" ItemCount=");
-      sb.Append(Count.ToString());
-      return sb.ToString();
-    }
-
-
-    /// <summary>
-    /// Команда, выделенная жирным шрифтом.
-    /// Обычно, это команда должна обрабатываться по двойному щелчку мыши. Это должно быть реализовано отдельно
-    /// </summary>
-    public EFPCommandItem DefaultCommandItem
-    {
-      get
-      {
-        return _DefaultCommandItem;
-      }
-      set
-      {
-        CheckNotReadOnly();
-        _DefaultCommandItem = value;
-      }
-    }
-    private EFPCommandItem _DefaultCommandItem;
-
-
     #endregion
 
-    #region Пустой список
+    #region Подготовка
+
+    internal void SetReadOnly()
+    {
+      if (IsReadOnly)
+        return; // повторный вызов
+
+      OnPrepare();
+
+      base.IsReadOnly = true;
+    }
 
     /// <summary>
-    /// Пустой список команд с установленными признаком "Только чтение"
+    /// Этот метод вызывается однократно перед началом использования списка команд.
+    /// После вызова список переводится в режим "только для чтения".
     /// </summary>
-    public static readonly EFPControlCommandItems Empty = new EFPControlCommandItems(true);
+    protected virtual void OnPrepare()
+    { 
+    }
 
     #endregion
   }
@@ -255,4 +163,120 @@ namespace FreeLibSet.Forms
     EFPControlCommandItemsNeededEventArgs args);
 
   #endregion
+
+  /// <summary>
+  /// Команды, относящиеся к управляющему элементу или форме. Объект
+  /// осуществляет подключение и отключение отношений Master - Servant
+  /// при изменении фокуса ввода
+  /// </summary>
+  public class EFPControlCommandItems : EFPContextCommandItems
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает пустой список команд
+    /// </summary>
+    public EFPControlCommandItems(EFPControlBase controlProvider)
+    {
+      if (controlProvider == null)
+        throw new ArgumentNullException("controlProvider");
+      switch (controlProvider.ProviderState)
+      { 
+        case EFPControlProviderState.Detached:
+        case EFPControlProviderState.Disposed:
+          throw new InvalidOperationException();
+      }
+      _ControlProvider = controlProvider;
+    }
+
+    #endregion
+
+    #region Общие методы и свойства
+
+    /// <summary>
+    /// Возвращает провайдер управляющего элемента, к которому относится список команд.
+    /// </summary>
+    public EFPControlBase ControlProvider { get { return _ControlProvider; } }
+    private EFPControlBase _ControlProvider;
+
+    /// <summary>
+    /// Возвращает отладочную информацию
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      StringBuilder sb = new StringBuilder();
+      sb.Append(GetType().Name);
+      sb.Append(" СontrolProvider=");
+      sb.Append(ControlProvider.ToString());
+      sb.Append(" ItemCount=");
+      sb.Append(Count.ToString());
+      sb.Append(" IsReadOnly=");
+      sb.Append(IsReadOnly.ToString());
+      sb.Append(" Active=");
+      sb.Append(Active.ToString());
+      return sb.ToString();
+    }
+
+    /// <summary>
+    /// Команда, выделенная жирным шрифтом.
+    /// Обычно, это команда должна обрабатываться по двойному щелчку мыши. Это должно быть реализовано отдельно
+    /// </summary>
+    public EFPCommandItem DefaultCommandItem
+    {
+      get
+      {
+        return _DefaultCommandItem;
+      }
+      set
+      {
+        CheckNotReadOnly();
+        _DefaultCommandItem = value;
+      }
+    }
+    private EFPCommandItem _DefaultCommandItem;
+
+    internal override bool GetIsModalForm()
+    {
+      return ControlProvider.BaseProvider.FormProvider.Modal;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Список команд локального меню, относящегося к форме в-целом
+  /// </summary>
+  public class EFPFormCommandItems : EFPContextCommandItems
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает список команд
+    /// </summary>
+    /// <param name="formProvider"></param>
+    public EFPFormCommandItems(EFPFormProvider formProvider)
+    {
+      if (formProvider == null)
+        throw new ArgumentNullException("formProvider");
+      _FormProvider = formProvider;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Провайдер формы, для которой задаются команды
+    /// </summary>
+    public EFPFormProvider FormProvider { get { return _FormProvider; } }
+    private EFPFormProvider _FormProvider;
+
+    internal override bool GetIsModalForm()
+    {
+      return _FormProvider.Modal;
+    } 
+
+    #endregion
+  }
 }

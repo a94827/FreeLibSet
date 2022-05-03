@@ -196,11 +196,12 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Команды "Сохранить" и "Сохранить как"
   /// </summary>
-  public class FileEditorFormCommandItems : EFPControlCommandItems
+  public class FileEditorFormCommandItems : EFPFormCommandItems
   {
     #region Конструктор
 
     public FileEditorFormCommandItems(FileEditorFormHandler formHandler)
+      :base(formHandler.FormProvider)
     {
       _FormHandler = formHandler;
 

@@ -693,9 +693,8 @@ namespace FreeLibSet.Forms.Docs
       #region Конструктор
 
       public ControlItems(EFPGroupDocComboBox controlProvider)
+        :base(controlProvider)
       {
-        _ControlProvider = controlProvider;
-
         ciCut = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Cut);
         ciCut.GroupBegin = true;
         ciCut.Click += new EventHandler(ciCut_Click);
@@ -724,7 +723,7 @@ namespace FreeLibSet.Forms.Docs
 
       #region Свойства
 
-      private EFPGroupDocComboBox _ControlProvider;
+      public new EFPGroupDocComboBox ControlProvider { get { return (EFPGroupDocComboBox)(base.ControlProvider); } }
 
       #endregion
 
@@ -732,10 +731,10 @@ namespace FreeLibSet.Forms.Docs
 
       public void InitEnabled()
       {
-        ciCut.Enabled = _ControlProvider.DocId != 0;
-        ciCopy.Enabled = _ControlProvider.DocId != 0;
+        ciCut.Enabled = ControlProvider.DocId != 0;
+        ciCopy.Enabled = ControlProvider.DocId != 0;
         ciPaste.Enabled = true;
-        ciShowDocInfo.Enabled = _ControlProvider.DocId != 0;
+        ciShowDocInfo.Enabled = ControlProvider.DocId != 0;
       }
 
       #endregion
@@ -747,41 +746,41 @@ namespace FreeLibSet.Forms.Docs
       void ciCut_Click(object sender, EventArgs args)
       {
         ciCopy_Click(null, null);
-        _ControlProvider.DocId = 0;
+        ControlProvider.DocId = 0;
       }
 
       void ciCopy_Click(object sender, EventArgs args)
       {
-        if (_ControlProvider.DocId == 0)
+        if (ControlProvider.DocId == 0)
         {
           EFPApp.ShowTempMessage("Документ группы не выбран");
           return;
         }
-        DBxDocSelection docSel = new DBxDocSelection(_ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
-        docSel.Add(_ControlProvider.DocTypeUI.DocType.Name, _ControlProvider.DocId);
+        DBxDocSelection docSel = new DBxDocSelection(ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
+        docSel.Add(ControlProvider.DocTypeUI.DocType.Name, ControlProvider.DocId);
         DataObject dObj = new DataObject();
         dObj.SetData(docSel);
-        _ControlProvider.DocTypeUI.UI.OnAddCopyFormats(dObj, docSel);
-        dObj.SetText(_ControlProvider.DocTypeUI.GetTextValue(_ControlProvider.DocId));
+        ControlProvider.DocTypeUI.UI.OnAddCopyFormats(dObj, docSel);
+        dObj.SetText(ControlProvider.DocTypeUI.GetTextValue(ControlProvider.DocId));
         EFPApp.Clipboard.SetDataObject(dObj, true);
       }
 
       void ciPaste_Click(object sender, EventArgs args)
       {
-        DBxDocSelection docSel = _ControlProvider.DocTypeUI.UI.PasteDocSel();
+        DBxDocSelection docSel = ControlProvider.DocTypeUI.UI.PasteDocSel();
         if (docSel == null)
         {
           EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
           return;
         }
 
-        Int32[] ids = docSel[_ControlProvider.DocTypeUI.DocType.Name];
+        Int32[] ids = docSel[ControlProvider.DocTypeUI.DocType.Name];
         if (ids.Length == 0)
         {
-          EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы \"" + _ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
+          EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы \"" + ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
           return;
         }
-        _ControlProvider.DocId = ids[0];
+        ControlProvider.DocId = ids[0];
       }
 
       #endregion
@@ -792,13 +791,13 @@ namespace FreeLibSet.Forms.Docs
 
       void ciShowDocInfo_Click(object sender, EventArgs args)
       {
-        if (_ControlProvider.DocId == 0)
+        if (ControlProvider.DocId == 0)
         {
           EFPApp.ShowTempMessage("Группа не выбрана");
           return;
         }
 
-        _ControlProvider.DocTypeUI.ShowDocInfo(_ControlProvider.DocId);
+        ControlProvider.DocTypeUI.ShowDocInfo(ControlProvider.DocId);
       }
 
       #endregion

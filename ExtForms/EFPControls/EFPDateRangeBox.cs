@@ -315,9 +315,8 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     public EFPDateRangeBoxCommandItems(EFPDateRangeBox controlProvider)
+      :base(controlProvider)
     {
-      _ControlProvider = controlProvider;
-
       ciToday = new EFPCommandItem("Edit", "Today");
       ciToday.MenuText = "Сегодня";
       ciToday.ShortCut = Keys.Control | Keys.T;
@@ -392,8 +391,7 @@ namespace FreeLibSet.Forms
 
     #region Общие свойства
 
-    public EFPDateRangeBox ControlProvider { get { return _ControlProvider; } }
-    private EFPDateRangeBox _ControlProvider;
+    public new EFPDateRangeBox ControlProvider { get { return (EFPDateRangeBox)(base.ControlProvider); } }
 
     #endregion
 
@@ -1726,8 +1724,6 @@ namespace FreeLibSet.Forms
     public EFPDateOrRangeBoxCommandItems(EFPDateOrRangeBox controlProvider)
       : base(controlProvider, false, true)
     {
-      _ControlProvider = controlProvider;
-
       ciToday = new EFPCommandItem("Edit", "Today");
       ciToday.MenuText = "Сегодня";
       ciToday.ShortCut = Keys.Control | Keys.T;
@@ -1763,8 +1759,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер управляющего элемента 
     /// </summary>
-    public EFPDateOrRangeBox ControlProvider { get { return _ControlProvider; } }
-    private EFPDateOrRangeBox _ControlProvider;
+    public new EFPDateOrRangeBox ControlProvider { get { return (EFPDateOrRangeBox)(base.ControlProvider); } }
 
     #endregion
 

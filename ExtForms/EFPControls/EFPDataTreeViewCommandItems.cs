@@ -198,14 +198,14 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new EFPDataTreeView Owner { get { return (EFPDataTreeView)(base.Owner); } }
+    public new EFPDataTreeView Owner { get { return (EFPDataTreeView)(base.ControlProvider); } }
 
     /// <summary>
     /// Установка свойств EFPCommandItem.Usage
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
       if (String.IsNullOrEmpty(ManualOrderColumn) && (!ManualOrderRows))
       {
@@ -259,15 +259,6 @@ namespace FreeLibSet.Forms
 
       }
       RefreshOrderItems();
-
-    }
-
-    /// <summary>
-    /// Дополнительная инициализация команд
-    /// </summary>
-    protected override void AfterControlAssigned()
-    {
-      base.AfterControlAssigned();
 
       /*
       Owner.Control.CellDoubleClick += new DataGridViewCellEventHandler(Grid_CellDoubleClick);

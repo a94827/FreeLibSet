@@ -961,7 +961,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер табличного просмотра
     /// </summary>
-    public new EFPConfigurableDataGridView Owner { get { return (EFPConfigurableDataGridView)(base.Owner); } }
+    public new EFPConfigurableDataGridView ControlProvider { get { return (EFPConfigurableDataGridView)(base.ControlProvider); } }
 
     #endregion
 
@@ -982,11 +982,11 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        if (Owner.HasFilters)
+        if (ControlProvider.HasFilters)
         {
-          for (int i = 0; i < Owner.Filters.Count; i++)
+          for (int i = 0; i < ControlProvider.Filters.Count; i++)
           {
-            if (Owner.Filters[i] is IEFPScrollableGridFilter)
+            if (ControlProvider.Filters[i] is IEFPScrollableGridFilter)
               return true;
           }
         }
@@ -1003,13 +1003,13 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        if (Owner.HasFilters)
+        if (ControlProvider.HasFilters)
         {
-          for (int i = 0; i < Owner.Filters.Count; i++)
+          for (int i = 0; i < ControlProvider.Filters.Count; i++)
           {
-            if (Owner.Filters[i] is IEFPScrollableGridFilter)
+            if (ControlProvider.Filters[i] is IEFPScrollableGridFilter)
             {
-              IEFPScrollableGridFilter f = (IEFPScrollableGridFilter)(Owner.Filters[i]);
+              IEFPScrollableGridFilter f = (IEFPScrollableGridFilter)(ControlProvider.Filters[i]);
               if (f.CanScrollUp || f.CanScrollDown)
                 return f;
             }
@@ -1038,14 +1038,14 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Установка свойств EFPCommandItem.Usage
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
-      if (!Owner.HasConfigureViewHandler)
+      if (!ControlProvider.HasConfigureViewHandler)
         ciEditConfig.Usage = EFPCommandItemUsage.None;
 
-      if (!Owner.HasFilters)
+      if (!ControlProvider.HasFilters)
       {
         ciSetFilter.Usage = EFPCommandItemUsage.None;
         if (_MenuFilter.MenuChildrenCount == 0)
@@ -1099,7 +1099,7 @@ namespace FreeLibSet.Forms
 
     private void ciEditConfig_Click(object sender, EventArgs args)
     {
-      Owner.ShowConfigDialog();
+      ControlProvider.ShowConfigDialog();
     }
 
     #endregion
@@ -1118,7 +1118,7 @@ namespace FreeLibSet.Forms
 
     void ciSetFilter_Click(object sender, EventArgs args)
     {
-      Owner.ShowFilterDialog();
+      ControlProvider.ShowFilterDialog();
     }
 
     void ciScrollFilterPrev_Click(object sender, EventArgs args)
@@ -1146,7 +1146,7 @@ namespace FreeLibSet.Forms
       else
         ActiveScrollableFilter.ScrollUp();
 
-      Owner.PerformFilterChanged();
+      ControlProvider.PerformFilterChanged();
     }
 
     #endregion
@@ -1165,14 +1165,14 @@ namespace FreeLibSet.Forms
       form.Text = "Отправить в " + ciSendToMicrosoftExcel.MenuTextWithoutMnemonic;
       form.Icon = EFPApp.MainImageIcon(ciSendToMicrosoftExcel.ImageKey);
       form.LoadValues(SendToSettings);
-      form.InitVisibility(Owner);
+      form.InitVisibility(ControlProvider);
       if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
         return;
 
       form.SaveValues(SendToSettings);
       WriteSendToSettings(SendToSettings);
 
-      Owner.SendToMicrosoftExcel(SendToSettings);
+      ControlProvider.SendToMicrosoftExcel(SendToSettings);
     }
 
     /// <summary>
@@ -1187,14 +1187,14 @@ namespace FreeLibSet.Forms
       form.Text = "Отправить в " + ciSendToOpenOfficeCalc.MenuTextWithoutMnemonic;
       form.Icon = EFPApp.MainImageIcon(ciSendToOpenOfficeCalc.ImageKey);
       form.LoadValues(SendToSettings);
-      form.InitVisibility(Owner);
+      form.InitVisibility(ControlProvider);
       if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
         return;
 
       form.SaveValues(SendToSettings);
       WriteSendToSettings(SendToSettings);
 
-      Owner.SendToOpenOfficeCalc(SendToSettings);
+      ControlProvider.SendToOpenOfficeCalc(SendToSettings);
     }
 
     /// <summary>
@@ -1205,11 +1205,11 @@ namespace FreeLibSet.Forms
     {
       CfgPart cfg;
 
-      if ((!String.IsNullOrEmpty(Owner.ConfigSectionName)) && EFPConfigTools.IsPersist(Owner.ConfigManager.Persistence))
+      if ((!String.IsNullOrEmpty(ControlProvider.ConfigSectionName)) && EFPConfigTools.IsPersist(ControlProvider.ConfigManager.Persistence))
       {
-        EFPConfigSectionInfo configInfo1 = new EFPConfigSectionInfo(Owner.ConfigSectionName,
+        EFPConfigSectionInfo configInfo1 = new EFPConfigSectionInfo(ControlProvider.ConfigSectionName,
           EFPConfigCategories.SendToExcel, String.Empty);
-        using (Owner.ConfigManager.GetConfig(configInfo1, EFPConfigMode.Read, out cfg))
+        using (ControlProvider.ConfigManager.GetConfig(configInfo1, EFPConfigMode.Read, out cfg))
         {
           if (!cfg.IsEmpty)
           {
@@ -1221,7 +1221,7 @@ namespace FreeLibSet.Forms
 
       EFPConfigSectionInfo configInfo2 = new EFPConfigSectionInfo("Default",
         EFPConfigCategories.SendToExcel, String.Empty);
-      using (Owner.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Read, out cfg))
+      using (ControlProvider.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Read, out cfg))
       {
         settings.ReadConfig(cfg);
       }
@@ -1235,12 +1235,12 @@ namespace FreeLibSet.Forms
     {
       CfgPart cfg;
 
-      if ((!String.IsNullOrEmpty(Owner.ConfigSectionName)) && EFPConfigTools.IsPersist(Owner.ConfigManager.Persistence))
+      if ((!String.IsNullOrEmpty(ControlProvider.ConfigSectionName)) && EFPConfigTools.IsPersist(ControlProvider.ConfigManager.Persistence))
       {
-        EFPConfigSectionInfo configInfo1 = new EFPConfigSectionInfo(Owner.ConfigSectionName,
+        EFPConfigSectionInfo configInfo1 = new EFPConfigSectionInfo(ControlProvider.ConfigSectionName,
           EFPConfigCategories.SendToExcel, String.Empty);
 
-        using (Owner.ConfigManager.GetConfig(configInfo1, EFPConfigMode.Write, out cfg))
+        using (ControlProvider.ConfigManager.GetConfig(configInfo1, EFPConfigMode.Write, out cfg))
         {
           settings.WriteConfig(cfg);
         }
@@ -1251,7 +1251,7 @@ namespace FreeLibSet.Forms
       EFPConfigSectionInfo configInfo2 = new EFPConfigSectionInfo("Default",
         EFPConfigCategories.SendToExcel, String.Empty);
 
-      using (Owner.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Write, out cfg))
+      using (ControlProvider.ConfigManager.GetConfig(configInfo2, EFPConfigMode.Write, out cfg))
       {
         settings.WriteConfig(cfg);
       }

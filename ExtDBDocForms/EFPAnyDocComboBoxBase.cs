@@ -465,9 +465,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер комбоблока</param>
     public EFPAnyDocComboBoxBaseCommandItems(EFPAnyDocComboBoxBase controlProvider)
+      :base(controlProvider)
     {
-      _ControlProvider = controlProvider;
-
       if (controlProvider.SetDocSelSupported)
       {
         ciCut = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Cut);
@@ -505,7 +504,10 @@ namespace FreeLibSet.Forms.Docs
 
     #region Свойства
 
-    private EFPAnyDocComboBoxBase _ControlProvider;
+    /// <summary>
+    /// Провайдер управляющего элемента
+    /// </summary>
+    protected new EFPAnyDocComboBoxBase ControlProvider { get { return (EFPAnyDocComboBoxBase)(base.ControlProvider); } }
 
     #endregion
 
@@ -517,11 +519,11 @@ namespace FreeLibSet.Forms.Docs
     public void InitEnabled()
     {
       if (ciCut != null)
-        ciCut.Enabled = _ControlProvider.IsNotEmpty && _ControlProvider.Selectable;
+        ciCut.Enabled = ControlProvider.IsNotEmpty && ControlProvider.Selectable;
       if (ciCopy != null)
-        ciCopy.Enabled = _ControlProvider.IsNotEmpty;
+        ciCopy.Enabled = ControlProvider.IsNotEmpty;
       if (ciPaste != null)
-        ciPaste.Enabled = _ControlProvider.Selectable;
+        ciPaste.Enabled = ControlProvider.Selectable;
 
       if (ciShowDocInfo != null)
       {
@@ -529,8 +531,8 @@ namespace FreeLibSet.Forms.Docs
         DBxDocSelection docSel;
         try
         {
-          docSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
-          UserPermissions ups = _ControlProvider.UI.DocProvider.UserPermissions;
+          docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+          UserPermissions ups = ControlProvider.UI.DocProvider.UserPermissions;
           if (docSel.IsEmpty || ups == null)
             ciShowDocInfo.Enabled = false;
           else
@@ -555,27 +557,27 @@ namespace FreeLibSet.Forms.Docs
     void ciCut_Click(object sender, EventArgs args)
     {
       ciCopy_Click(null, null);
-      _ControlProvider.Clear();
+      ControlProvider.Clear();
     }
 
     void ciCopy_Click(object sender, EventArgs args)
     {
-      if (!_ControlProvider.IsNotEmpty)
+      if (!ControlProvider.IsNotEmpty)
       {
         EFPApp.ShowTempMessage("Значение не выбрано");
         return;
       }
-      DBxDocSelection docSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
       DataObject dObj = new DataObject();
       dObj.SetData(docSel);
-      _ControlProvider.UI.OnAddCopyFormats(dObj, docSel); // 06.02.2021
-      dObj.SetText(_ControlProvider.Control.Text);
+      ControlProvider.UI.OnAddCopyFormats(dObj, docSel); // 06.02.2021
+      dObj.SetText(ControlProvider.Control.Text);
       EFPApp.Clipboard.SetDataObject(dObj, true);
     }
 
     void ciPaste_Click(object sender, EventArgs args)
     {
-      DBxDocSelection docSel = _ControlProvider.UI.PasteDocSel();
+      DBxDocSelection docSel = ControlProvider.UI.PasteDocSel();
       if (docSel == null)
       {
         EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
@@ -583,7 +585,7 @@ namespace FreeLibSet.Forms.Docs
       }
       // Сами не нормализуем
       // Это может делать виртуальный метод SetDocSel()
-      _ControlProvider.PerformSetDocSel(docSel);
+      ControlProvider.PerformSetDocSel(docSel);
     }
 
     #endregion
@@ -594,12 +596,12 @@ namespace FreeLibSet.Forms.Docs
 
     void ciShowDocInfo_Click(object sender, EventArgs args)
     {
-      if (!_ControlProvider.IsNotEmpty)
+      if (!ControlProvider.IsNotEmpty)
       {
         EFPApp.ShowTempMessage("Значение не выбрано");
         return;
       }
-      DBxDocSelection docSel = _ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
       if (docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Нет выбранного документа");
@@ -610,7 +612,7 @@ namespace FreeLibSet.Forms.Docs
       string docTypeName = docSel.TableNames[0];
       Int32 docId = docSel[docTypeName][0];
 
-      DocTypeUI dtui = _ControlProvider.UI.DocTypes[docTypeName];
+      DocTypeUI dtui = ControlProvider.UI.DocTypes[docTypeName];
       dtui.ShowDocInfo(docId);
     }
 

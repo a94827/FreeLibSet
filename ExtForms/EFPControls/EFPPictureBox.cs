@@ -437,11 +437,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает команды
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
-    public EFPThumbnailPictureButtonCommandItems(EFPThumbnailPictureButton owner)
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    public EFPThumbnailPictureButtonCommandItems(EFPThumbnailPictureButton controlProvider)
+      :base(controlProvider)
     {
-      _Owner = owner;
-
       ciOpen = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Open);
       ciOpen.Enabled = true;
       ciOpen.Click += new EventHandler(ciOpen_Click);
@@ -492,7 +491,7 @@ namespace FreeLibSet.Forms
       ciView.ImageKey = "View";
       ciView.Usage = EFPCommandItemUsage.Menu;
       ciView.MenuRightText = EFPCommandItem.GetShortCutText(Keys.Space);
-      ciView.Click += new EventHandler(owner.Control_Click);
+      ciView.Click += new EventHandler(controlProvider.Control_Click);
       Add(ciView);
     }
 
@@ -503,8 +502,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public EFPThumbnailPictureButton Owner { get { return _Owner; } }
-    private EFPThumbnailPictureButton _Owner;
+    public new EFPThumbnailPictureButton ControlProvider { get { return (EFPThumbnailPictureButton)(base.ControlProvider); } }
 
     #endregion
 
@@ -536,20 +534,20 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      Owner.SetMainImage(img);
+      ControlProvider.SetMainImage(img);
       img.Dispose();
     }
 
     void ciClear_Click(object sender, EventArgs args)
     {
-      Owner.Clear();
+      ControlProvider.Clear();
     }
 
     private static int _LastSaveFilterIndex = 1;
 
     void ciSave_Click(object sender, EventArgs args)
     {
-      if (Owner.MainImage == null)
+      if (ControlProvider.MainImage == null)
       {
         EFPApp.ShowTempMessage("Нет изображения");
         return;
@@ -569,19 +567,19 @@ namespace FreeLibSet.Forms
       switch (dlg.FilterIndex)
       {
         case 1:
-          Owner.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+          ControlProvider.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
           break;
         case 2:
-          Owner.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+          ControlProvider.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
           break;
         case 3:
-          Owner.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+          ControlProvider.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Gif);
           break;
         case 4:
-          Owner.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Png);
+          ControlProvider.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Png);
           break;
         case 5:
-          Owner.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+          ControlProvider.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
           break;
         default:
           throw new BugException("Неизвестный индекс формата файла: " + dlg.FilterIndex.ToString());
@@ -627,7 +625,7 @@ namespace FreeLibSet.Forms
       {
         Bitmap[] bmps = handler.Acqiire();
         if (bmps.Length > 0)
-          Owner.SetMainImage(bmps[0]);
+          ControlProvider.SetMainImage(bmps[0]);
         // Уничтожением Bitmap занимается EFPTwainHandler 
       }
       finally
@@ -645,23 +643,23 @@ namespace FreeLibSet.Forms
 
     void ciCut_Click(object sender, EventArgs args)
     {
-      if (Owner.MainImage == null)
+      if (ControlProvider.MainImage == null)
       {
         EFPApp.ShowTempMessage("Нет изображения для копирования в буфер обмена");
         return;
       }
-      EFPApp.Clipboard.SetImage(Owner.MainImage);
-      Owner.Clear();
+      EFPApp.Clipboard.SetImage(ControlProvider.MainImage);
+      ControlProvider.Clear();
     }
 
     void ciCopy_Click(object sender, EventArgs args)
     {
-      if (Owner.MainImage == null)
+      if (ControlProvider.MainImage == null)
       {
         EFPApp.ShowTempMessage("Нет изображения для копирования в буфер обмена");
         return;
       }
-      EFPApp.Clipboard.SetImage(Owner.MainImage);
+      EFPApp.Clipboard.SetImage(ControlProvider.MainImage);
     }
 
     void ciPaste_Click(object sender, EventArgs args)
@@ -674,7 +672,7 @@ namespace FreeLibSet.Forms
         EFPApp.ShowTempMessage("Буфер обмена не содержит изображения");
         return;
       }
-      Owner.SetMainImage(img);
+      ControlProvider.SetMainImage(img);
     }
 
     #endregion
@@ -690,14 +688,14 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Дополнительная инициализация команд меню
     /// </summary>
-    protected override void AfterControlAssigned()
+    protected override void OnPrepare()
     {
-      base.AfterControlAssigned();
+      base.OnPrepare();
 
       string auxText = String.Empty;
-      if (_Owner.MaxMainImageSize.Width != int.MaxValue)
-        auxText = ". Изображение будет уменьшено до размера " + _Owner.MaxMainImageSize.Width.ToString() +
-          "x" + _Owner.MaxMainImageSize.Height.ToString() + " пикселей";
+      if (ControlProvider.MaxMainImageSize.Width != int.MaxValue)
+        auxText = ". Изображение будет уменьшено до размера " + ControlProvider.MaxMainImageSize.Width.ToString() +
+          "x" + ControlProvider.MaxMainImageSize.Height.ToString() + " пикселей";
       ciOpen.ToolTipText = "Загрузить изображение из файла" + auxText;
       ciPaste.ToolTipText = "Вставить изображение из буфера обмена" + auxText;
 
@@ -711,14 +709,14 @@ namespace FreeLibSet.Forms
     /// </summary>
     public virtual void PerformRefreshItems()
     {
-      ciOpen.Enabled = !Owner.ReadOnly;
-      ciSave.Enabled = !Owner.IsEmpty;
-      ciClear.Enabled = (!Owner.ReadOnly) && (!Owner.IsEmpty);
-      ciScan.Enabled = !Owner.ReadOnly;
-      ciCut.Enabled = (!Owner.ReadOnly) && (!Owner.IsEmpty);
-      ciCopy.Enabled = !Owner.IsEmpty;
-      ciPaste.Enabled = !Owner.ReadOnly;
-      ciView.Enabled = !Owner.IsEmpty;
+      ciOpen.Enabled = !ControlProvider.ReadOnly;
+      ciSave.Enabled = !ControlProvider.IsEmpty;
+      ciClear.Enabled = (!ControlProvider.ReadOnly) && (!ControlProvider.IsEmpty);
+      ciScan.Enabled = !ControlProvider.ReadOnly;
+      ciCut.Enabled = (!ControlProvider.ReadOnly) && (!ControlProvider.IsEmpty);
+      ciCopy.Enabled = !ControlProvider.IsEmpty;
+      ciPaste.Enabled = !ControlProvider.ReadOnly;
+      ciView.Enabled = !ControlProvider.IsEmpty;
     }
 
     #endregion

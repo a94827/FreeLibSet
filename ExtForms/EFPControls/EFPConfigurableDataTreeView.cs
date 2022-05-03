@@ -643,9 +643,9 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Инициализация свойство EFPCommandItem.Usage
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
       if (!Owner.HasFilters)
       {

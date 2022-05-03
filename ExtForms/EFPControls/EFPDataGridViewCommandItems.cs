@@ -110,12 +110,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает список команд
     /// </summary>
-    /// <param name="owner">Провайдер табличного просмотра</param>
-    public EFPDataGridViewCommandItems(EFPDataGridView owner)
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    public EFPDataGridViewCommandItems(EFPDataGridView controlProvider)
+      : base(controlProvider)
     {
-      if (owner == null)
-        throw new ArgumentNullException("owner");
-      _Owner = owner;
 
       #region Начальные значения свойств
 
@@ -506,7 +504,7 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _EnterAsOk = value;
       }
     }
@@ -523,7 +521,7 @@ namespace FreeLibSet.Forms
       get { return _UseEditView; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseEditView = value;
       }
     }
@@ -538,7 +536,7 @@ namespace FreeLibSet.Forms
       get { return _UseRefresh; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseRefresh = value;
       }
     }
@@ -552,7 +550,7 @@ namespace FreeLibSet.Forms
       get { return _UseSelectAll; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseSelectAll = value;
       }
     }
@@ -569,7 +567,7 @@ namespace FreeLibSet.Forms
       get { return _ManualOrderRows; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _ManualOrderRows = value;
       }
     }
@@ -592,11 +590,11 @@ namespace FreeLibSet.Forms
       get { return _ManualOrderColumn; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _ManualOrderColumn = value;
 
         if (!String.IsNullOrEmpty(value))
-          Owner.AutoSort = false; // 21.07.2021
+          ControlProvider.AutoSort = false; // 21.07.2021
       }
     }
     private string _ManualOrderColumn;
@@ -611,7 +609,7 @@ namespace FreeLibSet.Forms
       get { return _DefaultManualOrderColumn; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _DefaultManualOrderColumn = value;
       }
     }
@@ -629,7 +627,7 @@ namespace FreeLibSet.Forms
       get { return _UseRowErrors; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseRowErrors = value;
       }
     }
@@ -647,7 +645,7 @@ namespace FreeLibSet.Forms
       get { return _UseRowErrorsListView; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseRowErrorsListView = value;
       }
     }
@@ -661,15 +659,14 @@ namespace FreeLibSet.Forms
     /// Провайдер табличного просмотра.
     /// Задается в конструкторе
     /// </summary>
-    public EFPDataGridView Owner { get { return _Owner; } }
-    private EFPDataGridView _Owner;
+    public new EFPDataGridView ControlProvider { get { return (EFPDataGridView)(base.ControlProvider); } }
 
     /// <summary>
     /// Инициализация EFPCommandItem.Usage перед инициализацией меню.
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
 
       // Отключаем ненужные команды
       if (!UseEditView)
@@ -683,7 +680,7 @@ namespace FreeLibSet.Forms
       }
 
       if (UseRefresh)
-        ciRefresh.Visible = Owner.HasRefreshDataHandler;
+        ciRefresh.Visible = ControlProvider.HasRefreshDataHandler;
       else
         ciRefresh.Usage = EFPCommandItemUsage.None;
 
@@ -691,7 +688,7 @@ namespace FreeLibSet.Forms
       if (ClipboardInToolBar)
         ClipboardUsage |= EFPCommandItemUsage.ToolBar;
 
-      if (Cut == null && Owner.Control.ReadOnly)
+      if (Cut == null && ControlProvider.Control.ReadOnly)
       {
         ciCut.Enabled = false;
         ciCut.Usage = EFPCommandItemUsage.None;
@@ -709,7 +706,7 @@ namespace FreeLibSet.Forms
       _PasteHandler.InitCommandUsage(ClipboardInToolBar);
       _PasteHandler.PasteApplied += new EventHandler(PasteHandler_PasteApplied);
 
-      Owner.Control.ReadOnlyChanged += new EventHandler(Control_ReadOnlyChanged); // 24.04.2019 - может переключаться динамически
+      ControlProvider.Control.ReadOnlyChanged += new EventHandler(Control_ReadOnlyChanged); // 24.04.2019 - может переключаться динамически
 
       if (!UseSelectAll)
         ciSelectAll.Usage = EFPCommandItemUsage.None;
@@ -736,9 +733,9 @@ namespace FreeLibSet.Forms
         }
       }
 
-      if (Owner.OrderCount > 0 ||
-        Owner.CustomOrderAllowed ||
-        (Owner.GridProducer != null && Owner.GridProducer.OrderCount > 0 && Owner.UseGridProducerOrders))
+      if (ControlProvider.OrderCount > 0 ||
+        ControlProvider.CustomOrderAllowed ||
+        (ControlProvider.GridProducer != null && ControlProvider.GridProducer.OrderCount > 0 && ControlProvider.UseGridProducerOrders))
       {
         // Команды сортировки строк существуют или могут появиться в будущем
         _MenuSort.Usage = EFPCommandItemUsage.Everywhere | EFPCommandItemUsage.DisableRightTextInToolTip;
@@ -781,7 +778,7 @@ namespace FreeLibSet.Forms
       }
       InitOrderItems();
 
-      if ((!Owner.UseRowImages) || (!UseRowErrors))
+      if ((!ControlProvider.UseRowImages) || (!UseRowErrors))
       {
         _MenuRowErrors.Usage = EFPCommandItemUsage.None;
         ciGotoNextErrorWarning.Usage = EFPCommandItemUsage.None;
@@ -800,7 +797,7 @@ namespace FreeLibSet.Forms
       }
 
 
-      if (Owner.MarkRowsGridColumn == null)
+      if (ControlProvider.MarkRowsGridColumn == null)
       {
         MenuCheck.Usage = EFPCommandItemUsage.None;
         ciCheckSel.Usage = EFPCommandItemUsage.None;
@@ -812,26 +809,18 @@ namespace FreeLibSet.Forms
 
       if (ciCopyToolTip != null)
       {
-        if (!Owner.Control.ShowCellToolTips)
+        if (!ControlProvider.Control.ShowCellToolTips)
           ciCopyToolTip.Usage = EFPCommandItemUsage.None;
       }
 
-      if (!Owner.UseRowImages)
+      if (!ControlProvider.UseRowImages)
       {
         if (ciCopyRowErrorMessages != null)
           ciCopyRowErrorMessages.Usage = EFPCommandItemUsage.None;
       }
 
-      if (Owner.TextSearchContext == null)
+      if (ControlProvider.TextSearchContext == null)
         ciFind.Usage = EFPCommandItemUsage.None;
-    }
-
-    /// <summary>
-    /// Дополнительная инициализация команд
-    /// </summary>
-    protected override void AfterControlAssigned()
-    {
-      base.AfterControlAssigned();
 
       // Доназначаем обработчики и горячие клавиши в зависимости от свойства EnterAsOk
       if (EnterAsOk)
@@ -849,27 +838,28 @@ namespace FreeLibSet.Forms
 
       if (ciStatCount != null)
       {
-        if (!(Owner.Control.MultiSelect && (Owner.Control.SelectionMode == DataGridViewSelectionMode.CellSelect ||
-          Owner.Control.SelectionMode == DataGridViewSelectionMode.RowHeaderSelect ||
-          Owner.Control.SelectionMode == DataGridViewSelectionMode.ColumnHeaderSelect)))
+        if (!(ControlProvider.Control.MultiSelect && (ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.CellSelect ||
+          ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.RowHeaderSelect ||
+          ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.ColumnHeaderSelect)))
         {
           ciStatCount.Visible = false;
           ciStatSumma.Visible = false;
         }
       }
 
-      Owner.Control.CellDoubleClick += new DataGridViewCellEventHandler(Grid_CellDoubleClick);
-      Owner.Control.MouseDown += new MouseEventHandler(Grid_MouseDown);
-      Owner.Control.MouseUp += new MouseEventHandler(Grid_MouseUp);
-      Owner.Control_VisibleChanged(null, null);
+      ControlProvider.Control.CellDoubleClick += new DataGridViewCellEventHandler(Grid_CellDoubleClick);
+      ControlProvider.Control.MouseDown += new MouseEventHandler(Grid_MouseDown);
+      ControlProvider.Control.MouseUp += new MouseEventHandler(Grid_MouseUp);
+      ControlProvider.Control_VisibleChanged(null, null);
 
       ciSendToMicrosoftExcel.Visible = EFPDataGridView.CanSendToMicrosoftExcel;
       ciSendToOpenOfficeCalc.Visible = EFPDataGridView.CanSendToOpenOfficeCalc;
 
       PerformRefreshItems();
 
+
       // 14.08.2012 Добавляем обработчики
-      Owner.AfterControlAssigned();
+      ControlProvider.AfterControlAssigned();
     }
 
     #endregion
@@ -888,9 +878,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void PerformRefreshItems()
     {
-      if (Owner == null)
-        return;
-
       // Вызываем виртуальный метод
       DoRefreshItems();
       // Посылаем извещения
@@ -905,7 +892,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected virtual void DoRefreshItems()
     {
-      EFPDataGridViewSelectedRowsState selState = Owner.SelectedRowsState;
+      EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
 
       if (UseEditView)
       {
@@ -931,14 +918,14 @@ namespace FreeLibSet.Forms
           ciView.Enabled = false;
 #else
         // 21.08.2019
-        ciEdit.Visible = !Owner.ReadOnly;
-        ciInsert.Visible = (!Owner.ReadOnly) && Owner.CanInsert;
-        ciInsertCopy.Visible = (!Owner.ReadOnly) && Owner.CanInsertCopy;
-        ciDelete.Visible = (!Owner.ReadOnly) && Owner.CanDelete;
-        ciView.Visible = Owner.CanView;
+        ciEdit.Visible = !ControlProvider.ReadOnly;
+        ciInsert.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsert;
+        ciInsertCopy.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsertCopy;
+        ciDelete.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanDelete;
+        ciView.Visible = ControlProvider.CanView;
 
 
-        if (Owner.CanMultiEdit)
+        if (ControlProvider.CanMultiEdit)
           ciEdit.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
         else
           ciEdit.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
@@ -950,49 +937,49 @@ namespace FreeLibSet.Forms
 
         if (selState == EFPDataGridViewSelectedRowsState.MultiRows)
         {
-          if (!Owner.ReadOnly)
+          if (!ControlProvider.ReadOnly)
           {
             ciEdit.MenuText = "Редактировать выбранные записи";
             ciDelete.MenuText = "Удалить выбранные записи";
           }
-          if (Owner.CanView)
+          if (ControlProvider.CanView)
             ciView.MenuText = "Просмотреть выбранные записи";
         }
         else
         {
-          if (!Owner.ReadOnly)
+          if (!ControlProvider.ReadOnly)
           {
             ciEdit.MenuText = "Редактировать запись";
             ciDelete.MenuText = "Удалить запись";
           }
-          if (Owner.CanView)
+          if (ControlProvider.CanView)
             ciView.MenuText = "Просмотреть запись";
         }
 
         if (ciCut.Usage != EFPCommandItemUsage.None)
-          ciCut.Enabled = !(Owner.ReadOnly && Owner.Control.ReadOnly);
+          ciCut.Enabled = !(ControlProvider.ReadOnly && ControlProvider.Control.ReadOnly);
         if (!PasteHandler.AlwaysEnabled) // 27.11.2017
         {
           if (HasTextPasteFormats)
-            PasteHandler.Enabled = !Owner.Control.ReadOnly; // 24.04.2019
+            PasteHandler.Enabled = !ControlProvider.Control.ReadOnly; // 24.04.2019
           else
-            PasteHandler.Enabled = !(Owner.ReadOnly && Owner.Control.ReadOnly);
+            PasteHandler.Enabled = !(ControlProvider.ReadOnly && ControlProvider.Control.ReadOnly);
         }
       }
 
       if (ciInlineEditStatus != null)
       {
-        if (Owner.Control.ReadOnly)
+        if (ControlProvider.Control.ReadOnly)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditReadOnlyTable";
           ciInlineEditStatus.ToolTipText = "Просмотр не поддерживает редактирование по месту";
         }
-        else if (Owner.Control.CurrentCell == null)
+        else if (ControlProvider.Control.CurrentCell == null)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditTableReadOnly";
           ciInlineEditStatus.ToolTipText = "Нет выбранной ячейки";
         }
-        else if (Owner.Control.IsCurrentCellInEditMode)
+        else if (ControlProvider.Control.IsCurrentCellInEditMode)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditProcess";
           ciInlineEditStatus.ToolTipText = "Выполняется редактирование ячейки";
@@ -1000,7 +987,7 @@ namespace FreeLibSet.Forms
         else
         {
           string readOnlyMessage;
-          if (Owner.GetCellReadOnly(Owner.Control.CurrentCell, out readOnlyMessage))
+          if (ControlProvider.GetCellReadOnly(ControlProvider.Control.CurrentCell, out readOnlyMessage))
           {
             ciInlineEditStatus.ImageKey = "TableInlineEditReadOnlyCell";
             ciInlineEditStatus.ToolTipText = "Нельзя редактировать ячейку. " + readOnlyMessage;
@@ -1015,7 +1002,7 @@ namespace FreeLibSet.Forms
 
       if (ciSelectAll != null)
       {
-        ciSelectAll.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) && Owner.Control.MultiSelect;
+        ciSelectAll.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) && ControlProvider.Control.MultiSelect;
       }
 
       RefreshIncSearchItems();
@@ -1034,12 +1021,12 @@ namespace FreeLibSet.Forms
       string statusBarText;
       bool isChecked = false;
 
-      if (Owner.CurrentIncSearchColumn != null)
+      if (ControlProvider.CurrentIncSearchColumn != null)
       {
         // Поиск по буквам выполняется
         isEnabled = true;
         menuText = "Закончить поиск по буквам";
-        string s = Owner.CurrentIncSearchChars;
+        string s = ControlProvider.CurrentIncSearchChars;
         s = s.Replace(' ', (char)(0x00B7));
         s = s.PadRight(20);
         statusBarText = s.ToUpper();
@@ -1048,17 +1035,17 @@ namespace FreeLibSet.Forms
       else
       {
         // Поиск по буквам не выполняется
-        if (Owner.CanIncSearch)
+        if (ControlProvider.CanIncSearch)
         {
           menuText = "Начать поиск по буквам";
-          if (Owner.CurrentColumn == null)
+          if (ControlProvider.CurrentColumn == null)
           {
             isEnabled = false;
             statusBarText = "<Столбец не выбран>";
           }
           else
           {
-            isEnabled = Owner.CurrentColumn.CanIncSearch;
+            isEnabled = ControlProvider.CurrentColumn.CanIncSearch;
             if (isEnabled)
               statusBarText = "<Поиск не начат>";
             else
@@ -1079,12 +1066,12 @@ namespace FreeLibSet.Forms
       ciIncSearch.Checked = isChecked;
       ciIncSearch.ToolTipText = menuText;
 
-      if (Owner.CurrentIncSearchColumn == null)
+      if (ControlProvider.CurrentIncSearchColumn == null)
       {
-        if (Owner.TextSearchContext == null)
+        if (ControlProvider.TextSearchContext == null)
           ciFindNext.Enabled = false;
         else
-          ciFindNext.Enabled = Owner.TextSearchContext.ContinueEnabled;
+          ciFindNext.Enabled = ControlProvider.TextSearchContext.ContinueEnabled;
       }
       else
         ciFindNext.Enabled = true;
@@ -1099,7 +1086,7 @@ namespace FreeLibSet.Forms
       base.OnAfterClick(args);
 
       if (args.Item != ciIncSearch && args.Item != ciFindNext)
-        _Owner.CurrentIncSearchColumn = null; // 28.01.2021
+        ControlProvider.CurrentIncSearchColumn = null; // 28.01.2021
     }
 
     #endregion
@@ -1138,7 +1125,7 @@ namespace FreeLibSet.Forms
     private void ClickOKButton(object sender, EventArgs args)
     {
       // Нажимаем в блоке диалога кнопку по умолчанию
-      Form frm = Owner.Control.FindForm();
+      Form frm = ControlProvider.Control.FindForm();
       if (frm.AcceptButton == null)
         return;
       frm.AcceptButton.PerformClick();
@@ -1175,10 +1162,10 @@ namespace FreeLibSet.Forms
           // 16.08.2012
           // Если текущая ячейка допускает inline-редактирование, то нажимать кнопку
           // по умолчанию - неправильно
-          if (Owner.Control.CurrentCell != null)
+          if (ControlProvider.Control.CurrentCell != null)
           {
             string ReadOnlyMessage;
-            if (!Owner.GetCellReadOnly(Owner.Control.CurrentCell, out ReadOnlyMessage))
+            if (!ControlProvider.GetCellReadOnly(ControlProvider.Control.CurrentCell, out ReadOnlyMessage))
               return;
           }
 
@@ -1186,7 +1173,7 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if ((!Owner.ReadOnly) || Owner.CanView /*|| (!Handler.MainGrid.ReadOnly)*/)
+          if ((!ControlProvider.ReadOnly) || ControlProvider.CanView /*|| (!Handler.MainGrid.ReadOnly)*/)
           {
             ciEdit_Click(null, null);
           }
@@ -1205,11 +1192,11 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(Owner.ReadOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit);
+        ControlProvider.PerformEditData(ControlProvider.ReadOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit);
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при " + (Owner.ReadOnly ? "просмотре" : "редактировании") + " данных");
+        EFPApp.ShowException(e, "Ошибка при " + (ControlProvider.ReadOnly ? "просмотре" : "редактировании") + " данных");
       }
     }
 
@@ -1217,7 +1204,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.Insert);
+        ControlProvider.PerformEditData(EFPDataGridViewState.Insert);
       }
       catch (Exception e)
       {
@@ -1230,7 +1217,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.InsertCopy);
+        ControlProvider.PerformEditData(EFPDataGridViewState.InsertCopy);
       }
       catch (Exception e)
       {
@@ -1243,7 +1230,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.Delete);
+        ControlProvider.PerformEditData(EFPDataGridViewState.Delete);
       }
       catch (Exception e)
       {
@@ -1255,7 +1242,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        Owner.PerformEditData(EFPDataGridViewState.View);
+        ControlProvider.PerformEditData(EFPDataGridViewState.View);
       }
       catch (Exception e)
       {
@@ -1265,10 +1252,10 @@ namespace FreeLibSet.Forms
 
     void ciInlineEditStatus_Click(object sender, EventArgs args)
     {
-      if (Owner.Control.IsCurrentCellInEditMode)
-        Owner.Control.EndEdit();
+      if (ControlProvider.Control.IsCurrentCellInEditMode)
+        ControlProvider.Control.EndEdit();
       else
-        Owner.Control.BeginEdit(false);
+        ControlProvider.Control.BeginEdit(false);
     }
 
     #endregion
@@ -1285,7 +1272,7 @@ namespace FreeLibSet.Forms
       get { return _ClipboardInToolBar; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _ClipboardInToolBar = value;
       }
     }
@@ -1333,13 +1320,13 @@ namespace FreeLibSet.Forms
     /// <returns>true, если вырезка выполнена и false в случае ошибки</returns>
     public bool TryPerformCutText(out string errorText)
     {
-      if (Owner.Control.ReadOnly)
+      if (ControlProvider.Control.ReadOnly)
       {
         errorText = "Просмотр не допускает редактирование ячеек";
         return false;
       }
 
-      EFPDataGridViewRectArea selArea = new EFPDataGridViewRectArea(Owner.Control);
+      EFPDataGridViewRectArea selArea = new EFPDataGridViewRectArea(ControlProvider.Control);
       if (selArea.IsEmpty)
       {
         errorText = "Нет выбранных ячеек";
@@ -1358,10 +1345,10 @@ namespace FreeLibSet.Forms
         for (int j = 0; j < selArea.ColumnCount; j++)
         {
           DataGridViewCell cell = selArea[j, i];
-          if (Owner.GetCellReadOnly(cell, out errorText))
+          if (ControlProvider.GetCellReadOnly(cell, out errorText))
             return false;
 
-          if (!Owner.TrySetTextValue(cell, String.Empty, out errorText, true, EFPDataGridViewCellFinishedReason.Clear))
+          if (!ControlProvider.TrySetTextValue(cell, String.Empty, out errorText, true, EFPDataGridViewCellFinishedReason.Clear))
             return false;
         }
       }
@@ -1379,7 +1366,7 @@ namespace FreeLibSet.Forms
         for (int j = 0; j < selArea.Columns.Count; j++)
         {
           DataGridViewCell cell = selArea[j, i];
-          Owner.SetTextValue(cell, String.Empty, EFPDataGridViewCellFinishedReason.Clear);
+          ControlProvider.SetTextValue(cell, String.Empty, EFPDataGridViewCellFinishedReason.Clear);
         }
       }
 
@@ -1410,7 +1397,7 @@ namespace FreeLibSet.Forms
       get { return _CopyFormats; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _CopyFormats = value;
       }
     }
@@ -1444,7 +1431,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        if (Owner.Control.GetCellCount(DataGridViewElementStates.Selected) <= 0)
+        if (ControlProvider.Control.GetCellCount(DataGridViewElementStates.Selected) <= 0)
         {
           EFPApp.ShowTempMessage("В просмотре нет выбранных ячеек");
           return false;
@@ -1472,8 +1459,8 @@ namespace FreeLibSet.Forms
 
           if ((CopyFormats & (EFPDataGridViewCopyFormats.Text | EFPDataGridViewCopyFormats.CSV)) != 0)
           {
-            EFPDataGridViewRectArea area = Owner.GetRectArea(EFPDataGridViewExpRange.Selected);
-            string[,] a = Owner.GetCellTextValues(area);
+            EFPDataGridViewRectArea area = ControlProvider.GetRectArea(EFPDataGridViewExpRange.Selected);
+            string[,] a = ControlProvider.GetCellTextValues(area);
 
             if ((CopyFormats & EFPDataGridViewCopyFormats.Text) == EFPDataGridViewCopyFormats.Text)
             {
@@ -1501,7 +1488,7 @@ namespace FreeLibSet.Forms
             //  Settings.ShowColumnHeaders = Owner.Control.AreAllCellsSelected(false);
             settings.ShowColumnHeaders = false; // 01.10.2020
             settings.Encoding = Encoding.UTF8;
-            byte[] buffer = EFPDataGridViewExpHtml.GetHtmlBytes(Owner, settings, true);
+            byte[] buffer = EFPDataGridViewExpHtml.GetHtmlBytes(ControlProvider, settings, true);
             //System.IO.File.WriteAllBytes(@"d:\temp\table1.html", Buffer);
             MemoryStream strm = new MemoryStream(buffer);
             dobj2.SetData(DataFormats.Html, false, strm);
@@ -1537,15 +1524,15 @@ namespace FreeLibSet.Forms
       //*** Owner.CurrentIncSearchColumn = null;
 
       string text;
-      if (Owner.Control.SelectedRows.Count > 0)
+      if (ControlProvider.Control.SelectedRows.Count > 0)
       {
-        if (Owner.Control.SelectedRows.Count != 1)
+        if (ControlProvider.Control.SelectedRows.Count != 1)
         {
           EFPApp.ShowTempMessage("Должно быть выбрано не более одной строки");
           return;
         }
 
-        text = Owner.GetRowToolTipText(Owner.Control.SelectedRows[0].Index);
+        text = ControlProvider.GetRowToolTipText(ControlProvider.Control.SelectedRows[0].Index);
         if (String.IsNullOrEmpty(text))
         {
           EFPApp.ShowTempMessage("Нет всплывающей подсказки для заголовка строки");
@@ -1554,19 +1541,19 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        if (Owner.Control.SelectedCells.Count > 1)
+        if (ControlProvider.Control.SelectedCells.Count > 1)
         {
           EFPApp.ShowTempMessage("Должно быть выбрано не более одной ячейки");
           return;
         }
-        if (Owner.Control.CurrentCell == null)
+        if (ControlProvider.Control.CurrentCell == null)
         {
           EFPApp.ShowTempMessage("Нет выбранной ячейки");
           return;
         }
 
-        text = Owner.GetCellToolTipText(Owner.Control.CurrentCell.RowIndex,
-          Owner.Control.CurrentCell.ColumnIndex);
+        text = ControlProvider.GetCellToolTipText(ControlProvider.Control.CurrentCell.RowIndex,
+          ControlProvider.Control.CurrentCell.ColumnIndex);
         if (String.IsNullOrEmpty(text))
         {
           EFPApp.ShowTempMessage("Нет всплывающей подсказки для выбранной ячейки");
@@ -1607,7 +1594,7 @@ namespace FreeLibSet.Forms
       if (_TextPasteFormats != null)
         return _TextPasteFormats; // повторный вызов
 
-      if (!Owner.Control.ReadOnly)
+      if (!ControlProvider.Control.ReadOnly)
       {
         // 10.09.2012: сначала - текст, затем - csv
         EFPPasteTextMatrixFormat fmtText = new EFPPasteTextMatrixFormat(false);
@@ -1649,14 +1636,14 @@ namespace FreeLibSet.Forms
       if (!args.Appliable)
         return;
 
-      if (Owner.Control.ReadOnly)
+      if (ControlProvider.Control.ReadOnly)
       {
         args.Appliable = false;
         args.DataInfoText = "Просмотр не поддерживает редактирование \"по месту\"";
         return;
       }
 
-      if (Owner.Control.CurrentCell == null)
+      if (ControlProvider.Control.CurrentCell == null)
       {
         args.Appliable = false;
         args.DataInfoText = "В просмотре нет выбранной ячейки";
@@ -1665,7 +1652,7 @@ namespace FreeLibSet.Forms
 
       string errorText;
       //if (Owner.GetCellReadOnly(Owner.Control.CurrentCell, out ErrorText))
-      if (!Owner.TestCanPasteText(fmt.TextMatrix, out errorText)) // 24.04.2019
+      if (!ControlProvider.TestCanPasteText(fmt.TextMatrix, out errorText)) // 24.04.2019
       {
         args.Appliable = false;
         args.DataInfoText = errorText;
@@ -1677,10 +1664,8 @@ namespace FreeLibSet.Forms
     {
       EFPPasteTextMatrixFormat fmt = (EFPPasteTextMatrixFormat)sender;
 
-      Owner.PerformPasteText(fmt.TextMatrix);
+      ControlProvider.PerformPasteText(fmt.TextMatrix);
     }
-
-
 
     void Control_ReadOnlyChanged(object sender, EventArgs args)
     {
@@ -1722,10 +1707,9 @@ namespace FreeLibSet.Forms
 
     private void DoCheckCommand(EFPDataGridViewCheckMarkRows rows, EFPDataGridViewCheckMarkAction action)
     {
-      if (Owner.CheckMarkRows(rows, action) == 0)
+      if (ControlProvider.CheckMarkRows(rows, action) == 0)
         EFPApp.ShowTempMessage("Нет изменившихся отметок строк");
     }
-
 
     #endregion
 
@@ -1736,43 +1720,43 @@ namespace FreeLibSet.Forms
     private void IncSearch(object sender, EventArgs args)
     {
       // Начать / закончить поиск по первым буквам
-      if (Owner.CurrentIncSearchColumn == null)
+      if (ControlProvider.CurrentIncSearchColumn == null)
       {
-        if (Owner.CurrentColumn == null)
+        if (ControlProvider.CurrentColumn == null)
         {
           EFPApp.ShowTempMessage("Столбец не выбран");
           return;
         }
-        if (!Owner.CurrentColumn.CanIncSearch)
+        if (!ControlProvider.CurrentColumn.CanIncSearch)
         {
           EFPApp.ShowTempMessage("Текущий столбец не поддерживает поиск по первым буквам");
           return;
         }
-        Owner.CurrentIncSearchColumn = Owner.CurrentColumn;
+        ControlProvider.CurrentIncSearchColumn = ControlProvider.CurrentColumn;
       }
       else
       {
-        Owner.CurrentIncSearchColumn = null;
+        ControlProvider.CurrentIncSearchColumn = null;
       }
     }
 
     private void Find(object sender, EventArgs args)
     {
-      if (Owner.TextSearchContext != null) // 27.12.2020
-        Owner.TextSearchContext.StartSearch();
+      if (ControlProvider.TextSearchContext != null) // 27.12.2020
+        ControlProvider.TextSearchContext.StartSearch();
     }
 
     private void FindNext(object sender, EventArgs args)
     {
-      if (Owner.CurrentIncSearchColumn == null)
+      if (ControlProvider.CurrentIncSearchColumn == null)
       {
-        if (Owner.TextSearchContext != null)
-          Owner.TextSearchContext.ContinueSearch();
+        if (ControlProvider.TextSearchContext != null)
+          ControlProvider.TextSearchContext.ContinueSearch();
       }
       else
-        if (!Owner.CurrentIncSearchColumn.PerformIncSearch(Owner.CurrentIncSearchChars.ToUpper(), true))
+        if (!ControlProvider.CurrentIncSearchColumn.PerformIncSearch(ControlProvider.CurrentIncSearchChars.ToUpper(), true))
           EFPApp.ShowTempMessage("Нет больше строк, в которых значение поля начинается с \"" +
-            Owner.CurrentIncSearchChars + "\"");
+            ControlProvider.CurrentIncSearchChars + "\"");
     }
 
     #endregion
@@ -1804,23 +1788,22 @@ namespace FreeLibSet.Forms
       if (_OrderItems == null)
         return;
 
-      int n = Owner.OrderCount;
+      int n = ControlProvider.OrderCount;
       for (int i = 0; i < _OrderItems.Length; i++)
       {
         _OrderItems[i].Visible = (i < n);
         if (i < n)
         {
-          _OrderItems[i].MenuText = (i + 1).ToString() + ". " + Owner.Orders[i].DisplayName;
-          _OrderItems[i].ImageKey = Owner.Orders[i].ImageKey;
+          _OrderItems[i].MenuText = (i + 1).ToString() + ". " + ControlProvider.Orders[i].DisplayName;
+          _OrderItems[i].ImageKey = ControlProvider.Orders[i].ImageKey;
         }
       }
 
-      ciOrderCustom.Visible = (n > 0) && Owner.CustomOrderAllowed;
-      ciOrderMore.Visible = (n > _OrderItems.Length) || Owner.CustomOrderAllowed;
-      _MenuSort.Enabled = (n > 0) || Owner.CustomOrderAllowed;
+      ciOrderCustom.Visible = (n > 0) && ControlProvider.CustomOrderAllowed;
+      ciOrderMore.Visible = (n > _OrderItems.Length) || ControlProvider.CustomOrderAllowed;
+      _MenuSort.Enabled = (n > 0) || ControlProvider.CustomOrderAllowed;
       InitCurentOrder();
     }
-
 
     /// <summary>
     /// Выделение пометкой команды локального меню, соответствующей выбранному
@@ -1831,15 +1814,15 @@ namespace FreeLibSet.Forms
       if (_OrderItems != null)
       {
         for (int i = 0; i < _OrderItems.Length; i++)
-          _OrderItems[i].Checked = (Owner.CurrentOrderIndex == i);
-        ciOrderCustom.Checked = Owner.CustomOrderActive;
+          _OrderItems[i].Checked = (ControlProvider.CurrentOrderIndex == i);
+        ciOrderCustom.Checked = ControlProvider.CustomOrderActive;
       }
 
-      if (Owner.CustomOrderActive)
+      if (ControlProvider.CustomOrderActive)
         _MenuSort.ImageKey = "OrderCustom";
-      else if (Owner.CurrentOrder == null)
+      else if (ControlProvider.CurrentOrder == null)
         _MenuSort.ImageKey = "OrderAZ"; // по идее, не должно быть
-      else if (Owner.CurrentOrder.SortInfo.Direction == ListSortDirection.Ascending)
+      else if (ControlProvider.CurrentOrder.SortInfo.Direction == ListSortDirection.Ascending)
         _MenuSort.ImageKey = "OrderAZ";
       else
         _MenuSort.ImageKey = "OrderZA";
@@ -1847,10 +1830,10 @@ namespace FreeLibSet.Forms
       if (_MenuSort.Enabled)
       {
         string s;
-        if (Owner.CurrentOrder == null)
+        if (ControlProvider.CurrentOrder == null)
           s = "Не задан";
         else
-          s = Owner.CurrentOrder.DisplayName;
+          s = ControlProvider.CurrentOrder.DisplayName;
         _MenuSort.MenuRightText = s;
         _MenuSort.ToolTipText = "Порядок строк (" + s + ")";
       }
@@ -1870,9 +1853,9 @@ namespace FreeLibSet.Forms
     void SelectOrder_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
-      int Order = (int)(ci.Tag);
-      if (Order < Owner.OrderCount)
-        Owner.CurrentOrderIndex = Order;
+      int order = (int)(ci.Tag);
+      if (order < ControlProvider.OrderCount)
+        ControlProvider.CurrentOrderIndex = order;
     }
 
     /// <summary>
@@ -1882,13 +1865,13 @@ namespace FreeLibSet.Forms
     /// <param name="args"></param>
     void ciOrderCustom_Click(object sender, EventArgs args)
     {
-      if (!Owner.CustomOrderAllowed)
+      if (!ControlProvider.CustomOrderAllowed)
         return;
 
-      if (Owner.OrderCount == 0)
+      if (ControlProvider.OrderCount == 0)
         return;
 
-      Owner.CustomOrderActive = !Owner.CustomOrderActive;
+      ControlProvider.CustomOrderActive = !ControlProvider.CustomOrderActive;
     }
 
     /// <summary>
@@ -1898,7 +1881,7 @@ namespace FreeLibSet.Forms
     /// <param name="args"></param>
     void ciOrderMore_Click(object sender, EventArgs args)
     {
-      Owner.ShowSelectOrderDialog();
+      ControlProvider.ShowSelectOrderDialog();
     }
 
     #endregion
@@ -1919,13 +1902,13 @@ namespace FreeLibSet.Forms
 
     private void DoReorder(bool down)
     {
-      if (!Owner.Control.EndEdit())
+      if (!ControlProvider.Control.EndEdit())
       {
         EFPApp.ErrorMessageBox("Редактирование не закончено");
         return;
       }
 
-      int oldColIdx = Owner.CurrentColumnIndex;
+      int oldColIdx = ControlProvider.CurrentColumnIndex;
 
       bool changed;
       if (ManualOrderRows)
@@ -1936,7 +1919,7 @@ namespace FreeLibSet.Forms
       // 9. Обновляем табличный просмотр
       if (changed)
       {
-        Owner.CurrentColumnIndex = oldColIdx;
+        ControlProvider.CurrentColumnIndex = oldColIdx;
 
         if (ManualOrderChanged != null)
           ManualOrderChanged(this, EventArgs.Empty);
@@ -2117,7 +2100,7 @@ namespace FreeLibSet.Forms
       // в отличие от оригинала
 
       // Получаем доступ к объекту DataView
-      DataView dv = Owner.SourceAsDataView;
+      DataView dv = ControlProvider.SourceAsDataView;
       if (dv == null)
         throw new InvalidDataSourceException("Нельзя получить DataView");
 
@@ -2125,7 +2108,7 @@ namespace FreeLibSet.Forms
       DataRow[] rows1 = DataTools.GetDataViewRows(dv);
 
       // 2. Загружаем выбранные строки
-      DataRow[] selRows = Owner.SelectedDataRows;
+      DataRow[] selRows = ControlProvider.SelectedDataRows;
       if (selRows.Length == 0)
       {
         EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
@@ -2209,8 +2192,8 @@ namespace FreeLibSet.Forms
       // 9. Обновляем просмотр
       if (changed)
       {
-        Owner.Control.Invalidate();
-        Owner.SelectedDataRows = selRows; // 26.10.2017
+        ControlProvider.Control.Invalidate();
+        ControlProvider.SelectedDataRows = selRows; // 26.10.2017
       }
       //if (Owner.Control.CurrentCell != null)
       //{
@@ -2235,13 +2218,13 @@ namespace FreeLibSet.Forms
     private bool DoReorderByGridRows(bool down)
     {
       // 1. Загружаем полный список строк DataGridViewRow в массив
-      DataGridViewRow[] rows1 = new DataGridViewRow[Owner.Control.Rows.Count];
-      Owner.Control.Rows.CopyTo(rows1, 0);
+      DataGridViewRow[] rows1 = new DataGridViewRow[ControlProvider.Control.Rows.Count];
+      ControlProvider.Control.Rows.CopyTo(rows1, 0);
 
       // 2. Запоминаем выбранные строки
-      DataGridViewRow[] selRows = Owner.SelectedGridRows;
+      DataGridViewRow[] selRows = ControlProvider.SelectedGridRows;
       // 3. Получаем позиции выбранных строк в массиве всех строк
-      int[] selPoss = Owner.SelectedRowIndices;
+      int[] selPoss = ControlProvider.SelectedRowIndices;
       if (selPoss.Length == 0)
       {
         EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
@@ -2308,17 +2291,17 @@ namespace FreeLibSet.Forms
       }
 
       // 8. Замещаем коллекцию строк
-      Owner.Control.Rows.Clear();
-      Owner.Control.Rows.AddRange(rows2);
+      ControlProvider.Control.Rows.Clear();
+      ControlProvider.Control.Rows.AddRange(rows2);
 
       // 9. Восстанавливаем выбор
-      Owner.SelectedGridRows = selRows;
+      ControlProvider.SelectedGridRows = selRows;
       return true;
     }
 
     void ciSortRestore_Click(object sender, EventArgs args)
     {
-      int oldColIdx = Owner.CurrentColumnIndex;
+      int oldColIdx = ControlProvider.CurrentColumnIndex;
 
       bool changed;
       if (ManualOrderRows)
@@ -2329,7 +2312,7 @@ namespace FreeLibSet.Forms
       // Обновляем табличный просмотр
       if (changed)
       {
-        Owner.CurrentColumnIndex = oldColIdx;
+        ControlProvider.CurrentColumnIndex = oldColIdx;
 
         if (ManualOrderChanged != null)
           ManualOrderChanged(this, EventArgs.Empty);
@@ -2408,7 +2391,7 @@ namespace FreeLibSet.Forms
 
 
       // Получаем доступ к объекту DataView
-      DataView dv = Owner.SourceAsDataView;
+      DataView dv = ControlProvider.SourceAsDataView;
       if (dv == null)
         throw new InvalidDataSourceException("Нельзя получить DataView");
 
@@ -2432,7 +2415,7 @@ namespace FreeLibSet.Forms
         return false;
 
       // 3. Обновляем просмотр
-      Owner.Control.Refresh();
+      ControlProvider.Control.Refresh();
 
       return true;
     }
@@ -2447,11 +2430,11 @@ namespace FreeLibSet.Forms
         throw new NullReferenceException("Свойство DefaultManulOrderRows не установлено");
 
       // 1. Загружаем полный список строк DataGridViewRow в массив
-      DataGridViewRow[] rows1 = new DataGridViewRow[Owner.Control.Rows.Count];
-      Owner.Control.Rows.CopyTo(rows1, 0);
+      DataGridViewRow[] rows1 = new DataGridViewRow[ControlProvider.Control.Rows.Count];
+      ControlProvider.Control.Rows.CopyTo(rows1, 0);
 
       // 2. Запоминаем выбранные строки
-      DataGridViewRow[] selRows = Owner.SelectedGridRows;
+      DataGridViewRow[] selRows = ControlProvider.SelectedGridRows;
 
       // 3. Подготавливаем массив строк для их размещения в новом порядке
       // Значения null в этом массиве означают временно пустые позиции
@@ -2490,11 +2473,11 @@ namespace FreeLibSet.Forms
         return false;
 
       // 6. Замещаем коллекцию строк
-      Owner.Control.Rows.Clear();
-      Owner.Control.Rows.AddRange(rows2);
+      ControlProvider.Control.Rows.Clear();
+      ControlProvider.Control.Rows.AddRange(rows2);
 
       // 7. Восстанавливаем выбор
-      Owner.SelectedGridRows = selRows;
+      ControlProvider.SelectedGridRows = selRows;
       return true;
     }
 
@@ -2516,30 +2499,30 @@ namespace FreeLibSet.Forms
 
     void ciGotoNextErrorWarning_Click(object sender, EventArgs args)
     {
-      Owner.GotoNextErrorRow(false, true, EFPDataGridViewImageKind.Warning);
+      ControlProvider.GotoNextErrorRow(false, true, EFPDataGridViewImageKind.Warning);
     }
 
     void ciGotoPrevErrorWarning_Click(object sender, EventArgs args)
     {
-      Owner.GotoNextErrorRow(false, false, EFPDataGridViewImageKind.Warning);
+      ControlProvider.GotoNextErrorRow(false, false, EFPDataGridViewImageKind.Warning);
     }
 
     void ciGotoNextErrorOnly_Click(object sender, EventArgs args)
     {
-      Owner.GotoNextErrorRow(false, true, EFPDataGridViewImageKind.Error);
+      ControlProvider.GotoNextErrorRow(false, true, EFPDataGridViewImageKind.Error);
     }
 
     void ciGotoPrevErrorOnly_Click(object sender, EventArgs args)
     {
-      Owner.GotoNextErrorRow(false, false, EFPDataGridViewImageKind.Error);
+      ControlProvider.GotoNextErrorRow(false, false, EFPDataGridViewImageKind.Error);
     }
 
     void ciCopyRowErrorMessages_Click(object sender, EventArgs args)
     {
-      if (!Owner.CheckSingleRow())
+      if (!ControlProvider.CheckSingleRow())
         return;
       ErrorMessageList errors = new ErrorMessageList();
-      Owner.GetSelectedRowsErrorMessages(errors);
+      ControlProvider.GetSelectedRowsErrorMessages(errors);
 
       if (errors.Count == 0)
       {
@@ -2589,8 +2572,8 @@ namespace FreeLibSet.Forms
     {
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.Title = "Показать список сообщений";
-      int n = Owner.SelectedRowCount;
-      dlg.Items = new string[]{Owner.IsCurrentRowSingleSelected? "Для текущей строки":"Для выбранных строк ("+n.ToString()+")",
+      int n = ControlProvider.SelectedRowCount;
+      dlg.Items = new string[]{ControlProvider.IsCurrentRowSingleSelected ? "Для текущей строки" : "Для выбранных строк (" + n.ToString() + ")",
         "Для всех строк в просмотре"};
       dlg.SelectedIndex = _ShowRowErrorMessagesRowMode;
       if (dlg.ShowDialog() != DialogResult.OK)
@@ -2603,13 +2586,13 @@ namespace FreeLibSet.Forms
       {
         if (_ShowRowErrorMessagesRowMode == 1)
         {
-          Owner.GetAllRowsErrorMessages(errors);
+          ControlProvider.GetAllRowsErrorMessages(errors);
           title = "Сообщения для всех строк таблицы";
         }
         else
         {
-          Owner.GetSelectedRowsErrorMessages(errors);
-          if (Owner.IsCurrentRowSingleSelected)
+          ControlProvider.GetSelectedRowsErrorMessages(errors);
+          if (ControlProvider.IsCurrentRowSingleSelected)
             title = "Сообщения для текущей строки таблицы";
           else
             title = "Сообщения для выбранных строк таблицы (" + n.ToString() + ")";
@@ -2642,8 +2625,8 @@ namespace FreeLibSet.Forms
     protected void EditRowForErrorMessage(object sender, ErrorMessageItemEventArgs args)
     {
       int rowIndex = DataTools.GetInt(args.Item.Tag);
-      if (rowIndex >= 0 && rowIndex < Owner.Control.RowCount)
-        Owner.SelectRowIndex(rowIndex);
+      if (rowIndex >= 0 && rowIndex < ControlProvider.Control.RowCount)
+        ControlProvider.SelectRowIndex(rowIndex);
       else
         EFPApp.ShowTempMessage("Несуществующий номер строки");
     }
@@ -2679,13 +2662,13 @@ namespace FreeLibSet.Forms
       form.Text = "Отправить в " + ciSendToMicrosoftExcel.MenuTextWithoutMnemonic;
       form.Icon = EFPApp.MainImageIcon(ciSendToMicrosoftExcel.ImageKey);
       form.LoadValues(SendToSettings);
-      form.InitVisibility(Owner);
+      form.InitVisibility(ControlProvider);
       if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
         return;
 
       form.SaveValues(SendToSettings);
 
-      Owner.SendToMicrosoftExcel(SendToSettings);
+      ControlProvider.SendToMicrosoftExcel(SendToSettings);
     }
 
     void ciSendToOpenOfficeCalc_Click(object sender, EventArgs args)
@@ -2702,13 +2685,13 @@ namespace FreeLibSet.Forms
       form.Text = "Отправить в " + ciSendToOpenOfficeCalc.MenuTextWithoutMnemonic;
       form.Icon = EFPApp.MainImageIcon(ciSendToOpenOfficeCalc.ImageKey);
       form.LoadValues(SendToSettings);
-      form.InitVisibility(Owner);
+      form.InitVisibility(ControlProvider);
       if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
         return;
 
       form.SaveValues(SendToSettings);
 
-      Owner.SendToOpenOfficeCalc(SendToSettings);
+      ControlProvider.SendToOpenOfficeCalc(SendToSettings);
     }
 
     #endregion
@@ -2753,7 +2736,7 @@ namespace FreeLibSet.Forms
       _CurrStatCellSummaDigits = 0;
       _CurrStatCellCount = null;
       ciStatSumma.ImageKey = "HourGlass";
-      if (Owner.Control.SelectedCells.Count <= StatCellCountPerCheck)
+      if (ControlProvider.Control.SelectedCells.Count <= StatCellCountPerCheck)
       {
         CalcStatSum(false);
       }
@@ -2773,13 +2756,13 @@ namespace FreeLibSet.Forms
     {
       //if (Handler.Grid.AreAllCellsSelected())
       //  return false;
-      if (Owner.Control.SelectedRows != null && Owner.Control.SelectedRows.Count > 0)
+      if (ControlProvider.Control.SelectedRows != null && ControlProvider.Control.SelectedRows.Count > 0)
         return false;
-      if (Owner.Control.SelectedColumns != null && Owner.Control.SelectedColumns.Count > 0)
+      if (ControlProvider.Control.SelectedColumns != null && ControlProvider.Control.SelectedColumns.Count > 0)
         return false;
-      if (Owner.Control.SelectedCells == null)
+      if (ControlProvider.Control.SelectedCells == null)
         return false;
-      if (Owner.Control.SelectedCells.Count < 2)
+      if (ControlProvider.Control.SelectedCells.Count < 2)
         return false;
       return true;
     }
@@ -2849,7 +2832,7 @@ namespace FreeLibSet.Forms
     private bool DoCalcStatSum(bool checkTime)
     {
       DateTime startTime = DateTime.Now;
-      while (_CurrStatCellIndex < Owner.Control.SelectedCells.Count)
+      while (_CurrStatCellIndex < ControlProvider.Control.SelectedCells.Count)
       {
         if (checkTime && _CurrStatCellIndex > 0 && (_CurrStatCellIndex % 20) == 0)
         {
@@ -2857,10 +2840,10 @@ namespace FreeLibSet.Forms
           if (ts.TotalMilliseconds > 200.0) // 1/5 секунды
             return false;
         }
-        DataGridViewCell cell = Owner.Control.SelectedCells[_CurrStatCellIndex];
+        DataGridViewCell cell = ControlProvider.Control.SelectedCells[_CurrStatCellIndex];
         _CurrStatCellIndex++;
-        Owner.DoGetRowAttributes(cell.RowIndex, EFPDataGridViewAttributesReason.View);
-        EFPDataGridViewCellAttributesEventArgs args = Owner.DoGetCellAttributes(cell.ColumnIndex);
+        ControlProvider.DoGetRowAttributes(cell.RowIndex, EFPDataGridViewAttributesReason.View);
+        EFPDataGridViewCellAttributesEventArgs args = ControlProvider.DoGetCellAttributes(cell.ColumnIndex);
         decimal x;
         if (!TryGetCellValue(args.FormattedValue, out x))
         {
@@ -2938,12 +2921,13 @@ namespace FreeLibSet.Forms
 
     private void SelectAll(object sender, EventArgs args)
     {
-      Owner.Control.SelectAll();
+      ControlProvider.Control.SelectAll();
       PerformRefreshItems();
     }
+
     private void Refresh(object sender, EventArgs args)
     {
-      Owner.PerformRefresh();
+      ControlProvider.PerformRefresh();
     }
 
     #endregion

@@ -1993,19 +1993,20 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает набор команд
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="useConvert">true, если будут использоваться команды подменю "Преобразовать текст"</param>
     /// <param name="alwaysReadOnly">Если true, то не будут созданы команды "Вырезать" и "Вставить",
     /// а будет только команда "Копировать"</param>
-    public EFPTextBoxCommandItems(IEFPSimpleTextBox owner, bool useConvert, bool alwaysReadOnly)
+    public EFPTextBoxCommandItems(IEFPSimpleTextBox controlProvider, bool useConvert, bool alwaysReadOnly)
+      :base((EFPControlBase)controlProvider)
     {
-      _Owner = owner;
+      _Owner = controlProvider;
 
       #region Undo
 
       bool undoSupported = false;
-      if (owner is IEFPTextBox)
-        undoSupported = ((IEFPTextBox)owner).UndoSupported;
+      if (controlProvider is IEFPTextBox)
+        undoSupported = ((IEFPTextBox)controlProvider).UndoSupported;
 
       if (undoSupported)
       {
@@ -2059,7 +2060,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      if (owner is IEFPTextBox)
+      if (controlProvider is IEFPTextBox)
       {
         #region Поиск
 
@@ -2076,9 +2077,9 @@ namespace FreeLibSet.Forms
         #endregion
       }
 
-      if (owner is IEFPTextBox)
+      if (controlProvider is IEFPTextBox)
       {
-        if (((IEFPTextBox)owner).MultiLineSupported)
+        if (((IEFPTextBox)controlProvider).MultiLineSupported)
         {
           #region Вставить перевод строки
 
@@ -2171,7 +2172,7 @@ namespace FreeLibSet.Forms
 
       #region Панели статусной строки
 
-      if (owner is IEFPTextBoxWithStatusBar)
+      if (controlProvider is IEFPTextBoxWithStatusBar)
       {
         UseStatusBarRC = true;
 
@@ -2215,9 +2216,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Установка свойств EFPCommandItem.Usage
     /// </summary>
-    protected override void BeforeControlAssigned()
+    protected override void OnPrepare()
     {
-      base.BeforeControlAssigned();
+      base.OnPrepare();
+
       if (ciFind != null)
       {
         if (((IEFPTextBox)Owner).TextSearchContext == null)
@@ -2235,19 +2237,11 @@ namespace FreeLibSet.Forms
         ciChangeCase.Usage = EFPCommandItemUsage.None;
         ciRusLat.Usage = EFPCommandItemUsage.None;
       }
-    }
-
-    /// <summary>
-    /// Присоединение обработчиков к управляющему элементу и установка свойств EFPCommandItem.Visible
-    /// </summary>
-    protected override void AfterControlAssigned()
-    {
-      base.AfterControlAssigned();
 
       Owner.EditableEx.ValueChanged += new EventHandler(InitEnabled);
-      Control.TextChanged += new EventHandler(InitEnabled);
-      Control.KeyUp += new KeyEventHandler(KeyUp);
-      Control.MouseUp += new MouseEventHandler(MouseUp);
+      ControlProvider.Control.TextChanged += new EventHandler(InitEnabled);
+      ControlProvider.Control.KeyUp += new KeyEventHandler(KeyUp);
+      ControlProvider.Control.MouseUp += new MouseEventHandler(MouseUp);
 
       // Начальная установка
       if (!UseStatusBarRC)
@@ -2391,7 +2385,7 @@ namespace FreeLibSet.Forms
       if (Owner is IEFPTextBox)
         ((IEFPTextBox)Owner).Undo();
       else
-        throw new BugException("Операция Undo неприменима к элементу " + Control.GetType().ToString());
+        throw new BugException("Операция Undo неприменима к элементу " + ControlProvider.Control.GetType().ToString());
       InitEnabled();
     }
 
@@ -2536,7 +2530,7 @@ namespace FreeLibSet.Forms
       get { return _UseConvert; }
       set
       {
-        CheckNotAssigned();
+        CheckNotReadOnly();
         _UseConvert = value;
       }
     }
@@ -2569,9 +2563,9 @@ namespace FreeLibSet.Forms
       if (Owner.SelectionLength == 0)
       {
         int pos = Owner.SelectionStart;
-        s = Control.Text;
+        s = ControlProvider.Control.Text;
         s = DoChangeText2(s, mode);
-        Control.Text = s;
+        ControlProvider.Control.Text = s;
         Owner.SelectionStart = pos;
       }
       else
