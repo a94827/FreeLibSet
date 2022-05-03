@@ -579,6 +579,8 @@ namespace FreeLibSet.Forms
     {
       // Перенесено сюда 21.05.2021
       CallUpdateByTime(); // сразу выполняем обновление
+
+      UpdateCommandItemsActive(); // 02.05.2022
     }
 
     void Form_Deactivate(object sender, EventArgs args)
@@ -591,6 +593,15 @@ namespace FreeLibSet.Forms
 
       // Записываем положение и размеры формы, параметры для всех управляющих элементов
       SaveFormConfig();
+
+      UpdateCommandItemsActive(); // 02.05.2022
+    }
+
+    private void UpdateCommandItemsActive()
+    {
+      EFPControlBase[] a = base.GetAllControlProviders();
+      for (int i = 0; i < a.Length; i++)
+        a[i].UpdateCommandItemsActive();
     }
 
     /// <summary>

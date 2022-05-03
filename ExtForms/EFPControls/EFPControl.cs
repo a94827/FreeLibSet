@@ -330,6 +330,7 @@ namespace FreeLibSet.Forms
           control.MouseDown += new MouseEventHandler(Control_MouseDown);
 
         control.Enter += new EventHandler(Control_Enter);
+        control.Leave += new EventHandler(Control_Leave);
 
         control.PreviewKeyDown += new PreviewKeyDownEventHandler(Control_PreviewKeyDown); // 04.02.2021
 
@@ -347,7 +348,6 @@ namespace FreeLibSet.Forms
         control.Disposed += new EventHandler(Control_Disposed);
       }
     }
-
 
     void Control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs args)
     {
@@ -468,7 +468,7 @@ namespace FreeLibSet.Forms
             InitLabelVisible(); // Иначе будут висячие метки
           break;
         case EFPControlProviderState.Disposed:
-          return;
+          break;
         default:
           throw new BugException("ProviderState=" + ProviderState.ToString());
       }
@@ -476,6 +476,8 @@ namespace FreeLibSet.Forms
       // 26.04.2022
       if (ProviderState == EFPControlProviderState.Detached && Control.IsDisposed)
         InternalSetProviderState(EFPControlProviderState.Disposed, EFPControlSetProviderStateReason.UpdateFormProviderState);
+
+      UpdateCommandItemsActive(); // 02.05.2022
     }
 
     /// <summary>
@@ -1610,6 +1612,18 @@ namespace FreeLibSet.Forms
       Control.Focus();
     }
 
+
+    internal void UpdateCommandItemsActive()
+    {
+      bool wantsActive = ProviderState == EFPControlProviderState.Attached &&
+        Control.ContainsFocus;
+
+      if (wantsActive)
+        PrepareContextMenu();
+      CommandItems.Active = wantsActive;
+    }
+
+
     private void Control_Enter(object sender, EventArgs args)
     {
       try
@@ -1634,6 +1648,7 @@ namespace FreeLibSet.Forms
     {
       if (ValidateWhenFocusChanged)
         _IdleValidationRequired = true;
+      UpdateCommandItemsActive();
     }
 
     private bool _ContextMenuWasInit;
@@ -2021,21 +2036,12 @@ namespace FreeLibSet.Forms
 
         _ValidateWhenFocusChanged = value;
         if (value)
-        {
           UseIdle = true;
-          if (!_ControlLeaveHandlerAssigned)
-          {
-            _ControlLeaveHandlerAssigned = true;
-            _Control.Leave += Control_Leave;
-          }
-        }
       }
     }
     private bool _ValidateWhenFocusChanged;
 
     private bool _IdleValidationRequired;
-
-    private bool _ControlLeaveHandlerAssigned;
 
     #endregion
 

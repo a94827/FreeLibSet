@@ -22,8 +22,6 @@ namespace FreeLibSet.Forms
     public EFPControlCommandItems()
     {
       _Active = false;
-      _EHFormEnter = new EventHandler(FormEnter);
-      _EHFormLeave = new EventHandler(FormLeave);
 
     }
 
@@ -54,28 +52,6 @@ namespace FreeLibSet.Forms
         throw new InvalidOperationException("Свойство Control можно устанавливать только один раз");
 
       _Control = control;
-
-      if (control is Form)
-      {
-        _LastForm = (Form)control;
-        // Обработка ShortCut'ов
-        _LastForm.KeyPreview = true;
-      }
-      else
-      {
-        _LastForm = control.FindForm();
-        if (_LastForm == null)
-          throw new InvalidOperationException("Управляющий элемент не был присоединен к форме");
-        _Control.Enter += new EventHandler(ControlEnter);
-        _Control.Leave += new EventHandler(ControlLeave);
-        _Control.HandleCreated += new EventHandler(ControlHandleCreated);
-      }
-      _LastForm.Activated += _EHFormEnter;
-      _LastForm.Deactivate += _EHFormLeave;
-
-      _Control.Disposed += new EventHandler(ControlDisposed);
-      //FControl.KeyDown += new KeyEventHandler(ClientItems.PerformKeyDown);
-      Active = _LastForm.Visible && _Control.ContainsFocus;
     }
 
     /// <summary>
@@ -114,8 +90,6 @@ namespace FreeLibSet.Forms
     protected virtual void AfterControlAssigned()
     {
     }
-
-    private Form _LastForm;
 
     private bool _IsModalForm;
 
@@ -227,82 +201,6 @@ namespace FreeLibSet.Forms
     }
     private EFPCommandItem _DefaultCommandItem;
 
-
-    #endregion
-
-    #region Внутренняя реализация
-
-    void ControlHandleCreated(object sender, EventArgs args)
-    {
-      ValidateFormHandlers();
-    }
-
-    private void ControlEnter(object sender, EventArgs args)
-    {
-      // 09.08.2011
-      // Управляющий элемент может быть прицеплен к другой форме в процессе работы
-      ValidateFormHandlers();
-
-        if (_LastForm.Visible)  // проверка условия добавлена 10.04.2009
-        // Событие может вызываться с помощью установки свойства
-        // TheForm.ActiveControl до показа формы на экране
-        Active = true;
-    }
-
-    private void ValidateFormHandlers()
-    {
-      if (_Control == null)
-        return; // 07.10.2019
-
-      if (_Control.FindForm() != _LastForm)
-      {
-        _LastForm.Activated -= _EHFormEnter;
-        _LastForm.Deactivate -= _EHFormLeave;
-        _LastForm = _Control.FindForm();
-        _LastForm.Activated += _EHFormEnter;
-        _LastForm.Deactivate += _EHFormLeave;
-      }
-    }
-
-    private void ControlLeave(object sender, EventArgs args)
-    {
-      Active = false;
-    }
-
-    /// <summary>
-    /// Перед дезактивацией формы запоминаем, имеет ли упр. элемент фокус ввода
-    /// </summary>
-    private bool _ControlWasActive;
-
-    /// <summary>
-    /// Управляющий элемент может быть присоединен к другой форме (например, в Мастере)
-    /// В этом случае обработчик формы должен быть прицеплен к новой форме
-    /// </summary>
-    private EventHandler _EHFormEnter;
-    private EventHandler _EHFormLeave;
-
-    private void FormEnter(object sender, EventArgs args)
-    {
-      if (_Control.ContainsFocus)
-      {
-        Active = true;
-      }
-      else
-      {
-        Active = _ControlWasActive;
-      }
-    }
-    private void FormLeave(object sender, EventArgs args)
-    {
-      _ControlWasActive = Active;
-      Active = false;
-    }
-
-    private void ControlDisposed(object sender, EventArgs args)
-    {
-      Active = false;
-      Dispose();
-    }
 
     #endregion
 
