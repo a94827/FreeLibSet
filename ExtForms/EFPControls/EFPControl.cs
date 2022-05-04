@@ -1385,6 +1385,12 @@ namespace FreeLibSet.Forms
     {
       StringBuilder sb = new StringBuilder();
       sb.Append(DisplayName);
+      if (String.IsNullOrEmpty(_DisplayName))
+      {
+        sb.Append(" (");
+        sb.Append(GetType().ToString());
+        sb.Append(")");
+      }
       sb.Append(", ProviderState=");
       sb.Append(ProviderState.ToString());
       if (ProviderState == EFPControlProviderState.Attached)
@@ -1614,7 +1620,9 @@ namespace FreeLibSet.Forms
     internal void UpdateCommandItemsActive()
     {
       bool wantsActive = ProviderState == EFPControlProviderState.Attached &&
-        Control.ContainsFocus;
+        //Control.ContainsFocus && // нельзя полагаться на это свойство из обработчика Control.Leave
+        _ControlHasFocus &&
+        BaseProvider.FormProvider.Active;
 
       if (wantsActive)
         PrepareContextMenu();
@@ -1623,8 +1631,12 @@ namespace FreeLibSet.Forms
     }
 
 
+    private bool _ControlHasFocus;
+
     private void Control_Enter(object sender, EventArgs args)
     {
+      _ControlHasFocus = true;
+
       try
       {
         // 21.08.2015
@@ -1645,6 +1657,8 @@ namespace FreeLibSet.Forms
 
     private void Control_Leave(object sender, EventArgs args)
     {
+      _ControlHasFocus = false;
+
       if (ValidateWhenFocusChanged)
         _IdleValidationRequired = true;
       UpdateCommandItemsActive();

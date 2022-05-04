@@ -471,6 +471,8 @@ namespace FreeLibSet.Forms
         _HasBeenShown = true;
       }
 
+      bool oldActive = _ActiveInternal;
+
       // Подключение форм инструментов
       if (Modal && ToolFormsEnabled)
       {
@@ -507,6 +509,9 @@ namespace FreeLibSet.Forms
       }
 
       _FormActivatedSetFocusFlag = true;
+
+      if (oldActive)
+        OnSetFormActive();
     }
 
     private void OnSetFormHidden()
@@ -518,6 +523,9 @@ namespace FreeLibSet.Forms
         _ToolTipDelayTimer.Dispose();
         _ToolTipDelayTimer = null;
       }
+
+      if (_ActiveInternal)
+        OnSetFormInactive();
 
       if (_TheToolTip != null)
       {
@@ -536,7 +544,6 @@ namespace FreeLibSet.Forms
         _TheToolTip.Active = false;
         _TheToolTip.RemoveAll();
       }
-
 
       // Отключение форм инструментов
       if (Modal && ToolFormsEnabled)
@@ -572,35 +579,6 @@ namespace FreeLibSet.Forms
     }
 
     private bool _FormActivatedSetFocusFlag; // 17.02.2022
-
-    void Form_Activated(object sender, EventArgs args)
-    {
-      // Перенесено сюда 21.05.2021
-      CallUpdateByTime(); // сразу выполняем обновление
-
-      UpdateCommandItemsActive(); // 02.05.2022
-    }
-
-    void Form_Deactivate(object sender, EventArgs args)
-    {
-      // Иногда это событие вызывается после закрытия формы
-      if (!Form.Visible)
-        return;
-      if (Form.IsDisposed)
-        return;
-
-      // Записываем положение и размеры формы, параметры для всех управляющих элементов
-      SaveFormConfig();
-
-      UpdateCommandItemsActive(); // 02.05.2022
-    }
-
-    private void UpdateCommandItemsActive()
-    {
-      EFPControlBase[] a = base.GetAllControlProviders();
-      for (int i = 0; i < a.Length; i++)
-        a[i].UpdateCommandItemsActive();
-    }
 
     /// <summary>
     /// Для предотвращения повторного вывода сообщений в log-файл
@@ -718,6 +696,64 @@ namespace FreeLibSet.Forms
 
       //ConfigHandler.WriteConfigChanges(this.ConfigManager);
       SaveFormConfig();
+    }
+
+    #endregion
+
+    #region Свойство IsActive
+
+
+    void Form_Activated(object sender, EventArgs args)
+    {
+      // Перенесено сюда 21.05.2021
+      CallUpdateByTime(); // сразу выполняем обновление
+
+      _ActiveInternal = true;
+      if (Visible)
+        OnSetFormActive();
+
+    }
+
+    void Form_Deactivate(object sender, EventArgs args)
+    {
+      // Иногда это событие вызывается после закрытия формы
+      if (!Form.Visible)
+        return;
+      if (Form.IsDisposed)
+        return;
+
+      // Записываем положение и размеры формы, параметры для всех управляющих элементов
+      SaveFormConfig();
+
+      _ActiveInternal = false;
+      OnSetFormInactive();
+    }
+
+    /// <summary>
+    /// Свойство возвращает true, если форма видима и активна
+    /// </summary>
+    public bool Active
+    {
+      get { return _Visible && _ActiveInternal; }
+    }
+    private bool _ActiveInternal;
+
+
+    private void OnSetFormActive()
+    {
+      UpdateCommandItemsActive(); // 02.05.2022
+    }
+
+    private void OnSetFormInactive()
+    {
+      UpdateCommandItemsActive(); // 02.05.2022
+    }
+
+    private void UpdateCommandItemsActive()
+    {
+      EFPControlBase[] a = base.GetAllControlProviders();
+      for (int i = 0; i < a.Length; i++)
+        a[i].UpdateCommandItemsActive();
     }
 
     #endregion

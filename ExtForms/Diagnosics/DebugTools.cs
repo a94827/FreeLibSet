@@ -1359,7 +1359,7 @@ namespace FreeLibSet.Forms.Diagnostics
           sb.Append("Form.ActiveForm=null");
         else
         {
-          while (ctrl != null)
+          while (true)
           {
             if (sb.Length > 0)
               sb.Append(Environment.NewLine);
@@ -1369,14 +1369,28 @@ namespace FreeLibSet.Forms.Diagnostics
             sb.Append("\", Text=\"");
             sb.Append(ctrl.Text);
             sb.Append('\"');
-            if (ctrl is Form)
-              ctrl = ((Form)ctrl).ActiveControl;
+            IContainerControl ctrl2 = ctrl as IContainerControl;
+            if (ctrl2 !=null)
+              ctrl = ctrl2.ActiveControl;
             else
               break;
           }
         }
 
-        _TheLabel.Text = sb.ToString();
+        EFPCommandItems[] a = EFPCommandItems.GetFocusedObjects();
+        sb.Append(Environment.NewLine);
+        sb.Append("EFPCommandItems.GetFocusedObjects()");
+        sb.Append(" (");
+        sb.Append(a.Length.ToString());
+        sb.Append(")");
+        for (int i = 0; i < a.Length; i++)
+        {
+          sb.Append(Environment.NewLine);
+          sb.Append("  ");
+          sb.Append(a[i].ToString());
+        }
+
+          _TheLabel.Text = sb.ToString();
         base.Size = _TheLabel.Size;
       }
 
