@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return _Message; 
+      return _Message;
     }
 
     #endregion
@@ -121,8 +121,8 @@ namespace FreeLibSet.Forms
         _Parent = value;
         if (value != null)
         {
-          if (_Parent._Children==null)
-            _Parent._Children=new List<EFPBaseProvider>();
+          if (_Parent._Children == null)
+            _Parent._Children = new List<EFPBaseProvider>();
 
           _Parent._Children.Add(this);
           _Parent.OnChildAdded(this);
@@ -144,7 +144,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="child">Добавленный дочерний провайдер</param>
     protected virtual void OnChildAdded(EFPBaseProvider child)
-    { 
+    {
     }
 
     /// <summary>
@@ -176,9 +176,9 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Возвращает количество дочерних провайдеров EFPBaseProvider
       /// </summary>
-      public int Count 
+      public int Count
       {
-        get 
+        get
         {
           if (_Owner._Children == null)
             return 0;
@@ -278,7 +278,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="controlBase">Провайдер управляющего элемента</param>
     protected virtual void OnControlProviderAdded(EFPControlBase controlBase)
-    { 
+    {
     }
 
 
@@ -910,7 +910,7 @@ namespace FreeLibSet.Forms
         for (int i = 0; i < _Children.Count; i++)
           _Children[i].FormVisibleChanged();
       }
-      if (_ControlProviders!= null)
+      if (_ControlProviders != null)
       {
         for (int i = 0; i < _ControlProviders.Count; i++)
           _ControlProviders[i].FormVisibleChanged();

@@ -44,6 +44,9 @@ namespace FreeLibSet.Forms
 
       control.Disposed += new EventHandler(Control_Disposed);
 
+      control.MouseDown += new MouseEventHandler(Control_MouseDown);
+      control.MouseUp += new MouseEventHandler(control_MouseUp);
+
       if (control.ImageList == null)
       {
         control.ImageList = EFPApp.MainImages;
@@ -194,6 +197,9 @@ namespace FreeLibSet.Forms
       /// <returns>Индекс страницы или (-1), если страница не найдена</returns>
       public int IndexOf(EFPTabPage pageControlProvider)
       {
+        if (pageControlProvider == null)
+          return -1;
+
         _Owner.ValidateItemList();
         return _Owner._Items.IndexOf(pageControlProvider);
       }
@@ -205,6 +211,9 @@ namespace FreeLibSet.Forms
       /// <returns>Индекс страницы или (-1), если страница не найдена</returns>
       public int IndexOf(TabPage pageControl)
       {
+        if (pageControl == null)
+          return -1;
+
         _Owner.ValidateItemList();
         for (int i = 0; i < _Owner._Items.Count; i++)
         {
@@ -432,6 +441,8 @@ namespace FreeLibSet.Forms
         TabPages[i].UpdateSelected();
 
       Validate();
+
+      InitCurrentContextMenu();
     }
 
     /// <summary>
@@ -551,6 +562,62 @@ namespace FreeLibSet.Forms
     void SelectedIndexEx_ValueChanged(object sender, EventArgs args)
     {
       SelectedIndex = _SelectedIndexEx.Value;
+    }
+
+    #endregion
+
+    #region Контекстное меню
+
+    /// <summary>
+    /// Контекстное меню, используемое, когда нет выбранной вкладки или по щелчку мыши вне области
+    /// </summary>
+    private ContextMenuStrip _MainContextMenuStrip;
+
+    protected override void OnCreated()
+    {
+      base.OnCreated();
+      PrepareContextMenu();
+      _MainContextMenuStrip = Control.ContextMenuStrip;
+    }
+
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+      InitCurrentContextMenu();
+    }
+
+    private void InitCurrentContextMenu()
+    {
+      if (SelectedTab == null)
+        Control.ContextMenuStrip = _MainContextMenuStrip;
+      else
+        Control.ContextMenuStrip = SelectedTab.GetContextMenuStrip();
+    }
+
+    void Control_MouseDown(object sender, MouseEventArgs args)
+    {
+      if (args.Button == MouseButtons.Right)
+      {
+        for (int i = 0; i < Control.TabPages.Count; i++)
+        {
+          Rectangle rc = Control.GetTabRect(i);
+          if (rc.Contains(args.Location))
+          { 
+            EFPTabPage tab = TabPages[Control.TabPages[i]];
+            Control.ContextMenuStrip = tab.GetContextMenuStrip();
+            return;
+          }
+        }
+
+        // Щелчок вне ярлычка вкладки
+        Control.ContextMenuStrip = _MainContextMenuStrip;
+      }
+    }
+
+    void control_MouseUp(object sender, MouseEventArgs args)
+    {
+      if (args.Button == MouseButtons.Right)
+        InitCurrentContextMenu();
     }
 
     #endregion
@@ -888,6 +955,16 @@ namespace FreeLibSet.Forms
         Control.ToolTipText = value;
         base.InitToolTips();
       }
+    }
+
+    #endregion
+
+    #region Контекстное меню
+
+    internal ContextMenuStrip GetContextMenuStrip()
+    {
+      PrepareContextMenu();
+      return Control.ContextMenuStrip;
     }
 
     #endregion

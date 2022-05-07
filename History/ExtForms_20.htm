@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-04-26T20:35:05.931000000"/>
+	<meta name="changed" content="2022-05-07T23:17:09.828000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -255,18 +255,100 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">317</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">02.05.2022-07.05.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">EFPFormProvider.Active </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p2"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">),
+			которое возвращает </span><span lang="en-US">true, </span><span lang="ru-RU">когда
+			форма видима на экране и активна, независимо от порядка
+			поступления событий.</span></p>
+			<p lang="en-US">2. <span lang="ru-RU">Изменения в командах
+			локального меню управляющих элементов и формы. В некоторых случаях
+			при открытии формы не устанавливалось свойство
+			EFPControlCommandItems.Active для первого элемента и, из-за этого,
+			не срабатывали комбинации клавиш.</span></p>
+			<p><span lang="ru-RU">- Из </span><span lang="en-US">EFPControlCommandItems
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p2"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			выделен базовый класс EFPContextCommandItems, а из него выделен
+			</span><span lang="en-US">EFPFormCommandItems.</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство
+			</span>EFPControlCommandItems<span lang="ru-RU">.</span>ControlProvider.
+			<span lang="ru-RU">Ссылка на провайдер управляющего элемента
+			требуется в конструкторе. Свойство </span>Control <span lang="ru-RU">убрано.</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Вместо метода </span>SetControl()
+			<span lang="ru-RU">и двух защищенных методов
+			</span>BeforeControlAssigned() <span lang="ru-RU">и
+			</span>AfterControlAssigned(), <span lang="ru-RU">в
+			EFPContextCommandItems</span> <span lang="ru-RU">используются
+			методы </span>SetReadOnly() <span lang="ru-RU">и </span>OnPrepare().</p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Создание списка
+			панелей статусной строки перенесено из
+			</span><span lang="en-US">EFPControlBase.PrepareCommandItems()
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v169p7"><span lang="en-US">v.169
+			</span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">в EFPContextCommandItems.</span><span lang="en-US">SetReadOnly().
+			</span><span lang="ru-RU">Панели статусной строки теперь работают
+			и в командах, относящихся к форме </span><span lang="en-US">(EFPFormProvider.CommandItems).</span></p>
+			<p lang="en-US">- <span lang="ru-RU">За установку свойства
+			</span>EFPContextCommandItems<span lang="ru-RU">.</span>Active
+			<span lang="ru-RU">отвечают теперь обработчики </span>EFPControlBase
+			<span lang="ru-RU">и </span>EFPFormProvider. <span lang="ru-RU">Раньше
+			присоединялись собственные обработчики </span>Control.Enter,
+			Control.Leave, Form.Activate <span lang="ru-RU">и </span>Form.Deactivate<span lang="ru-RU">.</span></p>
+			<p><span lang="ru-RU">- Обработчик </span><span lang="en-US">Control.Leave
+			</span><span lang="ru-RU">присоединяется в конструкторе
+			</span><span lang="en-US">EFPControlBase, </span><span lang="ru-RU">а
+			не только при установке свойства ValidateWhenFocusChanged (</span><a href="ExtForms_11.htm#v267p1"><span lang="en-US">v.267
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">).</span></p>
+			<p><span lang="ru-RU">- </span><span lang="en-US">EFPControlBase.PrepareCommandItems()
+			</span><span lang="ru-RU">больше не проверяет видимость элемента и
+			формы вызовом WinFormsTools.AreControlAndFormVisible() (</span><a href="ExtForms_11.htm#v017p14"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.14</span></a><span lang="ru-RU">) и не
+			возвращает результат.</span></p>
+			<p><span lang="ru-RU">3. </span><span lang="en-US">EFPTabControl
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v023p1"><span lang="en-US">v.23
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			переключает свое контекстное меню </span><span lang="en-US">(TabControl.ContextMenuStrip)
+			</span><span lang="ru-RU">в соответствии с выбранной вкладкой.
+			Обрабатывается нажатие правой кнопки мыши, чтобы показывать меню
+			вкладки, на которой выполняется щелчок, а не текущей вкладки.</span></p>
+			<p lang="en-US">4. <span lang="ru-RU">В классах </span>WizardStepWithXXX
+			<span lang="ru-RU">убраны ненужные больше вызовы
+			</span>PrepareCommandItems() <span lang="ru-RU">и установка
+			свойства </span>Active <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v032p1">v.32
+			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">5</span><span lang="en-US">. </span><span lang="ru-RU">Значением
+			по умолчанию для статического свойства
+			</span><span lang="en-US">EFPFormProvider.UseErrorProvider </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p2"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			является </span><span lang="en-US">false, </span><span lang="ru-RU">а
+			не </span><span lang="en-US">true. </span><span lang="ru-RU">Использование
+			мигающих значков стандартного класса </span><span lang="en-US">ErrorProvider
+			</span><span lang="ru-RU">не имеет смысла.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">316</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">26.04.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1.  EFPControlBase <span lang="ru-RU">может
-			обрабатывать событие </span>Control.Disposed<span lang="ru-RU">,
+			<p><span lang="en-US">1. EFPControlBase </span><span lang="ru-RU">может
+			обрабатывать событие </span><span lang="en-US">Control.Disposed</span><span lang="ru-RU">,
 			если оно возникает в процессе работы метода
-			</span>UpdateFormProviderState() (<a href="#v313p3">v.313 <span lang="ru-RU">п.3</span></a>).<span lang="ru-RU">
-			Переключение в состояние </span>ProviderState=Disposed<span lang="ru-RU">
-			в этом случае выполняет метод, а не обработчик события.</span></p>
+			</span><span lang="en-US">UpdateFormProviderState() (<a href="#v313p3">v.313
+			</a></span><a href="#v313p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Переключение в состояние
+			</span><span lang="en-US">ProviderState=Disposed </span><span lang="ru-RU">в
+			этом случае выполняет метод, а не обработчик события.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

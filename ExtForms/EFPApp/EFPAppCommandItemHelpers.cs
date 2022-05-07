@@ -977,7 +977,7 @@ namespace FreeLibSet.Forms
     /// Добавление команды "Справка"-"О программе"
     /// </summary>
     /// <param name="menuHelp">Меню "Справка"</param>
-    public void AboutExit(EFPCommandItem menuHelp)
+    public void AddAbout(EFPCommandItem menuHelp)
     {
       _About = CommandItems.Add(EFPAppStdCommandItems.About, menuHelp);
       _About.Click += new EventHandler(About_Click);

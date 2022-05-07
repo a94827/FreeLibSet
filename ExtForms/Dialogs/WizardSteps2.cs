@@ -215,6 +215,7 @@ namespace FreeLibSet.Forms
       }
 
       _TheButtons = new EFPRadioButtons(BaseProvider, btns);
+      _TheButtons.SelectedIndex = 0; // 07.05.2022
     }
 
     #endregion
@@ -230,21 +231,22 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Переопределенные методы
+    // Убрано 07.05.2022
+    //#region Переопределенные методы
 
-    /// <summary>
-    /// Инициализация при переходе к шагу мастера
-    /// </summary>
-    /// <param name="action">Причина вызова метода</param>
-    internal protected override void OnBeginStep(WizardAction action)
-    {
-      base.OnBeginStep(action);
+    ///// <summary>
+    ///// Инициализация при переходе к шагу мастера
+    ///// </summary>
+    ///// <param name="action">Причина вызова метода</param>
+    //internal protected override void OnBeginStep(WizardAction action)
+    //{
+    //  base.OnBeginStep(action);
 
-      _TheButtons.PrepareCommandItems(); // 01.02.2013
-      _TheButtons.CommandItems.Active = true; // 01.02.2013
-    }
+    //  _TheButtons.PrepareCommandItems(); // 01.02.2013
+    //  _TheButtons.CommandItems.Active = true; // 01.02.2013
+    //}
 
-    #endregion
+    //#endregion
   }
 
   /// <summary>
@@ -357,21 +359,22 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Переопределенные методы
+    // Убрано 07.05.2022
+    //#region Переопределенные методы
 
-    /// <summary>
-    /// Инициализация при переходе к шагу мастера
-    /// </summary>
-    /// <param name="action">Причина вызова метода</param>
-    internal protected override void OnBeginStep(WizardAction action)
-    {
-      base.OnBeginStep(action);
+    ///// <summary>
+    ///// Инициализация при переходе к шагу мастера
+    ///// </summary>
+    ///// <param name="action">Причина вызова метода</param>
+    //internal protected override void OnBeginStep(WizardAction action)
+    //{
+    //  base.OnBeginStep(action);
 
-      TheListView.PrepareCommandItems(); // 01.02.2013
-      TheListView.CommandItems.Active = true; // 01.02.2013
-    }
+    //  TheListView.PrepareCommandItems(); // 01.02.2013
+    //  TheListView.CommandItems.Active = true; // 01.02.2013
+    //}
 
-    #endregion
+    //#endregion
 
     #region Внутренняя реализация
 
@@ -486,8 +489,9 @@ namespace FreeLibSet.Forms
     /// <param name="action">Действие</param>
     internal protected override void OnBeginStep(WizardAction action)
     {
-      if (!_TheControlProvider.CommandItems.IsReadOnly)
-        _TheControlProvider.ToolBarPanel = _TheSpeedPanel;
+      // Убрано 07.05.2022
+      //if (!_TheControlProvider.CommandItems.IsReadOnly)
+      //  _TheControlProvider.ToolBarPanel = _TheSpeedPanel;
 
       if (_TheControlProvider.UseRowImages &&
         (!_TheControlProvider.UseRowImagesDataError) &&
@@ -497,8 +501,9 @@ namespace FreeLibSet.Forms
 
       base.OnBeginStep(action);
 
-      _TheControlProvider.PrepareCommandItems();
-      _TheControlProvider.CommandItems.Active = true;
+      // Убрано 07.05.2022
+      //_TheControlProvider.PrepareCommandItems();
+      //_TheControlProvider.CommandItems.Active = true;
     }
 
     // ReSharper disable once RedundantOverriddenMember

@@ -1626,7 +1626,7 @@ namespace FreeLibSet.Forms
 
       if (wantsActive)
         PrepareContextMenu();
-      if (_CommandItems!=null)
+      if (_CommandItems != null)
         _CommandItems.Active = wantsActive;
     }
 
@@ -1685,46 +1685,43 @@ namespace FreeLibSet.Forms
 
       try
       {
-        if (PrepareCommandItems())
+        PrepareCommandItems();
+
+        _ContextMenuWasInit = true;
+
+        // Присоединяем команды
+        bool toolBarControllable = false;
+        if (ToolBar != null)
+          toolBarControllable = ToolBar.PanelCommandItems != null;
+
+        List<EFPCommandItems> list = new List<EFPCommandItems>();
+        if (CommandItems.Count > 0)
+          list.Add(CommandItems);
+        if (BaseCommandItemsNeeded) // 28.09.2018
+          BaseProvider.InitCommandItemList(list);
+
+        if (list.Count > 0 || toolBarControllable)
         {
-          _ContextMenuWasInit = true;
+          EFPContextMenu ccm = new EFPContextMenu();
+          for (int i = 0; i < list.Count; i++)
+            ccm.Add(list[i]);
 
-          // Присоединяем команды
-          bool toolBarControllable = false;
-          if (ToolBar != null)
-            toolBarControllable = ToolBar.PanelCommandItems != null;
+          //if (ToolBarControllable)
+          //{
+          //  ccm.Menu.Items.Add(
+          //  EFPDropDownMenu ddm = new EFPDropDownMenu();
+          //  ddm.Add(ToolBar.PanelCommandItems);
+          //  //ddm.a
+          //}
 
-          List<EFPCommandItems> list = new List<EFPCommandItems>();
-          if (CommandItems.Count > 0)
-            list.Add(CommandItems);
-          if (BaseCommandItemsNeeded) // 28.09.2018
-            BaseProvider.InitCommandItemList(list);
+          ccm.DefaultCommandItem = CommandItems.DefaultCommandItem;
 
-          if (list.Count > 0 || toolBarControllable)
+          ccm.Attach(Control);
+
+          if (Control is UserControl)
           {
-            EFPContextMenu ccm = new EFPContextMenu();
-            for (int i = 0; i < list.Count; i++)
-              ccm.Add(list[i]);
-
-            //if (ToolBarControllable)
-            //{
-            //  ccm.Menu.Items.Add(
-            //  EFPDropDownMenu ddm = new EFPDropDownMenu();
-            //  ddm.Add(ToolBar.PanelCommandItems);
-            //  //ddm.a
-            //}
-
-            ccm.DefaultCommandItem = CommandItems.DefaultCommandItem;
-
-            ccm.Attach(Control);
-
-            if (Control is UserControl)
-            {
-              foreach (Control childControl in Control.Controls)
-                childControl.ContextMenuStrip = Control.ContextMenuStrip;
-            }
-
-            //CommandItems.Active = true; // ?? Control.ContainsFocus;
+            foreach (Control childControl in Control.Controls)
+              childControl.ContextMenuStrip = Control.ContextMenuStrip;
           }
         }
       }
@@ -1805,54 +1802,31 @@ namespace FreeLibSet.Forms
     private EFPPanelToolBar _ToolBar;
 
     /// <summary>
-    /// Если управляющий элемент присоединен к форме и форма выведена на экран,
-    /// то присваивает значение свойству CommandItems.Control.
-    /// Инициализирует локальную панель кнопок, если она есть
-    /// Инициализирует панели статусной строки
-    /// Возвращает true, если значение CommandItem.Control установлено сейчас или
-    /// было установлено раньше.
-    /// Для инициализации локального меню используйте PrepareContextMenu().
+    /// Инициализация команд локального меню, панели инструментов и статусной строки.
+    /// Этот метод не используется в прикладном коде.
     /// Повторные вызовы метода игнорируются.
     /// </summary>
-    public bool PrepareCommandItems()
+    public void PrepareCommandItems()
     {
       if (CommandItems.IsReadOnly)
-        return true;
+        return;
 
       if (Control.IsDisposed)
-        return false; // 23.10.2017
+        return; // 23.10.2017
 
-      if (!WinFormsTools.AreControlAndFormVisible(Control))
-        return false;
+      // Убрано 07.05.2022
+      //if (!WinFormsTools.AreControlAndFormVisible(Control))
+      //  return false;
 
       OnBeforePrepareCommandItems(); // 28.09.2018
 
       CommandItems.SetReadOnly();
-
-      bool sbFlag = false;
-      foreach (EFPCommandItem item in CommandItems)
-      {
-        if (item.StatusBarUsage)
-        {
-          sbFlag = true;
-          break;
-        }
-      }
-
-      if (sbFlag)
-      {
-        EFPStatusBarPanels sbPanels = new EFPStatusBarPanels(this, Control);
-        sbPanels.Add(CommandItems);
-        CommandItems.StatusBarPanels = sbPanels;
-      }
 
       if (ToolBar != null)
       {
         ToolBar.Add(CommandItems);
         ToolBar.ToolBarVisible = ToolBar.Count > 0; // 10.09.2012
       }
-
-      return true;
     }
 
     /// <summary>

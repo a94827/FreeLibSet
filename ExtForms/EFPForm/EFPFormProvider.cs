@@ -741,11 +741,15 @@ namespace FreeLibSet.Forms
 
     private void OnSetFormActive()
     {
+      if (!CommandItems.IsReadOnly)
+        CommandItems.SetReadOnly();
+      CommandItems.Active = true;
       UpdateCommandItemsActive(); // 02.05.2022
     }
 
     private void OnSetFormInactive()
     {
+      CommandItems.Active = false;
       UpdateCommandItemsActive(); // 02.05.2022
     }
 
@@ -761,10 +765,12 @@ namespace FreeLibSet.Forms
     #region Проверка ошибок в форме
 
     /// <summary>
-    /// True (по умолчанию), если нужно использовать объект ErrorProvider для форм
+    /// True, если нужно использовать объект ErrorProvider для форм
+    /// По умолчанию - false - выполняется только раскраска элементов с ошибками/предупреждениями, без использования
+    /// стандартного ErrorProvider.
     /// </summary>
     public static bool UseErrorProvider { get { return _UseErrorProvider; } set { _UseErrorProvider = value; } }
-    private static bool _UseErrorProvider = true;
+    private static bool _UseErrorProvider = false; // 07.05.2022
 
     /// <summary>
     /// Текущая причина вызова метода ValidateForm.

@@ -1359,7 +1359,7 @@ namespace FreeLibSet.Forms.Diagnostics
           sb.Append("Form.ActiveForm=null");
         else
         {
-          while (true)
+          while (ctrl != null)
           {
             if (sb.Length > 0)
               sb.Append(Environment.NewLine);
@@ -1370,7 +1370,7 @@ namespace FreeLibSet.Forms.Diagnostics
             sb.Append(ctrl.Text);
             sb.Append('\"');
             IContainerControl ctrl2 = ctrl as IContainerControl;
-            if (ctrl2 !=null)
+            if (ctrl2 != null)
               ctrl = ctrl2.ActiveControl;
             else
               break;
@@ -1387,10 +1387,12 @@ namespace FreeLibSet.Forms.Diagnostics
         {
           sb.Append(Environment.NewLine);
           sb.Append("  ");
+          sb.Append(a[i].GetType().ToString());
+          sb.Append(": ");
           sb.Append(a[i].ToString());
         }
 
-          _TheLabel.Text = sb.ToString();
+        _TheLabel.Text = sb.ToString();
         base.Size = _TheLabel.Size;
       }
 

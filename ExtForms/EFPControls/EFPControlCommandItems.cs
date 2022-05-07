@@ -47,7 +47,12 @@ namespace FreeLibSet.Forms
         // Модальность формы проверяем только при активации меню, при дезактивации
         // используем предыдущее значение
         if (value)
+        {
+          if (!IsReadOnly)
+            throw new InvalidOperationException("Не было вызова SetReadOnly()");
+
           _IsModalForm = GetIsModalForm();
+        }
 
         _Active = value;
         foreach (EFPCommandItem item in this)
@@ -84,17 +89,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Панели статусной строки. 
     /// </summary>
-    public EFPStatusBarPanels StatusBarPanels
-    {
-      get
-      {
-        return _StatusBarPanels;
-      }
-      set
-      {
-        _StatusBarPanels = value;
-      }
-    }
+    internal EFPStatusBarPanels StatusBarPanels { get { return _StatusBarPanels; } }
     private EFPStatusBarPanels _StatusBarPanels;
 
     #endregion
@@ -109,14 +104,44 @@ namespace FreeLibSet.Forms
       OnPrepare();
 
       base.IsReadOnly = true;
+
+      bool sbFlag = false;
+      foreach (EFPCommandItem item in this)
+      {
+        if (item.StatusBarUsage)
+        {
+          sbFlag = true;
+          break;
+        }
+      }
+
+      if (sbFlag)
+      {
+        _StatusBarPanels = CreateStatusBarPanels();
+        _StatusBarPanels.Add(this);
+      }
     }
+
+    internal abstract EFPStatusBarPanels CreateStatusBarPanels();
+
+
+    /// <summary>
+    /// Событие вызывается при подготовке списка команд к использованию.
+    /// На момент вызова свойство IsReadOnly=false.
+    /// Событие используется, в основном, в отладочных целях.
+    /// Классы-наследники, вместо обработчика события, переопределяют метод OnPrepare().
+    /// Прикладной код обычно использует событие EFPControlBase.BeforePrepareCommandItems.
+    /// </summary>
+    public event EventHandler Prepare;
 
     /// <summary>
     /// Этот метод вызывается однократно перед началом использования списка команд.
     /// После вызова список переводится в режим "только для чтения".
     /// </summary>
     protected virtual void OnPrepare()
-    { 
+    {
+      if (Prepare != null)
+        Prepare(this, EventArgs.Empty);
     }
 
     #endregion
@@ -181,7 +206,7 @@ namespace FreeLibSet.Forms
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
       switch (controlProvider.ProviderState)
-      { 
+      {
         case EFPControlProviderState.Detached:
         case EFPControlProviderState.Disposed:
           throw new InvalidOperationException();
@@ -206,15 +231,14 @@ namespace FreeLibSet.Forms
     public override string ToString()
     {
       StringBuilder sb = new StringBuilder();
-      sb.Append(GetType().Name);
-      sb.Append(" СontrolProvider=");
+      sb.Append("СontrolProvider=");
       sb.Append(ControlProvider.ToString());
       sb.Append(" ItemCount=");
       sb.Append(Count.ToString());
-      sb.Append(" IsReadOnly=");
-      sb.Append(IsReadOnly.ToString());
-      sb.Append(" Active=");
-      sb.Append(Active.ToString());
+      //sb.Append(" IsReadOnly=");
+      //sb.Append(IsReadOnly.ToString());
+      //sb.Append(" Active=");
+      //sb.Append(Active.ToString());
       return sb.ToString();
     }
 
@@ -239,6 +263,11 @@ namespace FreeLibSet.Forms
     internal override bool GetIsModalForm()
     {
       return ControlProvider.BaseProvider.FormProvider.Modal;
+    }
+
+    internal override EFPStatusBarPanels CreateStatusBarPanels()
+    {
+      return new EFPStatusBarPanels(ControlProvider, ControlProvider.Control);
     }
 
     #endregion
@@ -275,7 +304,34 @@ namespace FreeLibSet.Forms
     internal override bool GetIsModalForm()
     {
       return _FormProvider.Modal;
-    } 
+    }
+
+    #endregion
+
+    #region Методы
+
+    internal override EFPStatusBarPanels CreateStatusBarPanels()
+    {
+      return new EFPStatusBarPanels(FormProvider, FormProvider.Form);
+    }
+
+    /// <summary>
+    /// Возвращает отладочную информацию
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      StringBuilder sb = new StringBuilder();
+      sb.Append("FormProvider=");
+      sb.Append(FormProvider.ToString());
+      sb.Append(" ItemCount=");
+      sb.Append(Count.ToString());
+      //sb.Append(" IsReadOnly=");
+      //sb.Append(IsReadOnly.ToString());
+      //sb.Append(" Active=");
+      //sb.Append(Active.ToString());
+      return sb.ToString();
+    }
 
     #endregion
   }
