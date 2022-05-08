@@ -468,8 +468,12 @@ namespace FreeLibSet.Forms
         }
 
         OnShown();
+
+        if (!Modal)
+          InitButtonHandlers(Form); // 08.05.2022
+
         _HasBeenShown = true;
-      }
+      } // !HasBeenShown
 
       bool oldActive = _ActiveInternal;
 
@@ -2677,6 +2681,32 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    #region Обработчики для кнопок
+
+    private void InitButtonHandlers(Control control)
+    {
+      Button btn = control as Button;
+      if (btn == null)
+      {
+        if (control.HasChildren && (!(control is UserControl)) && base.FindControlProvider(control)==null)
+        {
+          foreach (Control child in control.Controls)
+            InitButtonHandlers(child); // рекурсивный вызов
+        }
+        return;
+      }
+
+      if (btn.DialogResult == null)
+        return;
+
+      if (base.FindControlProvider(btn) == null)
+        new EFPButton(this, btn); // создаем недостающий провайдер кнопки, который умеет закрывать форму
+    }
+
+
+    #endregion
+
 
     #region Поиск провайдера для формы
 

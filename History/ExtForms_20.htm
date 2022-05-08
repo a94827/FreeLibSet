@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-05-07T23:17:09.828000000"/>
+	<meta name="changed" content="2022-05-09T00:10:57.718000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -258,7 +258,7 @@
 			<p lang="en-US" align="center">317</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">02.05.2022-07.05.2022</p>
+			<p lang="en-US" align="center">02.05.2022-08.05.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Свойство
@@ -318,19 +318,30 @@
 			</span><span lang="ru-RU">в соответствии с выбранной вкладкой.
 			Обрабатывается нажатие правой кнопки мыши, чтобы показывать меню
 			вкладки, на которой выполняется щелчок, а не текущей вкладки.</span></p>
-			<p lang="en-US">4. <span lang="ru-RU">В классах </span>WizardStepWithXXX
-			<span lang="ru-RU">убраны ненужные больше вызовы
-			</span>PrepareCommandItems() <span lang="ru-RU">и установка
-			свойства </span>Active <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v032p1">v.32
-			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
-			<p><span lang="en-US">5</span><span lang="en-US">. </span><span lang="ru-RU">Значением
-			по умолчанию для статического свойства
+			<p><span lang="en-US">4. </span><span lang="ru-RU">В классах
+			</span><span lang="en-US">WizardStepWithXXX </span><span lang="ru-RU">убраны
+			ненужные больше вызовы </span><span lang="en-US">PrepareCommandItems()
+			</span><span lang="ru-RU">и установка свойства </span><span lang="en-US">Active
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v032p1"><span lang="en-US">v.32
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">5. </span><span lang="ru-RU">Значением по
+			умолчанию для статического свойства
 			</span><span lang="en-US">EFPFormProvider.UseErrorProvider </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p2"><span lang="en-US">v.17
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
 			является </span><span lang="en-US">false, </span><span lang="ru-RU">а
 			не </span><span lang="en-US">true. </span><span lang="ru-RU">Использование
 			мигающих значков стандартного класса </span><span lang="en-US">ErrorProvider
 			</span><span lang="ru-RU">не имеет смысла.</span></p>
+			<p lang="en-US">6. <span lang="ru-RU">Автоматическая поддержка
+			нажатий кнопок закрытия формы (</span>Button.DialogResult!=None),
+			<span lang="ru-RU">когда форма выведена в немодальном режиме:</span></p>
+			<p lang="en-US"><span lang="ru-RU">- внутренний метод
+			</span>EFPFormProvider.InitButtonHandlers()</p>
+			<p lang="en-US">- <span lang="ru-RU">Метод </span>EFPButton.OnClick()
+			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p2">v.17
+			<span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">вызывает </span>Form.Close(), <span lang="ru-RU">если
+			нет обработчика события </span>Click.</p>
 		</td>
 	</tr>
 	<tr valign="top">

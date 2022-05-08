@@ -152,6 +152,18 @@ namespace FreeLibSet.Forms
     {
       if (Click != null)
         Click(this, EventArgs.Empty);
+      else if (Control.DialogResult != DialogResult.None && (!PreventFormClosing))
+      {
+        // 08.05.2022
+        // «акрываем форму, если установлено свойство DialogResult.
+
+        Form frm = Control.FindForm();
+        if (frm != null)
+        {
+          frm.DialogResult = Control.DialogResult;
+          frm.Close();
+        }
+      }
     }
 
     #endregion
