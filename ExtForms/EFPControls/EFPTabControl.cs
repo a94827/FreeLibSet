@@ -573,6 +573,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     private ContextMenuStrip _MainContextMenuStrip;
 
+    /// <summary>
+    /// Инициализирует контекстное меню
+    /// </summary>
     protected override void OnCreated()
     {
       base.OnCreated();
@@ -580,6 +583,9 @@ namespace FreeLibSet.Forms
       _MainContextMenuStrip = Control.ContextMenuStrip;
     }
 
+    /// <summary>
+    /// Переключает контекстное меню на активную вкладку
+    /// </summary>
     protected override void OnAttached()
     {
       base.OnAttached();
@@ -594,6 +600,11 @@ namespace FreeLibSet.Forms
         Control.ContextMenuStrip = SelectedTab.GetContextMenuStrip();
     }
 
+    /// <summary>
+    /// Инициализирует контекстное меню в соответствии с вкладкой, на которой выполнен щелчок правой кнопки мыши
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     void Control_MouseDown(object sender, MouseEventArgs args)
     {
       if (args.Button == MouseButtons.Right)
@@ -614,6 +625,11 @@ namespace FreeLibSet.Forms
       }
     }
 
+    /// <summary>
+    /// Восстанавливает контекстное меню после отпускания правой кнопки мыши
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     void control_MouseUp(object sender, MouseEventArgs args)
     {
       if (args.Button == MouseButtons.Right)
