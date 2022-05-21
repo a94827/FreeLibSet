@@ -212,7 +212,8 @@ namespace FreeLibSet.Forms
 
       _Text = null;
 
-      _TheTextBox.PrepareCommandItems(); // активация TooBar
+      // Убрано 21.05.2022. См. EFPReportGridPage.CreateControlProvider()
+      //_TheTextBox.PrepareCommandItems(); // активация TooBar
       SetControlName(_TheTextBox, "TextBox");
     }
 
@@ -470,7 +471,8 @@ namespace FreeLibSet.Forms
       _XmlDocument = null;
       _XmlText = null;
 
-      _XmlView.PrepareCommandItems(); // активация TooBar
+      // Убрано 21.05.2022. См. EFPReportGridPage.CreateControlProvider()
+      //_XmlView.PrepareCommandItems(); // активация TooBar
       SetControlName(_XmlView, "XmlView");
     }
 

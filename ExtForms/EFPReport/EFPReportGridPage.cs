@@ -343,8 +343,8 @@ namespace FreeLibSet.Forms
 
       _ControlProvider = DoCreateControlProvider(_MainPanel.Control);
       // Убрано 02.06.2015
-      //FControlProvider.ReadOnly = true;
-      //FControlProvider.CanView = false;
+      //_ControlProvider.ReadOnly = true;
+      //_ControlProvider.CanView = false;
 
       _MainPanel.Control.MultiSelect = true; // после создания DocGridHandler
       _ControlProvider.CommandItems.UseRefresh = false; // обрабатывается на уровне отчета в-целом
@@ -360,7 +360,11 @@ namespace FreeLibSet.Forms
         if (ShowToolBar)
           ControlProvider.ToolBarPanel = _MainPanel.ToolBarPanel;
       }
-      ControlProvider.PrepareCommandItems();
+      // Убрано 21.05.2022
+      // Пусть пока команды меню останутся доступными для изменения.
+      // Событие DocTypeUI.InitView будет вызвано позднее, в ответ на событие EFPControlBase.Created.
+      // Пользовательский обработчик InitView может добавить еще команды меню
+      // ControlProvider.PrepareCommandItems();
     }
 
     /// <summary>
