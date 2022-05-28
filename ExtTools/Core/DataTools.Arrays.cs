@@ -204,7 +204,10 @@ namespace FreeLibSet.Core
         lst.Add(item);
       }
 
-      return lst.ToArray();
+      if (lst == null)
+        return DataTools.EmptyObjects;
+      else
+        return lst.ToArray();
     }
 
 

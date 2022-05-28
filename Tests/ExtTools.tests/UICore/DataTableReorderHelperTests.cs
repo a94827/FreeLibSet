@@ -52,17 +52,23 @@ namespace ExtTools_tests.UICore
     [TestCase("", false, "AAA,DDD,CCC,BBB")]
     public void MoveDown(string sRowValues, bool wantedRes, string sWantedValues)
     {
-      DataTable tbl = CreateTestTable();
-      DataTableReorderHelper sut = new DataTableReorderHelper(tbl.DefaultView, "Order");
+      // Перемещение для нескольких строк должно работать независимо от порядка задания выбранных строк
+      for (int i = 1; i <= 2; i++)
+      {
+        DataTable tbl = CreateTestTable();
+        DataTableReorderHelper sut = new DataTableReorderHelper(tbl.DefaultView, "Order");
 
-      DataRow[] rows = GetTableRows(tbl, sRowValues);
+        DataRow[] rows = GetTableRows(tbl, sRowValues);
+        if (i == 2)
+          Array.Reverse(rows);
 
-      bool res = sut.MoveDown(rows);
+        bool res = sut.MoveDown(rows);
 
-      Assert.AreEqual(wantedRes, res, "Result");
+        Assert.AreEqual(wantedRes, res, "Result #" + i.ToString());
 
-      string sResValues = GetOrderedText(tbl);
-      Assert.AreEqual(sWantedValues, sResValues, "Rows");
+        string sResValues = GetOrderedText(tbl);
+        Assert.AreEqual(sWantedValues, sResValues, "Rows #" + i.ToString());
+      }
     }
 
     [TestCase("AAA", false, "AAA,DDD,CCC,BBB")]
@@ -76,17 +82,23 @@ namespace ExtTools_tests.UICore
     [TestCase("", false, "AAA,DDD,CCC,BBB")]
     public void MoveUp(string sRowValues, bool wantedRes, string sWantedValues)
     {
-      DataTable tbl = CreateTestTable();
-      DataTableReorderHelper sut = new DataTableReorderHelper(tbl.DefaultView, "Order");
+      // Перемещение для нескольких строк должно работать независимо от порядка задания выбранных строк
+      for (int i = 1; i <= 2; i++)
+      {
+        DataTable tbl = CreateTestTable();
+        DataTableReorderHelper sut = new DataTableReorderHelper(tbl.DefaultView, "Order");
 
-      DataRow[] rows = GetTableRows(tbl, sRowValues);
+        DataRow[] rows = GetTableRows(tbl, sRowValues);
+        if (i == 2)
+          Array.Reverse(rows);
 
-      bool res = sut.MoveUp(rows);
+        bool res = sut.MoveUp(rows);
 
-      Assert.AreEqual(wantedRes, res, "Result");
+        Assert.AreEqual(wantedRes, res, "Result #" + i.ToString());
 
-      string sResValues = GetOrderedText(tbl);
-      Assert.AreEqual(sWantedValues, sResValues, "Rows");
+        string sResValues = GetOrderedText(tbl);
+        Assert.AreEqual(sWantedValues, sResValues, "Rows #" + i.ToString());
+      }
     }
 
     #endregion
@@ -160,15 +172,15 @@ namespace ExtTools_tests.UICore
       DataTable tbl = CreateTestTable();
       DataTableReorderHelper sut = new DataTableReorderHelper(tbl.DefaultView, "Order");
 
-      DataRow rowDDD = tbl.Rows[1]; // "DDD"
+      DataRow rowDDD = tbl.Rows[3]; // "DDD"
       DataRow rowCCC = tbl.Rows[2]; // "CCC"
-      DataRow rowBBB = tbl.Rows[3]; // "BBB"
+      DataRow rowBBB = tbl.Rows[1]; // "BBB"
       DataRow rowAAA = tbl.Rows[0]; // "AAA"
       DataRow[] rows = new DataRow[] { rowDDD, rowCCC, rowBBB, rowAAA };
 
       bool res1 = sut.Reorder(rows);
       Assert.IsTrue(res1, "Result #1");
-      Assert.AreEqual("DDD,CCC,BBB,AAA", GetOrderedText(tbl), "Rows #1"); 
+      Assert.AreEqual("DDD,CCC,BBB,AAA", GetOrderedText(tbl), "Rows #1");
 
       bool res2 = sut.Reorder(rows);
       Assert.IsFalse(res2, "Result #2");

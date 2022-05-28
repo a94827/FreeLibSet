@@ -104,6 +104,7 @@
     <Compile Include="IO\TempDirectoryTests.cs" />
     <Compile Include="Collections\WeakReferenceCollectionTests.cs" />
     <Compile Include="Text\TextWithRowsTests.cs" />
+    <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />
     <Compile Include="UICore\DataTableReorderHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>

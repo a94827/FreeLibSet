@@ -46,8 +46,8 @@ namespace ExtTools_tests.Models.Tree
       //   3 "CCC"
       // 6 "DDD"
       //   4 "EEE"
-      //     8 "FFF"
-      //     7 "GGG"
+      //     7 "FFF"
+      //     8 "GGG"
       //   5 "HHH"
 
       tbl.Rows.Add("BBB", 1, 2);

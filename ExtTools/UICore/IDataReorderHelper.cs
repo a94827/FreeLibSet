@@ -5,6 +5,7 @@ using System.Data;
 using FreeLibSet.Core;
 using System.ComponentModel;
 using FreeLibSet.Models.Tree;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.UICore
 {
@@ -180,9 +181,9 @@ namespace FreeLibSet.UICore
       DataRow[] rows1 = DataTools.GetDataViewRows(_DV);
 
       // 2. ѕолучаем позиции выбранных строк в массиве всех строк
-      int[] selPoss = new int[selRows.Length];
-      for (int i = 0; i < selRows.Length; i++)
-        selPoss[i] = Array.IndexOf<DataRow>(rows1, selRows[i]);
+      int[] selPoss = GetSelRowPositions(ref selRows, rows1);
+      if (selRows.Length == 0)
+        return false; // еще одна проверка, т.к. строки могли быть удалены
 
       // 3. ѕровер€ем, что не уперлись в границы списка
       if (down)
@@ -238,6 +239,43 @@ namespace FreeLibSet.UICore
       }
 
       return changed;
+    }
+
+    /// <summary>
+    /// Ќаходит позиции выбранных дл€ перемещени€ строк в просмотре.
+    /// »з массива выбранных строк выбрасываютс€ ненайденные строки.
+    /// «атем массив выбранных строк сортируетс€ по возрастанию номеров позиций.
+    /// </summary>
+    /// <param name="selRows">¬ыбранные строки. Ётот массив сортируетс€ и, возможно, сокращаетс€</param>
+    /// <param name="rows1"></param>
+    /// <returns></returns>
+    internal static int[] GetSelRowPositions(ref DataRow[] selRows, DataRow[] rows1)
+    {
+      // ѕромежуточна€ коллекци€.
+      // »спользуетс€ дл€ сортировки и поиска повторов.
+      //  люч - позици€ строки из selRows, значение - строка.
+      SortedDictionary<int, DataRow> dict = new SortedDictionary<int, DataRow>();
+
+      for (int i = 0; i < selRows.Length; i++)
+      {
+        if (selRows[i] == null)
+          throw new ArgumentException("rows[" + i.ToString() + "]=null", "rows");
+
+        int p = Array.IndexOf<DataRow>(rows1, selRows[i]);
+        if (p < 0)
+          continue;
+        if (dict.ContainsKey(p))
+          continue; // строка входит дважды
+        dict.Add(p, selRows[i]);
+      }
+
+      if (dict.Count != selRows.Length)
+        selRows = new DataRow[dict.Count];
+      int[] selPoss = new int[dict.Count];
+      dict.Keys.CopyTo(selPoss, 0);
+      dict.Values.CopyTo(selRows, 0);
+
+      return selPoss;
     }
 
     /// <summary>
@@ -377,7 +415,7 @@ namespace FreeLibSet.UICore
     private int _OrderColumnPos;
 
     /// <summary>
-    /// ¬озвращает true, если просмотр DV отсортирован по OrderColumnName
+    /// ¬озвращает true, если просмотр Model.Table.DefaultView отсортирован по OrderColumnName
     /// </summary>
     private bool IsSuitableDV
     {
@@ -457,9 +495,9 @@ namespace FreeLibSet.UICore
       }
 
       // 2. ѕолучаем позиции выбранных строк в массиве всех строк
-      int[] selPoss = new int[selRows.Length];
-      for (int i = 0; i < selRows.Length; i++)
-        selPoss[i] = rows1.IndexOf(selRows[i]);
+      int[] selPoss = DataTableReorderHelper.GetSelRowPositions(ref selRows, rows1.ToArray());
+      if (selRows.Length == 0)
+        return false; // еще одна проверка, т.к. строки могли быть удалены
 
       // 3. ѕровер€ем, что не уперлись в границы списка в пределах уровн€
       if (down)
@@ -550,7 +588,7 @@ namespace FreeLibSet.UICore
           {
             if (IsSuitableDV)
             {
-              if (Model.DataView.Count == 0)
+              if (Model.Table.DefaultView.Count == 0)
                 // —троки может и не быть пока в просмотре, поэтому вполне допускаетс€ DataView.Count=0.
                 maxVal = 0;
               else
@@ -559,7 +597,7 @@ namespace FreeLibSet.UICore
             else
             {
               // Ќет смысла создавать одноразовый DataView, чтобы найти максимальное значение
-              maxVal = DataTools.MaxInt(Model.DataView, OrderColumnName, true) ?? 0;
+              maxVal = DataTools.MaxInt(Model.Table.DefaultView, OrderColumnName, true) ?? 0;
             }
           }
 
@@ -629,7 +667,7 @@ namespace FreeLibSet.UICore
           }
         }
         if (areSame)
-          return true;
+          return false;
       }
 
       // 3. ¬ыполн€ет нумерацию без учета структуры дерева
