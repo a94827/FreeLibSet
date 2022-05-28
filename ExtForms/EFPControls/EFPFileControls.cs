@@ -557,7 +557,7 @@ namespace FreeLibSet.Forms
     #region Прочие свойства
 
     /// <summary>
-    /// Провайдер основного поля ввода иди комбоблока (задается в конструкторе)
+    /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
     /// </summary>
     public IEFPTextBox MainProvider { get { return _MainProvider; } }
     private IEFPTextBox _MainProvider;
@@ -776,7 +776,7 @@ namespace FreeLibSet.Forms
     #region Прочие свойства
 
     /// <summary>
-    /// Провайдер основного поля ввода иди комбоблока (задается в конструкторе)
+    /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
     /// </summary>
     public IEFPTextBox MainProvider { get { return _MainProvider; } }
     private IEFPTextBox _MainProvider;
@@ -1041,7 +1041,7 @@ namespace FreeLibSet.Forms
     #region Прочие свойства
 
     /// <summary>
-    /// Провайдер основного поля ввода иди комбоблока (задается в конструкторе)
+    /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
     /// </summary>
     public IEFPTextBox MainProvider { get { return _MainProvider; } }
     private IEFPTextBox _MainProvider;

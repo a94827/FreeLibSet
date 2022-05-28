@@ -148,7 +148,10 @@ namespace FreeLibSet.Models.Tree
       if (!_Table.Columns[_ParentColumnPosition].AllowDBNull)
         throw new ArgumentNullException("Столбец \"" + parentColumnName + "\" имеет свойство AllowDBNull=false", "parentColumnName");
 
-      _Sort = String.Empty;
+      //_Sort = String.Empty;
+      //_SortColumnPositions = DataTools.EmptyInts;
+      this.Sort = table.DefaultView.Sort; // 28.05.2022
+
       _IsNullDefaultValue = DataTools.GetEmptyValue(_Table.Columns[idColumnName].DataType);
 
       if (table.PrimaryKey.Length == 1)
@@ -229,7 +232,8 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Порядок сортировки строк (в формате аргумента sort метода DataTable.Select()).
-    /// По умолчанию узлы дерева одного уровня идут в порядке следования строк в таблице.
+    /// По умолчанию используется порядок сортировки в просмотре DataView (Table.DefaultView.Sort).
+    /// Дальнейшее изменение в свойстве Table.DefaultView.Sort не отслеживается.
     /// </summary>
     public string Sort
     {
@@ -238,10 +242,30 @@ namespace FreeLibSet.Models.Tree
       {
         if (value == null)
           throw new ArgumentNullException();
+        if (value.Length == 0)
+          _SortColumnPositions = DataTools.EmptyInts;
+        else
+        {
+          string[] aColNames = DataTools.GetDataViewSortColumnNames(value);
+          int[] a = new int[aColNames.Length];
+          for (int i = 0; i < aColNames.Length; i++)
+          {
+            a[i] = Table.Columns.IndexOf(aColNames[i]);
+            if (a[i] < 0)
+              throw new ArgumentException("Таблица " + Table.TableName + " не содержит столбца \"" + aColNames[i] + "\", используемого для сортировки");
+          }
+          _SortColumnPositions = a; // только, если не возникло исключения
+        }
         _Sort = value;
       }
     }
     private string _Sort;
+
+    /// <summary>
+    /// Позиции столбцов в таблице, которые используются для сортировки (свойство Sort).
+    /// Если Sort-пустая строка, то содержит пустой массив
+    /// </summary>
+    private int[] _SortColumnPositions; // 28.05.2022
 
     /// <summary>
     /// Значение, используемое в качестве второго аргумента при вызове функции ISNULL() (см. справку к свойству DataColumn.Expression).
@@ -328,6 +352,7 @@ namespace FreeLibSet.Models.Tree
     {
       // TODO: Будет медленно работать
       // Надо бы загружать полный список дочерних элементов второго уровня и запоминать флажки в словаре
+
       DataRow row = TreePathToDataRow(treePath);
       if (row == null)
         return true; // 27.12.2020
@@ -370,7 +395,7 @@ namespace FreeLibSet.Models.Tree
       if (_UpdateSuspendCount == 0)
         throw new InvalidOperationException("Лишний вызов EndUpdate()");
       _UpdateSuspendCount--;
-      if (_UpdateSuspendCount ==0 && _TableChanged)
+      if (_UpdateSuspendCount == 0 && _TableChanged)
         OnStructureChanged(TreePathEventArgs.Empty);
     }
 
@@ -402,6 +427,15 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     private Hashtable _PrevParentKeys;
 
+    /// <summary>
+    /// Отслеживание изменений в полях, участвующих в сортировке
+    /// Ключом является IdColumnName строки. Значение не используется (всегда null).
+    /// Если изменение происходит с одним из полей, входящих в свойство Sort, идентификатор строки добавляется в коллекцию.
+    /// Когда происходит событие RowChanged, если для строки есть запись в коллекции, выполняется обновление структуры родительского узла 
+    /// (или всего дерева для строки верхнего уровня), вместо посылки события NodesChanged.
+    /// </summary>
+    private Hashtable _SortColumnKeys; // 28.05.2022
+
     void Table_ColumnChanging(object sender, DataColumnChangeEventArgs args)
     {
       if (_UpdateSuspendCount > 0)
@@ -413,6 +447,18 @@ namespace FreeLibSet.Models.Tree
           _PrevParentKeys = new Hashtable();
 
         _PrevParentKeys[args.Row[IdColumnPosition]] = args.Row[ParentColumnPosition];
+      }
+      else
+      {
+        for (int i = 0; i < _SortColumnPositions.Length; i++)
+        {
+          if (Object.ReferenceEquals(args.Column, Table.Columns[_SortColumnPositions[i]]))
+          {
+            if (_SortColumnKeys == null)
+              _SortColumnKeys = new Hashtable();
+            _SortColumnKeys[args.Row[IdColumnPosition]] = null;
+          }
+        }
       }
     }
 
@@ -432,13 +478,24 @@ namespace FreeLibSet.Models.Tree
           break;
 
         case DataRowAction.Change:
-          if (_PrevParentKeys == null)
-            _PrevParentKeys = new Hashtable();
           object prevParentKey = parentKey;
-          if (_PrevParentKeys.ContainsKey(args.Row[IdColumnPosition]))
+          if (_PrevParentKeys != null)
           {
-            prevParentKey = _PrevParentKeys[args.Row[IdColumnPosition]];
-            _PrevParentKeys.Remove(args.Row[IdColumnPosition]); // не загромождаем коллекцию
+            if (_PrevParentKeys.ContainsKey(args.Row[IdColumnPosition]))
+            {
+              prevParentKey = _PrevParentKeys[args.Row[IdColumnPosition]];
+              _PrevParentKeys.Remove(args.Row[IdColumnPosition]); // не загромождаем коллекцию
+            }
+          }
+
+          bool sortColumnChanged = false;
+          if (_SortColumnKeys != null)
+          {
+            if (_SortColumnKeys.ContainsKey(args.Row[IdColumnPosition]))
+            {
+              sortColumnChanged = true;
+              _SortColumnKeys.Remove(args.Row[IdColumnPosition]);
+            }
           }
 
           if (!parentKey.Equals(prevParentKey))
@@ -457,9 +514,19 @@ namespace FreeLibSet.Models.Tree
               base.CallStructureChanged(treePath1, treePath2);
             }
           }
-
-          TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromKey(parentKey), new object[] { args.Row });
-          base.OnNodesChanged(args2);
+          else if (sortColumnChanged) // 28.05.2022
+          {
+            TreePath treePath = TreePathFromKey(parentKey);
+            if (treePath.IsEmpty)
+              OnStructureChanged(TreePathEventArgs.Empty);
+            else
+              OnStructureChanged(new TreePathEventArgs(treePath));
+          }
+          else
+          {
+            TreeModelEventArgs args2 = new TreeModelEventArgs(TreePathFromKey(parentKey), new object[] { args.Row });
+            base.OnNodesChanged(args2);
+          }
           break;
       }
     }

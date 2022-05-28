@@ -69,6 +69,7 @@
     <Compile Include="Collections\HashtableTests.cs" />
     <Compile Include="Models\DataTableTreeModelTests.cs" />
     <Compile Include="Models\DataTableTreeModelWithIdsTests.cs" />
+    <Compile Include="Models\TreePathEnumerableTests.cs" />
     <Compile Include="Models\TreePathTests.cs" />
     <Compile Include="Remoting\SerializationToolsTests.cs" />
     <Compile Include="Text\CsvTextConvertTests.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="IO\TempDirectoryTests.cs" />
     <Compile Include="Collections\WeakReferenceCollectionTests.cs" />
     <Compile Include="Text\TextWithRowsTests.cs" />
+    <Compile Include="UICore\DataTableReorderHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">

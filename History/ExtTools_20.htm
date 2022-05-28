@@ -5,7 +5,12 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-04-24T23:33:07.465000000"/>
+	<meta name="changed" content="2022-05-28T17:20:35.530000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -499,12 +504,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -533,6 +538,50 @@
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">318</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">26.05.2022-28.05.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US"><a name="v318p1"></a>1. <span lang="ru-RU">Поддержка
+			ручной сортировки строк в табличном просмотре на основе </span>DataTable.
+			<span lang="ru-RU">Интерфейс IDataReorderHelper, классы
+			DataTableReorderHelper </span>(<span lang="ru-RU">реализация
+			методов взята из </span>EFPDataGridViewCommandItems) <span lang="ru-RU">и
+			DataTableTreeReorderHelper.</span></p>
+			<p><span lang="en-US">2. DataTools.AddTableToDataSet() (<a href="ExtTools_11.htm#v058p3">v.58
+			</a></span><a href="ExtTools_11.htm#v058p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">восстанавливает свойства
+			</span><span lang="en-US">DataView.RowFilter, RowStateFilter </span><span lang="ru-RU">и
+			</span><span lang="en-US">Sort </span><span lang="ru-RU">для
+			</span><span lang="en-US">DataTable.DefaultView </span><span lang="ru-RU">присоединяемой
+			таблицы. Метод </span><span lang="en-US">DataTableCollection.Add()
+			</span><span lang="ru-RU">очищает, по крайней мере, свойство </span><span lang="en-US">Sort.</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Еще одна
+			оптимизация метода </span><span lang="en-US">DataTools.CreateArray&lt;T&gt;()
+			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v187p4"><span lang="en-US">v.187
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span></p>
+			<p lang="en-US"><span lang="ru-RU">4. Метод
+			</span>DataTools.CreateObjectArray()</p>
+			<p>5. Перечислитель <span lang="en-US">TreePathEnumerable (<a href="ExtTools_11.htm#v050p5">v.50
+			</a></span><a href="ExtTools_11.htm#v050p5">п.5</a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">6. </span><span lang="ru-RU">Изменения в
+			</span><span lang="en-US">DataTableTreeModel (<a href="ExtTools_11.htm#v050p6">v.50
+			</a></span><a href="ExtTools_11.htm#v050p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">):</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Значением
+			свойства </span><span lang="en-US">Sort </span><span lang="ru-RU">по
+			умолчанию является </span><span lang="en-US">Table.DefaultView.Sort,
+			</span><span lang="ru-RU">а не пустая строка.</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Отслеживаются
+			изменения в столбцах, используемых для сортировки. При изменении в
+			поле сортировки вызывается событие </span><span lang="en-US">StructureChanged
+			</span><span lang="ru-RU">для родительской строки или всего
+			дерева, а не </span><span lang="en-US">NodesChanged.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -591,14 +640,14 @@
 			</span>Comparer.</p>
 			<p><span lang="en-US">5. </span><span lang="ru-RU">Изменена
 			реализация </span><span lang="en-US">OrderSortedList&lt;TKey,
-			TValue&gt; </span><span lang="ru-RU">для учета компар</span><span lang="ru-RU">ат</span><span lang="ru-RU">ора</span>
+			TValue&gt; </span><span lang="ru-RU">для учета компаратора</span>
 			<span lang="ru-RU">(</span><a href="#v301p18"><span lang="en-US">v.301
 			</span><span lang="ru-RU">п.18</span></a><span lang="ru-RU">)</span><span lang="en-US">.
 			</span><span lang="ru-RU">Также, при установке значения в режиме
 			замены, элемент не перепрыгивает в конец списка (</span><a href="ExtTools_11.htm#v068p1"><span lang="en-US">v.68
-			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">).</span><span lang="en-US">
-			</span><span lang="ru-RU">Общедоступное свойство </span><span lang="en-US">Comparer.</span></p>
-			<p><span lang="en-US">6</span><span lang="en-US">. </span><span lang="ru-RU">Общедоступные
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">).</span>
+			<span lang="ru-RU">Общедоступное свойство </span><span lang="en-US">Comparer.</span></p>
+			<p><span lang="en-US">6. </span><span lang="ru-RU">Общедоступные
 			свойства </span><span lang="en-US">BidirectionalDictionary&lt;TKey,
 			TValue&gt;.KeyComparer </span><span lang="ru-RU">и </span><span lang="en-US">ValueComparer,
 			SingleScopeSortedList.Comparer (<a href="#v301p19">v.301 </a></span><a href="#v301p19"><span lang="ru-RU">п.19</span></a><span lang="en-US">)

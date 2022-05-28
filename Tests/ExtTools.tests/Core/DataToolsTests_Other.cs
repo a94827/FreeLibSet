@@ -626,9 +626,6 @@ namespace ExtTools_tests.Core
     [Test]
     public void AddTableToDataSet_named()
     {
-      DataTable tbl = new DataTable("T1");
-      tbl.Columns.Add("F1", typeof(string));
-
       DataSet ds = new DataSet();
       DataTable tbl01 = CreateTestTable123();
       tbl01.TableName = "T1";
@@ -637,12 +634,46 @@ namespace ExtTools_tests.Core
       tbl02.TableName = "T2";
       ds.Tables.Add(tbl02);
 
+      DataTable tbl = new DataTable("T1");
+      tbl.Columns.Add("F1", typeof(string));
       DataTools.AddTableToDataSet(ds, tbl);
       Assert.AreSame(ds, tbl.DataSet, "DataSet");
       Assert.AreEqual(2, ds.Tables.Count, "Tables.Count");
 
       Assert.IsNull(tbl01.DataSet, "Old table #1 has been removed");
       Assert.AreSame(ds, tbl02.DataSet, "Old table #2 stays in dataset");
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void AddTableToDataSet_DefaultView_Props(bool replace)
+    {
+      DataSet ds = new DataSet();
+      if (replace)
+      {
+        DataTable tblOld = CreateTestTable123();
+        tblOld.TableName = "T1";
+        ds.Tables.Add(tblOld);
+      }
+
+      DataTable tbl = CreateTestTable123();
+      tbl.TableName = "T1";
+      tbl.AcceptChanges();
+      tbl.Rows.Add(10, 11, 12); // в состоянии Added
+      Assert.AreEqual(4, tbl.Rows.Count, "DataTable.RowCount");
+      
+      tbl.DefaultView.Sort = "F1 DESC";
+      tbl.DefaultView.RowFilter = "F3>3"; // первая строка отключена
+      tbl.DefaultView.RowStateFilter = DataViewRowState.Unchanged; // последняя строка отключена
+
+      Assert.AreEqual(2, tbl.DefaultView.Count, "Count before");
+      Assert.AreSame(tbl.Rows[2], tbl.DefaultView[0].Row, "Row1 before");
+      Assert.AreSame(tbl.Rows[1], tbl.DefaultView[1].Row, "Row2 before");
+
+      DataTools.AddTableToDataSet(ds, tbl);
+      Assert.AreEqual(2, tbl.DefaultView.Count, "Count after");
+      Assert.AreSame(tbl.Rows[2], tbl.DefaultView[0].Row, "Row1 after");
+      Assert.AreSame(tbl.Rows[1], tbl.DefaultView[1].Row, "Row2 after");
     }
 
     #endregion

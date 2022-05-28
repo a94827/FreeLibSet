@@ -12,6 +12,7 @@ using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Controls;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -1019,7 +1020,7 @@ namespace FreeLibSet.Forms
 
 #pragma warning disable 0414 // временно
     /// <summary>
-    /// Этот флажок устанавливается в true, когда нажата мышь иди клавиша, что
+    /// Этот флажок устанавливается в true, когда нажата мышь или клавиша, что
     /// означает, что просмотр есть на экране, и смена текущей ячейки выполнена
     /// пользователем
     /// </summary>
@@ -2809,6 +2810,34 @@ namespace FreeLibSet.Forms
     protected override EFPControlCommandItems GetCommandItems()
     {
       return new EFPDataTreeViewCommandItems(this);
+    }
+
+    /// <summary>
+    /// Создает объект, предназначенный для сортировки строк с помощью числового поля.
+    /// Используется при установленном свойстве EFPDataTreeViewCommandItems.ManualOrderColumn.
+    /// Непереопределенный метод создает новый объект DataTableTreeReorderHelper.
+    /// </summary>
+    /// <returns>Объект, реализующий интерфейс IDataReorderHelper </returns>
+    internal protected virtual IDataReorderHelper CreateDataReorderHelper()
+    {
+      if (String.IsNullOrEmpty(CommandItems.ManualOrderColumn))
+        throw new InvalidOperationException("Не установлено свойство ManualOrderColumn");
+
+      IDataTableTreeModel dtmodel = Control.Model as IDataTableTreeModel;
+      if (dtmodel != null)
+        return new DataTableTreeReorderHelper(dtmodel, CommandItems.ManualOrderColumn);
+
+      throw new InvalidOperationException("Модель не присоединена или она не реализует интерфейс IDataTableTreeModel");
+
+      /*
+
+      // Получаем доступ к объекту DataView
+      DataView dv = SourceAsDataView;
+      if (dv == null)
+        throw new InvalidDataSourceException("Нельзя получить DataView");
+
+      return new DataTableReorderHelper(dv, CommandItems.ManualOrderColumn);
+       * */
     }
 
     #endregion

@@ -568,7 +568,7 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new EFPConfigurableDataTreeView Owner { get { return (EFPConfigurableDataTreeView)(base.Owner); } }
+    public new EFPConfigurableDataTreeView Owner { get { return (EFPConfigurableDataTreeView)(base.ControlProvider); } }
 
     #endregion
 

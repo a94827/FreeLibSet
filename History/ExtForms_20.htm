@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-05-21T14:20:25.067000000"/>
+	<meta name="changed" content="2022-05-27T21:35:30.718000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -258,21 +258,41 @@
 			<p lang="en-US" align="center">318</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.05.2022</p>
+			<p lang="en-US" align="center">21.05.2022-26.05.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">В </span>EFPReportGridPage
-			<span lang="ru-RU">убран вызов
-			</span>EFPControlBase.PrepareCommandItems() (<a href="#v317p2">v.317
-			<span lang="ru-RU">п.2</span></a>). <span lang="ru-RU">Перевод
-			списка команд в режим &laquo;Только чтение&raquo; приводил к
-			появлению </span>ObjectReadOnlyException <span lang="ru-RU">в
-			пользовательском обработчике события </span>DocTypeUI.InitView
-			(<a href="ExtDBDocForms_11.htm#v062p11">ExtDBDocForms, v.62 <span lang="ru-RU">п.11</span></a>)<span lang="ru-RU">,
-			если он добавляет команды в локальное меню просмотра</span>.
-			<span lang="ru-RU">Аналогичные изменения в </span>
-			EFPReportTextViewPage <span lang="ru-RU">и</span>
-			EFPReportXmlViewPage<span lang="ru-RU">.</span></p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">В
+			</span><span lang="en-US">EFPReportGridPage </span><span lang="ru-RU">убран
+			вызов </span><span lang="en-US">EFPControlBase.PrepareCommandItems()
+			(<a href="#v317p2">v.317 </a></span><a href="#v317p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Перевод списка команд в режим &laquo;Только
+			чтение&raquo; приводил к появлению </span><span lang="en-US">ObjectReadOnlyException
+			</span><span lang="ru-RU">в пользовательском обработчике события
+			</span><span lang="en-US">DocTypeUI.InitView (<a href="ExtDBDocForms_11.htm#v062p11">ExtDBDocForms,
+			v.62 </a></span><a href="ExtDBDocForms_11.htm#v062p11"><span lang="ru-RU">п.11</span></a><span lang="en-US">)</span><span lang="ru-RU">,
+			если он добавляет команды в локальное меню просмотра</span><span lang="en-US">.
+			</span><span lang="ru-RU">Аналогичные изменения в
+			</span><span lang="en-US">EFPReportTextViewPage </span><span lang="ru-RU">и</span><span lang="en-US">
+			EFPReportXmlViewPage</span><span lang="ru-RU">.</span></p>
+			<p><br/>
+<br/>
+
+			</p>
+			<p>Изменения в ручной сортировке строк с использованием свойства
+			<span lang="en-US">ManualOrderColumn</span></p>
+			<p><span lang="en-US">2. EFPDataGridViewCommandItems </span>использует
+			интерфейс <span lang="en-US">IDataReorderHelper (<a href="ExtTools_20.htm#v318p1">ExtTools,
+			v.318 </a></span><a href="ExtTools_20.htm#v318p1">п.1</a><span lang="en-US">).
+			</span>Событие <span lang="en-US">DataReorderHelperNeeded.
+			</span>Защищенный метод <span lang="en-US">EFPDataGridView.CreateReorderHelper()</span></p>
+			<p>3. Метод <span lang="en-US">EFPDataGridViewCommandItems.
+			</span>InitManualOrderColumnValue()</p>
+			<p><span lang="en-US">4. EFPDataGridView.OnCreated() </span>больше
+			не выполняет автоматическую нумерацию строк. Значение поле
+			<span lang="en-US">ManualOrderColumn </span>сохраняется до тех
+			пор, пока строки не переставляются пользователем.</p>
+			<p lang="en-US">5. EFPInputDataGridView <span lang="ru-RU">инициализирует
+			поле сортировки для новой строки</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -361,8 +381,8 @@
 			</span>EFPFormProvider.InitButtonHandlers()</p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">Метод
 			</span><span lang="en-US">EFPButton.OnClick() </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p2"><span lang="en-US">v.17
-			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">
-			</span><span lang="ru-RU">вызывает </span><span lang="en-US">Form.Close(),
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">вызывает </span><span lang="en-US">Form.Close(),
 			</span><span lang="ru-RU">если нет обработчика события </span><span lang="en-US">Click.</span></p>
 		</td>
 	</tr>

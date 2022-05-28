@@ -332,10 +332,21 @@ namespace FreeLibSet.Forms
 
     void DV_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs args)
     {
-      if (args.ListChangedType == System.ComponentModel.ListChangedType.ItemChanged)
-        _ValidatingResults.Remove(args.NewIndex);
-      else
-        _ValidatingResults.Clear(); // неохота проверять остальные режимы
+      switch (args.ListChangedType)
+      {
+        case System.ComponentModel.ListChangedType.ItemChanged:
+          _ValidatingResults.Remove(args.NewIndex);
+          break;
+        case System.ComponentModel.ListChangedType.ItemAdded:
+          // можно не очищать ValidatingResults.
+          DataRow row = ((DataView)sender)[args.NewIndex].Row;
+          bool otherRowsChanged;
+          CommandItems.InitManualOrderColumnValue(new DataRow[1] { row }, out otherRowsChanged);
+          break;
+        default:// неохота проверять остальные режимы
+          _ValidatingResults.Clear();
+          break;
+      }
     }
 
     /// <summary>

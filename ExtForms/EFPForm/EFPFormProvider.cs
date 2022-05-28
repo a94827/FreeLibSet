@@ -2697,7 +2697,7 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      if (btn.DialogResult == null)
+      if (btn.DialogResult == DialogResult.None)
         return;
 
       if (base.FindControlProvider(btn) == null)

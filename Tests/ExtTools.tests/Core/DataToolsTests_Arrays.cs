@@ -72,15 +72,41 @@ namespace ExtTools_tests.Core
     }
 
     [Test]
-    public void CreateArray_enumerable()
+    public void CreateArray_enumerable([Values(false, true)]bool isEmpty)
     {
       List<int> lst = new List<int>();
-      lst.Add(2);
-      lst.Add(1);
-      lst.Add(3);
+      if (!isEmpty) // Есть специальная оптимизация для пустого перечислителя
+      {
+        lst.Add(2);
+        lst.Add(1);
+        lst.Add(3);
+      }
 
       IEnumerable<int> source = lst;
       int[] a = DataTools.CreateArray<int>(source);
+
+      Assert.AreEqual(lst.Count, a.Length, "Length");
+      for (int i = 0; i < lst.Count; i++)
+        Assert.AreEqual(lst[i], a[i], "Item");
+    }
+
+    #endregion
+
+    #region CreateObjectArray()
+
+    [Test]
+    public void CreateObjectArray([Values(false, true)]bool isEmpty)
+    {
+      List<int> lst = new List<int>();
+      if (!isEmpty) // Есть специальная оптимизация для пустого перечислителя
+      {
+        lst.Add(2);
+        lst.Add(1);
+        lst.Add(3);
+      }
+
+      System.Collections.IEnumerable source = lst;
+      object[] a = DataTools.CreateObjectArray(source);
 
       Assert.AreEqual(lst.Count, a.Length, "Length");
       for (int i = 0; i < lst.Count; i++)

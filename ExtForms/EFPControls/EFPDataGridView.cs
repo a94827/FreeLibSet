@@ -18,6 +18,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Data;
 using FreeLibSet.Shell;
 using FreeLibSet.Logging;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -1988,7 +1989,7 @@ namespace FreeLibSet.Forms
     //private bool _VisibleHasChanged;
 
     /// <summary>
-    /// Этот флажок устанавливается в true, когда нажата мышь иди клавиша, что
+    /// Этот флажок устанавливается в true, когда нажата мышь или клавиша, что
     /// означает, что просмотр есть на экране, и смена текущей ячейки выаолнена
     /// пользователем
     /// </summary>
@@ -6033,6 +6034,26 @@ namespace FreeLibSet.Forms
       //CommandItems.AddClickHandler(ResetCurrentIncSearchColumn);
     }
 
+    /// <summary>
+    /// Создает объект, предназначенный для сортировки строк с помощью числового поля.
+    /// Используется при установленном свойстве EFPDataGridViewCommandItems.ManualOrderColumn.
+    /// Непереопределенный метод создает новый объект DataTableReorderHelper.
+    /// Переопределяется, если табличный просмотр предназначен для просмотра иерархических данных, а не плоской таблицы
+    /// </summary>
+    /// <returns>Объект, реализующий интерфейс IDataReorderHelper </returns>
+    internal protected virtual IDataReorderHelper CreateDataReorderHelper()
+    {
+      // Получаем доступ к объекту DataView
+      DataView dv = SourceAsDataView;
+      if (dv == null)
+        throw new InvalidDataSourceException("Нельзя получить DataView");
+
+      if (String.IsNullOrEmpty(CommandItems.ManualOrderColumn))
+        throw new InvalidOperationException("Не установлено свойство ManualOrderColumn");
+
+      return new DataTableReorderHelper(dv, CommandItems.ManualOrderColumn);
+    }
+
     #endregion
 
     #region Поддержка Inline-редактирования
@@ -8150,7 +8171,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Перейти к следующей иди предыдущей строке с ошибкой
+    /// Перейти к следующей или предыдущей строке с ошибкой
     /// </summary>
     /// <param name="fromTableBegin">true - перейти к первой или последней строке в таблице с подходящим условием,
     /// false - перейти к следующей или предыдущей относительно текущей строки</param>

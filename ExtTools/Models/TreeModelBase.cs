@@ -823,4 +823,220 @@ namespace FreeLibSet.Models.Tree
     #endregion
   }
 
+  /// <summary>
+  /// Рекурсивный перечислитель по модели дерева.
+  /// Элементами перечисления являются пути TreePath.
+  /// Этот перечислитель следует применять с осторожностью, так как могут быть иерархические модели с бесконечным
+  /// вложением узлов.
+  /// </summary>
+  public struct TreePathEnumerable : IEnumerable<TreePath>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает перечислитель, который перебирает все пути, которые являются дочерними (включая наследников) по отношению к заданному.
+    /// Сам путь <paramref name="parentPath"/> не входит в перечисление.
+    /// </summary>
+    /// <param name="model">Модель</param>
+    /// <param name="parentPath">Корневой узел</param>
+    public TreePathEnumerable(ITreeModel model, TreePath parentPath)
+    {
+      if (model == null)
+        throw new ArgumentNullException("model");
+      _Model = model;
+      _ParentPath = parentPath;
+    }
+
+    /// <summary>
+    /// Создает перечислитель, который перебирает все пути модели дерева.
+    /// </summary>
+    /// <param name="model">Модель</param>
+    public TreePathEnumerable(ITreeModel model)
+      : this(model, TreePath.Empty)
+    {
+    }
+
+    #endregion
+
+    #region Поля
+
+    private ITreeModel _Model;
+    private TreePath _ParentPath;
+
+    #endregion
+
+    /// <summary>
+    /// Состояние для одного уровня
+    /// Должно быть классом, а не структурой, чтобы можно было обновлять поле CurrentIndex.
+    /// </summary>
+    private class OneLevelInfo
+    {
+      #region Поля
+
+      /// <summary>
+      /// Узлы, возвращаемые ITreeModel.GetChildren().
+      /// Можно было бы просто хранить ITreeModel.GetChildren().GetEnumerator(), но тогда придется выполнять вызов Dispose()
+      /// </summary>
+      public object[] Nodes;
+
+      public int CurrentIndex;
+
+      public TreePath ParentPath;
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Структура перечислителя
+    /// </summary>
+    public struct Enumerator : IEnumerator<TreePath>
+    {
+      #region Конструктор
+
+      /// <summary>
+      /// Конструктор перечислителя
+      /// </summary>
+      /// <param name="model"></param>
+      /// <param name="parentPath"></param>
+      public Enumerator(ITreeModel model, TreePath parentPath)
+      {
+        _Model = model;
+        _ParentPath = parentPath;
+        _Stack = new Stack<OneLevelInfo>();
+        _GetChildRequired = false; // чтобы компилятор не ругался
+      }
+
+      #endregion
+
+      #region Поля
+
+      private ITreeModel _Model;
+      private TreePath _ParentPath;
+      private Stack<OneLevelInfo> _Stack;
+
+      /// <summary>
+      /// Переключение между переходом к следующему или к дочернему узлу.
+      /// Сохраняет состояние между вызовами GetNext.
+      /// Если true, то очередной вызов должен вызвать ITreeModel.GetChildren().
+      /// Если false, то требуется переход к следующему узлу в пределах текущего
+      /// </summary>
+      private bool _GetChildRequired;
+
+      #endregion
+
+      #region IEnumerator<TreePath> Members
+
+      /// <summary>
+      /// Переход к следующему узлу дерева
+      /// </summary>
+      /// <returns>true, если есть очередной узел</returns>
+      public bool MoveNext()
+      {
+        if (_Stack == null)
+          return false; // уже закончили перечислять
+
+        if (_Stack.Count == 0)
+          PushNodes(_ParentPath);
+
+        while (_Stack.Count > 0)
+        {
+          if (_GetChildRequired)
+            PushNodes(Current);
+
+          OneLevelInfo level = _Stack.Peek();
+
+          level.CurrentIndex++;
+          if (level.CurrentIndex >= level.Nodes.Length)
+            _Stack.Pop();
+          else
+          {
+            _GetChildRequired = true;
+            return true;
+          }
+        }
+        
+        // Перебор закончен
+        _Stack = null;
+        return false;
+      }
+
+      private void PushNodes(TreePath parentPath)
+      {
+        OneLevelInfo level = new OneLevelInfo();
+        level.ParentPath = parentPath;
+        level.CurrentIndex = -1;
+
+        // Для TreePath.Empty нельзя вызывать IsLeaf().
+        bool isLeaf;
+        if (parentPath.IsEmpty)
+          isLeaf = false;
+        else
+          isLeaf = _Model.IsLeaf(parentPath);
+
+        if (isLeaf)
+          level.Nodes = DataTools.EmptyObjects;
+        else
+          level.Nodes = DataTools.CreateObjectArray(_Model.GetChildren(parentPath));
+        _Stack.Push(level);
+        _GetChildRequired = false;
+      }
+
+      /// <summary>
+      /// Возвращает очередной узел
+      /// </summary>
+      public TreePath Current
+      {
+        get
+        {
+          if (_Stack == null)
+            return TreePath.Empty; // можно было бы выбросить исключение
+
+          OneLevelInfo level = _Stack.Peek();
+          return new TreePath(level.ParentPath, level.Nodes[level.CurrentIndex]);
+        }
+      }
+
+      /// <summary>
+      /// Ничего не делает
+      /// </summary>
+      public void Dispose()
+      {
+      }
+
+      object IEnumerator.Current
+      {
+        get { return Current; }
+      }
+
+      void IEnumerator.Reset()
+      {
+        _Stack = new Stack<OneLevelInfo>();
+      }
+
+      #endregion
+    }
+
+    #region IEnumerable<TreePath> Members
+
+    /// <summary>
+    /// Создает перечислитель
+    /// </summary>
+    /// <returns></returns>
+    public Enumerator GetEnumerator()
+    {
+      return new Enumerator(_Model, _ParentPath);
+    }
+
+    IEnumerator<TreePath> IEnumerable<TreePath>.GetEnumerator()
+    {
+      return new Enumerator(_Model, _ParentPath);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return new Enumerator(_Model, _ParentPath);
+    }
+
+    #endregion
+  }
 }

@@ -19,6 +19,7 @@ using System.Globalization;
 using System.ComponentModel;
 using FreeLibSet.Core;
 using FreeLibSet.Text;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -97,6 +98,35 @@ namespace FreeLibSet.Forms
     /// </summary>
     All = Text | CSV | HTML
   }
+
+  #endregion
+
+  #region DataReorderHelperNeededEventHandler
+
+  /// <summary>
+  /// Аргументы события EFPDataGridViewCommandItems.DataReorderHelperNeeded
+  /// </summary>
+  public class DataReorderHelperNeededEventArgs : EventArgs
+  {
+    #region Свойства
+
+    /// <summary>
+    /// Сюда обработчик события может поместить новый экземпляр класса, реализующего интерфейс IDataReorderHelper,
+    /// например, DataTableTreeReorderHelper.
+    /// Если останется значение по умолчанию null, то будет создан стандартный объект, обычно DataTableReorderHelper
+    /// </summary>
+    public IDataReorderHelper Helper { get { return _Helper; } set { _Helper = value; } }
+    private IDataReorderHelper _Helper;
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Делегат события EFPDataGridViewCommandItems.DataReorderHelperNeeded
+  /// </summary>
+  /// <param name="sender">Ссылка на EFPDataGridViewCommandItems</param>
+  /// <param name="args">Аргументы события</param>
+  public delegate void DataReorderHelperNeededEventHandler(object sender, DataReorderHelperNeededEventArgs args);
 
   #endregion
 
@@ -485,171 +515,6 @@ namespace FreeLibSet.Forms
       }
       base.Dispose(disposing);
     }
-
-    #endregion
-
-    #region Управление наличием команд
-
-    /// <summary>
-    /// true, если нажатие клавиши Enter не обрабатывается, а передается
-    /// форме для нажатия кнопки по умолчанию.
-    /// false, если нажатие Enter выполняет редактирование ячейки таблицы
-    /// По умолчанию - false
-    /// </summary>
-    public bool EnterAsOk
-    {
-      get
-      {
-        return _EnterAsOk;
-      }
-      set
-      {
-        CheckNotReadOnly();
-        _EnterAsOk = value;
-      }
-    }
-    private bool _EnterAsOk;
-
-
-
-    /// <summary>
-    /// True, если есть команды "Редактировать", "Создать", "Удалить", "Просмотр"
-    /// По умолчанию - true
-    /// </summary>
-    public bool UseEditView
-    {
-      get { return _UseEditView; }
-      set
-      {
-        CheckNotReadOnly();
-        _UseEditView = value;
-      }
-    }
-    private bool _UseEditView;
-
-    /// <summary>
-    /// True, если есть команда "Обновить" (F5)
-    /// По умолчанию - true
-    /// </summary>
-    public bool UseRefresh
-    {
-      get { return _UseRefresh; }
-      set
-      {
-        CheckNotReadOnly();
-        _UseRefresh = value;
-      }
-    }
-    private bool _UseRefresh;
-
-    /// <summary>
-    /// True, если есть команда "Выбрать все строки" (Ctrl-A)
-    /// </summary>
-    public bool UseSelectAll
-    {
-      get { return _UseSelectAll; }
-      set
-      {
-        CheckNotReadOnly();
-        _UseSelectAll = value;
-      }
-    }
-    private bool _UseSelectAll;
-
-    /// <summary>
-    /// Если установлено в true, то доступны команды ручной сортировки строк.
-    /// Сортировка основывается на порядке строк в коллекции, а не на значении
-    /// столбца. При сортировке строки переставляются местами внутри объекта
-    /// DataGridViewRowCollection
-    /// </summary>
-    public bool ManualOrderRows
-    {
-      get { return _ManualOrderRows; }
-      set
-      {
-        CheckNotReadOnly();
-        _ManualOrderRows = value;
-      }
-    }
-    private bool _ManualOrderRows;
-
-    /// <summary>
-    /// Массив строк табличного просмотра в порядке по умолчанию. Свойство действует
-    /// при ManualOrderRows=true. Если массив присвоен, то действует команда
-    /// "Восстановить порядок по умолчанию"
-    /// </summary>
-    public DataGridViewRow[] DefaultManualOrderRows { get { return _DefaultManualOrderRows; } set { _DefaultManualOrderRows = value; } }
-    private DataGridViewRow[] _DefaultManualOrderRows;
-
-    /// <summary>
-    /// Имя числового столбца, который определяет порядок строк при ручной сортировке
-    /// Если задано, то в меню есть команды ручной сортировки
-    /// </summary>
-    public string ManualOrderColumn
-    {
-      get { return _ManualOrderColumn; }
-      set
-      {
-        CheckNotReadOnly();
-        _ManualOrderColumn = value;
-
-        if (!String.IsNullOrEmpty(value))
-          ControlProvider.AutoSort = false; // 21.07.2021
-      }
-    }
-    private string _ManualOrderColumn;
-
-    /// <summary>
-    /// Имя числового столбца, который определяет порядок строк по умолчанию при ручной
-    /// сортировке. Свойство действует при непустом значении ManualOrderColumn.
-    /// Если имя присвоено, то действует команда "Восстановить порядок по умолчанию"
-    /// </summary>
-    public string DefaultManualOrderColumn
-    {
-      get { return _DefaultManualOrderColumn; }
-      set
-      {
-        CheckNotReadOnly();
-        _DefaultManualOrderColumn = value;
-      }
-    }
-    private string _DefaultManualOrderColumn;
-
-    /// <summary>
-    /// True (по умолчанию), если при установленном свойстве UseRowImages
-    /// нужно выводит команды "Перейти к следующей / предыдущей строке с ошибками".
-    /// Установите свойство в false, если картинки в заголовках строк используются
-    /// для других целей, а не для показа ошибок.
-    /// Свойство игнорируется, если UseRowImages=false
-    /// </summary>
-    public bool UseRowErrors
-    {
-      get { return _UseRowErrors; }
-      set
-      {
-        CheckNotReadOnly();
-        _UseRowErrors = value;
-      }
-    }
-    private bool _UseRowErrors;
-
-    /// <summary>
-    /// Если установлено (по умолчанию), а также установлены свойства UseRowErrors
-    /// и UseRowImages, то в подменю "Строки с ошибками" есть команда
-    /// "Показать список".
-    /// Это свойство сбрасывается в false в самом просмотре списка ошибок EFPErrorDataGridView, т.к.
-    /// рекурсивный вызов не имеет смысла
-    /// </summary>
-    public bool UseRowErrorsListView
-    {
-      get { return _UseRowErrorsListView; }
-      set
-      {
-        CheckNotReadOnly();
-        _UseRowErrorsListView = value;
-      }
-    }
-    private bool _UseRowErrorsListView;
 
     #endregion
 
@@ -1093,6 +958,44 @@ namespace FreeLibSet.Forms
 
     #region Команды редактирования
 
+    /// <summary>
+    /// true, если нажатие клавиши Enter не обрабатывается, а передается
+    /// форме для нажатия кнопки по умолчанию.
+    /// false, если нажатие Enter выполняет редактирование ячейки таблицы
+    /// По умолчанию - false
+    /// </summary>
+    public bool EnterAsOk
+    {
+      get
+      {
+        return _EnterAsOk;
+      }
+      set
+      {
+        CheckNotReadOnly();
+        _EnterAsOk = value;
+      }
+    }
+    private bool _EnterAsOk;
+
+
+
+    /// <summary>
+    /// True, если есть команды "Редактировать", "Создать", "Удалить", "Просмотр"
+    /// По умолчанию - true
+    /// </summary>
+    public bool UseEditView
+    {
+      get { return _UseEditView; }
+      set
+      {
+        CheckNotReadOnly();
+        _UseEditView = value;
+      }
+    }
+    private bool _UseEditView;
+
+
     private EFPCommandItem ciEdit, ciEdit2, ciInsert, ciInsertCopy, ciDelete, ciView;
 
     /// <summary>
@@ -1186,8 +1089,6 @@ namespace FreeLibSet.Forms
       _CellDoubleClicked = false;
     }
 
-
-
     private void ciEdit_Click(object sender, EventArgs args)
     {
       try
@@ -1210,7 +1111,6 @@ namespace FreeLibSet.Forms
       {
         EFPApp.ShowException(e, "Ошибка при добавлении строки данных");
       }
-
     }
 
     private void ciInsertCopy_Click(object sender, EventArgs args)
@@ -1888,6 +1788,8 @@ namespace FreeLibSet.Forms
 
     #region Ручная сортировка с помощью стрелочек
 
+    #region Общая часть
+
     internal EFPCommandItem ciSortMoveUp, ciSortMoveDown, ciSortRestore;
 
     void ciSortMoveUp_Click(object sender, EventArgs args)
@@ -1925,6 +1827,306 @@ namespace FreeLibSet.Forms
           ManualOrderChanged(this, EventArgs.Empty);
       }
     }
+
+    void ciSortRestore_Click(object sender, EventArgs args)
+    {
+      int oldColIdx = ControlProvider.CurrentColumnIndex;
+
+      bool changed;
+      if (ManualOrderRows)
+        changed = DoSortRestoreRows();
+      else
+        changed = DoSortRestoreColumn();
+
+      // Обновляем табличный просмотр
+      if (changed)
+      {
+        ControlProvider.CurrentColumnIndex = oldColIdx;
+
+        if (ManualOrderChanged != null)
+          ManualOrderChanged(this, EventArgs.Empty);
+      }
+    }
+
+    /// <summary>
+    /// Вызывается, когда выполнена ручная сортировка строк (по окончании изменения
+    /// значений поля для всех строк)
+    /// </summary>
+    public event EventHandler ManualOrderChanged;
+
+    #endregion
+
+    #region Перестановка строк DataGridViewRow
+
+    /// <summary>
+    /// Если установлено в true, то доступны команды ручной сортировки строк.
+    /// Сортировка основывается на порядке строк в коллекции, а не на значении
+    /// столбца. При сортировке строки переставляются местами внутри объекта
+    /// DataGridViewRowCollection
+    /// </summary>
+    public bool ManualOrderRows
+    {
+      get { return _ManualOrderRows; }
+      set
+      {
+        CheckNotReadOnly();
+        _ManualOrderRows = value;
+      }
+    }
+    private bool _ManualOrderRows;
+
+    /// <summary>
+    /// Массив строк табличного просмотра в порядке по умолчанию. Свойство действует
+    /// при ManualOrderRows=true. Если массив присвоен, то действует команда
+    /// "Восстановить порядок по умолчанию"
+    /// </summary>
+    public DataGridViewRow[] DefaultManualOrderRows { get { return _DefaultManualOrderRows; } set { _DefaultManualOrderRows = value; } }
+    private DataGridViewRow[] _DefaultManualOrderRows;
+
+
+    /// <summary>
+    /// Изменение порядка строк на основании их расположения в коллекции
+    /// </summary>
+    /// <param name="down">true - сдвиг вниз, false -  сдвиг вверх</param>
+    /// <returns>true, если перемещение было выполнено</returns>
+    private bool DoReorderByGridRows(bool down)
+    {
+      // 1. Загружаем полный список строк DataGridViewRow в массив
+      DataGridViewRow[] rows1 = new DataGridViewRow[ControlProvider.Control.Rows.Count];
+      ControlProvider.Control.Rows.CopyTo(rows1, 0);
+
+      // 2. Запоминаем выбранные строки
+      DataGridViewRow[] selRows = ControlProvider.SelectedGridRows;
+      // 3. Получаем позиции выбранных строк в массиве всех строк
+      int[] selPoss = ControlProvider.SelectedRowIndices;
+      if (selPoss.Length == 0)
+      {
+        EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
+        return false;
+      }
+
+      // 4. Проверяем, что не уперлись в границы списка
+      bool lBound = false;
+      if (down)
+      {
+        if (selPoss[selPoss.Length - 1] == rows1.Length - 1)
+          lBound = true;
+      }
+      else
+      {
+        if (selPoss[0] == 0)
+          lBound = true;
+      }
+      if (lBound)
+      {
+        string msg = "Нельзя передвинуть ";
+        if (selPoss.Length > 1)
+          msg += "выбранные строки ";
+        else
+          msg += "выбранную строку ";
+        if (down)
+          msg += "вниз";
+        else
+          msg += "вверх";
+        EFPApp.ShowTempMessage(msg);
+        return false;
+      }
+
+      // 5. Подготавливаем массив строк для их размещения в новом порядке
+      // Значения null в этом массиве означают временно пустые позиции
+      DataGridViewRow[] rows2 = new DataGridViewRow[rows1.Length];
+
+      // 6. Копируем в Rows2 строки из Rows1 со сдвигом для позиций, существующих
+      // в SelRows.
+      // В процессе перемещения будем очищать массив Rows1
+      int delta = down ? 1 : -1; // значение смещения
+      int i;
+      for (i = 0; i < selPoss.Length; i++)
+      {
+        int thisPos = selPoss[i];
+        rows2[thisPos + delta] = rows1[thisPos];
+        rows1[thisPos] = null;
+      }
+
+      // 7. Перебираем исходный массив и оставшиеся непустые строки размещаем в
+      // новом массиве, отыскивая пустые места. Для этого используем переменную FreePos
+      // для указания на очередную пустую позицию второго массива
+      int freePos = 0;
+      for (i = 0; i < rows1.Length; i++)
+      {
+        if (rows1[i] == null) // перемещенная позиция
+          continue;
+        // Поиск места
+        while (rows2[freePos] != null)
+          freePos++;
+        // Нашли дырку
+        rows2[freePos] = rows1[i];
+        freePos++;
+      }
+
+      // 8. Замещаем коллекцию строк
+      ControlProvider.Control.Rows.Clear();
+      ControlProvider.Control.Rows.AddRange(rows2);
+
+      // 9. Восстанавливаем выбор
+      ControlProvider.SelectedGridRows = selRows;
+      return true;
+    }
+
+    /// <summary>
+    /// Восстановление порядка по умолчанию на основании DefaultManualOrderRows
+    /// </summary>
+    /// <returns></returns>
+    private bool DoSortRestoreRows()
+    {
+      if (DefaultManualOrderRows == null)
+        throw new NullReferenceException("Свойство DefaultManulOrderRows не установлено");
+
+      // 1. Загружаем полный список строк DataGridViewRow в массив
+      DataGridViewRow[] rows1 = new DataGridViewRow[ControlProvider.Control.Rows.Count];
+      ControlProvider.Control.Rows.CopyTo(rows1, 0);
+
+      // 2. Запоминаем выбранные строки
+      DataGridViewRow[] selRows = ControlProvider.SelectedGridRows;
+
+      // 3. Подготавливаем массив строк для их размещения в новом порядке
+      // Значения null в этом массиве означают временно пустые позиции
+      DataGridViewRow[] rows2 = new DataGridViewRow[rows1.Length];
+
+      // 4. Копируем строки из массива по умолчанию
+      int i;
+      int cnt = 0;
+      bool changed = false;
+      for (i = 0; i < DefaultManualOrderRows.Length; i++)
+      {
+        int thisPos = Array.IndexOf<DataGridViewRow>(rows1, DefaultManualOrderRows[i]);
+        if (thisPos < 0)
+          continue; // Ошибка
+
+        rows2[cnt] = rows1[thisPos];
+        rows1[thisPos] = null;
+        if (cnt != thisPos)
+          changed = true;
+        cnt++;
+      }
+
+      // 5. Копируем "лишние" строки, которых нет в массиве по умолчанию
+      for (i = 0; i < rows1.Length; i++)
+      {
+        if (rows1[i] != null)
+        {
+          rows2[cnt] = rows1[i];
+          if (cnt != i)
+            changed = true;
+          cnt++;
+        }
+      }
+
+      if (!changed)
+        return false;
+
+      // 6. Замещаем коллекцию строк
+      ControlProvider.Control.Rows.Clear();
+      ControlProvider.Control.Rows.AddRange(rows2);
+
+      // 7. Восстанавливаем выбор
+      ControlProvider.SelectedGridRows = selRows;
+      return true;
+    }
+
+    #endregion
+
+    #region Перестановка с помощью числового поля
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя числового столбца, который определяет порядок строк при ручной сортировке
+    /// Если задано, то в меню есть команды ручной сортировки
+    /// </summary>
+    public string ManualOrderColumn
+    {
+      get { return _ManualOrderColumn; }
+      set
+      {
+        CheckNotReadOnly();
+        _ManualOrderColumn = value;
+
+        if (!String.IsNullOrEmpty(value))
+          ControlProvider.AutoSort = false; // 21.07.2021
+      }
+    }
+    private string _ManualOrderColumn;
+
+    /// <summary>
+    /// Имя числового столбца, который определяет порядок строк по умолчанию при ручной
+    /// сортировке. Свойство действует при непустом значении ManualOrderColumn.
+    /// Если имя присвоено, то действует команда "Восстановить порядок по умолчанию"
+    /// </summary>
+    public string DefaultManualOrderColumn
+    {
+      get { return _DefaultManualOrderColumn; }
+      set
+      {
+        CheckNotReadOnly();
+        _DefaultManualOrderColumn = value;
+      }
+    }
+    private string _DefaultManualOrderColumn;
+
+    #endregion
+
+    #region Событие DataReorderHelperNeeded
+
+    /// <summary>
+    /// Событие вызывается при выполнении команд ручной сортировки, если установлено свойство ManualOrderColumn.
+    /// Обработчик события может создать собственный экземпляр и установить свойство Helper.
+    /// Если обработчика нет, или он не создал объект, то создается объект по умолчанию
+    /// </summary>
+    public event DataReorderHelperNeededEventHandler DataReorderHelperNeeded;
+
+    /// <summary>
+    /// Вызывает обработчик события DataReorderHelperNeeded.
+    /// Если IDataReorderHelper не получен, объект создается вызовом метода EFPDataGridView.CreateDataReorderHelper().
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnDataReorderHelperNeeded(DataReorderHelperNeededEventArgs args)
+    {
+      if (DataReorderHelperNeeded != null)
+        DataReorderHelperNeeded(this, args);
+      if (args.Helper == null)
+        args.Helper = ControlProvider.CreateDataReorderHelper();
+    }
+
+    /// <summary>
+    /// Создает объект, реализующий интерфейс IDataReorderHelper.
+    /// Если свойство ManualOrderColumn не установлено, выбрасывается исключение.
+    /// </summary>
+    /// <returns>Объект IDataReorderHelper</returns>
+    public IDataReorderHelper CreateDataReorderHelper()
+    {
+      DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
+      OnDataReorderHelperNeeded(args);
+      if (args.Helper == null)
+        throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
+      return args.Helper;
+    }
+
+    /// <summary>
+    /// Создает объект, реализующий интерфейс IDataReorderHelper.
+    /// Если свойство ManualOrderColumn не установлено, выбрасывается исключение.
+    /// Эта перегрузка используется для реализации обработчика события у другого объекта EFPDataGrid/TreeViewCommandItems,
+    /// если оба просмотра должны использовать одинаковые вспомогательные объекты для сортировки строк.
+    /// </summary>
+    /// <param name="sender">Не используется</param>
+    /// <param name="args">Аргументы события</param>
+    public void CreateDataReorderHelper(object sender, DataReorderHelperNeededEventArgs args)
+    {
+      args.Helper = CreateDataReorderHelper();
+    }
+
+    #endregion
+
 
 #if USE_PROPS
 
@@ -2093,21 +2295,9 @@ namespace FreeLibSet.Forms
     /// <returns>true, если перемещение было выполнено</returns>
     private bool DoReorderByDataColumn(bool down)
     {
-      int i;
+      IDataReorderHelper helper = CreateDataReorderHelper();
 
-      // Алгоритм взят из программы BAVAMBUX (модуль SERVER\iGridReorder.pas)
-      // Упрощен, т.к. массивы строк DataRow могут содержать значение null,
-      // в отличие от оригинала
-
-      // Получаем доступ к объекту DataView
-      DataView dv = ControlProvider.SourceAsDataView;
-      if (dv == null)
-        throw new InvalidDataSourceException("Нельзя получить DataView");
-
-      // 1. Загружаем полный список строк DataRow в массив
-      DataRow[] rows1 = DataTools.GetDataViewRows(dv);
-
-      // 2. Загружаем выбранные строки
+      // Загружаем выбранные строки
       DataRow[] selRows = ControlProvider.SelectedDataRows;
       if (selRows.Length == 0)
       {
@@ -2115,24 +2305,13 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      // 3. Получаем позиции выбранных строк в массиве всех строк
-      int[] selPoss = new int[selRows.Length];
-      for (i = 0; i < selRows.Length; i++)
-        selPoss[i] = Array.IndexOf<DataRow>(rows1, selRows[i]);
-
-      // 4. Проверяем, что не уперлись в границы списка
-      bool lBound = false;
+      bool res;
       if (down)
-      {
-        if (selPoss[selPoss.Length - 1] == rows1.Length - 1)
-          lBound = true;
-      }
+        res = helper.MoveDown(selRows);
       else
-      {
-        if (selPoss[0] == 0)
-          lBound = true;
-      }
-      if (lBound)
+        res = helper.MoveUp(selRows);
+
+      if (!res)
       {
         string msg = "Нельзя передвинуть ";
         if (selRows.Length > 1)
@@ -2147,177 +2326,14 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      // 5. Подготавливаем массив строк для их размещения в новом порядке
-      // Значения null в этом массиве означают временно пустые позиции
-      DataRow[] rows2 = new DataRow[rows1.Length];
+      // Обновляем просмотр
+      ControlProvider.Control.Invalidate();
+      ControlProvider.SelectedDataRows = selRows; // 26.10.2017
 
-      // 6. Копируем в Rows2 строки из Rows1 со сдвигом для позиций, существующих
-      // в SelRows.
-      // В процессе перемещения будем очищать массив Rows1
-      int delta = down ? 1 : -1; // значение смещения
-      for (i = 0; i < selPoss.Length; i++)
-      {
-        int thisPos = selPoss[i];
-        rows2[thisPos + delta] = rows1[thisPos];
-        rows1[thisPos] = null;
-      }
-
-      // 7. Перебираем исходный массив и оставшиеся непустые строки размещаем в
-      // новом массиве, отыскивая пустые места. Для этого используем переменную FreePos
-      // для указания на очередную пустую позицию второго массива
-      int freePos = 0;
-      for (i = 0; i < rows1.Length; i++)
-      {
-        if (rows1[i] == null) // перемещенная позиция
-          continue;
-        // Поиск места
-        while (rows2[freePos] != null)
-          freePos++;
-        // Нашли дырку
-        rows2[freePos] = rows1[i];
-        freePos++;
-      }
-
-      // 8. Записываем номера строк в поле согласно новому порядку в Rows2
-      bool changed = false;
-      for (i = 0; i < rows2.Length; i++)
-      {
-        if (DataTools.GetInt(rows2[i], ManualOrderColumn) != (i + 1))
-        {
-          rows2[i][ManualOrderColumn] = i + 1;
-          changed = true;
-        }
-      }
-
-      // 9. Обновляем просмотр
-      if (changed)
-      {
-        ControlProvider.Control.Invalidate();
-        ControlProvider.SelectedDataRows = selRows; // 26.10.2017
-      }
-      //if (Owner.Control.CurrentCell != null)
-      //{
-      //  if (Owner.Control.CurrentCell.IsInEditMode)
-      //  {
-      //    DataGridViewCell Cell = Owner.Control.CurrentCell;
-      //    Owner.Control.CurrentCell = null;
-      //    Owner.Control.CurrentCell = Cell;
-      //  }
-      //}
-
-      return changed;
-    }
-
-#endif
-
-    /// <summary>
-    /// Изменение порядка строк на основании их расположения в коллекции
-    /// </summary>
-    /// <param name="down">true - сдвиг вниз, false -  сдвиг вверх</param>
-    /// <returns>true, если перемещение было выполнено</returns>
-    private bool DoReorderByGridRows(bool down)
-    {
-      // 1. Загружаем полный список строк DataGridViewRow в массив
-      DataGridViewRow[] rows1 = new DataGridViewRow[ControlProvider.Control.Rows.Count];
-      ControlProvider.Control.Rows.CopyTo(rows1, 0);
-
-      // 2. Запоминаем выбранные строки
-      DataGridViewRow[] selRows = ControlProvider.SelectedGridRows;
-      // 3. Получаем позиции выбранных строк в массиве всех строк
-      int[] selPoss = ControlProvider.SelectedRowIndices;
-      if (selPoss.Length == 0)
-      {
-        EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
-        return false;
-      }
-
-      // 4. Проверяем, что не уперлись в границы списка
-      bool lBound = false;
-      if (down)
-      {
-        if (selPoss[selPoss.Length - 1] == rows1.Length - 1)
-          lBound = true;
-      }
-      else
-      {
-        if (selPoss[0] == 0)
-          lBound = true;
-      }
-      if (lBound)
-      {
-        string msg = "Нельзя передвинуть ";
-        if (selPoss.Length > 1)
-          msg += "выбранные строки ";
-        else
-          msg += "выбранную строку ";
-        if (down)
-          msg += "вниз";
-        else
-          msg += "вверх";
-        EFPApp.ShowTempMessage(msg);
-        return false;
-      }
-
-      // 5. Подготавливаем массив строк для их размещения в новом порядке
-      // Значения null в этом массиве означают временно пустые позиции
-      DataGridViewRow[] rows2 = new DataGridViewRow[rows1.Length];
-
-      // 6. Копируем в Rows2 строки из Rows1 со сдвигом для позиций, существующих
-      // в SelRows.
-      // В процессе перемещения будем очищать массив Rows1
-      int delta = down ? 1 : -1; // значение смещения
-      int i;
-      for (i = 0; i < selPoss.Length; i++)
-      {
-        int thisPos = selPoss[i];
-        rows2[thisPos + delta] = rows1[thisPos];
-        rows1[thisPos] = null;
-      }
-
-      // 7. Перебираем исходный массив и оставшиеся непустые строки размещаем в
-      // новом массиве, отыскивая пустые места. Для этого используем переменную FreePos
-      // для указания на очередную пустую позицию второго массива
-      int freePos = 0;
-      for (i = 0; i < rows1.Length; i++)
-      {
-        if (rows1[i] == null) // перемещенная позиция
-          continue;
-        // Поиск места
-        while (rows2[freePos] != null)
-          freePos++;
-        // Нашли дырку
-        rows2[freePos] = rows1[i];
-        freePos++;
-      }
-
-      // 8. Замещаем коллекцию строк
-      ControlProvider.Control.Rows.Clear();
-      ControlProvider.Control.Rows.AddRange(rows2);
-
-      // 9. Восстанавливаем выбор
-      ControlProvider.SelectedGridRows = selRows;
       return true;
     }
 
-    void ciSortRestore_Click(object sender, EventArgs args)
-    {
-      int oldColIdx = ControlProvider.CurrentColumnIndex;
-
-      bool changed;
-      if (ManualOrderRows)
-        changed = DoSortRestoreRows();
-      else
-        changed = DoSortRestoreColumn();
-
-      // Обновляем табличный просмотр
-      if (changed)
-      {
-        ControlProvider.CurrentColumnIndex = oldColIdx;
-
-        if (ManualOrderChanged != null)
-          ManualOrderChanged(this, EventArgs.Empty);
-      }
-    }
+#endif
 
 #if USE_PROPS
     /// <summary>
@@ -2387,111 +2403,71 @@ namespace FreeLibSet.Forms
     {
       if (String.IsNullOrEmpty(DefaultManualOrderColumn))
         throw new NullReferenceException("Свойство DefaultManualOrderColumn не установлено");
-      int i;
 
-
-      // Получаем доступ к объекту DataView
-      DataView dv = ControlProvider.SourceAsDataView;
-      if (dv == null)
-        throw new InvalidDataSourceException("Нельзя получить DataView");
-
-      // 1. Загружаем полный список строк DataRow в массив
-      DataRow[] rows1 = DataTools.GetDataViewRows(dv);
-
-      // 2. Копируем значения поля сортировки по умолчанию
-      bool changed = false;
-      for (i = 0; i < rows1.Length; i++)
+      DataRow[] desiredOrder;
+      using (DataView dv = new DataView(ControlProvider.SourceAsDataTable))
       {
-        int oldOrder = DataTools.GetInt(rows1[i], ManualOrderColumn);
-        int newOrder = DataTools.GetInt(rows1[i], DefaultManualOrderColumn);
-        if (newOrder != oldOrder)
-        {
-          rows1[i][ManualOrderColumn] = newOrder;
-          changed = true;
-        }
+        dv.Sort = DefaultManualOrderColumn;
+        desiredOrder = DataTools.GetDataViewRows(dv);
       }
 
-      if (!changed)
-        return false;
+      IDataReorderHelper helper = CreateDataReorderHelper();
+      bool changed = helper.Reorder(desiredOrder);
 
-      // 3. Обновляем просмотр
-      ControlProvider.Control.Refresh();
-
-      return true;
+      if (changed)
+        ControlProvider.Control.Refresh();
+      return changed;
     }
+
 #endif
+
     /// <summary>
-    /// Восстановление порядка по умолчанию на основании DefaultManualOrderRows
+    /// Выполняет инициализацию значения поля, заданного свойством ManualOrderColumn для новых строк, у которых поле имеет значение 0.
+    /// Вызывает метод IDataReorderHelper.InitRows().
+    /// Если свойcтво ManualOrderColumn не установлено, никаких действий не выполняется.
     /// </summary>
-    /// <returns></returns>
-    private bool DoSortRestoreRows()
+    /// <param name="rows">Строки данных, которые нужно инициализировать</param>
+    /// <param name="otherRowsChanged">Сюда записывается значение true, если были изменены другие строки в просмотре, кроме выбранных.</param>
+    /// <returns>True, если строки (одна или несколько) содержали нулевое значение и были инициализированы.
+    /// Если все строки уже содержали ненулевое значение, то возвращается false.</returns>
+    public bool InitManualOrderColumnValue(DataRow[] rows, out bool otherRowsChanged)
     {
-      if (DefaultManualOrderRows == null)
-        throw new NullReferenceException("Свойство DefaultManulOrderRows не установлено");
-
-      // 1. Загружаем полный список строк DataGridViewRow в массив
-      DataGridViewRow[] rows1 = new DataGridViewRow[ControlProvider.Control.Rows.Count];
-      ControlProvider.Control.Rows.CopyTo(rows1, 0);
-
-      // 2. Запоминаем выбранные строки
-      DataGridViewRow[] selRows = ControlProvider.SelectedGridRows;
-
-      // 3. Подготавливаем массив строк для их размещения в новом порядке
-      // Значения null в этом массиве означают временно пустые позиции
-      DataGridViewRow[] rows2 = new DataGridViewRow[rows1.Length];
-
-      // 4. Копируем строки из массива по умолчанию
-      int i;
-      int cnt = 0;
-      bool changed = false;
-      for (i = 0; i < DefaultManualOrderRows.Length; i++)
+      if (String.IsNullOrEmpty(ManualOrderColumn))
       {
-        int thisPos = Array.IndexOf<DataGridViewRow>(rows1, DefaultManualOrderRows[i]);
-        if (thisPos < 0)
-          continue; // Ошибка
-
-        rows2[cnt] = rows1[thisPos];
-        rows1[thisPos] = null;
-        if (cnt != thisPos)
-          changed = true;
-        cnt++;
-      }
-
-      // 5. Копируем "лишние" строки, которых нет в массиве по умолчанию
-      for (i = 0; i < rows1.Length; i++)
-      {
-        if (rows1[i] != null)
-        {
-          rows2[cnt] = rows1[i];
-          if (cnt != i)
-            changed = true;
-          cnt++;
-        }
-      }
-
-      if (!changed)
+        otherRowsChanged = false;
         return false;
+      }
 
-      // 6. Замещаем коллекцию строк
-      ControlProvider.Control.Rows.Clear();
-      ControlProvider.Control.Rows.AddRange(rows2);
-
-      // 7. Восстанавливаем выбор
-      ControlProvider.SelectedGridRows = selRows;
-      return true;
+      IDataReorderHelper helper = CreateDataReorderHelper();
+      return helper.InitRows(rows, out otherRowsChanged);
     }
 
-    /// <summary>
-    /// Вызывается, когда выполнена ручная сортировка строк (по окончании изменения
-    /// значений поля для всех строк)
-    /// </summary>
-    public event EventHandler ManualOrderChanged;
+    #endregion
 
     #endregion
 
     #endregion
 
     #region Команды перехода между ошибками
+
+
+    /// <summary>
+    /// True (по умолчанию), если при установленном свойстве UseRowImages
+    /// нужно выводит команды "Перейти к следующей / предыдущей строке с ошибками".
+    /// Установите свойство в false, если картинки в заголовках строк используются
+    /// для других целей, а не для показа ошибок.
+    /// Свойство игнорируется, если UseRowImages=false
+    /// </summary>
+    public bool UseRowErrors
+    {
+      get { return _UseRowErrors; }
+      set
+      {
+        CheckNotReadOnly();
+        _UseRowErrors = value;
+      }
+    }
+    private bool _UseRowErrors;
 
     private EFPCommandItem _MenuRowErrors;
     private EFPCommandItem ciGotoPrevErrorWarning, ciGotoNextErrorWarning, ciGotoPrevErrorOnly, ciGotoNextErrorOnly;
@@ -2563,6 +2539,24 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Построение списка сообщений об ошибках
+
+    /// <summary>
+    /// Если установлено (по умолчанию), а также установлены свойства UseRowErrors
+    /// и UseRowImages, то в подменю "Строки с ошибками" есть команда
+    /// "Показать список".
+    /// Это свойство сбрасывается в false в самом просмотре списка ошибок EFPErrorDataGridView, т.к.
+    /// рекурсивный вызов не имеет смысла
+    /// </summary>
+    public bool UseRowErrorsListView
+    {
+      get { return _UseRowErrorsListView; }
+      set
+      {
+        CheckNotReadOnly();
+        _UseRowErrorsListView = value;
+      }
+    }
+    private bool _UseRowErrorsListView;
 
     private EFPCommandItem ciShowRowErrorMessages;
 
@@ -2916,6 +2910,35 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Прочие команды
+
+    /// <summary>
+    /// True, если есть команда "Обновить" (F5)
+    /// По умолчанию - true
+    /// </summary>
+    public bool UseRefresh
+    {
+      get { return _UseRefresh; }
+      set
+      {
+        CheckNotReadOnly();
+        _UseRefresh = value;
+      }
+    }
+    private bool _UseRefresh;
+
+    /// <summary>
+    /// True, если есть команда "Выбрать все строки" (Ctrl-A)
+    /// </summary>
+    public bool UseSelectAll
+    {
+      get { return _UseSelectAll; }
+      set
+      {
+        CheckNotReadOnly();
+        _UseSelectAll = value;
+      }
+    }
+    private bool _UseSelectAll;
 
     EFPCommandItem ciSelectAll, ciRefresh;
 

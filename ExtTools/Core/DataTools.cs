@@ -2743,7 +2743,7 @@ namespace FreeLibSet.Core
     /// она удаляется из набора
     /// </summary>
     /// <param name="ds">Целевой набор данных. Не может быть null</param>
-    /// <param name="table">Присоежиняемыая таблицы. Не может быть null</param>
+    /// <param name="table">Присоединяемыая таблицы. Не может быть null</param>
     public static void AddTableToDataSet(DataSet ds, DataTable table)
     {
       if (ds == null) // эта проверка обязательно нужна
@@ -2766,7 +2766,19 @@ namespace FreeLibSet.Core
           ds.Tables.Remove(table.TableName);
       }
 
+      // 27.05.2022
+      // Восстанавливаем значения свойств для DefaultView
+      // При добавлении таблицы в DataSet, свойство DataTable.DefaultView очищается (см. исходники Net Framework, внутренний метод DataTable.SetDataSet()).
+
+      string rf = table.DefaultView.RowFilter;
+      DataViewRowState rsf = table.DefaultView.RowStateFilter;
+      string sort = table.DefaultView.Sort;
+
       ds.Tables.Add(table);
+
+      table.DefaultView.RowFilter = rf;
+      table.DefaultView.RowStateFilter = rsf;
+      table.DefaultView.Sort = sort;
     }
 
     #endregion

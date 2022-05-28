@@ -36,9 +36,10 @@ namespace FreeLibSet.Forms
     {
       #region Буфер обмена
 
+      AddSeparator();
+
       ciCut = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Cut);
       ciCut.Click += new EventHandler(DoCut);
-      ciCut.GroupBegin = true;
       Add(ciCut);
 
       ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
@@ -63,9 +64,11 @@ namespace FreeLibSet.Forms
 
       #region Поиск
 
+      AddSeparator();
+
+
       ciFind = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Find);
       ciFind.Click += new EventHandler(Find);
-      ciFind.GroupBegin = true;
       Add(ciFind);
 
       ciIncSearch = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.IncSearch);
@@ -75,8 +78,9 @@ namespace FreeLibSet.Forms
 
       ciFindNext = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.FindNext);
       ciFindNext.Click += new EventHandler(FindNext);
-      ciFindNext.GroupEnd = true;
       Add(ciFindNext);
+
+      AddSeparator();
 
       #endregion
 
@@ -92,12 +96,13 @@ namespace FreeLibSet.Forms
 
       ciUncheckAll = new EFPCommandItem("Edit", "DeleteAllCheckmarks");
       //ciUncheckAll.Parent = MenuCheck;
-      ciUncheckAll.GroupEnd = true;
       ciUncheckAll.MenuText = "Снять отметки для всех строк";
       ciUncheckAll.ImageKey = "CheckListNone";
       ciUncheckAll.ShortCut = Keys.Control | Keys.Shift | Keys.A;
       ciUncheckAll.Click += new EventHandler(ciUncheckAll_Click);
       Add(ciUncheckAll);
+
+      AddSeparator();
 
       #endregion
     }

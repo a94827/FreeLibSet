@@ -3671,7 +3671,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Если свойству присвоено значение, то для значение может использоваться прямое
-    /// преобразование byte[]-byte[] иди прямое копирование.
+    /// преобразование byte[]-byte[] или прямое копирование.
     /// Иначе требуется преобразование byte[]-string-byte[]
     /// </summary>
     private SingleByteTranscoding _Transcoding;

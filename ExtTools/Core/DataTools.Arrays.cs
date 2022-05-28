@@ -172,12 +172,41 @@ namespace FreeLibSet.Core
       //return a;
 
       // 26.07.2019
-      List<T> lst = new List<T>();
+
+      //List<T> lst = new List<T>();
+      // 27.05.2022 - ленивое создание списка
+      List<T> lst = null;
       foreach (T item in source)
+      {
+        if (lst == null)
+          lst = new List<T>();
         lst.Add(item);
+      }
+
+      if (lst == null)
+        return new T[0];
+      else
+        return lst.ToArray();
+    }
+
+    /// <summary>
+    /// Создает массив Object из нетипизированного перечислителя
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static object[] CreateObjectArray(System.Collections.IEnumerable source)
+    {
+      List<object> lst = null;
+      foreach (object item in source)
+      {
+        if (lst == null)
+          lst = new List<object>();
+        lst.Add(item);
+      }
 
       return lst.ToArray();
     }
+
 
     /// <summary>
     /// Получение массива, заполненного значенияи DBNull

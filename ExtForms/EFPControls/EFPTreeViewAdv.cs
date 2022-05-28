@@ -12,6 +12,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {

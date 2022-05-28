@@ -388,8 +388,9 @@ namespace FreeLibSet.Forms.Docs
         if (base.ReadOnly)
           ManualOrderColumn = null;
 
-        if ((!String.IsNullOrEmpty(ManualOrderColumn)) && (!this.ReadOnly))
-          InitOrderValues(_SubDocs.SubDocsView.Table, false /* 21.04.2020 */);
+        // Убрано 26.05.2022
+        //if ((!String.IsNullOrEmpty(ManualOrderColumn)) && (!this.ReadOnly))
+        //  InitOrderValues(_SubDocs.SubDocsView.Table, false /* 21.04.2020 */);
       }
       catch (Exception e)
       {
@@ -687,9 +688,11 @@ namespace FreeLibSet.Forms.Docs
           // dv.Sort = SubDocs.SubDocsView.Sort; //
         }
 
-        string dvSort = SubDocType.DefaultOrder.ToString(); // 02.05.2022
-        if (!String.IsNullOrEmpty(ManualOrderColumn))
-          dv.Sort = ManualOrderColumn;
+        string dvSort;
+        if (String.IsNullOrEmpty(ManualOrderColumn))
+          dvSort = SubDocType.DefaultOrder.ToString(); // 02.05.2022
+        else
+          dvSort = ManualOrderColumn; // испр. 26.05.2022
 
         if (MainEditor != null)
         {
