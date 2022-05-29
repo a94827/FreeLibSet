@@ -175,6 +175,8 @@ namespace FreeLibSet.Data.Docs
     #endregion
   }
 
+  ??? Убрать ???
+
   /// <summary>
   /// Источник данных дерева для просмотра поддокументов в процессе редактирования одного или нескольких документов
   /// </summary>
@@ -186,8 +188,7 @@ namespace FreeLibSet.Data.Docs
     /// Создает модель
     /// </summary>
     /// <param name="subDocs">Объект для доступа к поддокументам одного вида</param>
-    /// <param name="columns">Список столбцов, которые должны быть в таблице</param>
-    public DBxSubDocTreeModel(DBxMultiSubDocs subDocs, DBxColumns columns)
+    public DBxSubDocTreeModel(DBxMultiSubDocs subDocs)
       : base(subDocs.SubDocsView.Table,
          "Id",
          subDocs.SubDocType.TreeParentColumnName)
@@ -210,6 +211,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Вспомогательные методы
 
+#if XXX // Не используется
     /// <summary>
     /// Возвращае массив, содержащий идентификатор <paramref name="id"/> 
     /// и все дочерние идентификаторы для строк, возвращаемых GetRowsWithChildren().
@@ -231,6 +233,7 @@ namespace FreeLibSet.Data.Docs
         return DataTools.GetIds(rows);
       }
     }
+#endif
 
     #endregion
   }

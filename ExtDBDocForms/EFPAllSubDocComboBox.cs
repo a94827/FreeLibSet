@@ -143,17 +143,6 @@ namespace FreeLibSet.Forms.Docs
     public DBxDocProvider DocProvider { get { return _SubDocs.DocSet.DocProvider; } }
 
     /// <summary>
-    /// Имя столбца, предназначенного для ручной сортировки строк или null, если
-    /// строки сортируются каким-то другим способом
-    /// </summary>
-    public string ManualOrderColumn
-    {
-      get { return _ManualOrderColumn; }
-      set { _ManualOrderColumn = value; }
-    }
-    private string _ManualOrderColumn;
-
-    /// <summary>
     /// Интерфейс доступа к поддокументам
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocTypeUI; } }
@@ -208,7 +197,6 @@ namespace FreeLibSet.Forms.Docs
         efpGrid = new EFPSubDocGridView(form.ControlWithToolBar, MainEditor, SubDocs);
 
       // Копируем свойства
-      efpGrid.ManualOrderColumn = this.ManualOrderColumn;
       efpGrid.ValidateBeforeEdit = this.ValidateBeforeEdit;
       efpGrid.ConfirmDeletion = this.ConfirmDeletion;
 

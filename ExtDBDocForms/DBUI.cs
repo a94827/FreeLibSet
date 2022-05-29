@@ -5072,6 +5072,27 @@ namespace FreeLibSet.Forms.Docs
     public bool CanInsertCopy { get { return _CanInsertCopy; } set { _CanInsertCopy = value; } }
     private bool _CanInsertCopy;
 
+    /// <summary>
+    /// Имя столбца, предназначенного для ручной сортировки строк или пустая строка, если
+    /// порядок строк определяется в GridProducer или DBxSubDocType.DefaultOrder.
+    /// </summary>
+    public string ManualOrderColumn
+    {
+      get { return _ManualOrderColumn; }
+      set 
+      {
+        if (!String.IsNullOrEmpty(value))
+        {
+          if (!SubDocType.Struct.Columns.Contains(value))
+            throw new ArgumentException("Таблица \"" + SubDocType.Name + "\" не содержит столбца \"" + value + "\"");
+          this.Columns[value].NewMode = ColumnNewMode.AlwaysDefaultValue; // чтобы новые поддокументы попадали в конец списка
+        }
+        _ManualOrderColumn = value; 
+      }
+    }
+    private string _ManualOrderColumn;
+
+
 
     /// <summary>
     /// Генератор табличного просмотра.

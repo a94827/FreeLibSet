@@ -144,7 +144,6 @@ namespace FreeLibSet.Forms
     public EFPDataGridViewCommandItems(EFPDataGridView controlProvider)
       : base(controlProvider)
     {
-
       #region Начальные значения свойств
 
       _EnterAsOk = false;
@@ -1854,6 +1853,15 @@ namespace FreeLibSet.Forms
     /// </summary>
     public event EventHandler ManualOrderChanged;
 
+    /// <summary>
+    /// Генерирует событие ManualOrderChanged
+    /// </summary>
+    public void CallManualOrderChanged()
+    {
+      if (ManualOrderChanged != null)
+        ManualOrderChanged(this, EventArgs.Empty);
+    }
+
     #endregion
 
     #region Перестановка строк DataGridViewRow
@@ -2127,6 +2135,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Перестановка строк
 
 #if USE_PROPS
 
@@ -2335,6 +2344,10 @@ namespace FreeLibSet.Forms
 
 #endif
 
+    #endregion
+
+    #region Восстановление порядка
+
 #if USE_PROPS
     /// <summary>
     /// Восстановление порядка по умолчанию на основании DefaultManualOrderColumn
@@ -2421,6 +2434,10 @@ namespace FreeLibSet.Forms
 
 #endif
 
+    #endregion
+
+    #region InitManualOrderColumnValue()
+
     /// <summary>
     /// Выполняет инициализацию значения поля, заданного свойством ManualOrderColumn для новых строк, у которых поле имеет значение 0.
     /// Вызывает метод IDataReorderHelper.InitRows().
@@ -2441,6 +2458,8 @@ namespace FreeLibSet.Forms
       IDataReorderHelper helper = CreateDataReorderHelper();
       return helper.InitRows(rows, out otherRowsChanged);
     }
+
+    #endregion
 
     #endregion
 

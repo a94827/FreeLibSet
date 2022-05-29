@@ -414,6 +414,15 @@ namespace FreeLibSet.Forms
     /// </summary>
     public event EventHandler ManualOrderChanged;
 
+    /// <summary>
+    /// Генерирует событие ManualOrderChanged
+    /// </summary>
+    public void CallManualOrderChanged()
+    {
+      if (ManualOrderChanged != null)
+        ManualOrderChanged(this, EventArgs.Empty);
+    }
+
     #endregion
 
     #region Перестановка узлов дерева (не реализовано)
@@ -758,6 +767,31 @@ return true;                          */
       //  ControlProvider.Control.Refresh();
 
       return changed;
+    }
+
+    #endregion
+
+    #region InitManualOrderColumnValue()
+
+    /// <summary>
+    /// Выполняет инициализацию значения поля, заданного свойством ManualOrderColumn для новых строк, у которых поле имеет значение 0.
+    /// Вызывает метод IDataReorderHelper.InitRows().
+    /// Если свойcтво ManualOrderColumn не установлено, никаких действий не выполняется.
+    /// </summary>
+    /// <param name="rows">Строки данных, которые нужно инициализировать</param>
+    /// <param name="otherRowsChanged">Сюда записывается значение true, если были изменены другие строки в просмотре, кроме выбранных.</param>
+    /// <returns>True, если строки (одна или несколько) содержали нулевое значение и были инициализированы.
+    /// Если все строки уже содержали ненулевое значение, то возвращается false.</returns>
+    public bool InitManualOrderColumnValue(DataRow[] rows, out bool otherRowsChanged)
+    {
+      if (String.IsNullOrEmpty(ManualOrderColumn))
+      {
+        otherRowsChanged = false;
+        return false;
+      }
+
+      IDataReorderHelper helper = CreateDataReorderHelper();
+      return helper.InitRows(rows, out otherRowsChanged);
     }
 
     #endregion

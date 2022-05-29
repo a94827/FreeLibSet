@@ -11,6 +11,7 @@ using FreeLibSet.Forms;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -160,7 +161,6 @@ namespace FreeLibSet.Forms.Docs
       Control.MultiSelect = true;
 
       Control.CellValidated += new DataGridViewCellEventHandler(Control_CellValidated);
-      CommandItems.ManualOrderChanged += new EventHandler(CommandItems_ManualOrderChanged);
 
       if (_SubDocTypeUI.HasEditorHandlers && mainEditor != null)
       {
@@ -230,16 +230,6 @@ namespace FreeLibSet.Forms.Docs
     /// Провайдер для доступа к документам
     /// </summary>
     public DBxDocProvider DocProvider { get { return _SubDocs.DocSet.DocProvider; } }
-
-    /// <summary>
-    /// Имя столбца, предназначенного для ручной сортировки строк или null, если
-    /// строки сортируются каким-то другим способом
-    /// </summary>
-    public string ManualOrderColumn
-    {
-      get { return CommandItems.ManualOrderColumn; }
-      set { CommandItems.ManualOrderColumn = value; }
-    }
 
     /// <summary>
     /// Интерфейс доступа к поддокументам
@@ -330,6 +320,13 @@ namespace FreeLibSet.Forms.Docs
 
       AfterInitColumns();
 
+      // В режиме просмотра ручная сортировка поддокументов не допускается
+      if (!base.ReadOnly)
+      {
+        CommandItems.ManualOrderColumn = SubDocTypeUI.ManualOrderColumn;
+        CommandItems.ManualOrderChanged += new EventHandler(CommandItems_ManualOrderChanged);
+      }
+
       #region Буфер обмена
 
       #region Вырезать
@@ -382,20 +379,13 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      try
-      {
-        // В режиме просмотра ручная сортировка поддокументов не допускается
-        if (base.ReadOnly)
-          ManualOrderColumn = null;
-
-        // Убрано 26.05.2022
+      // Убрано 26.05.2022
+      //try
+      //{
         //if ((!String.IsNullOrEmpty(ManualOrderColumn)) && (!this.ReadOnly))
         //  InitOrderValues(_SubDocs.SubDocsView.Table, false /* 21.04.2020 */);
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, "Ошибка установки порядка строк поддокументов \"" + SubDocType.PluralTitle + "\"");
-      }
+      //}
+      //catch (Exception e)      {        EFPApp.ShowException(e, "Ошибка установки порядка строк поддокументов \"" + SubDocType.PluralTitle + "\"");      }
 
       base.OnCreated();
 
@@ -405,6 +395,48 @@ namespace FreeLibSet.Forms.Docs
         PerformRefresh(); // обязательно после вызова OnCreated(), иначе UsedColumnNames будет равен null
         CurrentId = oldId; // 23.11.2017
       }
+    }
+
+    #endregion
+
+    #region Команды локального меню
+
+    void CommandItems_ManualOrderChanged(object sender, EventArgs args)
+    {
+      MainEditor.SubDocsChangeInfo.Changed = true;
+    }
+
+    /// <summary>
+    /// Модель используется, если используется иерархическая структура поддокументов
+    /// </summary>
+    private DBxSubDocTreeModel _TreeModel;
+
+    private void ResetTreeModel()
+    {
+      if (_TreeModel != null)
+      {
+        _TreeModel.Dispose();
+        _TreeModel = null;
+      }
+    }
+
+    /// <summary>
+    /// Если для поддокумента задан иерархический порядок (свойство DBxSubDocType.TreeParentColumnName),
+    /// то возвращается сортировщий для иерархической модели, а не обычный DataTableReorderHelper.
+    /// 
+    /// Если в редакторе документа есть и иерархический просмотр и плоская таблица, то в них будут одинаково переставляться строки
+    /// </summary>
+    /// <returns>Объект, реализующий IDataReorderHelper</returns>
+    protected override IDataReorderHelper CreateDataReorderHelper()
+    {
+      if (!String.IsNullOrEmpty(SubDocType.TreeParentColumnName))
+      {
+        if (_TreeModel == null)
+          _TreeModel = new DBxSubDocTreeModel(SubDocs);
+
+        return new DataTableTreeReorderHelper(_TreeModel, SubDocTypeUI.ManualOrderColumn);
+      }
+      return base.CreateDataReorderHelper();
     }
 
     #endregion
@@ -585,48 +617,29 @@ namespace FreeLibSet.Forms.Docs
     {
       using (DataView dv = new DataView(table))
       {
-        dv.Sort = ManualOrderColumn;
+        dv.Sort = SubDocTypeUI.ManualOrderColumn;
         DataRow[] rows = DataTools.GetDataViewRows(dv);
 
         bool changed = false;
 
         for (int i = 0; i < rows.Length; i++)
         {
-          int thisN = DataTools.GetInt(rows[i], ManualOrderColumn);
+          int thisN = DataTools.GetInt(rows[i], SubDocTypeUI.ManualOrderColumn);
           if (thisN != (i + 1)) // присваиваем только если не совпадает
           {
-            rows[i][ManualOrderColumn] = i + 1;
+            rows[i][SubDocTypeUI.ManualOrderColumn] = i + 1;
             changed = true;
           }
         }
 
         if (changed)
         {
-          if (ManualOrderChanged != null)
-            ManualOrderChanged(this, EventArgs.Empty);
+          CommandItems.CallManualOrderChanged();
           if (setChangeInfo /* 21.04.2020 */ &&
             MainEditor.SubDocsChangeInfo != null)
             MainEditor.SubDocsChangeInfo.Changed = true;
         }
       }
-    }
-
-    #endregion
-
-    #region Событие
-
-    /// <summary>
-    /// Вызывается, когда выполнена ручная сортировка строк (по окончании изменения
-    /// значений поля для всех строк)
-    /// </summary>
-    public event EventHandler ManualOrderChanged;
-
-    void CommandItems_ManualOrderChanged(object sender, EventArgs args)
-    {
-      // Дублируем событие
-      if (ManualOrderChanged != null)
-        ManualOrderChanged(this, EventArgs.Empty);
-      MainEditor.SubDocsChangeInfo.Changed = true;
     }
 
     #endregion
@@ -689,10 +702,10 @@ namespace FreeLibSet.Forms.Docs
         }
 
         string dvSort;
-        if (String.IsNullOrEmpty(ManualOrderColumn))
+        if (String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
           dvSort = SubDocType.DefaultOrder.ToString(); // 02.05.2022
         else
-          dvSort = ManualOrderColumn; // испр. 26.05.2022
+          dvSort = SubDocTypeUI.ManualOrderColumn; // испр. 26.05.2022
 
         if (MainEditor != null)
         {
@@ -710,6 +723,8 @@ namespace FreeLibSet.Forms.Docs
           base.TableRepeater = rep;
         SourceAsDataView.Sort = dvSort; // 02.05.2022
       }
+
+      ResetTreeModel();
 
       base.OnRefreshData(args);
     }
@@ -743,6 +758,8 @@ namespace FreeLibSet.Forms.Docs
         _MainEditor.AfterWrite -= new DocEditEventHandler(MainEditor_AfterWrite);
 
       base.OnDetached();
+
+      ResetTreeModel();
     }
 
     void MainEditor_AfterWrite(object sender, DocEditEventArgs args)
@@ -859,7 +876,7 @@ namespace FreeLibSet.Forms.Docs
           //DebugTools.DebugDataSet(MainEditor.Documents.DataSet, "После удаления");
 
 
-          if (!String.IsNullOrEmpty(ManualOrderColumn))
+          if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
             InitOrderValues(_SubDocs.SubDocsView.Table, true);
           MainEditor.SubDocsChangeInfo.Changed = true; // вдруг удалили последнюю строку?
           return true;
@@ -881,23 +898,40 @@ namespace FreeLibSet.Forms.Docs
         int lastOrder = 0;
         if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
         {
-          if (!String.IsNullOrEmpty(ManualOrderColumn))
-            lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, ManualOrderColumn, true) ?? 0;
+          if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
+            lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, SubDocTypeUI.ManualOrderColumn, true) ?? 0;
         }
 
         SubDocs.MergeSubSet(subDocs2);
 
+        if (sde.State != EFPDataGridViewState.Delete &&
+          (!String.IsNullOrEmpty(CommandItems.ManualOrderColumn)))
+        {
+          List<DataRow> lstRows1 = null;
+          foreach (DBxSubDoc sd2 in subDocs2)
+          {
+            if (sd2.Values[CommandItems.ManualOrderColumn].AsInteger == 0)
+            {
+              DataRow row1 = SubDocs.SubDocsView.Table.Rows.Find(sd2.SubDocId);
+              if (row1 == null)
+                throw new BugException("Не найдена строка поддокумента для SubDocId=" + sd2.SubDocId);
+
+              if (lstRows1 == null)
+                lstRows1 = new List<DataRow>();
+              lstRows1.Add(row1);
+            }
+          }
+          if (lstRows1 != null)
+          {
+            bool otherRowsChanged;
+            CommandItems.InitManualOrderColumnValue(lstRows1.ToArray(), out otherRowsChanged);
+            CommandItems.CallManualOrderChanged();
+          }
+        }
+
         if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
         {
           DataRow lastRow = _SubDocs.SubDocsView.Table.Rows[_SubDocs.SubDocsView.Table.Rows.Count - 1];
-          if (!String.IsNullOrEmpty(ManualOrderColumn))
-          {
-            // Присваиваем новой строке номер по порядку, чтобы она была в конце
-            //LastRow[ManualOrderColumn] = FSubDocs.SubDocsView.Table.Rows.Count;
-            // Исправлено 21.04.2020
-            lastRow[ManualOrderColumn] = lastOrder + 1;
-          }
-
           try { this.CurrentDataRow = GetSlaveRow(lastRow); }
           catch { } // 28.04.2022
         }
@@ -951,7 +985,7 @@ namespace FreeLibSet.Forms.Docs
         for (int i = 0; i < rows.Length; i++)
           rows[i].Delete();
 
-        if (!String.IsNullOrEmpty(ManualOrderColumn))
+        if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
           InitOrderValues(_SubDocs.SubDocsView.Table, true); // 21.04.2020
         if (_MainEditor != null) // 21.01.2022
           _MainEditor.SubDocsChangeInfo.Changed = true;
@@ -1149,20 +1183,20 @@ namespace FreeLibSet.Forms.Docs
 
       int count = SubDocs.SubDocCount;
       int lastOrder = 0;
-      if (!String.IsNullOrEmpty(ManualOrderColumn))
-        lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, ManualOrderColumn, true) ?? 0;
+      if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
+        lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, SubDocTypeUI.ManualOrderColumn, true) ?? 0;
 
       SubDocs.MergeSubSet(subDocs2);
       List<DataRow> resRows = new List<DataRow>();
       for (int i = count; i < SubDocs.SubDocCount; i++)
       {
-        if (!String.IsNullOrEmpty(ManualOrderColumn))
+        if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
         {
           // Присваиваем новой строке номер по порядку, чтобы она была в конце
           //SubDocs[i].Values[ManualOrderColumn].SetInteger(i + 1); // исправлено 08.12.2015
           // Еще раз исправлено 21.04.2020
           lastOrder++;
-          SubDocs[i].Values[ManualOrderColumn].SetInteger(lastOrder); // исправлено 08.12.2015
+          SubDocs[i].Values[SubDocTypeUI.ManualOrderColumn].SetInteger(lastOrder); // исправлено 08.12.2015
         }
         DataRow resRow = SubDocs.SubDocsView.Table.Rows[i];
         resRows.Add(GetSlaveRow(resRow));
