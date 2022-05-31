@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2022-05-29T16:07:34.093000000"/>
+	<meta name="changed" content="2022-05-31T15:15:48.794000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -129,7 +129,7 @@ Forms</span>)</h1>
 			<p lang="en-US" align="center">318</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">29.05.2022</p>
+			<p lang="en-US" align="center">29.05.2022-31.05.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US"><a name="v318p1"></a>1. <span lang="ru-RU">Убраны
@@ -139,10 +139,15 @@ Forms</span>)</h1>
 			в </span>CommandItems. <span lang="ru-RU">Вместо этого добавлено
 			свойство </span>SubDocTypeUI.ManualOrderColumn. <span lang="ru-RU">Убрано
 			свойство EFPAllSubDocComboBox.</span>ManualOrderColumn</p>
-			<p>2. Переопределенный метод 
-			<span lang="en-US">EFPSubDocGridView.CreateDataReorderHelper</span><span lang="en-US">()
+			<p>2. Переопределенный метод
+			<span lang="en-US">EFPSubDocGridView.CreateDataReorderHelper()
 			</span>создает DataTableTreeReorderHelper, если для поддокумента
 			используется иерархическая структура</p>
+			<p lang="en-US">3<span lang="ru-RU">. Изменена реализация методов
+			получения значений в DBxDocImageHandlers</span>, <span lang="ru-RU">по
+			аналогии с  </span>DBxDocTextHandlers.DoGetTextValue(). <span lang="ru-RU">Теперь
+			в комбоблоке EFPInsideSubDocComboBox правильно отображается значок
+			ссылки на новый поддокумент, а не значок ошибки.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

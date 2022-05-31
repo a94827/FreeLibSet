@@ -140,6 +140,8 @@ namespace FreeLibSet.Forms.Docs
   /// </summary>
   public class DBxDocImageHandlers : IReadOnlyObject
   {
+    // TODO: 31.05.2022. Выделить из DBxDocTextHandlers базовый класс DBxDocValueHandlersBase, из TableHandler - BaseTableHandler и вынести общий метод DBxDocValueHandlersBase.GetValue(). Но там сложно получается...
+
     #region Конструктор
 
     /// <summary>
@@ -411,8 +413,13 @@ namespace FreeLibSet.Forms.Docs
           else
           {
             if (id < 0)
-              return "Error"; // 16.06.2021
-            values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
+            {
+              values = InternalGetValues(tableName, id, handler.QueriedColumnNames, primaryDS); // 31.05.2022
+              if (values == null)
+                return "Error"; // 16.06.2021
+            }
+            else
+              values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
           }
         }
         catch (DBxAccessException)
@@ -463,6 +470,84 @@ namespace FreeLibSet.Forms.Docs
         return false;
 
       return _DBCache[handler.DocType.Name].GetBool(docId, "Deleted");
+    }
+
+    #endregion
+
+    #region InternalGetValues()
+
+    /// <summary>
+    /// Извлечение значений из набора <paramref name="primaryDS"/> для строки,
+    /// когда нельзя обращаться к DBxCache (фиктивный Id)
+    /// </summary>
+    /// <param name="tableName"></param>
+    /// <param name="id"></param>
+    /// <param name="columnNames"></param>
+    /// <param name="primaryDS"></param>
+    /// <returns></returns>
+    private object[] InternalGetValues(string tableName, Int32 id, DBxColumns columnNames, DataSet primaryDS)
+    {
+      DataRow row = InternalGetRow(tableName, id, primaryDS);
+      if (row == null)
+        return null;
+
+      object[] a = new object[columnNames.Count];
+      for (int i = 0; i < columnNames.Count; i++)
+        a[i] = InternalGetValue(row, tableName, columnNames[i], primaryDS);
+      return a;
+    }
+
+    private DataRow InternalGetRow(string tableName, Int32 id, DataSet primaryDS)
+    {
+      if (primaryDS == null)
+        return null;
+
+      DataTable table = primaryDS.Tables[tableName];
+      if (table == null)
+        return null;
+
+      return table.Rows.Find(id);
+    }
+
+    private object InternalGetValue(DataRow row, string tableName, string columnName, DataSet primaryDS)
+    {
+#if DEBUG
+      if (String.IsNullOrEmpty(columnName))
+        throw new ArgumentNullException("columnName");
+#endif
+      int p = columnName.IndexOf('.');
+      if (p < 0)
+      {
+        // Простое поле таблицы
+        if (row.Table.Columns.Contains(columnName))
+          return row[columnName];
+        else
+          return null;
+      }
+      else
+      {
+        string refColumnName = columnName.Substring(0, p);
+        Int32 refId = DataTools.GetInt(InternalGetValue(row, tableName, refColumnName, primaryDS));
+        if (refId == 0)
+          return null; // пустая ссылка
+
+        DBxTableStruct tableStruct = DBCache[tableName].TableStruct;
+
+        string extTableName = tableStruct.Columns[refColumnName].MasterTableName;
+        if (String.IsNullOrEmpty(extTableName))
+          throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + tableName + "\" не является ссылочным", "columnName");
+        string ExtColumnName = columnName.Substring(p + 1);
+
+        DataRow row2 = InternalGetRow(extTableName, refId, primaryDS);
+        if (row2 == null)
+        {
+          if (refId > 0)
+            return DBCache[extTableName].GetValue(refId, ExtColumnName);
+          else
+            return null;
+        }
+        return InternalGetValue(row2, extTableName, ExtColumnName, primaryDS);
+      }
     }
 
     #endregion
@@ -681,8 +766,13 @@ namespace FreeLibSet.Forms.Docs
         else
         {
           if (id < 0)
-            return; // 16.06.2021
-          values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
+          {
+            values = InternalGetValues(tableName, id, handler.QueriedColumnNames, primaryDS); // 31.05.2022
+            if (values == null)
+              return; // 16.06.2021
+          }
+          else
+            values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
         }
 
         _Args.InitData(tableName, id, handler.QueriedColumnNames, values, DBxImageValueNeededReason.RowColor);
@@ -881,8 +971,13 @@ namespace FreeLibSet.Forms.Docs
           else
           {
             if (id < 0)
-              return "Фиктивный идентификатор"; // 16.06.2021
-            values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
+            {
+              values = InternalGetValues(tableName, id, handler.QueriedColumnNames, primaryDS); // 31.05.2022
+              if (values == null)
+                return "Фиктивный идентификатор"; // 16.06.2021
+            }
+            else
+              values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
           }
         }
         catch (DBxAccessException)

@@ -432,7 +432,7 @@ namespace FreeLibSet.Forms.Docs
       if (!String.IsNullOrEmpty(SubDocType.TreeParentColumnName))
       {
         if (_TreeModel == null)
-          _TreeModel = new DBxSubDocTreeModel(SubDocs);
+          _TreeModel = new DBxSubDocTreeModel(SubDocs, SourceAsDataTable);
 
         return new DataTableTreeReorderHelper(_TreeModel, SubDocTypeUI.ManualOrderColumn);
       }

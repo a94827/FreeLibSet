@@ -175,8 +175,6 @@ namespace FreeLibSet.Data.Docs
     #endregion
   }
 
-  ??? Убрать ???
-
   /// <summary>
   /// Источник данных дерева для просмотра поддокументов в процессе редактирования одного или нескольких документов
   /// </summary>
@@ -188,8 +186,8 @@ namespace FreeLibSet.Data.Docs
     /// Создает модель
     /// </summary>
     /// <param name="subDocs">Объект для доступа к поддокументам одного вида</param>
-    public DBxSubDocTreeModel(DBxMultiSubDocs subDocs)
-      : base(subDocs.SubDocsView.Table,
+    public DBxSubDocTreeModel(DBxMultiSubDocs subDocs, DataTable repeaterTable)
+      : base(repeaterTable??subDocs.SubDocsView.Table,
          "Id",
          subDocs.SubDocType.TreeParentColumnName)
     {

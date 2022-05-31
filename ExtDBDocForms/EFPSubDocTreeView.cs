@@ -731,7 +731,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (SubDocs.DocSet.DocProvider.DBPermissions.TableModes[SubDocType.Name] != DBxAccessMode.None)
       {
-        DBxSubDocTreeModel model = new DBxSubDocTreeModel(SubDocs);
+        DBxSubDocTreeModel model = new DBxSubDocTreeModel(SubDocs, null);
         Control.Model = model;
       }
       else
