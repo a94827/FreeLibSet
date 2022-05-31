@@ -186,6 +186,8 @@ namespace FreeLibSet.Data.Docs
     /// Создает модель
     /// </summary>
     /// <param name="subDocs">Объект для доступа к поддокументам одного вида</param>
+    /// <param name="repeaterTable">Ссылка на таблицу-повторитель, если она должна использоваться вместо DBxMultiSubDocs.SubDocsView.
+    /// Null, если должна использоваться основная таблица</param>
     public DBxSubDocTreeModel(DBxMultiSubDocs subDocs, DataTable repeaterTable)
       : base(repeaterTable??subDocs.SubDocsView.Table,
          "Id",

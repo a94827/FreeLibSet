@@ -639,30 +639,8 @@ namespace FreeLibSet.Forms.Docs
       {
         SubDocs.MergeSubSet(subDocs2);
 
-        if (sde.State != EFPDataGridViewState.Delete &&
-          (!String.IsNullOrEmpty(CommandItems.ManualOrderColumn)))
-        {
-          List<DataRow> lstRows1 = null;
-          foreach (DBxSubDoc sd2 in subDocs2)
-          {
-            if (sd2.Values[CommandItems.ManualOrderColumn].AsInteger == 0)
-            {
-              DataRow row1 = SubDocs.SubDocsView.Table.Rows.Find(sd2.SubDocId);
-              if (row1 == null)
-                throw new BugException("Не найдена строка поддокумента для SubDocId=" + sd2.SubDocId);
-
-              if (lstRows1 == null)
-                lstRows1 = new List<DataRow>();
-              lstRows1.Add(row1);
-            }
-          }
-          if (lstRows1 != null)
-          {
-            bool otherRowsChanged;
-            CommandItems.InitManualOrderColumnValue(lstRows1.ToArray(), out otherRowsChanged);
-            CommandItems.CallManualOrderChanged();
-          }
-        }
+        if (sde.State != EFPDataGridViewState.Delete)
+          InitManualOrderColumnValueAfterEdit(subDocs2);
 
         if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
         {
@@ -686,6 +664,37 @@ namespace FreeLibSet.Forms.Docs
       }
 
       return true;
+    }
+
+    /// <summary>
+    /// Вызывается после объединения набора с помощью MergeSubSet() после редактирования или вставки из буфера обмена
+    /// </summary>
+    /// <param name="subDocs2"></param>
+    private void InitManualOrderColumnValueAfterEdit(DBxMultiSubDocs subDocs2)
+    {
+      if (String.IsNullOrEmpty(CommandItems.ManualOrderColumn))
+        return;
+
+      List<DataRow> lstRows1 = null;
+      foreach (DBxSubDoc sd2 in subDocs2)
+      {
+        if (sd2.Values[CommandItems.ManualOrderColumn].AsInteger == 0)
+        {
+          DataRow row1 = SubDocs.SubDocsView.Table.Rows.Find(sd2.SubDocId);
+          if (row1 == null)
+            throw new BugException("Не найдена строка поддокумента для SubDocId=" + sd2.SubDocId);
+
+          if (lstRows1 == null)
+            lstRows1 = new List<DataRow>();
+          lstRows1.Add(row1);
+        }
+      }
+      if (lstRows1 != null)
+      {
+        bool otherRowsChanged;
+        CommandItems.InitManualOrderColumnValue(lstRows1.ToArray(), out otherRowsChanged);
+        CommandItems.CallManualOrderChanged();
+      }
     }
 
 #if XXX
@@ -895,6 +904,8 @@ namespace FreeLibSet.Forms.Docs
       {
         DBxSubDoc subDoc2 = subDocs2.Insert();
         DBxDocValue.CopyValues(srcRows[i], subDoc2.Values);
+        if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
+          subDoc2.Values[SubDocTypeUI.ManualOrderColumn].SetNull(); // до пользовательского обработчика
 
         // Вызываем пользовательский обработчик
         AdjustPastedSubDocRowEventArgs args = new AdjustPastedSubDocRowEventArgs(subDoc2,
@@ -944,22 +955,12 @@ namespace FreeLibSet.Forms.Docs
       }
 
       int count = SubDocs.SubDocCount;
-      int lastOrder = 0;
-      if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
-        lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, SubDocTypeUI.ManualOrderColumn, true) ?? 0;
-
       SubDocs.MergeSubSet(subDocs2);
+      InitManualOrderColumnValueAfterEdit(subDocs2);
+
       List<DataRow> resRows = new List<DataRow>();
       for (int i = count; i < SubDocs.SubDocCount; i++)
       {
-        if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
-        {
-          // Присваиваем новой строке номер по порядку, чтобы она была в конце
-          //SubDocs[i].Values[ManualOrderColumn].SetInteger(i + 1); // исправлено 08.12.2015
-          // Еще раз исправлено 21.04.2020
-          lastOrder++;
-          SubDocs[i].Values[SubDocTypeUI.ManualOrderColumn].SetInteger(lastOrder); // исправлено 08.12.2015
-        }
         resRows.Add(SubDocs.SubDocsView.Table.Rows[i]);
       }
       this.SelectedDataRows = resRows.ToArray();
