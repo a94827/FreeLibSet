@@ -46,6 +46,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DocProviderUI.cs" />
+    <Compile Include="DocTypeUI.cs" />
     <Compile Include="EFPDBxViewOrder.cs" />
     <Compile Include="EFPAllSubDocComboBox.cs" />
     <Compile Include="GridFilterRange.cs" />
@@ -146,6 +147,7 @@
       <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GridFilterOthers.cs" />
+    <Compile Include="SubDocTypeUI.cs" />
     <Compile Include="YearGridFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>

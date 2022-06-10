@@ -64,6 +64,11 @@ namespace FreeLibSet.Forms.Docs
     /// Эти данные передаются обработчику инициализации табличного просмотра
     /// </summary>
     object UserInitData { get; }
+
+    /// <summary>
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство SubDocTypeUI)
+    /// </summary>
+    void InitManualOrderColumnValue();
   }
 
   #endregion
@@ -305,7 +310,6 @@ namespace FreeLibSet.Forms.Docs
 
     #region OnCreated() и OnDisposed()
 
-
     /// <summary>
     /// Закончить инициализацию табличного просмотра. Присоединяет табличный просмотр
     /// и панель кнопок к форме.
@@ -323,8 +327,7 @@ namespace FreeLibSet.Forms.Docs
       // В режиме просмотра ручная сортировка поддокументов не допускается
       if (!base.ReadOnly)
       {
-        CommandItems.ManualOrderColumn = SubDocTypeUI.ManualOrderColumn;
-        CommandItems.ManualOrderChanged += new EventHandler(CommandItems_ManualOrderChanged);
+        ManualOrderColumn = SubDocTypeUI.ManualOrderColumn;
       }
 
       #region Буфер обмена
@@ -401,9 +404,17 @@ namespace FreeLibSet.Forms.Docs
 
     #region Команды локального меню
 
-    void CommandItems_ManualOrderChanged(object sender, EventArgs args)
+    /// <summary>
+    /// Устанавливает SubDocsChangeInfo.Changed=true.
+    /// </summary>
+    protected override void OnManualOrderChanged(EventArgs args)
     {
-      MainEditor.SubDocsChangeInfo.Changed = true;
+      base.OnManualOrderChanged(args);
+      if (MainEditor != null)
+      {
+        if (MainEditor.SubDocsChangeInfo != null)
+          MainEditor.SubDocsChangeInfo.Changed = true;
+      }
     }
 
     /// <summary>
@@ -411,32 +422,17 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     private DBxSubDocTreeModel _TreeModel;
 
-    private void ResetTreeModel()
+    /// <summary>
+    /// Очищает временную модель дерева
+    /// </summary>
+    public override void ResetDataReorderHelper()
     {
+      base.ResetDataReorderHelper();
       if (_TreeModel != null)
       {
         _TreeModel.Dispose();
         _TreeModel = null;
       }
-    }
-
-    /// <summary>
-    /// Если для поддокумента задан иерархический порядок (свойство DBxSubDocType.TreeParentColumnName),
-    /// то возвращается сортировщий для иерархической модели, а не обычный DataTableReorderHelper.
-    /// 
-    /// Если в редакторе документа есть и иерархический просмотр и плоская таблица, то в них будут одинаково переставляться строки
-    /// </summary>
-    /// <returns>Объект, реализующий IDataReorderHelper</returns>
-    protected override IDataReorderHelper CreateDataReorderHelper()
-    {
-      if (!String.IsNullOrEmpty(SubDocType.TreeParentColumnName))
-      {
-        if (_TreeModel == null)
-          _TreeModel = new DBxSubDocTreeModel(SubDocs, SourceAsDataTable);
-
-        return new DataTableTreeReorderHelper(_TreeModel, SubDocTypeUI.ManualOrderColumn);
-      }
-      return base.CreateDataReorderHelper();
     }
 
     #endregion
@@ -497,6 +493,10 @@ namespace FreeLibSet.Forms.Docs
         SubDocTypeUI.PerformInitGrid(this, reInit, columns, UserInitData);
       else
         SubDocTypeUI.PerformInitGrid(this, reInit, columns, UserInitData, MainEditor.MultiDocMode, true);
+      if (!String.IsNullOrEmpty(ManualOrderColumn))
+        columns.Add(ManualOrderColumn);
+      if (!String.IsNullOrEmpty(DefaultManualOrderColumn))
+        columns.Add(DefaultManualOrderColumn);
       DBxColumns imgCols = UI.ImageHandlers.GetColumnNames(SubDocTypeUI.SubDocType.Name, true);
       columns.AddRange(imgCols); // Может быть, это нужно делать в SubDocTypeUI
     }
@@ -634,10 +634,7 @@ namespace FreeLibSet.Forms.Docs
 
         if (changed)
         {
-          CommandItems.CallManualOrderChanged();
-          if (setChangeInfo /* 21.04.2020 */ &&
-            MainEditor.SubDocsChangeInfo != null)
-            MainEditor.SubDocsChangeInfo.Changed = true;
+          OnManualOrderChanged(EventArgs.Empty);
         }
       }
     }
@@ -724,8 +721,6 @@ namespace FreeLibSet.Forms.Docs
         SourceAsDataView.Sort = dvSort; // 02.05.2022
       }
 
-      ResetTreeModel();
-
       base.OnRefreshData(args);
     }
 
@@ -758,8 +753,6 @@ namespace FreeLibSet.Forms.Docs
         _MainEditor.AfterWrite -= new DocEditEventHandler(MainEditor_AfterWrite);
 
       base.OnDetached();
-
-      ResetTreeModel();
     }
 
     void MainEditor_AfterWrite(object sender, DocEditEventArgs args)
@@ -905,7 +898,7 @@ namespace FreeLibSet.Forms.Docs
         SubDocs.MergeSubSet(subDocs2);
 
         if (sde.State != EFPDataGridViewState.Delete)
-          InitManualOrderColumnValueAfterEdit(subDocs2);
+          SubDocTypeUI.InitManualOrderColumnValueAfterEdit(this.SubDocs, subDocs2);
 
         if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
         {
@@ -928,37 +921,6 @@ namespace FreeLibSet.Forms.Docs
       }
 
       return true;
-    }
-
-    /// <summary>
-    /// Вызывается после объединения набора с помощью MergeSubSet() после редактирования или вставки из буфера обмена
-    /// </summary>
-    /// <param name="subDocs2"></param>
-    private void InitManualOrderColumnValueAfterEdit(DBxMultiSubDocs subDocs2)
-    {
-      if (String.IsNullOrEmpty(CommandItems.ManualOrderColumn))
-        return;
-
-      List<DataRow> lstRows1 = null;
-      foreach (DBxSubDoc sd2 in subDocs2)
-      {
-        if (sd2.Values[CommandItems.ManualOrderColumn].AsInteger == 0)
-        {
-          DataRow row1 = SubDocs.SubDocsView.Table.Rows.Find(sd2.SubDocId);
-          if (row1 == null)
-            throw new BugException("Не найдена строка поддокумента для SubDocId=" + sd2.SubDocId);
-
-          if (lstRows1 == null)
-            lstRows1 = new List<DataRow>();
-          lstRows1.Add(row1);
-        }
-      }
-      if (lstRows1 != null)
-      {
-        bool otherRowsChanged;
-        CommandItems.InitManualOrderColumnValue(lstRows1.ToArray(), out otherRowsChanged);
-        CommandItems.CallManualOrderChanged();
-      }
     }
 
     void Control_CellValidated(object sender, DataGridViewCellEventArgs args)
@@ -1133,79 +1095,58 @@ namespace FreeLibSet.Forms.Docs
 
       DBxSingleDoc mainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(docId);
 
-      // Нельзя использовать в качестве оригинала полученную строку, т.к. таблица в буфере обмена может быть неполной
-      DBxMultiSubDocs subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
+      DBxSubDoc[] newSubDocs = SubDocTypeUI.PerformPasteRows(mainDoc.SubDocs[SubDocType.Name], srcRows, docTypeBase, this);
+      if (newSubDocs == null)
+        return;
 
-      int cntCancelled = 0;
-      ErrorMessageList errors = new ErrorMessageList();
-      for (int i = 0; i < srcRows.Length; i++)
+      DataRow[] slaveRows = new DataRow[newSubDocs.Length];
+      for (int i = 0; i < slaveRows.Length; i++)
       {
-        DBxSubDoc subDoc2 = subDocs2.Insert();
-        DBxDocValue.CopyValues(srcRows[i], subDoc2.Values);
-        if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
-          subDoc2.Values[SubDocTypeUI.ManualOrderColumn].SetNull(); // до пользовательского обработчика
-
-        // Вызываем пользовательский обработчик
-        AdjustPastedSubDocRowEventArgs args = new AdjustPastedSubDocRowEventArgs(subDoc2,
-          srcRows[i], srcRows[0].Table.DataSet, srcRows[0].Table.TableName, mainDoc, i == 0);
-        this.SubDocTypeUI.PerformAdjustPastedRow(args);
-        if (args.Cancel)
-        {
-          cntCancelled++;
-          if (String.IsNullOrEmpty(args.ErrorMessage))
-            args.ErrorMessage = "Нельзя добавить строку";
-          errors.AddWarning("Строка " + (i + 1).ToString() + " пропускается. " + args.ErrorMessage);
-          subDoc2.Delete();
-        }
+        DataRow subDocRow = SubDocs.SubDocsView.Table.Rows.Find(newSubDocs[i].SubDocId);
+        slaveRows[i] = GetSlaveRow(subDocRow);
       }
 
-      // Убираем отмененные строки и возвращаем состояние Insert на место
-      subDocs2.SubDocsView.Table.AcceptChanges();
-      foreach (DataRow row in subDocs2.SubDocsView.Table.Rows)
-        DataTools.SetRowState(row, DataRowState.Added);
-
-      if (cntCancelled > 0)
-      {
-        if (subDocs2.SubDocCount == 0)
-          errors.AddError("Ни одна из строк (" + srcRows.Length.ToString() + " шт.) не может быть добавлена");
-        EFPApp.ShowErrorMessageListDialog(errors, "Вставка");
-        if (subDocs2.SubDocCount == 0)
-          return;
-      }
-
-      if (SubDocTypeUI.HasEditorHandlers && subDocs2.SubDocCount == 1)
-      {
-        // Открытие редактора поддокумента
-        // Режим должен быть обязательно InsertCopy, иначе значения не прочитаются
-        SubDocumentEditor sde = new SubDocumentEditor(MainEditor, subDocs2, EFPDataGridViewState.InsertCopy);
-        sde.SuppressInsertColumnValues = true; // не нужна инициализация, иначе некоторые поля с режимом NewMode=AlwaysDefaultValue очистятся
-        if (!sde.Run())
-          return;
-      }
-      else
-      {
-        if (EFPApp.MessageBox("Вставить " + (docTypeBase.DocTypeBase.IsSubDoc ?
-          "копии поддокументов" : "копии документов") + " (" + subDocs2.SubDocCount.ToString() + " шт.)?",
-          "Подтверждение вставки поддокументов \"" + SubDocType.PluralTitle + "\"",
-          MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
-
-          return;
-      }
-
-      int count = SubDocs.SubDocCount;
-      SubDocs.MergeSubSet(subDocs2);
-      InitManualOrderColumnValueAfterEdit(subDocs2);
-      List<DataRow> resRows = new List<DataRow>();
-      for (int i = count; i < SubDocs.SubDocCount; i++)
-      {
-        DataRow resRow = SubDocs.SubDocsView.Table.Rows[i];
-        resRows.Add(GetSlaveRow(resRow));
-      }
-      this.SelectedDataRows = resRows.ToArray();
-      MainEditor.SubDocsChangeInfo.Changed = true;
+      this.SelectedDataRows = slaveRows;
+      if (MainEditor != null)
+        MainEditor.SubDocsChangeInfo.Changed = true;
     }
 
     #endregion
+
+    #endregion
+
+    #region Ручная сортировка строк
+
+    /// <summary>
+    /// Если для поддокумента задан иерархический порядок (свойство DBxSubDocType.TreeParentColumnName),
+    /// то возвращается сортировщий для иерархической модели, а не обычный DataTableReorderHelper.
+    /// 
+    /// Если в редакторе документа есть и иерархический просмотр и плоская таблица, то в них будут одинаково переставляться строки.
+    /// </summary>
+    /// <returns>Объект, реализующий IDataReorderHelper</returns>
+    protected override IDataReorderHelper CreateDefaultDataReorderHelper()
+    {
+      if (SubDocs.Owner.DocCount != 1)
+        throw new InvalidOperationException("Использование ручной сортировки поддокументов не допускается, если одновременно редактируется несколько документов");
+
+      if (!String.IsNullOrEmpty(SubDocType.TreeParentColumnName))
+      {
+        if (_TreeModel == null)
+          _TreeModel = new DBxSubDocTreeModel(SubDocs, SourceAsDataTable);
+
+        return new DataTableTreeReorderHelper(_TreeModel, SubDocTypeUI.ManualOrderColumn);
+      }
+      return base.CreateDefaultDataReorderHelper();
+    }
+
+    /// <summary>
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство SubDocTypeUI)
+    /// </summary>
+    public void InitManualOrderColumnValue()
+    {
+      if (SubDocTypeUI.InitManualOrderColumnValue(this.SubDocs))
+        OnManualOrderChanged(EventArgs.Empty);
+    }
 
     #endregion
   }

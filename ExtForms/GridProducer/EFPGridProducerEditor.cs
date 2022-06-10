@@ -52,7 +52,7 @@ namespace FreeLibSet.Forms
       grColumns.MultiSelect = false;
       grColumns.ReadOnly = false;
       //InitColumnsGrid();
-      ghColumns.CommandItems.ManualOrderRows = true;
+      ghColumns.ManualOrderRows = true;
       ghColumns.MarkRowsColumnIndex = 0;
       ghColumns.CellFinished += new EFPDataGridViewCellFinishedEventHandler(ghColumns_CellFinished);
       ghColumns.ToolBarPanel = panSpbColumns;
@@ -94,7 +94,7 @@ namespace FreeLibSet.Forms
         grToolTips.ReadOnly = false;
         ghToolTips.Columns[1].CanIncSearch = true;
         //InitToolTipsGrid();
-        ghToolTips.CommandItems.ManualOrderRows = true;
+        ghToolTips.ManualOrderRows = true;
         ghToolTips.MarkRowsColumnIndex = 0;
         ghToolTips.ToolBarPanel = panSpbToolTips;
       }
@@ -262,7 +262,7 @@ namespace FreeLibSet.Forms
       {
         ghColumns.EndUpdate();
       }
-      ghColumns.CommandItems.DefaultManualOrderRows = ordRows; // востановление порядка по умолчанию
+      ghColumns.DefaultManualOrderRows = ordRows; // востановление порядка по умолчанию
 
       // Активируем строку, соответствующую текущему столбцу в просмотре или с первой отметкой
       if (startRow1 != null)
@@ -530,7 +530,7 @@ namespace FreeLibSet.Forms
           ghToolTips.EndUpdate();
         }
 
-        ghToolTips.CommandItems.DefaultManualOrderRows = ordRows;
+        ghToolTips.DefaultManualOrderRows = ordRows;
 
         panGrToolTips.Visible = _GridProducer.ToolTips.Count > 0; // 11.10.2016
       }

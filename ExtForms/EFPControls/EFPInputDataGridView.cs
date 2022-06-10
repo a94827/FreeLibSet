@@ -341,7 +341,7 @@ namespace FreeLibSet.Forms
           // можно не очищать ValidatingResults.
           DataRow row = ((DataView)sender)[args.NewIndex].Row;
           bool otherRowsChanged;
-          CommandItems.InitManualOrderColumnValue(new DataRow[1] { row }, out otherRowsChanged);
+          InitManualOrderColumnValue(new DataRow[1] { row }, out otherRowsChanged);
           break;
         default:// неохота проверять остальные режимы
           _ValidatingResults.Clear();

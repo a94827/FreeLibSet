@@ -364,7 +364,7 @@ namespace FreeLibSet.Forms.Docs
 
         case EFPDocSelGridViewOrderMode.Manual:
           _Table.DefaultView.Sort = "Order";
-          CommandItems.ManualOrderColumn = "Order";
+          ManualOrderColumn = "Order";
           break;
       }
 

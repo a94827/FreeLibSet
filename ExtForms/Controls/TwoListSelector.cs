@@ -225,8 +225,8 @@ namespace FreeLibSet.Forms
       _SelectedGridViewProvider.EditData += new EventHandler(SelectedGridViewProvider_EditData);
       _SelectedGridViewProvider.CanMultiEdit = false;
       _SelectedGridViewProvider.Control.MultiSelect = true;
-      _SelectedGridViewProvider.CommandItems.ManualOrderRows = true;
-      _SelectedGridViewProvider.CommandItems.ManualOrderChanged += new EventHandler(SelectedGridViewProvider_ManualOrderChanged);
+      _SelectedGridViewProvider.ManualOrderRows = true;
+      _SelectedGridViewProvider.ManualOrderChanged += new EventHandler(SelectedGridViewProvider_ManualOrderChanged);
 
       // Убираем все лишние кнопки из панели инструментов
       foreach (EFPCommandItem ci in _SelectedGridViewProvider.CommandItems)
@@ -308,11 +308,11 @@ namespace FreeLibSet.Forms
     /// </summary>
     public bool AllowOrder
     {
-      get { return _SelectedGridViewProvider.CommandItems.ManualOrderRows; }
+      get { return _SelectedGridViewProvider.ManualOrderRows; }
       set
       {
         CheckHasNotBeenCreated();
-        _SelectedGridViewProvider.CommandItems.ManualOrderRows = value;
+        _SelectedGridViewProvider.ManualOrderRows = value;
       }
     }
 

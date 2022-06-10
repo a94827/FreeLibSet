@@ -335,8 +335,25 @@ namespace FreeLibSet.Controls
           FullUpdate();
           if (_model != null)
             BindModelEvents();
+
+          OnModelChanged(EventArgs.Empty);
         }
       }
+    }
+
+    /// <summary>
+    /// Событие вызывается после установки свойства Model
+    /// </summary>
+    public event EventHandler ModelChanged;
+
+    /// <summary>
+    /// Вызывает обработчик события ModelChanged, если он установлен.
+    /// </summary>
+    /// <param name="args">Не используется</param>
+    protected virtual void OnModelChanged(EventArgs args)
+    {
+      if (ModelChanged != null)
+        ModelChanged(this, EventArgs.Empty);
     }
 
     // Tahoma is the default font

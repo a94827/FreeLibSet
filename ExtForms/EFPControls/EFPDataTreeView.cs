@@ -958,8 +958,31 @@ namespace FreeLibSet.Forms
         //  Control.CellToolTipTextNeeded += new DataGridViewCellToolTipTextNeededEventHandler(Control_CellToolTipTextNeeded);
         //Control.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(Control_ColumnHeaderMouseClick);
         //Control.ReadOnlyChanged += Control_ReadOnlyChanged;
+        Control.ModelChanged += Control_ModelChanged;
       }
       Control.UseColumns = true;
+    }
+
+    #endregion
+
+    #region Изменения в ProviderState
+
+    /// <summary>
+    /// Вызов ResetDataReorderHelper();
+    /// </summary>
+    protected override void OnDetached()
+    {
+      base.OnDetached();
+      ResetDataReorderHelper();
+    }
+
+    /// <summary>
+    /// Вызов ResetDataReorderHelper();
+    /// </summary>
+    protected override void OnDisposed()
+    {
+      ResetDataReorderHelper();
+      base.OnDisposed();
     }
 
     #endregion
@@ -1157,6 +1180,15 @@ namespace FreeLibSet.Forms
         }
          * */
       }
+    }
+
+    #endregion
+
+    #region ModelChanged
+
+    void Control_ModelChanged(object sender, EventArgs args)
+    {
+      ResetDataReorderHelper();
     }
 
     #endregion
@@ -2796,6 +2828,506 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Ручная сортировка строк
+
+    #region Общая часть
+
+    /// <summary>
+    /// Свойство возвращает true, если подерживается ручная перестановка строк с помощью стрелочек вверх/вниз
+    /// </summary>
+    public bool ManualOrderSupported
+    {
+      get { return ManualOrderRows || (!String.IsNullOrEmpty(ManualOrderColumn)); }
+    }
+
+    /// <summary>
+    /// Свойство возвращает true, если есть возможность восстановить порядок сортировки строк по умолчанию
+    /// </summary>
+    public bool RestoreManualOrderSupported
+    {
+      get
+      {
+        return DefaultManualOrderRows != null ||
+          (!String.IsNullOrEmpty(DefaultManualOrderColumn));
+      }
+    }
+
+    /// <summary>
+    /// Выполняет сдвиг выбранных строк в просмотре вверх или вниз
+    /// </summary>
+    /// <param name="down"></param>
+    internal void ChangeManualOrder(bool down)
+    {
+      /*
+      if (!Owner.Control.EndEdit())
+      {
+        EFPApp.ErrorMessageBox("Редактирование не закончено");
+        return;
+      } */
+
+      int oldColIdx = CurrentColumnIndex;
+
+      bool changed;
+      if (ManualOrderRows)
+        changed = DoReorderByRows(down);
+      else
+        changed = DoReorderByDataColumn(down);
+
+      // 9. Обновляем табличный просмотр
+      if (changed)
+      {
+        CurrentColumnIndex = oldColIdx;
+        OnManualOrderChanged(EventArgs.Empty);
+      }
+    }
+
+    /// <summary>
+    /// Восстанавливает порядок сортировки
+    /// </summary>
+    internal void RestoreManualOrder()
+    {
+      EFPDataTreeViewSelection oldSel = this.Selection;
+
+      bool changed;
+      if (ManualOrderRows)
+        changed = DoSortRestoreRows();
+      else
+        changed = DoSortRestoreColumn();
+
+      // Обновляем табличный просмотр
+      if (changed)
+      {
+        this.Selection = oldSel;
+        OnManualOrderChanged(EventArgs.Empty);
+      }
+    }
+
+    /// <summary>
+    /// Вызывается, когда выполнена ручная сортировка строк (по окончании изменения
+    /// значений поля для всех строк)
+    /// </summary>
+    public event EventHandler ManualOrderChanged;
+
+    /// <summary>
+    /// Генерирует событие ManualOrderChanged
+    /// </summary>
+    protected virtual void OnManualOrderChanged(EventArgs args)
+    {
+      if (ManualOrderChanged != null)
+        ManualOrderChanged(this, EventArgs.Empty);
+    }
+
+    #endregion
+
+    #region Перестановка узлов дерева (не реализовано)
+
+    /// <summary>
+    /// НЕ РЕАЛИЗОВАНО.
+    /// Если установлено в true, то доступны команды ручной сортировки строк.
+    /// Сортировка основывается на порядке строк в коллекции, а не на значении
+    /// столбца. При сортировке строки переставляются местами внутри объекта
+    /// DataGridViewRowCollection
+    /// </summary>
+    public bool ManualOrderRows { get { return _ManualOrderRows; } set { _ManualOrderRows = value; } }
+    private bool _ManualOrderRows;
+
+    /// <summary>
+    /// НЕ РЕАЛИЗОВАНО.
+    /// Массив строк табличного просмотра в порядке по умолчанию. Свойство действует
+    /// при ManualOrderRows=true. Если массив присвоен, то действует команда
+    /// "Восстановить порядок по умолчанию"
+    /// </summary>
+    public DataGridViewRow[] DefaultManualOrderRows { get { return _DefaultManualOrderRows; } set { _DefaultManualOrderRows = value; } }
+    private DataGridViewRow[] _DefaultManualOrderRows;
+
+    /// <summary>
+    /// Изменение порядка строк на основании их расположени в коллекции
+    /// </summary>
+    /// <param name="down"></param>
+    /// <returns></returns>
+    private bool DoReorderByRows(bool down)
+    {
+      throw new NotImplementedException();
+      /*
+// 1. Загружаем полный список строк DataGridViewRow в массив
+DataGridViewRow[] Rows1 = new DataGridViewRow[Owner.Control.Rows.Count];
+Owner.Control.Rows.CopyTo(Rows1, 0);
+
+// 2. Запоминаем выбранные строки
+DataGridViewRow[] SelRows = Owner.SelectedGridRows;
+// 3. Получаем позиции выбранных строк в массиве всех строк
+int[] SelPoss = Owner.SelectedRowIndices;
+if (SelPoss.Length == 0)
+{
+EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
+return false;
+}
+
+// 4. Проверяем, что не уперлись в границы списка
+bool lBound = false;
+if (Down)
+{
+if (SelPoss[SelPoss.Length - 1] == Rows1.Length - 1)
+lBound = true;
+}
+else
+{
+if (SelPoss[0] == 0)
+lBound = true;
+}
+if (lBound)
+{
+string msg = "Нельзя передвинуть ";
+if (SelPoss.Length > 1)
+msg += "выбранные строки ";
+else
+msg += "выбранную строку ";
+if (Down)
+msg += "вниз";
+else
+msg += "вверх";
+EFPApp.ShowTempMessage(msg);
+return false;
+}
+
+// 5. Подготавливаем массив строк для их размещения в новом порядке
+// Значения null в этом массиве означают временно пустые позиции
+DataGridViewRow[] Rows2 = new DataGridViewRow[Rows1.Length];
+
+// 6. Копируем в Rows2 строки из Rows1 со сдвигом для позиций, существующих
+// в SelRows.
+// В процессе перемещения будем очищать массив Rows1
+int Delta = Down ? 1 : -1; // значение смещения
+int i;
+for (i = 0; i < SelPoss.Length; i++)
+{
+int ThisPos = SelPoss[i];
+Rows2[ThisPos + Delta] = Rows1[ThisPos];
+Rows1[ThisPos] = null;
+}
+
+// 7. Перебираем исходный массив и оставшиеся непустые строки размещаем в
+// новом массиве, отыскивая пустые места. Для этого используем переменную FreePos
+// для указания на очередную пустую позицию второго массива
+int FreePos = 0;
+for (i = 0; i < Rows1.Length; i++)
+{
+if (Rows1[i] == null) // перемещенная позиция
+continue;
+// Поиск места
+while (Rows2[FreePos] != null)
+FreePos++;
+// Нашли дырку
+Rows2[FreePos] = Rows1[i];
+FreePos++;
+}
+
+// 8. Замещаем коллекцию строк
+Owner.Control.Rows.Clear();
+Owner.Control.Rows.AddRange(Rows2);
+
+// 9. Восстанавливаем выбор
+Owner.SelectedGridRows = SelRows;     
+return true;                          */
+    }
+
+    /// <summary>
+    /// Восстановление порядка по умолчанию на основании DefaultManualOrderRows
+    /// </summary>
+    /// <returns></returns>
+    private bool DoSortRestoreRows()
+    {
+      throw new NotImplementedException();
+
+      /*
+      if (DefaultManualOrderRows == null)
+        throw new NullReferenceException("Свойство DefaultManulOrderRows не установлено");
+
+      // 1. Загружаем полный список строк DataGridViewRow в массив
+      DataGridViewRow[] Rows1 = new DataGridViewRow[Owner.Control.Rows.Count];
+      Owner.Control.Rows.CopyTo(Rows1, 0);
+
+      // 2. Запоминаем выбранные строки
+      DataGridViewRow[] SelRows = Owner.SelectedGridRows;
+
+      // 3. Подготавливаем массив строк для их размещения в новом порядке
+      // Значения null в этом массиве означают временно пустые позиции
+      DataGridViewRow[] Rows2 = new DataGridViewRow[Rows1.Length];
+
+      // 4. Копируем строки из массива по умолчанию
+      int i;
+      int cnt = 0;
+      bool Changed = false;
+      for (i = 0; i < DefaultManualOrderRows.Length; i++)
+      {
+        int ThisPos = Array.IndexOf<DataGridViewRow>(Rows1, DefaultManualOrderRows[i]);
+        if (ThisPos < 0)
+          continue; // Ошибка
+
+        Rows2[cnt] = Rows1[ThisPos];
+        Rows1[ThisPos] = null;
+        if (cnt != ThisPos)
+          Changed = true;
+        cnt++;
+      }
+
+      // 5. Копируем "лишние" строки, которых нет в массиве по умолчанию
+      for (i = 0; i < Rows1.Length; i++)
+      {
+        if (Rows1[i] != null)
+        {
+          Rows2[cnt] = Rows1[i];
+          if (cnt != i)
+            Changed = true;
+          cnt++;
+        }
+      }
+
+      if (!Changed)
+        return false;
+
+      // 6. Замещаем коллекцию строк
+      Owner.Control.Rows.Clear();
+      Owner.Control.Rows.AddRange(Rows2);
+
+      // 7. Восстанавливаем выбор
+      Owner.SelectedGridRows = SelRows;
+      return true; */
+    }
+
+    #endregion
+
+    #region Перестановка с помощью числового поля
+
+    #region Свойство DataReorderHelper
+
+    /// <summary>
+    /// Возвращает объект, реализующий интерфейс IDataReorderHelper.
+    /// Если свойство ManualOrderColumn не установлено, возвращается null.
+    /// Для инициализации значения однократно вызывается событие DataReorderHelperNeeded.
+    /// Если требуется, чтобы свойство вернуло новое значение, используйте метод ResetDataReorderHelper().
+    /// </summary>
+    /// <returns>Объект IDataReorderHelper</returns>
+    public IDataReorderHelper DataReorderHelper
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(ManualOrderColumn))
+          return null;
+
+        if (ProviderState == EFPControlProviderState.Initialization || ProviderState == EFPControlProviderState.Disposed)
+          return null;
+
+        if (_DataReorderHelper == null)
+        {
+          DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
+          OnDataReorderHelperNeeded(args);
+          if (args.Helper == null)
+            throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
+          _DataReorderHelper = args.Helper;
+        }
+        return _DataReorderHelper;
+      }
+    }
+    private IDataReorderHelper _DataReorderHelper;
+
+    /// <summary>
+    /// Очищает сохраненное значение свойства DataReorderHelper, чтобы при следующем обращении к нему
+    /// вновь было вызвано событие DataReorderHelperNeeded
+    /// </summary>
+    public virtual void ResetDataReorderHelper()
+    {
+      _DataReorderHelper = null;
+    }
+
+    /// <summary>
+    /// Событие вызывается при выполнении команд ручной сортировки, если установлено свойство ManualOrderColumn.
+    /// Обработчик события может создать собственный экземпляр и установить свойство Helper.
+    /// Если обработчика нет, или он не создал объект, то создается объект по умолчанию
+    /// </summary>
+    public event DataReorderHelperNeededEventHandler DataReorderHelperNeeded;
+
+    /// <summary>
+    /// Вызывает обработчик события DataReorderHelperNeeded.
+    /// Если IDataReorderHelper не получен, объект создается вызовом метода EFPDataGridView.CreateDataReorderHelper().
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnDataReorderHelperNeeded(DataReorderHelperNeededEventArgs args)
+    {
+      if (DataReorderHelperNeeded != null)
+        DataReorderHelperNeeded(this, args);
+      if (args.Helper == null)
+        args.Helper = CreateDefaultDataReorderHelper();
+    }
+
+    /// <summary>
+    /// Создает объект, предназначенный для сортировки строк с помощью числового поля.
+    /// Используется при установленном свойстве EFPDataTreeViewCommandItems.ManualOrderColumn.
+    /// Непереопределенный метод создает новый объект DataTableTreeReorderHelper.
+    /// </summary>
+    /// <returns>Объект, реализующий интерфейс IDataReorderHelper </returns>
+    protected virtual IDataReorderHelper CreateDefaultDataReorderHelper()
+    {
+      if (String.IsNullOrEmpty(ManualOrderColumn))
+        throw new InvalidOperationException("Не установлено свойство ManualOrderColumn");
+
+      IDataTableTreeModel dtmodel = Control.Model as IDataTableTreeModel;
+      if (dtmodel != null)
+        return new DataTableTreeReorderHelper(dtmodel, ManualOrderColumn);
+
+      throw new InvalidOperationException("Модель не присоединена или она не реализует интерфейс IDataTableTreeModel");
+
+      /*
+      // Получаем доступ к объекту DataView
+      DataView dv = SourceAsDataView;
+      if (dv == null)
+        throw new InvalidDataSourceException("Нельзя получить DataView");
+
+      return new DataTableReorderHelper(dv, CommandItems.ManualOrderColumn);
+       * */
+    }
+
+
+    #endregion
+
+    #region Перестановка строк
+
+    /// <summary>
+    /// Имя числового столбца, который определяет порядок строк при ручной сортировке
+    /// Если задано, то в меню есть команды ручной сортировки
+    /// </summary>
+    public string ManualOrderColumn { get { return _ManualOrderColumn; } set { _ManualOrderColumn = value; } }
+    private string _ManualOrderColumn;
+
+    /// <summary>
+    /// Изменение порядка строк на основании числового поля
+    /// </summary>
+    /// <param name="down"></param>
+    /// <returns></returns>
+    private bool DoReorderByDataColumn(bool down)
+    {
+      if (DataReorderHelper == null)
+        throw new NullReferenceException("DataReorderHelper=null");
+
+      //Загружаем выбранные строки
+      DataRow[] selRows = this.SelectedDataRows;
+      if (selRows.Length == 0)
+      {
+        EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
+        return false;
+      }
+
+      bool res;
+      if (down)
+        res = DataReorderHelper.MoveDown(selRows);
+      else
+        res = DataReorderHelper.MoveUp(selRows);
+
+      if (!res)
+      {
+        string msg = "Нельзя передвинуть ";
+        if (selRows.Length > 1)
+          msg += "выбранные строки ";
+        else
+          msg += "выбранную строку ";
+        if (down)
+          msg += "вниз";
+        else
+          msg += "вверх";
+        EFPApp.ShowTempMessage(msg);
+        return false;
+      }
+
+      // Обновляем просмотр
+      //ControlProvider.PerformRefresh();
+      //Model.Refresh();
+      /*
+      if (Owner.Control.CurrentCell != null)
+      {
+        if (Owner.Control.CurrentCell.IsInEditMode)
+        {
+          DataGridViewCell Cell = Owner.Control.CurrentCell;
+          Owner.Control.CurrentCell = null;
+          Owner.Control.CurrentCell = Cell;
+        }
+      } */
+
+      this.SelectedDataRows = selRows; // восстанавливаем выбранные строки
+
+      return true;
+    }
+
+    #endregion
+
+    #region Восстановление порядка
+
+
+    /// <summary>
+    /// Имя числового столбца, который определяет порядок строк по умолчанию при ручной
+    /// сортировке. Свойство действует при непустом значении ManualOrderColumn.
+    /// Если имя присвоено, то действует команда "Восстановить порядок по умолчанию"
+    /// </summary>
+    public string DefaultManualOrderColumn { get { return _DefaultManualOrderColumn; } set { _DefaultManualOrderColumn = value; } }
+    private string _DefaultManualOrderColumn;
+
+    /// <summary>
+    /// Восстановление порядка по умолчанию на основании DefaultManualOrderColumn
+    /// </summary>
+    /// <returns></returns>
+    private bool DoSortRestoreColumn()
+    {
+      if (String.IsNullOrEmpty(DefaultManualOrderColumn))
+        throw new NullReferenceException("Свойство DefaultManualOrderColumn не установлено");
+      if (DataReorderHelper == null)
+        throw new NullReferenceException("DataReorderHelper=null");
+
+
+      DataRow[] desiredOrder;
+      using (DataView dv = new DataView(SourceAsDataTable))
+      {
+        dv.Sort = DefaultManualOrderColumn;
+        desiredOrder = DataTools.GetDataViewRows(dv);
+      }
+
+      bool changed = DataReorderHelper.Reorder(desiredOrder);
+
+      // Обновляем просмотр
+      //if (changed)
+      //  ControlProvider.Control.Refresh();
+
+      return changed;
+    }
+
+    #endregion
+
+    #region InitManualOrderColumnValue()
+
+    /// <summary>
+    /// Выполняет инициализацию значения поля, заданного свойством ManualOrderColumn для новых строк, у которых поле имеет значение 0.
+    /// Вызывает метод IDataReorderHelper.InitRows().
+    /// Если свойcтво ManualOrderColumn не установлено, никаких действий не выполняется.
+    /// </summary>
+    /// <param name="rows">Строки данных, которые нужно инициализировать</param>
+    /// <param name="otherRowsChanged">Сюда записывается значение true, если были изменены другие строки в просмотре, кроме выбранных.</param>
+    /// <returns>True, если строки (одна или несколько) содержали нулевое значение и были инициализированы.
+    /// Если все строки уже содержали ненулевое значение, то возвращается false.</returns>
+    public bool InitManualOrderColumnValue(DataRow[] rows, out bool otherRowsChanged)
+    {
+      if (DataReorderHelper == null)
+      {
+        otherRowsChanged = false;
+        return false;
+      }
+
+      return DataReorderHelper.InitRows(rows, out otherRowsChanged);
+    }
+
+    #endregion
+
+    #endregion
+
+    #endregion
+
     #region Команды локального меню
 
     /// <summary>
@@ -2810,34 +3342,6 @@ namespace FreeLibSet.Forms
     protected override EFPControlCommandItems GetCommandItems()
     {
       return new EFPDataTreeViewCommandItems(this);
-    }
-
-    /// <summary>
-    /// Создает объект, предназначенный для сортировки строк с помощью числового поля.
-    /// Используется при установленном свойстве EFPDataTreeViewCommandItems.ManualOrderColumn.
-    /// Непереопределенный метод создает новый объект DataTableTreeReorderHelper.
-    /// </summary>
-    /// <returns>Объект, реализующий интерфейс IDataReorderHelper </returns>
-    internal protected virtual IDataReorderHelper CreateDataReorderHelper()
-    {
-      if (String.IsNullOrEmpty(CommandItems.ManualOrderColumn))
-        throw new InvalidOperationException("Не установлено свойство ManualOrderColumn");
-
-      IDataTableTreeModel dtmodel = Control.Model as IDataTableTreeModel;
-      if (dtmodel != null)
-        return new DataTableTreeReorderHelper(dtmodel, CommandItems.ManualOrderColumn);
-
-      throw new InvalidOperationException("Модель не присоединена или она не реализует интерфейс IDataTableTreeModel");
-
-      /*
-
-      // Получаем доступ к объекту DataView
-      DataView dv = SourceAsDataView;
-      if (dv == null)
-        throw new InvalidDataSourceException("Нельзя получить DataView");
-
-      return new DataTableReorderHelper(dv, CommandItems.ManualOrderColumn);
-       * */
     }
 
     #endregion

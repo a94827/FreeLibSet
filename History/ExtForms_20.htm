@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-05-27T21:35:30.718000000"/>
+	<meta name="changed" content="2022-06-10T16:14:43.538000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -258,7 +258,7 @@
 			<p lang="en-US" align="center">318</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.05.2022-26.05.2022</p>
+			<p lang="en-US" align="center">21.05.2022-<span lang="ru-RU">10</span>.06.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">В
@@ -272,27 +272,48 @@
 			v.62 </a></span><a href="ExtDBDocForms_11.htm#v062p11"><span lang="ru-RU">п.11</span></a><span lang="en-US">)</span><span lang="ru-RU">,
 			если он добавляет команды в локальное меню просмотра</span><span lang="en-US">.
 			</span><span lang="ru-RU">Аналогичные изменения в
-			</span><span lang="en-US">EFPReportTextViewPage </span><span lang="ru-RU">и</span><span lang="en-US">
-			EFPReportXmlViewPage</span><span lang="ru-RU">.</span></p>
-			<p><br/>
-<br/>
-
-			</p>
-			<p>Изменения в ручной сортировке строк с использованием свойства
-			<span lang="en-US">ManualOrderColumn</span></p>
-			<p><span lang="en-US">2. EFPDataGridViewCommandItems </span>использует
-			интерфейс <span lang="en-US">IDataReorderHelper (<a href="ExtTools_20.htm#v318p1">ExtTools,
-			v.318 </a></span><a href="ExtTools_20.htm#v318p1">п.1</a><span lang="en-US">).
-			</span>Событие <span lang="en-US">DataReorderHelperNeeded.
-			</span>Защищенный метод <span lang="en-US">EFPDataGridView.CreateReorderHelper()</span></p>
-			<p>3. Метод <span lang="en-US">EFPDataGridViewCommandItems.
-			</span>InitManualOrderColumnValue()</p>
-			<p><span lang="en-US">4. EFPDataGridView.OnCreated() </span>больше
-			не выполняет автоматическую нумерацию строк. Значение поле
-			<span lang="en-US">ManualOrderColumn </span>сохраняется до тех
-			пор, пока строки не переставляются пользователем.</p>
-			<p lang="en-US">5. EFPInputDataGridView <span lang="ru-RU">инициализирует
-			поле сортировки для новой строки</span></p>
+			</span><span lang="en-US">EFPReportTextViewPage </span><span lang="ru-RU">и</span>
+			<span lang="en-US">EFPReportXmlViewPage</span><span lang="ru-RU">.</span></p>
+			<p><a name="v318p2"></a><span lang="en-US">2. Изменения в ручной
+			сортировке строк </span><span lang="ru-RU">в </span><span lang="en-US">EFPDataGridView</span>
+			<span lang="en-US">(<a href="ExtForms_11.htm#v054p1">v.54 </a></span><a href="ExtForms_11.htm#v054p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span>
+			<span lang="ru-RU">и </span><span lang="en-US">EFPDataTreeView</span>
+			<span lang="en-US">(<a href="ExtForms_11.htm#v092p4">v.92 </a></span><a href="ExtForms_11.htm#v092p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Свойства
+			</span><span lang="en-US">ManualOrderColumn,
+			DefaultManualOrderColumn, ManualOrderRows </span><span lang="ru-RU">и
+			</span><span lang="en-US">DefaultManualOrderRows</span> <span lang="ru-RU">перенесены
+			из классов </span><span lang="en-US">CommandItems </span><span lang="ru-RU">в
+			основной объект.</span></p>
+			<p><span lang="ru-RU">- Свойство </span><span lang="en-US">DataReorderHelper
+			</span><span lang="ru-RU">типа </span><span lang="en-US">IDataReorderHelper
+			(<a href="ExtTools_20.htm#v318p1">ExtTools, v.318 </a></span><a href="ExtTools_20.htm#v318p1">п.1</a><span lang="en-US">).
+			</span>Событие <span lang="en-US">DataReorderHelperNeeded</span><span lang="ru-RU">.</span>
+			<span lang="ru-RU">З</span>ащищенный метод
+			<span lang="en-US">CreateDefaultReorderHelper().</span></p>
+			<p><span lang="en-US">- </span>Метод InitManualOrderColumnValue()</p>
+			<p><span lang="ru-RU">-</span> <span lang="en-US">EFPDataGridView.OnCreated()
+			</span>больше не выполняет автоматическую нумерацию строк.
+			Значение поле <span lang="en-US">ManualOrderColumn </span>сохраняется
+			до тех пор, пока строки не переставляются пользователем. <span lang="ru-RU">При
+			наличии иерархии, нумерация может измениться и при добавлении
+			новых строк или их вставки из буфера обмена.</span></p>
+			<p>- <span lang="ru-RU">В интерфейс </span><span lang="en-US">IEFPDataView</span>
+			<span lang="ru-RU">(</span><a href="ExtForms_11.htm#v167p5"><span lang="en-US">v.167
+			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">добавлены свойства </span><span lang="en-US">ManualOrderColumn,
+			DefaultManualOrderColumn, DataReorderHelper; </span><span lang="ru-RU">событие
+			</span><span lang="en-US">ManualOrderChanged; </span><span lang="ru-RU">методы
+			</span><span lang="en-US">ResetDataReorderHelper(),
+			InitManualOrderColumnValue().</span></p>
+			<p><span lang="ru-RU">3</span><span lang="en-US">.
+			EFPInputDataGridView </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v276p2"><span lang="en-US">v.276
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">
+			</span><span lang="ru-RU">инициализирует поле сортировки для новой
+			строки</span></p>
+			<p><span lang="ru-RU">4</span><span lang="en-US">. </span><span lang="ru-RU">Событие
+			</span><span lang="en-US">TreeViewAdv.ModelChanged </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v092p2"><span lang="en-US">v.92
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

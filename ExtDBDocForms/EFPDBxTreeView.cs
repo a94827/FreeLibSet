@@ -1032,32 +1032,6 @@ namespace FreeLibSet.Forms.Docs
 
     #region Вспомогательные методы
 
-#if XXX
-    /// <summary>
-    /// Получение списка имен полей для всех столбцов, разделенный запятыми. 
-    /// Предназначен для создания SQL-запроса сервером. Имена без квадратных скобок
-    /// </summary>
-    /// <returns>CSV-строка с именами. Не содержит пробелов</returns>
-    public string GetFieldNames()
-    {
-      string s = String.Empty;
-      for (int i = 0; i < Control.Columns.Count; i++)
-      {
-        string ThisName = Control.Columns[i].DataPropertyName;
-        if (String.IsNullOrEmpty(ThisName))
-          continue;
-        if (s.Length > 0)
-          s += ",";
-        s += ThisName;
-      }
-      return s;
-    }
-#endif
-
-    #endregion
-
-    #region Вспомогательные методы
-
     /// <summary>
     /// Пометить на обновление строки с заданными идентификаторами
     /// </summary>
