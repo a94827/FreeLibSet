@@ -699,25 +699,31 @@ namespace FreeLibSet.Forms.Docs
         }
 
         string dvSort;
-        if (String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
-          dvSort = SubDocType.DefaultOrder.ToString(); // 02.05.2022
-        else
-          dvSort = SubDocTypeUI.ManualOrderColumn; // испр. 26.05.2022
-
-        if (MainEditor != null)
+        if (base.CurrentOrder == null)
         {
-          if (MainEditor.MultiDocMode)
+          if (String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
+            dvSort = SubDocType.DefaultOrder.ToString(); // 02.05.2022
+          else
+            dvSort = SubDocTypeUI.ManualOrderColumn; // испр. 26.05.2022
+          if (MainEditor != null)
           {
-            if (String.IsNullOrEmpty(dv.Sort))
-              dvSort = "DocId";
-            else
-              dvSort += ",DocId";
+            if (MainEditor.MultiDocMode)
+            {
+              if (String.IsNullOrEmpty(dv.Sort))
+                dvSort = "DocId";
+              else
+                dvSort += ",DocId";
+            }
           }
         }
+        else
+          dvSort = base.CurrentOrder.Sort; // 15.06.2022
+
         if (rep == null)
           Control.DataSource = dv;
         else
           base.TableRepeater = rep;
+
         SourceAsDataView.Sort = dvSort; // 02.05.2022
       }
 

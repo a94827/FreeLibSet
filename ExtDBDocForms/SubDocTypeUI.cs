@@ -1392,8 +1392,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="srcRows">Массив исходных строк для добавления.</param>
     /// <param name="srcDocTypeBase">Описание документа или поддокумента, к которому относятся исходные строки</param>
     /// <param name="controlProvider">Табличный или иерархический просмотр, для которого выполняется вставка.
-    /// Ссылка передается обработчикам событий (свойство ControlProvider. Может быть null.</param>
-    /// если вставляется одна строка. Может быть null.</param>
+    /// Ссылка передается обработчикам событий (свойство ControlProvider). Может быть null.</param>
     /// <returns>Массив созданных документов или null, если вставка не выполнена</returns>
     public DBxSubDoc[] PerformPasteRows(DBxSingleSubDocs subDocs, DataRow[] srcRows, DocTypeUIBase srcDocTypeBase, IEFPSubDocView controlProvider)
     {
