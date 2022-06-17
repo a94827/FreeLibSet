@@ -1073,11 +1073,28 @@ namespace FreeLibSet.Forms
 
       for (int i = 0; i < SelColumns.Length; i++)
       {
+        bool columnIsEmpty = true;
+        for (int k = 0; k < SelRows.Length; k++)
+        {
+          if (!SelRows[k])
+            continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
+          if (!String.IsNullOrEmpty(SourceData[k, i]))
+          {
+            columnIsEmpty = false;
+            break;
+          }
+        }
+        if (columnIsEmpty)
+          continue; // 17.06.2022. Полностью пустому столбцу данных не назначаем столбец по умолчанию.
+
         for (int j = 0; j < cols2.Count; j++)
         {
           bool IsOK = true;
           for (int k = 0; k < SelRows.Length; k++)
           {
+            if (!SelRows[k])
+              continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
+
             args.InitSourceData(SourceData[k, i]);
             cols2[j].PerformValidating(args);
             if (args.ValidateState != UIValidateState.Ok)
@@ -1366,6 +1383,9 @@ namespace FreeLibSet.Forms
           args.ReadOnlyMessage = "Пустая ячейка";
           return;
         }
+        // Так странно себя ведет
+        //if (SelColumns[args.ColumnIndex - 1] == null && args.GetGridCell().Selected)
+        //  args.Grayed = true;
       }
       else
       {

@@ -1270,6 +1270,8 @@ namespace FreeLibSet.Forms.Docs
       List<DataRow> lstRows = null;
       foreach (DBxSubDoc sd in subDocs)
       {
+        if (sd.SubDocState == DBxDocState.Delete)
+          continue; // 17.06.2022
         if (sd.Values[pOrderCol].AsInteger == 0)
         {
           DataRow row = subDocs.SubDocsView.Table.Rows.Find(sd.SubDocId);

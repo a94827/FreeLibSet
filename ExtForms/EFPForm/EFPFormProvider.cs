@@ -2689,7 +2689,7 @@ namespace FreeLibSet.Forms
       Button btn = control as Button;
       if (btn == null)
       {
-        if (control.HasChildren && (!(control is UserControl)) && base.FindControlProvider(control)==null)
+        if (control.HasChildren && (!(control is UserControl)) && base.FindControlProvider(control) == null)
         {
           foreach (Control child in control.Controls)
             InitButtonHandlers(child); // рекурсивный вызов
@@ -2706,7 +2706,6 @@ namespace FreeLibSet.Forms
 
 
     #endregion
-
 
     #region Поиск провайдера для формы
 
