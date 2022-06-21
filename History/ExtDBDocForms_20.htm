@@ -5,7 +5,7 @@
 	<title>»зменени€ в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2022-06-17T19:04:20.045000000"/>
+	<meta name="changed" content="2022-06-20T17:07:24.720000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -87,12 +87,12 @@
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
 		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -126,16 +126,30 @@ Forms</span>)</h1>
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">320</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">20.06.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. EFPGroupDocTreeView.OnAttached() <span lang="ru-RU">запоминает
+			текущий выбранный узел на врем€ замены текста корневого узла
+			(</span><a href="#v310p2">v.<span lang="ru-RU">310 п.2</span></a><span lang="ru-RU">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">319</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">17.06.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">ћетод
-			</span>SubDocTypeUI.InitManualOrderColumnValue() <span lang="ru-RU">(</span><a href="#v318p2">v.318
-			<span lang="ru-RU">п.2</span></a><span lang="ru-RU">) пропускает
-			удаленные поддокументы.</span></p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">ћетод
+			</span><span lang="en-US">SubDocTypeUI.InitManualOrderColumnValue()
+			</span><span lang="ru-RU">(</span><a href="#v318p2"><span lang="en-US">v.318
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			пропускает удаленные поддокументы.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -369,8 +383,8 @@ Forms</span>)</h1>
 			(и других действи€х). ѕри следующем открытии справочника новый
 			элемент не отображалс€ в просмотре до выполнени€ команды
 			&quot;ќбновить&quot;.</span></p>
-			<p><span lang="ru-RU">2. EFPGroupDocTreeView обрабатывает
-			</span><span lang="en-US">OnAttached(), </span><span lang="ru-RU">где
+			<p><a name="v310p2"></a><span lang="ru-RU">2. EFPGroupDocTreeView
+			обрабатывает </span><span lang="en-US">OnAttached(), </span><span lang="ru-RU">где
 			заново инициализирует текст дл€ корневого узла дерева. —оздание
 			модели</span> <span lang="ru-RU">и корневого узла </span><span lang="en-US">(<a href="ExtDBDocForms_11.htm#v101p4">v.101
 			</a></span><a href="ExtDBDocForms_11.htm#v101p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)

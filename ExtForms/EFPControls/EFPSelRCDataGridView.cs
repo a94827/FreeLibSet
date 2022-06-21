@@ -9,6 +9,7 @@ using System.Drawing;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Text;
 
 namespace FreeLibSet.Forms
 {
@@ -940,6 +941,10 @@ namespace FreeLibSet.Forms
       // 12.01.2022
       Columns.AddBool("RowFlag", false, String.Empty); // будет удален при установке SourceData
       base.MarkRowsColumnIndex = 0;
+
+      _AutoSelect = true;
+      _SelRows = new SelRowCollection(this);
+      _SelColumns = new SelColumnCollection(this);
     }
 
     private EFPSelRCValidatingEventArgs _ValidatingArgs;
@@ -963,6 +968,34 @@ namespace FreeLibSet.Forms
     }
     private string[,] _SourceData;
 
+    /// <summary>
+    /// Возвращает количество исходных строк в SourceData.
+    /// </summary>
+    public int SourceRowCount
+    {
+      get
+      {
+        if (_SourceData == null)
+          return 0;
+        else
+          return _SourceData.GetLength(0);
+      }
+    }
+
+    /// <summary>
+    /// Возвращает количество исходных столбцов в SourceData.
+    /// </summary>
+    public int SourceColumnCount
+    {
+      get
+      {
+        if (_SourceData == null)
+          return 0;
+        else
+          return _SourceData.GetLength(1);
+      }
+    }
+
     #endregion
 
     #region AllColumns
@@ -976,36 +1009,36 @@ namespace FreeLibSet.Forms
       set
       {
         _AllColumns = value;
+        if (value == null)
+          _AllColumnIndexer = null;
+        else
+        {
+          string[] a = new string[value.Length];
+          for (int i = 0; i < value.Length; i++)
+          {
+            if (value[i] == null)
+              throw new ArgumentException("value", "value[" + i.ToString() + "]==null");
+            a[i] = value[i].Code;
+          }
+          _AllColumnIndexer = new StringArrayIndexer(a, false);
+        }
+
         InitSourceData();
       }
     }
     private EFPSelRCColumn[] _AllColumns;
+    private StringArrayIndexer _AllColumnIndexer;
 
     private void InitSourceData()
     {
       if (_AllColumns == null || _SourceData == null)
       {
-        _SelColumns = null;
-        _SelRows = null;
+        _SelColumnArray = null;
+        _SelRowArray = null;
         return;
       }
-      _SelColumns = new EFPSelRCColumn[SourceData.GetLength(1)];
-      _SelRows = new bool[SourceData.GetLength(0)];
-
-      // 12.12.2017
-      // Ставим флажки только для непустых строк
-      // DataTools.FillArray<bool>(FSelRows, true);
-      for (int i = 0; i < _SelRows.Length; i++)
-      {
-        for (int j = 0; j < _SelColumns.Length; j++)
-        {
-          if (!String.IsNullOrEmpty(_SourceData[i, j]))
-          {
-            _SelRows[i] = true;
-            break;
-          }
-        }
-      }
+      _SelColumnArray = new EFPSelRCColumn[SourceData.GetLength(1)];
+      _SelRowArray = new bool[SourceData.GetLength(0)];
 
       Columns.Clear();
       Columns.AddBool("RowFlag", false, String.Empty);
@@ -1018,7 +1051,7 @@ namespace FreeLibSet.Forms
         displayNames[i + 1] = AllColumns[i].DisplayName;
       int dropDownWidth = CalcDropDownWidth(displayNames);
 
-      for (int i = 0; i < SelColumns.Length; i++)
+      for (int i = 0; i < _SelColumnArray.Length; i++)
       {
         DataGridViewComboBoxColumn col = new DataGridViewComboBoxColumn();
         col.Name = "Col" + (i + 1).ToString(); // 12.01.2022
@@ -1029,7 +1062,7 @@ namespace FreeLibSet.Forms
         Control.Columns.Add(col);
 
         int maxLen = 7; // нужно место для стрелочки выпадающего списка
-        for (int j = 0; j < SelRows.Length; j++)
+        for (int j = 0; j < _SelRowArray.Length; j++)
         {
           string s = DataTools.GetString(SourceData[j, i]);
           maxLen = Math.Max(s.Length, maxLen);
@@ -1039,17 +1072,17 @@ namespace FreeLibSet.Forms
         Columns[col].TextWidth = maxLen;
       }
 
-      Control.RowCount = SelRows.Length + 1;
+      Control.RowCount = _SelRowArray.Length + 1;
 
       base.FrozenColumns = 1;
       Control.Rows[0].Frozen = true;
       Control.Rows[0].DividerHeight = 1; // 12.01.2022
       base.MarkRowsColumnIndex = 0;
 
-      for (int i = 0; i < SelRows.Length; i++)
+      for (int i = 0; i < _SelRowArray.Length; i++)
       {
         Control.Rows[i + 1].HeaderCell.Value = i + 1;
-        for (int j = 0; j < SelColumns.Length; j++)
+        for (int j = 0; j < _SelColumnArray.Length; j++)
         {
           DataGridViewComboBoxCell Cell = (DataGridViewComboBoxCell)(base.Control[j + 1, i + 1]);
 
@@ -1059,65 +1092,495 @@ namespace FreeLibSet.Forms
         }
       }
 
-      InitDefaultColumns();
-    }
-
-    /// <summary>
-    /// Начальная инициализация столбцов подходящими значениями
-    /// </summary>
-    private void InitDefaultColumns()
-    {
-      List<EFPSelRCColumn> cols2 = new List<EFPSelRCColumn>(AllColumns);
-
-      EFPSelRCValidatingEventArgs args = new EFPSelRCValidatingEventArgs();
-
-      for (int i = 0; i < SelColumns.Length; i++)
+      if (AutoSelect)
       {
-        bool columnIsEmpty = true;
-        for (int k = 0; k < SelRows.Length; k++)
-        {
-          if (!SelRows[k])
-            continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
-          if (!String.IsNullOrEmpty(SourceData[k, i]))
-          {
-            columnIsEmpty = false;
-            break;
-          }
-        }
-        if (columnIsEmpty)
-          continue; // 17.06.2022. Полностью пустому столбцу данных не назначаем столбец по умолчанию.
-
-        for (int j = 0; j < cols2.Count; j++)
-        {
-          bool IsOK = true;
-          for (int k = 0; k < SelRows.Length; k++)
-          {
-            if (!SelRows[k])
-              continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
-
-            args.InitSourceData(SourceData[k, i]);
-            cols2[j].PerformValidating(args);
-            if (args.ValidateState != UIValidateState.Ok)
-            {
-              IsOK = false;
-              break;
-            }
-          }
-
-          if (IsOK)
-          {
-            // Столбец подходит
-            SelColumns[i] = cols2[j];
-            cols2.RemoveAt(j);
-            break;
-          }
-        }
+        SelRows.Init();
+        SelColumns.Init();
       }
+
+      Control.Invalidate();
     }
 
     #endregion
 
-    #region SelColumns и SelRows
+    #region SelRows и SelColumns
+
+    /// <summary>
+    /// Реализация свойства SelRows
+    /// </summary>
+    public sealed class SelRowCollection
+    {
+      // Нельзя делать одноразовой структурой.
+      // Компилятор будет ругаться на присвоение свойства this
+
+      #region Конструктор
+
+      internal SelRowCollection(EFPSelRCDataGridView owner)
+      {
+        _Owner = owner;
+      }
+
+      #endregion
+
+      #region Свойства
+
+      private EFPSelRCDataGridView _Owner;
+
+#if XXX
+      /// <summary>
+      /// Возвращает количество строк в матрице данных SourceData.GetLength(0).
+      /// Пока свойства SourceData и AllColumns не установлены, возвращается 0.
+      /// </summary>
+      public int Count
+      {
+        get
+        {
+          if (_Owner._SelRowArray == null)
+            return 0;
+          else
+            return _Owner._SelRowArray.Length;
+        }
+      }
+#endif
+
+      /// <summary>
+      /// Возвращает или устанавливает отметку для строки
+      /// </summary>
+      /// <param name="index">Индекс строки</param>
+      /// <returns>Наличие отметки</returns>
+      public bool this[int index]
+      {
+        get { return _Owner._SelRowArray[index]; }
+        set
+        {
+          _Owner.CheckRequiredData();
+          if (value == _Owner._SelRowArray[index])
+            return;
+          _Owner._SelRowArray[index] = value;
+          _Owner.Control.InvalidateRow(index + 1); // вся строка может стать серой
+        }
+      }
+
+      /// <summary>
+      /// Возвыращает true, если ни одна из строк не выбрана
+      /// </summary>
+      public bool IsEmpty
+      {
+        get
+        {
+          if (_Owner._SelRowArray == null)
+            return true;
+          return Array.IndexOf<bool>(_Owner._SelRowArray, true) < 0;
+        }
+      }
+
+      /// <summary>
+      /// Флажки для выбранных строк в виде массива
+      /// </summary>
+      public bool[] AsArray 
+      {
+        get
+        {
+          if (_Owner._SelRowArray == null)
+            return DataTools.EmptyBools;
+          bool[] a = new bool[_Owner._SelRowArray.Length];
+          _Owner._SelRowArray.CopyTo(a, 0);
+          return a;
+        }
+        set
+        { 
+          _Owner.CheckRequiredData();
+          if (value == null)
+            Clear();
+          else
+          {
+            int n = Math.Min(value.Length, _Owner._SelRowArray.Length);
+            DataTools.FillArray<bool>(_Owner._SelRowArray, false);
+            Array.Copy(value, _Owner._SelRowArray, n);
+            _Owner.Control.Invalidate();
+          }
+        }
+      }
+
+      #endregion
+
+      #region Методы
+
+      /// <summary>
+      /// Очищает список выбранных строк
+      /// </summary>
+      public void Clear()
+      {
+        _Owner.CheckRequiredData();
+        if (IsEmpty)
+          return;
+        DataTools.FillArray<bool>(_Owner._SelRowArray, false);
+        _Owner.Control.Invalidate();
+      }
+
+      /// <summary>
+      /// Устанавливает отметки (свойство SelRows) для всех непустых строк.
+      /// На момент вызова должны быть установлены свойства AllColumns и SourceData.
+      /// Этот метод вызывается автоматически при AutoSelect=true.
+      /// </summary>
+      public void Init()
+      {
+        _Owner.CheckRequiredData();
+
+        // 12.12.2017
+        // Ставим флажки только для непустых строк
+        // DataTools.FillArray<bool>(FSelRows, true);
+        for (int i = 0; i < _Owner._SelRowArray.Length; i++)
+        {
+          for (int j = 0; j < _Owner._SelColumnArray.Length; j++)
+          {
+            if (!String.IsNullOrEmpty(_Owner._SourceData[i, j]))
+            {
+              _Owner._SelRowArray[i] = true;
+              break;
+            }
+          }
+        }
+        _Owner.Control.Invalidate();
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Флажки для выбранных строк.
+    /// </summary>
+    public SelRowCollection SelRows { get { return _SelRows; } }
+    private SelRowCollection _SelRows;
+
+    private bool[] _SelRowArray;
+
+    /// <summary>
+    /// Реализация свойства SelColumns
+    /// </summary>
+    public sealed class SelColumnCollection
+    {
+      // Нельзя делать одноразовой структурой.
+      // Компилятор будет ругаться на присвоение свойства this
+
+      #region Конструктор
+
+      internal SelColumnCollection(EFPSelRCDataGridView owner)
+      {
+        _Owner = owner;
+      }
+
+      #endregion
+
+      #region Свойства
+
+      private EFPSelRCDataGridView _Owner;
+
+#if XXX
+      /// <summary>
+      /// Возвращает количество столбцов в матрице данных SourceData.GetLength(1).
+      /// Пока свойства SourceData и AllColumns не установлены, возвращается 0.
+      /// </summary>
+      public int Count
+      {
+        get
+        {
+          if (_Owner._SelColumnArray == null)
+            return 0;
+          else
+            return _Owner._SelColumnArray.Length;
+        }
+      }
+#endif
+
+      /// <summary>
+      /// Возвращает или назначает выбор для столбца
+      /// </summary>
+      /// <param name="index">Индекс столбца в матрице SourceData</param>
+      /// <returns>Один из элементов в AllColumns или null, если столбец не используется</returns>
+      public EFPSelRCColumn this[int index]
+      {
+        get { return _Owner._SelColumnArray[index]; }
+        set
+        {
+          _Owner.CheckRequiredData();
+          if (value == _Owner._SelColumnArray[index])
+            return;
+          _Owner._SelColumnArray[index] = value;
+          _Owner.Control.InvalidateColumn(index + 1);
+        }
+      }
+
+      /// <summary>
+      /// Возвращает true, если нет ни одного назначенного столбца
+      /// </summary>
+      public bool IsEmpty
+      {
+        get
+        {
+          if (_Owner._SelColumnArray == null)
+            return true;
+
+          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
+          {
+            if (_Owner._SelColumnArray[i] != null)
+              return false;
+          }
+          return true;
+        }
+      }
+
+
+      /// <summary>
+      /// Коды выбранных столбцов. Дублирует свойство SelColumns.
+      /// Для невыбранных столбцов элементы возвращаемого массива содержат пустую строку.
+      /// При установке свойства для ненайденных кодов, как и для пустых строк/null, устанавливается значение соответствующего элемента SelColumns равным null.
+      /// Присваиваемый массив может быть короче или длиннее массива SelColumns. Лишние элементы игнорируются,
+      /// недостающие принимают значение null.
+      /// </summary>
+      public string[] Codes
+      {
+        get
+        {
+          if (_Owner._SelColumnArray == null)
+            return DataTools.EmptyStrings;
+          string[] a = new string[_Owner._SelColumnArray.Length];
+          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
+          {
+            if (_Owner._SelColumnArray[i] == null)
+              a[i] = String.Empty;
+            else
+              a[i] = _Owner._SelColumnArray[i].Code;
+          }
+          return a;
+        }
+        set
+        {
+          if (value == null)
+            value = DataTools.EmptyStrings;
+
+          _Owner.CheckRequiredData();
+
+          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
+          {
+            if (i < value.Length)
+            {
+              if (String.IsNullOrEmpty(value[i]))
+                this[i] = null;
+              else
+              {
+                int p = _Owner._AllColumnIndexer.IndexOf(value[i]);
+                if (p < 0)
+                  this[i] = null;
+                else
+                  this[i] = _Owner._AllColumns[p];
+              }
+            }
+            else // короткий массив value
+              this[i] = null;
+          }
+        }
+      }
+
+      /// <summary>
+      /// Получение и установка списка кодов выбранных столбцов в виде строки CSV
+      /// </summary>
+      public string AsString
+      {
+        get
+        {
+          CsvTextConvert conv = new CsvTextConvert();
+          return conv.ToString(Codes);
+        }
+        set
+        {
+          CsvTextConvert conv = new CsvTextConvert();
+          Codes = conv.ToArray(value);
+        }
+      }
+
+      #endregion
+
+      #region Методы
+
+      /// <summary>
+      /// Возвращает индекс столбца, если он выбран.
+      /// Если данный столбец не выбран, возвращается (-1)
+      /// </summary>
+      /// <param name="column">Столбец из массива AllColumns. 
+      /// Для null возвращает индекс первого не назначенного столбца</param>
+      /// <returns>Индекс выбранного столбца в SelColumns</returns>
+      public int IndexOf(EFPSelRCColumn column)
+      {
+        if (_Owner._SelColumnArray == null)
+          return -1;
+
+        return Array.IndexOf<EFPSelRCColumn>(_Owner._SelColumnArray, column);
+      }
+
+      /// <summary>
+      /// Возвращает индекс выбранного столбца с заданным кодом
+      /// Если данный столбец не выбран, возвращается (-1)
+      /// </summary>
+      /// <param name="code">Код столбца из массива AllColumns. 
+      /// Для пустой строки возвращает индекс первого не назначенного столбца</param>
+      /// <returns>Индекс выбранного столбца в SelColumns</returns>
+      public int IndexOf(string code)
+      {
+        if (_Owner._SelColumnArray == null)
+          return -1;
+
+        if (String.IsNullOrEmpty(code))
+        {
+          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
+          {
+            if (_Owner.SelColumns[i] == null)
+              return i;
+          }
+        }
+        else
+        {
+          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
+          {
+            if (_Owner.SelColumns[i] != null)
+            {
+              if (_Owner.SelColumns[i].Code == code)
+                return i;
+            }
+          }
+        }
+
+        return -1;
+      }
+
+      /// <summary>
+      /// Возвращает true, если заданный столбец выбран
+      /// </summary>
+      /// <param name="code">Код столбца из массива AllColumns</param>
+      /// <returns>Наличие выбранного столбца</returns>
+      public bool Contains(string code)
+      {
+        return IndexOf(code) >= 0;
+      }
+
+      /// <summary>
+      /// Возвращает true, если хотя бы один из указанных столбцов выбран
+      /// </summary>
+      /// <param name="codes">Список кодов столбцов из массива AllColumns, разделенных запятыми</param>
+      /// <returns>Наличие выбранных столбцов</returns>
+      public bool ContainsAny(string codes)
+      {
+        if (String.IsNullOrEmpty(codes))
+          return false;
+        string[] a = codes.Split(',');
+        for (int i = 0; i < a.Length; i++)
+        {
+          if (Contains(a[i]))
+            return true;
+        }
+        return false;
+      }
+
+      /// <summary>
+      /// Возвращает true, если все указанные столбцы выбраны
+      /// </summary>
+      /// <param name="codes">Список кодов столбцов из массива AllColumns, разделенных запятыми</param>
+      /// <returns>Наличие выбранных столбцов</returns>
+      public bool ContainsAll(string codes)
+      {
+        if (String.IsNullOrEmpty(codes))
+          return true;
+        string[] a = codes.Split(',');
+        for (int i = 0; i < a.Length; i++)
+        {
+          if (!Contains(a[i]))
+            return false;
+        }
+        return true;
+      }
+
+      /// <summary>
+      /// Снимает выбор для всех столбцов
+      /// </summary>
+      public void Clear()
+      {
+        _Owner.CheckRequiredData();
+        if (IsEmpty)
+          return;
+        DataTools.FillArray<EFPSelRCColumn>(_Owner._SelColumnArray, null);
+        _Owner.Control.Invalidate();
+      }
+
+      /// <summary>
+      /// Начальная инициализация столбцов подходящими значениями.
+      /// На момент вызова должны быть установлены свойства AllColumns и SourceData.
+      /// Уже назначенные столбцы сохраняются.
+      /// Также должны быть отмечены строки SelRows, иначе подходящие столбцы не могут быть назначены.
+      /// Этот метод вызывается автоматически при AutoSelect=true.
+      /// </summary>
+      public void Init()
+      {
+        _Owner.CheckRequiredData();
+
+        // Столбцы, которые можно назначать
+        List<EFPSelRCColumn> cols2 = new List<EFPSelRCColumn>(_Owner.AllColumns);
+        for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
+        {
+          if (_Owner._SelColumnArray[i] != null) // уже использован в прикладном коде
+            cols2.Remove(_Owner._SelColumnArray[i]);
+        }
+
+        EFPSelRCValidatingEventArgs args = new EFPSelRCValidatingEventArgs();
+
+        for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
+        {
+          if (_Owner._SelColumnArray[i] != null)
+            continue; // уже назначен в прикладном коде
+
+          bool columnIsEmpty = true;
+          for (int k = 0; k < _Owner._SelRowArray.Length; k++)
+          {
+            if (!_Owner._SelRowArray[k])
+              continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
+            if (!String.IsNullOrEmpty(_Owner._SourceData[k, i]))
+            {
+              columnIsEmpty = false;
+              break;
+            }
+          }
+          if (columnIsEmpty)
+            continue; // 17.06.2022. Полностью пустому столбцу данных не назначаем столбец по умолчанию.
+
+          for (int j = 0; j < cols2.Count; j++)
+          {
+            bool isOK = true;
+            for (int k = 0; k < _Owner._SelRowArray.Length; k++)
+            {
+              if (!_Owner._SelRowArray[k])
+                continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
+
+              args.InitSourceData(_Owner._SourceData[k, i]);
+              cols2[j].PerformValidating(args);
+              if (args.ValidateState != UIValidateState.Ok)
+              {
+                isOK = false;
+                break;
+              }
+            }
+
+            if (isOK)
+            {
+              // Столбец подходит
+              this[i] = cols2[j];
+              cols2.RemoveAt(j);
+              break;
+            }
+          }
+        }
+      }
+
+      #endregion
+    }
 
     /// <summary>
     /// Выбранные столбцы из списка AllColumns.
@@ -1125,83 +1588,19 @@ namespace FreeLibSet.Forms
     /// Для ненужных столбцов содержится значение null
     /// Свойство доступно только после установки строк AllColumns и SourceData
     /// </summary>
-    public EFPSelRCColumn[] SelColumns { get { return _SelColumns; } }
-    private EFPSelRCColumn[] _SelColumns;
+    public SelColumnCollection SelColumns { get { return _SelColumns; } }
+    private SelColumnCollection _SelColumns;
 
-    /// <summary>
-    /// Флажки для выбранных строк.
-    /// Длина массива соответствует числу строк в массиве SourceData
-    /// Свойство доступно только после установки строк AllColumns и SourceData
-    /// </summary>
-    public bool[] SelRows { get { return _SelRows; } }
-    private bool[] _SelRows;
+    private EFPSelRCColumn[] _SelColumnArray;
 
-    /// <summary>
-    /// Возвращает индекс выбранного столбца с заданным кодом
-    /// Если данный столбец не выбран, возвращается (-1)
-    /// </summary>
-    /// <param name="code">Код столбца из массива AllColumns</param>
-    /// <returns>Индекс выбранного столбца в SelColumns</returns>
-    public int IndexOfSelColumn(string code)
+    private void CheckRequiredData()
     {
-      for (int i = 0; i < SelColumns.Length; i++)
-      {
-        if (SelColumns[i] != null)
-        {
-          if (SelColumns[i].Code == code)
-            return i;
-        }
-      }
-
-      return -1;
+      if (_SelColumnArray == null)
+        throw new InvalidOperationException("Свойства AllColumns и SourceData должны быть установлены");
     }
 
-    /// <summary>
-    /// Возвращает true, если заданный столбец выбран
-    /// </summary>
-    /// <param name="code">Код столбца из массива AllColumns</param>
-    /// <returns>Наличие выбранного столбца</returns>
-    public bool ContainsSelColumn(string code)
-    {
-      return IndexOfSelColumn(code) >= 0;
-    }
 
-    /// <summary>
-    /// Возвращает true, если хотя бы один из указанных столбцов выбран
-    /// </summary>
-    /// <param name="codes">Список кодов столбцов из массива AllColumns, разделенных запятыми</param>
-    /// <returns>Наличие выбранных столбцов</returns>
-    public bool ContainsAnySelColumn(string codes)
-    {
-      if (String.IsNullOrEmpty(codes))
-        return false;
-      string[] a = codes.Split(',');
-      for (int i = 0; i < a.Length; i++)
-      {
-        if (ContainsSelColumn(a[i]))
-          return true;
-      }
-      return false;
-    }
-
-    /// <summary>
-    /// Возвращает true, если все указанные столбцы выбраны
-    /// </summary>
-    /// <param name="codes">Список кодов столбцов из массива AllColumns, разделенных запятыми</param>
-    /// <returns>Наличие выбранных столбцов</returns>
-    public bool ContainsAllSelColumns(string codes)
-    {
-      if (String.IsNullOrEmpty(codes))
-        return true;
-      string[] a = codes.Split(',');
-      for (int i = 0; i < a.Length; i++)
-      {
-        if (!ContainsSelColumn(a[i]))
-          return false;
-      }
-      return true;
-    }
-
+#if XXX
     /// <summary>
     /// Возвращает количество строк, отмеченных галочками
     /// </summary>
@@ -1220,22 +1619,23 @@ namespace FreeLibSet.Forms
         return cnt;
       }
     }
+#endif
+
 
     /// <summary>
-    /// Программная установка выбранного столбца
+    /// Если свойство установлено в true (по умолчанию), то после установки свойств AllColumns и SourceData,
+    /// будут автоматически выбраны все непустые строки (свойство SelRows) и назначены подходящие столбцы (свойство SelColumns).
+    /// Для ручной инициализации столбцов сбросьте свойство AutoSelect в false до присвоения SourceData.
+    /// После присоединения матрицы данных установите отметки для нужных строк или вызовите SelRows.Init().
+    /// Назначьте нужные столбцы в SelColumns. Чтобы затем автоматически назначить недостающие столбцы,
+    /// можно использовать метод SelColumns.Init().
     /// </summary>
-    /// <param name="columnIndex">Индекс столбца в массве SelColumns</param>
-    /// <param name="value">Выбранный столбец для привязки. Может быть null</param>
-    public void SetSelColumn(int columnIndex, EFPSelRCColumn value)
+    public bool AutoSelect
     {
-      if (_SelColumns == null)
-        throw new NullReferenceException("Свойство SelColumns не было инициализировано");
-      if (value == _SelColumns[columnIndex])
-        return;
-
-      _SelColumns[columnIndex] = value;
-      Control.InvalidateColumn(columnIndex + 1);
+      get { return _AutoSelect; }
+      set { _AutoSelect = value; }
     }
+    private bool _AutoSelect;
 
     #endregion
 
@@ -1345,7 +1745,7 @@ namespace FreeLibSet.Forms
     {
       if (args.RowIndex >= 1 && SelRows[args.RowIndex - 1]) // серые ячейки делаем поштучно
       {
-        for (int i = 0; i < SelColumns.Length; i++)
+        for (int i = 0; i < _SelColumnArray.Length; i++)
         {
           if (SelColumns[i] != null)
           {
@@ -1420,20 +1820,20 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnValidate()
     {
-      if (SelRows == null)
+      if (_SelRowArray == null)
       {
         base.SetError("Свойства AllColumns и SourceData должны быть установлены");
         return;
       }
       bool hasCol = false;
-      for (int i = 0; i < SelColumns.Length; i++)
+      for (int i = 0; i < _SelColumnArray.Length; i++)
       {
         if (SelColumns[i] != null)
         {
           hasCol = true;
           for (int j = 0; j < i; j++)
           {
-            if (SelColumns[j] == SelColumns[i])
+            if (_SelColumnArray[j] == _SelColumnArray[i])
             {
               Control.CurrentCell = Control[j + 1, 0];
               SetError("Столбец \"" + SelColumns[j].DisplayName + "\" выбран дважды");
@@ -1450,13 +1850,13 @@ namespace FreeLibSet.Forms
 
       // Проверяем наличие выбранных строк и корректность данных
       bool hasRows = false;
-      for (int i = 0; i < SelRows.Length; i++)
+      for (int i = 0; i < _SelRowArray.Length; i++)
       {
         if (SelRows[i])
         {
           hasRows = true;
 
-          for (int j = 0; j < SelColumns.Length; j++)
+          for (int j = 0; j < _SelColumnArray.Length; j++)
           {
             if (SelColumns[j] != null)
             {
@@ -1472,7 +1872,7 @@ namespace FreeLibSet.Forms
                 // Теперь можно использовать Ctrl+] и Ctrl+[ для поиска ошибок.
                 //Control.CurrentCell = Control[j + 1, i + 1];
 
-                base.SetError("Строка "+ (i+1).ToString()+", столбец "+(j+1).ToString()+" ("+SelColumns[j].DisplayName+"). "+ 
+                base.SetError("Строка " + (i + 1).ToString() + ", столбец " + (j + 1).ToString() + " (" + SelColumns[j].DisplayName + "). " +
                   _ValidatingArgs.ErrorText);
                 return;
               }
@@ -1522,7 +1922,7 @@ namespace FreeLibSet.Forms
     /// <returns>Значение ячйки</returns>
     public object GetResultValue(int rowIndex, string columnCode)
     {
-      int columnIndex = IndexOfSelColumn(columnCode);
+      int columnIndex = SelColumns.IndexOf(columnCode);
       if (columnIndex < 0)
         return null;
       else
@@ -1682,8 +2082,7 @@ namespace FreeLibSet.Forms
 
     void ciClearColumns_Click(object sender, EventArgs args)
     {
-      for (int i = 0; i < ControlProvider.SelColumns.Length; i++)
-        ControlProvider.SetSelColumn(i, null);
+      ControlProvider.SelColumns.Clear();
     }
 
     #endregion

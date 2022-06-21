@@ -177,10 +177,15 @@ namespace FreeLibSet.Forms.Docs
 
       if (_RootNodeDataRow != null)
       {
+        Int32 oldId = base.CurrentId;
+
         if (FirstTextControl != null)
           _RootNodeDataRow[FirstTextControl.DataPropertyName] = this.RootNodeTextValue;
         DBxDocTreeModel model = (DBxDocTreeModel)(Control.Model);
         model.RefreshNode(model.TreePathFromDataRow(_RootNodeDataRow));
+
+        base.CurrentId = oldId; // 20.06.2022
+        // Хорошо бы, конечно, иметь возможность избежать отправки события StructureChanged для всего дерева.
       }
     }
 
