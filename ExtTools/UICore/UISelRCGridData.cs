@@ -404,7 +404,7 @@ namespace FreeLibSet.UICore
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = 0m;
+        args.ResultValue = 0;
       else
       {
         int value;

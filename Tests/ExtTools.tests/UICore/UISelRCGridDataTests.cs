@@ -4,7 +4,6 @@ using System.Text;
 
 using NUnit.Framework;
 using FreeLibSet.UICore;
-using System.Data;
 using FreeLibSet.Core;
 using FreeLibSet.DependedValues;
 using System.Globalization;
