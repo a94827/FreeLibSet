@@ -2226,7 +2226,7 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(s))
         return false;
 
-      WinFormsTools.CorrectNumberString(ref s);
+      UITools.CorrectNumberString(ref s);
       bool res = decimal.TryParse(s, out x);
       if (res)
       {

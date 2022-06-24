@@ -559,7 +559,7 @@ namespace FreeLibSet.Controls
           else
           {
             string s = _MainControl.Text;
-            FreeLibSet.Forms.WinFormsTools.CorrectNumberString(ref s, this.FormatProvider); // замена точки и запятой
+            UITools.CorrectNumberString(ref s, this.FormatProvider); // замена точки и запятой
 
             T value;
             _TextIsValid = TryParseText(s, out value);

@@ -9,886 +9,13 @@ using System.Drawing;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
-using FreeLibSet.Text;
 
 namespace FreeLibSet.Forms
 {
-  #region Делегат EFPSelRCValidatingEventHandler
-
-  /// <summary>
-  /// Аргументы события EFPSelRCColumn.Validating
-  /// </summary>
-  public class EFPSelRCValidatingEventArgs : EventArgs, IUIValidableObject
-  {
-    #region Инициализация
-
-    /// <summary>
-    /// Инициализация.
-    /// Так как событие Validating обычно вызывается много раз подряд, не выгоднго создавать объект
-    /// EFPSelRCValidatingEventArgs каждый раз. Вместо этого объект создается однократно, а затем вызывается
-    /// метод InitSourceData() для каждого значения, после чего вызывается событие
-    /// </summary>
-    /// <param name="sourceData"></param>
-    public void InitSourceData(string sourceData)
-    {
-      _SourceData = sourceData;
-      _ResultValue = sourceData;
-      _ValidateState = UIValidateState.Ok;
-      _ErrorText = null;
-    }
-
-    #endregion
-
-    #region Основные свойства
-
-    /// <summary>
-    /// Исходные данные из буфера обмена (строка), которые нужно проверить и преобразовать в значение.
-    /// Может быть пустая строка
-    /// </summary>
-    public string SourceData { get { return _SourceData; } }
-    private string _SourceData;
-
-    /// <summary>
-    /// Результат преобразования. По умолчанию, значение совпадает со строкой SourceData
-    /// Обработчик может установить собственное значение, не обязательно строковое
-    /// </summary>
-    public object ResultValue { get { return _ResultValue; } set { _ResultValue = value; } }
-    private object _ResultValue;
-
-    #endregion
-
-    #region Результаты проверки
-
-    /// <summary>
-    /// Результат вызова события Validating
-    /// </summary>
-    public UIValidateState ValidateState { get { return _ValidateState; } }
-    private UIValidateState _ValidateState;
-
-    /// <summary>
-    /// Сообщение об ошибке или предупреждении
-    /// </summary>
-    public string ErrorText { get { return _ErrorText; } }
-    private string _ErrorText;
-
-    /// <summary>
-    /// Установить признак ошибочного значения
-    /// </summary>
-    /// <param name="message">Текст сообщения об ошибке</param>
-    public void SetError(string message)
-    {
-      if (ValidateState != UIValidateState.Error)
-      {
-        _ValidateState = UIValidateState.Error;
-        _ErrorText = message;
-      }
-    }
-
-    /// <summary>
-    /// Задать предупреждение
-    /// </summary>
-    /// <param name="message">Текст сообщения</param>
-    public void SetWarning(string message)
-    {
-      if (ValidateState == UIValidateState.Ok)
-      {
-        _ValidateState = UIValidateState.Warning;
-        _ErrorText = message;
-      }
-    }
-
-    /// <summary>
-    /// Вспомогательный метод, вызывающий SetError() или SetWarning()
-    /// </summary>
-    /// <param name="state">Состояние</param>
-    /// <param name="message">Сообщение</param>
-    public void SetState(UIValidateState state, string message)
-    {
-      if (ValidateState == UIValidateState.Error)
-        return;
-
-      switch (state)
-      {
-        case UIValidateState.Error:
-          SetError(message);
-          break;
-        case UIValidateState.Warning:
-          if (ValidateState == UIValidateState.Ok)
-            SetWarning(message);
-          break;
-      }
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Делегат события EFPSelRCColumn.Validating
-  /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
-  public delegate void EFPSelRCValidatingEventHandler(object sender, EFPSelRCValidatingEventArgs args);
-
-  #endregion
-
-  /// <summary>
-  /// Описание для одного столбца при вставке текста из буфера обмена
-  /// </summary>
-  public class EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным кодом
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    public EFPSelRCColumn(string code)
-    {
-      if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
-
-      _Code = code;
-      _CanBeEmpty = true;
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным кодом и отображаемым именем
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    /// <param name="displayName">Название, отображаемое при выборе столбца из выпадающего списка</param>
-    public EFPSelRCColumn(string code, string displayName)
-      : this(code)
-    {
-      this.DisplayName = displayName;
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным кодом и отображаемым именем
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    /// <param name="displayName">Название, отображаемое при выборе столбца из выпадающего списка</param>
-    /// <param name="validateHandler">Делегат для проверки корректности данных</param>
-    public EFPSelRCColumn(string code, string displayName, EFPSelRCValidatingEventHandler validateHandler)
-      : this(code, displayName)
-    {
-      if (validateHandler != null)
-        Validating += validateHandler;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Код столбца
-    /// Обязательное свойство, устанавливается в конструкторе
-    /// </summary>
-    public string Code { get { return _Code; } }
-    private string _Code;
-
-    /// <summary>
-    /// Имя, отображаемое в выпадающем списке выбора назначения столбца.
-    /// Если свойство не задано в явном виде, возвращает значение свойства Code
-    /// </summary>
-    public string DisplayName
-    {
-      get
-      {
-        if (String.IsNullOrEmpty(_DisplayName))
-          return _Code;
-        else
-          return _DisplayName;
-      }
-      set
-      {
-        _DisplayName = value;
-      }
-    }
-    private string _DisplayName;
-
-    /// <summary>
-    /// Произвольные пользовательские данные
-    /// </summary>
-    public object Tag { get { return _Tag; } set { _Tag = value; } }
-    private object _Tag;
-
-    #endregion
-
-    #region Получение и проверка значения
-
-    /// <summary>
-    /// Если true (по умолчанию), то ячейки столбца могут содержать пустые значения.
-    /// Если свойство равно false, то для пустой ячейки устанавливается ошибка, а пользовательский обработчик
-    /// не устанавливается
-    /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
-
-    /// <summary>
-    /// Вспомогательный метод.
-    /// Устанавливает CanBeEmpty=false и возвращает текущий объект.
-    /// Удобно использовать при инициализации массива описаний
-    /// </summary>
-    /// <returns>Указатель this</returns>
-    public EFPSelRCColumn SetRequired()
-    {
-      CanBeEmpty = false;
-      return this;
-    }
-
-    /// <summary>
-    /// Событие вызывается для проверки корректности строкового значения и, возможно, для преобразования значения
-    /// Если обработчик события не установлен, столбец допускает любые строковые значения, включая пустую строку ""
-    /// Обработчик вызывается в том числе и для пустых строк, если свойство CanBeEmpty=true.
-    /// </summary>
-    public event EFPSelRCValidatingEventHandler Validating;
-
-    /// <summary>
-    /// Проверка корректности данных.
-    /// Непереопределенный метод, после проверки наличия данных вызывает обработчик события Validating.
-    /// </summary>
-    /// <param name="args"></param>
-    public virtual void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData) && (!CanBeEmpty))
-      {
-        args.SetError("Пустые значения не допускаются");
-        return;
-      }
-
-      if (Validating != null)
-        Validating(this, args);
-    }
-
-    #endregion
-  }
-
-  #region Расширенные реализации столбцов
-
-  /// <summary>
-  /// Столбец для вставки значения типа "Дата"
-  /// Значение ResultValue имеет тип Nullable DateTime 
-  /// </summary>
-  public class EFPSelRCDateColumn : EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным кодом
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    public EFPSelRCDateColumn(string code)
-      : base(code)
-    {
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным кодом и отображаемым именем
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    /// <param name="displayName">Название, отображаемое при выборе столбца из выпадающего списка</param>
-    public EFPSelRCDateColumn(string code, string displayName)
-      : base(code, displayName)
-    {
-    }
-
-    /// <summary>
-    /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
-    public EFPSelRCDateColumn(string code, string displayName, EFPSelRCValidatingEventHandler validateHandler)
-      : base(code, displayName, validateHandler)
-    {
-    }
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Выполняет преобразование строки в дату.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating
-    /// </summary>
-    /// <param name="args"></param>
-    public override void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = null;
-      else
-      {
-        DateTime value;
-        string s = args.SourceData;
-        //if (!DataConv.TryDateFromStr10(s, out dt))
-        //{
-        if (!DateTime.TryParse(s, out value))
-        {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в дату");
-          return;
-        }
-        //}
-        args.ResultValue = value;
-        ValidateValue(args, value);
-      }
-      base.PerformValidating(args);
-    }
-
-    /// <summary>
-    /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в дату.
-    /// Непереопределенный метод ничего не делает.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    /// <param name="value">Проверяемое значение после преобразования из строки</param>
-    protected virtual void ValidateValue(EFPSelRCValidatingEventArgs args, DateTime value)
-    {
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Int32 
-  /// </summary>
-  public class EFPSelRCIntColumn : EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным кодом
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    public EFPSelRCIntColumn(string code)
-      : base(code)
-    {
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным кодом и отображаемым именем
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    /// <param name="displayName">Название, отображаемое при выборе столбца из выпадающего списка</param>
-    public EFPSelRCIntColumn(string code, string displayName)
-      : base(code, displayName)
-    {
-    }
-
-    /// <summary>
-    /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
-    public EFPSelRCIntColumn(string code, string displayName, EFPSelRCValidatingEventHandler validateHandler)
-      : base(code, displayName, validateHandler)
-    {
-    }
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    public override void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = 0m;
-      else
-      {
-        int value;
-        string s = args.SourceData;
-        WinFormsTools.CorrectNumberString(ref s);
-        if (!Int32.TryParse(s, out value))
-        {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в целое число");
-          return;
-        }
-        args.ResultValue = value;
-        ValidateValue(args, value);
-      }
-      base.PerformValidating(args);
-    }
-
-    /// <summary>
-    /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
-    /// Непереопределенный метод ничего не делает.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    /// <param name="value">Проверяемое значение после преобразования из строки</param>
-    protected virtual void ValidateValue(EFPSelRCValidatingEventArgs args, int value)
-    {
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Single 
-  /// </summary>
-  public class EFPSelRCSingleColumn : EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным кодом
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    public EFPSelRCSingleColumn(string code)
-      : base(code)
-    {
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным кодом и отображаемым именем
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    /// <param name="displayName">Название, отображаемое при выборе столбца из выпадающего списка</param>
-    public EFPSelRCSingleColumn(string code, string displayName)
-      : base(code, displayName)
-    {
-    }
-
-    /// <summary>
-    /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
-    public EFPSelRCSingleColumn(string code, string displayName, EFPSelRCValidatingEventHandler validateHandler)
-      : base(code, displayName, validateHandler)
-    {
-    }
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    public override void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = 0m;
-      else
-      {
-        float value;
-        string s = args.SourceData;
-        WinFormsTools.CorrectNumberString(ref s);
-        if (!Single.TryParse(s, out value))
-        {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
-          return;
-        }
-        args.ResultValue = value;
-        ValidateValue(args, value);
-      }
-      base.PerformValidating(args);
-    }
-
-    /// <summary>
-    /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
-    /// Непереопределенный метод ничего не делает.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    /// <param name="value">Проверяемое значение после преобразования из строки</param>
-    protected virtual void ValidateValue(EFPSelRCValidatingEventArgs args, float value)
-    {
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Double
-  /// </summary>
-  public class EFPSelRCDoubleColumn : EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным кодом
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    public EFPSelRCDoubleColumn(string code)
-      : base(code)
-    {
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным кодом и отображаемым именем
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    /// <param name="displayName">Название, отображаемое при выборе столбца из выпадающего списка</param>
-    public EFPSelRCDoubleColumn(string code, string displayName)
-      : base(code, displayName)
-    {
-    }
-
-    /// <summary>
-    /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
-    public EFPSelRCDoubleColumn(string code, string displayName, EFPSelRCValidatingEventHandler validateHandler)
-      : base(code, displayName, validateHandler)
-    {
-    }
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    public override void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = 0m;
-      else
-      {
-        double value;
-        string s = args.SourceData;
-        WinFormsTools.CorrectNumberString(ref s);
-        if (!Double.TryParse(s, out value))
-        {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
-          return;
-        }
-        args.ResultValue = value;
-        ValidateValue(args, value);
-      }
-      base.PerformValidating(args);
-    }
-
-    /// <summary>
-    /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
-    /// Непереопределенный метод ничего не делает.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    /// <param name="value">Проверяемое значение после преобразования из строки</param>
-    protected virtual void ValidateValue(EFPSelRCValidatingEventArgs args, double value)
-    {
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип decimal 
-  /// </summary>
-  public class EFPSelRCDecimalColumn : EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным кодом
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    public EFPSelRCDecimalColumn(string code)
-      : base(code)
-    {
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным кодом и отображаемым именем
-    /// </summary>
-    /// <param name="code">Код столбца</param>
-    /// <param name="displayName">Название, отображаемое при выборе столбца из выпадающего списка</param>
-    public EFPSelRCDecimalColumn(string code, string displayName)
-      : base(code, displayName)
-    {
-    }
-
-    /// <summary>
-    /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
-    public EFPSelRCDecimalColumn(string code, string displayName, EFPSelRCValidatingEventHandler validateHandler)
-      : base(code, displayName, validateHandler)
-    {
-    }
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    public override void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = 0m;
-      else
-      {
-        decimal value;
-        string s = args.SourceData;
-        WinFormsTools.CorrectNumberString(ref s);
-        if (!decimal.TryParse(s, out value))
-        {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
-          return;
-        }
-        args.ResultValue = value;
-        ValidateValue(args, value);
-      }
-      base.PerformValidating(args);
-    }
-
-    /// <summary>
-    /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
-    /// Непереопределенный метод ничего не делает.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    /// <param name="value">Проверяемое значение после преобразования из строки</param>
-    protected virtual void ValidateValue(EFPSelRCValidatingEventArgs args, decimal value)
-    {
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Столбец для вставки значения перечислимого типа <typeparamref name="T"/>
-  /// Значение ResultValue имеет перечислимый тип.
-  /// Использует список строковых значений, соответствующих элементам перечисления.
-  /// </summary>
-  /// <typeparam name="T">Тип перечисления. Поддерживаются только простые перечисления,
-  /// имеющие значения 0,1,2, ...</typeparam>
-  public class EFPSelRCEnumColumn<T> : EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным списком значений
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="textValues">Список текстовых значений</param>
-    public EFPSelRCEnumColumn(string code, string displayName, string[] textValues)
-      : this(code, displayName, textValues, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным списком значений.
-    /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="textValues">Список текстовых значений</param>
-    /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
-    public EFPSelRCEnumColumn(string code, string displayName, string[] textValues, EFPSelRCValidatingEventHandler validateHandler)
-      : base(code, displayName, validateHandler)
-    {
-      if (textValues == null)
-        throw new ArgumentNullException("textValues");
-      if (textValues.Length == 0)
-        throw new ArgumentException("TextValues.Length=0", "textValues");
-      _TextValues = textValues;
-      _TextValueIndexer = new StringArrayIndexer(textValues, true);
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Список текстовых значений, соответствующих элементам перечисления со значениями 0,1,2, ...
-    /// Регистр символов не учитывается.
-    /// Список создается в конструкторе.
-    /// </summary>
-    public string[] TextValues { get { return _TextValues; } }
-    private string[] _TextValues;
-
-    private StringArrayIndexer _TextValueIndexer;
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Выполняет преобразование строки в перечисление.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    public override void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = null;
-      else
-      {
-        int p = _TextValueIndexer.IndexOf(args.SourceData);
-        if (p < 0)
-        {
-          args.SetError("Неизвестная строка \"" + args.SourceData + "\"");
-          args.ResultValue = null;
-        }
-        else
-        {
-          T value = (T)(Enum.ToObject(typeof(T), p));
-          args.ResultValue = value;
-          ValidateValue(args, value);
-        }
-      }
-      base.PerformValidating(args);
-    }
-
-    /// <summary>
-    /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в перечислимое значение.
-    /// Непереопределенный метод ничего не делает.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    /// <param name="value">Проверяемое значение после преобразования из строки</param>
-    protected virtual void ValidateValue(EFPSelRCValidatingEventArgs args, T value)
-    {
-    }
-
-    #endregion
-  }
-
-
-  /// <summary>
-  /// Столбец для вставки значения перечислимого типа <typeparamref name="T"/>
-  /// Значение ResultValue имеет перечислимый тип.
-  /// Использует словарь строковых значений, соответствующих элементам перечисления.
-  /// В словаре несколько строк могут соответствовать одному значению.
-  /// </summary>
-  /// <typeparam name="T">Тип перечисления</typeparam>
-  public class EFPSelRCEnumColumnWithDict<T> : EFPSelRCColumn
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает столбец с заданным словарем значений.
-    /// Учет регистра символов определяется коллекцией TextValues.
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="textValues">Список текстовых значений и соответствующих им элементов перечисления</param>
-    public EFPSelRCEnumColumnWithDict(string code, string displayName, TypedStringDictionary<T> textValues)
-      : this(code, displayName, textValues, null)
-    {
-    }
-
-    /// <summary>
-    /// Создает столбец с заданным словарем значений.
-    /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Учет регистра символов определяется коллекцией TextValues.
-    /// </summary>
-    /// <param name="code">Код</param>
-    /// <param name="displayName">Отображаемое наименование</param>
-    /// <param name="textValues">Список текстовых значений и соответствующих им элементов перечисления</param>
-    /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
-    public EFPSelRCEnumColumnWithDict(string code, string displayName, TypedStringDictionary<T> textValues, EFPSelRCValidatingEventHandler validateHandler)
-      : base(code, displayName, validateHandler)
-    {
-      if (textValues == null)
-        throw new ArgumentNullException("textValues");
-      if (textValues.Count == 0)
-        throw new ArgumentException("textValues.Count=0", "textValues");
-      _TextValues = textValues;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Список текстовых значений и соответствующих им элементов перечисления.
-    /// Список задается в конструкторе.
-    /// </summary>
-    public TypedStringDictionary<T> TextValues { get { return _TextValues; } }
-    private TypedStringDictionary<T> _TextValues;
-
-    #endregion
-
-    #region Переопределенные методы
-
-    /// <summary>
-    /// Выполняет преобразование строки в перечисление.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    public override void PerformValidating(EFPSelRCValidatingEventArgs args)
-    {
-      if (String.IsNullOrEmpty(args.SourceData))
-        args.ResultValue = null;
-      else
-      {
-        T value;
-        if (TextValues.TryGetValue(args.SourceData, out value))
-        {
-          args.ResultValue = value;
-          ValidateValue(args, value);
-        }
-        else
-        {
-          args.SetError("Неизвестная строка \"" + args.SourceData + "\"");
-          args.ResultValue = null;
-        }
-      }
-      base.PerformValidating(args);
-    }
-
-    /// <summary>
-    /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в перечислимое значение.
-    /// Непереопределенный метод ничего не делает.
-    /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
-    /// <param name="value">Проверяемое значение после преобразования из строки</param>
-    protected virtual void ValidateValue(EFPSelRCValidatingEventArgs args, T value)
-    {
-    }
-
-    #endregion
-  }
-
-  #endregion
-
-
   /// <summary>
   /// Табличный просмотр для выбора строк и назначения столбцов
-  /// Используется в диалогах или мастерах вставки текстовых значений из буфера обмена
+  /// Используется в диалогах или мастерах вставки текстовых значений из буфера обмена.
+  /// Для отображения данных следует установить свойство Data
   /// </summary>
   public class EFPSelRCDataGridView : EFPDataGridView
   {
@@ -923,8 +50,6 @@ namespace FreeLibSet.Forms
 
     private void Init()
     {
-      _ValidatingArgs = new EFPSelRCValidatingEventArgs();
-
       base.UseRowImages = true;
       Control.VirtualMode = true;
       if (!DesignMode)
@@ -943,115 +68,66 @@ namespace FreeLibSet.Forms
       base.MarkRowsColumnIndex = 0;
 
       _AutoSelect = true;
-      _SelRows = new SelRowCollection(this);
-      _SelColumns = new SelColumnCollection(this);
-    }
-
-    private EFPSelRCValidatingEventArgs _ValidatingArgs;
-
-    #endregion
-
-    #region SourceData
-
-    /// <summary>
-    /// Двумерный массив строк исходных данных.
-    /// Свойство должно быть установлено до вывода управляющего элемента на экран
-    /// </summary>
-    public string[,] SourceData
-    {
-      get { return _SourceData; }
-      set
-      {
-        _SourceData = value;
-        InitSourceData();
-      }
-    }
-    private string[,] _SourceData;
-
-    /// <summary>
-    /// Возвращает количество исходных строк в SourceData.
-    /// </summary>
-    public int SourceRowCount
-    {
-      get
-      {
-        if (_SourceData == null)
-          return 0;
-        else
-          return _SourceData.GetLength(0);
-      }
-    }
-
-    /// <summary>
-    /// Возвращает количество исходных столбцов в SourceData.
-    /// </summary>
-    public int SourceColumnCount
-    {
-      get
-      {
-        if (_SourceData == null)
-          return 0;
-        else
-          return _SourceData.GetLength(1);
-      }
     }
 
     #endregion
 
-    #region AllColumns
+    #region Свойство Data
 
     /// <summary>
-    /// Полный список описаний возможных столбцов, из которых можно осуществлять выбор
+    /// Отображаемые данные (основное свойство)
     /// </summary>
-    public EFPSelRCColumn[] AllColumns
+    public UISelRCGridData Data
     {
-      get { return _AllColumns; }
+      get { return _Data; }
       set
       {
-        _AllColumns = value;
-        if (value == null)
-          _AllColumnIndexer = null;
-        else
+        if (_Data != null)
+          _Data.Changed -= ValidateAndRepaint;
+
+        _Data = value;
+
+        InitRowsAndColumns();
+
+        if (AutoSelect)
         {
-          string[] a = new string[value.Length];
-          for (int i = 0; i < value.Length; i++)
-          {
-            if (value[i] == null)
-              throw new ArgumentException("value", "value[" + i.ToString() + "]==null");
-            a[i] = value[i].Code;
-          }
-          _AllColumnIndexer = new StringArrayIndexer(a, false);
+          Data.SelRows.Init();
+          Data.SelColumns.Init();
         }
 
-        InitSourceData();
+        if (_Data != null)
+          _Data.Changed += ValidateAndRepaint;
+
+        if (_Data == null)
+          TopLeftCellToolTipText = String.Empty;
+        else
+          TopLeftCellToolTipText = "Всего строк: " + _Data.RowCount.ToString() + ", столбцов: " + _Data.ColumnCount.ToString();
+
+        ValidateAndRepaint(null, null);
       }
     }
-    private EFPSelRCColumn[] _AllColumns;
-    private StringArrayIndexer _AllColumnIndexer;
+    private UISelRCGridData _Data;
 
-    private void InitSourceData()
+    private void InitRowsAndColumns()
     {
-      if (_AllColumns == null || _SourceData == null)
+      Columns.Clear();
+      if (_Data == null)
       {
-        _SelColumnArray = null;
-        _SelRowArray = null;
+        Control.RowCount = 0;
         return;
       }
-      _SelColumnArray = new EFPSelRCColumn[SourceData.GetLength(1)];
-      _SelRowArray = new bool[SourceData.GetLength(0)];
 
-      Columns.Clear();
       Columns.AddBool("RowFlag", false, String.Empty);
       Columns.LastAdded.GridColumn.ToolTipText = "Использование строки";
       Columns.LastAdded.GridColumn.DividerWidth = 1; // 12.01.2022
 
-      string[] displayNames = new string[AllColumns.Length + 1];
+      string[] displayNames = new string[Data.AvailableColumns.Length + 1];
       displayNames[0] = NoneColText;
-      for (int i = 0; i < AllColumns.Length; i++)
-        displayNames[i + 1] = AllColumns[i].DisplayName;
+      for (int i = 0; i < Data.AvailableColumns.Length; i++)
+        displayNames[i + 1] = Data.AvailableColumns[i].DisplayName;
       int dropDownWidth = CalcDropDownWidth(displayNames);
 
-      for (int i = 0; i < _SelColumnArray.Length; i++)
+      for (int i = 0; i < Data.ColumnCount; i++)
       {
         DataGridViewComboBoxColumn col = new DataGridViewComboBoxColumn();
         col.Name = "Col" + (i + 1).ToString(); // 12.01.2022
@@ -1062,9 +138,9 @@ namespace FreeLibSet.Forms
         Control.Columns.Add(col);
 
         int maxLen = 7; // нужно место для стрелочки выпадающего списка
-        for (int j = 0; j < _SelRowArray.Length; j++)
+        for (int j = 0; j < Data.RowCount; j++)
         {
-          string s = DataTools.GetString(SourceData[j, i]);
+          string s = DataTools.GetString(Data.SourceData[j, i]);
           maxLen = Math.Max(s.Length, maxLen);
         }
         maxLen = Math.Min(maxLen, 30);
@@ -1072,555 +148,28 @@ namespace FreeLibSet.Forms
         Columns[col].TextWidth = maxLen;
       }
 
-      Control.RowCount = _SelRowArray.Length + 1;
+      Control.RowCount = Data.RowCount + 1;
 
       base.FrozenColumns = 1;
       Control.Rows[0].Frozen = true;
       Control.Rows[0].DividerHeight = 1; // 12.01.2022
       base.MarkRowsColumnIndex = 0;
 
-      for (int i = 0; i < _SelRowArray.Length; i++)
+      for (int i = 0; i < Data.RowCount; i++)
       {
         Control.Rows[i + 1].HeaderCell.Value = i + 1;
-        for (int j = 0; j < _SelColumnArray.Length; j++)
+        for (int j = 0; j < Data.ColumnCount; j++)
         {
           DataGridViewComboBoxCell Cell = (DataGridViewComboBoxCell)(base.Control[j + 1, i + 1]);
 
-          Cell.Items.Add(SourceData[i, j]);
+          Cell.Items.Add(Data.SourceData[i, j]);
           Cell.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-          Cell.Value = SourceData[i, j];
+          Cell.Value = Data.SourceData[i, j];
         }
       }
-
-      if (AutoSelect)
-      {
-        SelRows.Init();
-        SelColumns.Init();
-      }
-
-      Control.Invalidate();
     }
 
     #endregion
-
-    #region SelRows и SelColumns
-
-    /// <summary>
-    /// Реализация свойства SelRows
-    /// </summary>
-    public sealed class SelRowCollection
-    {
-      // Нельзя делать одноразовой структурой.
-      // Компилятор будет ругаться на присвоение свойства this
-
-      #region Конструктор
-
-      internal SelRowCollection(EFPSelRCDataGridView owner)
-      {
-        _Owner = owner;
-      }
-
-      #endregion
-
-      #region Свойства
-
-      private EFPSelRCDataGridView _Owner;
-
-#if XXX
-      /// <summary>
-      /// Возвращает количество строк в матрице данных SourceData.GetLength(0).
-      /// Пока свойства SourceData и AllColumns не установлены, возвращается 0.
-      /// </summary>
-      public int Count
-      {
-        get
-        {
-          if (_Owner._SelRowArray == null)
-            return 0;
-          else
-            return _Owner._SelRowArray.Length;
-        }
-      }
-#endif
-
-      /// <summary>
-      /// Возвращает или устанавливает отметку для строки
-      /// </summary>
-      /// <param name="index">Индекс строки</param>
-      /// <returns>Наличие отметки</returns>
-      public bool this[int index]
-      {
-        get { return _Owner._SelRowArray[index]; }
-        set
-        {
-          _Owner.CheckRequiredData();
-          if (value == _Owner._SelRowArray[index])
-            return;
-          _Owner._SelRowArray[index] = value;
-          _Owner.Control.InvalidateRow(index + 1); // вся строка может стать серой
-        }
-      }
-
-      /// <summary>
-      /// Возвыращает true, если ни одна из строк не выбрана
-      /// </summary>
-      public bool IsEmpty
-      {
-        get
-        {
-          if (_Owner._SelRowArray == null)
-            return true;
-          return Array.IndexOf<bool>(_Owner._SelRowArray, true) < 0;
-        }
-      }
-
-      /// <summary>
-      /// Флажки для выбранных строк в виде массива
-      /// </summary>
-      public bool[] AsArray 
-      {
-        get
-        {
-          if (_Owner._SelRowArray == null)
-            return DataTools.EmptyBools;
-          bool[] a = new bool[_Owner._SelRowArray.Length];
-          _Owner._SelRowArray.CopyTo(a, 0);
-          return a;
-        }
-        set
-        { 
-          _Owner.CheckRequiredData();
-          if (value == null)
-            Clear();
-          else
-          {
-            int n = Math.Min(value.Length, _Owner._SelRowArray.Length);
-            DataTools.FillArray<bool>(_Owner._SelRowArray, false);
-            Array.Copy(value, _Owner._SelRowArray, n);
-            _Owner.Control.Invalidate();
-          }
-        }
-      }
-
-      #endregion
-
-      #region Методы
-
-      /// <summary>
-      /// Очищает список выбранных строк
-      /// </summary>
-      public void Clear()
-      {
-        _Owner.CheckRequiredData();
-        if (IsEmpty)
-          return;
-        DataTools.FillArray<bool>(_Owner._SelRowArray, false);
-        _Owner.Control.Invalidate();
-      }
-
-      /// <summary>
-      /// Устанавливает отметки (свойство SelRows) для всех непустых строк.
-      /// На момент вызова должны быть установлены свойства AllColumns и SourceData.
-      /// Этот метод вызывается автоматически при AutoSelect=true.
-      /// </summary>
-      public void Init()
-      {
-        _Owner.CheckRequiredData();
-
-        // 12.12.2017
-        // Ставим флажки только для непустых строк
-        // DataTools.FillArray<bool>(FSelRows, true);
-        for (int i = 0; i < _Owner._SelRowArray.Length; i++)
-        {
-          for (int j = 0; j < _Owner._SelColumnArray.Length; j++)
-          {
-            if (!String.IsNullOrEmpty(_Owner._SourceData[i, j]))
-            {
-              _Owner._SelRowArray[i] = true;
-              break;
-            }
-          }
-        }
-        _Owner.Control.Invalidate();
-      }
-
-      #endregion
-    }
-
-    /// <summary>
-    /// Флажки для выбранных строк.
-    /// </summary>
-    public SelRowCollection SelRows { get { return _SelRows; } }
-    private SelRowCollection _SelRows;
-
-    private bool[] _SelRowArray;
-
-    /// <summary>
-    /// Реализация свойства SelColumns
-    /// </summary>
-    public sealed class SelColumnCollection
-    {
-      // Нельзя делать одноразовой структурой.
-      // Компилятор будет ругаться на присвоение свойства this
-
-      #region Конструктор
-
-      internal SelColumnCollection(EFPSelRCDataGridView owner)
-      {
-        _Owner = owner;
-      }
-
-      #endregion
-
-      #region Свойства
-
-      private EFPSelRCDataGridView _Owner;
-
-#if XXX
-      /// <summary>
-      /// Возвращает количество столбцов в матрице данных SourceData.GetLength(1).
-      /// Пока свойства SourceData и AllColumns не установлены, возвращается 0.
-      /// </summary>
-      public int Count
-      {
-        get
-        {
-          if (_Owner._SelColumnArray == null)
-            return 0;
-          else
-            return _Owner._SelColumnArray.Length;
-        }
-      }
-#endif
-
-      /// <summary>
-      /// Возвращает или назначает выбор для столбца
-      /// </summary>
-      /// <param name="index">Индекс столбца в матрице SourceData</param>
-      /// <returns>Один из элементов в AllColumns или null, если столбец не используется</returns>
-      public EFPSelRCColumn this[int index]
-      {
-        get { return _Owner._SelColumnArray[index]; }
-        set
-        {
-          _Owner.CheckRequiredData();
-          if (value == _Owner._SelColumnArray[index])
-            return;
-          _Owner._SelColumnArray[index] = value;
-          _Owner.Control.InvalidateColumn(index + 1);
-        }
-      }
-
-      /// <summary>
-      /// Возвращает true, если нет ни одного назначенного столбца
-      /// </summary>
-      public bool IsEmpty
-      {
-        get
-        {
-          if (_Owner._SelColumnArray == null)
-            return true;
-
-          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
-          {
-            if (_Owner._SelColumnArray[i] != null)
-              return false;
-          }
-          return true;
-        }
-      }
-
-
-      /// <summary>
-      /// Коды выбранных столбцов. Дублирует свойство SelColumns.
-      /// Для невыбранных столбцов элементы возвращаемого массива содержат пустую строку.
-      /// При установке свойства для ненайденных кодов, как и для пустых строк/null, устанавливается значение соответствующего элемента SelColumns равным null.
-      /// Присваиваемый массив может быть короче или длиннее массива SelColumns. Лишние элементы игнорируются,
-      /// недостающие принимают значение null.
-      /// </summary>
-      public string[] Codes
-      {
-        get
-        {
-          if (_Owner._SelColumnArray == null)
-            return DataTools.EmptyStrings;
-          string[] a = new string[_Owner._SelColumnArray.Length];
-          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
-          {
-            if (_Owner._SelColumnArray[i] == null)
-              a[i] = String.Empty;
-            else
-              a[i] = _Owner._SelColumnArray[i].Code;
-          }
-          return a;
-        }
-        set
-        {
-          if (value == null)
-            value = DataTools.EmptyStrings;
-
-          _Owner.CheckRequiredData();
-
-          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
-          {
-            if (i < value.Length)
-            {
-              if (String.IsNullOrEmpty(value[i]))
-                this[i] = null;
-              else
-              {
-                int p = _Owner._AllColumnIndexer.IndexOf(value[i]);
-                if (p < 0)
-                  this[i] = null;
-                else
-                  this[i] = _Owner._AllColumns[p];
-              }
-            }
-            else // короткий массив value
-              this[i] = null;
-          }
-        }
-      }
-
-      /// <summary>
-      /// Получение и установка списка кодов выбранных столбцов в виде строки CSV
-      /// </summary>
-      public string AsString
-      {
-        get
-        {
-          CsvTextConvert conv = new CsvTextConvert();
-          return conv.ToString(Codes);
-        }
-        set
-        {
-          CsvTextConvert conv = new CsvTextConvert();
-          Codes = conv.ToArray(value);
-        }
-      }
-
-      #endregion
-
-      #region Методы
-
-      /// <summary>
-      /// Возвращает индекс столбца, если он выбран.
-      /// Если данный столбец не выбран, возвращается (-1)
-      /// </summary>
-      /// <param name="column">Столбец из массива AllColumns. 
-      /// Для null возвращает индекс первого не назначенного столбца</param>
-      /// <returns>Индекс выбранного столбца в SelColumns</returns>
-      public int IndexOf(EFPSelRCColumn column)
-      {
-        if (_Owner._SelColumnArray == null)
-          return -1;
-
-        return Array.IndexOf<EFPSelRCColumn>(_Owner._SelColumnArray, column);
-      }
-
-      /// <summary>
-      /// Возвращает индекс выбранного столбца с заданным кодом
-      /// Если данный столбец не выбран, возвращается (-1)
-      /// </summary>
-      /// <param name="code">Код столбца из массива AllColumns. 
-      /// Для пустой строки возвращает индекс первого не назначенного столбца</param>
-      /// <returns>Индекс выбранного столбца в SelColumns</returns>
-      public int IndexOf(string code)
-      {
-        if (_Owner._SelColumnArray == null)
-          return -1;
-
-        if (String.IsNullOrEmpty(code))
-        {
-          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
-          {
-            if (_Owner.SelColumns[i] == null)
-              return i;
-          }
-        }
-        else
-        {
-          for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
-          {
-            if (_Owner.SelColumns[i] != null)
-            {
-              if (_Owner.SelColumns[i].Code == code)
-                return i;
-            }
-          }
-        }
-
-        return -1;
-      }
-
-      /// <summary>
-      /// Возвращает true, если заданный столбец выбран
-      /// </summary>
-      /// <param name="code">Код столбца из массива AllColumns</param>
-      /// <returns>Наличие выбранного столбца</returns>
-      public bool Contains(string code)
-      {
-        return IndexOf(code) >= 0;
-      }
-
-      /// <summary>
-      /// Возвращает true, если хотя бы один из указанных столбцов выбран
-      /// </summary>
-      /// <param name="codes">Список кодов столбцов из массива AllColumns, разделенных запятыми</param>
-      /// <returns>Наличие выбранных столбцов</returns>
-      public bool ContainsAny(string codes)
-      {
-        if (String.IsNullOrEmpty(codes))
-          return false;
-        string[] a = codes.Split(',');
-        for (int i = 0; i < a.Length; i++)
-        {
-          if (Contains(a[i]))
-            return true;
-        }
-        return false;
-      }
-
-      /// <summary>
-      /// Возвращает true, если все указанные столбцы выбраны
-      /// </summary>
-      /// <param name="codes">Список кодов столбцов из массива AllColumns, разделенных запятыми</param>
-      /// <returns>Наличие выбранных столбцов</returns>
-      public bool ContainsAll(string codes)
-      {
-        if (String.IsNullOrEmpty(codes))
-          return true;
-        string[] a = codes.Split(',');
-        for (int i = 0; i < a.Length; i++)
-        {
-          if (!Contains(a[i]))
-            return false;
-        }
-        return true;
-      }
-
-      /// <summary>
-      /// Снимает выбор для всех столбцов
-      /// </summary>
-      public void Clear()
-      {
-        _Owner.CheckRequiredData();
-        if (IsEmpty)
-          return;
-        DataTools.FillArray<EFPSelRCColumn>(_Owner._SelColumnArray, null);
-        _Owner.Control.Invalidate();
-      }
-
-      /// <summary>
-      /// Начальная инициализация столбцов подходящими значениями.
-      /// На момент вызова должны быть установлены свойства AllColumns и SourceData.
-      /// Уже назначенные столбцы сохраняются.
-      /// Также должны быть отмечены строки SelRows, иначе подходящие столбцы не могут быть назначены.
-      /// Этот метод вызывается автоматически при AutoSelect=true.
-      /// </summary>
-      public void Init()
-      {
-        _Owner.CheckRequiredData();
-
-        // Столбцы, которые можно назначать
-        List<EFPSelRCColumn> cols2 = new List<EFPSelRCColumn>(_Owner.AllColumns);
-        for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
-        {
-          if (_Owner._SelColumnArray[i] != null) // уже использован в прикладном коде
-            cols2.Remove(_Owner._SelColumnArray[i]);
-        }
-
-        EFPSelRCValidatingEventArgs args = new EFPSelRCValidatingEventArgs();
-
-        for (int i = 0; i < _Owner._SelColumnArray.Length; i++)
-        {
-          if (_Owner._SelColumnArray[i] != null)
-            continue; // уже назначен в прикладном коде
-
-          bool columnIsEmpty = true;
-          for (int k = 0; k < _Owner._SelRowArray.Length; k++)
-          {
-            if (!_Owner._SelRowArray[k])
-              continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
-            if (!String.IsNullOrEmpty(_Owner._SourceData[k, i]))
-            {
-              columnIsEmpty = false;
-              break;
-            }
-          }
-          if (columnIsEmpty)
-            continue; // 17.06.2022. Полностью пустому столбцу данных не назначаем столбец по умолчанию.
-
-          for (int j = 0; j < cols2.Count; j++)
-          {
-            bool isOK = true;
-            for (int k = 0; k < _Owner._SelRowArray.Length; k++)
-            {
-              if (!_Owner._SelRowArray[k])
-                continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
-
-              args.InitSourceData(_Owner._SourceData[k, i]);
-              cols2[j].PerformValidating(args);
-              if (args.ValidateState != UIValidateState.Ok)
-              {
-                isOK = false;
-                break;
-              }
-            }
-
-            if (isOK)
-            {
-              // Столбец подходит
-              this[i] = cols2[j];
-              cols2.RemoveAt(j);
-              break;
-            }
-          }
-        }
-      }
-
-      #endregion
-    }
-
-    /// <summary>
-    /// Выбранные столбцы из списка AllColumns.
-    /// Длина массива соответствует числу столбцов в SourceData.
-    /// Для ненужных столбцов содержится значение null
-    /// Свойство доступно только после установки строк AllColumns и SourceData
-    /// </summary>
-    public SelColumnCollection SelColumns { get { return _SelColumns; } }
-    private SelColumnCollection _SelColumns;
-
-    private EFPSelRCColumn[] _SelColumnArray;
-
-    private void CheckRequiredData()
-    {
-      if (_SelColumnArray == null)
-        throw new InvalidOperationException("Свойства AllColumns и SourceData должны быть установлены");
-    }
-
-
-#if XXX
-    /// <summary>
-    /// Возвращает количество строк, отмеченных галочками
-    /// </summary>
-    public int SelRowCount
-    {
-      get
-      {
-        if (_SelRows == null)
-          return 0;
-        int cnt = 0;
-        for (int i = 0; i < _SelRows.Length; i++)
-        {
-          if (_SelRows[i])
-            cnt++;
-        }
-        return cnt;
-      }
-    }
-#endif
-
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то после установки свойств AllColumns и SourceData,
@@ -1637,7 +186,6 @@ namespace FreeLibSet.Forms
     }
     private bool _AutoSelect;
 
-    #endregion
 
     #region Обработчики таблицы
 
@@ -1666,21 +214,24 @@ namespace FreeLibSet.Forms
 
     void Control_CellValueNeeded(object sender, DataGridViewCellValueEventArgs args)
     {
+      if (Data == null)
+        return;
+
       try
       {
         if (args.ColumnIndex == 0)
         {
           if (args.RowIndex > 0)
-            args.Value = SelRows[args.RowIndex - 1];
+            args.Value = Data.SelRows[args.RowIndex - 1];
         }
         else
         {
           //DataGridViewComboBoxCell Cell = (DataGridViewComboBoxCell)(Control[args.ColumnIndex, args.RowIndex]);
           if (args.RowIndex > 0)
-            args.Value = SourceData[args.RowIndex - 1, args.ColumnIndex - 1];
+            args.Value = Data.SourceData[args.RowIndex - 1, args.ColumnIndex - 1];
           else
           {
-            EFPSelRCColumn Col = SelColumns[args.ColumnIndex - 1];
+            UISelRCColumn Col = Data.SelColumns[args.ColumnIndex - 1];
             if (Col == null)
               args.Value = NoneColText;
             else
@@ -1697,11 +248,14 @@ namespace FreeLibSet.Forms
     {
       try
       {
+        if (Data == null)
+          throw new ArgumentNullException("Data==null");
+
         if (args.ColumnIndex == 0)
         {
           if (args.RowIndex == 0)
             return;
-          SelRows[args.RowIndex - 1] = DataTools.GetBool(args.Value);
+          Data.SelRows[args.RowIndex - 1] = DataTools.GetBool(args.Value);
           Control.InvalidateRow(args.RowIndex);
           base.Validate();
         }
@@ -1710,15 +264,15 @@ namespace FreeLibSet.Forms
         {
           string displayName = DataTools.GetString(args.Value);
           if (displayName == NoneColText)
-            SelColumns[args.ColumnIndex - 1] = null;
+            Data.SelColumns[args.ColumnIndex - 1] = null;
           else
           {
             bool found = false;
-            for (int i = 0; i < AllColumns.Length; i++)
+            for (int i = 0; i < Data.AvailableColumns.Length; i++)
             {
-              if (AllColumns[i].DisplayName == displayName)
+              if (Data.AvailableColumns[i].DisplayName == displayName)
               {
-                SelColumns[args.ColumnIndex - 1] = AllColumns[i];
+                Data.SelColumns[args.ColumnIndex - 1] = Data.AvailableColumns[i];
                 found = true;
                 break;
               }
@@ -1743,21 +297,24 @@ namespace FreeLibSet.Forms
     /// <param name="args">Аргументы события</param>
     protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
     {
-      if (args.RowIndex >= 1 && SelRows[args.RowIndex - 1]) // серые ячейки делаем поштучно
+      if (Data == null)
+        return;
+
+      if (args.RowIndex >= 1 && Data.SelRows[args.RowIndex - 1]) // серые ячейки делаем поштучно
       {
-        for (int i = 0; i < _SelColumnArray.Length; i++)
+        for (int i = 0; i < Data.ColumnCount; i++)
         {
-          if (SelColumns[i] != null)
+          if (Data.SelColumns[i] != null)
           {
-            _ValidatingArgs.InitSourceData(SourceData[args.RowIndex - 1, i]);
-            SelColumns[i].PerformValidating(_ValidatingArgs);
-            switch (_ValidatingArgs.ValidateState)
+            string errorText;
+            UIValidateState res = Data.Validate(args.RowIndex - 1, i, out errorText);
+            switch (res)
             {
               case UIValidateState.Error:
-                args.AddRowError(_ValidatingArgs.ErrorText, Columns[i + 1].Name);
+                args.AddRowError(Data.SelColumns[i].DisplayName + ": " + errorText, Columns[i + 1].Name);
                 break;
               case UIValidateState.Warning:
-                args.AddRowWarning(_ValidatingArgs.ErrorText, Columns[i + 1].Name);
+                args.AddRowWarning(Data.SelColumns[i].DisplayName + ": " + errorText, Columns[i + 1].Name);
                 break;
             }
           }
@@ -1772,6 +329,9 @@ namespace FreeLibSet.Forms
     /// <param name="args">Аргументы события</param>
     protected override void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
     {
+      if (Data == null)
+        return;
+
       if (args.RowIndex == 0)
       {
         // Строка выбора типа столбца
@@ -1783,9 +343,15 @@ namespace FreeLibSet.Forms
           args.ReadOnlyMessage = "Пустая ячейка";
           return;
         }
-        // Так странно себя ведет
-        //if (SelColumns[args.ColumnIndex - 1] == null && args.GetGridCell().Selected)
-        //  args.Grayed = true;
+
+        if (!args.GetGridCell().Selected)
+        {
+          // Так странно себя ведет
+          if (Data.SelColumns.IsRepeated(args.ColumnIndex - 1))
+            args.ColorType = EFPDataGridViewColorType.Error;
+          else if (Data.SelColumns[args.ColumnIndex - 1] == null)
+            args.Grayed = true;
+        }
       }
       else
       {
@@ -1793,9 +359,9 @@ namespace FreeLibSet.Forms
         if (args.ColumnIndex >= 1)
         {
           // Столбец данных
-          if (SelRows[args.RowIndex - 1])
+          if (Data.SelRows[args.RowIndex - 1])
           {
-            if (SelColumns[args.ColumnIndex - 1] == null)
+            if (Data.SelColumns[args.ColumnIndex - 1] == null)
               args.Grayed = true;
           }
           else
@@ -1813,6 +379,12 @@ namespace FreeLibSet.Forms
 
     #region Validate
 
+    private void ValidateAndRepaint(object sender, EventArgs args)
+    {
+      Validate();
+      Control.Invalidate();
+    }
+
     /// <summary>
     /// Проверка корректности введенных данных управляющего элемента
     /// Проверка значений импортируемых ячеек не выполняется, т.к. она может быть сравнительно длительной
@@ -1820,49 +392,38 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnValidate()
     {
-      if (_SelRowArray == null)
+      if (Data == null)
       {
-        base.SetError("Свойства AllColumns и SourceData должны быть установлены");
+        SetError("Нет данных для выбора");
         return;
       }
-      bool hasCol = false;
-      for (int i = 0; i < _SelColumnArray.Length; i++)
-      {
-        if (SelColumns[i] != null)
-        {
-          hasCol = true;
-          for (int j = 0; j < i; j++)
-          {
-            if (_SelColumnArray[j] == _SelColumnArray[i])
-            {
-              Control.CurrentCell = Control[j + 1, 0];
-              SetError("Столбец \"" + SelColumns[j].DisplayName + "\" выбран дважды");
-              return;
-            }
-          }
-        }
-      }
-      if (!hasCol)
+
+      if (Data.SelColumns.IsEmpty)
       {
         base.SetError("Не выбрано ни одного столбца");
         return;
       }
 
+      if (Data.SelColumns.HasRepeats)
+      {
+        SetError("Столбец \"" + Data.SelColumns[Data.SelColumns.FirstRepeatedColumnIndex] + "\" выбран дважды");
+        return;
+      }
+
       // Проверяем наличие выбранных строк и корректность данных
       bool hasRows = false;
-      for (int i = 0; i < _SelRowArray.Length; i++)
+      for (int i = 0; i < Data.RowCount; i++)
       {
-        if (SelRows[i])
+        if (Data.SelRows[i])
         {
           hasRows = true;
 
-          for (int j = 0; j < _SelColumnArray.Length; j++)
+          for (int j = 0; j < Data.ColumnCount; j++)
           {
-            if (SelColumns[j] != null)
+            if (Data.SelColumns[j] != null)
             {
-              _ValidatingArgs.InitSourceData(SourceData[i, j]);
-              SelColumns[j].PerformValidating(_ValidatingArgs);
-              if (_ValidatingArgs.ValidateState == UIValidateState.Error)
+              string errorText;
+              if (Data.Validate(i, j, out errorText) == UIValidateState.Error)
               {
                 // 12.01.2022
                 // Переход на ошибочную ячейку не выполняем.
@@ -1872,8 +433,8 @@ namespace FreeLibSet.Forms
                 // Теперь можно использовать Ctrl+] и Ctrl+[ для поиска ошибок.
                 //Control.CurrentCell = Control[j + 1, i + 1];
 
-                base.SetError("Строка " + (i + 1).ToString() + ", столбец " + (j + 1).ToString() + " (" + SelColumns[j].DisplayName + "). " +
-                  _ValidatingArgs.ErrorText);
+                base.SetError("Строка " + (i + 1).ToString() + ", столбец " + (j + 1).ToString() + " (" + Data.SelColumns[j].DisplayName + "). " +
+                  errorText);
                 return;
               }
             }
@@ -1891,131 +452,6 @@ namespace FreeLibSet.Forms
 
       base.OnValidate();
     }
-
-    #endregion
-
-    #region Получение значения
-
-    /// <summary>
-    /// Получить результирующее значение ячейки после преобразования
-    /// Выбрасывает исключение NullReferenceException, если для столбца с индексом <paramref name="columnIndex"/> не выбрано значение
-    /// (SelCoumns[ColumnIndex]=null)
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnIndex">Индекс столбца в массиве SelColumns</param>
-    /// <returns>Преобразованное значение</returns>
-    public object GetResultValue(int rowIndex, int columnIndex)
-    {
-      if (SelColumns[columnIndex] == null)
-        throw new NullReferenceException("Для столбца с индексом " + columnIndex.ToString() + " не выбрано значение в массиве SelColumns");
-      _ValidatingArgs.InitSourceData(SourceData[rowIndex, columnIndex]);
-      SelColumns[columnIndex].PerformValidating(_ValidatingArgs);
-      return _ValidatingArgs.ResultValue;
-    }
-
-    /// <summary>
-    /// Получить результирующее значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается null
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Значение ячйки</returns>
-    public object GetResultValue(int rowIndex, string columnCode)
-    {
-      int columnIndex = SelColumns.IndexOf(columnCode);
-      if (columnIndex < 0)
-        return null;
-      else
-        return GetResultValue(rowIndex, columnIndex);
-    }
-
-    #region Получение типизированных значений
-
-    /// <summary>
-    /// Получить результирующее строковое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается пустая строка
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Типизированное значение ячйки</returns>
-    public string GetString(int rowIndex, string columnCode)
-    {
-      return DataTools.GetString(GetResultValue(rowIndex, columnCode));
-    }
-
-    /// <summary>
-    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается 0
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Типизированное значение ячйки</returns>
-    public int GetInt(int rowIndex, string columnCode)
-    {
-      return DataTools.GetInt(GetResultValue(rowIndex, columnCode));
-    }
-
-    /// <summary>
-    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается 0
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Типизированное значение ячйки</returns>
-    public float GetSingle(int rowIndex, string columnCode)
-    {
-      return DataTools.GetSingle(GetResultValue(rowIndex, columnCode));
-    }
-
-    /// <summary>
-    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается 0
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Типизированное значение ячйки</returns>
-    public double GetDouble(int rowIndex, string columnCode)
-    {
-      return DataTools.GetDouble(GetResultValue(rowIndex, columnCode));
-    }
-
-    /// <summary>
-    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается 0
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Типизированное значение ячйки</returns>
-    public decimal GetDecimal(int rowIndex, string columnCode)
-    {
-      return DataTools.GetDecimal(GetResultValue(rowIndex, columnCode));
-    }
-
-    /// <summary>
-    /// Получить результирующее значение дата/время ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается null
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Типизированное значение ячйки</returns>
-    public DateTime? GetNullableDateTime(int rowIndex, string columnCode)
-    {
-      return DataTools.GetNullableDateTime(GetResultValue(rowIndex, columnCode));
-    }
-
-    /// <summary>
-    /// Получить результирующее логическое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается false
-    /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AllColumns</param>
-    /// <returns>Типизированное значение ячйки</returns>
-    public bool GetBool(int rowIndex, string columnCode)
-    {
-      return DataTools.GetBool(GetResultValue(rowIndex, columnCode));
-    }
-
-    #endregion
 
     #endregion
 
@@ -2082,7 +518,9 @@ namespace FreeLibSet.Forms
 
     void ciClearColumns_Click(object sender, EventArgs args)
     {
-      ControlProvider.SelColumns.Clear();
+      if (ControlProvider.Data == null)
+        return;
+      ControlProvider.Data.SelColumns.Clear();
     }
 
     #endregion

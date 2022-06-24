@@ -6943,7 +6943,7 @@ namespace FreeLibSet.Forms
       if (!DataTools.IsFloatType(args.DesiredType))
         return false; // не число с плавающей точкой
 
-      WinFormsTools.CorrectNumberString(ref s, args.InheritedCellStyle.FormatProvider);
+      UITools.CorrectNumberString(ref s, args.InheritedCellStyle.FormatProvider);
       DataGridViewCell cell = Control[args.ColumnIndex, args.RowIndex];
       try
       {
@@ -7626,7 +7626,7 @@ namespace FreeLibSet.Forms
       IMaskProvider maskProvider = Columns[cell.ColumnIndex].MaskProvider;
 
       if (DataTools.IsFloatType(valueType))
-        WinFormsTools.CorrectNumberString(ref textValue);
+        UITools.CorrectNumberString(ref textValue);
       else if (valueType == typeof(string) && maskProvider != null)
       {
         if (!maskProvider.Test(textValue, out errorText))

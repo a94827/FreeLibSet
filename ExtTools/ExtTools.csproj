@@ -99,6 +99,7 @@
     <Compile Include="Text\TabTextConvert.cs" />
     <Compile Include="UICore\IUpDownHandler.cs" />
     <Compile Include="UICore\UIInputGridData.cs" />
+    <Compile Include="UICore\UISelRCGridData.cs" />
     <Compile Include="UICore\UITools.cs" />
     <Compile Include="Win32\IniFileWindows.cs" />
     <Compile Include="IO\IniFile.cs" />

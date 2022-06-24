@@ -106,6 +106,8 @@
     <Compile Include="Text\TextWithRowsTests.cs" />
     <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />
     <Compile Include="UICore\DataTableReorderHelperTests.cs" />
+    <Compile Include="UICore\UISelRCGridDataTests.cs" />
+    <Compile Include="UICore\UIToolsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">

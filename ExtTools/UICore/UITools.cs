@@ -6,6 +6,7 @@ using FreeLibSet.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 namespace FreeLibSet.UICore
@@ -259,6 +260,70 @@ namespace FreeLibSet.UICore
     private static UIValidateResult CreateValidateResult(bool isValid, string message)
     {
       return new UIValidateResult(isValid, message);
+    }
+
+    #endregion
+
+    #region Преобразование чисел
+
+    /// <summary>
+    /// Корректировка строки, содержащей число с плавающей точкой, перед преобразованием
+    /// float/double/decimal.TryParse().
+    /// Выполняет замену символов "." и "," в зависимости от значения DecimalSeparator
+    /// Также убираются пробелы
+    /// </summary>
+    /// <param name="s">Строка, которая будет преобразовываться</param>
+    /// <param name="nfi">Объект, содержщий параметры форматирования</param>
+    public static void CorrectNumberString(ref string s, NumberFormatInfo nfi)
+    {
+      if (String.IsNullOrEmpty(s))
+        return;
+
+      if (nfi == null)
+        nfi = NumberFormatInfo.CurrentInfo;
+      switch (nfi.NumberDecimalSeparator)
+      {
+        case ",":
+          s = s.Replace('.', ',');
+          break;
+        case ".":
+          s = s.Replace(',', '.');
+          break;
+      }
+
+      s = s.Replace(" ", "");
+      s = s.Replace(DataTools.NonBreakSpaceStr, "");
+    }
+
+    /// <summary>
+    /// Корректировка строки, содержащей число с плавающей точкой, перед преобразованием
+    /// float/double/decimal.TryParse().
+    /// Выполняет замену символов "." и "," в зависимости от значения DecimalSeparator
+    /// Также убираются пробелы.
+    /// </summary>
+    /// <param name="s">Строка, которая будет преобразовываться</param>
+    public static void CorrectNumberString(ref string s)
+    {
+      CorrectNumberString(ref s, NumberFormatInfo.CurrentInfo);
+    }
+
+    /// <summary>
+    /// Корректировка строки, содержащей число с плавающей точкой, перед преобразованием
+    /// float/double/decimal.TryParse().
+    /// Выполняет замену символов "." и "," в зависимости от значения DecimalSeparator
+    /// Также убираются пробелы
+    /// </summary>
+    /// <param name="s">Строка, которая будет преобразовываться</param>
+    /// <param name="formatProvider">Форматизатор</param>
+    public static void CorrectNumberString(ref string s, IFormatProvider formatProvider)
+    {
+      if (formatProvider == null)
+        CorrectNumberString(ref s);
+      else
+      {
+        NumberFormatInfo nfi = formatProvider.GetFormat(typeof(NumberFormatInfo)) as NumberFormatInfo;
+        CorrectNumberString(ref s, nfi);
+      }
     }
 
     #endregion
