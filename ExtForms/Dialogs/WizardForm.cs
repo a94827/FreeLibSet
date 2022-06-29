@@ -465,7 +465,7 @@ namespace FreeLibSet.Forms
   /// Объект "Мастер".
   /// Вывод последовательности диалогов с навигацией "Вперед" и "Назад"
   /// </summary>
-  public class Wizard : DisposableObject
+  public class Wizard : DisposableObject, ISplashStack
   {
     // 03.01.2021
     // Не знаю, можно ли использовать SimpleDisposableObject
@@ -770,6 +770,61 @@ namespace FreeLibSet.Forms
     /// </summary>
     public WizardTempPage TempPage { get { return _TempPage; } }
     internal WizardTempPage _TempPage;
+
+
+    ISplash ISplashStack.BeginSplash(string[] phases)
+    {
+      return BeginTempPage(phases);
+    }
+
+    ISplash ISplashStack.BeginSplash(string phase)
+    {
+      return BeginTempPage(phase);
+    }
+
+    ISplash ISplashStack.BeginSplash()
+    {
+      return BeginTempPage("Идет процесс");
+    }
+
+    void ISplashStack.EndSplash()
+    {
+      EndTempPage();
+    }
+
+    ISplash ISplashStack.Splash
+    {
+      get 
+      {
+        WizardSplashPage page=TempPage as WizardSplashPage ;
+        if (TempPage == null)
+          return null;
+        else
+          return page.Splash;
+      }
+    }
+
+    ISplash[] ISplashStack.GetSplashStack()
+    {
+      if (TempPage == null)
+        return new ISplash[0];
+
+      Stack<ISplash> stk = new Stack<ISplash>();
+      WizardTempPage page = TempPage;
+      while (page != null)
+      {
+        if (page is WizardSplashPage)
+          stk.Push(((WizardSplashPage)page).Splash);
+        page = page.PrevTempPage;
+      }
+      return stk.ToArray();
+    }
+
+    ISplash[] ISplashStack.GetSplashStack(ref int stackVersion)
+    {
+      return ((ISplashStack)this).GetSplashStack(); // нет отслеживания версий
+    }
+
 
     #endregion
 

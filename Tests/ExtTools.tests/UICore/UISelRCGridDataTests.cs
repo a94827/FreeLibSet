@@ -33,10 +33,12 @@ namespace ExtTools_tests.UICore
 
       Assert.IsTrue(sut.SelRows.IsEmpty, "SelRows.IsEmpty");
       Assert.AreEqual(new bool[3] { false, false, false }, sut.SelRows.AsArray, "SelRows.AsArray");
+      Assert.AreEqual(0, sut.SelRows.SelectionCount, "SelRows.SelectionCount");
 
       Assert.IsTrue(sut.SelColumns.IsEmpty, "SelRows.IsEmpty");
       Assert.AreEqual(new string[2] { String.Empty, String.Empty }, sut.SelColumns.Codes, "SelColumns.Codes");
       Assert.AreEqual(",", sut.SelColumns.AsString, "SelColumns.AsString");
+      Assert.AreEqual(0, sut.SelColumns.SelectionCount, "SelColumns.SelectionCount");
     }
 
     [Test]
@@ -84,10 +86,10 @@ namespace ExtTools_tests.UICore
     static void TestColumn1_Validating(object sender, UISelRCValidatingEventArgs args)
     {
       int x;
-      if (int.TryParse(args.SourceData, out x))
+      if (int.TryParse(args.SourceText, out x))
       {
         args.ResultValue = x;
-        if (args.SourceData.Length != 1)
+        if (args.SourceText.Length != 1)
           args.SetWarning("Длина строки должна быть 1 символ");
       }
       else
@@ -189,6 +191,22 @@ namespace ExtTools_tests.UICore
       sut.SelRows[3] = true;
       sut.SelRows.Init();
       Assert.AreEqual(new bool[] { true, true, true, true, true }, sut.SelRows.AsArray, "#2");
+    }
+
+    [Test]
+    public void SelRows_SelectionCount()
+    {
+      UISelRCGridData sut = CreateTestData();
+      Assert.AreEqual(0, sut.SelRows.SelectionCount, "#1");
+
+      sut.SelRows.Init();
+      Assert.AreEqual(4, sut.SelRows.SelectionCount, "#2");
+
+      sut.SelRows.Clear();
+      Assert.AreEqual(0, sut.SelRows.SelectionCount, "#3");
+
+      sut.SelRows[0] = true;
+      Assert.AreEqual(1, sut.SelRows.SelectionCount, "#4");
     }
 
     #endregion
@@ -341,9 +359,23 @@ namespace ExtTools_tests.UICore
       Assert.AreEqual(2, sut.SelColumns.IndexOf("Col1"), "#9 (Col2, null, Col1)");
     }
 
+    [TestCase("Col1", 1)]
+    [TestCase("Col2", -1)]
+    [TestCase("Col1,Col2", 1)]
+    [TestCase("", -1)]
+    public void SelColumns_IndexOfAny(string codes, int wantedRes)
+    {
+      UISelRCGridData sut = CreateTestData();
+      sut.SelColumns[1] = sut.AvailableColumns[0];
+
+      int res = sut.SelColumns.IndexOfAny(codes);
+      Assert.AreEqual(wantedRes, res);
+    }
+
     [TestCase("Col1", true)]
     [TestCase("Col2", false)]
     [TestCase("Col1,Col2", true)]
+    [TestCase("", false)]
     public void SelColumns_ContainsAny(string codes, bool wantedRes)
     {
       UISelRCGridData sut = CreateTestData();
@@ -356,6 +388,7 @@ namespace ExtTools_tests.UICore
     [TestCase("Col1", true)]
     [TestCase("Col2", false)]
     [TestCase("Col1,Col2", false)]
+    [TestCase("", true)]
     public void SelColumns_ContainsAll(string codes, bool wantedRes)
     {
       UISelRCGridData sut = CreateTestData();
@@ -549,6 +582,7 @@ namespace ExtTools_tests.UICore
       Assert.AreEqual(wantedRes, sut.SelColumns.FirstRepeatedColumnIndex);
     }
 
+    [Test]
     public void SelColumns_FirstRepeatedColumnIndex_dynamic()
     {
       UISelRCGridData sut = CreateTestData();
@@ -559,6 +593,24 @@ namespace ExtTools_tests.UICore
 
       sut.SelColumns[0] = sut.AvailableColumns[0];
       Assert.AreEqual(0, sut.SelColumns.FirstRepeatedColumnIndex, "#3");
+    }
+
+
+    [Test]
+    public void SelColumns_SelectionCount()
+    {
+      UISelRCGridData sut = CreateTestData();
+      Assert.AreEqual(0, sut.SelColumns.SelectionCount, "#1");
+
+      sut.SelRows.Init();
+      sut.SelColumns.Init();
+      Assert.AreEqual(1, sut.SelColumns.SelectionCount, "#2");
+
+      sut.SelColumns.Clear();
+      Assert.AreEqual(0, sut.SelColumns.SelectionCount, "#3");
+
+      sut.SelColumns[0] = sut.AvailableColumns[0];
+      Assert.AreEqual(1, sut.SelColumns.SelectionCount, "#4");
     }
 
     #endregion

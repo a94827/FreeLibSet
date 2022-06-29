@@ -26,15 +26,15 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Инициализация.
-    /// Так как событие Validating обычно вызывается много раз подряд, не выгоднго создавать объект
+    /// Так как событие Validating обычно вызывается много раз подряд, не выгодно создавать объект
     /// UISelRCValidatingEventArgs каждый раз. Вместо этого объект создается однократно, а затем вызывается
-    /// метод InitSourceData() для каждого значения, после чего вызывается событие
+    /// метод InitSource() для каждого значения, после чего вызывается событие Validating.
     /// </summary>
-    /// <param name="sourceData"></param>
-    internal void InitSourceData(string sourceData)
+    /// <param name="sourceText"></param>
+    internal void InitSource(string sourceText)
     {
-      _SourceData = sourceData;
-      _ResultValue = sourceData;
+      _SourceText = sourceText;
+      _ResultValue = sourceText;
       _ValidateState = UIValidateState.Ok;
       _ErrorText = null;
     }
@@ -47,8 +47,8 @@ namespace FreeLibSet.UICore
     /// Исходные данные из буфера обмена (строка), которые нужно проверить и преобразовать в значение.
     /// Может быть пустая строка
     /// </summary>
-    public string SourceData { get { return _SourceData; } }
-    private string _SourceData;
+    public string SourceText { get { return _SourceText; } }
+    private string _SourceText;
 
     /// <summary>
     /// Результат преобразования. По умолчанию, значение совпадает со строкой SourceData
@@ -127,8 +127,8 @@ namespace FreeLibSet.UICore
   /// <summary>
   /// Делегат события UISelRCColumn.Validating
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Ссылка на UISelRCColumn</param>
+  /// <param name="args">Аргументы события</param>
   public delegate void UISelRCValidatingEventHandler(object sender, UISelRCValidatingEventArgs args);
 
   #endregion
@@ -252,7 +252,7 @@ namespace FreeLibSet.UICore
     /// <param name="args"></param>
     public virtual void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData) && (!CanBeEmpty))
+      if (String.IsNullOrEmpty(args.SourceText) && (!CanBeEmpty))
       {
         args.SetError("Пустые значения не допускаются");
         return;
@@ -269,7 +269,8 @@ namespace FreeLibSet.UICore
 
   /// <summary>
   /// Столбец для вставки значения типа "Дата"
-  /// Значение ResultValue имеет тип Nullable DateTime 
+  /// Значение ResultValue имеет тип Nullable DateTime.
+  /// Пустая строка трактуется как null (при CanBeEmpty=true).
   /// </summary>
   public class UISelRCDateColumn : UISelRCColumn
   {
@@ -318,17 +319,17 @@ namespace FreeLibSet.UICore
     /// <param name="args"></param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData))
+      if (String.IsNullOrEmpty(args.SourceText))
         args.ResultValue = null;
       else
       {
         DateTime value;
-        string s = args.SourceData;
+        string s = args.SourceText;
         //if (!DataConv.TryDateFromStr10(s, out dt))
         //{
         if (!DateTime.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в дату");
+          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в дату");
           return;
         }
         //}
@@ -354,7 +355,8 @@ namespace FreeLibSet.UICore
 
   /// <summary>
   /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Int32 
+  /// Значение ResultValue имеет тип Int32.
+  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
   /// </summary>
   public class UISelRCIntColumn : UISelRCColumn
   {
@@ -403,16 +405,16 @@ namespace FreeLibSet.UICore
     /// <param name="args">Аргументы события Validating</param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData))
+      if (String.IsNullOrEmpty(args.SourceText))
         args.ResultValue = 0;
       else
       {
         int value;
-        string s = args.SourceData;
+        string s = args.SourceText;
         UITools.CorrectNumberString(ref s);
         if (!Int32.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в целое число");
+          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в целое число");
           return;
         }
         args.ResultValue = value;
@@ -437,7 +439,8 @@ namespace FreeLibSet.UICore
 
   /// <summary>
   /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Single 
+  /// Значение ResultValue имеет тип Single.
+  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
   /// </summary>
   public class UISelRCSingleColumn : UISelRCColumn
   {
@@ -486,16 +489,16 @@ namespace FreeLibSet.UICore
     /// <param name="args">Аргументы события Validating</param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData))
+      if (String.IsNullOrEmpty(args.SourceText))
         args.ResultValue = 0m;
       else
       {
         float value;
-        string s = args.SourceData;
+        string s = args.SourceText;
         UITools.CorrectNumberString(ref s);
         if (!Single.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
+          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в числовое значение");
           return;
         }
         args.ResultValue = value;
@@ -520,7 +523,8 @@ namespace FreeLibSet.UICore
 
   /// <summary>
   /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Double
+  /// Значение ResultValue имеет тип Double.
+  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
   /// </summary>
   public class UISelRCDoubleColumn : UISelRCColumn
   {
@@ -569,16 +573,16 @@ namespace FreeLibSet.UICore
     /// <param name="args">Аргументы события Validating</param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData))
+      if (String.IsNullOrEmpty(args.SourceText))
         args.ResultValue = 0m;
       else
       {
         double value;
-        string s = args.SourceData;
+        string s = args.SourceText;
         UITools.CorrectNumberString(ref s);
         if (!Double.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
+          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в числовое значение");
           return;
         }
         args.ResultValue = value;
@@ -603,7 +607,8 @@ namespace FreeLibSet.UICore
 
   /// <summary>
   /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип decimal 
+  /// Значение ResultValue имеет тип decimal. 
+  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
   /// </summary>
   public class UISelRCDecimalColumn : UISelRCColumn
   {
@@ -652,16 +657,16 @@ namespace FreeLibSet.UICore
     /// <param name="args">Аргументы события Validating</param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData))
+      if (String.IsNullOrEmpty(args.SourceText))
         args.ResultValue = 0m;
       else
       {
         decimal value;
-        string s = args.SourceData;
+        string s = args.SourceText;
         UITools.CorrectNumberString(ref s);
         if (!decimal.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceData + "\" нельзя преобразовать в числовое значение");
+          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в числовое значение");
           return;
         }
         args.ResultValue = value;
@@ -688,6 +693,7 @@ namespace FreeLibSet.UICore
   /// Столбец для вставки значения перечислимого типа <typeparamref name="T"/>
   /// Значение ResultValue имеет перечислимый тип.
   /// Использует список строковых значений, соответствующих элементам перечисления.
+  /// Пустая строка трактуется как null (при CanBeEmpty=true).
   /// </summary>
   /// <typeparam name="T">Тип перечисления. Поддерживаются только простые перечисления,
   /// имеющие значения 0,1,2, ...</typeparam>
@@ -752,14 +758,16 @@ namespace FreeLibSet.UICore
     /// <param name="args">Аргументы события Validating</param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData))
+      if (String.IsNullOrEmpty(args.SourceText))
+      {
         args.ResultValue = null;
+      }
       else
       {
-        int p = _TextValueIndexer.IndexOf(args.SourceData);
+        int p = _TextValueIndexer.IndexOf(args.SourceText);
         if (p < 0)
         {
-          args.SetError("Неизвестная строка \"" + args.SourceData + "\"");
+          args.SetError("Неизвестная строка \"" + args.SourceText + "\"");
           args.ResultValue = null;
         }
         else
@@ -792,6 +800,7 @@ namespace FreeLibSet.UICore
   /// Значение ResultValue имеет перечислимый тип.
   /// Использует словарь строковых значений, соответствующих элементам перечисления.
   /// В словаре несколько строк могут соответствовать одному значению.
+  /// Пустая строка трактуется как null (при CanBeEmpty=true).
   /// </summary>
   /// <typeparam name="T">Тип перечисления</typeparam>
   public class UISelRCEnumColumnWithDict<T> : UISelRCColumn
@@ -852,19 +861,19 @@ namespace FreeLibSet.UICore
     /// <param name="args">Аргументы события Validating</param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
-      if (String.IsNullOrEmpty(args.SourceData))
+      if (String.IsNullOrEmpty(args.SourceText))
         args.ResultValue = null;
       else
       {
         T value;
-        if (TextValues.TryGetValue(args.SourceData, out value))
+        if (TextValues.TryGetValue(args.SourceText, out value))
         {
           args.ResultValue = value;
           ValidateValue(args, value);
         }
         else
         {
-          args.SetError("Неизвестная строка \"" + args.SourceData + "\"");
+          args.SetError("Неизвестная строка \"" + args.SourceText + "\"");
           args.ResultValue = null;
         }
       }
@@ -1041,6 +1050,23 @@ namespace FreeLibSet.UICore
             Array.Copy(value, _Items, n);
             _Data.CallChanged();
           }
+        }
+      }
+
+      /// <summary>
+      /// Возвращает количество выбранных строк
+      /// </summary>
+      public int SelectionCount
+      {
+        get
+        {
+          int n = 0;
+          for (int i = 0; i < _Items.Length; i++)
+          {
+            if (_Items[i])
+              n++;
+          }
+          return n;
         }
       }
 
@@ -1227,6 +1253,23 @@ namespace FreeLibSet.UICore
         }
       }
 
+      /// <summary>
+      /// Возвращает количество столбцов, для которых заданы соответствия
+      /// </summary>
+      public int SelectionCount
+      {
+        get
+        {
+          int n = 0;
+          for (int i = 0; i < _Items.Length; i++)
+          {
+            if (_Items[i] != null)
+              n++;
+          }
+          return n;
+        }
+      }
+
       #endregion
 
       #region Буферизация позиций столбцов и повторов
@@ -1357,6 +1400,32 @@ namespace FreeLibSet.UICore
       }
 
       /// <summary>
+      /// Возвращает индекс первого выбранного столбца с любым из заданных кодов описаний.
+      /// Не может использоваться для поиска невыбранных столбцов.
+      /// </summary>
+      /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
+      /// <returns>Индекс </returns>
+      public int IndexOfAny(string codes)
+      {
+        if (String.IsNullOrEmpty(codes))
+          return -1;
+
+        string[] a = codes.Split(',');
+        int pRes = -1;
+        for (int i = 0; i < a.Length; i++)
+        {
+          int p = IndexOf(a[i]);
+          if (p < 0)
+            continue;
+          if (pRes < 0)
+            pRes = p;
+          else
+            pRes = Math.Min(pRes, p);
+        }
+        return pRes;
+      }
+
+      /// <summary>
       /// Возвращает true, если в SelColumns выбрано описание с заданным кодом.
       /// </summary>
       /// <param name="code">Код описания столбца из массива AvailableColumns.
@@ -1369,6 +1438,7 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Возвращает true, если столбцам назначено хотя бы одно из описаний с заданными кодами.
+      /// Не может использоваться для поиска невыбранных столбцов.
       /// </summary>
       /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
       /// <returns>Наличие выбранных описаний</returns>
@@ -1387,6 +1457,7 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Возвращает true, если столбцам назначены все описания с заданными кодами.
+      /// Не может использоваться для поиска невыбранных столбцов.
       /// </summary>
       /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
       /// <returns>Наличие выбранных описаний</returns>
@@ -1401,6 +1472,27 @@ namespace FreeLibSet.UICore
             return false;
         }
         return true;
+      }
+
+      /// <summary>
+      /// Определяет количество указанных описаний столбов из списка, которые назначены столбцам.
+      /// Если одно описание (ошибочно) назначено нескольким столбцам, то описание учитывается только один раз
+      /// </summary>
+      /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
+      /// <returns>Количество назначенных описаний в диапазоне от 0 до количества кодов в строке <paramref name="codes"/> включительно.</returns>
+      public int ContainCount(string codes)
+      {
+        if (String.IsNullOrEmpty(codes))
+          return 0;
+
+        string[] a = codes.Split(',');
+        int cnt = 0;
+        for (int i = 0; i < a.Length; i++)
+        {
+          if (Contains(a[i]))
+            cnt++;
+        }
+        return cnt;
       }
 
       /// <summary>
@@ -1467,7 +1559,7 @@ namespace FreeLibSet.UICore
                 if (!_Data.SelRows[k])
                   continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
 
-                _Data._ValidatingArgs.InitSourceData(_Data._SourceData[k, i]);
+                _Data._ValidatingArgs.InitSource(_Data._SourceData[k, i]);
                 cols2[j].PerformValidating(_Data._ValidatingArgs);
                 if (_Data._ValidatingArgs.ValidateState != UIValidateState.Ok)
                 {
@@ -1597,15 +1689,15 @@ namespace FreeLibSet.UICore
       public string[] RepeatedCodes
       {
         get
-        { 
+        {
           PreparePositions();
           if (_Repeats == null)
             return DataTools.EmptyStrings;
 
           SingleScopeStringList lst = new SingleScopeStringList(false);
-          foreach(KeyValuePair<int,object> pair in _Repeats)
+          foreach (KeyValuePair<int, object> pair in _Repeats)
           {
-            UISelRCColumn col=_Items[pair.Key];
+            UISelRCColumn col = _Items[pair.Key];
             lst.Add(col.Code);
           }
 
@@ -1628,7 +1720,7 @@ namespace FreeLibSet.UICore
       public int FirstRepeatedColumnIndex
       {
         get
-        { 
+        {
           PreparePositions();
           if (_Repeats == null)
             return -1;
@@ -1732,10 +1824,18 @@ namespace FreeLibSet.UICore
         return UIValidateState.Ok;
       }
 
-      _ValidatingArgs.InitSourceData(SourceData[rowIndex, columnIndex]);
-      SelColumns[columnIndex].PerformValidating(_ValidatingArgs);
-      errorText = _ValidatingArgs.ErrorText;
-      return _ValidatingArgs.ValidateState;
+      try
+      {
+        _ValidatingArgs.InitSource(SourceData[rowIndex, columnIndex]);
+        SelColumns[columnIndex].PerformValidating(_ValidatingArgs);
+        errorText = _ValidatingArgs.ErrorText;
+        return _ValidatingArgs.ValidateState;
+      }
+      catch (Exception e)
+      {
+        errorText = "Ошибка проверки значения. " + e.Message;
+        return UIValidateState.Error;
+      }
     }
 
     #endregion
@@ -1760,9 +1860,16 @@ namespace FreeLibSet.UICore
 
           return null;
 
-        _ValidatingArgs.InitSourceData(SourceData[rowIndex, columnIndex]);
-        SelColumns[columnIndex].PerformValidating(_ValidatingArgs);
-        return _ValidatingArgs.ResultValue;
+        try
+        {
+          _ValidatingArgs.InitSource(SourceData[rowIndex, columnIndex]);
+          SelColumns[columnIndex].PerformValidating(_ValidatingArgs);
+          return _ValidatingArgs.ResultValue;
+        }
+        catch
+        {
+          return null;
+        }
       }
     }
 

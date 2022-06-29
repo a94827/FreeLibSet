@@ -7,6 +7,7 @@ using FreeLibSet.UICore;
 using FreeLibSet.Core;
 using FreeLibSet.DependedValues;
 using System.Globalization;
+using FreeLibSet.Collections;
 
 namespace ExtTools_tests.UICore
 {
@@ -43,7 +44,7 @@ namespace ExtTools_tests.UICore
 
     #region Тестовые данные
 
-    private static UISelRCGridData CreateTestData(string textValue, UISelRCColumn sut)
+    public static UISelRCGridData CreateTestData(string textValue, UISelRCColumn sut)
     {
       string[,] sourceData = new string[1, 1] { { textValue } };
       UISelRCColumn[] availableColumns = new UISelRCColumn[1] { sut };
@@ -157,13 +158,141 @@ namespace ExtTools_tests.UICore
     [TestCase(false, 0)]
     public void Validating_and_CanBeEmpty(bool canBeEmpty, int wantedCount)
     {
-      ValidatingCounter counter=new ValidatingCounter();
+      ValidatingCounter counter = new ValidatingCounter();
 
       UISelRCColumn sut = new UISelRCColumn("Col1", "Col1", counter.Validating);
       sut.CanBeEmpty = canBeEmpty;
       UISelRCGridData data = CreateTestData("", sut); // пустые данные
       object value1 = data[0, 0];
       Assert.AreEqual(wantedCount, counter.Count);
+    }
+
+    #endregion
+  }
+
+  public class UISelRCColumn_InheritorTests
+  {
+    #region Столбцы ввода простых значений
+
+    [Test]
+    public void UISelRCIntColumn_main()
+    {
+      DoTest(new UISelRCIntColumn("Col1"), 123, 123.45.ToString(), 0);
+    }
+
+    [Test]
+    public void UISelRCSingleColumn_main()
+    {
+      DoTest(new UISelRCSingleColumn("Col1"), 123.45f, "ABC", 0f);
+    }
+
+    [Test]
+    public void UISelRCDoubleColumn_main()
+    {
+      DoTest(new UISelRCDoubleColumn("Col1"), 123.45, "ABC", 0.0);
+    }
+
+    [Test]
+    public void UISelRCDecimalColumn_main()
+    {
+      DoTest(new UISelRCDecimalColumn("Col1"), 123.45m, "ABC", 0m);
+    }
+
+    [Test]
+    public void UISelRCDateColumn_main()
+    {
+      DoTest(new UISelRCDateColumn("Col1"), DateTime.Today, "ABC", null);
+    }
+
+    private void DoTest(UISelRCColumn col, object testValue, string badText, object defValue)
+    {
+      string errorText;
+      UISelRCGridData data1 = UISelRCColumnTests.CreateTestData(testValue.ToString(), col);
+      Assert.AreEqual(testValue, data1[0, 0], "Good value #1");
+      Assert.AreEqual(UIValidateState.Ok, data1.Validate(0, 0, out errorText), "Validate() #1");
+
+      UISelRCGridData data2 = UISelRCColumnTests.CreateTestData(badText, col);
+      // Ошибочное значение не определено
+      //Assert.AreEqual(defValue, data2[0, 0], "Default value #2");
+      Assert.AreEqual(UIValidateState.Error, data2.Validate(0, 0, out errorText), "Validate() #2");
+
+      col.CanBeEmpty = true;
+      UISelRCGridData data3 = UISelRCColumnTests.CreateTestData(String.Empty, col);
+      Assert.AreEqual(defValue, data3[0, 0], "Default value #3");
+      Assert.AreEqual(UIValidateState.Ok, data3.Validate(0, 0, out errorText), "Validate() #3");
+
+      col.CanBeEmpty = false;
+      UISelRCGridData data4 = UISelRCColumnTests.CreateTestData(String.Empty, col);
+      Assert.AreEqual(defValue, data4[0, 0], "Default value #4");
+      Assert.AreEqual(UIValidateState.Error, data4.Validate(0, 0, out errorText), "Validate() #4");
+    }
+
+    #endregion
+
+    #region Столбцы перечислений
+
+    private enum SimpleEnum
+    { 
+      Zero, One, Two, Three
+    }
+
+    [Test]
+    public void UISelRCEnumColumn_main()
+    {
+      UISelRCEnumColumn<SimpleEnum> col = new UISelRCEnumColumn<SimpleEnum>("Col1", "Test", new string[]{
+        "Value 0",
+        "Value 1",
+        "Value 2",
+        "Value 3"});
+
+      string errorText;
+      UISelRCGridData data1 = UISelRCColumnTests.CreateTestData("Value 2", col);
+      Assert.AreEqual(SimpleEnum.Two, data1[0, 0], "Good value #1");
+      Assert.AreEqual(UIValidateState.Ok, data1.Validate(0, 0, out errorText), "Validate() #1");
+
+
+      UISelRCGridData data2 = UISelRCColumnTests.CreateTestData("Two", col);
+      Assert.AreEqual(UIValidateState.Error, data2.Validate(0, 0, out errorText), "Validate() #2");
+
+      col.CanBeEmpty = true;
+      UISelRCGridData data3 = UISelRCColumnTests.CreateTestData(String.Empty, col);
+      Assert.AreEqual(null, data3[0, 0], "Default value #3");
+      Assert.AreEqual(UIValidateState.Ok, data3.Validate(0, 0, out errorText), "Validate() #3");
+
+      col.CanBeEmpty = false;
+      UISelRCGridData data4 = UISelRCColumnTests.CreateTestData(String.Empty, col);
+      Assert.AreEqual(null, data4[0, 0], "Default value #4");
+      Assert.AreEqual(UIValidateState.Error, data4.Validate(0, 0, out errorText), "Validate() #4");
+    }
+
+    [Test]
+    public void UISelRCEnumColumnWithDict_main()
+    {
+      TypedStringDictionary<SimpleEnum> dict = new TypedStringDictionary<SimpleEnum>(true);
+      dict.Add("Value 1", SimpleEnum.One);
+      dict.Add("Value 3", SimpleEnum.Three);
+      dict.Add("XXX 3", SimpleEnum.Three); // повтор
+
+      UISelRCEnumColumnWithDict<SimpleEnum> col = new UISelRCEnumColumnWithDict<SimpleEnum>("Col1", "Test", dict);
+
+      string errorText;
+      UISelRCGridData data1 = UISelRCColumnTests.CreateTestData("XXX 3", col);
+      Assert.AreEqual(SimpleEnum.Three, data1[0, 0], "Good value #1");
+      Assert.AreEqual(UIValidateState.Ok, data1.Validate(0, 0, out errorText), "Validate() #1");
+
+
+      UISelRCGridData data2 = UISelRCColumnTests.CreateTestData("Value 2", col);
+      Assert.AreEqual(UIValidateState.Error, data2.Validate(0, 0, out errorText), "Validate() #2");
+
+      col.CanBeEmpty = true;
+      UISelRCGridData data3 = UISelRCColumnTests.CreateTestData(String.Empty, col);
+      Assert.AreEqual(null, data3[0, 0], "Default value #3");
+      Assert.AreEqual(UIValidateState.Ok, data3.Validate(0, 0, out errorText), "Validate() #3");
+
+      col.CanBeEmpty = false;
+      UISelRCGridData data4 = UISelRCColumnTests.CreateTestData(String.Empty, col);
+      Assert.AreEqual(null, data4[0, 0], "Default value #4");
+      Assert.AreEqual(UIValidateState.Error, data4.Validate(0, 0, out errorText), "Validate() #4");
     }
 
     #endregion
