@@ -842,7 +842,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="srcCollection">Исходный список объектов</param>
     public NamedList(ICollection<T> srcCollection)
-      : this(srcCollection, false)
+      : this(srcCollection, false, false)
     {
     }
 
@@ -853,10 +853,24 @@ namespace FreeLibSet.Collections
     /// <param name="srcCollection">Исходный список объектов</param>
     /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
     public NamedList(ICollection<T> srcCollection, bool ignoreCase)
+      : this(srcCollection, ignoreCase, false)
+    {
+    }
+
+    /// <summary>
+    /// Создает список, заполняя его значениями из коллекции.
+    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами (с учетом <paramref name="ignoreCase"/>), повторы отбрасываются
+    /// </summary>
+    /// <param name="srcCollection">Исходный список объектов</param>
+    /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
+    /// <param name="isReadOnly">Если true, то список сразу переводится в режим "Только чтение"</param>
+    public NamedList(ICollection<T> srcCollection, bool ignoreCase, bool isReadOnly)
       : this(srcCollection.Count, ignoreCase)
     {
       foreach (T item in srcCollection)
         Add(item);
+
+      _IsReadOnly = isReadOnly;
     }
 
     /// <summary>
@@ -866,7 +880,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="srcCollection">Исходный список объектов</param>
     public NamedList(IEnumerable<T> srcCollection)
-      : this(srcCollection, false)
+      : this(srcCollection, false, false)
     {
     }
 
@@ -877,10 +891,24 @@ namespace FreeLibSet.Collections
     /// <param name="srcCollection">Исходный список объектов</param>
     /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
     public NamedList(IEnumerable<T> srcCollection, bool ignoreCase)
+      : this(srcCollection, ignoreCase, false)
+    {
+    }
+
+    /// <summary>
+    /// Создает список, заполняя его значениями из коллекции.
+    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами (с учетом <paramref name="ignoreCase"/>), повторы отбрасываются
+    /// </summary>
+    /// <param name="srcCollection">Исходный список объектов</param>
+    /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
+    /// <param name="isReadOnly">Если true, то список сразу переводится в режим "Только чтение"</param>
+    public NamedList(IEnumerable<T> srcCollection, bool ignoreCase, bool isReadOnly)
       : this(ignoreCase)
     {
       foreach (T item in srcCollection)
         Add(item);
+
+      _IsReadOnly = isReadOnly;
     }
 
     #endregion

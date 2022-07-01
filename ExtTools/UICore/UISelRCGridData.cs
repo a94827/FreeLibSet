@@ -136,7 +136,7 @@ namespace FreeLibSet.UICore
   /// <summary>
   /// Описание для одного столбца для модели UISelRCGridData
   /// </summary>
-  public class UISelRCColumn
+  public class UISelRCColumn: IObjectWithCode
   {
     #region Конструкторы
 
@@ -923,16 +923,7 @@ namespace FreeLibSet.UICore
         throw new ArgumentNullException("availableColumns");
 
       _SourceData = sourceData;
-      _AvailableColumns = DataTools.CreateArray<UISelRCColumn>(availableColumns);
-
-      string[] a = new string[_AvailableColumns.Length];
-      for (int i = 0; i < _AvailableColumns.Length; i++)
-      {
-        if (_AvailableColumns[i] == null)
-          throw new ArgumentException("availableColumns", "availableColumns[" + i.ToString() + "]==null");
-        a[i] = _AvailableColumns[i].Code;
-      }
-      _AvailableColumnIndexer = new StringArrayIndexer(a, false);
+      _AvailableColumns = new NamedList<UISelRCColumn>(availableColumns, false, true);
 
       _SelRows = new SelRowCollection(this);
       _SelColumns = new SelColumnCollection(this);
@@ -966,11 +957,11 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Полный список описаний возможных столбцов, из которых можно осуществлять выбор.
+    /// Список доступен только для просмотра
     /// Задается в конструкторе.
     /// </summary>
-    public UISelRCColumn[] AvailableColumns { get { return _AvailableColumns; } }
-    private UISelRCColumn[] _AvailableColumns;
-    private StringArrayIndexer _AvailableColumnIndexer;
+    public NamedList<UISelRCColumn> AvailableColumns { get { return _AvailableColumns; } }
+    private NamedList<UISelRCColumn> _AvailableColumns;
 
     #endregion
 
@@ -1018,13 +1009,24 @@ namespace FreeLibSet.UICore
 
 
       /// <summary>
-      /// Возвыращает true, если ни одна из строк не выбрана
+      /// Возвращает true, если ни одна из строк не выбрана
       /// </summary>
       public bool IsEmpty
       {
         get
         {
           return Array.IndexOf<bool>(_Items, true) < 0;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает true, если выбраны все строки
+      /// </summary>
+      public bool IsFull
+      {
+        get
+        {
+          return Array.IndexOf<bool>(_Items, false) < 0;
         }
       }
 
@@ -1174,6 +1176,21 @@ namespace FreeLibSet.UICore
       }
 
       /// <summary>
+      /// Возвращает true, если всем столбцам назначены описания, 
+      /// то есть все элементы SelColumns возвращают значения, не равные null.
+      /// Корректность не проверяется, то есть одно описание может быть назначено несколько раз
+      /// </summary>
+      public bool IsFull 
+      {
+        get
+        {
+          PreparePositions();
+          return _IsFull;
+        }
+      }
+
+
+      /// <summary>
       /// Коды описаний выбранных столбцов. 
       /// Свойство возвращает массив, длина которого равна количеству столбцов исходной матрицы ColumnCount.
       /// Для столбцов с назначенным описанием возвращается свойство UISelRCColumn.Code.
@@ -1214,7 +1231,7 @@ namespace FreeLibSet.UICore
                   this[i] = null;
                 else
                 {
-                  int p = _Data._AvailableColumnIndexer.IndexOf(value[i]);
+                  int p = _Data._AvailableColumns.IndexOf(value[i]);
                   if (p < 0)
                     this[i] = null;
                   else
@@ -1270,6 +1287,36 @@ namespace FreeLibSet.UICore
         }
       }
 
+      /// <summary>
+      /// Возвращает массив кодов описаний столбцов, которым не назначены описания
+      /// </summary>
+      public string[] UnassignedCodes
+      {
+        get
+        {
+          if (IsEmpty)
+            return _Data.AvailableColumns.GetCodes();
+          else
+          {
+            List<string> lst = null;
+            for (int i = 0; i < _Data.AvailableColumns.Count; i++)
+            {
+              string code = _Data.AvailableColumns[i].Code;
+              if (!Contains(code))
+              {
+                if (lst == null)
+                  lst = new List<string>();
+                lst.Add(code);
+              }
+            }
+            if (lst == null)
+              return DataTools.EmptyStrings;
+            else
+              return lst.ToArray();
+          }
+        }
+      }
+
       #endregion
 
       #region Буферизация позиций столбцов и повторов
@@ -1301,6 +1348,12 @@ namespace FreeLibSet.UICore
       [NonSerialized]
       private bool _IsEmpty;
 
+      /// <summary>
+      /// true, если всем столбцам назначено описание
+      /// </summary>
+      [NonSerialized]
+      private bool _IsFull;
+
       private void PreparePositions()
       {
         if (_CodePositions == null)
@@ -1312,12 +1365,14 @@ namespace FreeLibSet.UICore
         _CodePositions = new Dictionary<string, int>();
         _Repeats = null;
         _IsEmpty = true;
+        _IsFull = true;
         for (int i = 0; i < _Items.Length; i++)
         {
           if (_Items[i] == null)
           {
             if (!_CodePositions.ContainsKey(String.Empty))
               _CodePositions.Add(String.Empty, i);
+            _IsFull = false;
           }
           else
           {

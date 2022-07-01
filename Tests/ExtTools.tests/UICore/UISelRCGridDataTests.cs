@@ -28,17 +28,21 @@ namespace ExtTools_tests.UICore
 
       Assert.AreEqual(sourceData, sut.SourceData, "SourceData");
 
-      Assert.AreEqual(1, sut.AvailableColumns.Length, "AvailableColumns.Length");
+      Assert.AreEqual(1, sut.AvailableColumns.Count, "AvailableColumns.Count");
       Assert.AreEqual("C1", sut.AvailableColumns[0].Code);
+      Assert.IsTrue(sut.AvailableColumns.IsReadOnly, "AvailableColumns.IsReadOnly");
 
       Assert.IsTrue(sut.SelRows.IsEmpty, "SelRows.IsEmpty");
+      Assert.IsFalse(sut.SelRows.IsFull, "SelRows.IsFull");
       Assert.AreEqual(new bool[3] { false, false, false }, sut.SelRows.AsArray, "SelRows.AsArray");
       Assert.AreEqual(0, sut.SelRows.SelectionCount, "SelRows.SelectionCount");
 
-      Assert.IsTrue(sut.SelColumns.IsEmpty, "SelRows.IsEmpty");
+      Assert.IsTrue(sut.SelColumns.IsEmpty, "SelColumns.IsEmpty");
+      Assert.IsFalse(sut.SelColumns.IsFull, "SelColumns.IsFull");
       Assert.AreEqual(new string[2] { String.Empty, String.Empty }, sut.SelColumns.Codes, "SelColumns.Codes");
       Assert.AreEqual(",", sut.SelColumns.AsString, "SelColumns.AsString");
       Assert.AreEqual(0, sut.SelColumns.SelectionCount, "SelColumns.SelectionCount");
+      Assert.AreEqual(new string[] { "C1" }, sut.SelColumns.UnassignedCodes, "SelColumns.UnassignedCodes");
     }
 
     [Test]
@@ -128,6 +132,23 @@ namespace ExtTools_tests.UICore
 
       sut.SelRows[1] = false;
       Assert.IsTrue(sut.SelRows.IsEmpty, "#3");
+    }
+
+    [Test]
+    public void SelRows_IsFull()
+    {
+      UISelRCGridData sut = CreateTestData();
+      Assert.IsFalse(sut.SelRows.IsFull, "#1");
+
+      for (int i = 1; i < sut.RowCount;i++ )
+        sut.SelRows[i] = true;
+      Assert.IsFalse(sut.SelRows.IsFull, "#2");
+
+      sut.SelRows[0] = true;
+      Assert.IsTrue(sut.SelRows.IsFull, "#3");
+
+      sut.SelRows[1] = false;
+      Assert.IsFalse(sut.SelRows.IsFull, "#4");
     }
 
 
@@ -237,6 +258,19 @@ namespace ExtTools_tests.UICore
 
       sut.SelColumns[2] = null;
       Assert.IsTrue(sut.SelColumns.IsEmpty, "#3");
+    }
+
+    [Test]
+    public void SelColumns_IsFull()
+    {
+      UISelRCGridData sut = CreateTestData();
+      Assert.IsFalse(sut.SelColumns.IsFull, "#1");
+
+      sut.SelColumns.AsString = "Col1,Col2,Col1";
+      Assert.IsTrue(sut.SelColumns.IsFull, "#2");
+
+      sut.SelColumns[1] = null;
+      Assert.IsFalse(sut.SelColumns.IsFull, "#3");
     }
 
     [Test]
@@ -611,6 +645,16 @@ namespace ExtTools_tests.UICore
 
       sut.SelColumns[0] = sut.AvailableColumns[0];
       Assert.AreEqual(1, sut.SelColumns.SelectionCount, "#4");
+    }
+
+    [TestCase(",,", "Col1,Col2")]
+    [TestCase("Col2,,Col2", "Col1")]
+    [TestCase("Col2,Col1", "")]
+    public void SelColumns_UnassignedCodes(string selCodes, string sWantedRes)
+    {
+      UISelRCGridData sut = CreateTestData();
+      sut.SelColumns.AsString = selCodes;
+      Assert.AreEqual(sWantedRes, String.Join(",", sut.SelColumns.UnassignedCodes));
     }
 
     #endregion

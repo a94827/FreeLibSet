@@ -121,9 +121,9 @@ namespace FreeLibSet.Forms
       Columns.LastAdded.GridColumn.ToolTipText = "Использование строки";
       Columns.LastAdded.GridColumn.DividerWidth = 1; // 12.01.2022
 
-      string[] displayNames = new string[Data.AvailableColumns.Length + 1];
+      string[] displayNames = new string[Data.AvailableColumns.Count + 1];
       displayNames[0] = NoneColText;
-      for (int i = 0; i < Data.AvailableColumns.Length; i++)
+      for (int i = 0; i < Data.AvailableColumns.Count; i++)
         displayNames[i + 1] = Data.AvailableColumns[i].DisplayName;
       int dropDownWidth = CalcDropDownWidth(displayNames);
 
@@ -171,6 +171,8 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Другие свойства
+
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то после установки свойств AllColumns и SourceData,
     /// будут автоматически выбраны все непустые строки (свойство SelRows) и назначены подходящие столбцы (свойство SelColumns).
@@ -186,6 +188,7 @@ namespace FreeLibSet.Forms
     }
     private bool _AutoSelect;
 
+    #endregion
 
     #region Обработчики таблицы
 
@@ -268,7 +271,7 @@ namespace FreeLibSet.Forms
           else
           {
             bool found = false;
-            for (int i = 0; i < Data.AvailableColumns.Length; i++)
+            for (int i = 0; i < Data.AvailableColumns.Count; i++)
             {
               if (Data.AvailableColumns[i].DisplayName == displayName)
               {
@@ -383,6 +386,9 @@ namespace FreeLibSet.Forms
     {
       Validate();
       Control.Invalidate();
+
+      if (CommandItemsIfAssigned != null)
+        CommandItems.SetEnabled();
     }
 
     /// <summary>
@@ -474,6 +480,7 @@ namespace FreeLibSet.Forms
       return new EFPSelRCDataGridViewCommandItems(this);
     }
 
+
     #endregion
   }
 
@@ -487,18 +494,27 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает список команд
     /// </summary>
-    /// <param name="owner">Провайдер табличного просмотра</param>
-    public EFPSelRCDataGridViewCommandItems(EFPSelRCDataGridView owner)
-      : base(owner)
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    public EFPSelRCDataGridViewCommandItems(EFPSelRCDataGridView controlProvider)
+      : base(controlProvider)
     {
-      ciClearColumns = new EFPCommandItem("Edit", "CleraColumnRefs");
+      ciClearColumns = new EFPCommandItem("Edit", "ClearSelectedColumns");
       ciClearColumns.MenuText = "Очистить привязку столбцов";
       ciClearColumns.ImageKey = "No";
       ciClearColumns.ShortCut = Keys.F8;
       ciClearColumns.GroupBegin = true;
-      ciClearColumns.GroupEnd = true;
       ciClearColumns.Click += ciClearColumns_Click;
       base.Add(ciClearColumns);
+
+      ciInitColumns = new EFPCommandItem("Edit", "InitSelectedColumns");
+      ciInitColumns.MenuText = "Установить привязку столбцов";
+      ciInitColumns.ImageKey = "Execute";
+      ciInitColumns.ShortCut = Keys.F9;
+      ciInitColumns.GroupEnd = true;
+      ciInitColumns.Click += ciInitColumns_Click;
+      base.Add(ciInitColumns);
+
+      SetEnabled();
     }
 
     #endregion
@@ -521,6 +537,44 @@ namespace FreeLibSet.Forms
       if (ControlProvider.Data == null)
         return;
       ControlProvider.Data.SelColumns.Clear();
+    }
+
+    #endregion
+
+    #region Команда заполнения
+
+    EFPCommandItem ciInitColumns;
+
+    void ciInitColumns_Click(object sender, EventArgs args)
+    {
+      if (ControlProvider.Data == null)
+        return;
+
+      string oldCodes = ControlProvider.Data.SelColumns.AsString;
+      ControlProvider.Data.SelColumns.Init();
+      if (ControlProvider.Data.SelColumns.AsString == oldCodes)
+        EFPApp.ShowTempMessage("Не удалось назначить другие столбцы");
+    }
+
+    #endregion
+
+    #region Установка состояния команд
+
+    internal void SetEnabled()
+    {
+      if (ControlProvider.Data == null)
+      {
+        ciClearColumns.Enabled = false;
+        ciInitColumns.Enabled = false;
+      }
+      else
+      {
+        ciClearColumns.Enabled = !ControlProvider.Data.SelColumns.IsEmpty;
+        if (ControlProvider.Data.SelRows.IsEmpty || ControlProvider.Data.SelColumns.IsFull)
+          ciInitColumns.Enabled = false;
+        else
+          ciInitColumns.Enabled = ControlProvider.Data.SelColumns.UnassignedCodes.Length > 0;
+      }
     }
 
     #endregion
