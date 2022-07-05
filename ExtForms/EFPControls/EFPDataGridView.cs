@@ -1947,10 +1947,10 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void BeginUpdate()
     {
-      // Так не работает, все равно все прыгает
+      // Так не работает, все равно все прыгает.
+      // Кроме того, эти методы не являются реентрантыми и могут вызываться только из пользовательского кода.
       // EFPDataGridView.SourceAsDataTable.BeginLoadData();
-      // EFPDatGridView.SourceAsDataTable.BeginInit();
-
+      // EFPDataGridView.SourceAsDataTable.BeginInit();
       if (_UpdateCount == 0)
       {
         if (WinFormsTools.AreControlAndFormVisible(Control) &&

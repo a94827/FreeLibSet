@@ -318,20 +318,28 @@ namespace FreeLibSet.Core
                   case 0: return "Windows Vista";
                   case 1: return "Windows 7";
                   case 2:
-                    try
+                    if (!IsWine) // 05.07.2022
                     {
-                      addSP = false;
-                      return GetWindows10Version(out addVer); // 12.02.2018
+                      try
+                      {
+                        addSP = false;
+                        return GetWindows10Version(out addVer); // 12.02.2018
+                      }
+                      catch { }
+                      return "Windows 8 (?)";
                     }
-                    catch { }
-                    return "Windows 8 (?)";
+                    break;
                   case 3: return "Windows 8.1";
                 }
                 break;
               case 10: // Это никогда не будет вызвано, т.к. Windows 10 обманывает приложение
                 switch (Environment.OSVersion.Version.Minor)
                 {
-                  case 0: return "Windows 10";
+                  case 0:
+                    if (Environment.OSVersion.Version.Build >= 22000)
+                      return "Windows 11"; // 05.07.2022
+                    else
+                      return "Windows 10";
                 }
                 break;
             }
@@ -397,7 +405,17 @@ namespace FreeLibSet.Core
         return "Windows 8 (?)";
 
       // Дальше, наверное, версии будут правильными
-      string s = "Windows " + ver.Major.ToString();
+      // 05.07.2022: Не будут. Windows 11 имеет версию 10
+      string s;
+      if (ver.Major == 10)
+      {
+        if (ver.Build >= 22000)
+          s = "Windows 11"; // 05.07.2022
+        else
+          s = "Windows 10";
+      }
+      else
+        s = "Windows " + ver.Major.ToString();
       if (ver.Minor > 0)
         s += "." + ver.Minor.ToString();
       return s;
@@ -443,7 +461,7 @@ namespace FreeLibSet.Core
         {
           return Process.GetCurrentProcess().SessionId;
         }
-        catch 
+        catch
         {
           return 0;
         }
